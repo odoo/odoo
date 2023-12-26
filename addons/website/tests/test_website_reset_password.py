@@ -75,3 +75,26 @@ class TestWebsiteResetPassword(HttpCase):
         # The most specific user should be selected
         self.authenticate("bobo@mail.com", "bobo@mail.com")
         self.assertEqual(self.session["uid"], user2.id)
+
+    def test_multi_website_reset_password_user_specific_user_account(self):
+        # Create same user on different websites with 'Specific User Account'
+        # option enabled and then reset password. Only the user from the
+        # current website should be reset.
+        website_1, website_2 = self.env['website'].create([
+            {'name': 'Website 1', 'specific_user_account': True},
+            {'name': 'Website 2', 'specific_user_account': True},
+        ])
+
+        login = 'user@example.com'  # same login for both users
+        user_website_1, user_website_2 = self.env['res.users'].with_context(no_reset_password=True).create([
+            {'website_id': website_1.id, 'login': login, 'email': login, 'name': login},
+            {'website_id': website_2.id, 'login': login, 'email': login, 'name': login},
+        ])
+
+        self.assertFalse(user_website_1.signup_valid)
+        self.assertFalse(user_website_2.signup_valid)
+
+        self.env['res.users'].with_context(website_id=website_1.id).reset_password(login)
+
+        self.assertTrue(user_website_1.signup_valid)
+        self.assertFalse(user_website_2.signup_valid)

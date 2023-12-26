@@ -2,6 +2,7 @@ odoo.define('web.bus_tests', function (require) {
 "use strict";
 
 var BusService = require('bus.BusService');
+var CrossTabBus = require('bus.CrossTab');
 var AbstractStorageService = require('web.AbstractStorageService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
@@ -310,5 +311,81 @@ QUnit.module('Bus', {
         parentMaster.destroy();
         parentSlave.destroy();
     });
+
+    QUnit.test('two tabs calling addChannel simultaneously', async function (assert) {
+        assert.expect(5);
+
+        let id = 1;
+        testUtils.patch(CrossTabBus, {
+            init: function () {
+                this._super.apply(this, arguments);
+                this.__tabId__ = id++;
+            },
+            addChannel: function (channel) {
+                assert.step('Tab ' + this.__tabId__ + ': addChannel ' + channel);
+                this._super.apply(this, arguments);
+            },
+            deleteChannel: function (channel) {
+                assert.step('Tab ' + this.__tabId__ + ': deleteChannel ' + channel);
+                this._super.apply(this, arguments);
+            },
+        });
+
+        let pollPromise;
+        const parentTab1 = new Widget();
+        await testUtils.addMockEnvironment(parentTab1, {
+            data: {},
+            services: {
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route) {
+                if (route === '/longpolling/poll') {
+                    pollPromise = testUtils.makeTestPromise();
+                    pollPromise.abort = (function () {
+                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                    }).bind(pollPromise);
+                    return pollPromise;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        const parentTab2 = new Widget();
+        await testUtils.addMockEnvironment(parentTab2, {
+            data: {},
+            services: {
+                local_storage: LocalStorageServiceMock,
+            },
+            mockRPC: function (route) {
+                if (route === '/longpolling/poll') {
+                    pollPromise = testUtils.makeTestPromise();
+                    pollPromise.abort = (function () {
+                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
+                    }).bind(pollPromise);
+                    return pollPromise;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        const tab1 = new CrossTabBus(parentTab1);
+        const tab2 = new CrossTabBus(parentTab2);
+
+        tab1.addChannel("alpha");
+        tab2.addChannel("alpha");
+        tab1.addChannel("beta");
+        tab2.addChannel("beta");
+
+        assert.verifySteps([
+            "Tab 1: addChannel alpha",
+            "Tab 2: addChannel alpha",
+            "Tab 1: addChannel beta",
+            "Tab 2: addChannel beta",
+        ]);
+
+        testUtils.unpatch(CrossTabBus);
+        parentTab1.destroy();
+        parentTab2.destroy();
+    });
 });
+
 });

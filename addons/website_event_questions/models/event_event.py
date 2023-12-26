@@ -53,7 +53,7 @@ class EventEvent(models.Model):
                 command = [(3, question.id) for question in questions_toremove]
             else:
                 command = [(5, 0)]
-            if event.event_type_id.use_mail_schedule:
+            if event.event_type_id.use_questions:
                 command += [
                     (0, 0, {
                         'title': question.title,

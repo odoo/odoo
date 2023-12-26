@@ -11,7 +11,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
@@ -272,6 +272,12 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'task_id': task.id,
             'unit_amount': 50,
             'employee_id': self.employee_manager.id,
+        })
+
+        self.assertFalse(timesheet1.so_line, "The timesheet should be not linked to the project of the map entry since no SOL in the linked task.")
+
+        task.write({
+            'sale_line_id': self.project_employee_rate_user.sale_line_id.id
         })
 
         self.assertEqual(self.project_employee_rate_manager.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the Employee manager in the map")

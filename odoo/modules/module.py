@@ -88,6 +88,32 @@ class OdooHook(object):
         return sys.modules[name]
 
 
+class UpgradeHook(object):
+    """Makes the legacy `migrations` package being `odoo.upgrade`"""
+
+    def find_module(self, name, path=None):
+        if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", name):
+            # We can't trigger a DeprecationWarning in this case.
+            # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
+            # the tests, and the common files (utility functions) still needs to import from the
+            # legacy name.
+            return self
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        canonical_upgrade = name.replace("odoo.addons.base.maintenance.migrations", "odoo.upgrade")
+
+        if canonical_upgrade in sys.modules:
+            mod = sys.modules[canonical_upgrade]
+        else:
+            mod = importlib.import_module(canonical_upgrade)
+
+        sys.modules[name] = mod
+
+        return sys.modules[name]
+
+
 def initialize_sys_path():
     """
     Setup the addons path ``odoo.addons.__path__`` with various defaults
@@ -114,7 +140,7 @@ def initialize_sys_path():
     legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
     for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
         up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
-        if up not in upgrade.__path__:
+        if os.path.isdir(up) and up not in upgrade.__path__:
             upgrade.__path__.append(up)
 
     # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
@@ -126,6 +152,7 @@ def initialize_sys_path():
 
     # hook deprecated module alias from openerp to odoo and "crm"-like to odoo.addons
     if not getattr(initialize_sys_path, 'called', False): # only initialize once
+        sys.meta_path.insert(0, UpgradeHook())
         sys.meta_path.insert(0, OdooHook())
         sys.meta_path.insert(0, AddonsHook())
         initialize_sys_path.called = True
@@ -394,6 +421,9 @@ def get_modules():
 
     plist = []
     for ad in odoo.addons.__path__:
+        if not os.path.exists(ad):
+            _logger.warning("addons path does not exist: %s", ad)
+            continue
         plist.extend(listdir(ad))
     return list(set(plist))
 
@@ -415,3 +445,36 @@ def adapt_version(version):
     return version
 
 current_test = None
+
+
+def check_python_external_dependency(pydep):
+    try:
+        pkg_resources.get_distribution(pydep)
+    except pkg_resources.DistributionNotFound as e:
+        try:
+            importlib.import_module(pydep)
+            _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+        except ImportError:
+            # backward compatibility attempt failed
+            _logger.warning("DistributionNotFound: %s", e)
+            raise Exception('Python library not installed: %s' % (pydep,))
+    except pkg_resources.VersionConflict as e:
+        _logger.warning("VersionConflict: %s", e)
+        raise Exception('Python library version conflict: %s' % (pydep,))
+    except Exception as e:
+        _logger.warning("get_distribution(%s) failed: %s", pydep, e)
+        raise Exception('Error finding python library %s' % (pydep,))
+
+
+def check_manifest_dependencies(manifest):
+    depends = manifest.get('external_dependencies')
+    if not depends:
+        return
+    for pydep in depends.get('python', []):
+        check_python_external_dependency(pydep)
+
+    for binary in depends.get('bin', []):
+        try:
+            tools.find_in_path(binary)
+        except IOError:
+            raise Exception('Unable to find %r in path' % (binary,))

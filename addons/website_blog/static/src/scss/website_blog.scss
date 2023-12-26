@@ -152,11 +152,11 @@ $o-wblog-loader-size: 50px;
         // ==============================================
         &.o_wblog_post_page_cover_regular {
             &.o_full_screen_height {
-                min-height: 350px;
+                min-height: 70vh !important;
             }
 
             &.o_half_screen_height {
-                min-height: 250px;
+                min-height: 40vh !important;
             }
 
             &.cover_auto {
@@ -239,15 +239,22 @@ $o-wblog-loader-size: 50px;
         animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
     }
 
+    // "Read next article" (with "Regular Cover")
+    #o_wblog_post_footer a.w-25 {
+        flex: 0 0 auto;
+    }
+
     // Blog Index Pages
     // ==============================================
     #o_wblog_posts_loop {
         .o_record_cover_container {
             box-shadow: inset 0 0 0 1px rgba(white, 0.3);
-            background: rgba(black, 0.1);
 
             padding-top: 33%;
             height: auto!important;
+            // This is mandatory as we do not want the CoverProperties 
+            // sizing classes to be applied here
+            min-height: auto!important;
 
             &:hover .o_record_cover_image {
                 opacity: 0.8;

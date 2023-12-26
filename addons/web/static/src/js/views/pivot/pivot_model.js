@@ -593,7 +593,8 @@ var PivotModel = AbstractModel.extend({
         };
         this._computeDerivedParams();
 
-        this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+        this.data.groupedBy = this.data.groupedBy.slice();
+        this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys.slice();
 
         var defaultOrder = params.default_order && params.default_order.split(' ');
         if (defaultOrder) {
@@ -644,7 +645,8 @@ var PivotModel = AbstractModel.extend({
         }
         this._computeDerivedParams();
 
-        this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+        this.data.groupedBy = this.data.groupedBy.slice();
+        this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys.slice();
 
         if (!_.isEqual(oldRowGroupBys, self.data.rowGroupBys)) {
             this.data.expandedRowGroupBys = [];
@@ -721,7 +723,11 @@ var PivotModel = AbstractModel.extend({
         values.slice(0, values.length - 1).forEach(function (value) {
             tree = tree.directSubTrees.get(value);
         });
-        tree.directSubTrees.set(values[values.length - 1], {
+        const value = values[values.length - 1];
+        if (tree.directSubTrees.has(value)) {
+            return;
+        }
+        tree.directSubTrees.set(value, {
             root: {
                 labels: labels,
                 values: values,

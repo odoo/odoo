@@ -214,7 +214,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
     def test_product_filtered_exclude_for(self):
         """
             Super Computer has 18 variants total (2 ssd * 3 ram * 3 hdd)
-            RAM 16 excudes HDD 1, that matches 2 variants:
+            RAM 16 excludes HDD 1, that matches 2 variants:
             - SSD 256 RAM 16 HDD 1
             - SSD 512 RAM 16 HDD 1
 
@@ -230,8 +230,8 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_ram_exclude_for()
         self.assertEqual(len(self.computer._get_possible_variants()), 16)
         self.assertTrue(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_8 + computer_hdd_1)._is_variant_possible())
-        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_16 + computer_hdd_1)._is_variant_possible())
-        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_512 + computer_ram_16 + computer_hdd_1)._is_variant_possible())
+        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_16 + computer_hdd_1))
+        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_512 + computer_ram_16 + computer_hdd_1))
 
     def test_children_product_filtered_exclude_for(self):
         """
@@ -387,11 +387,130 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_exclude(computer_ram_32, computer_ssd_256)
         self.assertEqual(self.computer._get_first_possible_combination(), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
 
-        # No possible combination (test helper and iterator)
-        self._add_exclude(computer_ram_32, computer_hdd_4)
+        # Not possible to add an exclusion when only one variant is left -> it deletes the product template associated to it
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self._add_exclude(computer_ram_32, computer_hdd_4)
+
+        # If an exclusion rule deletes all variants at once it does not delete the template.
+        # Here we can test `_get_first_possible_combination` with a product template with no variants
+        # Deletes all exclusions
+        for exclusion in computer_ram_32.exclude_for:
+            computer_ram_32.write({
+                'exclude_for': [(2, exclusion.id, 0)]
+            })
+
+        # Activates all exclusions at once
+        computer_ram_32.write({
+            'exclude_for': [(0, computer_ram_32.exclude_for.id, {
+                'product_tmpl_id': self.computer.id,
+                'value_ids': [(6, 0, [computer_hdd_1.id, computer_hdd_2.id, computer_hdd_4.id, computer_ssd_256.id, computer_ssd_512.id])]
+            })]
+        })
+
         self.assertEqual(self.computer._get_first_possible_combination(), self.env['product.template.attribute.value'])
         gen = self.computer._get_possible_combinations()
         self.assertIsNone(next(gen, None))
+
+        # Testing parent case
+        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
+
+        # prep work for the last part of the test
+        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+        })
+        color_green = self.env['product.attribute.value'].create({
+            'name': 'Green',
+            'attribute_id': color_attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': mouse.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [color_red.id, color_green.id])],
+        })
+
+        mouse_color_red = self._get_product_template_attribute_value(color_red, mouse)
+        mouse_color_green = self._get_product_template_attribute_value(color_green, mouse)
+
+        self._add_exclude(computer_ssd_256, mouse_color_red, mouse)
+        self.assertEqual(mouse._get_first_possible_combination(parent_combination=computer_ssd_256 + computer_ram_8 + computer_hdd_1), mouse_color_green)
+
+        # Test to see if several attribute_line for same attribute is well handled
+        color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+        })
+        color_yellow = self.env['product.attribute.value'].create({
+            'name': 'Yellow',
+            'attribute_id': color_attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': mouse.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [color_blue.id, color_yellow.id])],
+        })
+        mouse_color_yellow = self._get_product_template_attribute_value(color_yellow, mouse)
+        self.assertEqual(mouse._get_first_possible_combination(necessary_values=mouse_color_yellow), mouse_color_red + mouse_color_yellow)
+
+        # Making sure it's not extremely slow (has to discard invalid combinations early !)
+        product_template = self.env['product.template'].create({
+            'name': 'many combinations',
+        })
+
+        for i in range(10):
+            # create the attributes
+            product_attribute = self.env['product.attribute'].create({
+                'name': "att %s" % i,
+                'create_variant': 'dynamic',
+                'sequence': i,
+            })
+
+            for j in range(50):
+                # create the attribute values
+                value = self.env['product.attribute.value'].create([{
+                    'name': "val %s" % j,
+                    'attribute_id': product_attribute.id,
+                    'sequence': j,
+                }])
+
+            # set attribute and attribute values on the template
+            self.env['product.template.attribute.line'].create([{
+                'attribute_id': product_attribute.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, product_attribute.value_ids.ids)]
+            }])
+
+        self._add_exclude(
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[1].value_ids[0],
+                                                       model=product_template),
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[0].value_ids[0],
+                                                       model=product_template),
+            product_template)
+        self._add_exclude(
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[0].value_ids[0],
+                                                       model=product_template),
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[1].value_ids[1],
+                                                       model=product_template),
+            product_template)
+
+        combination = self.env['product.template.attribute.value']
+        for idx, ptal in enumerate(product_template.attribute_line_ids):
+            if idx != 1:
+                value = ptal.product_template_value_ids[0]
+            else:
+                value = ptal.product_template_value_ids[2]
+            combination += value
+
+        started_at = time.time()
+        self.assertEqual(product_template._get_first_possible_combination(), combination)
+        elapsed = time.time() - started_at
+        # It should be about instantaneous, 0.5 to avoid false positives
+        self.assertLess(elapsed, 0.5)
+
+
+
 
     def test_get_closest_possible_combinations(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -546,3 +665,34 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
                 'name': '32 GB',
                 'attribute_id': self.ram_attribute.id,
             })
+
+    def test_inactive_related_product_update(self):
+        """
+            Create a product and give it a product attribute then archive it, delete the product attribute,
+            unarchive the product and check that the product is not related to the product attribute.
+        """
+        product_attribut = self.env['product.attribute'].create({
+            'name': 'PA',
+            'sequence': 1,
+            'create_variant': 'no_variant',
+        })
+        a1 = self.env['product.attribute.value'].create({
+            'name': 'pa_value',
+            'attribute_id': product_attribut.id,
+            'sequence': 1,
+        })
+        product = self.env['product.template'].create({
+            'name': 'P1',
+            'type': 'consu',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': product_attribut.id,
+                'value_ids': [(6, 0, [a1.id])],
+            })]
+        })
+        self.assertTrue(product_attribut.is_used_on_products, 'The product attribute must have an associated product')
+        product.action_archive()
+        self.assertFalse(product.active, 'The product should be archived.')
+        product.write({'attribute_line_ids': [[5, 0, 0]]})
+        product.action_unarchive()
+        self.assertTrue(product.active, 'The product should be unarchived.')
+        self.assertFalse(product_attribut.is_used_on_products, 'The product attribute must not have an associated product')

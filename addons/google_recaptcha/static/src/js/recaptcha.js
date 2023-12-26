@@ -21,7 +21,7 @@ const ReCaptcha = Class.extend({
      */
     loadLibs: function () {
         if (this._publicKey) {
-            this._recaptchaReady = ajax.loadJS(`https://www.recaptcha.net/recaptcha/api.js?render=${this._publicKey}`)
+            this._recaptchaReady = ajax.loadJS(`https://www.recaptcha.net/recaptcha/api.js?render=${encodeURIComponent(this._publicKey)}`)
                 .then(() => new Promise(resolve => window.grecaptcha.ready(() => resolve())));
             return this._recaptchaReady.then(() => !!document.querySelector('.grecaptcha-badge'));
         }
@@ -38,7 +38,7 @@ const ReCaptcha = Class.extend({
     getToken: async function (action) {
         if (!this._publicKey) {
             return {
-                message: _t("No recaptcha public key set."),
+                message: _t("No recaptcha site key set."),
             };
         }
         await this._recaptchaReady;
@@ -48,7 +48,7 @@ const ReCaptcha = Class.extend({
             };
         } catch (e) {
             return {
-                error: _t("The recaptcha public key is invalid."),
+                error: _t("The recaptcha site key is invalid."),
             };
         }
     },

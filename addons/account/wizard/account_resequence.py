@@ -25,12 +25,19 @@ class ReSequenceWizard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         values = super(ReSequenceWizard, self).default_get(fields_list)
+        if 'move_ids' not in fields_list:
+            return values
         active_move_ids = self.env['account.move']
         if self.env.context['active_model'] == 'account.move' and 'active_ids' in self.env.context:
             active_move_ids = self.env['account.move'].browse(self.env.context['active_ids'])
         if len(active_move_ids.journal_id) > 1:
             raise UserError(_('You can only resequence items from the same journal'))
-        if active_move_ids.journal_id.refund_sequence and len(set(active_move_ids.mapped('move_type')) - {'out_receipt', 'in_receipt'}) > 1:
+        move_types = set(active_move_ids.mapped('move_type'))
+        if (
+            active_move_ids.journal_id.refund_sequence
+            and ('in_refund' in move_types or 'out_refund' in move_types)
+            and len(move_types) > 1
+        ):
             raise UserError(_('The sequences of this journal are different for Invoices and Refunds but you selected some of both types.'))
         values['move_ids'] = [(6, 0, active_move_ids.ids)]
         return values
@@ -45,7 +52,7 @@ class ReSequenceWizard(models.TransientModel):
         self.first_name = ""
         for record in self:
             if record.move_ids:
-                record.first_name = min(record.move_ids._origin.mapped('name'))
+                record.first_name = min(record.move_ids._origin.mapped(lambda move: move.name or ""))
 
     @api.depends('new_values', 'ordering')
     def _compute_preview_moves(self):
@@ -60,7 +67,7 @@ class ReSequenceWizard(models.TransientModel):
                  or (self.sequence_number_reset == 'year' and line['server-date'][0:4] != previous_line['server-date'][0:4])\
                  or (self.sequence_number_reset == 'month' and line['server-date'][0:7] != previous_line['server-date'][0:7]):
                     if in_elipsis:
-                        changeLines.append({'current_name': '... (%s other)' % str(in_elipsis), 'new_by_name': '...', 'new_by_date': '...', 'date': '...'})
+                        changeLines.append({'id': 'other_' + str(line['id']), 'current_name': _('... (%s other)', in_elipsis), 'new_by_name': '...', 'new_by_date': '...', 'date': '...'})
                         in_elipsis = 0
                     changeLines.append(line)
                 else:
@@ -93,20 +100,21 @@ class ReSequenceWizard(models.TransientModel):
             for move in record.move_ids._origin:  # Sort the moves by period depending on the sequence number reset
                 moves_by_period[_get_move_key(move)] += move
 
-            format, format_values = self.env['account.move']._get_sequence_format_param(record.first_name)
+            seq_format, format_values = record.move_ids[0]._get_sequence_format_param(record.first_name)
 
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
                 # compute the new values period by period
                 for move in period_recs:
                     new_values[move.id] = {
+                        'id': move.id,
                         'current_name': move.name,
                         'state': move.state,
                         'date': format_date(self.env, move.date),
                         'server-date': str(move.date),
                     }
 
-                new_name_list = [format.format(**{
+                new_name_list = [seq_format.format(**{
                     **format_values,
                     'year': period_recs[0].date.year % (10 ** format_values['year_length']),
                     'month': period_recs[0].date.month,
@@ -117,23 +125,21 @@ class ReSequenceWizard(models.TransientModel):
                 for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_prefix, m.sequence_number)), new_name_list):
                     new_values[move.id]['new_by_name'] = new_name
                 # For all the moves of this period, assign the name by increasing date
-                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name, m.id)), new_name_list):
+                for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name or "", m.id)), new_name_list):
                     new_values[move.id]['new_by_date'] = new_name
 
             record.new_values = json.dumps(new_values)
 
     def resequence(self):
         new_values = json.loads(self.new_values)
-        # Can't change the name of a posted invoice, but we do not want to have the chatter
-        # logging 3 separate changes with [state to draft], [change of name], [state to posted]
-        self.with_context(tracking_disable=True).move_ids.state = 'draft'
         if self.move_ids.journal_id and self.move_ids.journal_id.restrict_mode_hash_table:
             if self.ordering == 'date':
                 raise UserError(_('You can not reorder sequence by date when the journal is locked with a hash.'))
+        self.move_ids._check_fiscalyear_lock_date()
+        self.env['account.move'].browse(int(k) for k in new_values.keys()).name = False
         for move_id in self.move_ids:
             if str(move_id.id) in new_values:
                 if self.ordering == 'keep':
                     move_id.name = new_values[str(move_id.id)]['new_by_name']
                 else:
                     move_id.name = new_values[str(move_id.id)]['new_by_date']
-                move_id.with_context(tracking_disable=True).state = new_values[str(move_id.id)]['state']

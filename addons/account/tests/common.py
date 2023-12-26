@@ -24,6 +24,8 @@ class AccountTestInvoicingCommon(SavepointCase):
     def setUpClass(cls, chart_template_ref=None):
         super(AccountTestInvoicingCommon, cls).setUpClass()
 
+        assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
+
         if chart_template_ref:
             chart_template = cls.env.ref(chart_template_ref)
         else:
@@ -361,10 +363,14 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
 
     @classmethod
-    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=[], amounts=[], taxes=None):
-        move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type))
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, currency=None):
+        products = [] if products is None else products
+        amounts = [] if amounts is None else amounts
+        move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
+        move_form.date = move_form.invoice_date
         move_form.partner_id = partner or cls.partner_a
+        move_form.currency_id = currency if currency else cls.company_data['currency']
 
         for product in products:
             with move_form.invoice_line_ids.new() as line_form:
@@ -375,10 +381,14 @@ class AccountTestInvoicingCommon(SavepointCase):
 
         for amount in amounts:
             with move_form.invoice_line_ids.new() as line_form:
+                line_form.name = "test line"
+                # We use account_predictive_bills_disable_prediction context key so that
+                # this doesn't trigger prediction in case enterprise (hence account_predictive_bills) is installed
                 line_form.price_unit = amount
                 if taxes:
                     line_form.tax_ids.clear()
-                    line_form.tax_ids.add(taxes)
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
 
         rslt = move_form.save()
 
@@ -535,7 +545,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         cls.diff_income_account = cls.company.income_currency_exchange_account_id
         cls.diff_expense_account = cls.company.expense_currency_exchange_account_id
 
-        cls.inbound_payment_method = cls.env['account.payment.method'].create({
+        cls.inbound_payment_method = cls.env['account.payment.method'].sudo().create({
             'name': 'inbound',
             'code': 'IN',
             'payment_type': 'inbound',
@@ -624,11 +634,11 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             }
         ])
 
-    def _create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False):
+    def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False):
         date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
 
         invoice_vals = {
-            'move_type': type,
+            'move_type': move_type,
             'partner_id': partner_id or self.partner_agrolait_id,
             'invoice_date': date_invoice,
             'date': date_invoice,
@@ -646,17 +656,17 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         if currency_id:
             invoice_vals['currency_id'] = currency_id
 
-        invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
+        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
         if auto_validate:
             invoice.action_post()
         return invoice
 
-    def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
-        return self._create_invoice(type=type, invoice_amount=invoice_amount, currency_id=currency_id, auto_validate=True)
+    def create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None):
+        return self._create_invoice(move_type=move_type, invoice_amount=invoice_amount, currency_id=currency_id, auto_validate=True)
 
-    def create_invoice_partner(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False, payment_term_id=False):
+    def create_invoice_partner(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False, payment_term_id=False):
         return self._create_invoice(
-            type=type,
+            move_type=move_type,
             invoice_amount=invoice_amount,
             currency_id=currency_id,
             partner_id=partner_id,
@@ -684,14 +694,14 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
 
     def make_customer_and_supplier_flows(self, invoice_currency_id, invoice_amount, bank_journal, amount, amount_currency, transaction_currency_id):
         #we create an invoice in given invoice_currency
-        invoice_record = self.create_invoice(type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
+        invoice_record = self.create_invoice(move_type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         line = invoice_record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=amount, amount_currency=amount_currency, currency_id=transaction_currency_id, reconcile_param=[{'id': line.id}])
         customer_move_lines = bank_stmt.line_ids.line_ids
 
         #we create a supplier bill in given invoice_currency
-        invoice_record = self.create_invoice(type='in_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
+        invoice_record = self.create_invoice(move_type='in_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         line = invoice_record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id, reconcile_param=[{'id': line.id}])

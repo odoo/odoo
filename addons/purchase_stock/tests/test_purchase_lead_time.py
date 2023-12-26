@@ -213,6 +213,18 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """Change merging po line if same procurement is done depending on custom values."""
         company = self.env.ref('base.main_company')
         company.write({'po_lead': 0.00})
+
+        # The seller has a specific product name and code which must be kept in the PO line
+        self.t_shirt.seller_ids.write({
+            'product_name': 'Vendor Name',
+            'product_code': 'Vendor Code',
+        })
+        partner = self.t_shirt.seller_ids[:1].name
+        t_shirt = self.t_shirt.with_context(
+            lang=partner.lang,
+            partner_id=partner.id,
+        )
+
         # Create procurement order of product_1
         ProcurementGroup = self.env['procurement.group']
         procurement_values = {
@@ -232,7 +244,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
         order_line_description = purchase_order.order_line.product_id._get_description(purchase_order.picking_type_id)
         self.assertEqual(len(purchase_order.order_line), 1, 'wrong number of order line is created')
-        self.assertEqual(purchase_order.order_line.name, order_line_description + "Color (Red)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
 
         procurement_values['product_description_variants'] = 'Color (Red)'
         order_2_values = procurement_values
@@ -252,15 +264,18 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             self.t_shirt.name, '/', self.env.company, order_3_values)
         ])
         self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
-        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, order_line_description + "Color (Red)", 'wrong description in po lines')
-        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, order_line_description + "Color (Green)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, t_shirt.display_name + "\n" + "Color (Green)", 'wrong description in po lines')
 
         purchase_order.button_confirm()
-        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, order_line_description + "Color (Red)", 'wrong description in picking')
-        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, order_line_description + "Color (Green)", 'wrong description in picking')
+        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 15).description_picking, order_line_description + "\nColor (Red)", 'wrong description in picking')
+        self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, order_line_description + "\nColor (Green)", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
         company = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({
+            'name': 'Second Company',
+        })
         company.write({'po_lead': 0.00})
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.patcher.start()
@@ -268,15 +283,26 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         vendor = self.env['res.partner'].create({
             'name': 'Colruyt'
         })
+        vendor2 = self.env['res.partner'].create({
+            'name': 'Delhaize'
+        })
 
         self.env.company.days_to_purchase = 2.0
 
         product = self.env['product.product'].create({
             'name': 'Chicory',
             'type': 'product',
-            'seller_ids': [(0, 0, {'name': vendor.id, 'delay': 1.0})]
+            'seller_ids': [
+                (0, 0, {'name': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
+                (0, 0, {'name': vendor.id, 'delay': 1.0, 'company_id': company.id})
+            ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint = orderpoint_form.save()
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
         orderpoint = orderpoint_form.save()
@@ -296,7 +322,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         delivery_moves._action_confirm()
         self.env['procurement.group'].run_scheduler()
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), fields.Date.today() + timedelta(days=2))
+        expected_date_order = fields.Date.today() + timedelta(days=2)
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), expected_date_order)
         self.assertEqual(len(po_line), 1)
         self.assertEqual(po_line.product_uom_qty, 20.0)
         self.assertEqual(len(po_line.order_id), 1)
@@ -306,10 +333,33 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.mock_date.today.return_value = fields.Date.today() + timedelta(days=1)
         orderpoint._compute_qty()
         self.env['procurement.group'].run_scheduler()
-        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(len(po_line), 2)
-        self.assertEqual(len(po_line.order_id), 2)
-        new_order = po_line.order_id.sorted('date_order')[-1]
-        self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
-        self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
+        po_line02 = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(po_line02, po_line, 'The orderpoint execution should not create a new POL')
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), expected_date_order, 'The Order Deadline should not change')
+        self.assertEqual(po_line.product_uom_qty, 25.0, 'The existing POL should be updated with the quantity of the last execution')
         self.patcher.stop()
+
+    def test_supplier_lead_time(self):
+        """ Basic stock configuration and a supplier with a minimum qty and a lead time """
+        self.env['stock.warehouse.orderpoint'].search([]).unlink()
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product_1
+        orderpoint_form.product_min_qty = 10
+        orderpoint_form.product_max_qty = 50
+        orderpoint = orderpoint_form.save()
+
+        self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_1.product_tmpl_id.id)]).unlink()
+        self.env['product.supplierinfo'].create({
+            'name': self.partner_1.id,
+            'min_qty': 1,
+            'price': 1,
+            'delay': 7,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+        })
+
+        self.env['procurement.group'].run_scheduler()
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner_1.id)])
+
+        today = fields.Datetime.start_of(fields.Datetime.now(), 'day')
+        self.assertEqual(purchase_order.date_order, today)
+        self.assertEqual(fields.Datetime.start_of(purchase_order.date_planned, 'day'), today + timedelta(days=7))

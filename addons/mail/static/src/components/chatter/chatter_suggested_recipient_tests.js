@@ -10,6 +10,7 @@ const {
     afterNextRender,
     beforeEach,
     createRootComponent,
+    nextTick,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -148,6 +149,45 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
     assert.notOk(
         checkboxUnchecked.checked,
         "suggested recipient without partner must be unchecked by default",
+    );
+});
+
+QUnit.test("suggested recipient without partner are unchecked when closing the dialog without creating partner", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.fake'].records.push({
+        id: 10,
+        email_cc: "john@test.be",
+    });
+
+    const params = {
+        archs: {},
+
+    };
+    params.archs["res.partner,false,form"] = `
+        <form>
+            <field name="name"/>
+        </form>
+    `;
+
+    await this.start(params);
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+    // click on checkbox to open dialog
+    document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]').click();
+    await nextTick();
+    // close dialog without changing anything
+    document.querySelector('.modal-dialog .close').click();
+
+    assert.notOk(
+        document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]').checked,
+        "suggested recipient without partner must be unchecked",
     );
 });
 
@@ -372,6 +412,45 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
         '.o_ComposerSuggestedRecipientList_showMore',
         "suggested recipient list should containt a 'show More' button after clicking on 'show less'."
     );
+});
+
+QUnit.test("suggested recipients should not be notified when posting an internal note", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({
+        display_name: "John Jane",
+        email: "john@jane.be",
+        id: 100,
+    });
+    this.data['res.fake'].records.push({
+        id: 10,
+        partner_ids: [100],
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.model === 'res.fake' && args.method === 'message_post') {
+                assert.strictEqual(
+                    args.kwargs.partner_ids.length,
+                    0,
+                    "message_post should not contain suggested recipients when posting an internal note"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
+    );
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
 });
 
 });

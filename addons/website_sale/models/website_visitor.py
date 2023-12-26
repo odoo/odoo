@@ -21,7 +21,10 @@ class WebsiteVisitor(models.Model):
     @api.depends('website_track_ids')
     def _compute_product_statistics(self):
         results = self.env['website.track'].read_group(
-            [('visitor_id', 'in', self.ids), ('product_id', '!=', False)], ['visitor_id', 'product_id'], ['visitor_id', 'product_id'], lazy=False)
+            [('visitor_id', 'in', self.ids), ('product_id', '!=', False),
+             '|', ('product_id.company_id', 'in', self.env.companies.ids), ('product_id.company_id', '=', False)],
+            ['visitor_id', 'product_id'], ['visitor_id', 'product_id'],
+            lazy=False)
         mapped_data = {}
         for result in results:
             visitor_info = mapped_data.get(result['visitor_id'][0], {'product_count': 0, 'product_ids': set()})

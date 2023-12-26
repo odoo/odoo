@@ -23,4 +23,5 @@ For Vendor Bill support, Default Vendor Specific OCR and validation for OCR are 
         'views/account_journal_view.xml'
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

@@ -63,6 +63,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.$el.toggleClass('o_cannot_create', !this.activeActions.create);
         await this._super(...arguments);
     },
+    /**
+     * Called each time the controller is dettached into the DOM
+     */
+    on_detach_callback() {
+        this._super.apply(this, arguments);
+        this.renderer.resetLocalState();
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -706,7 +713,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {OdooEvent} ev
      */
     _onFieldChanged: function (ev) {
-        if (this.mode === 'readonly') {
+        if (this.mode === 'readonly' && !('force_save' in ev.data)) {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
@@ -867,6 +874,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
             isText: result.context.translation_type === 'text',
             showSrc: result.context.translation_show_src,
+            node: ev.target && ev.target.__node,
         });
         return this.translationDialog.open();
     },

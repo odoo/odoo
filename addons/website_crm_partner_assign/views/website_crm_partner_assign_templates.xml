@@ -73,7 +73,7 @@
                     <t t-foreach="partners" t-as="partner">
                         <t t-if="last_grade != partner.grade_id.id">
                             <h3 class="text-center mt-4">
-                                <span t-field="partner.grade_id"/> Partners
+                                <span t-field="partner.grade_id"/>
                                 <t t-call="website.publish_management">
                                     <t t-set="object" t-value="partner.grade_id"/>
                                     <t t-set="publish_edit" t-value="True"/>
@@ -158,7 +158,7 @@
 <template id="grade_in_detail" inherit_id="website_partner.partner_detail">
   <xpath expr="//*[@id='partner_name']" position="after">
     <h3 class="col-lg-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
-      <span t-field="partner.grade_id"/> Partner</h3>
+      <span t-field="partner.grade_id"/></h3>
   </xpath>
 </template>
 
@@ -274,7 +274,7 @@
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <header class="modal-header">
                             <h4 class="modal-title">New Opportunity</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         </header>
                         <main class="modal-body" id="new-opp-dialog">
                             <div class="form-group">
@@ -320,7 +320,10 @@
                         </td>
                         <td><span t-field="opp.contact_name" /></td>
                         <td>
-                            <span class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
+                            <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
+                            <span t-else="" class="text-nowrap" t-esc="opp.expected_revenue"/>
+                            <span> at </span>
+                            <span t-field="opp.probability" />%
                         </td>
                         <td>
                             <span class="badge badge-info badge-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
@@ -430,7 +433,7 @@
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
                             <header class="modal-header">
                                 <h4 class="modal-title">Lead Feedback</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
@@ -459,7 +462,7 @@
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
                             <header class="modal-header">
                                 <h4 class="modal-title">Lead Feedback</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
@@ -529,7 +532,9 @@
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
                                 <h5 class="mb-0">
-                                    <span class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
+                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                    <span t-else="" class="text-nowrap" t-esc="opportunity.expected_revenue"/>
+                                    <span> at </span>
                                     <span class="badge badge-info badge-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
@@ -623,7 +628,7 @@
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
                                         <header class="modal-header">
                                             <h4 class="modal-title">Edit Opportunity</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                         </header>
                                         <main class="modal-body" id="sign-dialog">
                                             <div class="form-group">
@@ -649,7 +654,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <label>Priority:</label>
                                                         <div class="input-group">
                                                             <label class="radio-inline">
@@ -673,11 +678,11 @@
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-7">
                                                         <label>Expected Closing:</label>
                                                         <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
                                                             <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
-                                                            <input type="date" min="1900-01-01" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                                                            <input type="text" name="date_deadline" data-target="#exp_closing_div" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
                                                             <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
@@ -703,7 +708,7 @@
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class="input-group date" id="next_activity_div" data-target-input="nearest">
                                                     <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
-                                                    <input type="date" min="1900-01-01" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                                                    <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
                                                     <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
@@ -727,7 +732,7 @@
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
                                         <header class="modal-header">
                                             <h4 class="modal-title">Edit Contact</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                         </header>
                                         <main class="modal-body" id="sign-dialog">
                                             <t t-if="opportunity.partner_name">

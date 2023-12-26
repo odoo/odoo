@@ -26,7 +26,8 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_free_shipping(self, program):
         delivery_line = self.order_line.filtered(lambda x: x.is_delivery)
-        taxes = self.fiscal_position_id.map_tax(delivery_line.product_id.taxes_id)
+        taxes = delivery_line.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+        taxes = self.fiscal_position_id.map_tax(taxes)
         return {
             'name': _("Discount: %s", program.name),
             'product_id': program.discount_line_product_id.id,

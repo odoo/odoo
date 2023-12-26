@@ -54,6 +54,7 @@ odoo.define('web.sample_server_tests', function (require) {
                     salary: { string: "Salary", type: 'monetary' },
                     currency: { string: "Currency", type: 'many2one', relation: 'res.currency' },
                     manager_id: { string: "Manager", type: 'many2one', relation: 'res.users' },
+                    cover_image_id: { string: "Cover Image", type: 'many2one', relation: 'ir.attachment' },
                     managed_ids: { string: "Managing", type: 'one2many', relation: 'res.users' },
                     tag_ids: { string: "Tags", type: 'many2many', relation: 'tag' },
                     type: { string: "Type", type: 'selection', selection: [
@@ -70,6 +71,9 @@ odoo.define('web.sample_server_tests', function (require) {
                     ] },
                     age: { string: "Age", type: 'integer' },
                 },
+                'ir.attachment': {
+                    display_name: { string: "Name", type: 'char' },
+                }
             };
         },
     }, function () {
@@ -77,7 +81,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.module("Basic behaviour");
 
         QUnit.test("Sample data: people type + all field names", async function (assert) {
-            assert.expect(24);
+            assert.expect(26);
 
             mock.patch(session, {
                 company_currency_id: 4,
@@ -105,13 +109,11 @@ odoo.define('web.sample_server_tests', function (require) {
                     );
                 }
             }
-            function assertBetween(fieldName, min, max, decimal = 1) {
+            function assertBetween(fieldName, min, max, isFloat = false) {
+                const val = rec[fieldName];
                 assert.ok(
-                    min <= rec[fieldName] && rec[fieldName] < max &&
-                    rec[fieldName].toString().split(".").length === decimal,
-                    `Field "${fieldName}" is between ${min} and ${max} and is ${
-                        decimal === 1 ? "an integer" : "a float number"
-                    }`
+                    min <= val && val < max && (isFloat || parseInt(val, 10) === val),
+                    `Field "${fieldName}" is between ${min} and ${max} ${!isFloat ? 'and is an integer ' : ''}: ${val}`
                 );
             }
 
@@ -129,10 +131,13 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.ok(SAMPLE_TEXTS.includes(rec.description));
             assertFormat('birthday', /\d{4}-\d{2}-\d{2}/);
             assertFormat('arrival_date', /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
-            assertBetween('height', 0, MAX_FLOAT, 2);
+            assertBetween('height', 0, MAX_FLOAT, true);
             assertBetween('color', 0, MAX_COLOR_INT);
             assertBetween('age', 0, MAX_INTEGER);
             assertBetween('salary', 0, MAX_MONETARY);
+
+            // check float field have 2 decimal rounding
+            assert.strictEqual(rec.height, parseFloat(parseFloat(rec.height).toFixed(2)));
 
             const selectionValues = this.fields['res.users'].type.selection.map(
                 (sel) => sel[0]
@@ -148,6 +153,8 @@ odoo.define('web.sample_server_tests', function (require) {
 
             assert.strictEqual(typeof rec.manager_id[0], 'number');
             assert.ok(SAMPLE_PEOPLE.includes(rec.manager_id[1]));
+
+            assert.strictEqual(rec.cover_image_id, false);
 
             assert.strictEqual(rec.managed_ids.length, 2);
             assert.ok(rec.managed_ids.every(

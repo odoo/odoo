@@ -13,4 +13,4 @@ Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/
 List of contributors:
 
 Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/optesis-ibg
-Mame Abdoul Aziz SY 149785030+optesis-msy@users.noreply.github.com https://github.com/optesis-msy
+

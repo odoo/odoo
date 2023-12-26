@@ -19,8 +19,8 @@
             <t t-call="web.frontend_layout">
                 <div class="container card mb-5 mt-4 o_rating_page_submit">
                     <div class="card-body">
-                        <div clas="row">
-                            <h1 class="mt-5">Thank you for rating our services!</h1>
+                        <div class="row text-center justify-content-center">
+                            <h1 class="col-12 mt-5">Thank you for rating our services!</h1>
                             <form t-attf-action="/rate/#{token}/submit_feedback" method="post">
                                 <div class="btn-group btn-group-toggle row" data-toggle="buttons">
                                     <t t-foreach="rate_names" t-as="rate_name">

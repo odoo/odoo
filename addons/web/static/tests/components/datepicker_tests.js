@@ -4,6 +4,8 @@ odoo.define('web.datepicker_tests', function (require) {
     const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
     const testUtils = require('web.test_utils');
     const time = require('web.time');
+    const CustomFilterItem = require('web.CustomFilterItem');
+    const ActionModel = require('web/static/src/js/views/action_model.js');
 
     const { createComponent } = testUtils;
 
@@ -70,6 +72,47 @@ odoo.define('web.datepicker_tests', function (require) {
             picker.destroy();
         });
 
+        QUnit.test("pick a date with locale", async function (assert) {
+            assert.expect(4);
+
+            // weird shit of moment https://github.com/moment/moment/issues/5600
+            // When month regex returns undefined, january is taken (first month of the default "nameless" locale)
+            const originalLocale = moment.locale();
+            // Those parameters will make Moment's internal compute stuff that are relevant to the bug
+            const months = 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_');
+            const monthsShort = 'janv._févr._mars_avr._mai_juin_juil._août_custSept._oct._nov._déc.'.split('_');
+            moment.defineLocale('frenchForTests', { months, monthsShort, code: 'frTest' , monthsParseExact: true});
+
+            const hasChanged = testUtils.makeTestPromise();
+            const picker = await createComponent(DatePicker, {
+                translateParameters: {
+                    date_format: "%d %b, %Y", // Those are important too
+                    time_format: "%H:%M:%S",
+                },
+                props: { date: moment('09/01/1997', 'MM/DD/YYYY') },
+                intercepts: {
+                    'datetime-changed': ev => {
+                        assert.step('datetime-changed');
+                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY'), '09/02/1997',
+                            "Event should transmit the correct date");
+                        hasChanged.resolve();
+                    },
+                }
+            });
+            const input = picker.el.querySelector('.o_datepicker_input');
+            await testUtils.dom.click(input);
+
+            await testUtils.dom.click(document.querySelectorAll('.datepicker table td')[3]); // next day
+
+            assert.strictEqual(input.value, '02 custSept., 1997');
+            assert.verifySteps(['datetime-changed']);
+
+            moment.locale(originalLocale);
+            moment.updateLocale('englishForTest', null);
+
+            picker.destroy();
+        });
+
         QUnit.test("enter a date value", async function (assert) {
             assert.expect(5);
 
@@ -121,6 +164,43 @@ odoo.define('web.datepicker_tests', function (require) {
             picker.destroy();
             testUtils.unpatch(time);
         });
+
+        QUnit.test('custom filter date', async function (assert) {
+            assert.expect(5);
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    const preFilter = preFilters[0];
+                    assert.strictEqual(preFilter.description,
+                        'A date is equal to "05/05/2005"',
+                        "description should be in localized format");
+                    assert.deepEqual(preFilter.domain,
+                        '[["date_field","=","2005-05-05"]]',
+                        "domain should be in UTC format");
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const date_field = { name: 'date_field', string: "A date", type: 'date', searchable: true };
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: { date_field },
+                },
+                env: { searchModel },
+            });
+
+            await testUtils.controlPanel.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_field');
+            const valueInput = cfi.el.querySelector('.o_generator_menu_value .o_input');
+            await testUtils.dom.click(valueInput);
+            assert.containsOnce(document.body, '.datepicker');
+            await testUtils.fields.editSelect(valueInput, '05/05/2005');
+            await testUtils.controlPanel.applyFilter(cfi);
+            assert.containsNone(document.body, '.datepicker');
+            cfi.destroy();
+        });
+
 
         QUnit.module('DateTimePicker');
 
@@ -190,6 +270,59 @@ odoo.define('web.datepicker_tests', function (require) {
 
             assert.strictEqual(input.value, '02/08/1997 15:45:05');
             assert.verifySteps(['datetime-changed']);
+
+            picker.destroy();
+        });
+
+        QUnit.test("pick a date and time with locale", async function (assert) {
+            assert.expect(5);
+
+            // weird shit of moment https://github.com/moment/moment/issues/5600
+            // When month regex returns undefined, january is taken (first month of the default "nameless" locale)
+            const originalLocale = moment.locale();
+            // Those parameters will make Moment's internal compute stuff that are relevant to the bug
+            const months = 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_');
+            const monthsShort = 'janv._févr._mars_avr._mai_juin_juil._août_custSept._oct._nov._déc.'.split('_');
+            moment.defineLocale('frenchForTests', { months, monthsShort, code: 'frTest' , monthsParseExact: true});
+
+            const hasChanged = testUtils.makeTestPromise();
+            const picker = await createComponent(DateTimePicker, {
+                translateParameters: {
+                    date_format: "%d %b, %Y", // Those are important too
+                    time_format: "%H:%M:%S",
+                },
+                props: { date: moment('09/01/1997 12:30:01', 'MM/DD/YYYY HH:mm:ss') },
+                intercepts: {
+                    'datetime-changed': ev => {
+                        assert.step('datetime-changed');
+                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY HH:mm:ss'), '09/02/1997 15:45:05',
+                            "Event should transmit the correct date");
+                        hasChanged.resolve();
+                    },
+                }
+            });
+
+            const input = picker.el.querySelector('input.o_input.o_datepicker_input');
+
+            await testUtils.dom.click(input);
+            await testUtils.dom.click(document.querySelectorAll('.datepicker table td')[3]); // next day
+            await testUtils.dom.click(document.querySelector('a[title="Select Time"]'));
+            await testUtils.dom.click(document.querySelector('.timepicker .timepicker-hour'));
+            await testUtils.dom.click(document.querySelectorAll('.timepicker .hour')[15]); // 15h
+            await testUtils.dom.click(document.querySelector('.timepicker .timepicker-minute'));
+            await testUtils.dom.click(document.querySelectorAll('.timepicker .minute')[9]); // 45m
+            await testUtils.dom.click(document.querySelector('.timepicker .timepicker-second'));
+
+            assert.verifySteps([]);
+            await testUtils.dom.click(document.querySelectorAll('.timepicker .second')[1]); // 05s
+
+            assert.strictEqual(input.value, '02 custSept., 1997 15:45:05');
+            assert.verifySteps(['datetime-changed']);
+
+            await hasChanged;
+
+            moment.locale(originalLocale);
+            moment.updateLocale('frenchForTests', null);
 
             picker.destroy();
         });

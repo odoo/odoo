@@ -983,6 +983,7 @@ var ListRenderer = BasicRenderer.extend({
             'data-toggle': "dropdown",
             'data-display': "static",
             'aria-expanded': false,
+            'aria-label': _t('Optional columns'),
         });
         $a.appendTo($optionalColumnsDropdown);
 
@@ -1001,6 +1002,7 @@ var ListRenderer = BasicRenderer.extend({
                 (config.isDebug() ? (' (' + col.attrs.name + ')') : '');
             var $checkbox = dom.renderCheckbox({
                 text: txt,
+                role: "menuitemcheckbox",
                 prop: {
                     name: col.attrs.name,
                     checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
@@ -1099,7 +1101,7 @@ var ListRenderer = BasicRenderer.extend({
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
                 );
-                this.$('table').append(this._renderOptionalColumnsDropdown());
+                this.$el.append(this._renderOptionalColumnsDropdown());
             }
             if (this.selection.length) {
                 const $checked_rows = this.$('tr').filter(
@@ -1168,6 +1170,7 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _updateSelection: function () {
+        const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
         var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
@@ -1180,7 +1183,9 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         this.$('thead .o_list_record_selector input').prop('checked', allChecked);
-        this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        if (JSON.stringify(this.selection) !== previousSelection) {
+            this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        }
         this._updateFooter();
     },
 
@@ -1268,6 +1273,16 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        // Explicitly set left/right of the optional column dropdown as it is pushed
+        // inside this.$el, so we need to position it at the end of top left corner.
+        var position = (this.$(".table-responsive").css('overflow') === "auto" ? this.$el.width() :
+            this.$('table').width());
+        var direction = "left";
+        if (_t.database.parameters.direction === 'rtl') {
+            position = position - this.$('.o_optional_columns .o_optional_columns_dropdown').width();
+            direction = "right";
+        }
+        this.$('.o_optional_columns').css(direction, position);
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to

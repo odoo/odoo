@@ -15,4 +15,5 @@ base modules simple.
         'views/res_lang_views.xml',
     ],
     'depends': ['web'],
+    'license': 'LGPL-3',
 }

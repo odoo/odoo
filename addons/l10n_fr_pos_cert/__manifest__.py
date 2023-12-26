@@ -38,4 +38,5 @@ The module adds following features:
     ],
     'qweb': ['static/src/xml/OrderReceipt.xml'],
     'post_init_hook': '_setup_inalterability',
+    'license': 'LGPL-3',
 }

@@ -30,10 +30,10 @@ class AuthorizeAPI():
 
         :param record acquirer: payment.acquirer account that will be contacted
         """
-        if acquirer.state == 'test':
-            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
-        else:
+        if acquirer.state == 'enabled':
             self.url = 'https://api.authorize.net/xml/v1/request.api'
+        else:
+            self.url = 'https://apitest.authorize.net/xml/v1/request.api'
 
         self.state = acquirer.state
         self.name = acquirer.authorize_login
@@ -84,8 +84,8 @@ class AuthorizeAPI():
                     'paymentProfiles': {
                         'customerType': 'business' if partner.is_company else 'individual',
                         'billTo': {
-                            'firstName': '' if partner.is_company else _partner_split_name(partner.name)[0],
-                            'lastName':  _partner_split_name(partner.name)[1],
+                            'firstName': '' if partner.is_company else _partner_split_name(partner.name)[0][:50],
+                            'lastName':  partner.name[:50] if partner.is_company else _partner_split_name(partner.name)[1][:50],
                             'address': (partner.street or '' + (partner.street2 if partner.street2 else '')) or None,
                             'city': partner.city,
                             'state': partner.state_id.name or None,
@@ -212,7 +212,8 @@ class AuthorizeAPI():
                         }
                     },
                     'order': {
-                        'invoiceNumber': reference[:20]
+                        'invoiceNumber': reference[:20],
+                        'description': reference[:255],
                     }
                 }
 
@@ -265,7 +266,8 @@ class AuthorizeAPI():
                         }
                     },
                     'order': {
-                        'invoiceNumber': reference[:20]
+                        'invoiceNumber': reference[:20],
+                        'description': reference[:255],
                     }
                 }
 

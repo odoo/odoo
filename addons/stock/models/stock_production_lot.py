@@ -10,6 +10,7 @@ class ProductionLot(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lot/Serial'
     _check_company_auto = True
+    _order = 'name, id'
 
     name = fields.Char(
         'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
@@ -25,7 +26,7 @@ class ProductionLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True, default=lambda self: self.env.company.id)
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):
@@ -77,7 +78,7 @@ class ProductionLot(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._check_create()
-        return super(ProductionLot, self).create(vals_list)
+        return super(ProductionLot, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def write(self, vals):
         if 'company_id' in vals:

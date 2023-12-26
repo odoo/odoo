@@ -60,14 +60,27 @@ class ProviderGrid(models.Model):
                     'price': 0.0,
                     'error_message': e.args[0],
                     'warning_message': False}
-        if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
-            price_unit = order.company_id.currency_id._convert(
-                price_unit, order.pricelist_id.currency_id, order.company_id, order.date_order or fields.Date.today())
+
+        price_unit = self._compute_currency(order, price_unit, 'company_to_pricelist')
 
         return {'success': True,
                 'price': price_unit,
                 'error_message': False,
                 'warning_message': False}
+
+    def _get_conversion_currencies(self, order, conversion):
+        if conversion == 'company_to_pricelist':
+            from_currency, to_currency = order.company_id.currency_id, order.pricelist_id.currency_id
+        elif conversion == 'pricelist_to_company':
+            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+
+        return from_currency, to_currency
+
+    def _compute_currency(self, order, price, conversion):
+        from_currency, to_currency = self._get_conversion_currencies(order, conversion)
+        if from_currency.id == to_currency.id:
+            return price
+        return from_currency._convert(price, to_currency, order.company_id, order.date_order or fields.Date.today())
 
     def _get_price_available(self, order):
         self.ensure_one()
@@ -82,21 +95,35 @@ class ProviderGrid(models.Model):
                 total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
+            if line.product_id.type == "service":
+                continue
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
-        total = order.currency_id._convert(
-            total, order.company_id.currency_id, order.company_id, order.date_order or fields.Date.today())
+        total = self._compute_currency(order, total, 'pricelist_to_company')
 
         return self._get_price_from_picking(total, weight, volume, quantity)
+
+    def _get_price_dict(self, total, weight, volume, quantity):
+        '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
+        Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
+        return {
+            'price': total,
+            'volume': volume,
+            'weight': weight,
+            'wv': volume * weight,
+            'quantity': quantity
+        }
 
     def _get_price_from_picking(self, total, weight, volume, quantity):
         price = 0.0
         criteria_found = False
-        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        if self.free_over and total >= self.amount:
+            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:

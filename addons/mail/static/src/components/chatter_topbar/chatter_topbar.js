@@ -5,6 +5,7 @@ const components = {
     FollowButton: require('mail/static/src/components/follow_button/follow_button.js'),
     FollowerListMenu: require('mail/static/src/components/follower_list_menu/follower_list_menu.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -16,6 +17,7 @@ class ChatterTopbar extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
             const thread = chatter ? chatter.thread : undefined;
@@ -23,7 +25,7 @@ class ChatterTopbar extends Component {
             return {
                 areThreadAttachmentsLoaded: thread && thread.areAttachmentsLoaded,
                 chatter: chatter ? chatter.__state : undefined,
-                composer: chatter && chatter.composer ? chatter.composer.__state : undefined,
+                composerIsLog: chatter && chatter.composer && chatter.composer.isLog,
                 threadAttachmentsAmount: threadAttachments.length,
             };
         });
@@ -99,8 +101,7 @@ class ChatterTopbar extends Component {
             action,
             options: {
                 on_close: () => {
-                    this.chatter.thread.refreshActivities();
-                    this.chatter.thread.refresh();
+                    this.trigger('reload', { keepChanges: true });
                 },
             },
         });

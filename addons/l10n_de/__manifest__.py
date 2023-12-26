@@ -3,6 +3,7 @@
 
 {
     'name': 'Germany - Accounting',
+    "version": "2.0",
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
     'category': 'Accounting/Localizations',
@@ -24,4 +25,5 @@ German accounting chart and localization.
         'report/din5008_report.xml',
         'data/report_layout.xml',
     ],
+    'license': 'LGPL-3',
 }

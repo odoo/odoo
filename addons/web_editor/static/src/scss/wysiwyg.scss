@@ -7,6 +7,20 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
 }
 
+.o_we_command_protector {
+    font-weight: 400 !important;
+
+    b, strong {
+        font-weight: 700 !important;
+    }
+    * {
+        font-weight: inherit !important;
+    }
+    .btn {
+        text-align: unset !important;
+    }
+}
+
 // EDITOR TOP BAR AND POPOVER
 .note-popover .popover {
     max-width: 350px;
@@ -111,8 +125,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         outline: none !important;
     }
     .dropdown-menu {
+        transform: none !important;
         margin-top: $o-we-dropdown-spacing;
         padding: 0;
+        margin-top: $o-we-toolbar-height;
         border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
         background-color: $o-we-dropdown-bg;
         box-shadow: $o-we-dropdown-shadow;
@@ -268,6 +284,10 @@ body .modal {
                     &:hover {
                         color: $o-we-color-danger;
                     }
+                }
+
+                .o_file_name {
+                    @include o-text-overflow;
                 }
 
                 &:hover {
@@ -474,6 +494,10 @@ img::selection {
         label {
             display: flex;
             align-items: center;
+
+            &.active {
+                background-color: $o-we-bg-darkest;
+            }
         }
 
         button:not(.btn), label {

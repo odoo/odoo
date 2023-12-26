@@ -49,7 +49,6 @@
             <field name="arch" type="xml">
                 <form string="Carrier">
                     <sheet>
-                      <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_prod_environment"
                                     attrs="{'invisible': ['|', '|', ('prod_environment', '=', False), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
@@ -87,6 +86,7 @@
                                 </div>
                             </button>
                         </div>
+                        <widget name="web_ribbon" text="Archived" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title" name="title">
                             <label for="name" string="Name" class="oe_edit_only"/>
                             <h1>
@@ -107,7 +107,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group name="delivery_details">
-                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False}" />
+                                <field name="product_id" context="{'default_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
                                 <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>

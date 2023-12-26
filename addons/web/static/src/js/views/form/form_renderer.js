@@ -228,6 +228,21 @@ var FormRenderer = BasicRenderer.extend({
         this.lastActivatedFieldIndex = -1;
     },
     /**
+     * Resets state which stores information like scroll position, curently
+     * active page, ...
+     *
+     * @override
+     */
+    resetLocalState() {
+        for (const notebook of this.el.querySelectorAll(':scope div.o_notebook')) {
+            [...notebook.querySelectorAll(':scope .o_notebook_headers .nav-item .nav-link')]
+                .map(nav => nav.classList.remove('active'));
+            [...notebook.querySelectorAll(':scope .tab-content > .tab-pane')]
+                .map(tab => tab.classList.remove('active'));
+        }
+
+    },
+    /**
      * Restore active tab pages for each notebook. It relies on the implicit fact
      * that each nav header corresponds to a tab page.
      *
@@ -235,10 +250,13 @@ var FormRenderer = BasicRenderer.extend({
      */
     setLocalState: function (state) {
         for (const notebook of this.el.querySelectorAll(':scope div.o_notebook')) {
+            if (notebook.closest(".o_field_widget")) {
+                continue;
+            }
             const name = notebook.dataset.name;
             if (name in state) {
                 const navs = notebook.querySelectorAll(':scope .o_notebook_headers .nav-item');
-                const pages = notebook.querySelectorAll(':scope .tab-content > .tab-pane');
+                const pages = notebook.querySelectorAll(':scope > .tab-content > .tab-pane');
                 // We can't base the amount on the 'navs' length since some overrides
                 // are adding pageless nav items.
                 const validTabsAmount = pages.length;
@@ -967,6 +985,13 @@ var FormRenderer = BasicRenderer.extend({
                         tab.$page.removeClass('active');
                         self.inactiveNotebooks.push(renderedTabs);
                     }
+                    if (!modifiers.invisible) {
+                        // make first page active if there is only one page to display
+                        var $visibleTabs = $headers.find('li:not(.o_invisible_modifier)');
+                        if ($visibleTabs.length === 1) {
+                            self.inactiveNotebooks.push(renderedTabs);
+                        }
+                    }
                 },
             });
         });
@@ -1029,7 +1054,7 @@ var FormRenderer = BasicRenderer.extend({
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
 
-        return Promise.all(defs).then(function () {
+        return Promise.all(defs).then(() => this.__renderView()).then(function () {
             self._updateView($form.contents());
             if (self.state.res_id in self.alertFields) {
                 self.displayTranslationAlert();
@@ -1042,6 +1067,14 @@ var FormRenderer = BasicRenderer.extend({
             $form.remove();
         });
     },
+    /**
+     * Meant to be overridden if asynchronous work needs to be done when
+     * rendering the view. This is called right before attaching the new view
+     * content.
+     * @private
+     * @returns {Promise<any>}
+     */
+    async __renderView() {},
     /**
      * This method is overridden to activate the first notebook page if the
      * current active page is invisible due to modifiers. This is done after

@@ -5,10 +5,10 @@
 # Translators:
 # Martin Trigaux, 2020
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -136,7 +136,7 @@ msgstr "Automat"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
 msgid "Average Cost (AVCO)"
-msgstr "Costul mediu (AVCO)"
+msgstr "Cost mediu ponderat (CMP)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -223,6 +223,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Elementele jurnalului omolog pentru toate intrările în stoc vor fi postate în acest cont, cu excepția cazului în care există un cont de evaluare specific\n"
+"                setat în locația sursă. Aceasta este valoarea implicită pentru toate produsele din această categorie. Poate fi setat și direct pe fiecare produs."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -491,7 +493,7 @@ msgstr "Valoare nouă după cantitate"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "On Hand Value"
-msgstr ""
+msgstr "Valoare în stoc"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -663,7 +665,7 @@ msgstr "Istoricul cantităților de stoc"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Raport Reaprovizionare Stoc"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
@@ -708,6 +710,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Conturile de intrare și / sau de ieșire a stocurilor nu pot fi aceleași cu "
+"contul de evaluare a stocului."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -744,6 +748,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
+"Liniile de mișcare nu sunt într-o stare consistentă: ele fac o intercompanie"
+" într-un singur pas în timp ce ar trebui să treacă prin locația de tranzit "
+"intercompanie."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -879,6 +886,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Când se face evaluarea automatizată a inventarului, elementele jurnal opuse pentru toate mișcările de stoc iesitoare vor fi postate in acest cont, \n"
+"                cu excepția cazului în care există un cont de evaluare specific setat pe locația destinație. Aceasta este valoarea implicită pentru toate produsele din această categorie. \n"
+"                Poate fi setat direct și pe fiecare produs."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -975,3 +985,10 @@ msgstr "pentru"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
 msgstr "locații"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid ""
+"'The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""

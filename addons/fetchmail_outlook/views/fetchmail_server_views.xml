@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_view_form" model="ir.ui.view">
+        <field name="name">fetchmail.server.view.form.inherit.outlook</field>
+        <field name="model">fetchmail.server</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="fetchmail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <field name="server" position="before">
+                <field name="use_microsoft_outlook_service" string="Outlook"
+                    attrs="{'readonly': [('state', '=', 'done')]}"/>
+            </field>
+            <field name="user" position="after">
+                <field name="is_microsoft_outlook_configured" invisible="1"/>
+                <field name="microsoft_outlook_refresh_token" invisible="1"/>
+                <field name="microsoft_outlook_access_token" invisible="1"/>
+                <field name="microsoft_outlook_access_token_expiration" invisible="1"/>
+                <div></div>
+                <div attrs="{'invisible': [('use_microsoft_outlook_service', '=', False)]}">
+                    <span attrs="{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}"
+                        class="badge badge-success">
+                        Outlook Token Valid
+                    </span>
+                    <button type="object"
+                        name="open_microsoft_outlook_uri" class="btn-link px-0"
+                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '!=', False)]}">
+                        <i class="fa fa-arrow-right"/>
+                        Connect your Outlook account
+                    </button>
+                    <button type="object"
+                        name="open_microsoft_outlook_uri" class="btn-link px-0"
+                        attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}">
+                        <i class="fa fa-cog"/>
+                        Edit Settings
+                    </button>
+                    <div class="alert alert-warning" role="alert"
+                        attrs="{'invisible': ['|', ('is_microsoft_outlook_configured', '=', True), ('use_microsoft_outlook_service', '=', False)]}">
+                        Setup your Outlook API credentials in the general settings to link a Outlook account.
+                    </div>
+                </div>
+            </field>
+            <field name="password" position="attributes">
+                <attribute name="attrs">{}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

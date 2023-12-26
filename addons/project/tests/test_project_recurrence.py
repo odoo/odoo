@@ -7,8 +7,8 @@ from odoo import fields
 
 from datetime import date, datetime
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
+from freezegun import freeze_time
 
-from unittest.mock import patch
 
 class TestProjectrecurrence(SavepointCase):
     @classmethod
@@ -32,7 +32,7 @@ class TestProjectrecurrence(SavepointCase):
         self.env.cr.execute("UPDATE project_task SET create_date=%s WHERE id=%s", (create_date, task_id))
 
     def test_recurrence_simple(self):
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 2, 1)):
+        with freeze_time("2020-02-01"):
             with Form(self.env['project.task']) as form:
                 form.name = 'test recurring task'
                 form.project_id = self.project_recurring
@@ -56,8 +56,9 @@ class TestProjectrecurrence(SavepointCase):
             task.recurring_task = False
             self.assertFalse(bool(task.recurrence_id), 'the recurrence should be deleted')
 
-    def test_recurrence_cron(self):
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 1)):
+    def test_recurrence_cron_repeat_after(self):
+        domain = [('project_id', '=', self.project_recurring.id)]
+        with freeze_time("2020-01-01"):
             form = Form(self.env['project.task'])
             form.name = 'test recurring task'
             form.description = 'my super recurring task bla bla bla'
@@ -75,22 +76,27 @@ class TestProjectrecurrence(SavepointCase):
             task.planned_hours = 2
 
             self.assertEqual(task.recurrence_id.next_recurrence_date, date(2020, 1, 15))
-            self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 1)
+            self.assertEqual(self.env['project.task'].search_count(domain), 1)
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
-            self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 1, 'no extra task should be created')
+            self.assertEqual(self.env['project.task'].search_count(domain), 1, 'no extra task should be created')
             self.assertEqual(task.recurrence_id.recurrence_left, 2)
 
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 15)):
-            self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 1)
+        with freeze_time("2020-01-15"):
+            self.assertEqual(self.env['project.task'].search_count(domain), 1)
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
-            self.assertEqual(self.env['project.task'].search_count([('project_id', '=', self.project_recurring.id)]), 2)
+            self.assertEqual(self.env['project.task'].search_count(domain), 2)
             self.assertEqual(task.recurrence_id.recurrence_left, 1)
 
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 2, 15)):
+        with freeze_time("2020-02-15"):
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+            self.assertEqual(task.recurrence_id.recurrence_left, 0)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
             self.assertEqual(task.recurrence_id.recurrence_left, 0)
 
-        tasks = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
+
+        tasks = self.env['project.task'].search(domain)
         self.assertEqual(len(tasks), 3)
 
         self.assertTrue(bool(tasks[2].date_deadline))
@@ -99,8 +105,111 @@ class TestProjectrecurrence(SavepointCase):
         for f in self.env['project.task.recurrence']._get_recurring_fields():
             self.assertTrue(tasks[0][f] == tasks[1][f] == tasks[2][f], "Field %s should have been copied" % f)
 
+    def test_recurrence_cron_repeat_until(self):
+        domain = [('project_id', '=', self.project_recurring.id)]
+        with freeze_time("2020-01-01"):
+            form = Form(self.env['project.task'])
+            form.name = 'test recurring task'
+            form.description = 'my super recurring task bla bla bla'
+            form.project_id = self.project_recurring
+            form.date_deadline = datetime(2020, 2, 1)
+
+            form.recurring_task = True
+            form.repeat_interval = 1
+            form.repeat_unit = 'month'
+            form.repeat_type = 'until'
+            form.repeat_until = date(2020, 2, 20)
+            form.repeat_on_month = 'date'
+            form.repeat_day = '15'
+            task = form.save()
+            task.planned_hours = 2
+
+            self.assertEqual(task.recurrence_id.next_recurrence_date, date(2020, 1, 15))
+            self.assertEqual(self.env['project.task'].search_count(domain), 1)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 1, 'no extra task should be created')
+
+        with freeze_time("2020-01-15"):
+            self.assertEqual(self.env['project.task'].search_count(domain), 1)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 2)
+
+        with freeze_time("2020-02-15"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+
+        tasks = self.env['project.task'].search(domain)
+        self.assertEqual(len(tasks), 3)
+
+        self.assertTrue(bool(tasks[2].date_deadline))
+        self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
+
+        for f in self.env['project.task.recurrence']._get_recurring_fields():
+            self.assertTrue(tasks[0][f] == tasks[1][f] == tasks[2][f], "Field %s should have been copied" % f)
+
+    def test_recurrence_cron_repeat_forever(self):
+        domain = [('project_id', '=', self.project_recurring.id)]
+        with freeze_time("2020-01-01"):
+            form = Form(self.env['project.task'])
+            form.name = 'test recurring task'
+            form.description = 'my super recurring task bla bla bla'
+            form.project_id = self.project_recurring
+            form.date_deadline = datetime(2020, 2, 1)
+
+            form.recurring_task = True
+            form.repeat_interval = 1
+            form.repeat_unit = 'month'
+            form.repeat_type = 'forever'
+            form.repeat_on_month = 'date'
+            form.repeat_day = '15'
+            task = form.save()
+            task.planned_hours = 2
+
+            self.assertEqual(task.recurrence_id.next_recurrence_date, date(2020, 1, 15))
+            self.assertEqual(self.env['project.task'].search_count(domain), 1)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 1, 'no extra task should be created')
+
+        with freeze_time("2020-01-15"):
+            self.assertEqual(self.env['project.task'].search_count(domain), 1)
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 2)
+
+        with freeze_time("2020-02-15"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+
+        with freeze_time("2020-02-16"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+
+        with freeze_time("2020-02-17"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+
+        with freeze_time("2020-02-17"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 3)
+
+        with freeze_time("2020-03-15"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+            self.assertEqual(self.env['project.task'].search_count(domain), 4)
+
+        tasks = self.env['project.task'].search(domain)
+        self.assertEqual(len(tasks), 4)
+
+        self.assertTrue(bool(tasks[3].date_deadline))
+        self.assertFalse(tasks[1].date_deadline, "Deadline should not be copied")
+
+        for f in self.env['project.task.recurrence']._get_recurring_fields():
+            self.assertTrue(
+                tasks[0][f] == tasks[1][f] == tasks[2][f] == tasks[3][f],
+                "Field %s should have been copied" % f)
+
     def test_recurrence_update_task(self):
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 1)):
+        with freeze_time("2020-01-01"):
             task = self.env['project.task'].create({
                     'name': 'test recurring task',
                     'project_id': self.project_recurring.id,
@@ -112,10 +221,10 @@ class TestProjectrecurrence(SavepointCase):
                     'mon': True,
                 })
 
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 6)):
+        with freeze_time("2020-01-06"):
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
 
-        with patch.object(fields.Date, 'today', lambda: datetime(2020, 1, 13)):
+        with freeze_time("2020-01-13"):
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
 
         task_c, task_b, task_a = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
@@ -328,6 +437,87 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[3], datetime(2020, 4, 25))
         self.assertEqual(dates[4], datetime(2020, 5, 23))
 
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=datetime(2020, 1, 10),
+            repeat_interval=6, # twice a year
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=datetime(2021, 1, 11),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=[TH(+1)],
+            repeat_day='3', # the 3rd of the month
+            repeat_week=False,
+            repeat_month=False,
+            count=1)
+
+        self.assertEqual(len(dates), 2)
+        self.assertEqual(dates[0], datetime(2020, 7, 3))
+        self.assertEqual(dates[1], datetime(2021, 1, 3))
+
+        # Should generate a date at the last day of the current month
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 2, 26),
+            repeat_interval=1,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2022, 2, 28),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=31,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 1)
+        self.assertEqual(dates[0], date(2022, 2, 28))
+
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 11, 26),
+            repeat_interval=3,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2024, 2, 29),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=25,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 5)
+        self.assertEqual(dates[0], date(2023, 2, 25))
+        self.assertEqual(dates[1], date(2023, 5, 25))
+        self.assertEqual(dates[2], date(2023, 8, 25))
+        self.assertEqual(dates[3], date(2023, 11, 25))
+        self.assertEqual(dates[4], date(2024, 2, 25))
+
+        # Use the exact same parameters than the previous test but with a repeat_day that is not passed yet
+        # So we generate an additional date in the current month
+        dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+            date_start=date(2022, 11, 26),
+            repeat_interval=3,
+            repeat_unit='month',
+            repeat_type='until',
+            repeat_until=date(2024, 2, 29),
+            repeat_on_month='date',
+            repeat_on_year=False,
+            weekdays=False,
+            repeat_day=31,
+            repeat_week=False,
+            repeat_month=False,
+            count=5)
+
+        self.assertEqual(len(dates), 6)
+        self.assertEqual(dates[0], date(2022, 11, 30))
+        self.assertEqual(dates[1], date(2023, 2, 28))
+        self.assertEqual(dates[2], date(2023, 5, 31))
+        self.assertEqual(dates[3], date(2023, 8, 31))
+        self.assertEqual(dates[4], date(2023, 11, 30))
+        self.assertEqual(dates[5], date(2024, 2, 29))
+
     def test_recurrence_next_dates_year(self):
         dates = self.env['project.task.recurrence']._get_next_recurring_dates(
             date_start=date(2020, 12, 1),
@@ -349,3 +539,48 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[2], datetime(2023, 11, 30))
         self.assertEqual(dates[3], datetime(2024, 11, 30))
         self.assertEqual(dates[4], datetime(2025, 11, 30))
+
+    def test_compute_recurrence_message_with_lang_not_set(self):
+        task = self.env['project.task'].create({
+            'name': 'Test task with user language not set',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'repeat_interval': 1,
+            'repeat_unit': 'week',
+            'repeat_type': 'after',
+            'repeat_number': 2,
+            'mon': True,
+        })
+
+        self.env.user.lang = None
+        task._compute_recurrence_message()
+
+    def test_disabling_recurrence(self):
+        """
+        Disabling the recurrence of one task in a recurrence suite should disable *all*
+        recurrences option on the tasks linked to that recurrence
+        """
+        with freeze_time("2020-01-01"):
+            self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'repeat_interval': 1,
+                'repeat_unit': 'week',
+                'repeat_type': 'after',
+                'repeat_number': 2,
+                'mon': True,
+            })
+
+        with freeze_time("2020-01-06"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+
+        with freeze_time("2020-01-13"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+
+        task_c, task_b, task_a = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
+
+        task_b.recurring_task = False
+
+        self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
+                         "All tasks in the recurrence should have their recurrence disabled")

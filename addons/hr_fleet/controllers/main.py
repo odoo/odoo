@@ -67,6 +67,9 @@ class HrFleet(Controller):
                 page.mergePage(header_pdf.getPage(0))
                 writer.addPage(page)
 
+        if not writer.getNumPages():
+            request.not_found(_('There is no pdf attached to generate a claim report.'))
+
         _buffer = io.BytesIO()
         writer.write(_buffer)
         merged_pdf = _buffer.getvalue()

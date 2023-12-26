@@ -1,6 +1,8 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
+const AbstractField = require('web.AbstractField');
+const fieldRegistry = require('web.field_registry');
 var AbstractStorageService = require('web.AbstractStorageService');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
@@ -597,6 +599,7 @@ QUnit.module('Views', {
         assert.containsOnce($('body'), '.modal', "there should be only one open modal");
 
         calendar.destroy();
+        testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
     });
 
     QUnit.test('create event with timezone in week mode European locale', async function (assert) {
@@ -1371,6 +1374,36 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test("all day event attribute", async function (assert) {
+        assert.expect(5);
+
+        this.data.event.fields.boolfield = { string: "boolean field", type: "boolean" };
+        this.data.event.records[0].boolfield = true;
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="boolfield" mode="month">
+                    <field name="name"/>
+                </calendar>
+            `,
+            archs: archs,
+            viewOptions: { initialDate },
+            session: { getTZOffset: () => 120 },
+        });
+
+        assert.containsOnce(calendar, ".fc-event[data-event-id=1]");
+        assert.containsNone(calendar, ".fc-event[data-event-id=1].o_cw_nobg", "first event is an all day event");
+
+        assert.containsOnce(calendar, ".fc-event[data-event-id=2].o_cw_nobg", "second event is not an all day event");
+
+        assert.containsN(calendar, ".fc-event[data-event-id=5]", 2);
+        assert.containsNone(calendar, ".fc-event[data-event-id=5].o_cw_nobg", 2, "fifth event is an all day event");
+
+        calendar.destroy();
+    });
+
     QUnit.test('create all day event in week mode', async function (assert) {
         assert.expect(3);
 
@@ -2075,11 +2108,16 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Add filters and specific color', async function (assert) {
-        assert.expect(5);
+        assert.expect(8);
+
+        this.data.event_type.records.push(
+            {id: 4, display_name: "Event Type no color", color: 0},
+        );
 
         this.data.event.records.push(
             {id: 8, user_id: 4, partner_id: 1, name: "event 8", start: "2016-12-11 09:00:00", stop: "2016-12-11 10:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 3, color: 4},
             {id: 9, user_id: 4, partner_id: 1, name: "event 9", start: "2016-12-11 19:00:00", stop: "2016-12-11 20:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 1, color: 1},
+            {id: 10, user_id: 4, partner_id: 1, name: "event 10", start: "2016-12-11 12:00:00", stop: "2016-12-11 13:00:00", allday: false, partner_ids: [1,2,3], event_type_id: 4, color: 0},
         );
 
         var calendar = await createCalendarView({
@@ -2100,18 +2138,25 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === "search_read" && args.model === "event_type" && args.args[1][0] === "color") {
+                    assert.step('color_search_read');
+                }
+                return result;
+            },
         });
 
         assert.containsN(calendar, '.o_calendar_filter', 2, "should display 2 filters");
 
         var $typeFilter =  calendar.$('.o_calendar_filter:has(h5:contains(Event_Type))');
         assert.ok($typeFilter.length, "should display 'Event Type' filter");
-        assert.containsN($typeFilter, '.o_calendar_filter_item', 3, "should display 3 filter items for 'Event Type'");
+        assert.containsN($typeFilter, '.o_calendar_filter_item', 4, "should display 4 filter items for 'Event Type'");
 
         assert.containsOnce($typeFilter, '.o_calendar_filter_item[data-value=3].o_cw_filter_color_4', "Filter for event type 3 must have the color 4");
-
         assert.containsOnce(calendar, '.fc-event[data-event-id=8].o_calendar_color_4', "Event of event type 3 must have the color 4");
-
+        assert.containsOnce(calendar, '.fc-event[data-event-id=10].o_calendar_color_1', "The first color is used when none is provided (default int field value being 0)")
+        assert.verifySteps(['color_search_read'], "The color attribute on a field should trigger a search_read")
         calendar.destroy();
     });
 
@@ -2877,7 +2922,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test("drag and drop on month mode", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         const calendar = await createCalendarView({
             arch:
@@ -2901,6 +2946,14 @@ QUnit.module('Views', {
         await testUtils.fields.editInput($input, "An event");
         await testUtils.dom.click($('.modal button.btn-primary'));
         await testUtils.nextTick();
+
+        await testUtils.dragAndDrop(
+            calendar.$('.fc-event:contains("event 1")'),
+            calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day-top:eq(1)'),
+            { disableDrop: true },
+        );
+        assert.hasClass(calendar.$('.o_calendar_widget > [data-event-id="1"]'), 'dayGridMonth',
+            "should have dayGridMonth class");
 
         // Move event to another day (on 19 december)
         await testUtils.dragAndDrop(
@@ -3818,6 +3871,55 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test("fields are added in the right order in popover", async function (assert) {
+        assert.expect(3);
+
+        const def = testUtils.makeTestPromise();
+        const DeferredWidget = AbstractField.extend({
+            async start() {
+                await this._super(...arguments);
+                await def;
+            }
+        });
+        fieldRegistry.add("deferred_widget", DeferredWidget);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month"
+                >
+                    <field name="user_id" widget="deferred_widget" />
+                    <field name="name" />
+                </calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$(`[data-event-id="4"]`));
+        assert.containsNone(calendar, ".o_cw_popover");
+
+        def.resolve();
+        await testUtils.nextTick();
+        assert.containsOnce(calendar, ".o_cw_popover");
+
+        assert.strictEqual(
+            calendar.$(".o_cw_popover .o_cw_popover_fields_secondary").text(),
+            "user : name : event 4"
+        );
+
+        calendar.destroy();
+        delete fieldRegistry.map.deferred_widget;
+    });
+
 });
 
 });

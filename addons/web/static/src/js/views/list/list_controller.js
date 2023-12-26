@@ -60,6 +60,7 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
+        this.lastFieldChangedEvent = null;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
         this.isExportEnable = false;
@@ -98,6 +99,24 @@ var ListController = BasicController.extend({
             return record.res_id;
         });
     },
+
+    /**
+     * Returns the list of currently selected res_ids (with the check boxes on
+     * the left) or the whole domain res_ids if it is selected
+     *
+     * This method should be the implementation of getSelectedIds but it is kept for compatibility reasons
+     *
+     * @returns {Promise<integer[]>}
+     */
+    getSelectedIdsWithDomain: async function () {
+        if (this.isDomainSelected) {
+            const state = this.model.get(this.handle, {raw: true});
+            return await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+        } else {
+            return Promise.resolve(this.model.localIdsToResIds(this.selectedRecords));
+        }
+    },
+
     /**
      * Returns the list of currently selected records (with the check boxes on
      * the left)
@@ -109,6 +128,23 @@ var ListController = BasicController.extend({
         return _.map(this.selectedRecords, function (db_id) {
             return self.model.get(db_id, {raw: true});
         });
+    },
+    /**
+     * Returns the list of currently selected records (with the check boxes on
+     * the left) or the whole domain records if it is selected
+     *
+     * @returns {Promise<{id, display_name}[]>}
+     */
+    getSelectedRecordsWithDomain: async function () {
+        if (this.isDomainSelected) {
+            const state = this.model.get(this.handle, {raw: true});
+            return await this._domainToRecords(state.getDomain(), session.active_ids_limit);
+        } else {
+            return Promise.resolve(this.selectedRecords.map(localId => {
+                const data = this.model.localData[localId].data;
+                return { id: data.id, display_name: data.display_name };
+            }));
+        }
     },
     /**
      * Display and bind all buttons in the control panel
@@ -366,6 +402,25 @@ var ListController = BasicController.extend({
         });
     },
     /**
+     * Returns the records matching the given domain.
+     *
+     * @private
+     * @param {Array[]} domain
+     * @param {integer} [limit]
+     * @returns {Promise<{id, display_name}[]>}
+     */
+    _domainToRecords: function (domain, limit) {
+        return this._rpc({
+            model: this.modelName,
+            method: 'search_read',
+            args: [domain],
+            kwargs: {
+                fields: ['display_name'],
+                limit: limit,
+            },
+        });
+    },
+    /**
      * Returns the ids of records matching the given domain.
      *
      * @private
@@ -389,7 +444,7 @@ var ListController = BasicController.extend({
      */
     _getExportDialogWidget() {
         let state = this.model.get(this.handle);
-        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
+        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field' && state.fields[field.attrs.name].exportable !== false).map(field => field.attrs.name);
         let groupedBy = this.renderer.state.groupedBy;
         const domain = this.isDomainSelected && state.getDomain();
         return new DataExport(this, state, defaultExportFields, groupedBy,
@@ -449,6 +504,21 @@ var ListController = BasicController.extend({
             isDomainSelected: this.isDomainSelected,
         });
     },
+    _isValueSet(fieldType, value) {
+        switch (fieldType) {
+            case 'boolean':
+            case 'one2many':
+            case 'many2many':
+            case 'integer':
+            case 'monetary':
+            case 'float':
+                return true;
+            case 'selection':
+                return value !== false;
+            default:
+                return !!value;
+        }
+    },
     /**
      * Saves multiple records at once. This method is called by the _onFieldChanged method
      * since the record must be confirmed as soon as the focus leaves a dirty cell.
@@ -468,7 +538,8 @@ var ListController = BasicController.extend({
         var validRecordIds = recordIds.reduce((result, nextRecordId) => {
             var record = this.model.get(nextRecordId);
             var modifiers = this.renderer._registerModifiers(node, record);
-            if (!modifiers.readonly && (!modifiers.required || value)) {
+            const fieldType = record.fields[fieldName].type;
+            if (!modifiers.readonly && (!modifiers.required || this._isValueSet(fieldType, value))) {
                 result.push(nextRecordId);
             }
             return result;
@@ -536,6 +607,10 @@ var ListController = BasicController.extend({
     _saveRecord: function (recordId) {
         var record = this.model.get(recordId, { raw: true });
         if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
+            if (!this.multipleRecordsSavingPromise && this.lastFieldChangedEvent) {
+                this._onFieldChanged(this.lastFieldChangedEvent);
+                this.lastFieldChangedEvent = null;
+            }
             // do not save the record (see _saveMultipleRecords)
             const prom = this.multipleRecordsSavingPromise || Promise.reject();
             this.multipleRecordsSavingPromise = null;
@@ -576,20 +651,14 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _toggleArchiveState: async function (archive) {
-        let resIds;
-        let displayNotif = false;
-        const state = this.model.get(this.handle, {raw: true});
-        if (this.isDomainSelected) {
-            resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
-            displayNotif = (resIds.length === session.active_ids_limit);
-        } else {
-            resIds = this.model.localIdsToResIds(this.selectedRecords);
-        }
+        const resIds = await this.getSelectedIdsWithDomain()
+        const notif = this.isDomainSelected;
         await this._archive(resIds, archive);
-        if (displayNotif) {
+        const total = this.model.get(this.handle, {raw: true}).count;
+        if (notif && resIds.length === session.active_ids_limit && resIds.length < total) {
             const msg = _.str.sprintf(
                 _t("Of the %d records selected, only the first %d have been archived/unarchived."),
-                state.count, resIds.length
+                total, resIds.length
             );
             this.do_notify(_t('Warning'), msg);
         }
@@ -603,7 +672,7 @@ var ListController = BasicController.extend({
     _toggleCreateButton: function () {
         if (this.hasButtons) {
             var state = this.model.get(this.handle);
-            var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
+            var createHidden = this.editable && state.groupedBy.length && state.data.length;
             this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
         }
     },
@@ -728,7 +797,9 @@ var ListController = BasicController.extend({
      */
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
-        this._discardChanges();
+        this._discardChanges().then(() => {
+            this.lastFieldChangedEvent = null;
+        });
     },
     /**
      * Used to detect if the discard button is about to be clicked.
@@ -818,6 +889,7 @@ var ListController = BasicController.extend({
     _onFieldChanged: function (ev) {
         ev.stopPropagation();
         const recordId = ev.data.dataPointID;
+        this.lastFieldChangedEvent = ev;
 
         if (this.fieldChangedPrevented) {
             this.fieldChangedPrevented = ev;
@@ -827,14 +899,18 @@ var ListController = BasicController.extend({
                 // that triggered the event, otherwise ev.target is the legacy field
                 // Widget that triggered the event
                 const target = ev.data.__originalComponent || ev.target;
+                const node = target.__node || ev.data.node;
                 this.multipleRecordsSavingPromise =
-                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
+                    this._saveMultipleRecords(ev.data.dataPointID, node, ev.data.changes);
             };
             // deal with edition of multiple lines
             ev.data.onSuccess = saveMulti; // will ask confirmation, and save
             ev.data.onFailure = saveMulti; // will show the appropriate dialog
             // disable onchanges as we'll save directly
             ev.data.notifyChange = false;
+            // In multi edit mode, we will be asked if we want to write on the selected
+            // records, so the force_save for readonly is not necessary.
+            ev.data.force_save = false;
         }
         this._super.apply(this, arguments);
     },
@@ -847,13 +923,7 @@ var ListController = BasicController.extend({
         this._disableButtons();
         const state = this.model.get(this.handle);
         try {
-            let resIds;
-            if (this.isDomainSelected) {
-                const limit = session.active_ids_limit;
-                resIds = await this._domainToResIds(state.getDomain(), limit);
-            } else {
-                resIds = this.getSelectedIds();
-            }
+            const resIds = await this.getSelectedIdsWithDomain();
             // add the context of the button node (in the xml) and our custom one
             // (active_ids and domain) to the action's execution context
             const actionData = Object.assign({}, node.attrs, {

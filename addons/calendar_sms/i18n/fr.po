@@ -7,7 +7,8 @@
 # Nicolas Roussey <nro@odoo.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Alexandra Jubert, 2021
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
@@ -38,7 +39,7 @@ msgstr "Evénement calendrier : Rappel"
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom d'affichage"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -59,7 +60,7 @@ msgstr "Rappel d'événement: ${object.name}, ${object.display_time}"
 #: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
-msgstr ""
+msgstr "Rappel d'événement: %(name)s, %(time)s."
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id

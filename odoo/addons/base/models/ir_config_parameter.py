@@ -7,7 +7,8 @@ Store database-specific configuration parameters
 import uuid
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.tools import config, ormcache, mute_logger
 
 _logger = logging.getLogger(__name__)
@@ -101,9 +102,15 @@ class IrConfigParameter(models.Model):
         return super(IrConfigParameter, self).create(vals_list)
 
     def write(self, vals):
+        if 'key' in vals:
+            illegal = _default_parameters.keys() & self.mapped('key')
+            if illegal:
+                raise ValidationError(_("You cannot rename config parameters with keys %s", ', '.join(illegal)))
         self.clear_caches()
         return super(IrConfigParameter, self).write(vals)
 
     def unlink(self):
+        for record in self.filtered(lambda p: p.key in _default_parameters.keys()):
+            raise ValidationError(_("You cannot delete the %s record.", record.key))
         self.clear_caches()
         return super(IrConfigParameter, self).unlink()

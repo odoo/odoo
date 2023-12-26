@@ -20,6 +20,8 @@ class GroupOperator(models.Model):
     int_max = fields.Integer(group_operator='max')
     float_min = fields.Float(group_operator='min')
     float_avg = fields.Float(group_operator='avg')
+    float_monetary = fields.Monetary(currency_field='currency_id',group_operator='sum')
+    currency_id = fields.Many2one('res.currency')
     date_max = fields.Date(group_operator='max')
     bool_and = fields.Boolean(group_operator='bool_and')
     bool_or = fields.Boolean(group_operator='bool_or')
@@ -32,3 +34,14 @@ class GroupOperatorO2M(models.Model):
 
     parent_id = fields.Many2one('export.group_operator')
     value = fields.Integer()
+
+class ComputedBinary(models.Model):
+    _name = 'export.computed.binary'
+    _description = 'Export computed binary'
+
+    binary_field = fields.Binary(compute='_compute_binary_field')
+
+    def _compute_binary_field(self):
+        # This kind of computed binary field is obviously a bad idea,
+        # but since the ORM supports it, the export also needs to handle it.
+        self.binary_field = ["computed value"]

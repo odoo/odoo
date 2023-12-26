@@ -9,7 +9,7 @@ class report_product_pricelist(models.AbstractModel):
     _description = 'Pricelist Report'
 
     def _get_report_values(self, docids, data):
-        product_ids = [int(i) for i in data['active_ids'].split(',')]
+        product_ids = [int(i) for i in data['active_ids'].split(',')] if data['active_ids'] else False
         pricelist_id = data['pricelist_id'] and int(data['pricelist_id']) or None
         quantities = [int(i) for i in data['quantities'].split(',')] or [1]
         return self._get_report_data(data['active_model'], product_ids, pricelist_id, quantities, 'pdf')

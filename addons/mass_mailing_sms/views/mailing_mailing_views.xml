@@ -35,7 +35,7 @@
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">
                 <field name="sms_has_insufficient_credit" invisible="1"/>
-                <div class="alert alert-warning text-center" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}" role="alert">
+                <div class="alert alert-warning text-center o-hidden-ios" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}" role="alert">
                     <button class="btn-link py-0"
                             name="action_buy_sms_credits"
                             type="object">
@@ -45,7 +45,7 @@
                     </button>
                 </div>
                 <field name="sms_has_unregistered_account" invisible="1"/>
-                <div class="alert alert-warning text-center" attrs="{'invisible': [('sms_has_unregistered_account', '=', False)]}" role="alert">
+                <div class="alert alert-warning text-center o-hidden-ios" attrs="{'invisible': [('sms_has_unregistered_account', '=', False)]}" role="alert">
                     <button class="btn-link py-0"
                             name="action_buy_sms_credits"
                             type="object">
@@ -110,7 +110,8 @@
             </xpath>
             <xpath expr="//page[@name='mail_body']" position="after">
                 <page string="SMS Content" name="sms_body" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
-                    <field name="body_plaintext" widget="sms_widget" attrs="{'required': [('mailing_type', '=', 'sms')]}" 
+                    <field name="body_plaintext" widget="sms_widget"
+                        attrs="{'required': [('mailing_type', '=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"
                         options='{"enable_emojis": True}'/>
                     <group>
                         <field name="sms_force_send" invisible="1"/>
@@ -183,7 +184,7 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//div[@name='div_responsible_avatar']" position="after">
-                <div class="alert alert-warning mb-0 mt-3" role="alert" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}">
+                <div class="alert alert-warning mb-0 mt-3 o-hidden-ios" role="alert" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}">
                     <a name="action_buy_sms_credits" type="object">Insufficient credits</a>
                 </div>
                 <div class="alert alert-warning mb-0 mt-3" role="alert" attrs="{'invisible': [('sms_has_unregistered_account', '=', False)]}">

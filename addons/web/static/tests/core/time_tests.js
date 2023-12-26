@@ -1,6 +1,7 @@
 odoo.define('web.time_tests', function (require) {
 "use strict";
 
+const core = require('web.core');
 var time = require('web.time');
 
 QUnit.module('core', {}, function () {
@@ -143,6 +144,20 @@ QUnit.module('core', {}, function () {
         date.setMinutes(34);
         date.setSeconds(23);
         assert.strictEqual(time.time_to_str(date), "12:34:23");
+    });
+
+    QUnit.test("Get lang datetime format", (assert) => {
+        assert.expect(4);
+        const originalParameters = Object.assign({}, core._t.database.parameters);
+        Object.assign(core._t.database.parameters, {
+            date_format: '%m/%d/%Y',
+            time_format: '%H:%M:%S',
+        });
+        assert.strictEqual(time.getLangDateFormat(), "MM/DD/YYYY");
+        assert.strictEqual(time.getLangDateFormatWoZero(), "M/D/YYYY");
+        assert.strictEqual(time.getLangTimeFormat(), "HH:mm:ss");
+        assert.strictEqual(time.getLangTimeFormatWoZero(), "H:m:s");
+        Object.assign(core._t.database.parameters, originalParameters);
     });
 
 });

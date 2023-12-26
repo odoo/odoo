@@ -72,6 +72,11 @@ if (!$('.website_blog').length) {
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
+// TODO Remove in master.
+for (const el of document.querySelectorAll(".o_wblog_social_links")) {
+    el.classList.add("o_not_editable");
+}
+
 WysiwygMultizone.include({
     custom_events: Object.assign({}, WysiwygMultizone.prototype.custom_events, {
         'set_blog_post_updated_tags': '_onSetBlogPostUpdatedTags',
@@ -180,7 +185,6 @@ options.registry.CoverProperties.include({
      * @override
      */
     updateUI: async function () {
-        await this._super(...arguments);
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
         var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');
         var $coverMid = this.$el.find('[data-select-class*="o_half_screen_height"]');
@@ -191,6 +195,7 @@ options.registry.CoverProperties.include({
         $coverFull.children('div').text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
         $coverMid.children('div').text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
         $coverAuto.children('div').text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
+        return this._super(...arguments);
     },
 });
 
@@ -367,7 +372,8 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         }
         const $select = $(uiFragment.querySelector('we-select[data-name="blog_existing_tag_opt"]'));
         for (const [key, tag] of Object.entries(this.allTagsByID)) {
-            if (this.tagIDs.includes(parseInt(key))) {
+            if (this.tagIDs.includes(parseInt(key)) || this.tagIDs.includes(key)) {
+                // saved tag keys are numbers, new tag keys are strings
                 continue;
             }
             $select.prepend(qweb.render('website_blog.TagSelectItem', {

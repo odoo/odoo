@@ -24,6 +24,7 @@
                     <field name="require_partner_bank_account" invisible="1"/>
                     <field name="hide_payment_method" invisible="1"/>
                     <field name="available_payment_method_ids" invisible="1"/>
+                    <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
 
                     <group>
@@ -53,8 +54,7 @@
                                    attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
                         </group>
                         <group name="group3"
-                               attrs="{'invisible': ['|', ('payment_difference', '=', 0.0), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"
-                               groups="account.group_account_readonly">
+                               attrs="{'invisible': ['|', ('payment_difference', '=', 0.0), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}">
                             <label for="payment_difference"/>
                             <div>
                                 <field name="payment_difference"/>

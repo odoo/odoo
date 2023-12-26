@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <form string="Work Entry" >
                 <header>
-                    <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="draft,validated,conflict"/>
+                    <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,validated,conflict"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -55,9 +55,9 @@
                         </group>
                         <group>
                             <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                             <label for="duration" string="Period"/>
-                            <div>
+                            <div class="o_row">
                                 <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>

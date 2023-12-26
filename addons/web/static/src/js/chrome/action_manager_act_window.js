@@ -84,7 +84,7 @@ ActionManager.include({
                     // jQuery's BBQ plugin does some parsing on values that are valid integers
                     // which means that if there's only one item, it will do parseInt() on it,
                     // otherwise it will keep the comma seperated list as string
-                    context.active_ids = state.active_ids.split(',').map(function (id) {
+                    context.active_ids = state.active_ids.toString().split(',').map(function (id) {
                         return parseInt(id, 10) || id;
                     });
                 } else if (state.active_id) {

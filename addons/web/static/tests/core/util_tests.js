@@ -7,6 +7,29 @@ QUnit.module('core', {}, function () {
 
     QUnit.module('utils');
 
+    QUnit.test('findWhere', function (assert) {
+        assert.expect(7);
+
+        const { findWhere } = utils;
+
+        const list = [
+            undefined,
+            { a: 1, b: 2 },
+            { a: 2, b: 2 },
+            { a: 1, b: 3 },
+            { a: 1, b: 4 },
+            { a: 2, b: 4 },
+        ];
+
+        assert.deepEqual(findWhere(list, { a: 1 }), { a: 1, b: 2 });
+        assert.deepEqual(findWhere(list, { a: 2 }), { a: 2, b: 2 });
+        assert.deepEqual(findWhere(list, { b: 4 }), { a: 1, b: 4 });
+        assert.deepEqual(findWhere(list, { b: 4, a: 2 }), { a: 2, b: 4 });
+        assert.ok(findWhere([], { a: 1 }) === undefined);
+        assert.ok(findWhere(list, { a: 1, b: 5 }) === undefined);
+        assert.ok(findWhere(list, { c: 1 }) === undefined);
+    });
+
     QUnit.test('groupBy', function (assert) {
         assert.expect(7);
 

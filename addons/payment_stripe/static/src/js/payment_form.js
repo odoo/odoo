@@ -23,6 +23,32 @@ PaymentForm.include({
     // Private
     //--------------------------------------------------------------------------
 
+     /**
+     * called to create payment method object for credit card/debit card.
+     *
+     * @private
+     * @param {Object} stripe
+     * @param {Object} formData
+     * @param {Object} card
+     * @param {Boolean} addPmEvent
+     * @returns {Promise}
+     */
+    _createPaymentMethod: function (stripe, formData, card, addPmEvent) {
+        if (addPmEvent) {
+            return this._rpc({
+                route: '/payment/stripe/s2s/create_setup_intent',
+                params: {'acquirer_id': formData.acquirer_id}
+            }).then(function(intent_secret) {
+                return stripe.handleCardSetup(intent_secret, card);
+            });
+        } else {
+            return stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+            });
+        }
+    },
+
     /**
      * called when clicking on pay now or add payment event to create token for credit card/debit card.
      *
@@ -50,22 +76,21 @@ PaymentForm.include({
         var stripe = this.stripe;
         var card = this.stripe_card_element;
         if (card._invalid) {
+            // if we don't enable the button again, at this point the button is displaying the 'loading' animation
+            // and since we break the workflow here it gives the impression that something is happening, but it isn't
+            self.enableButton(button);
             return;
         }
-        return this._rpc({
-            route: '/payment/stripe/s2s/create_setup_intent',
-            params: {'acquirer_id': formData.acquirer_id}
-        }).then(function(intent_secret){
-            return stripe.handleCardSetup(intent_secret, card);
-        }).then(function(result) {
+        this._createPaymentMethod(stripe, formData, card, addPmEvent).then(function(result) {
             if (result.error) {
                 return Promise.reject({"message": {"data": { "arguments": [result.error.message]}}});
             } else {
-                _.extend(formData, {"payment_method": result.setupIntent.payment_method});
+                const paymentMethod = addPmEvent ? result.setupIntent.payment_method : result.paymentMethod.id;
+                _.extend(formData, {"payment_method": paymentMethod});
                 return self._rpc({
                     route: formData.data_set,
                     params: formData,
-                })
+                });
             }
         }).then(function(result) {
             if (addPmEvent) {
@@ -107,7 +132,9 @@ PaymentForm.include({
         var stripe = Stripe(formData.stripe_publishable_key);
         var element = stripe.elements();
         var card = element.create('card', {hidePostalCode: true});
-        card.mount('#card-element');
+        // use more specific css selector so that '#card-element' is found inside the selected stripe card, otherwise
+        // this won't happen, and the card will be mounted to the first element found.
+        card.mount(`#o_payment_add_token_acq_${acquirerID} #card-element`);
         card.on('ready', function(ev) {
             card.focus();
         });

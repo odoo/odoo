@@ -42,8 +42,8 @@ WITH service_costs AS (
         fleet_vehicle ve
     CROSS JOIN generate_series((
             SELECT
-                min(acquisition_date)
-                FROM fleet_vehicle), CURRENT_DATE, '1 month') d
+                min(date)
+                FROM fleet_vehicle_log_services), CURRENT_DATE + '1 month'::interval, '1 month') d
         LEFT JOIN fleet_vehicle_log_services se ON se.vehicle_id = ve.id
             AND date_trunc('month', se.date) = date_trunc('month', d)
     WHERE
@@ -74,7 +74,7 @@ contract_costs AS (
     CROSS JOIN generate_series((
             SELECT
                 min(acquisition_date)
-                FROM fleet_vehicle), CURRENT_DATE, '1 month') d
+                FROM fleet_vehicle), CURRENT_DATE + '1 month'::interval, '1 month') d
         LEFT JOIN fleet_vehicle_log_contract co ON co.vehicle_id = ve.id
             AND date_trunc('month', co.date) = date_trunc('month', d)
         LEFT JOIN fleet_vehicle_log_contract cod ON cod.vehicle_id = ve.id

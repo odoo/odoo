@@ -65,7 +65,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         lc.compute_landed_cost()
         lc.button_validate()
         return lc
-    
+
     def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False):
         """ Helper to create and validate a receipt move.
         """
@@ -341,6 +341,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         # Create a vendor bill for the RFQ
         action = rfq.action_create_invoice()
         vb = self.env['account.move'].browse(action['res_id'])
+        vb.invoice_date = vb.date
         vb.action_post()
 
         input_aml = self._get_stock_input_move_lines()[-1]
@@ -353,6 +354,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         # Create a vendor bill for a landed cost product, post it and validate a landed cost
         # linked to this vendor bill. LC; 1@50
         lcvb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        lcvb.invoice_date = lcvb.date
         lcvb.partner_id = self.vendor2
         with lcvb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
@@ -429,6 +431,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         # Create a vendor bill for the RFQ and add to it the landed cost
         vb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         vb.partner_id = self.vendor1
+        vb.invoice_date = vb.date
         with vb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
             inv_line.price_unit = 50
@@ -481,6 +484,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         # Create a vebdor bill for the RFQ
         action = rfq.action_create_invoice()
         vb = self.env['account.move'].browse(action['res_id'])
+        vb.invoice_date = vb.date
         vb.action_post()
 
         expense_aml = self._get_expense_move_lines()[-1]
@@ -495,6 +499,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         # linked to this vendor bill. LC; 1@50
         lcvb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         lcvb.partner_id = self.vendor2
+        lcvb.invoice_date = lcvb.date
         with lcvb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
             inv_line.price_unit = 50

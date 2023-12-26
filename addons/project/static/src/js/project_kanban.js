@@ -18,7 +18,8 @@ KanbanRecord.include({
      */
      // YTI TODO: Should be transformed into a extend and specific to project
     _openRecord: function () {
-        if (this.modelName === 'project.project' && this.$(".o_project_kanban_boxes a").length) {
+        if (this.selectionMode !== true && this.modelName === 'project.project' &&
+            this.$(".o_project_kanban_boxes a").length) {
             this.$('.o_project_kanban_boxes a').first().click();
         } else {
             this._super.apply(this, arguments);
@@ -55,8 +56,8 @@ var ProjectKanbanView = KanbanView.extend({
 
 KanbanColumn.include({
     _onDeleteColumn: function (event) {
-        event.preventDefault();
-        if (this.modelName === 'project.task') {
+        if (this.modelName === 'project.task' && this.groupedBy === 'stage_id') {
+            event.preventDefault();
             this.trigger_up('kanban_column_delete_wizard');
             return;
         }

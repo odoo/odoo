@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import html_escape
 
 class ChannelPartner(models.Model):
     _inherit = 'mail.channel.partner'
@@ -52,10 +53,7 @@ class MailChannel(models.Model):
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
             should be added to the notification, since the user cannot be listining to the channel.
         """
-        livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
-        other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
-        notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
-                        super(MailChannel, other_channels)._channel_message_notifications(message, message_format)
+        notifications = super()._channel_message_notifications(message=message, message_format=message_format)
         for channel in self:
             # add uuid for private livechat channels to allow anonymous to listen
             if channel.channel_type == 'livechat' and channel.public == 'private':
@@ -66,11 +64,6 @@ class MailChannel(models.Model):
                 unpinned_channel_partner.write({'is_pinned': True})
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
         return notifications
-
-    def channel_fetch_message(self, last_id=False, limit=20):
-        """ Override to add the context of the livechat username."""
-        channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
-        return super(MailChannel, channel).channel_fetch_message(last_id=last_id, limit=limit)
 
     def channel_info(self, extra_info=False):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
@@ -83,11 +76,31 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat':
                 # add the operator id
                 if channel.livechat_operator_id:
-                    res = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
-                    channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
+                    display_name = channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.display_name
+                    channel_infos_dict[channel.id]['operator_pid'] = (channel.livechat_operator_id.id, display_name.replace(',', ''))
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
         return list(channel_infos_dict.values())
+
+    def _channel_info_format_member(self, partner, partner_info):
+        """Override to remove sensitive information in livechat."""
+        if self.channel_type == 'livechat':
+            return {
+                'id': partner.id,
+                'name': partner.user_livechat_username or partner.name,  # for API compatibility in stable
+                'email': False,  # for API compatibility in stable
+                'im_status': False,  # for API compatibility in stable
+                'livechat_username': partner.user_livechat_username,
+            }
+        return super()._channel_info_format_member(partner=partner, partner_info=partner_info)
+
+    def _notify_typing_partner_data(self):
+        """Override to remove name and return livechat username if applicable."""
+        data = super()._notify_typing_partner_data()
+        if self.channel_type == 'livechat' and self.env.user.partner_id.user_livechat_username:
+            data['partner_name'] = self.env.user.partner_id.user_livechat_username  # for API compatibility in stable
+            data['livechat_username'] = self.env.user.partner_id.user_livechat_username
+        return data
 
     @api.model
     def channel_fetch_slot(self):
@@ -104,12 +117,13 @@ class MailChannel(models.Model):
         if not partners:
             # operator probably testing the livechat with his own user
             partners = channel_partner_ids
-        if partners and partners[0] != self.env.ref('base.public_partner'):
+        first_partner = partners and partners[0]
+        if first_partner and (not first_partner.user_ids or not any(user._is_public() for user in first_partner.user_ids)):
             # legit non-public partner
             return {
-                'country': partners[0].country_id.name_get()[0] if partners[0].country_id else False,
-                'id': partners[0].id,
-                'name': partners[0].name,
+                'country': first_partner.country_id.name_get()[0] if first_partner.country_id else False,
+                'id': first_partner.id,
+                'name': first_partner.name,
             }
         return {
             'country': self.country_id.name_get()[0] if self.country_id else False,
@@ -167,7 +181,7 @@ class MailChannel(models.Model):
     def _send_history_message(self, pid, page_history):
         message_body = _('No history found')
         if page_history:
-            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (page, page) for page in page_history]
+            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (html_escape(page), html_escape(page)) for page in page_history]
             message_body = '<span class="o_mail_notification"><ul>%s</ul></span>' % (''.join(html_links))
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', pid), {
             'body': message_body,
@@ -205,7 +219,7 @@ class MailChannel(models.Model):
         mail_body = template._render(render_context, engine='ir.qweb', minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
         mail = self.env['mail.mail'].sudo().create({
-            'subject': _('Conversation with %s', self.livechat_operator_id.name),
+            'subject': _('Conversation with %s', self.livechat_operator_id.user_livechat_username or self.livechat_operator_id.name),
             'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
             'email_to': email,

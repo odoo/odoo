@@ -8,7 +8,7 @@
 
     <!--Leave Type-->
     <record id="hr_holiday_status_dv" model="hr.leave.type">
-        <field name="name">Parental Time Off</field>
+        <field name="name">Parental Leaves</field>
         <field name="allocation_type">fixed</field>
         <field name="color_name">brown</field>
         <field name="leave_validation_type">both</field>
@@ -34,6 +34,9 @@
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
     </record>
+    <function model="hr.leave.allocation" name="action_approve">
+        <value eval="ref('hr_holidays.hr_holidays_int_tour')"/>
+    </function>
 
     <record id="hr_holidays_vc" model="hr.leave.allocation">
         <field name="name">Summer Vacation</field>
@@ -50,58 +53,29 @@
         <field name="state">validate</field>
     </record>
 
-    <!-- approve leave allocations -->
-    <function model="hr.leave.allocation" name="action_approve">
-        <value model="hr.leave.allocation" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_int_tour')])
-        ]"/>
-    </function>
-
     <!-- leave request -->
     <record id="hr_holidays_cl" model="hr.leave">
         <field name="name">Trip with Family</field>
         <field name="holiday_status_id" ref="holiday_status_comp"/>
-        <field eval="time.strftime('%Y-%m-01')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-03')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-01')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-03')" name="request_date_to"/>
-        <field name="number_of_days">10</field>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_admin"/>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('number_of_days', '=', '10'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl')])
-        ]"/>
-    </function>
 
     <record id="hr_holidays_sl" model="hr.leave">
         <field name="name">Doctor Appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="time.strftime('%Y-%m-20')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-22')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-20')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-22')" name="request_date_to"/>
-        <field name="number_of_days">3</field>
+        <field eval="(datetime.now() + relativedelta(day=20, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=20, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl')])
-        ]"/>
-    </function>
-
-    <!-- approve the leave request -->
     <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl')])
-        ]"/>
+        <value eval="ref('hr_holidays.hr_holidays_sl')"/>
     </function>
 
     <record id="hr.employee_al" model="hr.employee">
@@ -132,10 +106,11 @@
     </record>
 
     <record id="hr_holidays_allocation_pl_al" model="hr.leave.allocation">
-        <field name="name">Parental Time Off</field>
+        <field name="name">Parental Leaves</field>
         <field name="holiday_status_id" ref="hr_holiday_status_dv"/>
         <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_al"/>
+        <field name="state">validate</field>
     </record>
 
     <record id="hr_holidays_vc_al" model="hr.leave.allocation">
@@ -143,21 +118,8 @@
         <field name="holiday_status_id" ref="holiday_status_unpaid"/>
         <field name="number_of_days">12</field>
         <field name="employee_id" ref="hr.employee_al"/>
+        <field name="state">validate</field>
     </record>
-
-    <!-- approve leave allocations -->
-    <function model="hr.leave.allocation" name="action_approve">
-        <value model="hr.leave.allocation" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_allocation_pl_al')])
-        ]"/>
-    </function>
-    <function model="hr.leave.allocation" name="action_approve">
-        <value model="hr.leave.allocation" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_vc_al')])
-        ]"/>
-    </function>
 
     <!-- leave request -->
     <record id="hr_holidays_cl_al" model="hr.leave">
@@ -167,49 +129,24 @@
         <field eval="time.strftime('%Y-%m-10')" name="date_to"/>
         <field eval="time.strftime('%Y-%m-04')" name="request_date_from"/>
         <field eval="time.strftime('%Y-%m-10')" name="request_date_to"/>
-        <field name="number_of_days">6</field>
         <field name="employee_id" ref="hr.employee_al"/>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_al')])
-        ]"/>
+    <function model="hr.leave" name="action_approve">
+        <value eval="ref('hr_holidays.hr_holidays_cl_al')"/>
     </function>
 
     <record id="hr_holidays_sl_al" model="hr.leave">
         <field name="name">Dentist appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-17')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-19')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-17')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-19')" name="request_date_to"/>
-        <field name="number_of_days">3</field>
+        <field eval="(datetime.now()+relativedelta(months=1, day=17, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=17, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=17, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=17, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_al')])
-        ]"/>
-    </function>
-
-    <!-- approve the leave request -->
     <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_al')])
-        ]"/>
-    </function>
-
-    <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_al')])
-        ]"/>
+        <value eval="ref('hr_holidays.hr_holidays_sl_al')"/>
     </function>
 
     <!-- ++++++++++++++++++++++  Anita Oliver  ++++++++++++++++++++++ -->
@@ -237,42 +174,21 @@
         <field eval="time.strftime('%Y-%m-24')" name="date_to"/>
         <field eval="time.strftime('%Y-%m-18')" name="request_date_from"/>
         <field eval="time.strftime('%Y-%m-24')" name="request_date_to"/>
-        <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_mit"/>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_mit')])
-        ]"/>
+    <function model="hr.leave" name="action_approve">
+        <value eval="ref('hr_holidays.hr_holidays_cl_mit')"/>
     </function>
 
     <record id="hr_holidays_cl_mit_2" model="hr.leave">
         <field name="name">Trip</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
-        <field eval="time.strftime('%Y-%m-05')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-07')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-05')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-07')" name="request_date_to"/>
-        <field name="number_of_days">3</field>
+        <field eval="(datetime.now() + relativedelta(day=5, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=5, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=5, weekday=0)).strftime('%Y-%m-%d 08:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=5, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_mit"/>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_mit_2')])
-        ]"/>
-    </function>
-
-    <!-- approve the leave request -->
-    <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_mit')])
-        ]"/>
-    </function>
 
     <!-- ++++++++++++++++++++++  Marc Demo  ++++++++++++++++++++++ -->
 
@@ -290,66 +206,37 @@
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
     </record>
-
-    <!-- approve leave allocations -->
     <function model="hr.leave.allocation" name="action_approve">
-        <value model="hr.leave.allocation" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_vc_qdp')])
-        ]"/>
+        <value eval="ref('hr_holidays.hr_holidays_vc_qdp')"/>
     </function>
 
     <!-- leave request -->
     <record id="hr_holidays_cl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-03 01:00:00')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-05 23:00:00')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-03 01:00:00')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-05 23:00:00')" name="request_date_to"/>
-        <field name="number_of_days">3</field>
+        <field eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_qdp')])
-        ]"/>
+    <function model="hr.leave" name="action_approve">
+        <value eval="ref('hr_holidays.hr_holidays_cl_qdp')"/>
     </function>
 
     <record id="hr_holidays_sl_qdp" model="hr.leave">
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="time.strftime('%Y-%m-01 01:00:00')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-03 23:00:00')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-01 01:00:00')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-03 23:00:00')" name="request_date_to"/>
-        <field name="number_of_days">1</field>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(days=2)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(days=2)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_qdp')])
-        ]"/>
-    </function>
-
-    <!-- approve the leave request -->
     <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_qdp')])
-        ]"/>
-    </function>
-    <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_cl_qdp')])
-        ]"/>
+        <value eval="ref('hr_holidays.hr_holidays_sl_qdp')"/>
     </function>
 
     <!-- ++++++++++++++++++++++  Audrey Peterson  ++++++++++++++++++++++ -->
@@ -385,13 +272,8 @@
         <field name="number_of_days">5</field>
         <field name="employee_id" ref="hr.employee_niv"/>
     </record>
-
-    <!-- approve leave allocations -->
     <function model="hr.leave.allocation" name="action_approve">
-        <value model="hr.leave.allocation" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_vc_vad')])
-        ]"/>
+        <value eval="ref('hr_holidays.hr_holidays_vc_vad')"/>
     </function>
 
 
@@ -402,41 +284,22 @@
         <field eval="time.strftime('%Y-%m-16')" name="date_to"/>
         <field eval="time.strftime('%Y-%m-09')" name="request_date_from"/>
         <field eval="time.strftime('%Y-%m-16')" name="request_date_to"/>
-        <field name="number_of_days">8</field>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value eval="[ref('hr_holidays.hr_holidays_cl_vad')]"/>
-    </function>
 
     <record id="hr_holidays_sl_vad" model="hr.leave">
         <field name="name">Doctor Appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="time.strftime('%Y-%m-25 01:00:00')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-26 23:00:00')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-25 01:00:00')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-26 23:00:00')" name="request_date_to"/>
-        <field name="number_of_days">2</field>
+        <field eval="(datetime.now() + relativedelta(day=25, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=25, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=25, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now() + relativedelta(day=25, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
     </record>
-
-    <function model="hr.leave" name="_compute_number_of_days">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_vad')])
-        ]"/>
-    </function>
-
-
-    <!-- approve the leave request -->
     <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_sl_vad')])
-        ]"/>
+        <value eval="ref('hr_holidays.hr_holidays_sl_vad')"/>
     </function>
 
     <!-- ++++++++++++++++++++++   Kim  ++++++++++++++++++++++ -->
@@ -460,11 +323,10 @@
     <record id="hr_holidays_sl_kim" model="hr.leave">
         <field name="name">Dentist appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 01:00:00')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 23:00:00')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 01:00:00')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=1)).strftime('%Y-%m-01 23:00:00')" name="request_date_to"/>
-        <field name="number_of_days">1</field>
+        <field eval="(datetime.now()+relativedelta(months=1, day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=1, weekday=0)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=1, day=1, weekday=0)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
     </record>
@@ -472,11 +334,10 @@
     <record id="hr_holidays_sl_kim_2" model="hr.leave">
         <field name="name">Second dentist appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 01:00:00')" name="date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 23:00:00')" name="date_to"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 01:00:00')" name="request_date_from"/>
-        <field eval="(datetime.now()+relativedelta(months=4)).strftime('%Y-%m-03 23:00:00')" name="request_date_to"/>
-        <field name="number_of_days">1</field>
+        <field eval="(datetime.now()+relativedelta(months=4, day=1, weekday=2)).strftime('%Y-%m-%d 01:00:00')" name="date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=4, day=1, weekday=2)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now()+relativedelta(months=4, day=1, weekday=2)).strftime('%Y-%m-%d 01:00:00')" name="request_date_from"/>
+        <field eval="(datetime.now()+relativedelta(months=4, day=1, weekday=2)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
     </record>

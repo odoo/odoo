@@ -21,7 +21,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                     (0, None, {
                         'product_id': cls.product_a.id,
                         'quantity': 3,
-                        'price_unit': 1000,
+                        'price_unit': 750,
                     }),
                     (0, None, {
                         'product_id': cls.product_a.id,
@@ -103,6 +103,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             'price_subtotal': vals[1],
             'quantity': vals[2],
         } for vals in expected_values_list]
+
         self.assertRecordValues(reports, expected_values_dict)
 
     def test_invoice_report_multiple_types(self):
@@ -110,9 +111,9 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             #price_average   price_subtotal  quantity
             [2000,           2000,           1],
             [1000,           1000,           1],
-            [1000,           1000,           3],
+            [250,            750,            3],
             [6,              6,              1],
-            [-20,            -20,           -1],
-            [-20,            -20,           -1],
-            [-600,           -600,          -1],
+            [20,             -20,           -1],
+            [20,             -20,           -1],
+            [600,            -600,          -1],
         ])

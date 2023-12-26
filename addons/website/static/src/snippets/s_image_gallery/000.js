@@ -26,6 +26,9 @@ const GalleryWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
+        if (this.$modal || ev.currentTarget.matches("a > img")) {
+            return;
+        }
         var self = this;
         var $cur = $(ev.currentTarget);
 
@@ -43,29 +46,30 @@ const GalleryWidget = publicWidget.Widget.extend({
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
 
         const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
-        var $modal = $(qweb.render('website.gallery.slideshow.lightbox', {
+        this.$modal = $(qweb.render('website.gallery.slideshow.lightbox', {
             images: $images.get(),
             index: $images.index($img),
             dim: dimensions,
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
-        $modal.modal({
+        this.$modal.modal({
             keyboard: true,
             backdrop: true,
         });
-        $modal.on('hidden.bs.modal', function () {
+        this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             $(this).remove();
+            self.$modal = undefined;
         });
-        $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
-        $modal.appendTo(document.body);
+        this.$modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
+        this.$modal.appendTo(document.body);
 
-        $modal.one('shown.bs.modal', function () {
+        this.$modal.one('shown.bs.modal', function () {
             self.trigger_up('widgets_start_request', {
                 editableMode: false,
-                $target: $modal.find('.modal-body.o_slideshow'),
+                $target: self.$modal.find('.modal-body.o_slideshow'),
             });
         });
     },
@@ -86,7 +90,18 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
         var $lis = this.$indicator.find('li[data-slide-to]');
-        var nbPerPage = Math.floor(this.$indicator.width() / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
+        let indicatorWidth = this.$indicator.width();
+        if (indicatorWidth === 0) {
+            // An ancestor may be hidden so we try to find it and make it
+            // visible just to take the correct width.
+            const $indicatorParent = this.$indicator.parents().not(':visible').last();
+            if (!$indicatorParent[0].style.display) {
+                $indicatorParent[0].style.display = 'block';
+                indicatorWidth = this.$indicator.width();
+                $indicatorParent[0].style.display = '';
+            }
+        }
+        let nbPerPage = Math.floor(indicatorWidth / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
         var realNbPerPage = nbPerPage || 1;
         var nbPages = Math.ceil($lis.length / realNbPerPage);
 
@@ -113,7 +128,8 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         }
 
         function update() {
-            index = $lis.index($lis.filter('.active')) || 0;
+            const active = $lis.filter('.active');
+            index = active.length ? $lis.index(active) : 0;
             page = Math.floor(index / realNbPerPage);
             hide();
         }

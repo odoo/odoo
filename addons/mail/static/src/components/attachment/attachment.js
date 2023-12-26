@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/attachment/attachment.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
@@ -16,6 +17,11 @@ class Attachment extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                attachmentLocalIds: 1,
+            },
+        });
         useStore(props => {
             const attachment = this.env.models['mail.attachment'].get(props.attachmentLocalId);
             return {
@@ -88,9 +94,18 @@ class Attachment extends Component {
         if (this.detailsMode === 'card') {
             size = '38x38';
         } else {
-            size = '160x160';
+            // The size of background-image depends on the props.imageSize
+            // to sync with width and height of `.o_Attachment_image`.
+            if (this.props.imageSize === "large") {
+                size = '400x400';
+            } else if (this.props.imageSize === "medium") {
+                size = '200x200';
+            } else if (this.props.imageSize === "small") {
+                size = '100x100';
+            }
         }
-        return `background-image:url(/web/image/${this.attachment.id}/${size}/?crop=true);`;
+        // background-size set to override value from `o_image` which makes small image stretched
+        return `background-image:url(/web/image/${this.attachment.id}/${size}); background-size: auto;`;
     }
 
     //--------------------------------------------------------------------------
@@ -132,6 +147,9 @@ class Attachment extends Component {
      */
     _onClickUnlink(ev) {
         ev.stopPropagation();
+        if (!this.attachment) {
+            return;
+        }
         if (this.attachment.isLinkedToComposer) {
             this.attachment.remove();
             this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });

@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
@@ -17,6 +18,11 @@ class ModerationBanDialog extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                messageLocalIds: 1,
+            },
+        });
         useStore(props => {
             const messages = props.messageLocalIds.map(localId =>
                 this.env.models['mail.message'].get(localId)

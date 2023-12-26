@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/composer_text_input/composer_text_input.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -12,9 +13,6 @@ const { markEventHandled } = require('mail/static/src/utils/utils.js');
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-/**
- * ComposerInput relies on a minimal HTML editor in order to support mentions.
- */
 class ComposerTextInput extends Component {
 
     /**
@@ -22,11 +20,24 @@ class ComposerTextInput extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                sendShortcuts: 1,
+            },
+        });
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const thread = composer && composer.thread;
             return {
-                composer: composer ? composer.__state : undefined,
+                composerHasFocus: composer && composer.hasFocus,
+                composerHasSuggestions: composer && composer.hasSuggestions,
+                composerIsLog: composer && composer.isLog,
+                composerTextInputContent: composer && composer.textInputContent,
+                composerTextInputCursorEnd: composer && composer.textInputCursorEnd,
+                composerTextInputCursorStart: composer && composer.textInputCursorStart,
+                composerTextInputSelectionDirection: composer && composer.textInputSelectionDirection,
                 isDeviceMobile: this.env.messaging.device.isMobile,
+                threadModel: thread && thread.model,
             };
         });
         /**
@@ -43,6 +54,12 @@ class ComposerTextInput extends Component {
          * Reference of the textarea. Useful to set height, selection and content.
          */
         this._textareaRef = useRef('textarea');
+        /**
+         * This is the invisible textarea used to compute the composer height
+         * based on the text content. We need it to downsize the textarea
+         * properly without flicker.
+         */
+        this._mirroredTextareaRef = useRef('mirroredTextarea');
     }
 
     //--------------------------------------------------------------------------
@@ -87,8 +104,9 @@ class ComposerTextInput extends Component {
     saveStateInStore() {
         this.composer.update({
             textInputContent: this._getContent(),
-            textInputCursorStart: this._getSelectionStart(),
             textInputCursorEnd: this._getSelectionEnd(),
+            textInputCursorStart: this._getSelectionStart(),
+            textInputSelectionDirection: this._textareaRef.el.selectionDirection,
         });
     }
 
@@ -146,11 +164,17 @@ class ComposerTextInput extends Component {
         if (!this.composer) {
             return;
         }
-        this._textareaRef.el.value = this.composer.textInputContent;
-        this._textareaRef.el.setSelectionRange(
-            this.composer.textInputCursorStart,
-            this.composer.textInputCursorEnd
-        );
+        if (this.composer.isLastStateChangeProgrammatic) {
+            this._textareaRef.el.value = this.composer.textInputContent;
+            if (this.composer.hasFocus) {
+                this._textareaRef.el.setSelectionRange(
+                    this.composer.textInputCursorStart,
+                    this.composer.textInputCursorEnd,
+                    this.composer.textInputSelectionDirection,
+                );
+            }
+            this.composer.update({ isLastStateChangeProgrammatic: false });
+        }
         this._updateHeight();
     }
 
@@ -160,8 +184,8 @@ class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
-        this._textareaRef.el.style.height = "0px";
-        this._textareaRef.el.style.height = (this._textareaRef.el.scrollHeight) + "px";
+        this._mirroredTextareaRef.el.value = this.composer.textInputContent;
+        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
     }
 
     //--------------------------------------------------------------------------
@@ -171,8 +195,17 @@ class ComposerTextInput extends Component {
     /**
      * @private
      */
+    _onClickTextarea() {
+        // clicking might change the cursor position
+        this.saveStateInStore();
+    }
+
+    /**
+     * @private
+     */
     _onFocusinTextarea() {
         this.composer.focus();
+        this.trigger('o-focusin-composer');
     }
 
     /**
@@ -187,12 +220,12 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onInputTextarea() {
+        this.saveStateInStore();
         if (this._textareaLastInputValue !== this._textareaRef.el.value) {
             this.composer.handleCurrentPartnerIsTyping();
         }
         this._textareaLastInputValue = this._textareaRef.el.value;
         this._updateHeight();
-        this.saveStateInStore();
     }
 
     /**
@@ -253,8 +286,7 @@ class ComposerTextInput extends Component {
             !ev.altKey &&
             !ev.ctrlKey &&
             !ev.metaKey &&
-            !ev.shiftKey &&
-            !this.env.messaging.device.isMobile
+            !ev.shiftKey
         ) {
             this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
@@ -348,7 +380,6 @@ class ComposerTextInput extends Component {
             // Otherwise, check if a mention is typed
             default:
                 this.saveStateInStore();
-                this.composer.detectSuggestionDelimiter();
         }
     }
 

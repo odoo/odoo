@@ -8,14 +8,13 @@
 // !!!!!!!!! use window.pdfjsLib and not pdfjsLib
 
 var PDFSlidesViewer = (function(){
-
     function PDFSlidesViewer(pdf_url, $canvas, disableWorker){
         // pdf variables
         this.pdf = null;
         this.pdf_url = pdf_url || false;
-        this.pdf_scale = 1.5;
         this.pdf_page_total = 0;
         this.pdf_page_current = 1; // default is the first page
+        this.pdf_zoom = 1; // 1 = scale to fit to available space
         // promise business
         this.pageRendering = false;
         this.pageNumPending = null;
@@ -59,7 +58,10 @@ var PDFSlidesViewer = (function(){
         this.pageRendering = true;
         return this.pdf.getPage(page_number).then(function(page) {
             // Each PDF page has its own viewport which defines the size in pixels and initial rotation.
-            var viewport = page.getViewport(self.pdf_scale);
+            // We provide the scale at which to render it (relative to the natural size of the document)
+            var scale = self.getScaleToFit(page) * self.pdf_zoom;
+            var viewport = page.getViewport({ scale: scale });
+            // important to match, otherwise the browser will scale the rendered output and it will be ugly
             self.canvas.height = viewport.height;
             self.canvas.width = viewport.width;
             // Render PDF page into canvas context
@@ -71,6 +73,10 @@ var PDFSlidesViewer = (function(){
             // Wait for rendering to finish
             return renderTask.promise.then(function () {
                 self.pageRendering = false;
+                if (self.pdf_zoom === 1 && scale > self.getScaleToFit(page)) {
+                    // if the scale has changed (because we just added scrollbars) and we no longer fit the space
+                    return self.renderPage(page_number);
+                }
                 if (self.pageNumPending !== null) {
                     // New page rendering is pending
                     self.renderPage(self.pageNumPending);
@@ -115,6 +121,17 @@ var PDFSlidesViewer = (function(){
         }
         this.pdf_page_current++;
         return this.queueRenderPage(this.pdf_page_current);
+    };
+
+    /*
+     * Calculate a scale to fit the document on the available space.
+     */
+    PDFSlidesViewer.prototype.getScaleToFit = function(page) {
+        var maxWidth = this.canvas.parentNode.clientWidth;
+        var maxHeight = this.canvas.parentNode.clientHeight;
+        var hScale = maxWidth / page.view[2];
+        var vScale = maxHeight / page.view[3];
+        return Math.min(hScale, vScale);
     };
 
     /**

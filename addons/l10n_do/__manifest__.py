@@ -106,4 +106,5 @@ en Odoo):
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

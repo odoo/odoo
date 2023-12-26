@@ -20,4 +20,5 @@ inclusion of rating directly within the customer portal discuss widget.
         'views/rating_templates.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

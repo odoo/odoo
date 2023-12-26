@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 from pytz import timezone, UTC
 
@@ -187,7 +187,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_employee_is_absent(self):
         """ Only the concerned employee should be considered absent """
-        self.env['hr.leave'].with_user(self.user_employee_id).create({
+        user_employee_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_type_1.id,
@@ -196,6 +196,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'number_of_days': 2,
         })
         (self.employee_emp | self.employee_hrmanager).mapped('is_absent')  # compute in batch
+        self.assertFalse(self.employee_emp.is_absent, "He should not be considered absent")
+        self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
+
+        user_employee_leave.sudo().write({
+            'state': 'validate',
+        })
+        (self.employee_emp | self.employee_hrmanager)._compute_leave_status()
         self.assertTrue(self.employee_emp.is_absent, "He should be considered absent")
         self.assertFalse(self.employee_hrmanager.is_absent, "He should not be considered absent")
 
@@ -233,6 +240,27 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
         self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timezone_company_validated(self):
+        """ Create a leave request for a company in another timezone and validate it """
+        self.env.user.tz = 'NZ' # GMT+12
+        company = self.env['res.company'].create({'name': "Hergé"})
+        employee = self.env['hr.employee'].create({'name': "Remi", 'company_id': company.id})
+        leave_form = Form(self.env['hr.leave'], view='hr_holidays.hr_leave_view_form_manager')
+        leave_form.holiday_type = 'company'
+        leave_form.mode_company_id = company
+        leave_form.holiday_status_id = self.holidays_type_1
+        leave_form.request_date_from = date(2019, 5, 6)
+        leave_form.request_date_to = date(2019, 5, 6)
+        leave = leave_form.save()
+        leave.state = 'confirm'
+        leave.action_validate()
+        employee_leave = self.env['hr.leave'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(
+            employee_leave.request_date_from, date(2019, 5, 6),
+            "Timezone should be kept between company and employee leave"
+        )
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_timezone_department_leave_request(self):
@@ -417,3 +445,70 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         local_date_to = datetime(2019, 1, 8, 19, 0, 0)
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)
+
+    def test_leave_with_public_holiday_other_company(self):
+        other_company = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        # Create a public holiday for the second company
+        p_leave = self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        p_leave.company_id = other_company
+
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'holiday_type': 'employee',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': datetime(2022, 3, 11),
+            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        })
+        self.assertEqual(leave.number_of_days, 1)
+
+    def test_current_leave_status(self):
+        types = ('no_validation', 'manager', 'hr', 'both')
+        employee = self.employee_emp
+
+        def run_validation_flow(leave_validation_type):
+            LeaveType = self.env['hr.leave.type'].with_user(self.user_hrmanager_id)
+            leave_type = LeaveType.with_context(tracking_disable=True).create({
+                'name': leave_validation_type.capitalize(),
+                'leave_validation_type': leave_validation_type,
+                'allocation_type': 'no',
+            })
+            current_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'holiday_type': 'employee',
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': fields.Date.today(),
+                'date_to': fields.Date.today() + timedelta(days=2),
+                'number_of_days': 2,
+            })
+
+            if leave_validation_type in ('manager', 'both'):
+                self.assertFalse(employee.is_absent)
+                self.assertFalse(employee.current_leave_id)
+                self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
+                self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
+                current_leave.with_user(self.user_hruser_id).action_approve()
+
+            if leave_validation_type in ('hr', 'both'):
+                self.assertFalse(employee.is_absent)
+                self.assertFalse(employee.current_leave_id)
+                self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
+                self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
+                current_leave.with_user(self.user_hrmanager_id).action_validate()
+
+            self.assertTrue(employee.is_absent)
+            self.assertEqual(employee.current_leave_id, current_leave.holiday_status_id)
+            self.assertFalse(employee.filtered_domain([('is_absent', '=', False)]))
+            self.assertEqual(employee.filtered_domain([('is_absent', '=', True)]), employee)
+
+            raise RuntimeError()
+
+        for leave_validation_type in types:
+            with self.assertRaises(RuntimeError), self.env.cr.savepoint():
+                run_validation_flow(leave_validation_type)

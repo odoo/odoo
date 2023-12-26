@@ -37,6 +37,11 @@ $o-cw-filter-avatar-size: 20px;
             color: $body-color;
         }
 
+        &.fc-dragging.fc-day-grid-event.dayGridMonth .fc-content {
+            @include text-truncate();
+            margin: 4px 4px 3px;
+        }
+
         .fc-bg {
             background-color: mix(theme-color('primary'), white); // Used for placeholder events only (on creation)
             @include size(101%); // Compensate border
@@ -49,6 +54,11 @@ $o-cw-filter-avatar-size: 20px;
             margin: 8px 4px;
             font-size: 1.1em;
             font-weight: 500;
+        }
+
+        // Try to show one full lien for short event
+        &.fc-short .fc-content {
+            margin-top: 1px;
         }
 
         &.o_cw_custom_highlight {
@@ -208,6 +218,7 @@ $o-cw-filter-avatar-size: 20px;
             // Try to avoid showing no title for short event
             &.fc-short {
                 padding-top: 0;
+                padding-bottom: 0;
             }
         }
 
@@ -594,6 +605,7 @@ $o-cw-filter-avatar-size: 20px;
                 &.o_beside_avatar {
                     @include size($o-cw-filter-avatar-size);
                     border-radius: 2px;
+                    object-fit: cover;
                 }
             }
 
@@ -616,7 +628,7 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             .o_cw_filter_title {
-                line-height: 1;
+                line-height: $o-line-height-base;
                 flex-grow: 1;
             }
 
@@ -677,6 +689,8 @@ $o-cw-filter-avatar-size: 20px;
     .o_cw_popover_fields_secondary {
         max-height: 170px; // Fallback for old browsers
         max-height: 25vh;
+        overflow-y: auto;
+        padding-bottom: 1px; // prevents the scrollbar to show when not needed
 
         &::-webkit-scrollbar {
             background: gray('200');

@@ -6,6 +6,9 @@
 # Martin Trigaux, 2020
 # Matt <matt.fasola@braintec-group.com>, 2020
 # UteHaus, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2020
+# Chris Egal <sodaswed@web.de>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,8 +16,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: UteHaus, 2020\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,7 +28,7 @@ msgstr ""
 #: code:addons/hr_fleet/controllers/main.py:0
 #, python-format
 msgid "%(car_name)s (driven from: %(date_start)s to %(date_end)s)"
-msgstr ""
+msgstr "%(car_name)s (gefahren von: %(date_start)s nach %(date_end)s)"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
@@ -47,7 +50,7 @@ msgstr "Auto Anspruchsbericht"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr ""
+msgstr "Abreise Wizard"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
@@ -99,7 +102,7 @@ msgstr "Zuletzt geändert am"
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
 msgid "Mobility Card"
-msgstr ""
+msgstr "Mobilitätskarte"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
@@ -114,7 +117,7 @@ msgstr "Öffentlicher Mitarbeiter"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
+msgstr "Firmenwagen freigeben"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -125,6 +128,12 @@ msgid ""
 msgstr ""
 "Dieser Bericht enthält nur PDF-Dateien. Wenn Sie alle Dokumente wünschen, "
 "gehen Sie bitte auf die Fahrzeugseite. Wollen Sie fortfahren?"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/controllers/main.py:0
+msgid "There is no pdf attached to generate a claim report."
+msgstr ""
+"Es ist kein PDF-Dokument angehängt, um einen Schadensbericht zu erstellen."
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_res_users

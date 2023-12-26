@@ -168,14 +168,7 @@ models.PosModel = models.PosModel.extend({
         if (orders_to_sync.length) {
             this.set_synch('connecting', orders_to_sync.length);
             this._save_to_server(orders_to_sync, {'draft': true}).then(function (server_ids) {
-                server_ids.forEach(function(server_id){
-                    table_orders.some(function(o){
-                        if (o.name === server_id.pos_reference) {
-                            o.server_id = server_id.id;
-                            o.save_to_db();
-                        }
-                    });
-                });
+                server_ids.forEach(server_id => self.update_table_order(server_id, table_orders));
                 if (!ids_to_remove.length) {
                     self.set_synch('connected');
                 } else {
@@ -192,6 +185,15 @@ models.PosModel = models.PosModel.extend({
             }
             self.clean_table_transfer(table);
         }
+    },
+
+    update_table_order: function(server_id, table_orders) {
+        const order = table_orders.find(o => o.name === server_id.pos_reference);
+        if (order) {
+            order.server_id = server_id.id;
+            order.save_to_db();
+        }
+        return order;
     },
 
     /**
@@ -224,22 +226,7 @@ models.PosModel = models.PosModel.extend({
         this.set_synch('connecting', 1);
         this._get_from_server(table.id).then(function (server_orders) {
             var orders = self.get_order_list();
-            orders.forEach(function(order){
-                // We don't remove the validated orders because we still want to see them
-                // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
-                // orders.
-                if (order.server_id && !order.finalized){
-                    self.get("orders").remove(order);
-                    order.destroy();
-                }
-            });
-            server_orders.forEach(function(server_order){
-                if (server_order.lines.length){
-                    var new_order = new models.Order({},{pos: self, json: server_order});
-                    self.get("orders").add(new_order);
-                    new_order.save_to_db();
-                }
-            })
+            self._replace_orders(orders, server_orders);
             if (!ids_to_remove.length) {
                 self.set_synch('connected');
             } else {
@@ -251,7 +238,29 @@ models.PosModel = models.PosModel.extend({
             self.set_order_on_table(order);
         });
     },
-
+    _replace_orders: function(orders_to_replace, new_orders) {
+        var self = this;
+        orders_to_replace.forEach(function(order){
+            // We don't remove the validated orders because we still want to see them
+            // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
+            // orders.
+            if (order.server_id && !order.finalized){
+                self.get("orders").remove(order);
+                order.destroy();
+            }
+        });
+        new_orders.forEach(function(server_order){
+            var new_order = new models.Order({},{pos: self, json: server_order});
+            self.get("orders").add(new_order);
+            new_order.save_to_db();
+        });
+    },
+    //@throw error
+    replace_table_orders_from_server: async function(table) {
+        const server_orders = await this._get_from_server(table.id);
+        const orders = this.get_table_orders(table);
+        this._replace_orders(orders, server_orders);
+    },
     get_order_with_uid: function() {
         var order_ids = [];
         this.get_order_list().forEach(function(o){
@@ -367,7 +376,7 @@ models.PosModel = models.PosModel.extend({
             if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
                 this.set_order(order_list[index] || order_list[order_list.length - 1], { silent: true });
             } else if (order_list.length === 0) {
-                this.set_order(null);
+                this.table ? this.set_order(null) : this.set_table(null);
             }
         } else {
             _super_posmodel.on_removed_order.apply(this,arguments);

@@ -15,6 +15,7 @@ class PaymentTransaction(models.Model):
     def render_invoice_button(self, invoice, submit_txt=None, render_values=None):
         values = {
             'partner_id': invoice.partner_id.id,
+            'type': self.type,
         }
         if render_values:
             values.update(render_values)

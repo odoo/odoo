@@ -13,15 +13,21 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     async start() {
         await this._super(...arguments);
+        this.$scrollingElement = this.$target.closest(".s_table_of_content").closestScrollable();
+        this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
-        extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPosition.bind(this));
+
+        this.boundUpdateNavbar = this._updateTableOfContentNavbarPosition.bind(this);
+        extraMenuUpdateCallbacks.push(this.boundUpdateNavbar);
     },
     /**
      * @override
      */
     destroy() {
+        const indexOfCallback = extraMenuUpdateCallbacks.indexOf(this.boundUpdateNavbar);
+        extraMenuUpdateCallbacks.splice(indexOfCallback, 1);
         this.$target.css('top', '');
-        this.$target.find('.s_table_of_content_navbar').css('top', '');
+        this.$target.find('.s_table_of_content_navbar').css({top: '', maxHeight: ''});
         this._super(...arguments);
     },
 
@@ -40,9 +46,26 @@ const TableOfContent = publicWidget.Widget.extend({
         this.$target.css('top', isHorizontalNavbar ? position : '');
         this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
         const $mainNavBar = $('#oe_main_menu_navbar');
-        position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
+        const mainNavBarHidden = document.body.classList.contains('o_fullscreen') || this.editableMode;
+        position += !mainNavBarHidden && $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
         position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
-        $().getScrollingElement().scrollspy({target: '.s_table_of_content_navbar', method: 'offset', offset: position + 100});
+        this.$target.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
+        if (this.previousPosition !== position) {
+            // The scrollSpy must be destroyed before calling it again.
+            // Otherwise the call has no effect. We also need to be sure that
+            // a scrollSpy instance exists to avoid targeting elements outside
+            // the table of content navbar on scrollSpy methods.
+            if (this.$scrollingElement.data('bs.scrollspy')) {
+                this.$scrollingElement.scrollspy('dispose');
+            }
+            this.$scrollingElement.scrollspy({
+                target: '.s_table_of_content_navbar',
+                method: 'offset',
+                offset: position + 100,
+                alwaysKeepFirstActive: true,
+            });
+            this.previousPosition = position;
+        }
     },
 });
 

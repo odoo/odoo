@@ -32,6 +32,9 @@ State Data/省份数据
 
     修改小企业会计税率
 
+We added the option to print a voucher which will also 
+print the amount in words (special Chinese characters for numbers)
+correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     """,
     'depends': ['base', 'account', 'l10n_multilang'],
     'data': [
@@ -41,10 +44,13 @@ State Data/省份数据
         'data/l10n_cn_chart_post_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
-        'views/account_move_view.xml'
+        'views/account_move_view.xml',
+        'views/account_report.xml',
+        'views/report_voucher.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
+    'license': 'LGPL-3',
 }

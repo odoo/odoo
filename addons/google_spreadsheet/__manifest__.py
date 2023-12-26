@@ -20,4 +20,5 @@ The module adds the possibility to display data from Odoo in Google Spreadsheets
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

@@ -94,7 +94,7 @@ class StockPickingBatch(models.Model):
         batchs = self.filtered(lambda batch: batch.state not in ['cancel', 'done'])
         for batch in batchs:
             if not batch.picking_ids:
-                return
+                continue
             # Cancels automatically the batch picking if all its transfers are cancelled.
             if all(picking.state == 'cancel' for picking in batch.picking_ids):
                 batch.state = 'cancel'
@@ -104,7 +104,8 @@ class StockPickingBatch(models.Model):
 
     @api.depends('picking_ids', 'picking_ids.scheduled_date')
     def _compute_scheduled_date(self):
-        self.scheduled_date = min(self.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+        for rec in self:
+            rec.scheduled_date = min(rec.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
 
     @api.onchange('scheduled_date')
     def onchange_scheduled_date(self):
@@ -185,14 +186,24 @@ class StockPickingBatch(models.Model):
         if any(picking.state not in ('assigned', 'confirmed') for picking in pickings):
             raise UserError(_('Some transfers are still waiting for goods. Please check or force their availability before setting this batch to done.'))
 
+        empty_pickings = set()
         for picking in pickings:
+            if all(float_is_zero(line.qty_done, precision_rounding=line.product_uom_id.rounding) for line in picking.move_line_ids if line.state not in ('done', 'cancel')):
+                empty_pickings.add(picking.id)
             picking.message_post(
                 body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>" % (
                     _("Transferred by"),
                     _("Batch Transfer"),
                     picking.batch_id.id,
                     picking.batch_id.name))
-        return pickings.button_validate()
+
+        if len(empty_pickings) == len(pickings):
+            return pickings.button_validate()
+        else:
+            res = pickings.with_context(skip_immediate=True).button_validate()
+            if empty_pickings and res.get('context'):
+                res['context']['pickings_to_detach'] = list(empty_pickings)
+            return res
 
     def action_assign(self):
         self.ensure_one()
@@ -215,9 +226,9 @@ class StockPickingBatch(models.Model):
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
             if move_line_ids:
-                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:
-                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                    res = move_line_ids.picking_id[0]._put_in_pack(move_line_ids, False)
                 return res
             else:
                 raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))

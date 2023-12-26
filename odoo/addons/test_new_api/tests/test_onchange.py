@@ -4,7 +4,7 @@
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests import common
+from odoo.tests import common, Form
 
 def strip_prefix(prefix, names):
     size = len(prefix)
@@ -497,13 +497,13 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         self.env.cache.invalidate()
         Message = self.env['test_new_api.related']
-        result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
+        result = Message.onchange(value, 'message', field_onchange)
 
         self.assertEqual(result['value'], onchange_result)
 
         self.env.cache.invalidate()
         Message = self.env(user=self.user_demo.id)['test_new_api.related']
-        result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
+        result = Message.onchange(value, 'message', field_onchange)
 
         self.assertEqual(result['value'], onchange_result)
 
@@ -536,30 +536,82 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         self.assertFalse(called[0], "discussion.messages has been read")
 
+    def test_onchange_one2many_many2one_in_form(self):
+        order = self.env['test_new_api.monetary_order'].create({
+            'currency_id': self.env.ref('base.USD').id,
+        })
+
+        # this call to onchange() is made when creating a new line in field
+        # order.line_ids; check what happens when the line's form view contains
+        # the inverse many2one field
+        values = {'order_id': {'id': order.id, 'currency_id': order.currency_id.id}}
+        field_onchange = dict.fromkeys(['order_id', 'subtotal'], '')
+        result = self.env['test_new_api.monetary_order_line'].onchange(values, [], field_onchange)
+
+        self.assertEqual(result['value']['order_id'], (order.id, order.display_name))
+
+    def test_onchange_inherited(self):
+        """ Setting an inherited field should assign the field on the parent record. """
+        foo, bar = self.env['test_new_api.multi.tag'].create([{'name': 'Foo'}, {'name': 'Bar'}])
+        view = self.env['ir.ui.view'].create({
+            'name': 'Payment form view',
+            'model': 'test_new_api.payment',
+            'arch': """
+                <form>
+                    <field name="move_id" readonly="1" required="0"/>
+                    <field name="tag_id"/>
+                    <field name="tag_name"/>
+                </form>
+            """,
+        })
+
+        # both fields 'tag_id' and 'tag_name' are inherited through 'move_id';
+        # assigning 'tag_id' should modify 'move_id.tag_id' accordingly, which
+        # should in turn recompute `move.tag_name` and `tag_name`
+        form = Form(self.env['test_new_api.payment'], view)
+        form.tag_id = foo
+        self.assertEqual(form.tag_name, 'Foo')
+
+        payment = form.save()
+        self.assertEqual(payment.tag_id, foo)
+        self.assertEqual(payment.tag_name, 'Foo')
+
+        with Form(payment, view) as form:
+            form.tag_id = bar
+            self.assertEqual(form.tag_name, 'Bar')
+
+        self.assertEqual(payment.tag_id, bar)
+        self.assertEqual(payment.tag_name, 'Bar')
+
 
 class TestComputeOnchange(common.TransactionCase):
 
     def test_create(self):
         model = self.env['test_new_api.compute.onchange']
 
+        # compute 'bar' (readonly) and 'baz' (editable)
+        record = model.create({'active': True})
+        self.assertEqual(record.bar, "r")
+        self.assertEqual(record.baz, "z")
+
         # compute 'bar' and 'baz'
         record = model.create({'active': True, 'foo': "foo"})
-        self.assertEqual(record.bar, "foo")
-        self.assertEqual(record.baz, "foo")
+        self.assertEqual(record.bar, "foor")
+        self.assertEqual(record.baz, "fooz")
 
         # compute 'bar' but not 'baz'
         record = model.create({'active': True, 'foo': "foo", 'bar': "bar", 'baz': "baz"})
-        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.bar, "foor")
         self.assertEqual(record.baz, "baz")
 
         # compute 'bar' and 'baz', but do not change its value
         record = model.create({'active': False, 'foo': "foo"})
-        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.bar, "foor")
         self.assertEqual(record.baz, False)
 
         # compute 'bar' but not 'baz'
         record = model.create({'active': False, 'foo': "foo", 'bar': "bar", 'baz': "baz"})
-        self.assertEqual(record.bar, "foo")
+        self.assertEqual(record.bar, "foor")
         self.assertEqual(record.baz, "baz")
 
     def test_copy(self):
@@ -571,10 +623,10 @@ class TestComputeOnchange(common.TransactionCase):
             {'name': 'bar1'},
         ])
 
-        # compute 'bar', 'baz', 'line_ids' and 'tag_ids'
+        # compute 'bar' (readonly), 'baz', 'line_ids' and 'tag_ids' (editable)
         record = Model.create({'active': True, 'foo': "foo1"})
-        self.assertEqual(record.bar, "foo1")
-        self.assertEqual(record.baz, "foo1")
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "foo1z")
         self.assertEqual(record.line_ids.mapped('foo'), ['foo1'])
         self.assertEqual(record.tag_ids, tag_foo)
 
@@ -584,7 +636,7 @@ class TestComputeOnchange(common.TransactionCase):
             'line_ids': [(0, 0, {'foo': 'bar'})],
             'tag_ids': [(4, tag_bar.id)],
         })
-        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.bar, "foo1r")
         self.assertEqual(record.baz, "baz1")
         self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])
         self.assertEqual(record.tag_ids, tag_foo + tag_bar)
@@ -592,7 +644,7 @@ class TestComputeOnchange(common.TransactionCase):
         # copy the record, and check results
         copied = record.copy()
         self.assertEqual(copied.foo, "foo1 (copy)")   # copied and modified
-        self.assertEqual(copied.bar, "foo1 (copy)")   # computed
+        self.assertEqual(copied.bar, "foo1 (copy)r")  # computed
         self.assertEqual(copied.baz, "baz1")          # copied
         self.assertEqual(record.line_ids.mapped('foo'), ['foo1', 'bar'])  # copied
         self.assertEqual(record.tag_ids, tag_foo + tag_bar)  # copied
@@ -600,129 +652,160 @@ class TestComputeOnchange(common.TransactionCase):
     def test_write(self):
         model = self.env['test_new_api.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})
-        self.assertEqual(record.bar, "foo")
-        self.assertEqual(record.baz, "foo")
+        self.assertEqual(record.bar, "foor")
+        self.assertEqual(record.baz, "fooz")
 
-        # recompute 'bar' and 'baz'
+        # recompute 'bar' (readonly) and 'baz' (editable)
         record.write({'foo': "foo1"})
-        self.assertEqual(record.bar, "foo1")
-        self.assertEqual(record.baz, "foo1")
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "foo1z")
 
         # recompute 'bar' but not 'baz'
         record.write({'foo': "foo2", 'bar': "bar2", 'baz': "baz2"})
-        self.assertEqual(record.bar, "foo2")
+        self.assertEqual(record.bar, "foo2r")
         self.assertEqual(record.baz, "baz2")
 
         # recompute 'bar' and 'baz', but do not change its value
         record.write({'active': False, 'foo': "foo3"})
-        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "baz2")
 
         # recompute 'bar' but not 'baz'
         record.write({'active': False, 'foo': "foo4", 'bar': "bar4", 'baz': "baz4"})
-        self.assertEqual(record.bar, "foo4")
+        self.assertEqual(record.bar, "foo4r")
         self.assertEqual(record.baz, "baz4")
 
     def test_set(self):
         model = self.env['test_new_api.compute.onchange']
         record = model.create({'active': True, 'foo': "foo"})
-        self.assertEqual(record.bar, "foo")
-        self.assertEqual(record.baz, "foo")
+        self.assertEqual(record.bar, "foor")
+        self.assertEqual(record.baz, "fooz")
 
-        # recompute 'bar' and 'baz'
+        # recompute 'bar' (readonly) and 'baz' (editable)
         record.foo = "foo1"
-        self.assertEqual(record.bar, "foo1")
-        self.assertEqual(record.baz, "foo1")
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "foo1z")
 
         # do not recompute 'baz'
         record.baz = "baz2"
-        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.bar, "foo1r")
         self.assertEqual(record.baz, "baz2")
 
         # recompute 'baz', but do not change its value
         record.active = False
-        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.bar, "foo1r")
         self.assertEqual(record.baz, "baz2")
 
         # recompute 'baz', but do not change its value
         record.foo = "foo3"
-        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "baz2")
 
         # do not recompute 'baz'
         record.baz = "baz4"
-        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "baz4")
 
     def test_set_new(self):
         model = self.env['test_new_api.compute.onchange']
-        record = model.new({'active': True, 'foo': "foo"})
-        self.assertEqual(record.bar, "foo")
-        self.assertEqual(record.baz, "foo")
+        record = model.new({'active': True})
+        self.assertEqual(record.bar, "r")
+        self.assertEqual(record.baz, "z")
 
-        # recompute 'bar' and 'baz'
+        # recompute 'bar' (readonly) and 'baz' (editable)
         record.foo = "foo1"
-        self.assertEqual(record.bar, "foo1")
-        self.assertEqual(record.baz, "foo1")
+        self.assertEqual(record.bar, "foo1r")
+        self.assertEqual(record.baz, "foo1z")
 
         # do not recompute 'baz'
         record.baz = "baz2"
-        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.bar, "foo1r")
         self.assertEqual(record.baz, "baz2")
 
         # recompute 'baz', but do not change its value
         record.active = False
-        self.assertEqual(record.bar, "foo1")
+        self.assertEqual(record.bar, "foo1r")
         self.assertEqual(record.baz, "baz2")
 
         # recompute 'baz', but do not change its value
         record.foo = "foo3"
-        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "baz2")
 
         # do not recompute 'baz'
         record.baz = "baz4"
-        self.assertEqual(record.bar, "foo3")
+        self.assertEqual(record.bar, "foo3r")
         self.assertEqual(record.baz, "baz4")
 
     def test_onchange(self):
+        # check computations of 'bar' (readonly) and 'baz' (editable)
         form = common.Form(self.env['test_new_api.compute.onchange'])
+        self.assertEqual(form.bar, "r")
+        self.assertEqual(form.baz, False)
         form.active = True
+        self.assertEqual(form.bar, "r")
+        self.assertEqual(form.baz, "z")
         form.foo = "foo1"
-        self.assertEqual(form.bar, "foo1")
-        self.assertEqual(form.baz, "foo1")
+        self.assertEqual(form.bar, "foo1r")
+        self.assertEqual(form.baz, "foo1z")
         form.baz = "baz2"
-        self.assertEqual(form.bar, "foo1")
+        self.assertEqual(form.bar, "foo1r")
         self.assertEqual(form.baz, "baz2")
         form.active = False
-        self.assertEqual(form.bar, "foo1")
+        self.assertEqual(form.bar, "foo1r")
         self.assertEqual(form.baz, "baz2")
         form.foo = "foo3"
-        self.assertEqual(form.bar, "foo3")
+        self.assertEqual(form.bar, "foo3r")
         self.assertEqual(form.baz, "baz2")
         form.active = True
-        self.assertEqual(form.bar, "foo3")
-        self.assertEqual(form.baz, "foo3")
+        self.assertEqual(form.bar, "foo3r")
+        self.assertEqual(form.baz, "foo3z")
+
+        with form.line_ids.new() as line:
+            # check computation of 'bar' (readonly)
+            self.assertEqual(line.foo, False)
+            self.assertEqual(line.bar, "r")
+            line.foo = "foo"
+            self.assertEqual(line.foo, "foo")
+            self.assertEqual(line.bar, "foor")
 
         record = form.save()
-        self.assertEqual(record.bar, "foo3")
-        self.assertEqual(record.baz, "foo3")
+        self.assertEqual(record.bar, "foo3r")
+        self.assertEqual(record.baz, "foo3z")
 
         form = common.Form(record)
-        self.assertEqual(form.bar, "foo3")
-        self.assertEqual(form.baz, "foo3")
+        self.assertEqual(form.bar, "foo3r")
+        self.assertEqual(form.baz, "foo3z")
         form.foo = "foo4"
-        self.assertEqual(form.bar, "foo4")
-        self.assertEqual(form.baz, "foo4")
+        self.assertEqual(form.bar, "foo4r")
+        self.assertEqual(form.baz, "foo4z")
         form.baz = "baz5"
-        self.assertEqual(form.bar, "foo4")
+        self.assertEqual(form.bar, "foo4r")
         self.assertEqual(form.baz, "baz5")
         form.active = False
-        self.assertEqual(form.bar, "foo4")
+        self.assertEqual(form.bar, "foo4r")
         self.assertEqual(form.baz, "baz5")
         form.foo = "foo6"
-        self.assertEqual(form.bar, "foo6")
+        self.assertEqual(form.bar, "foo6r")
         self.assertEqual(form.baz, "baz5")
+
+    def test_onchange_default(self):
+        form = common.Form(self.env['test_new_api.compute.onchange'].with_context(
+            default_active=True, default_foo="foo", default_baz="baz",
+        ))
+        # 'baz' is computed editable, so when given a default value it should
+        # 'not be recomputed, even if a dependency also has a default value
+        self.assertEqual(form.foo, "foo")
+        self.assertEqual(form.bar, "foor")
+        self.assertEqual(form.baz, "baz")
+
+    def test_onchange_once(self):
+        """ Modifies `foo` field which will trigger an onchange method and
+        checks it was triggered only one time. """
+        form = Form(self.env['test_new_api.compute.onchange'].with_context(default_foo="oof"))
+        record = form.save()
+        self.assertEqual(record.foo, "oof")
+        self.assertEqual(record.count, 1, "value onchange must be called only one time")
 
     def test_onchange_one2many(self):
         record = self.env['test_new_api.model_parent_m2o'].create({
@@ -751,3 +834,83 @@ class TestComputeOnchange(common.TransactionCase):
             with form.child_ids.edit(2) as line:
                 line.cost = 30
             self.assertEqual(form.cost, 61)
+
+    def test_onchange_editable_compute_one2many(self):
+        # create a record with a computed editable field ('edit') on lines
+        record = self.env['test_new_api.compute_editable'].create({'line_ids': [(0, 0, {'value': 7})]})
+        record.flush()
+        line = record.line_ids
+        self.assertRecordValues(line, [{'value': 7, 'edit': 7, 'count': 0}])
+
+        # retrieve the onchange spec for calling 'onchange'
+        spec = Form(record)._view['onchange']
+
+        # The onchange on 'line_ids' should increment 'count' and keep the value
+        # of 'edit' (this field should not be recomputed), whatever the order of
+        # the fields in the dictionary.  This ensures that the value set by the
+        # user on a computed editable field on a line is not lost.
+        line_ids = [
+            (1, line.id, {'value': 8, 'edit': 9, 'count': 0}),
+            (0, 0, {'value': 8, 'edit': 9, 'count': 0}),
+        ]
+        result = record.onchange({'line_ids': line_ids}, 'line_ids', spec)
+        expected = {'value': {
+            'line_ids': [
+                (5,),
+                (1, line.id, {'value': 8, 'edit': 9, 'count': 8}),
+                (0, 0, {'value': 8, 'edit': 9, 'count': 8}),
+            ],
+        }}
+        self.assertEqual(result, expected)
+
+        # change dict order in lines, and try again
+        line_ids = [
+            (op, id_, dict(reversed(list(vals.items()))))
+            for op, id_, vals in line_ids
+        ]
+        result = record.onchange({'line_ids': line_ids}, 'line_ids', spec)
+        self.assertEqual(result, expected)
+
+    def test_computed_editable_one2many_domain(self):
+        """ Test a computed, editable one2many field with a domain. """
+        record = self.env['test_new_api.one2many'].create({'name': 'foo'})
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+        ])
+
+        # trigger recomputation by changing name
+        record.name = 'bar'
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+        ])
+
+        # manually adding a line should not trigger recomputation
+        record.line_ids.create({'name': 'baz', 'container_id': record.id})
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+            {'name': 'baz', 'count': 1},
+        ])
+
+        # changing the field in the domain should not trigger recomputation...
+        record.line_ids[-1].count = 2
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+            {'name': 'baz', 'count': 2},
+        ])
+
+        # ...and may show cache inconsistencies
+        record.line_ids[-1].count = 0
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+            {'name': 'baz', 'count': 0},
+        ])
+        record.flush()
+        record.invalidate_cache()
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+        ])

@@ -77,12 +77,6 @@ class AccountJournal(models.Model):
             rec._create_check_sequence()
         return rec
 
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        rec = super(AccountJournal, self).copy(default)
-        rec._create_check_sequence()
-        return rec
-
     def _create_check_sequence(self):
         """ Create a check sequence for the journal """
         for journal in self:
@@ -112,7 +106,8 @@ class AccountJournal(models.Model):
         domain_checks_to_print = [
             ('journal_id', '=', self.id),
             ('payment_method_id.code', '=', 'check_printing'),
-            ('state', '=', 'posted')
+            ('state', '=', 'posted'),
+            ('is_move_sent','=', False),
         ]
         return dict(
             super(AccountJournal, self).get_journal_dashboard_datas(),

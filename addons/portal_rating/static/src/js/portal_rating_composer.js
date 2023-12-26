@@ -67,4 +67,7 @@ publicWidget.registry.RatingPopupComposer = publicWidget.Widget.extend({
         ]);
     },
 });
+
+return RatingPopupComposer;
+
 });

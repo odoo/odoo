@@ -4,6 +4,7 @@
 from collections import defaultdict
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -14,6 +15,32 @@ class MrpProduction(models.Model):
         'stock.move.line', string="Detail Component", readonly=False,
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
+    incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
+
+    @api.depends('name')
+    def name_get(self):
+        return [
+            (record.id, "%s (%s)" % (record.incoming_picking.name, record.name)) if record.bom_id.type == 'subcontract'
+            else (record.id, record.name) for record in self
+        ]
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = list(args or [])
+
+        if name == '' and operator == 'ilike':
+            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+        # search through MO
+        domain = [(self._rec_name, operator, name)]
+
+        # search through transfers
+        picking_rec_name = self.env['stock.picking']._rec_name
+        picking_domain = [('bom_id.type', '=', 'subcontract'), ('incoming_picking.%s' % picking_rec_name, operator, name)]
+        domain = expression.OR([domain, picking_domain])
+
+        args = expression.AND([args, domain])
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):
@@ -39,9 +66,11 @@ class MrpProduction(models.Model):
         assert self.env.context.get('subcontract_move_id')
         if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
             return {'type': 'ir.actions.act_window_close'}
+        if self.product_tracking != 'none' and not self.lot_producing_id:
+            raise UserError(_('You must enter a serial number for %s') % self.product_id.name)
         for sml in self.move_raw_ids.move_line_ids:
             if sml.tracking != 'none' and not sml.lot_id:
-                raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.name)
+                raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.display_name)
         self._update_finished_move()
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
@@ -58,6 +87,11 @@ class MrpProduction(models.Model):
             action = subcontract_move_id._action_record_components()
             action.update({'res_id': backorder.id})
             return action
+        return {'type': 'ir.actions.act_window_close'}
+
+    def action_subcontracting_discard_remaining_components(self):
+        self.ensure_one()
+        self.qty_producing = 0
         return {'type': 'ir.actions.act_window_close'}
 
     def _pre_button_mark_done(self):
@@ -125,3 +159,18 @@ class MrpProduction(models.Model):
                 for ml in subcontract_move_id.move_line_ids:
                     ml.product_uom_qty = ml.qty_done
                 subcontract_move_id._recompute_state()
+
+    def _subcontracting_filter_to_done(self):
+        """ Filter subcontracting production where composant is already recorded and should be consider to be validate """
+        def filter_in(mo):
+            if mo.state in ('done', 'cancel'):
+                return False
+            if float_is_zero(mo.qty_producing, precision_rounding=mo.product_uom_id.rounding):
+                return False
+            if not all(line.lot_id for line in mo.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids):
+                return False
+            if mo.product_tracking != 'none' and not mo.lot_producing_id:
+                return False
+            return True
+
+        return self.filtered(filter_in)

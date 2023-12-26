@@ -33,17 +33,20 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 selectedTableId: null,
                 isEditMode: false,
                 floorBackground: floor.background_color,
+                floorMapScrollTop: 0,
             });
             this.floorMapRef = useRef('floor-map-ref');
         }
         patched() {
             this.floorMapRef.el.style.background = this.state.floorBackground;
+            this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
         }
         mounted() {
             if (this.env.pos.table) {
                 this.env.pos.set_table(null);
             }
             this.floorMapRef.el.style.background = this.state.floorBackground;
+            this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
             // call _tableLongpolling once then set interval of 5sec.
             this._tableLongpolling();
             this.tableLongpolling = setInterval(this._tableLongpolling.bind(this), 5000);

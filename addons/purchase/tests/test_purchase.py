@@ -5,7 +5,8 @@ from odoo.tests import tagged, Form
 from odoo import fields
 
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+from freezegun import freeze_time
 
 
 @tagged('-at_install', 'post_install')
@@ -44,6 +45,19 @@ class TestPurchase(AccountTestInvoicingCommon):
         new_date_planned = orig_date_planned - timedelta(hours=72)
         po.order_line[1].date_planned = new_date_planned
         self.assertAlmostEqual(po.order_line[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
+
+    @freeze_time("2021-12-02 21:00")
+    def test_date_planned_02(self):
+        """Check the planned date definition when server is UTC and user is UTC+11"""
+        # UTC:  2021-12-02 21:00
+        # User: 2021-12-03 08:00 (UTC+11)
+        self.env.user.tz = "Australia/Sydney"
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+        self.assertEqual(po_form.date_planned, datetime.fromisoformat("2021-12-03 01:00:00"),
+                         "Should be 2021-12-03 01:00:00, i.e. 2021-12-03 12:00:00 UTC+11")
 
     def test_purchase_order_sequence(self):
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
@@ -170,3 +184,54 @@ class TestPurchase(AccountTestInvoicingCommon):
             '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - product_a from 2020-06-06 to %s </p><p> \xa0 - product_b from 2020-06-06 to %s </p>' % (fields.Date.today(), fields.Date.today()),
             activity.note,
         )
+
+    def test_with_different_uom(self):
+        """ This test ensures that the unit price is correctly computed"""
+        uom_units = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_unit')
+        uom_dozens = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_dozen')
+        uom_pairs = self.env['uom.uom'].create({
+            'name': 'Pairs',
+            'category_id': uom_units.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 2,
+            'rounding': 1,
+        })
+        product_data = {
+            'name': 'SuperProduct',
+            'type': 'consu',
+            'uom_id': uom_units.id,
+            'uom_po_id': uom_pairs.id,
+            'standard_price': 100
+        }
+        product_01 = self.env['product.product'].create(product_data)
+        product_02 = self.env['product.product'].create(product_data)
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_01
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_02
+            po_line.product_uom = uom_dozens
+        po = po_form.save()
+
+        self.assertEqual(po.order_line[0].price_unit, 200)
+        self.assertEqual(po.order_line[1].price_unit, 1200)
+
+    def test_on_change_quantity_description(self):
+        """
+        When a user changes the quantity of a product in a purchase order it
+        should not change the description if the descritpion was changed by
+        the user before
+        """
+        self.env.user.write({'company_id': self.company_data['company'].id})
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        with po.order_line.new() as pol:
+            pol.product_id = self.product_a
+            pol.product_qty = 1
+
+        pol.name = "New custom description"
+        pol.product_qty += 1
+        self.assertEqual(pol.name, "New custom description")

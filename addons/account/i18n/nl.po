@@ -11,7 +11,6 @@
 # woutvanrooij <wout.vanrooij@dynapps.be>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
 # ca2da8678cdb9cbd573eaf985f02c476, 2020
-# Martin Trigaux, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
 # dpms <pieter.van.de.wygaert@telenet.be>, 2020
@@ -20,18 +19,21 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# d37b7452f9c400ac7a88cc4fbb491bbb_4273061, 2022
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -168,6 +170,12 @@ msgid ". You might want to put a higher number here."
 msgstr ". Misschien wilt u hier een hoger nummer neerzetten."
 
 #. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s overige)"
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
 msgstr "15 dagen"
@@ -296,28 +304,28 @@ msgstr ""
 "            ${object.partner_id.name},\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Hier is uw\n"
+"        Hierbij vind je je\n"
 "        % if object.name:\n"
 "            invoice <strong>${object.name}</strong>\n"
 "        % else:\n"
 "            factuur\n"
 "        %endif\n"
 "        % if object.invoice_origin:\n"
-"            (with reference: ${object.invoice_origin})\n"
+"            (met referentie: ${object.invoice_origin})\n"
 "        % endif\n"
 "        voor het bedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        van ${object.company_id.name}.\n"
 "        % if object.payment_state in ('paid', 'in_payment'):\n"
 "            Deze factuur is al betaald.\n"
 "        % else:\n"
-"            Wilt u de betaling zo spoedig mogelijk te verrichten.\n"
+"            Wij zien de betaling graag zo spoedig mogelijk tegemoet.\n"
 "            % if object.payment_reference:\n"
 "                <br/><br/>\n"
-"                Gebruik de volgende communicatie voor uw betaling: <strong>${object.payment_reference}</strong>.\n"
+"                Gelieve de volgende communicatie te gebruiken voor je betaling: <strong>${object.payment_reference}</strong>.\n"
 "            % endif\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Mocht u vragen hebben aarzel dan niet om contact met ons op te nemen.\n"
+"        Mocht je vragen hebben aarzel dan niet om contact met ons op te nemen.\n"
 "        % if object.invoice_user_id.signature:\n"
 "            <br/>\n"
 "            ${object.invoice_user_id.signature | safe}\n"
@@ -456,8 +464,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Waiting for Payment</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
 " aria-label=\"Geopend\" title=\"Geopend\" role=\"img\"/><span class=\"d-none"
@@ -830,6 +838,11 @@ msgstr "<strong>Bedrijf:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>Creditfactuur datum:</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Klantcode:</strong>"
 
@@ -842,6 +855,11 @@ msgstr "<strong>Klant: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Klant</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Datum:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -897,6 +915,11 @@ msgstr "<strong>Betalingsmethode:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Product</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Ontvangstdatum:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -986,7 +1009,7 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"Een bankafschrift is een samenvatting van alle financiële transacties\n"
+"Een rekeningafschrift is een samenvatting van alle financiële transacties\n"
 "gedurende een bepaalde periode op een bankrekening. U\n"
 "moet deze periodiek van uw bank ontvangen."
 
@@ -994,7 +1017,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
 msgstr ""
-"Een bankafschriftregel is een financiële transactie op een bankrekening"
+"Een rekeningafschriftregel is een financiële transactie op een bankrekening"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1013,6 +1036,14 @@ msgid ""
 msgstr ""
 "Een dagboek wordt gebruikt om alle verrichtingen uit het dagelijkse "
 "zakenleven in uw boekhouding op te slaan."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"Een regel van deze boeking gebruikt een verouderde rekening. Je kunt niet "
+"boeken."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -1041,8 +1072,8 @@ msgstr ""
 #, python-format
 msgid "A tag defined to be used on taxes must always have a country set."
 msgstr ""
-"Een label die is gedefinieerd om te worden gebruikt voor belastingen, moet "
-"altijd een landenset hebben."
+"Een label die is gedefinieerd om te worden gebruikt voor BTW, moet altijd "
+"een landenset hebben."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1112,7 +1143,7 @@ msgstr "Kasrekening afronding"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Rekeningstelsel sjabloon"
+msgstr "Grootboekschema sjabloon"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1369,7 +1400,7 @@ msgstr "Rekening op product"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Rekening waarop het BTW-bedrag te posten"
+msgstr "Rekening waarop het belastingbedrag moet worden geboekt"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -1577,7 +1608,7 @@ msgstr "Actief"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr "Active rekening"
+msgstr "Actieve rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
@@ -1903,8 +1934,7 @@ msgid ""
 "All the account entries lines must be processed in order to validate the "
 "statement."
 msgstr ""
-"Alle regels voor rekeningboekingen moeten worden verwerkt om het overzicht "
-"te valideren."
+"Alle regels moeten zijn verwerkt om het bankafschrift te kunnen bevestigen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
@@ -2520,6 +2550,13 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Balans"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr "Saldo berekend op basis van de openingsbalans en alle boekingen"
@@ -2621,44 +2658,44 @@ msgstr "Voorinstellingen tbv afletteren banken"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr "Bankafschrift"
+msgstr "Rekeningafschrift"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Bank Statement %s.pdf"
-msgstr "Bankafschrift %s.pdf"
+msgstr "Rekeningafschrift %s.pdf"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_cashbox
 msgid "Bank Statement Cashbox"
-msgstr "Bankafschrift kaslade"
+msgstr "Rekeningafschrift kaslade"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
 msgid "Bank Statement Closing Balance"
-msgstr "Bankafschrift eindsaldo"
+msgstr "Rekeningafschrift eindsaldo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Bankafschriftregel"
+msgstr "Rekeningafschriftregel"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
 msgid "Bank Statement Lines"
-msgstr "Bankafschriftregels"
+msgstr "Rekeningafschriftregels"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Bank Statement.pdf"
-msgstr "Bankafschrift.pdf"
+msgstr "Rekeningafschrift.pdf"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
-msgstr "Bankafschriften"
+msgstr "Rekeningafschriften"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -2691,8 +2728,8 @@ msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
 msgstr ""
-"Transacties van bankafschriften worden op de tussenrekening geboekt tot de "
-"laatste aflettering waardoor de juiste rekening kan worden gevonden."
+"Transacties van rekeningafschriften worden op de tussenrekening geboekt tot "
+"de laatste aflettering waardoor de juiste rekening kan worden gevonden."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -2850,7 +2887,7 @@ msgstr "Blokkerend bericht"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr "Breng rekeningslado voorwaarts"
+msgstr "Breng rekeningsaldo voorwaarts"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -2865,7 +2902,7 @@ msgstr "Budgetbeheer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__name
 msgid "Button Label"
-msgstr "Knop label"
+msgstr "Knop omschrijving"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
@@ -3605,7 +3642,7 @@ msgstr "Voorwaarden"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Conditions on Bank Statement Line"
-msgstr "Condities op bankafschriftregel"
+msgstr "Condities op rekeningafschriftregel"
 
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
@@ -3639,11 +3676,6 @@ msgstr "Configureren"
 #, python-format
 msgid "Confirm"
 msgstr "Bevestigen"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
-msgid "Confirmed"
-msgstr "Bevestigd"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -3810,7 +3842,7 @@ msgstr "Maak factuur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Invoices upon Emails"
-msgstr "Mak facturen van e-mails"
+msgstr "Maak facturen van e-mails"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4497,7 +4529,7 @@ msgstr "Debet boeking"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__debit_account_id
 msgid "Debit account"
-msgstr "Debiteurenrekening"
+msgstr "Debet rekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
@@ -4548,7 +4580,7 @@ msgstr "Standaard Incoterm van uw bedrijf"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
 msgid "Default PoS Receivable Account"
-msgstr "Standaard POS-debiteurenaccount"
+msgstr "Standaard POS-debiteurenrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -4637,12 +4669,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years &amp; tax returns periodicity."
-msgstr "Definieer uw boekjaar &amp; BTW aangifteperiode."
+msgstr "Definieer uw boekjaar & BTW aangifteperiode."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "Definieert hoe bankafschriften geregistreerd worden"
+msgstr "Definieert hoe rekeningafschriften geregistreerd worden"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -4934,7 +4966,7 @@ msgstr "Verdeling wanneer de BTW wordt gebruikt voor een creditfactuur"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr "Verdeling wanneer de belasting wordt gebruikt voor een factuur"
+msgstr "Verdeling wanneer de BTW wordt gebruikt voor een factuur"
 
 #. module: account
 #: code:addons/account/models/digest.py:0
@@ -5301,7 +5333,7 @@ msgstr "Verwacht een grootboek rekeningschema"
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__expense
 #, python-format
 msgid "Expense"
-msgstr "Declaratie"
+msgstr "Kosten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
@@ -5386,18 +5418,14 @@ msgstr "Februari"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__state_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__state_ids
 msgid "Federal States"
-msgstr "Federale staten"
+msgstr "Federale staten/Provincies"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
-msgid ""
-"Fill in the details of the line.<br><i>Tip: all the details can be set "
-"automatically if you configure your <b>products</b>.</i>"
-msgstr ""
-"Vul de details van de regels in. <br> <i>Tip: alle details kunnen "
-"automatisch worden ingesteld als u uw <b>producten</b> configureert.</i>"
+msgid "Fill in the details of the line."
+msgstr "Vul de details van de regel in."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -5530,9 +5558,9 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Fiscale posities worden gebruikt om belastingen en rekeningen voor bepaalde "
-"klanten of verkooporders / facturen aan te passen. De standaardwaarde komt "
-"van de klant."
+"Fiscale posities worden gebruikt om BTW en rekeningen voor bepaalde klanten "
+"of verkooporders / facturen aan te passen. De standaardwaarde komt van de "
+"klant."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -5607,7 +5635,7 @@ msgstr "Volgers (Relaties)"
 #: model:ir.model.fields,help:account.field_account_move__activity_type_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon b.v. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -5685,7 +5713,7 @@ msgstr "Van debiteuren"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line_template__amount_type__regex
 msgid "From label"
-msgstr "Vanuit label"
+msgstr "Van label"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5790,8 +5818,8 @@ msgid ""
 "“Bank Synchronization” in bank account settings. Then, click “Configure” on "
 "the online account to enter your bank credentials."
 msgstr ""
-"Krijg de bankafschriften automatisch geïmporteerd iedere 4 uur, of met 1 "
-"klik, door gebruik te maken van de Yodlee en Plaid diensten. Wanneer "
+"Krijg de rekeningafschriften automatisch geïmporteerd iedere 4 uur, of met 1"
+" klik, door gebruik te maken van de Yodlee en Plaid diensten. Wanneer "
 "geïnstalleerd, ste de \"Bank Feeds\" in op \"Bank Synchronisatie\" bij de "
 "bankrekening instellingen. Klik vervolgens op \"Instellen\" op de online "
 "rekening om de bankgegevens in te geven."
@@ -5806,7 +5834,7 @@ msgstr "Bepaalt de volgorde bij het weergeven van de kostenverdeling"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__sequence
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
-msgstr "Geeft de volgorde weer, bij de weergave van bankafschriftregels."
+msgstr "Geeft de volgorde weer, bij de weergave van rekeningafschriftregels."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__sequence
@@ -6110,8 +6138,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and a negative one."
 msgstr ""
-"Als labels zijn gedefinieerd voor een belastingrapportregel, zijn er slechts"
-" twee toegestaan: een positieve en een negatieve."
+"Als labels zijn gedefinieerd voor een BTW-rapportregel, zijn er slechts twee"
+" toegestaan: een positieve en een negatieve."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -6128,12 +6156,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__to_check
 msgid ""
 "If this checkbox is ticked, it means that the user was not sure of all the "
-"related informations at the time of the creation of the move and that the "
+"related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
-"Als de optie is aangevinkt is, wil dat zeggen dat de gebruiker niet zeker "
-"was van alle gegevens op het moment van het aanmaken van de boeking en dat "
-"de boeking nog nagekeken moet worden."
+"Als dit selectievakje is aangevinkt, betekent dit dat de gebruiker niet "
+"zeker was van alle gerelateerde informatie op het moment dat de boeking werd"
+" gemaakt en dat de boeking opnieuw moet worden gecontroleerd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -6178,7 +6206,8 @@ msgstr "Als u deze optie aanvinkt kan u uw betaling registreren met SEPA."
 msgid ""
 "If you have not installed a chart of account, please install one first.<br>"
 msgstr ""
-"Installeer een rekeningstelsel als u er nog geen had geïnstalleerd.<br>"
+"Als u geen grootboekschema hebt geïnstalleerd, installeer er dan eerst een. "
+"<br>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -6244,27 +6273,27 @@ msgstr "Importeer in CAMT.053 formaat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements automatically"
-msgstr "Importeer uw bankafschriften automatisch"
+msgstr "Importeer uw rekeningafschriften automatisch"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr "Importeer uw bankafschriften in CAMT.053"
+msgstr "Importeer uw rekeningafschriften in CAMT.053"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CSV"
-msgstr "Importeer uw bankafschriften in CSV"
+msgstr "Importeer uw rekeningafschriften in CSV"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in OFX"
-msgstr "Importeer uw bankafschriften in OFX"
+msgstr "Importeer uw rekeningafschriften in OFX"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in QIF"
-msgstr "Importeer uw bankafschriften in QIF"
+msgstr "Importeer uw rekeningafschriften in QIF"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6287,8 +6316,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
-"Om een bankafschrift te verwijderen, dient u eerst het gerelateerde boeking "
-"te annuleren."
+"Om een rekeningafschrift te verwijderen, dient u eerst het gerelateerde "
+"boeking te annuleren."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -6372,10 +6401,10 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
-"Inkomende betalingen die worden geactiveerd door facturen creditfacturen, "
+"Inkomende betalingen die worden geactiveerd door facturen/creditfacturen, "
 "worden geboekt op de rekening voor openstaande ontvangsten en worden "
 "weergegeven als blauwe lijnen bij het afletteren. Tijdens het afletterproces"
-" worden de betreffende transacties afgeletterd met posten op de rekening "
+" worden de betreffende transacties afgeletterd met boekingen op de rekening "
 "voor openstaande ontvangsten in plaats van de rekening voor ontvangsten."
 
 #. module: account
@@ -6496,15 +6525,17 @@ msgid "Internal Notes"
 msgstr "Interne notities"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
-msgstr "Interne overboeking"
+msgstr "Interne verplaatsing"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfers"
-msgstr "Interne overboekingen"
+msgstr "Interne verplaatsingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_type
@@ -6568,7 +6599,7 @@ msgstr "Factuur #"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoice Analysis"
-msgstr "Analyse facturen"
+msgstr "Factuuranalyse"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6606,7 +6637,7 @@ msgstr "Factuur heeft bijpassend tussenrekening bedrag"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr "Factuur Heeft Openstaande"
+msgstr "Factuur heeft openstaande"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -6621,7 +6652,7 @@ msgstr "Factuurregels"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
 msgid "Invoice Online Payment"
-msgstr "Factureer online betaling"
+msgstr "Betaal facturen online"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
@@ -6635,7 +6666,7 @@ msgstr "Factuurwidget voor uitstaande credits en debets"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Factuur partnerweergavenaam"
+msgstr "Factuurrelatie weergavenaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -6664,6 +6695,15 @@ msgid ""
 msgstr ""
 "De verdeling van facturen en creditnota's moet elk exact één regel voor de "
 "basis bevatten."
+
+#. module: account
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+"Facturen en creditfacturen moeten ten minste één regel voor BTW hebben."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6841,7 +6881,7 @@ msgstr "Is lager dan"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr "Is afgeletterd met een bankafschrift"
+msgstr "Is afgeletterd met een rekeningafschrift"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -6904,6 +6944,12 @@ msgid ""
 msgstr ""
 "Het lijkt erop dat de BTW's zijn gewijzigd sinds de aanmaak van de boeking. "
 "U kan de creditnota in plaats daarvan handmatig aanmaken."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "It was previously '%(previous)s' and it is now '%(now)s'."
+msgstr "Het was eerder '%(previous)s' en het is nu '%(now)s'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7160,7 +7206,7 @@ msgstr "Kanban dashboard grafiek"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr "Behoud huidige order"
+msgstr "Houd de huidige volgorde aan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7209,18 +7255,18 @@ msgstr "KPI rekening totaal omzetwaarde"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #, python-format
 msgid "Label"
-msgstr "Label"
+msgstr "Omschrijving"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_label_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_label_param
 msgid "Label Parameter"
-msgstr "Label parameter"
+msgstr "Omschrijving parameter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 msgid "Label on Invoices"
-msgstr "Label op facturen"
+msgstr "Omschrijving op facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -7678,7 +7724,7 @@ msgid ""
 msgstr ""
 "Handmatig: Krijg betaald met contant geld, cheques of een andere methode buiten Odoo om.\n"
 "Elektronisch: Betaal automatisch via een betaalprovider door een transactie aan te vragen op een door de klant opgeslagen kaart bij het online kopen of abonneren van (betalingstoken).\n"
-"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen."
+"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de rekeningafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_id
@@ -7693,7 +7739,7 @@ msgstr ""
 "Handmatig: Krijg betaald met contant geld, cheques of een andere methode buiten Odoo om.\n"
 "Elektronisch: Betaal automatisch via een betalingsverwerker door een transactie aan te vragen op een door de klant opgeslagen kaart bij het online kopen of abonneren van (betalingstoken).\n"
 "Cheque: Betaal factuur met een cheque en druk deze af in Odoo\n"
-"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de bankafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen.\n"
+"Batch Deposito: Verzamel meerdere klantcheques tegelijk door een batch deposito te genereren om bij uw bank in te dienen. Wanneer u de rekeningafschriften in Odoo ingeeft, wordt u voorgesteld om de transactie af te letteren met de batchafbetaling. Schakel deze optie in bij instellingen.\n"
 "SEPA overschrijving: Betaal de factuur met een SEPA overschrijvingsbestand welke je upload bij de bank. Om SEPA te activeren dient te module account_sepa worden geïnstalleerd."
 
 #. module: account
@@ -7709,13 +7755,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
 msgid "Manually create a write-off on clicked button"
 msgstr "Maak handmatig een afschrijving op de aangeklikte knop"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
-msgid "Manually create a write-off on clicked button."
-msgstr "Maak handmatig een afschrijving bij drukken op de knop."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -7756,7 +7798,7 @@ msgstr "Match regex"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_text_location_label
 msgid "Match Text Location Label"
-msgstr "Zoek tekst in label"
+msgstr "Zoek tekst in omschrijving"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_note
@@ -7772,13 +7814,9 @@ msgstr "Zoek tekst in referenties"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Match existing invoices/bills"
 msgstr "Match bestaande facturen/leveranciersfacturen."
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
-msgid "Match existing invoices/bills."
-msgstr "Match bestaande facturen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -8052,8 +8090,8 @@ msgstr "Nieuwe boeking"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "New Transactions"
-msgstr "Nieuwe transacties"
+msgid "New Transaction"
+msgstr "Nieuwe transactie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -8144,8 +8182,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
-"Er zijn geen gebruikers die de dagboek boekingen kunnen wijzigen gerelateerd"
-" aan een BTW voorafgaand of op deze datum."
+"Er zijn geen gebruikers die de boekingen kunnen wijzigen gerelateerd aan een"
+" BTW voorafgaand of op deze datum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -8284,7 +8322,7 @@ msgstr "November"
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
-msgid "Now, we'll create a your first invoice."
+msgid "Now, we'll create your first invoice."
 msgstr "Nu maken we uw eerste factuur."
 
 #. module: account
@@ -8477,7 +8515,7 @@ msgstr "Zodra uw factuur klaar is, drukt u op BEVESTIGEN."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only Validated statements can be reset to new."
-msgstr "Alleen gevalideerde afschriften kunnen worden gereset naar concept."
+msgstr "Alleen bevestigde afschriften kunnen worden gereset naar concept."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -8488,6 +8526,7 @@ msgstr "Alleen administrators kunnen een lijst met accounts laden"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Alleen facturen konden afgedrukt worden."
@@ -8518,7 +8557,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only validated statements can be reset to new."
-msgstr "Alleen gevalideerde afschriften kunnen worden gereset naar concept."
+msgstr "Alleen bevestigde afschriften kunnen worden gereset naar concept."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
@@ -8645,6 +8684,12 @@ msgid "Options"
 msgstr "Opties"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr "Of stuur een factuur naar %s@%s"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "Ordening"
@@ -8661,12 +8706,18 @@ msgstr "Bron"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_move_id
 msgid "Origin Tax Cash Basis Entry"
-msgstr "Bron kassttelsel BTW boeking"
+msgstr "Bron kasstelsel BTW boeking"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
 msgstr "Originele facturen"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "Originele valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8758,7 +8809,7 @@ msgstr "Voorraadafname rekening voor voorraadwaardering"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "Openstaande Betalingen"
+msgstr "Openstaande betalingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
@@ -8780,18 +8831,18 @@ msgstr "Rekening openstaande ontvangsten"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding credits"
-msgstr "Uitstaande omzet"
+msgstr "Openstaande credit bedragen"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding debits"
-msgstr "Uitstaande uitgaven"
+msgstr "Openstaande debet bedragen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
-msgstr "Te laat"
+msgstr "Vervallen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9197,7 +9248,7 @@ msgid ""
 "Payments generated during the reconciliation of this bank statement lines."
 msgstr ""
 "Betalingen die zijn gegenereerd tijdens het afletteren van deze "
-"bankafschriftregels."
+"rekeningafschriftregels."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -9266,7 +9317,8 @@ msgstr "Plaid connector"
 #: code:addons/account/wizard/pos_box.py:0
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr "Controleer of het veld 'dagboek' is ingesteld bij de bankafschrift."
+msgstr ""
+"Controleer of het veld 'dagboek' is ingesteld bij de rekeningafschrift."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -9313,6 +9365,12 @@ msgstr ""
 "maken voordat u verder gaat."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Stel een strikt positieve afrondingswaarde in."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -9320,12 +9378,6 @@ msgid ""
 msgstr ""
 "Stel ten minste één van de afletter-teksten in om een relatiemapping te "
 "maken."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:0
-#, python-format
-msgid "Please set a strictly positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9354,7 +9406,7 @@ msgstr "Portaal toegang URL"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Post"
-msgstr "Posten"
+msgstr "Boeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9756,7 +9808,7 @@ msgstr "Debiteurenrekeningen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Receivables"
-msgstr "Debiteuren rekening"
+msgstr "Debiteuren"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
@@ -9845,6 +9897,12 @@ msgid "Reconciliation Parts"
 msgstr "Afletteringsonderdelen"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr "Item kan niet worden verwijderd. Partner is gebruikt in Accounting."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
 msgstr "Transacties registreren in vreemde valuta"
@@ -9895,7 +9953,7 @@ msgstr "Creditfactuur aangemaakt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Refund Date"
-msgstr "Datum creditering"
+msgstr "Creditdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__refund_tax_id
@@ -9924,7 +9982,7 @@ msgstr "Betaling registreren"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid "Register a bank statement"
-msgstr "Registreer een bankafschrift"
+msgstr "Registreer een rekeningafschrift"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -10160,7 +10218,7 @@ msgstr "Omzet/kostenrekening"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reversal Date"
-msgstr "Omkeringsdatum"
+msgstr "Creditdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_id
@@ -10172,7 +10230,7 @@ msgstr "Omgekeerde boeking"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
-msgstr "Omkeringsdatum"
+msgstr "Creditdatum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
@@ -10200,7 +10258,7 @@ msgstr "Omkering van: %s"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Reverse"
-msgstr "Retourneren"
+msgstr "Crediteren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10225,7 +10283,7 @@ msgstr "Boekingen omkeren"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Omgekeerd"
+msgstr "Gecrediteerd"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -10432,12 +10490,12 @@ msgstr "Zoek rekeningsjablonen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Search Bank Statements"
-msgstr "Zoek bankafschriften"
+msgstr "Zoek rekeningafschriften"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_search
 msgid "Search Bank Statements Line"
-msgstr "Zoek bankafschriftregels"
+msgstr "Zoek rekeningafschriftregels"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -10481,7 +10539,8 @@ msgstr "Zoek BTW"
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
-"Zoek in het afschriftlabel om de factuur/betalingsreferentie te vinden"
+"Zoek in het afschriftomschrijving om de factuur/betalingsreferentie te "
+"vinden"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
@@ -10960,7 +11019,7 @@ msgstr "Toon Terugzetten naar concept-knop"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
-msgstr "Toon niet-afgeletterde bankafschriftregel"
+msgstr "Toon niet-afgeletterde rekeningafschriftregel"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -11289,8 +11348,8 @@ msgstr "Subtype"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
-msgid "Suggest a write-off."
-msgstr "Stel een afschrijving voor."
+msgid "Suggest a write-off"
+msgstr "Stel een afschrijving voor"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -11680,7 +11739,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__tag_ids
 msgid "Tax tags populating this line"
-msgstr "Belasting labels op deze regel"
+msgstr "BTW labels op deze regel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -11866,7 +11925,7 @@ msgid ""
 "matching amount in any supsense account."
 msgstr ""
 "Technisch veld dat wordt gebruikt om een waarschuwing op facturen weer te "
-"geven als er ten minste een overeenkomend bedrag op een supsense-account "
+"geven als er ten minste een overeenkomend bedrag op een tussenrekening "
 "staat."
 
 #. module: account
@@ -11908,8 +11967,8 @@ msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
 msgstr ""
-"Technisch veld gebruikt om een dynamisch domein op dagboek/belastingen te "
-"geven in het formulier overzicht."
+"Technisch veld gebruikt om een dynamisch domein op dagboek/BTW te geven in "
+"het formulier overzicht."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -12114,6 +12173,16 @@ msgid "That is the date of the opening entry."
 msgstr "Dat is de datum van de openingsboeking."
 
 #. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
+msgstr ""
+"De  %(date_field)s (%(date)s) komen niet overeen met %(sequence_field)s (%(sequence)s).\n"
+"Mogelijk wilt u het veld %(sequence_field)s leegmaken voordat u doorgaat met het wijzigen van de datum."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
 #: model:ir.model.fields,help:account.field_account_account_type__internal_group
 #: model:ir.model.fields,help:account.field_account_move_line__account_internal_group
@@ -12136,6 +12205,13 @@ msgstr ""
 "De 'Interne soort' wordt gebruikt om kenmerken aan te duiden bij "
 "verschillende rekeningen: liquiditeit is voor kas- en bankrekeningen, "
 "crediteuren/debiteuren is voor leverancier-/klantfacturen."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+"De factuur- of creditfactuurdatum is vereist om dit document te bevestigen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
@@ -12179,6 +12255,18 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "Deze rekening %s (%s) is vervallen"
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
+"Deze rekening is in %(journal_names)s dagboek(en) (ids %(journal_ids)s) "
+"geconfigureerd als debet- of creditrekening voor betalingen. Dit betekent "
+"dat het type van dit account afletterbaar moet zijn."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12310,7 +12398,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "Het bankafschrift dat wordt gebruikt voor bank verrekening"
+msgstr "Het rekeningafschrift dat wordt gebruikt voor bank verrekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -12402,15 +12490,14 @@ msgid ""
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
 msgstr ""
-"De huidige staat van uw bankafschrift: - Nieuw: volledig bewerkbaar met "
+"De huidige staat van uw rekeningafschrift: - Nieuw: volledig bewerkbaar met "
 "conceptboekingen. - Verwerking: niet langer bewerkbaar met geboekte "
-"boekingen, klaar voor de afletteren. - Gevalideerd: alle regels worden "
+"boekingen, klaar voor de afletteren. - Goedgekeurd: alle regels worden "
 "afgeletterd. Er valt niets meer te verwerken."
 
 #. module: account
-#: code:addons/account/models/sequence_mixin.py:0
 #: code:addons/account/models/account_payment_term.py:0
-#, python-format, python-format
+#, python-format
 msgid "The day of the month used for this term must be strictly positive."
 msgstr "De dag van de maand voor deze termijn moet positief zijn."
 
@@ -12497,6 +12584,15 @@ msgstr ""
 "geen e-mail adres is ingesteld."
 
 #. module: account
+#: code:addons/account/models/account_reconcile_model.py:0
+#, python-format
+msgid ""
+"The following regular expression is invalid to create a partner mapping: %s"
+msgstr ""
+"De volgende reguliere expressie is ongeldig om een relatietoewijzing te "
+"maken: %s"
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -12539,6 +12635,20 @@ msgstr ""
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "De rekeninghouder van het bankdagboek moet het bedrijf zijn (%s)."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+"De factuur bevat al regels, deze is niet bijgewerkt vanuit de bijlage."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr "De factuur is geen concept en is niet bijgewerkt vanuit de bijlage."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12622,8 +12732,8 @@ msgid ""
 "The journal of a bank statement line must always be the same as the bank "
 "statement one."
 msgstr ""
-"Het dagboek van een bankafschriftregel moet altijd hetzelfde zijn als het "
-"bankafschriftregel."
+"Het dagboek van een rekeningafschriftregel moet altijd hetzelfde zijn als "
+"het rekeningafschriftregel."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12633,7 +12743,7 @@ msgid ""
 "statement one."
 msgstr ""
 "Het dagboek van een afschriftregel moet altijd hetzelfde zijn als het "
-"bankafschrift."
+"rekeningafschrift."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -12677,6 +12787,14 @@ msgstr ""
 "- Om de tekst aan het begin van de regel af te stemmen (in label of notities), vult u gewoon uw tekst in.\n"
 "- Om de tekst waar dan ook overeen te laten komen (in label of notities), plaatst u uw tekst tussen. *\n"
 "bijv .: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+"De boeking kan om de volgende reden niet worden geboekt: %(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -12787,6 +12905,16 @@ msgstr "De betaling die deze boeking heeft gemaakt"
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
 msgstr "De valuta van de betaling."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The recipient bank account link to this invoice is archived.\n"
+"So you cannot confirm the invoice."
+msgstr ""
+"De bankrekening van de ontvanger van deze factuur is gearchiveerd.\n"
+"Je kunt de factuur dus niet bevestigen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -12950,6 +13078,12 @@ msgstr ""
 "worden toegepast."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The sequence format has changed."
+msgstr "Het reeksformaat is gewijzigd."
+
+#. module: account
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
@@ -12958,6 +13092,40 @@ msgid ""
 msgstr ""
 "De reeks regex moet ten minste de seq groeperingssleutels bevatten. Bijvoorbeeld::\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"De reeks zal nooit opnieuw beginnen.\n"
+"Het oplopende getal is in dit geval '%(formatted_seq)s'."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"De reeks begint aan het begin van elke maand weer bij 1.\n"
+"Het hier gedetecteerde jaar is '%(year)s' en de maand is '%(month)s'.\n"
+"Het oplopend getal is in dit geval '%(formatted_seq)s'."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"De reeks start aan het begin van elk jaar weer op 1.\n"
+"Het hier gedetecteerde jaar is ''%(year)s.\n"
+"Het oplopende getal is in dit geval '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -12976,7 +13144,7 @@ msgid ""
 "previous bank statement."
 msgstr ""
 "Het beginsaldo <b>komt niet overeen</b> met het eindsaldo van het vorige "
-"bankafschrift."
+"rekeningafschrift."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13041,7 +13209,7 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
-"De belasting die is ingesteld om deze verdeling op facturen toe te passen. "
+"De BTW die is ingesteld om deze verdeling op facturen toe te passen. "
 "Wederzijds exclusief met refund_tax_id"
 
 #. module: account
@@ -13051,7 +13219,7 @@ msgid ""
 "The tax set to apply this distribution on refund invoices. Mutually "
 "exclusive with invoice_tax_id"
 msgstr ""
-"De belasting die is ingesteld om deze verdeling op facturen toe te passen. "
+"De BTW die is ingesteld om deze verdeling op facturen toe te passen. "
 "Wederzijds exclusief met invoice_tax_id"
 
 #. module: account
@@ -13097,8 +13265,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"Er zijn nog steeds niet-afgestemde bankafschriftregels in de periode die u "
-"wilt vergrendelen. U moet ze afletteren of verwijderen."
+"Er zijn nog steeds niet-afgestemde rekeningafschriftregels in de periode die"
+" u wilt vergrendelen. U moet ze afletteren of verwijderen."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -13229,7 +13397,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr "Dit veld wordt genegeerd bij de aflettering van een bankafschrift."
+msgstr ""
+"Dit veld wordt genegeerd bij de aflettering van een rekeningafschrift."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -13248,7 +13417,7 @@ msgid ""
 "database (or cannot be found)."
 msgstr ""
 "Dit veld wordt gebruikt om de naam van een derde op te slaan bij het "
-"importeren van het bankafschrift in elektronisch formaat, en de relatie "
+"importeren van het rekeningafschrift in elektronisch formaat, en de relatie "
 "bestaat niet in de database (of kan niet worden gevonden)."
 
 #. module: account
@@ -13277,9 +13446,9 @@ msgstr "Dit dagboek bevind zich niet in de strikte modus."
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__to_check
 msgid ""
 "This matching rule is used when the user is not certain of all the "
-"informations of the counterpart."
+"information of the counterpart."
 msgstr ""
-"Deze matching-regel wordt gebruikt wanneer de gebruiker niet zeker is van "
+"Deze afletterregel wordt gebruikt wanneer de gebruiker niet zeker is van "
 "alle informatie van de tegenpartij."
 
 #. module: account
@@ -13347,7 +13516,7 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Deze betalingsvoorwaarden zullen gebruikt worden in plaats van de standaard "
+"Deze betalingscondities zullen gebruikt worden in plaats van de standaard "
 "voor inkooporders en leveranciersfacturen"
 
 #. module: account
@@ -13359,6 +13528,16 @@ msgid ""
 msgstr ""
 "Deze betalingsvoorwaarde zal worden gebruikt in plaats van de standaard- "
 "voor verkooporders en facturen"
+
+#. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"Dit product is reeds gebruikt in de geboekte boekingen.\n"
+"Als je de maateenheid ervan wil wijzigen, archiveer dit product en maak een nieuw product aan."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -13382,7 +13561,7 @@ msgid ""
 "                a bank statement or an account."
 msgstr ""
 "Deze kunnen gebruikt worden om snel een boeking aan te maken wanneer\n"
-"u een bankafschrift of rekening aflettert."
+"u een rekeningafschrift of rekening aflettert."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13404,7 +13583,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "To"
-msgstr "Aan"
+msgstr "Naar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -13555,7 +13734,7 @@ msgstr "Verplaatsing"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr "Verplaatsingsdatum"
+msgstr "Boekingsdatum"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13587,6 +13766,12 @@ msgstr "Overboeken naar %s"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Transfers"
 msgstr "Verplaatsingen"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr "Probeer een voorbeeld van een leveranciersfactuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -13714,6 +13899,12 @@ msgid "Unposted"
 msgstr "Ongeboekt"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "Ongeboekte boekingen"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Ongeboekte boekingsregels"
@@ -13787,7 +13978,7 @@ msgstr "Maateenheid"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
-msgstr "Automatisch wisselkoersen updaten"
+msgstr "Automatisch wisselkoersen bijwerken"
 
 #. module: account
 #. openerp-web
@@ -13795,6 +13986,12 @@ msgstr "Automatisch wisselkoersen updaten"
 #, python-format
 msgid "Upload"
 msgstr "Upload"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr "Upload uw eigen factuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -13974,7 +14171,7 @@ msgstr "Bevestig"
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Validated"
-msgstr "Gevalideerd"
+msgstr "Bevestigd"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
@@ -14085,7 +14282,7 @@ msgstr "Leveranciers"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "View"
-msgstr "Weergave"
+msgstr "Bekijk"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -14254,13 +14451,31 @@ msgstr ""
 "is de Odoo-referentie."
 
 #. module: account
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"You can not archive a journal containing draft journal entries.\n"
+"\n"
+"To proceed:\n"
+"1/ click on the top-right button 'Journal Entries' from this journal form\n"
+"2/ then filter on 'Draft' entries\n"
+"3/ select them all and post or delete them through the action menu"
+msgstr ""
+"U kunt een dagboek met concept journaalboekingen niet archiveren.\n"
+"\n"
+"Verder gaan:\n"
+"1/ klik op de knop rechtsboven 'Boekingen' van dit dagboekscherm\n"
+"2/ filter vervolgens op regels in 'Concept'\n"
+"3/ selecteer ze allemaal en post of verwijder ze via het actiemenu"
+
+#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
-"U kunt geen betalingstermijnen verwijderen gerelateerd aan gegevens. "
+"U kunt geen betalingstermijn verwijderen gerelateerd aan gegevens. "
 "Daarentegen, kan u ze wel archiveren. "
 
 #. module: account
@@ -14293,8 +14508,8 @@ msgstr "U kunt alleen de periode/rekening van geboekte boekingen wijzigen."
 #, python-format
 msgid "You can only create statement line in open bank statements."
 msgstr ""
-"U kunt alleen een bankafschriftregels aanmaken in openstaande "
-"bankafschriften."
+"U kunt alleen een rekeningafschriftregels aanmaken in openstaande "
+"rekeningafschriften."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14334,7 +14549,7 @@ msgid ""
 "for vendor bill."
 msgstr ""
 "U kunt alleen een crediteurenrekening instellen op regels voor "
-"betalingsvoorwaarden voor leveranciersfacturen."
+"betalingscondities voor leveranciersfacturen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14344,7 +14559,7 @@ msgid ""
 "lines for customer invoice."
 msgstr ""
 "U kunt alleen een debiteurenrekening instellen op regels voor "
-"betalingsvoorwaarden voor klantfacturen."
+"betalingscondities voor klantfacturen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -14424,7 +14639,7 @@ msgid ""
 "created by bank statement %s."
 msgstr ""
 "U kunt de status van de boeking %s niet handmatig wijzigen, aangezien deze "
-"is gemaakt op een bankafschrift %s."
+"is gemaakt op een rekeningafschrift %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14517,6 +14732,14 @@ msgstr ""
 "financiële boekingen zijn gemaakt."
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Gelieve contact op te nemen met je accountant om het has-"
+"integriteitsresultaat af te drukken."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14575,19 +14798,23 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"U kunt de volgende velden niet bewerken omdat de beperkingsmodus is "
-"geactiveerd op het dagboek: %s."
+"Je kan volgende velden niet bewerken: %s.\n"
+"De volgende boekingen zijn reeds gehasht:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the journal of an account move if it has already a sequence "
+"You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
+"U kunt het dagboek van een boeking niet bewerken als er al een volgnummer "
+"aan is toegewezen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14613,8 +14840,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"U kunt niet meer dan een rekening hebben in \"Huidige Boekjaar\" van het "
-"type. (rekeningen: %s)"
+"U kunt niet meer dan één rekening hebben met als type \"Huidige Jaarwinst\"."
+" (rekeningen: %s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14670,20 +14897,18 @@ msgstr ""
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
-"U kan geen geld inleggen/uitnemen voor een bankafschrift dat reeds gesloten "
-"werd."
+"U kan geen geld inleggen/uitnemen voor een rekeningafschrift dat reeds "
+"gesloten werd."
 
 #. module: account
 #: code:addons/account/models/res_currency.py:0
 #, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
-"already been used to make accounting entries. If you really need to do that,"
-" please contact tech support."
+"already been used to make accounting entries."
 msgstr ""
 "U kunt het aantal decimalen van een valuta die al is gebruikt om boekingen "
-"te boeken, niet verminderen. Neem contact op met de technische ondersteuning"
-" als u dat echt nodig heeft."
+"te boeken, niet verminderen."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14732,8 +14957,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"U kan niet wisselen van account om het afletteren te voorkomen als "
-"gedeeltelijke afletteringen nog in aanvraag zijn."
+"U kan niet wisselen van rekening om het afletteren te voorkomen als "
+"gedeeltelijke afletteringen nog in behandeling zijn."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14809,13 +15034,19 @@ msgstr "U heeft"
 msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
-msgstr "Maak een 'tussenrekening' aan in uw kas register."
+msgstr "Maak een 'tussenrekening' aan in uw kasboek."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "De boeking %s (id %s) is al geboekt."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "Je moet een regel toevoegen voordat je kunt posten."
+msgstr "U moet een regel toevoegen voordat u boekt."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14911,7 +15142,7 @@ msgstr "dag(en) na het einde van de gefactureerde maand"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
-msgstr "dagen na de factureringsdatum"
+msgstr "dagen na factuurdatum"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -14989,12 +15220,12 @@ msgstr "op"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "uitstaande uitgaven"
+msgstr "openstaande debet bedragen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding payments"
-msgstr "uitstaande betalingen"
+msgstr "openstaande betalingen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
@@ -15012,9 +15243,31 @@ msgid "technical field to compute starting balance correctly"
 msgstr "technisch veld om het beginsaldo correct te berekenen"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"Het gekozen dagboek heeft een type dat niet compatibel is met uw "
+"factuurtype. Verkoopactiviteiten moeten naar 'verkoop dagboek' gaan en "
+"inkoopactiviteiten naar een 'inkoop dagboek'."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "het bovenliggende bedrijf"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"De maateenheid (UoM) '%s' die je hebt geselecteerd voor product '%s', is "
+"niet compatibel met zijn categorie: %s."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -15036,3 +15289,32 @@ msgstr "met als bijlage een pdf van een factuur."
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Telling"
+
+#. module: account
+#: code:addons/account/models/account_analytic_default.py:31
+#, python-format
+msgid ""
+"An analytic default requires an analytic account or an analytic tag used for"
+" analytic distribution."
+msgstr ""
+"Een standaard kostenplaats vereist een kostenplaats of een kostenplaatslabel"
+" die wordt gebruikt voor kostenplaatsverdeling."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "Je belastingen zijn bijgewerkt!"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"Controleer deze belastingen. Ze kunnen verouderd zijn. We hebben ze niet "
+"bijgewerkt. Ze komen inderdaad niet precies overeen met de belastingen van "
+"de oorspronkelijke versie van de lokalisatiemodule.<br/>Je kan ze misschien "
+"archiveren of aanpassen.<br/><ul>"

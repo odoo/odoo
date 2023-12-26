@@ -8,7 +8,7 @@
         <!-- Tax template for VAT -->
         <record id="sale_tax_template_vat20_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">10</field>
+            <field name="sequence">9</field>
             <field name="name">Реалізація ПДВ 20%</field>
             <field name="description">+ ПДВ 20%</field>
             <field name="amount">20</field>
@@ -39,7 +39,7 @@
         </record>
         <record id="sale_tax_template_vat20incl_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">10</field>
+            <field name="sequence">9</field>
             <field name="name">Реалізація в т. ч. ПДВ 20%</field>
             <field name="description">в т. ч. ПДВ 20%</field>
             <field name="amount">20</field>
@@ -68,6 +68,69 @@
                 }),
             ]"/>
             <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="sale_tax_template_vat14_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація ПДВ 14%</field>
+            <field name="description">+ ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">sale</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base'
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6431'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6431'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
+        </record>
+        <record id="sale_tax_template_vat14incl_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація в т. ч. ПДВ 14%</field>
+            <field name="description">в т. ч. ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="1"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6431'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6431'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
         </record>
         <record id="sale_tax_template_vat7_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
@@ -219,7 +282,7 @@
 
         <record id="purchase_tax_template_vat20_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">20</field>
+            <field name="sequence">19</field>
             <field name="name">Придбання ПДВ 20%</field>
             <field name="description">+ ПДВ 20%</field>
             <field name="amount">20</field>
@@ -250,7 +313,7 @@
         </record>
         <record id="purchase_tax_template_vat20incl_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">20</field>
+            <field name="sequence">19</field>
             <field name="name">Придбання в т. ч. ПДВ 20%</field>
             <field name="description">в т. ч. ПДВ 20%</field>
             <field name="amount">20</field>
@@ -279,6 +342,69 @@
                 }),
             ]"/>
             <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="purchase_tax_template_vat14_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання ПДВ 14%</field>
+            <field name="description">+ ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6441'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6441'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
+        </record>
+        <record id="purchase_tax_template_vat14incl_psbo" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання в т. ч. ПДВ 14%</field>
+            <field name="description">в т. ч. ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="1"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6441'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_psbp_6441'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
         </record>
         <record id="purchase_tax_template_vat7_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
@@ -503,7 +629,7 @@
         <!-- Tax template for VAT -->
         <record id="sale_tax_template_vat20" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">10</field>
+            <field name="sequence">9</field>
             <field name="name">Реалізація з ПДВ 20%</field>
             <field name="description">+ ПДВ 20%</field>
             <field name="amount">20</field>
@@ -534,7 +660,7 @@
         </record>
         <record id="sale_tax_template_vat20incl" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">10</field>
+            <field name="sequence">9</field>
             <field name="name">Реалізація в т. ч. ПДВ 20%</field>
             <field name="description">в т. ч. ПДВ 20%</field>
             <field name="amount">20</field>
@@ -563,6 +689,69 @@
                 }),
             ]"/>
             <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="sale_tax_template_vat14" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація з ПДВ 14%</field>
+            <field name="description">+ ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">sale</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1204'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1204'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
+        </record>
+        <record id="sale_tax_template_vat14incl" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація в т. ч. ПДВ 14%</field>
+            <field name="description">в т. ч. ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="1"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1204'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1204'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
         </record>
         <record id="sale_tax_template_vat7" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
@@ -714,7 +903,7 @@
 
         <record id="purchase_tax_template_vat20" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">20</field>
+            <field name="sequence">19</field>
             <field name="name">Придбання з ПДВ 20%</field>
             <field name="description">+ ПДВ 20%</field>
             <field name="amount">20</field>
@@ -745,7 +934,7 @@
         </record>
         <record id="purchase_tax_template_vat20incl" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">20</field>
+            <field name="sequence">19</field>
             <field name="name">Придбання в т. ч. ПДВ 20%</field>
             <field name="description">в т. ч. ПДВ 20%</field>
             <field name="amount">20</field>
@@ -774,6 +963,69 @@
                 }),
             ]"/>
             <field name="tax_group_id" ref="l10n_ua.tax_group_vat20"/>
+        </record>
+        <record id="purchase_tax_template_vat14" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання з ПДВ 14%</field>
+            <field name="description">+ ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1140'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1140'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
+        </record>
+        <record id="purchase_tax_template_vat14incl" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання в т. ч. ПДВ 14%</field>
+            <field name="description">в т. ч. ПДВ 14%</field>
+            <field name="amount">14</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="1"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1140'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ua_ias_1140'),
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="l10n_ua.tax_group_vat14"/>
         </record>
         <record id="purchase_tax_template_vat7" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>

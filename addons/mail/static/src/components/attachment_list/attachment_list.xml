@@ -3,19 +3,36 @@
 
     <t t-name="mail.AttachmentList" owl="1">
         <div class="o_AttachmentList">
-            <t t-foreach="props.attachmentLocalIds" t-as="attachmentLocalId" t-key="attachmentLocalId">
-                <Attachment
-                    class="o_AttachmentList_attachment"
-                    attachmentLocalId="attachmentLocalId"
-                    attachmentLocalIds="props.attachmentLocalIds"
-                    detailsMode="props.attachmentsDetailsMode"
-                    imageSize="props.attachmentsImageSize"
-                    isDownloadable="props.areAttachmentsDownloadable"
-                    isEditable="props.areAttachmentsEditable"
-                    showExtension="props.showAttachmentsExtensions"
-                    showFilename="props.showAttachmentsFilenames"
-                />
-            </t>
+            <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages">
+                <t t-foreach="imageAttachments" t-as="attachment" t-key="attachment.localId">
+                    <Attachment
+                        class="o_AttachmentList_attachment o_AttachmentList_imageAttachment"
+                        attachmentLocalId="attachment.localId"
+                        attachmentLocalIds="viewableAttachments.map(attachment => attachment.localId)"
+                        detailsMode="props.attachmentsDetailsMode"
+                        imageSize="props.attachmentsImageSize"
+                        isDownloadable="props.areAttachmentsDownloadable"
+                        isEditable="props.areAttachmentsEditable"
+                        showExtension="props.showAttachmentsExtensions"
+                        showFilename="props.showAttachmentsFilenames"
+                    />
+                </t>
+            </div>
+            <div class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages">
+                <t t-foreach="nonImageAttachments" t-as="attachment" t-key="attachment.localId">
+                    <Attachment
+                        class="o_AttachmentList_attachment o_AttachmentList_nonImageAttachment"
+                        attachmentLocalId="attachment.localId"
+                        attachmentLocalIds="viewableAttachments.map(attachment => attachment.localId)"
+                        detailsMode="'card'"
+                        imageSize="props.attachmentsImageSize"
+                        isDownloadable="props.areAttachmentsDownloadable"
+                        isEditable="props.areAttachmentsEditable"
+                        showExtension="props.showAttachmentsExtensions"
+                        showFilename="props.showAttachmentsFilenames"
+                    />
+                </t>
+            </div>
         </div>
     </t>
 

@@ -21,6 +21,23 @@ class TestImage(TransactionCase):
         self.base64_1x1_png = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
         self.base64_svg = base64.b64encode(b'<svg></svg>')
         self.base64_1920x1080_jpeg = tools.image_to_base64(Image.new('RGB', (1920, 1080)), 'JPEG')
+        # The following image contains a tag `Lens Info` with a value of `3.99mm f/1.8`
+        # This particular tag 0xa432 makes the `exif_transpose` method fail in 5.4.1 < Pillow < 7.2.0
+        self.base64_exif_jpg = b"""/9j/4AAQSkZJRgABAQAAAQABAAD/4QDQRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAYAAAEaAAUA
+                                  AAABAAAAVgEbAAUAAAABAAAAXgEoAAMAAAABAAEAAAITAAMAAAABAAEAAIdpAAQAAAABAAAAZgAA
+                                  AAAAAAABAAAAAQAAAAEAAAABAAWQAAAHAAAABDAyMzGRAQAHAAAABAECAwCgAAAHAAAABDAxMDCg
+                                  AQADAAAAAf//AACkMgAFAAAABAAAAKgAAAAAAAABjwAAAGQAAAGPAAAAZAAAAAkAAAAFAAAACQAA
+                                  AAX/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAx
+                                  NDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy
+                                  MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAADAAYDASIAAhEBAxEB/8QAHwAAAQUBAQEB
+                                  AQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1Fh
+                                  ByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZ
+                                  WmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXG
+                                  x8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAEC
+                                  AwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHB
+                                  CSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0
+                                  dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX
+                                  2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q=="""
 
         # Draw a red square in the middle of the image, this will be used to
         # verify crop is working. The border is going to be `self.bg_color` and
@@ -91,6 +108,13 @@ class TestImage(TransactionCase):
         self._orientation_test(7, (pink, yellow, green, blue), size, expected)  # right/bottom
         self._orientation_test(8, (green, blue, pink, yellow), size, expected)  # left/bottom
 
+    def test_03_image_fix_orientation_exif(self):
+        """Test that a jpg image with exif orientation tag gets rotated"""
+        image = tools.base64_to_image(self.base64_exif_jpg)
+        self.assertEqual(image.size, (6,3))
+        image = tools.image_fix_orientation(image)
+        self.assertEqual(image.size, (3,6))
+
     def test_10_image_process_base64_source(self):
         """Test the base64_source parameter of image_process."""
         wrong_base64 = b'oazdazpodazdpok'
@@ -141,8 +165,8 @@ class TestImage(TransactionCase):
         """Test the verify_resolution parameter of image_process."""
         res = tools.image_process(self.base64_1920x1080_jpeg, verify_resolution=True)
         self.assertNotEqual(res, False, "size ok")
-        base64_image_excessive = tools.image_to_base64(Image.new('RGB', (45001, 1000)), 'PNG')
-        with self.assertRaises(ValueError, msg="size excessive"):
+        base64_image_excessive = tools.image_to_base64(Image.new('RGB', (50001, 1000)), 'PNG')
+        with self.assertRaises(UserError, msg="size excessive"):
             tools.image_process(base64_image_excessive, verify_resolution=True)
 
     def test_13_image_process_quality(self):
@@ -261,6 +285,31 @@ class TestImage(TransactionCase):
         """Test that image_data_uri is working as expected."""
         self.assertEqual(tools.image_data_uri(self.base64_1x1_png), 'data:image/png;base64,' + self.base64_1x1_png.decode('ascii'))
 
+    def test_21_image_guess_size_from_field_name(self):
+        f = tools.image_guess_size_from_field_name
+        # Test case: empty field_name input
+        self.assertEqual(f(''), (0, 0))
+        # Test case: custom field_name input
+        self.assertEqual(f('custom_field'), (0, 0))
+        # Test case: field_name input that starts with 'x_'
+        self.assertEqual(f('x_field'), (0, 0))
+        # Test case: field_name input that starts with 'x_' and ends with a number less than 16
+        self.assertEqual(f('x_studio_image_1'), (0, 0))
+        # Test case: field_name input that starts with 'x_' and ends with a number greater than 16
+        self.assertEqual(f('x_studio_image_32'), (0, 0))
+        # Test case: field_name input that has a suffix less than 16
+        self.assertEqual(f('image_15'), (0, 0))
+        # Test case: field_name input that has a suffix equal to 16
+        self.assertEqual(f('image_16'), (16, 16))
+        # Test case: field_name input that has a suffix greater than 16
+        self.assertEqual(f('image_32'), (32, 32))
+        # Test case: field_name input that has a suffix with 2 numbers
+        self.assertEqual(f('image_1920_1080'), (1080, 1080))
+        # Test case: field_name input that has a float as suffix
+        self.assertEqual(f('image_32.5'), (0, 0))
+        # Test case: field_name input that has a suffix greater than 16 but no underscore
+        self.assertEqual(f('image32'), (0, 0))
+
     def _assertAlmostEqualSequence(self, rgb1, rgb2, delta=10):
         self.assertEqual(len(rgb1), len(rgb2))
         for index, t in enumerate(zip(rgb1, rgb2)):
@@ -290,3 +339,9 @@ class TestImage(TransactionCase):
         self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, 0)), expected[1])         # top/right
         self._assertAlmostEqualSequence(fixed_image.getpixel((0, size - 1)), expected[2])         # bottom/left
         self._assertAlmostEqualSequence(fixed_image.getpixel((size - 1, size - 1)), expected[3])  # bottom/right
+
+    def test_ptype_image_to_jpeg(self):
+        """converts to RGB when saving as JPEG"""
+        image1 = Image.new('P', (1, 1), color='red')
+        image2 = Image.new('RGB', (1, 1), color='red')
+        self.assertEqual(tools.image.image_apply_opt(image1, 'JPEG'), tools.image.image_apply_opt(image2, 'JPEG'))

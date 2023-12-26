@@ -5,6 +5,7 @@
 # Translators:
 # Vangelis Skarmoutsos <skarmoutsosv@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-10-05 06:29+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
-"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
+"Last-Translator: Alexandros Kapetanios <alexandros@gnugr.org>, 2021\n"
+"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,14 +27,28 @@ msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid "Display the currency"
+msgstr ""
+
+#. module: account_edi_facturx
 #: model:ir.model,name:account_edi_facturx.model_account_edi_format
 msgid "EDI format"
-msgstr ""
+msgstr "Ηλεκτρονική ανταλλαγή δεδομένων"
 
 #. module: account_edi_facturx
 #: model:ir.model.fields,field_description:account_edi_facturx.field_account_edi_format__id
 msgid "ID"
 msgstr "Κωδικός"
+
+#. module: account_edi_facturx
+#: code:addons/account_edi_facturx/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The currency (%s) of the document you are uploading is not active in this database.\n"
+"Please activate it before trying again to import."
+msgstr ""
 
 #. module: account_edi_facturx
 #: model:ir.model.fields,field_description:account_edi_facturx.field_account_edi_format____last_update

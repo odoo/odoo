@@ -15,7 +15,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
-    
+
     def _get_invoice_reference(self):
         self.ensure_one()
         vendor_refs = [ref for ref in set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
@@ -45,14 +45,19 @@ class AccountMove(models.Model):
 
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
+        invoice_vals['currency_id'] = self.line_ids and self.currency_id or invoice_vals.get('currency_id')
         del invoice_vals['ref']
         self.update(invoice_vals)
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
         new_lines = self.env['account.move.line']
+        sequence = max(self.line_ids.mapped('sequence')) + 1 if self.line_ids else 10
         for line in po_lines.filtered(lambda l: not l.display_type):
-            new_line = new_lines.new(line._prepare_account_move_line(self))
+            line_vals = line._prepare_account_move_line(self)
+            line_vals.update({'sequence': sequence})
+            new_line = new_lines.new(line_vals)
+            sequence += 1
             new_line.account_id = new_line._get_computed_account()
             new_line._onchange_price_subtotal()
             new_lines += new_line
@@ -72,28 +77,31 @@ class AccountMove(models.Model):
 
         self.purchase_id = False
         self._onchange_currency()
-        self.partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
         res = super(AccountMove, self)._onchange_partner_id()
-        if self.partner_id and\
-                self.move_type in ['in_invoice', 'in_refund'] and\
-                self.currency_id != self.partner_id.property_purchase_currency_id and\
-                self.partner_id.property_purchase_currency_id.id:
+
+        currency_id = (
+                self.partner_id.property_purchase_currency_id
+                or self.env['res.currency'].browse(self.env.context.get("default_currency_id"))
+                or self.currency_id
+        )
+
+        if self.partner_id and self.move_type in ['in_invoice', 'in_refund'] and self.currency_id != currency_id:
             if not self.env.context.get('default_journal_id'):
                 journal_domain = [
                     ('type', '=', 'purchase'),
                     ('company_id', '=', self.company_id.id),
-                    ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
+                    ('currency_id', '=', currency_id.id),
                 ]
                 default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
                 if default_journal_id:
                     self.journal_id = default_journal_id
-            if self.env.context.get('default_currency_id'):
-                self.currency_id = self.env.context['default_currency_id']
-            if self.partner_id.property_purchase_currency_id:
-                self.currency_id = self.partner_id.property_purchase_currency_id
+
+            self.currency_id = currency_id
+            self._onchange_currency()
+
         return res
 
     @api.model_create_multi

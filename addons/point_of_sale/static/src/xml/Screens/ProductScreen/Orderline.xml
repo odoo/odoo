@@ -6,7 +6,7 @@
             <span class="product-name">
                 <t t-esc="props.line.get_full_product_name()"/>
                 <span> </span>
-                <t t-if="props.line.get_product().tracking!=='none'">
+                <t t-if="props.line.get_product().tracking!=='none' &amp;&amp; (env.pos.picking_type.use_create_lots || env.pos.picking_type.use_existing_lots)">
                     <t t-if="props.line.has_valid_product_lot()">
                         <i  t-on-click.stop="lotIconClicked"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
@@ -37,9 +37,9 @@
                         <span> </span><t t-esc="props.line.get_unit().name" />
                         at
                         <t t-if="props.line.display_discount_policy() == 'without_discount' and
-                            props.line.get_unit_display_price() != props.line.get_lst_price()">
+                            props.line.get_unit_display_price() &lt; props.line.get_taxed_lst_unit_price()">
                             <s>
-                                <t t-esc="env.pos.format_currency(props.line.get_fixed_lst_price(),'Product Price')" />
+                                <t t-esc="env.pos.format_currency(props.line.get_taxed_lst_unit_price(),'Product Price')" />
                             </s>
                             <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
                         </t>
@@ -60,6 +60,15 @@
                     </li>
                 </t>
             </ul>
+            <t t-if="props.line.get_lot_lines()">
+                <ul class="info-list">
+                    <t t-foreach="props.line.get_lot_lines()" t-as="lot" t-key="lot.cid">
+                        <li>
+                            SN <t t-esc="lot.attributes['lot_name']"/>
+                        </li>
+                    </t>
+                </ul>
+            </t>
         </li>
     </t>
 

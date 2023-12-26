@@ -55,6 +55,8 @@ class GeoIPResolver(object):
                 'city': r.city.name,
                 'country_code': getattr(country, attr),
                 'country_name': country.name,
+                'latitude': r.location.latitude,
+                'longitude': r.location.longitude,
                 'region': r.subdivisions[0].iso_code if r.subdivisions else None,
                 'time_zone': r.location.time_zone,
             }

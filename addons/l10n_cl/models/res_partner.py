@@ -23,6 +23,10 @@ class ResPartner(models.Model):
              '3 - End consumer (only receipts)\n'
              '4 - Foreigner')
 
+    @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['l10n_cl_sii_taxpayer_type']
+
     def _format_vat_cl(self, values):
         identification_types = [self.env.ref('l10n_latam_base.it_vat').id, self.env.ref('l10n_cl.it_RUT').id,
                                 self.env.ref('l10n_cl.it_RUN').id]
@@ -38,6 +42,11 @@ class ResPartner(models.Model):
         else:
             return values['vat']
 
+    def _format_dotted_vat_cl(self, vat):
+        vat_l = vat.split('-')
+        n_vat, n_dv = vat_l[0], vat_l[1]
+        return '%s-%s' % (format(int(n_vat), ',d').replace(',', '.'), n_dv)
+
     @api.model
     def create(self, values):
         if values.get('vat'):
@@ -45,12 +54,13 @@ class ResPartner(models.Model):
         return super().create(values)
 
     def write(self, values):
-        for record in self:
-            vat_values = {
-                'vat': values.get('vat', record.vat),
-                'l10n_latam_identification_type_id': values.get(
-                    'l10n_latam_identification_type_id', record.l10n_latam_identification_type_id.id),
-                'country_id': values.get('country_id', record.country_id.id)
-            }
-            values['vat'] = self._format_vat_cl(vat_values)
+        if any(field in values for field in ['vat', 'l10n_latam_identification_type_id', 'country_id']): 
+            for record in self:
+                vat_values = {
+                    'vat': values.get('vat', record.vat),
+                    'l10n_latam_identification_type_id': values.get(
+                        'l10n_latam_identification_type_id', record.l10n_latam_identification_type_id.id),
+                    'country_id': values.get('country_id', record.country_id.id)
+                }
+                values['vat'] = self._format_vat_cl(vat_values)
         return super().write(values)

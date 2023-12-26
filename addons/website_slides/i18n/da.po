@@ -15,21 +15,21 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
-# walther_b <wba@miracle.dk>, 2020
+# Walther Barnett <walther@gundogpro.dk>, 2020
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2020
 # JonathanStein <jstein@image.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
 # Martin Trigaux, 2020
+# Mads Søndergaard, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: Mads Søndergaard, 2021\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -647,11 +647,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid ""
-"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
-"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
-"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
-"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Fuldført</span>"
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Fuldført</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -861,6 +861,7 @@ msgstr "<span>Erfarings point</span>"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr "<strong>Tak skal du have!</strong>Emailen er blevet sendt. "
@@ -874,6 +875,17 @@ msgstr "En Mægtig Skov fra Ages"
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_0
 msgid "A fruit"
 msgstr "En frugt"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"A good course has a structure. Pick a name for your first section and click "
+"<b>Save</b> to create it."
+msgstr ""
+"Et godt kursus har en struktur. Giv din første sektion et navn, og klik på "
+"<b>Gem</b> for at oprette den."
 
 #. module: website_slides
 #. openerp-web
@@ -1566,6 +1578,8 @@ msgid ""
 "Click here to send a verification email allowing you to participate at the "
 "eLearning."
 msgstr ""
+"Klik her for at sende en bekræftelses email som gør dig i stand til at "
+"deltage in eLæringen."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -1757,6 +1771,9 @@ msgid ""
 "available here. The tag \"<b>New</b>\" indicates that this lesson was "
 "created less than 7 days ago."
 msgstr ""
+"Tillykke! Din første lektion er tilgængelig! Lad os se mulighederne der er "
+"tilgængelige her. Tagget \"<b>Ny</b>\" indikerer, at denne lektion er "
+"oprettet for mindre end 7 dage siden."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
@@ -1771,6 +1788,8 @@ msgid ""
 "Congratulations, you've created your first course.<br/>Click on the title of"
 " this content to see it in fullscreen mode."
 msgstr ""
+"Tillykke! Du har oprettet dit første kursus. <br/>Klik på titlen for dette "
+"indhold for at se det i fuldskærms tilstand."
 
 #. module: website_slides
 #. openerp-web
@@ -1780,6 +1799,9 @@ msgid ""
 "Congratulations, your course has been created, but there isn't any content "
 "yet. First, let's add a <b>Section</b> to give your course a structure."
 msgstr ""
+"Tillykke! Dit kursus er blevet oprettet, men der er endnu ikke noget "
+"indhold. Lad os først tilføje et <b>Afsnit</b>, for at give dit kursus en "
+"struktur."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
@@ -2115,6 +2137,12 @@ msgid ""
 " * Specific : You choose the slide to appear.\n"
 " * None : No slides will be shown.\n"
 msgstr ""
+"Afhængig af kampagne strategien, vil et dias vises øverst på kursus siden :\n"
+"* Seneste Udgivet : diasset oprettet sidst.\n"
+"* Mest Bedømte : diasset som har flest stemmer.\n"
+"* Mest Viste : diasset som er blevet vist mest.\n"
+"* Specifik : Du vælger diasset der skal vises.\n"
+"* Ingen : Der vil ikke blive vist noget dias.\n"
 
 #. module: website_slides
 #. openerp-web
@@ -2970,7 +2998,7 @@ msgstr "Interessante Træ-fakta"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_slide_demo_0_1
-msgid "Interesting informations about home gardening. Keep it close !"
+msgid "Interesting information about home gardening. Keep it close !"
 msgstr "Interessante informationer om hjemme gartneri. Hold den nær !"
 
 #. module: website_slides
@@ -3824,17 +3852,17 @@ msgstr "Indtast venligst et gyldigt youtube eller google doc url"
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
+#, python-format
+msgid "Please fill in the question"
+msgstr "Vær venlig at udfylde spørgsmålet"
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
 msgstr "Udfyld venligst dette felt"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
-#, python-format
-msgid "Please fill up the question"
-msgstr "Vær venlig at udfylde spørgsmålet"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
@@ -3952,7 +3980,7 @@ msgstr "Spørgsmålet \"%s\" skal have 1 korrekt svar"
 #: code:addons/website_slides/models/slide_question.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
-msgstr ""
+msgstr "Spørgsmål \"%s\" skal have 1 korrekt svar og mindst 1 ugyldigt svar"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
@@ -4313,6 +4341,12 @@ msgstr "Sektion navn"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
 msgstr "Sikkerheds Token"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_users.py:0
+#, python-format
+msgid "See our eLearning"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -4869,7 +4903,7 @@ msgstr "Dette er det korrekte svar"
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "This is the correct answer, congratulations"
-msgstr ""
+msgstr "Dette er det korrekte svar, tillykke"
 
 #. module: website_slides
 #. openerp-web
@@ -5381,6 +5415,14 @@ msgid "Yes"
 msgstr "Ja"
 
 #. module: website_slides
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
+msgstr ""
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -5484,7 +5526,7 @@ msgstr "Du skal logge ind før"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "You may now participate in our eLearning."
-msgstr ""
+msgstr "Du kan nu deltage i vores eLæring."
 
 #. module: website_slides
 #. openerp-web
@@ -5522,6 +5564,8 @@ msgid ""
 "Your Google API key is invalid, please update it in your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
+"Din Google API nøgler er ugyldig, opdater den venligst i dine indstillinger.\n"
+"Indstillinger > Hjemmeside > Funktioner > API Nøgle"
 
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
@@ -5604,6 +5648,13 @@ msgstr ""
 "at teste din viden."
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "e.g. Introduction"
+msgstr "f.eks. Introduktion"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. https://www.odoo.com"
 msgstr "f.eks. https://www.odoo.com"
@@ -5643,6 +5694,9 @@ msgid ""
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
+"betyder? YouTube unlisted betyder, at videoen kun kan ses af brugere med et "
+"link til den. Din video vil aldrig komme frem som resultat på søgninger, "
+"eller på din kanal."
 
 #. module: website_slides
 #. openerp-web

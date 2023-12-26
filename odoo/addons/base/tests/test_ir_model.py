@@ -311,6 +311,20 @@ class TestIrModel(SavepointCase):
         }]
         self.assertEqual(groups, expected, 'should include 2 empty ripeness stages')
 
+    def test_rec_name_deletion(self):
+        """Check that deleting 'x_name' does not crash."""
+        record = self.env['x_bananas'].create({'x_name': "Ifan Ben-Mezd"})
+        self.assertEqual(record._rec_name, 'x_name')
+        self.assertEqual(record._fields['display_name'].depends, ('x_name',))
+        self.assertEqual(record.display_name, "Ifan Ben-Mezd")
+
+        # unlinking x_name should fixup _rec_name and display_name
+        self.env['ir.model.fields']._get('x_bananas', 'x_name').unlink()
+        record = self.env['x_bananas'].browse(record.id)
+        self.assertEqual(record._rec_name, None)
+        self.assertEqual(record._fields['display_name'].depends, ())
+        self.assertEqual(record.display_name, f"x_bananas,{record.id}")
+
 
 @tagged('test_eval_context')
 class TestEvalContext(TransactionCase):

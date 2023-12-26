@@ -81,15 +81,23 @@ class StockLandedCost(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_picking_ids(self):
-        self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
-                                 FROM stock_move AS sm
-                           INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
-                                WHERE sm.picking_id IS NOT NULL""")
+        # Backport of f329de26: allowed_picking_ids is useless, view_stock_landed_cost_form no longer uses it,
+        # the field and its compute are kept since this is a stable version. Still, this compute has been made
+        # more resilient to MemoryErrors.
         valued_picking_ids_per_company = defaultdict(list)
-        for res in self.env.cr.fetchall():
-            valued_picking_ids_per_company[res[1]].append(res[0])
+        if self.company_id:
+            self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                     FROM stock_move AS sm
+                               INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                    WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
+                                 GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
+            for res in self.env.cr.fetchall():
+                valued_picking_ids_per_company[res[1]].append(res[0])
         for cost in self:
-            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
+            n = 5000
+            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id][:n]
+            for ids_chunk in tools.split_every(n, valued_picking_ids_per_company[cost.company_id.id][n:]):
+                cost.allowed_picking_ids = [(4, id_) for id_ in ids_chunk]
 
     @api.onchange('target_model')
     def _onchange_target_model(self):
@@ -136,6 +144,7 @@ class StockLandedCost(models.Model):
                 'move_type': 'entry',
             }
             valuation_layer_ids = []
+            cost_to_add_byproduct = defaultdict(lambda: 0.0)
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
@@ -159,8 +168,11 @@ class StockLandedCost(models.Model):
                     valuation_layer_ids.append(valuation_layer.id)
                 # Update the AVCO
                 product = line.move_id.product_id
-                if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                    product.with_company(self.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add / product.quantity_svl
+                if product.cost_method == 'average':
+                    cost_to_add_byproduct[product] += cost_to_add
+                # Products with manual inventory valuation are ignored because they do not need to create journal entries.
+                if product.valuation != "real_time":
+                    continue
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
@@ -170,17 +182,28 @@ class StockLandedCost(models.Model):
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            # batch standard price computation avoid recompute quantity_svl at each iteration
+            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys())
+            for product in products:  # iterate on recordset to prefetch efficiently quantity_svl
+                if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                    product.with_company(cost.company_id).sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
+
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
-            move = move.create(move_vals)
-            cost.write({'state': 'done', 'account_move_id': move.id})
-            move._post()
+            # We will only create the accounting entry when there are defined lines (the lines will be those linked to products of real_time valuation category).
+            cost_vals = {'state': 'done'}
+            if move_vals.get("line_ids"):
+                move = move.create(move_vals)
+                cost_vals.update({'account_move_id': move.id})
+            cost.write(cost_vals)
+            if cost.account_move_id:
+                move._post()
 
             if cost.vendor_bill_id and cost.vendor_bill_id.state == 'posted' and cost.company_id.anglo_saxon_accounting:
                 all_amls = cost.vendor_bill_id.line_ids | cost.account_move_id.line_ids
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
-                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.full_reconcile_id).reconcile()
+                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled).reconcile()
 
         return True
 
@@ -190,7 +213,7 @@ class StockLandedCost(models.Model):
 
         for move in self._get_targeted_move_ids():
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel':
+            if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.product_qty:
                 continue
             vals = {
                 'product_id': move.product_id.id,
@@ -204,16 +227,16 @@ class StockLandedCost(models.Model):
 
         if not lines:
             target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
-            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with automated inventory valuation and FIFO or average costing method.", target_model_descriptions[self.target_model]))
+            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.", target_model_descriptions[self.target_model]))
         return lines
 
     def compute_landed_cost(self):
         AdjustementLines = self.env['stock.valuation.adjustment.lines']
         AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
 
-        digits = self.env['decimal.precision'].precision_get('Product Price')
         towrite_dict = {}
         for cost in self.filtered(lambda cost: cost._get_targeted_move_ids()):
+            rounding = cost.currency_id.rounding
             total_qty = 0.0
             total_cost = 0.0
             total_weight = 0.0
@@ -230,7 +253,7 @@ class StockLandedCost(models.Model):
 
                 former_cost = val_line_values.get('former_cost', 0.0)
                 # round this because former_cost on the valuation lines is also rounded
-                total_cost += tools.float_round(former_cost, precision_digits=digits) if digits else former_cost
+                total_cost += cost.currency_id.round(former_cost)
 
                 total_line += 1
 
@@ -256,8 +279,8 @@ class StockLandedCost(models.Model):
                         else:
                             value = (line.price_unit / total_line)
 
-                        if digits:
-                            value = tools.float_round(value, precision_digits=digits, rounding_method='UP')
+                        if rounding:
+                            value = tools.float_round(value, precision_rounding=rounding, rounding_method='UP')
                             fnc = min if line.price_unit > 0 else max
                             value = fnc(value, line.price_unit - value_split)
                             value_split += value

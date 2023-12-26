@@ -65,6 +65,7 @@ _CONST_OPCODES = set(to_opcodes([
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
+    'LIST_EXTEND', 'SET_UPDATE',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -82,9 +83,13 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # comprehensions
     'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
     'COMPARE_OP',
+    # specialised comparisons
+    'IS_OP', 'CONTAINS_OP',
+    'DICT_MERGE', 'DICT_UPDATE',
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
+    'GEN_START',  # added in 3.10
     'POP_BLOCK', 'POP_EXCEPT',
 
     # note: removed in 3.8
@@ -106,6 +111,8 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
+
+    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
 ])) - _BLACKLIST
 
 _logger = logging.getLogger(__name__)
@@ -407,7 +414,7 @@ dateutil = wrap_module(dateutil, {
     for mod in mods
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
-time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime'])
+time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])

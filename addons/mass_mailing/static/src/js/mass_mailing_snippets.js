@@ -139,4 +139,15 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     }
 });
 
+// TODO remove in master when removing the XML div. The option has been disabled
+// in 14.0 because of tricky problems to resolve that require refactoring:
+// the ability to clean snippet without saving and reloading the page.
+options.registry.SnippetSave.include({
+
+    async saveSnippet(previewMode, widgetValue, params) {},
+
+    async _computeVisibility() {
+        return false;
+    },
+});
 });

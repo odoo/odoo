@@ -62,12 +62,12 @@ class HrEmployeeBase(models.AbstractModel):
         """
         # Check on login
         check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
-        employee_to_check_working = self.filtered(lambda e: e.user_id.im_status)
+        employee_to_check_working = self.filtered(lambda e: e.user_id.im_status == 'offline')
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'to_define'
             if check_login:
-                if employee.user_id.im_status == 'online' or employee.last_activity:
+                if employee.user_id.im_status == 'online':
                     state = 'present'
                 elif employee.user_id.im_status == 'offline' and employee.id not in working_now_list:
                     state = 'absent'
@@ -133,7 +133,7 @@ class HrEmployeeBase(models.AbstractModel):
         This method compute the state defining the display icon in the kanban view.
         It can be overriden to add other possibilities, like time off or attendances recordings.
         """
-        working_now_list = self._get_employee_working_now()
+        working_now_list = self.filtered(lambda e: e.hr_presence_state == 'present')._get_employee_working_now()
         for employee in self:
             if employee.hr_presence_state == 'present':
                 if employee.id in working_now_list:
@@ -158,7 +158,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _get_employee_working_now(self):
         working_now = []
         # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
-        all_employee_tz = self.mapped('tz')
+        all_employee_tz = set(self.mapped('tz'))
         for tz in all_employee_tz:
             employee_ids = self.filtered(lambda e: e.tz == tz)
             resource_calendar_ids = employee_ids.mapped('resource_calendar_id')

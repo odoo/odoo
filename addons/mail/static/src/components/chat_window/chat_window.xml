@@ -17,6 +17,7 @@
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="props.hasCloseAsBackButton"
                     isExpandable="props.isExpandable"
+                    saveThreadScrollTop="_saveThreadScrollTop"
                     t-on-o-clicked="_onClickedHeader"
                     t-ref="header"
                 />
@@ -40,7 +41,6 @@
                         </span>
                         <AutocompleteInput
                             class="o_ChatWindow_newMessageFormInput"
-                            isHtml="true"
                             placeholder="newMessageFormInputPlaceholder"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"

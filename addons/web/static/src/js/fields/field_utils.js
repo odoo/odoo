@@ -23,6 +23,8 @@ var utils = require('web.utils');
 
 var _t = core._t;
 
+const NBSP = "\u00a0";
+
 //------------------------------------------------------------------------------
 // Formatting
 //------------------------------------------------------------------------------
@@ -330,8 +332,12 @@ function formatX2Many(value) {
  *        digits precision in the field. Note: if the currency defines a
  *        precision, the currency's one is used.
  * @param {boolean} [options.forceString=false]
- *        if false, returns a string encoding the html formatted value (with
- *        whitespace encoded as '&nbsp;')
+ *        if true, returns a string with regular whitespace. Otherwise it uses
+ *        non-breaking whitespace unicode character. The option is presented for
+ *        historical reason and will be removed in master. Previous
+ *        implementation used html entity `&nbsp;`, which doesn't work in html
+ *        attributes. With new implementation we can always use the unicode
+ *        character and the option is not needed anymore.
  * @returns {string}
  */
 function formatMonetary(value, field, options) {
@@ -361,7 +367,7 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
-    const ws = options.forceString ? ' ' : '&nbsp;';
+    const ws = options.forceString ? ' ' : NBSP;
     if (currency.position === "after") {
         return formatted_value + ws + currency.symbol;
     } else {
@@ -467,7 +473,7 @@ function parseDate(value, field, options) {
         return false;
     }
     var datePattern = time.getLangDateFormat();
-    var datePatternWoZero = datePattern.replace('MM', 'M').replace('DD', 'D');
+    var datePatternWoZero = time.getLangDateFormatWoZero();
     var date;
     const smartDate = parseSmartDateInput(value);
     if (smartDate) {
@@ -484,10 +490,12 @@ function parseDate(value, field, options) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
-        date.toJSON = function () {
-            return this.clone().locale('en').format('YYYY-MM-DD');
-        };
-        return date;
+        if (date.year() >= 1000){
+            date.toJSON = function () {
+                return this.clone().locale('en').format('YYYY-MM-DD');
+            };
+            return date;
+        }
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct date"), value));
 }
@@ -509,10 +517,10 @@ function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.getLangDateFormat(),
-        timePattern = time.getLangTimeFormat();
-    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
-        timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
+    const datePattern = time.getLangDateFormat();
+    const timePattern = time.getLangTimeFormat();
+    const datePatternWoZero = time.getLangDateFormatWoZero();
+    const timePatternWoZero = time.getLangTimeFormatWoZero();
     var pattern1 = datePattern + ' ' + timePattern;
     var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
@@ -521,6 +529,7 @@ function parseDateTime(value, field, options) {
         datetime = smartDate;
     } else {
         if (options && options.isUTC) {
+            value = value.padStart(19, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
             // phatomjs crash if we don't use this format
             datetime = moment.utc(value.replace(' ', 'T') + 'Z');
         } else {
@@ -534,10 +543,12 @@ function parseDateTime(value, field, options) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
-        datetime.toJSON = function () {
-            return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
-        };
-        return datetime;
+        if (datetime.year() >= 1000) {
+            datetime.toJSON = function () {
+                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
+            };
+            return datetime;
+        }
     }
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
@@ -604,12 +615,8 @@ function parseFloat(value) {
  * @throws {Error} if no float is found or if parameter does not respect monetary condition
  */
 function parseMonetary(value, field, options) {
-    var values = value.split('&nbsp;');
-    if (values.length === 1) {
+    if (!value.includes(NBSP) && !value.includes('&nbsp;')) {
         return parseFloat(value);
-    }
-    else if (values.length !== 2) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
     }
     options = options || {};
     var currency = options.currency;
@@ -621,7 +628,21 @@ function parseMonetary(value, field, options) {
         }
         currency = session.get_currency(currency_id);
     }
-    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
+    if (!currency) {
+        return parseFloat(value);
+    }
+    if (!value.includes(currency.symbol)) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+    }
+    if (currency.position === 'after') {
+        return parseFloat(value
+            .replace(`${ NBSP }${ currency.symbol }`, '')
+            .replace(`&nbsp;${ currency.symbol }`, ''));
+    } else {
+        return parseFloat(value
+            .replace(`${ currency.symbol }${ NBSP }`, '')
+            .replace(`${ currency.symbol }&nbsp;`, ''));
+    }
 }
 
 /**

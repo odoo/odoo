@@ -3,8 +3,10 @@
 # 	* base_vat
 # 
 # Translators:
-# 0bbd034d1b285e7568819a743ec2b501_2b84791 <d5c81972596cfedcd53204f47f6a8434_940895>, 2020
 # Martin Trigaux, 2020
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Daniela Cervantes <dace@odoo.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -27,10 +29,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" aria-label=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -64,7 +65,7 @@ msgstr "Nombre mostrado"
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "Identificación"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -72,9 +73,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
-"Si esta casilla de verificación está marcada, no podrá guardar un contacto "
-"si el su número de identificación fiscal (NIF) no puede ser validado por el "
-"servicio Europeo VIES."
+"Si esta casilla de verificación se encuentra seleccionada, no podrás guardar"
+" un contacto si IVA no es valido para el servicio Europeo VIES."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
@@ -90,8 +90,8 @@ msgid ""
 "The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
 "Note: the expected format is %(format)s"
 msgstr ""
-"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
-"Note: the expected format is %(format)s"
+"El número de IVA [%(vat)s]para el socio [%(name)s] parece no ser válido. \n"
+"Nota: el formato esperado es %(format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -100,24 +100,22 @@ msgid ""
 "The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
 "validation check or did not respect the expected format %(format)s."
 msgstr ""
-"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
-"validation check or did not respect the expected format %(format)s."
+"El número de IVA [%(vat)s] para el socio [%(name)s] no pasó la verificación "
+"de validación de IVA VIES o no tiene el formato esperado%(format)s."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "VAT"
-msgstr "Nº identif. fiscal (NIF)"
+msgstr "NIF"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Verificar números de identificación fiscal (NIF)"
+msgstr "Verificar NIFs"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
-"Verificar números de identificación fiscal (NIF) usando el servicio europeo "
-"VIES"
+msgstr "Verificar NIFs con el servicio europeo VIES"

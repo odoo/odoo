@@ -11,7 +11,7 @@ class Board(Controller):
     @route('/board/add_to_dashboard', type='json', auth='user')
     def add_to_dashboard(self, action_id, context_to_save, domain, view_mode, name=''):
         # Retrieve the 'My Dashboard' action from its xmlid
-        action = request.env.ref('board.open_board_my_dash_action')
+        action = request.env.ref('board.open_board_my_dash_action').sudo()
 
         if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form' and action_id:
             # Maybe should check the content instead of model board.board ?
@@ -21,6 +21,10 @@ class Board(Controller):
                 xml = ElementTree.fromstring(board['arch'])
                 column = xml.find('./board/column')
                 if column is not None:
+                    # We don't want to save allowed_company_ids
+                    # Otherwise on dashboard, the multi-company widget does not filter the records
+                    if 'allowed_company_ids' in context_to_save:
+                        context_to_save.pop('allowed_company_ids')
                     new_action = ElementTree.Element('action', {
                         'name': str(action_id),
                         'string': name,

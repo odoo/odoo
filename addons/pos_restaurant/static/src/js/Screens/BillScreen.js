@@ -10,6 +10,16 @@ odoo.define('pos_restaurant.BillScreen', function (require) {
                 this.props.resolve({ confirmed: true, payload: null });
                 this.trigger('close-temp-screen');
             }
+            whenClosing() {
+                this.confirm();
+            }
+            /**
+             * @override
+             */
+            async printReceipt() {
+                await super.printReceipt();
+                this.currentOrder._printed = false;
+            }
         }
         BillScreen.template = 'BillScreen';
         return BillScreen;

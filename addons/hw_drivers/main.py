@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from traceback import format_exc
 
 from dbus.mainloop.glib import DBusGMainLoop
 import json
@@ -72,7 +73,10 @@ class Manager(Thread):
         """
 
         helpers.check_git_branch()
-        helpers.check_certificate()
+        is_certificate_ok, certificate_details = helpers.get_certificate_status()
+        if not is_certificate_ok:
+            _logger.warning("An error happened when trying to get the HTTPS certificate: %s",
+                            certificate_details)
 
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
@@ -90,10 +94,14 @@ class Manager(Thread):
         # list to the connected DB.
         self.previous_iot_devices = []
         while 1:
-            if iot_devices != self.previous_iot_devices:
-                self.send_alldevices()
-                self.previous_iot_devices = iot_devices.copy()
-            time.sleep(3)
+            try:
+                if iot_devices != self.previous_iot_devices:
+                    self.send_alldevices()
+                    self.previous_iot_devices = iot_devices.copy()
+                time.sleep(3)
+            except:
+                # No matter what goes wrong, the Manager loop needs to keep running
+                _logger.error(format_exc())
 
 
 # Must be started from main thread

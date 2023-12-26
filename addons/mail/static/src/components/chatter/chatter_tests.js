@@ -89,10 +89,10 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     );
     assert.strictEqual(
         document.querySelector(`.o_Chatter_thread`).dataset.threadLocalId,
-        this.env.models['mail.thread'].find(thread =>
-            thread.id === 100 &&
-            thread.model === 'res.partner'
-        ).localId,
+        this.env.models['mail.thread'].findFromIdentifyingData({
+            id: 100,
+            model: 'res.partner',
+        }).localId,
         "thread should have the right thread local id"
     );
     assert.strictEqual(

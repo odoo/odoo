@@ -200,10 +200,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                             if (!treatedQuestionIds.includes(questionId)) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
+
+                                // Add answer to selected answer
+                                self.selectedAnswers.push(parseInt($target.val()));
                             }
                         });
-                        // Add answer to selected answer
-                        this.selectedAnswers.push(parseInt($target.val()));
                     }
                 }
             }
@@ -589,7 +590,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                     if (questionRequired && !data[questionId]) {
                         errors[questionId] = constrErrorMsg;
                     } else if (data[questionId]) {
-                        var momentDate = moment($input.val());
+                        var datetimepickerFormat = $input.data('questionType') === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat();
+                        var momentDate = moment($input.val(), datetimepickerFormat);
                         if (!momentDate.isValid()) {
                             errors[questionId] = validationDateMsg;
                         } else {
@@ -880,6 +882,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
         var questionTimeLimitReached = $timerData.data('questionTimeLimitReached');
         var timeLimitMinutes = $timerData.data('timeLimitMinutes');
         var hasAnswered = $timerData.data('hasAnswered');
+        const serverTime = $timerData.data('serverTime');
 
         if (!questionTimeLimitReached && !hasAnswered && timeLimitMinutes) {
             var timer = $timerData.data('timer');
@@ -888,6 +891,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             });
             this.$('.o_survey_timer_container').append($timer);
             this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
+                'serverTime': serverTime,
                 'timer': timer,
                 'timeLimitMinutes': timeLimitMinutes
             });
@@ -914,7 +918,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         var minDate = minDateData
             ? this._formatDateTime(minDateData, datetimepickerFormat)
-            : moment({ y: 1 });
+            : moment({ y: 1000 });
 
         var maxDate = maxDateData
             ? this._formatDateTime(maxDateData, datetimepickerFormat)

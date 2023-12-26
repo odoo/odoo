@@ -8,7 +8,6 @@
 # Levent Karakaş <levent@mektup.at>, 2020
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Mehmet Demirel <mdemirell@gmail.com>, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2020
@@ -17,21 +16,23 @@
 # Thermo Dynamic <emirhanayar2004@gmail.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2020
-# abc Def <hdogan1974@gmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # Martin Trigaux, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
+# abc Def <hdogan1974@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Halil, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -207,7 +208,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 msgid "<em>No tags defined</em>"
-msgstr ""
+msgstr "<em>Tanımlanmış etiket yok</em>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -277,6 +278,8 @@ msgid ""
 "<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Read "
 "Next</span>"
 msgstr ""
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-"
+"sm\">Sonrakini Oku</span>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
@@ -395,6 +398,24 @@ msgstr "Tüm Bloglar"
 #: model_terms:blog.post,content:website_blog.blog_post_6
 msgid "Along those lines, how difficult is the set up and break down?"
 msgstr "Bu hatlar boyunca, kurulum ve bozulma ne kadar zor?"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website_blog.js:0
+#, python-format
+msgid "Amazing blog article: %s! Check it live: %s"
+msgstr "İnanılmaz blog makalesi: %s! Canlı olarak kontrol edin: %s"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid ""
+"An error occured with this latest posts block. If the problem persists, "
+"please consider deleting it and adding a new one"
+msgstr ""
+"Bu son yayın bloğunda bir hata oluştu. Sorun devam ederse, lütfen silmeyi ve"
+" yeni bir tane eklemeyi düşünün"
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
@@ -614,7 +635,7 @@ msgstr "Blog Post <b>%s</b>Bu sayfaya bir bağlantı var gibi görünüyor!"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Blog Post Cover"
-msgstr ""
+msgstr "Blog Yazısı Kapağı"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -717,7 +738,7 @@ msgstr "Yayımlanabilir"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Cards"
-msgstr ""
+msgstr "Kartlar"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
@@ -740,6 +761,13 @@ msgstr ""
 #, python-format
 msgid "Choose an image from the library."
 msgstr "Kütüphaneden bir resim seçiniz"
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#, python-format
+msgid "Click here to add new content to your website."
+msgstr "Web sitenize yeni içerik eklemek için buraya tıklayın."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -830,7 +858,7 @@ msgstr "Oluşturulma"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Dexter"
-msgstr ""
+msgstr "Dexter"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__display_name
@@ -1022,7 +1050,7 @@ msgstr "Yatay"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Hover effect"
-msgstr ""
+msgstr "Vurgulu efekt"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_4
@@ -1296,7 +1324,7 @@ msgstr "Ana Ek"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Marley"
-msgstr ""
+msgstr "Marley"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_2
@@ -1434,6 +1462,13 @@ msgid "New tag"
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid "No blog post was found. Make sure your posts are published."
+msgstr "Blog yazısı bulunamadı. Gönderilerinizin yayınlandığından emin olun."
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No blog post yet."
 msgstr "Henüz blog yazısı yazılmadı"
@@ -1446,7 +1481,7 @@ msgstr "Görünümler"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No results for \"%s\"."
-msgstr ""
+msgstr "\"%s\" için sonuç bulunamadı."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
@@ -1688,7 +1723,7 @@ msgstr "Kaydet"
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Search for an image. (eg: type \"business\")"
-msgstr ""
+msgstr "Bir resim arayın. (örn.: \"business\" yazın)"
 
 #. module: website_blog
 #. openerp-web
@@ -1716,7 +1751,7 @@ msgstr "Yeni bir blog yazısı oluşturmak için bu menü öğesini seçin."
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo adı"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -1780,7 +1815,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Silly-Chico"
-msgstr ""
+msgstr "Aptal-Chico"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -2154,7 +2189,7 @@ msgstr "Bu kutu ziyaretçileriniz tarafından görülmeyecek"
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
 msgid "This tag already exists"
-msgstr ""
+msgstr "Bu bölüm için etiket zaten var"
 
 #. module: website_blog
 #. openerp-web

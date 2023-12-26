@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 import ast
 from odoo.osv import expression
@@ -33,14 +33,23 @@ class CouponGenerate(models.TransientModel):
             for partner in self.env['res.partner'].search(ast.literal_eval(self.partners_domain)):
                 vals.update({'partner_id': partner.id, 'state': 'sent' if partner.email else 'new'})
                 coupon = self.env['coupon.coupon'].create(vals)
-                subject = '%s, a coupon has been generated for you' % (partner.name)
+                context = dict(lang=partner.lang)
+                subject = _('%s, a coupon has been generated for you') % (partner.name)
+                del context
                 template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
                 if template:
-                    email_values = {'email_to': partner.email, 'email_from': self.env.user.email or '', 'subject': subject}
+                    email_values = {'email_from': self.env.user.email or '', 'subject': subject}
                     template.send_mail(coupon.id, email_values=email_values, notif_layout='mail.mail_notification_light')
 
     @api.depends('partners_domain')
     def _compute_has_partner_email(self):
         for record in self:
-            domain = expression.AND([ast.literal_eval(record.partners_domain), [('email', '=', False)]])
+            partners_domain = ast.literal_eval(record.partners_domain)
+            if partners_domain == [['', '=', 1]]:
+                # The field name is not clear. It actually means "all partners have email".
+                # If domain is not set, we don't want to show the warning "there is a partner without email".
+                # So, we explicitly set value to True
+                record.has_partner_email = True
+                continue
+            domain = expression.AND([partners_domain, [('email', '=', False)]])
             record.has_partner_email = self.env['res.partner'].search_count(domain) == 0

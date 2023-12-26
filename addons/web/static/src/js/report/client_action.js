@@ -43,7 +43,7 @@ var ReportAction = AbstractAction.extend({
             $buttons: this.$buttons,
         };
         return Promise.all([this._super.apply(this, arguments), session.is_bound]).then(async function () {
-            var web_base_url = session['web.base.url'];
+            var web_base_url = window.origin;
             var trusted_host = utils.get_host_from_url(web_base_url);
             var trusted_protocol = utils.get_protocol_from_url(web_base_url);
             self.trusted_origin = utils.build_origin(trusted_protocol, trusted_host);
@@ -51,15 +51,6 @@ var ReportAction = AbstractAction.extend({
             // Load the report in the iframe. Note that we use a relative URL.
             self.iframe.src = self.report_url;
         });
-    },
-
-    do_show: function () {
-        this.updateControlPanel({
-            cp_content: {
-                $buttons: this.$buttons,
-            },
-        });
-        return this._super.apply(this, arguments);
     },
 
     on_attach_callback: function () {

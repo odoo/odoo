@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="view_move_form_inherit_l10n_cl" model="ir.ui.view">
         <field name="name">account.move.form.inherit.l10n.cl</field>
         <field name="model">account.move</field>
@@ -9,8 +8,33 @@
             <form>
                 <field name="l10n_latam_internal_type" invisible="1"/>
             </form>
-            <field name="ref" position="attributes">
-                <attribute name="attrs">{'invisible': [('move_type', '=', 'out_invoice'), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note')]}</attribute>
+        </field>
+    </record>
+
+    <record id="view_latam_form_inherit_l10n_cl" model="ir.ui.view">
+        <field name="name">account.move.latam.form.inherit.l10n.cl</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_document_number" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [
+                    '|',
+                        ('l10n_latam_use_documents', '=', False),
+                        ('l10n_latam_manual_document_number', '=', False),
+                    '|', '|',
+                        ('l10n_latam_use_documents', '=', False),
+                        ('highest_name', '!=', False),
+                        ('state', '!=', 'draft'),
+                    '|', '|', '|',
+                        ('l10n_latam_use_documents', '=', False),
+                        ('posted_before', '=', False),
+                        ('state', '!=', 'draft'),
+                        ('country_code', '!=', 'CL')
+                    ],
+                    'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')],
+                    'required': ['|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)]}
+                </attribute>
             </field>
         </field>
     </record>
@@ -21,6 +45,7 @@
         <field name="arch" type="xml">
             <tree decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
                 <field name="l10n_latam_document_type_id_code"/>
+                <field name="l10n_latam_document_number" string="Folio"/>
                 <field name="partner_id_vat"/>
                 <field name="partner_id"/>
                 <field name="invoice_date" optional="show"/>

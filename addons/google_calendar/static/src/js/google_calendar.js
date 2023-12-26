@@ -9,6 +9,7 @@ const CalendarRenderer = require('calendar.CalendarRenderer');
 const CalendarController = require('calendar.CalendarController');
 const CalendarModel = require('calendar.CalendarModel');
 const viewRegistry = require('web.view_registry');
+const session = require('web.session');
 
 var _t = core._t;
 
@@ -20,6 +21,7 @@ const GoogleCalendarModel = CalendarModel.include({
     init: function () {
         this._super.apply(this, arguments);
         this.google_is_sync = true;
+        this.google_pending_sync = false;
     },
 
     /**
@@ -38,6 +40,11 @@ const GoogleCalendarModel = CalendarModel.include({
      */
     async _loadCalendar() {
         const _super = this._super.bind(this);
+        // When the calendar synchronization takes some time, prevents retriggering the sync while navigating the calendar.
+        if (this.google_pending_sync) {
+            return _super(...arguments);
+        }
+
         try {
             await Promise.race([
                 new Promise(resolve => setTimeout(resolve, 1000)),
@@ -48,6 +55,7 @@ const GoogleCalendarModel = CalendarModel.include({
                 error.event.preventDefault();
             }
             console.error("Could not synchronize Google events now.", error);
+            this.google_pending_sync = false;
         }
         return _super(...arguments);
     },
@@ -55,6 +63,7 @@ const GoogleCalendarModel = CalendarModel.include({
     _syncGoogleCalendar(shadow = false) {
         var self = this;
         var context = this.getSession().user_context;
+        this.google_pending_sync = true;
         return this._rpc({
             route: '/google_calendar/sync_data',
             params: {
@@ -68,7 +77,17 @@ const GoogleCalendarModel = CalendarModel.include({
             } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
                 self.google_is_sync = true;
             }
+            self.google_pending_sync = false;
             return result
+        });
+    },
+
+    archiveRecords: function (ids, model) {
+        return this._rpc({
+            model: model,
+            method: 'action_archive',
+            args: [ids],
+            context: session.user_context,
         });
     },
 })
@@ -76,6 +95,7 @@ const GoogleCalendarModel = CalendarModel.include({
 const GoogleCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
         syncGoogleCalendar: '_onGoogleSyncCalendar',
+        archiveRecord: '_onArchiveRecord',
     }),
 
 
@@ -119,12 +139,27 @@ const GoogleCalendarController = CalendarController.include({
                 self.reload();
             }
         }).then(event.data.on_always, event.data.on_always);
-    }
+    },
+
+    _onArchiveRecord: function (ev) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
+            confirm_callback: function () {
+                self.model.archiveRecords([ev.data.id], self.modelName).then(function () {
+                    self.reload();
+                });
+            }
+        });
+    },
 });
 
 const GoogleCalendarRenderer = CalendarRenderer.include({
     events: _.extend({}, CalendarRenderer.prototype.events, {
         'click .o_google_sync_button': '_onGoogleSyncCalendar',
+    }),
+    
+    custom_events: _.extend({}, CalendarRenderer.prototype.custom_events, {
+        archive_event: '_onArchiveEvent',
     }),
 
     //--------------------------------------------------------------------------
@@ -173,6 +208,11 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
             },
         });
     },
+
+    _onArchiveEvent: function (ev) {
+        this._unselectEvent();
+        this.trigger_up('archiveRecord', {id: parseInt(ev.data.id, 10)});
+    }
 });
 
 return {

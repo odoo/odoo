@@ -32,6 +32,7 @@ The service is provided by the In App Purchase Odoo platform.
         'views/sms_sms_views.xml',
         'views/sms_template_views.xml',
         'security/ir.model.access.csv',
+        'security/sms_security.xml',
     ],
     'demo': [
         'data/sms_demo.xml',
@@ -44,4 +45,5 @@ The service is provided by the In App Purchase Odoo platform.
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

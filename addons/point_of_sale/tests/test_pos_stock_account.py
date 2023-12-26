@@ -201,3 +201,76 @@ class TestPoSStock(TestPoSCommon):
 
         self.assertTrue(receivable_line_cash.full_reconcile_id, msg='Cash receivable line should be fully-reconciled.')
         self.assertTrue(output_line.full_reconcile_id, msg='The stock output account line should be fully-reconciled.')
+
+    def test_03_order_product_w_owner(self):
+        """
+        Test order via POS a product having stock owner.
+        """
+
+        group_owner = self.env.ref('stock.group_tracking_owner')
+        self.env.user.write({'groups_id': [(4, group_owner.id)]})
+        self.product4 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory adjustment'
+        })
+        self.env['stock.inventory.line'].create({
+            'product_id': self.product4.id,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'inventory_id': inventory.id,
+            'product_qty': 10,
+            'partner_id': self.partner_a.id,
+            'location_id': self.stock_location_components.id,
+        })
+        inventory._action_start()
+        inventory.action_validate()
+
+        self.open_new_session()
+
+        # create orders
+        orders = []
+        orders.append(self.create_ui_order_data([(self.product4, 1)]))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # check values before closing the session
+        self.assertEqual(1, self.pos_session.order_count)
+
+        # check product qty_available after syncing the order
+        self.assertEqual(self.product4.qty_available, 9)
+
+        # picking and stock moves should be in done state
+        for order in self.pos_session.order_ids:
+            self.assertEqual(order.picking_ids[0].state, 'done', 'Picking should be in done state.')
+            self.assertTrue(all(state == 'done' for state in order.picking_ids[0].move_lines.mapped('state')), 'Move Lines should be in done state.' )
+            self.assertTrue(self.partner_a == order.picking_ids[0].move_lines[0].move_line_ids[0].owner_id, 'Move Lines Owner should be taken into account.' )
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+    def test_04_order_refund(self):
+        self.categ4 = self.env['product.category'].create({
+            'name': 'Category 4',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+        self.product4 = self.create_product('Product 4', self.categ4, 30.0, 15.0)
+
+        self.open_new_session()
+        orders = []
+        orders.append(self.create_ui_order_data([(self.product4, 1)]))
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        refund_action = self.env['pos.order'].browse(order[0]['id']).refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_pm.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        self.pos_session.action_pos_session_validate()
+        expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id)])
+        self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")

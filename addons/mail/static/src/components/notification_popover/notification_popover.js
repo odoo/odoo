@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/notification_popover/notification_popove
 'use strict';
 
 const { Component } = owl;
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 class NotificationPopover extends Component {
@@ -11,6 +12,11 @@ class NotificationPopover extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                notificationLocalIds: 1,
+            },
+        });
         useStore(props => {
             const notifications = props.notificationLocalIds.map(
                 notificationLocalId => this.env.models['mail.notification'].get(notificationLocalId)

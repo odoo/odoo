@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -17,11 +18,12 @@ class ComposerSuggestion extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(this.props.composerLocalId);
             const record = this.env.models[props.modelName].get(props.recordLocalId);
             return {
-                composer: composer && composer.__state,
+                composerHasToScrollToActiveSuggestion: composer && composer.hasToScrollToActiveSuggestion,
                 record: record ? record.__state : undefined,
             };
         });
@@ -114,9 +116,7 @@ class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composer.update({
-            [this.composer.activeSuggestedRecordName]: [['link', this.record]],
-        });
+        this.composer.update({ activeSuggestedRecord: [['link', this.record]] });
         this.composer.insertSuggestion();
         this.composer.closeSuggestions();
         this.trigger('o-composer-suggestion-clicked');

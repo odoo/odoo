@@ -4,7 +4,8 @@
 from datetime import date, timedelta
 
 import requests
-import werkzeug
+
+from html import unescape
 
 from odoo import models, api, service
 from odoo.tools.translate import _
@@ -69,7 +70,7 @@ class MercuryTransaction(models.Model):
         try:
             r = requests.post(url, data=xml_transaction, headers=headers, timeout=65)
             r.raise_for_status()
-            response = werkzeug.utils.unescape(r.content.decode())
+            response = unescape(r.content.decode())
         except Exception:
             response = "timeout"
 
@@ -112,12 +113,3 @@ class MercuryTransaction(models.Model):
         response = self._do_request('pos_mercury.mercury_return', data)
         return response
 
-    # One time (the ones we use) Vantiv tokens are required to be
-    # deleted after 6 months
-    @api.autovacuum
-    def _gc_old_tokens(self):
-        expired_creation_date = (date.today() - timedelta(days=6 * 30)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
-            order.ref_no = ""
-            order.record_no = ""

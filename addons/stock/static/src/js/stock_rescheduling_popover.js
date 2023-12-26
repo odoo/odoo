@@ -5,10 +5,10 @@ var core = require('web.core');
 
 var PopoverWidgetField = require('stock.popover_widget');
 var registry = require('web.field_registry');
-var _t = core._t;
+var _lt = core._lt;
 
 var PopoverStockPicking = PopoverWidgetField.extend({
-    title: _t('Planning Issue'),
+    title: _lt('Planning Issue'),
     trigger: 'focus',
     color: 'text-danger',
     icon: 'fa-exclamation-triangle',

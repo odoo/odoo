@@ -19,7 +19,7 @@ from odoo.addons.event.controllers.main import EventController
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
-
+from odoo.exceptions import UserError
 
 class WebsiteEventController(http.Controller):
 
@@ -320,8 +320,11 @@ class WebsiteEventController(http.Controller):
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
-        allowed_fields = {'name', 'phone', 'email', 'mobile', 'event_id', 'partner_id', 'event_ticket_id'}
+        allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
+        for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
+            if int(ticket_id) not in event.event_ticket_ids.ids and len(event.event_ticket_ids.ids) > 0:
+                raise UserError(_("This ticket is not available for sale for this event"))
         registrations = {}
         global_values = {}
         for key, value in form_details.items():

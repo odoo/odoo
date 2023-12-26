@@ -70,7 +70,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         var $amountDelivery = $('#order_delivery .monetary_field');
         var $amountUntaxed = $('#order_total_untaxed .monetary_field');
         var $amountTax = $('#order_total_taxes .monetary_field');
-        var $amountTotal = $('#order_total .monetary_field');
+        var $amountTotal = $('#order_total .monetary_field, #amount_total_summary.monetary_field');
 
         if (result.status === true) {
             $amountDelivery.html(result.new_amount_delivery);

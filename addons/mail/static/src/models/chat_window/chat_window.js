@@ -39,9 +39,12 @@ function factory(dependencies) {
          * Close this chat window.
          *
          * @param {Object} [param0={}]
-         * @param {boolean} [param0.notifyServer=true]
+         * @param {boolean} [param0.notifyServer]
          */
-        close({ notifyServer = true } = {}) {
+        close({ notifyServer } = {}) {
+            if (notifyServer === undefined) {
+                notifyServer = !this.env.messaging.device.isMobile;
+            }
             const thread = this.thread;
             this.delete();
             // Flux specific: 'closed' fold state should only be saved on the
@@ -49,6 +52,13 @@ function factory(dependencies) {
             // or sync from server value for example should not save the value.
             if (thread && notifyServer) {
                 thread.notifyFoldStateToServer('closed');
+            }
+            if (this.env.device.isMobile && !this.env.messaging.discuss.isOpen) {
+                // If we are in mobile and discuss is not open, it means the
+                // chat window was opened from the messaging menu. In that
+                // case it should be re-opened to simulate it was always
+                // there in the background.
+                this.env.messaging.messagingMenu.update({ isOpen: true });
             }
         }
 
@@ -82,9 +92,12 @@ function factory(dependencies) {
 
         /**
          * @param {Object} [param0={}]
-         * @param {boolean} [param0.notifyServer=true]
+         * @param {boolean} [param0.notifyServer]
          */
-        fold({ notifyServer = true } = {}) {
+        fold({ notifyServer } = {}) {
+            if (notifyServer === undefined) {
+                notifyServer = !this.env.messaging.device.isMobile;
+            }
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
@@ -133,9 +146,12 @@ function factory(dependencies) {
 
         /**
          * @param {Object} [param0={}]
-         * @param {boolean} [param0.notifyServer=true]
+         * @param {boolean} [param0.notifyServer]
          */
-        unfold({ notifyServer = true } = {}) {
+        unfold({ notifyServer } = {}) {
+            if (notifyServer === undefined) {
+                notifyServer = !this.env.messaging.device.isMobile;
+            }
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
             // new state on the server.

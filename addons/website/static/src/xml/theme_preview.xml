@@ -24,8 +24,15 @@
         </div>
     </t>
     <t t-name="website.ThemePreview.Loader">
-        <div class="o_theme_install_loader_container position-fixed fixed-top fixed-left h-100 w-100 d-flex justify-content-center align-items-center">
+        <div class="o_theme_install_loader_container position-fixed fixed-top fixed-left
+            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
+            <t t-if="showTips">Building your website...</t>
             <div class="o_theme_install_loader"></div>
+            <p t-if="showTips" class="o_theme_install_loader_tip text-center w-25">
+                TIP: Follow the
+                <span class="o_tooltip o_tooltip_visible top o_animated position-relative"></span>
+                to build the perfect page in 5 steps.
+            </p>
         </div>
     </t>
 </templates>

@@ -10,6 +10,8 @@ from werkzeug import urls
 
 from odoo import tools, models, fields, api, _
 
+URL_MAX_SIZE = 10 * 1024 * 1024
+
 
 class LinkTracker(models.Model):
     """ Link trackers allow users to wrap any URL into a short URL that can be
@@ -66,12 +68,12 @@ class LinkTracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         for tracker in self:
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            tracker.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': tracker.code})
+            tracker.short_url = urls.url_join(tracker.short_url_host, '%(code)s' % {'code': tracker.code})
 
     def _compute_short_url_host(self):
         for tracker in self:
-            tracker.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
+            base_url = tracker.get_base_url()
+            tracker.short_url_host = urls.url_join(base_url, '/r/')
 
     def _compute_code(self):
         for tracker in self:
@@ -80,11 +82,27 @@ class LinkTracker(models.Model):
 
     @api.depends('url')
     def _compute_redirected_url(self):
+        """Compute the URL to which we will redirect the user.
+
+        By default, add UTM values as GET parameters. But if the system parameter
+        `link_tracker.no_external_tracking` is set, we add the UTM values in the URL
+        *only* for URLs that redirect to the local website (base URL).
+        """
+        no_external_tracking = self.env['ir.config_parameter'].sudo().get_param('link_tracker.no_external_tracking')
+
         for tracker in self:
+            base_domain = urls.url_parse(tracker.get_base_url()).netloc
             parsed = urls.url_parse(tracker.url)
+            if no_external_tracking and parsed.netloc and parsed.netloc != base_domain:
+                tracker.redirected_url = parsed.to_url()
+                continue
+
             utms = {}
-            for key, field, cook in self.env['utm.mixin'].tracking_fields():
-                attr = getattr(tracker, field).name
+            for key, field_name, cook in self.env['utm.mixin'].tracking_fields():
+                field = self._fields[field_name]
+                attr = getattr(tracker, field_name)
+                if field.type == 'many2one':
+                    attr = attr.name
                 if attr:
                     utms[key] = attr
             utms.update(parsed.decode_query())
@@ -94,7 +112,15 @@ class LinkTracker(models.Model):
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
-            page = requests.get(url, timeout=5)
+            head = requests.head(url, allow_redirects=True, timeout=5)
+            if (
+                    int(head.headers.get('Content-Length', 0)) > URL_MAX_SIZE
+                    or
+                    'text/html' not in head.headers.get('Content-Type', 'text/html')
+            ):
+                return url
+            # HTML parser can work with a part of page, so ask server to limit downloading to 50 KB
+            page = requests.get(url, timeout=5, headers={"range": "bytes=0-50000"})
             p = html.fromstring(page.text.encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
@@ -186,6 +212,7 @@ class LinkTracker(models.Model):
 class LinkTrackerCode(models.Model):
     _name = "link.tracker.code"
     _description = "Link Tracker Code"
+    _rec_name = 'code'
 
     code = fields.Char(string='Short URL Code', required=True, store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')

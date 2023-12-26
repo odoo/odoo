@@ -46,6 +46,17 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     /**
+     * @override
+     */
+    displayTranslationAlert: function () {
+        // Translation alerts are disabled for res.config.settings:
+        // those are designed to warn user to translate field he just changed, but
+        // * in res.config.settings almost all fields marked as changed (because
+        //   it's not a usual record and all values are set via default_get)
+        // * page is reloaded after saving, so those alerts would be visible
+        //   only for short time after clicking Save
+    },
+    /**
      * initialize modules list.
      * remove module that restricted in groups
      * data contains
@@ -222,46 +233,59 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
             module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find(".o_form_label:containsTextLike('" + self.searchText + "')");
-            if (resultSetting.length > 0) {
-                resultSetting.each(function () {
-                    var settingBox = $(this).closest('.o_setting_box');
+
+            const upperCasedSearchText = self.searchText.toUpperCase();
+            const [matches, others] = _.partition(module.settingView.find(".o_form_label"),
+                (e) => e.textContent.toUpperCase().includes(upperCasedSearchText));
+            if (matches.length) {
+                for (let result of matches) {
+                    const settingBox = $(result).closest('.o_setting_box');
                     if (!settingBox.hasClass('o_invisible_modifier')) {
                         settingBox.removeClass('o_hidden');
-                        $(this).html(self._wordHighlighter($(this).html(), self.searchText));
+                        self._wordHighlighter(result, upperCasedSearchText);
                     } else {
                         self.inVisibleCount++;
                     }
-                });
-                if (self.inVisibleCount !== resultSetting.length) {
+                }
+                if (self.inVisibleCount !== matches.length) {
                     module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
                     module.settingView.removeClass('o_hidden');
                 }
             } else {
                 ++self.count;
             }
+            others.filter(e => e.firstElementChild).forEach(e => self._removeHighlight(e));
         });
         this.count === _.size(this.modules) ? this.$('.notFound').removeClass('o_hidden') : this.$('.notFound').addClass('o_hidden');
         if (this.searchText.length === 0) {
             this._resetSearch();
         }
     },
+
     /**
      * highlight search word
      *
      * @private
-     * @param {string} text
-     * @param {string} word
+     * @param {HTMLElement} node
+     * @param {string} upperCasedSearchText
      */
-    _wordHighlighter: function (text, word) {
-        if (text.indexOf('highlighter') !== -1) {
-            text = text.replace('<span class="highlighter">', "");
-            text = text.replace("</span>", "");
-        }
-        var match = text.search(new RegExp(word, "i"));
-        word = text.substring(match, match + word.length);
-        var highlightedWord = "<span class='highlighter'>" + word + '</span>';
-        return text.replace(word, highlightedWord);
+    _wordHighlighter: function (node, upperCasedSearchText) {
+        const text = node.textContent;
+        const startIndex = text.toUpperCase().indexOf(upperCasedSearchText);
+        const endIndex = startIndex + upperCasedSearchText.length;
+        $(node).empty().append(
+            document.createTextNode(text.substring(0, startIndex)),
+            $('<span class="highlighter">').text(text.substring(startIndex, endIndex)),
+            document.createTextNode(text.substring(endIndex))
+        );
+    },
+
+    /**
+     * @param {HTMLElement} node
+     * @private
+     */
+    _removeHighlight: function(node) {
+        node.textContent = node.textContent;
     },
 });
 

@@ -6,6 +6,7 @@
 # Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
 # Thiago Macêdo <thiago95macedo@gmail.com>, 2020
+# falexandresilva <falexandresilva@gmail.com>, 2020
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2020
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
 # Diego Bittencourt <diegomb86@gmail.com>, 2020
@@ -17,7 +18,6 @@
 # Maicon Grahl <maicongrahl@hotmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
 # Caio Leonardo Mendes de Sousa <caleozao@gmail.com>, 2020
-# falexandresilva <falexandresilva@gmail.com>, 2020
 # Yannick Belot <yannickbh@gmail.com>, 2020
 # Marcelo Costa <marcelo@comdesk.com.br>, 2020
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2020
@@ -29,23 +29,25 @@
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Silmar <pinheirosilmar@gmail.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
-# Luís Otávio Malta Conceição <luiso.malta@gmail.com>, 2020
-# grazziano <gra.negocia@gmail.com>, 2020
-# Éder Brito <britoederr@gmail.com>, 2020
+# Luis Malta <luiso.malta@gmail.com>, 2020
+# grazziano <grazziano.do+transifex@gmail.com>, 2020
+# Maurício Liell <mauricio@liell.com.br>, 2021
+# Éder Brito <britoederr@gmail.com>, 2021
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web
 #. openerp-web
@@ -67,13 +69,6 @@ msgstr "registros"
 #, python-format
 msgid "# Code editor"
 msgstr "# Editor de código"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr "${-diffDays} dias atrás"
 
 #. module: web
 #. openerp-web
@@ -119,10 +114,10 @@ msgstr "%s Arquivos"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr "%s dia atrás"
 
 #. module: web
 #. openerp-web
@@ -429,8 +424,8 @@ msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
-"Uma janela pop-up foi bloqueada. Pode ser necessário alterar as "
-"configurações do navegador para permitir janelas pop-up para esta página."
+"Uma janela pop-up foi bloqueada. Pode ser necessário alterar as definições "
+"do navegador para permitir janelas pop-up para esta página."
 
 #. module: web
 #. openerp-web
@@ -441,15 +436,15 @@ msgid ""
 "browser settings to allow popup windows for this page."
 msgstr ""
 "Uma janela pop-up com seu relatório foi bloqueada. Pode ser necessário "
-"alterar as configurações do navegador para permitir janelas pop-up para esta"
-" página."
+"alterar as definições do navegador para permitir janelas pop-up para esta "
+"página."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "ALL"
-msgstr "ALL"
+msgstr "TUDO"
 
 #. module: web
 #. openerp-web
@@ -526,7 +521,7 @@ msgstr "Adicionar %s"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add Custom Filter"
-msgstr "Adicionar Filtro Personalizado"
+msgstr "Adicionar filtro personalizado"
 
 #. module: web
 #. openerp-web
@@ -603,7 +598,7 @@ msgstr "Adicionar nó"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add tag"
-msgstr "Adicionar tag"
+msgstr "Adicionar marcador"
 
 #. module: web
 #. openerp-web
@@ -699,7 +694,7 @@ msgstr "Entre os/as"
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "An error occurred"
-msgstr "Ocorreu um error"
+msgstr "Houve um erro"
 
 #. module: web
 #. openerp-web
@@ -740,6 +735,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -886,7 +882,7 @@ msgstr "Avatar"
 #: code:addons/web/static/src/js/fields/basic_fields_owl.js:0
 #, python-format
 msgid "Badge"
-msgstr "Medalha"
+msgstr "Distintivo"
 
 #. module: web
 #. openerp-web
@@ -1003,6 +999,7 @@ msgstr "A visão de calendário não definiu o atributo 'date_start'"
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
@@ -1175,7 +1172,7 @@ msgstr "Layout do Documento da Empresa"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
 msgid "Company Logo"
-msgstr "Logo da Empresa"
+msgstr "Logo da empresa"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__name
@@ -1185,7 +1182,7 @@ msgstr "Nome da Empresa"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_header
 msgid "Company Tagline"
-msgstr "Slogan da Empresa"
+msgstr "Slogan da empresa"
 
 #. module: web
 #. openerp-web
@@ -1302,7 +1299,7 @@ msgstr "Copiar para Área de Transferência"
 #: code:addons/web/static/src/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr "Não pôde connectar ao servidor"
+msgstr "Não foi possível conectar ao servidor"
 
 #. module: web
 #. openerp-web
@@ -1925,7 +1922,7 @@ msgstr "Campo:"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Fields View Get"
-msgstr "Fields View Get"
+msgstr "Obter Visualização de Campos"
 
 #. module: web
 #. openerp-web
@@ -2069,6 +2066,7 @@ msgstr "Verde"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Agrupar Por"
@@ -2173,8 +2171,8 @@ msgstr "Imagem"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
-msgstr "Em ${diffDays} dias"
+msgid "In %s days"
+msgstr "Em %s dias"
 
 #. module: web
 #. openerp-web
@@ -2452,6 +2450,13 @@ msgstr "Mac"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr "MailDeliveryException"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2526,6 +2531,7 @@ msgstr "Tente recarregar a aplicação pressionado F5 ..."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2656,8 +2662,8 @@ msgstr "Novo"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
-msgstr "Novo ${this.name}"
+msgid "New %s"
+msgstr "Novo %s"
 
 #. module: web
 #. openerp-web
@@ -2971,6 +2977,13 @@ msgstr "Somente eu"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Abrir Ferramentas de Desenvolvedor"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr "Abrir Ferramentas de Desenvolvedor#{widget.debug_mode_help}"
 
@@ -3019,6 +3032,13 @@ msgstr "Abrir a visualização de lista"
 #, python-format
 msgid "Open: "
 msgstr "Aberto: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr "Colunas opcionais"
 
 #. module: web
 #. openerp-web
@@ -3147,7 +3167,7 @@ msgstr "Pivô"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr "Configurações de Pivô"
+msgstr "Definições de Pivô"
 
 #. module: web
 #. openerp-web
@@ -3488,7 +3508,7 @@ msgstr "Remover dos Favoritos"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Remove tag"
-msgstr "Remover tag"
+msgstr "Remover marcador"
 
 #. module: web
 #. openerp-web
@@ -3785,7 +3805,7 @@ msgstr "Definir um fuso horário para seu usuário"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Definições"
 
 #. module: web
 #. openerp-web
@@ -3953,7 +3973,7 @@ msgstr "Espere uns minutos, pegue um café, <br /> porque está carregando..."
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
 msgid "Tax ID"
-msgstr "ID do Imposto"
+msgstr "CPF/CNPJ"
 
 #. module: web
 #. openerp-web
@@ -3993,8 +4013,8 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"O número de identificação fiscal. Preencha-o se o contato estiver sujeito a "
+"impostos governamentais. Usado em algumas declarações legais."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4337,7 +4357,7 @@ msgstr "Desvincular linha"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Unnamed"
-msgstr "Anônimo"
+msgstr "Sem nome"
 
 #. module: web
 #. openerp-web
@@ -4494,6 +4514,13 @@ msgstr "Variação"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "Ver %s"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
@@ -4537,6 +4564,7 @@ msgstr "Alternador de Visualização"
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
+#: code:addons/web/static/src/js/control_panel/favorite_menu.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
@@ -4649,6 +4677,12 @@ msgstr "Sim"
 #, python-format
 msgid "Yesterday"
 msgstr "Ontem"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Você não tem permissão para enviar um anexo aqui."
 
 #. module: web
 #. openerp-web
@@ -4849,7 +4883,7 @@ msgstr "ex. Souções de Negócios Globais"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Opening hours, bank accounts (one per line)"
-msgstr "e.g. Opening hours, bank accounts (one per line)"
+msgstr "ex: Horários de abertura, contas bancárias (um por linha)"
 
 #. module: web
 #. openerp-web
@@ -5087,13 +5121,6 @@ msgstr "de:"
 #, python-format
 msgid "or"
 msgstr "ou"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker.xml:0
-#, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
-msgstr "p-0 border-0 text-center text-monospace bg-transparent text-white"
 
 #. module: web
 #. openerp-web

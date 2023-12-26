@@ -123,18 +123,17 @@ class LunchOrder(models.Model):
     def write(self, values):
         merge_needed = 'note' in values or 'topping_ids_1' in values or 'topping_ids_2' in values or 'topping_ids_3' in values
 
-        # Only write on topping_ids_1 because they all share the same table
-        # and we don't want to remove all the records
-        # _extract_toppings will pop topping_ids_1, topping_ids_2 and topping_ids_3 from values
-        # This also forces us to invalidate the cache for topping_ids_2 and topping_ids_3 that
-        # could have changed through topping_ids_1 without the cache knowing about it
-        toppings = self._extract_toppings(values)
-        values['topping_ids_1'] = [(6, 0, toppings)]
-        self.invalidate_cache(['topping_ids_2', 'topping_ids_3'])
-
         if merge_needed:
             lines_to_deactivate = self.env['lunch.order']
             for line in self:
+                # Only write on topping_ids_1 because they all share the same table
+                # and we don't want to remove all the records
+                # _extract_toppings will pop topping_ids_1, topping_ids_2 and topping_ids_3 from values
+                # This also forces us to invalidate the cache for topping_ids_2 and topping_ids_3 that
+                # could have changed through topping_ids_1 without the cache knowing about it
+                toppings = self._extract_toppings(values)
+                self.invalidate_cache(['topping_ids_2', 'topping_ids_3'])
+                values['topping_ids_1'] = [(6, 0, toppings)]
                 matching_lines = self._find_matching_lines({
                     'user_id': values.get('user_id', line.user_id.id),
                     'product_id': values.get('product_id', line.product_id.id),

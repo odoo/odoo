@@ -2,11 +2,6 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_action_manager {
-    // bug with scrollable inside discuss mobile without this...
-    min-height: 0;
-}
-
 .o-autogrow {
     flex: 1 1 auto;
 }
@@ -87,7 +82,7 @@
 }
 
 .o_Discuss_thread {
-    flex: 1 1 auto;
+    flex: 1 1 0;
 
     &.o-mobile {
         width: 100%;
@@ -96,7 +91,7 @@
 
 .o_Discuss_notificationList {
     width: 100%;
-    flex: 1 1 auto;
+    flex: 1 1 0;
 }
 // ------------------------------------------------------------------
 // Style

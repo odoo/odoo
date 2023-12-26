@@ -300,7 +300,34 @@ function getLangDatetimeFormat() {
     return strftime_to_moment_format(_t.database.parameters.date_format + " " + _t.database.parameters.time_format);
 }
 
+const dateFormatWoZeroCache = {};
+/**
+ * Get date format of the user's language - allows non padded
+ */
+function getLangDateFormatWoZero() {
+    const dateFormat = getLangDateFormat();
+    if (!(dateFormat in dateFormatWoZeroCache)) {
+        dateFormatWoZeroCache[dateFormat] = dateFormat
+            .replace('MM', 'M')
+            .replace('DD', 'D');
+    }
+    return dateFormatWoZeroCache[dateFormat];
+}
 
+const timeFormatWoZeroCache = {};
+/**
+ * Get time format of the user's language - allows non padded
+ */
+function getLangTimeFormatWoZero() {
+    const timeFormat = getLangTimeFormat();
+    if (!(timeFormat in timeFormatWoZeroCache)) {
+        timeFormatWoZeroCache[timeFormat] = timeFormat
+            .replace('HH', 'H')
+            .replace('mm', 'm')
+            .replace('ss', 's');
+    }
+    return timeFormatWoZeroCache[timeFormat];
+}
 
 return {
     date_to_utc: date_to_utc,
@@ -316,6 +343,8 @@ return {
     moment_to_strftime_format: moment_to_strftime_format,
     getLangDateFormat: getLangDateFormat,
     getLangTimeFormat: getLangTimeFormat,
+    getLangDateFormatWoZero: getLangDateFormatWoZero,
+    getLangTimeFormatWoZero: getLangTimeFormatWoZero,
     getLangDatetimeFormat: getLangDatetimeFormat,
 };
 

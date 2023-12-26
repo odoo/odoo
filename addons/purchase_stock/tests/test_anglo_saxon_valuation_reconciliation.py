@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import Form, tagged
+from odoo import fields
+
+from freezegun import freeze_time
 
 
 @tagged('post_install', '-at_install')
@@ -210,3 +213,243 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
+
+    @freeze_time('2021-01-01')
+    def test_rounding_price_unit_exchange_difference(self):
+        test_product = self.test_product_delivery
+        date_po_and_delivery = '2021-01-01'
+        rate_po = 28.0
+        date_bill = '2020-01-01'
+        rate_bill = 26.0
+        foreign_currency = self.currency_data['currency']
+        company_currency = self.env.company.currency_id
+        self.env['res.currency.rate'].create([
+        {
+            'name': date_po_and_delivery,
+            'rate': rate_po,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': rate_bill,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_po_and_delivery,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }])
+
+        purchase_order = self._create_purchase(test_product, date_po_and_delivery, quantity=100, price_unit=6000)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+        invoice = self._create_invoice_for_po(purchase_order, date_bill)
+        invoice.action_post()
+
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        self.assertFalse(price_diff_line, "No price difference line should be created")
+
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
+        self.check_reconciliation(invoice, picking)
+
+    @freeze_time('2021-01-03')
+    def test_price_difference_exchange_difference_accounting_date(self):
+        test_product = self.test_product_delivery
+        test_product.categ_id.write({"property_cost_method": "standard"})
+        test_product.write({'standard_price': 100.0})
+        date_po_receipt = '2021-01-02'
+        rate_po_receipt = 25.0
+        date_bill = '2021-01-01'
+        rate_bill = 30.0
+        date_accounting = '2021-01-03'
+        rate_accounting = 26.0
+
+        foreign_currency = self.currency_data['currency']
+        company_currency = self.env.company.currency_id
+        self.env['res.currency.rate'].create([
+        {
+            'name': date_po_receipt,
+            'rate': rate_po_receipt,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': rate_bill,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_accounting,
+            'rate': rate_accounting,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_po_receipt,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_accounting,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }, {
+            'name': date_bill,
+            'rate': 1.0,
+            'currency_id': company_currency.id,
+            'company_id': self.env.company.id,
+        }])
+
+        #purchase order created in foreign currency
+        purchase_order = self._create_purchase(test_product, date_po_receipt, quantity=10, price_unit=3000)
+        with freeze_time(date_po_receipt):
+            self._process_pickings(purchase_order.picking_ids)
+        invoice = self._create_invoice_for_po(purchase_order, date_bill)
+        with Form(invoice) as move_form:
+            move_form.invoice_date = fields.Date.from_string(date_bill)
+            move_form.date = fields.Date.from_string(date_accounting)
+        invoice.action_post()
+
+        price_diff_line = invoice.line_ids.filtered(lambda l: l.account_id == self.stock_account_product_categ.property_account_creditor_price_difference_categ)
+        self.assertTrue(len(price_diff_line) == 1, "A price difference line should be created")
+        self.assertAlmostEqual(price_diff_line.balance, 192.31)
+        self.assertAlmostEqual(price_diff_line.price_total, 5000.0)
+
+        picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
+        self.check_reconciliation(invoice, picking)
+        interim_account_id = self.company_data['default_account_stock_in'].id
+
+        valuation_line = picking.move_lines.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
+        self.assertTrue(valuation_line.full_reconcile_id, "The reconciliation should be total at that point.")
+
+        exchange_move = valuation_line.full_reconcile_id.exchange_move_id
+        self.assertTrue(exchange_move, "An exchange move should exists.")
+        exchange_difference = exchange_move.line_ids.filtered(lambda l: l.account_id.id == interim_account_id).balance
+        self.assertAlmostEqual(exchange_difference, 38.46, msg="Exchange amount is incorrect")
+
+    def test_reconcile_cash_basis_bill(self):
+        ''' Test the generation of the CABA move after bill payment
+        '''
+        self.env.company.tax_exigibility = True
+        cash_basis_base_account = self.env['account.account'].create({
+            'code': 'cash_basis_base_account',
+            'name': 'cash_basis_base_account',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'company_id': self.company_data['company'].id,
+        })
+        self.company_data['company'].account_cash_basis_base_account_id = cash_basis_base_account
+
+        cash_basis_transfer_account = self.env['account.account'].create({
+            'code': 'cash_basis_transfer_account',
+            'name': 'cash_basis_transfer_account',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        tax_account_1 = self.env['account.account'].create({
+            'code': 'tax_account_1',
+            'name': 'tax_account_1',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        fake_country = self.env['res.country'].create({
+            'name': "The Island of the Fly",
+            'code': 'YY',
+        })
+
+        tax_tags = self.env['account.account.tag'].create({
+            'name': 'tax_tag_%s' % str(i),
+            'applicability': 'taxes',
+            'country_id': fake_country.id,
+        } for i in range(8))
+
+        cash_basis_tax_a_third_amount = self.env['account.tax'].create({
+            'name': 'tax_1',
+            'amount': 33.3333,
+            'company_id': self.company_data['company'].id,
+            'cash_basis_transition_account_id': cash_basis_transfer_account.id,
+            'tax_exigibility': 'on_payment',
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags[0].ids)],
+                }),
+
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_account_1.id,
+                    'tag_ids': [(6, 0, tax_tags[1].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags[2].ids)],
+                }),
+
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_account_1.id,
+                    'tag_ids': [(6, 0, tax_tags[3].ids)],
+                }),
+            ],
+        })
+
+        product_A = self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "type": "product",
+                "default_code": "prda",
+                "categ_id": self.stock_account_product_categ.id,
+                "taxes_id": [(5, 0, 0)],
+                "supplier_taxes_id": [(6, 0, cash_basis_tax_a_third_amount.ids)],
+                "lst_price": 100.0,
+                "standard_price": 10.0,
+                "property_account_income_id": self.company_data["default_account_revenue"].id,
+                "property_account_expense_id": self.company_data["default_account_expense"].id,
+            }
+        )
+        product_A.categ_id.write(
+            {
+                "property_account_creditor_price_difference_categ": False,
+                "property_valuation": "real_time",
+                "property_cost_method": "standard",
+            }
+        )
+
+        date_po_and_delivery = '2018-01-01'
+        purchase_order = self._create_purchase(product_A, date_po_and_delivery, set_tax=True, price_unit=300.0)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
+
+        bill = self._create_invoice_for_po(purchase_order, '2018-02-02')
+        bill.action_post()
+
+        # Register a payment creating the CABA journal entry on the fly and reconcile it with the tax line.
+        self.env['account.payment.register']\
+            .with_context(active_ids=bill.ids, active_model='account.move')\
+            .create({})\
+            ._create_payments()
+
+        partial_rec = bill.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+
+        # Tax values based on payment
+        # Invoice amount 300
+        self.assertRecordValues(caba_move.line_ids, [
+            # pylint: disable=C0326
+            # Base amount:
+            {'debit': 0.0,    'credit': 150.0,      'amount_currency': -300.0,   'account_id': cash_basis_base_account.id},
+            {'debit': 150.0,      'credit': 0.0,    'amount_currency': 300.0,  'account_id': cash_basis_base_account.id},
+            # tax:
+            {'debit': 0.0,     'credit': 50.0,      'amount_currency': -100.0,   'account_id': cash_basis_transfer_account.id},
+            {'debit': 50.0,      'credit': 0.0,     'amount_currency': 100.0,  'account_id': tax_account_1.id},
+        ])

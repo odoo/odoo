@@ -84,12 +84,13 @@ var FormController = BasicController.extend({
      * @todo make record creation a basic controller feature
      * @param {string} [parentID] if given, the parentID will be used as parent
      *                            for the new record.
+     * @param {Object} [additionalContext]
      * @returns {Promise}
      */
-    createRecord: async function (parentID) {
+    createRecord: async function (parentID, additionalContext) {
         const record = this.model.get(this.handle, { raw: true });
         const handle = await this.model.load({
-            context: record.getContext(),
+            context: record.getContext({ additionalContext: additionalContext}),
             fields: record.fields,
             fieldsInfo: record.fieldsInfo,
             modelName: this.modelName,
@@ -468,7 +469,7 @@ var FormController = BasicController.extend({
         var attrs = ev.data.attrs;
         if (attrs.confirm) {
             def = new Promise(function (resolve, reject) {
-                Dialog.confirm(this, attrs.confirm, {
+                Dialog.confirm(self, attrs.confirm, {
                     confirm_callback: saveAndExecuteAction,
                 }).on("closed", null, resolve);
             });

@@ -2077,8 +2077,9 @@ eventHandler.modules.editor.currentStyle = function (target) {
     if (!styleInfo.image || !dom.isEditable(styleInfo.image)) {
         styleInfo.image = undefined;
         var r = range.create();
-        if (r)
+        if (r && r.isOnEditable()) {
             styleInfo.image = r.isOnImg();
+        }
     }
     // Fix when the target is a link: the text-align buttons state should
     // indicate the alignment of the link in the parent, not the text inside
@@ -2260,7 +2261,8 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // remove node without attributes (move content), and merge the same nodes
-     var className2, style, style2;
+     var className2, style, style2, hasBefore, hasAfter;
+     var noContent = ['none', null, undefined];
      for (i=0; i<nodes.length; i++) {
       node = nodes[i];
 
@@ -2279,8 +2281,10 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
       $font = $(node);
       className = dom.orderClass(node);
       style = dom.orderStyle(node);
+      hasBefore = noContent.indexOf(window.getComputedStyle(node, '::before').content) === -1;
+      hasAfter = noContent.indexOf(window.getComputedStyle(node, '::after').content) === -1;
 
-      if (!className && !style) {
+      if (!className && !style && !hasBefore && !hasAfter) {
         remove(node, node.parentNode);
         continue;
       }

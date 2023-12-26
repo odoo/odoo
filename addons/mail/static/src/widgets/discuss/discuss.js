@@ -147,6 +147,7 @@ const DiscussWidget = AbstractAction.extend({
             'o-update-control-panel',
             this._updateControlPanelEventListener
         );
+        this._lastPushStateActiveThread = null;
     },
 
     //--------------------------------------------------------------------------
@@ -320,7 +321,8 @@ const DiscussWidget = AbstractAction.extend({
      * @private
      */
     _onClickMarkAllAsRead() {
-        this.env.models['mail.message'].markAllAsRead(this.domain);
+        const domain = this.discuss.stringifiedDomain ? JSON.parse(this.discuss.stringifiedDomain) : undefined;
+        this.env.models['mail.message'].markAllAsRead(domain);
     },
     /**
      * @private

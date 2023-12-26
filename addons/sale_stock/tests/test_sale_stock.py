@@ -6,26 +6,28 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
+from odoo.tests.common import SavepointCase
 
 
 @tagged('post_install', '-at_install')
 class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
-    def _get_new_sale_order(self, amount=10.0):
+    def _get_new_sale_order(self, amount=10.0, product=False):
         """ Creates and returns a sale order with one default order line.
 
         :param float amount: quantity of product for the order line (10 by default)
         """
+        product = product or self.company_data['product_delivery_no']
         sale_order_vals = {
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
             'order_line': [(0, 0, {
-                'name': self.company_data['product_delivery_no'].name,
-                'product_id': self.company_data['product_delivery_no'].id,
+                'name': product.name,
+                'product_id': product.id,
                 'product_uom_qty': amount,
-                'product_uom': self.company_data['product_delivery_no'].uom_id.id,
-                'price_unit': self.company_data['product_delivery_no'].list_price})],
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price})],
             'pricelist_id': self.company_data['default_pricelist'].id,
         }
         sale_order = self.env['sale.order'].create(sale_order_vals)
@@ -278,6 +280,10 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         res_dict = pick.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         wizard.process_cancel_backorder()
+
+        #Check Exception error is logged on SO
+        activity = self.env['mail.activity'].search([('res_id', '=', self.so.id), ('res_model', '=', 'sale.order')])
+        self.assertEqual(len(activity), 1, 'When no backorder is created for a partial delivery, a warning error should be logged in its origin SO')
 
         # Check quantity delivered
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
@@ -770,6 +776,172 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # Checks the delivery amount (must still be 10).
         self.assertEqual(sale_order.order_line.qty_delivered, 10)
 
+    def test_13_delivered_qty(self):
+        """ Creates a sale order, valids it and adds a new move line in the delivery for a
+        product with an invoicing policy on 'order', then checks a new SO line was created.
+        After that, creates a second sale order and does the same thing but with a product
+        with and invoicing policy on 'ordered'.
+        """
+        product_inv_on_delivered = self.company_data['product_delivery_no']
+        # Configure a product with invoicing policy on order.
+        product_inv_on_order = self.env['product.product'].create({
+            'name': 'Shenaniffluffy',
+            'type': 'consu',
+            'invoice_policy': 'order',
+            'list_price': 55.0,
+        })
+        # Creates a sale order for 3 products invoiced on qty. delivered.
+        sale_order = self._get_new_sale_order(amount=3)
+        # Confirms the sale order, then increases the delivered qty., adds a new
+        # line and valids the delivery.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        picking = sale_order.picking_ids
+
+        picking_form = Form(picking)
+        with picking_form.move_line_ids_without_package.edit(0) as move:
+            move.qty_done = 5
+        with picking_form.move_line_ids_without_package.new() as new_move:
+            new_move.product_id = product_inv_on_order
+            new_move.qty_done = 5
+        picking = picking_form.save()
+        picking.button_validate()
+
+        # Check a new sale order line was correctly created.
+        self.assertEqual(len(sale_order.order_line), 2)
+        so_line_1 = sale_order.order_line[0]
+        so_line_2 = sale_order.order_line[1]
+        self.assertEqual(so_line_1.product_id.id, product_inv_on_delivered.id)
+        self.assertEqual(so_line_1.product_uom_qty, 3)
+        self.assertEqual(so_line_1.qty_delivered, 5)
+        self.assertEqual(so_line_1.price_unit, 70.0)
+        self.assertEqual(so_line_2.product_id.id, product_inv_on_order.id)
+        self.assertEqual(so_line_2.product_uom_qty, 0)
+        self.assertEqual(so_line_2.qty_delivered, 5)
+        self.assertEqual(
+            so_line_2.price_unit, 0,
+            "Shouldn't get the product price as the invoice policy is on qty. ordered")
+
+        # Creates a second sale order for 3 product invoiced on qty. ordered.
+        sale_order = self._get_new_sale_order(product=product_inv_on_order, amount=3)
+        # Confirms the sale order, then increases the delivered qty., adds a new
+        # line and valids the delivery.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        picking = sale_order.picking_ids
+
+        picking_form = Form(picking)
+        with picking_form.move_line_ids_without_package.edit(0) as move:
+            move.qty_done = 5
+        with picking_form.move_line_ids_without_package.new() as new_move:
+            new_move.product_id = product_inv_on_delivered
+            new_move.qty_done = 5
+        picking = picking_form.save()
+        picking.button_validate()
+
+        # Check a new sale order line was correctly created.
+        self.assertEqual(len(sale_order.order_line), 2)
+        so_line_1 = sale_order.order_line[0]
+        so_line_2 = sale_order.order_line[1]
+        self.assertEqual(so_line_1.product_id.id, product_inv_on_order.id)
+        self.assertEqual(so_line_1.product_uom_qty, 3)
+        self.assertEqual(so_line_1.qty_delivered, 5)
+        self.assertEqual(so_line_1.price_unit, 55.0)
+        self.assertEqual(so_line_2.product_id.id, product_inv_on_delivered.id)
+        self.assertEqual(so_line_2.product_uom_qty, 0)
+        self.assertEqual(so_line_2.qty_delivered, 5)
+        self.assertEqual(
+            so_line_2.price_unit, 70.0,
+            "Should get the product price as the invoice policy is on qty. delivered")
+
+    def test_14_delivered_qty_in_multistep(self):
+        """ Creates a sale order with delivery in two-step. Process the pick &
+        ship and check we don't have extra SO line. Then, do the same but with
+        adding a extra move and check only one extra SO line was created.
+        """
+        # Set the delivery in two steps.
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        # Configure a product with invoicing policy on order.
+        product_inv_on_order = self.env['product.product'].create({
+            'name': 'Shenaniffluffy',
+            'type': 'consu',
+            'invoice_policy': 'order',
+            'list_price': 55.0,
+        })
+        # Create a sale order.
+        sale_order = self._get_new_sale_order()
+        # Confirms the sale order, then valids pick and delivery.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        pick = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
+        delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+
+        picking_form = Form(pick)
+        with picking_form.move_line_ids_without_package.edit(0) as move:
+            move.qty_done = 10
+        pick = picking_form.save()
+        pick.button_validate()
+
+        picking_form = Form(delivery)
+        with picking_form.move_line_ids_without_package.edit(0) as move:
+            move.qty_done = 10
+        delivery = picking_form.save()
+        delivery.button_validate()
+
+        # Check no new sale order line was created.
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.product_uom_qty, 10)
+        self.assertEqual(sale_order.order_line.qty_delivered, 10)
+        self.assertEqual(sale_order.order_line.price_unit, 70.0)
+
+        # Creates a second sale order.
+        sale_order = self._get_new_sale_order()
+        # Confirms the sale order then add a new line for an another product in the pick/out.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        pick = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'internal')
+        delivery = sale_order.picking_ids.filtered(lambda p: p.picking_type_code == 'outgoing')
+
+        picking_form = Form(pick)
+        with picking_form.move_line_ids_without_package.edit(0) as move:
+            move.qty_done = 10
+        with picking_form.move_line_ids_without_package.new() as new_move:
+            new_move.product_id = product_inv_on_order
+            new_move.qty_done = 10
+        pick = picking_form.save()
+        pick.button_validate()
+
+        picking_form = Form(delivery)
+        with picking_form.move_line_ids_without_package.edit(0) as move:
+            move.qty_done = 10
+        with picking_form.move_line_ids_without_package.new() as new_move:
+            new_move.product_id = product_inv_on_order
+            new_move.qty_done = 10
+        delivery = picking_form.save()
+        delivery.button_validate()
+
+        # Check a new sale order line was correctly created.
+        self.assertEqual(len(sale_order.order_line), 2)
+        so_line_1 = sale_order.order_line[0]
+        so_line_2 = sale_order.order_line[1]
+        self.assertEqual(so_line_1.product_id.id, self.company_data['product_delivery_no'].id)
+        self.assertEqual(so_line_1.product_uom_qty, 10)
+        self.assertEqual(so_line_1.qty_delivered, 10)
+        self.assertEqual(so_line_1.price_unit, 70.0)
+        self.assertEqual(so_line_2.product_id.id, product_inv_on_order.id)
+        self.assertEqual(so_line_2.product_uom_qty, 0)
+        self.assertEqual(so_line_2.qty_delivered, 10)
+        self.assertEqual(so_line_2.price_unit, 0)
+
     def test_08_sale_return_qty_and_cancel(self):
         """
         Test a SO with a product on delivery with a 5 quantity.
@@ -822,3 +994,249 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         wizard.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
+
+    def test_15_cancel_delivery(self):
+        """ Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing
+        policy set to "Delivered quantities". When cancelling the delivery of such a product, the
+        invoice status of the associated SO should be 'Nothing to Invoice'
+        """
+        group_auto_done = self.env['ir.model.data'].xmlid_to_object('sale.group_auto_done_setting')
+        self.env.user.groups_id = [(4, group_auto_done.id)]
+
+        product = self.product_a
+        partner = self.partner_a
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 2,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price
+            })],
+            'pricelist_id': self.env.ref('product.list0').id,
+        })
+        so.action_confirm()
+        self.assertEqual(so.state, 'done')
+        so.picking_ids.action_cancel()
+
+        self.assertEqual(so.invoice_status, 'no')
+
+    def test_16_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        product = self.env.ref('product.product_product_11').copy({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 4.0,
+                    'product_uom': yards_uom.id,
+                    'price_unit': 1.0,
+                })
+            ],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[0]
+        picking.move_lines.write({'quantity_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
+
+    def test_17_deliver_more_and_multi_uom(self):
+        """
+        Deliver an additional product with a UoM different than its default one
+        This UoM should be the same on the generated SO line
+        """
+        uom_m_id = self.ref("uom.product_uom_meter")
+        uom_km_id = self.ref("uom.product_uom_km")
+        self.product_b.write({
+            'uom_id': uom_m_id,
+            'uom_po_id': uom_m_id,
+        })
+
+        so = self._get_new_sale_order(product=self.product_a)
+        so.action_confirm()
+
+        picking = so.picking_ids
+        self.env['stock.move'].create({
+            'picking_id': picking.id,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'name': self.product_b.name,
+            'product_id': self.product_b.id,
+            'product_uom_qty': 1,
+            'product_uom': uom_km_id,
+        })
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        self.assertEqual(so.order_line[1].product_id, self.product_b)
+        self.assertEqual(so.order_line[1].qty_delivered, 1)
+        self.assertEqual(so.order_line[1].product_uom.id, uom_km_id)
+
+    def test_multiple_returns(self):
+        # Creates a sale order for 10 products.
+        sale_order = self._get_new_sale_order()
+        # Valids the sale order, then valids the delivery.
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_lines.write({'quantity_done': 10})
+        picking.button_validate()
+
+        # Creates a return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Check that the correct quantity is set on the retrun
+        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        return_wizard.product_return_moves.quantity = 2
+        # Valids the return picking.
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_lines.write({'quantity_done': 2})
+        return_picking.button_validate()
+
+        # Creates a second return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Check that the remaining quantity is set on the retrun
+        self.assertEqual(return_wizard.product_return_moves.quantity, 8)
+
+    def test_exception_delivery_partial_multi(self):
+        '''
+        When a backorder is cancelled for a picking in multi-picking,
+        the related SO should have an exception logged
+        '''
+        #Create 2 sale orders
+        so_1 = self._get_new_sale_order()
+        so_1.action_confirm()
+        picking_1 = so_1.picking_ids
+        picking_1.move_lines.write({'quantity_done': 1})
+
+        so_2 = self._get_new_sale_order()
+        so_2.action_confirm()
+        picking_2 = so_2.picking_ids
+        picking_2.move_lines.write({'quantity_done': 2})
+
+        #multi-picking validation
+        pick = picking_1 | picking_2
+        res_dict = pick.button_validate()
+        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        wizard.backorder_confirmation_line_ids[1].write({'to_backorder': False})
+        wizard.process()
+
+        #Check Exception error is logged on so_2
+        activity = self.env['mail.activity'].search([('res_id', '=', so_2.id), ('res_model', '=', 'sale.order')])
+        self.assertEqual(len(activity), 1, 'When no backorder is created for a partial delivery, a warning error should be logged in its origin SO')
+
+    def test_3_steps_and_unpack(self):
+        """
+        When removing the package of a stock.move.line mid-flow in a 3-steps delivery with backorders, make sure that
+        the OUT picking does not get packages again on its stock.move.line.
+        Steps:
+        - create a SO of product A for 10 units
+        - on PICK_1 picking: put 2 units in Done and put in a package, validate, create a backorder
+        - on PACK_1 picking: remove the destination package for the 2 units, validate, create a backorder
+        - on OUT picking: the stock.move.line should not have a package
+        - on PICK_2 picking: put 2 units in Done and put in a package, validate, create a backorder
+        - on OUT picking: the stock.move.line should still not have a package
+        - on PACK_2: validate, create a backorder
+        - on OUT picking: there should be 2 stock.move.lines, one with package and one without
+        """
+        warehouse = self.company_data.get('default_warehouse')
+        self.env['res.config.settings'].write({
+            'group_stock_tracking_lot': True,
+            'group_stock_adv_location': True,
+            'group_stock_multi_locations': True,
+        })
+        warehouse.delivery_steps = 'pick_pack_ship'
+        self.env['stock.quant']._update_available_quantity(self.test_product_delivery, warehouse.lot_stock_id, 10)
+
+        so_1 = self._get_new_sale_order(product=self.test_product_delivery)
+        so_1.action_confirm()
+        pick_picking = so_1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        pack_picking = so_1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pack_type_id)
+        out_picking = so_1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+
+        pick_picking.move_lines.quantity_done = 2
+        pick_picking.action_put_in_pack()
+        backorder_wizard_dict = pick_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        pack_picking.move_line_ids.result_package_id = False
+        pack_picking.move_lines.quantity_done = 2
+        backorder_wizard_dict = pack_picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        self.assertEqual(out_picking.move_line_ids.package_id.id, False)
+        self.assertEqual(out_picking.move_line_ids.result_package_id.id, False)
+
+        pick_picking_2 = so_1.picking_ids.filtered(lambda x: x.picking_type_id == warehouse.pick_type_id and x.state != 'done')
+
+        pick_picking_2.move_lines.quantity_done = 2
+        package_2 = pick_picking_2.action_put_in_pack()
+        backorder_wizard_dict = pick_picking_2.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        self.assertEqual(out_picking.move_line_ids.package_id.id, False)
+        self.assertEqual(out_picking.move_line_ids.result_package_id.id, False)
+
+        pack_picking_2 = so_1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pack_type_id and p.state != 'done')
+
+        pack_picking_2.move_lines.quantity_done = 2
+        backorder_wizard_dict = pack_picking_2.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        self.assertRecordValues(out_picking.move_line_ids, [{'result_package_id': False}, {'result_package_id': package_2.id}])
+
+class TestSaleStockOnly(SavepointCase):
+
+    def test_no_automatic_assign(self):
+        """
+        This test ensures that when a picking is generated from a SO, the quantities are not
+        automatically reserved (the automatic reservation should only happen when `procurement_jit`
+        is installed)
+        """
+        product = self.env['product.product'].create({'name': 'Super Product', 'type': 'product'})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 3)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env['res.partner'].create({'name': 'Res Partner Test'})
+        with so_form.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 3
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        self.assertEqual(picking.state, 'confirmed')
+        self.assertEqual(picking.move_lines.reserved_availability, 0.0)
+
+        picking.move_lines.quantity_done = 1
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.move_lines.reserved_availability, 0.0)

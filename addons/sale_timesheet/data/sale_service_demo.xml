@@ -22,6 +22,7 @@
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
             <field name="name">After-Sales Services</field>
             <field name="analytic_account_id" ref="account_analytic_account_project_support"/>
+            <field name="allow_billable" eval="True" />
             <field name="type_ids" eval="[(4, ref('project.project_stage_0')), (4, ref('project.project_stage_1')), (4, ref('project.project_stage_2'))]"/>
         </record>
 
@@ -45,7 +46,6 @@
 
         <record id="product_service_order_timesheet" model="product.product">
             <field name="name">Customer Care (Prepaid Hours)</field>
-            <field name="default_code">SERV_585189</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="type">service</field>
             <field name="list_price">250.00</field>
@@ -59,7 +59,6 @@
 
         <record id="product_service_deliver_timesheet_1" model="product.product">
             <field name="name">Senior Architect (Invoice on Timesheets)</field>
-            <field name="default_code">SERV_89744</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">200.00</field>
             <field name="standard_price">150.00</field>
@@ -72,7 +71,6 @@
 
         <record id="product_service_deliver_timesheet_2" model="product.product">
             <field name="name">Junior Architect (Invoice on Timesheets)</field>
-            <field name="default_code">SERV_89665</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">100.00</field>
             <field name="standard_price">85.00</field>
@@ -85,7 +83,6 @@
 
         <record id="product_service_deliver_manual" model="product.product">
             <field name="name">Kitchen Assembly (Milestones)</field>
-            <field name="default_code">SERV_32289</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">500</field>
             <field name="standard_price">420.00</field>

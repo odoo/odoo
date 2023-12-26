@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 
 
@@ -87,12 +89,12 @@ class HrEmployeeBase(models.AbstractModel):
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
         rg_results = dict((d['employee_id'][0], d['number_of_days']) for d in data)
         for employee in self:
-            employee.allocation_count = rg_results.get(employee.id, 0.0)
+            employee.allocation_count = float_round(rg_results.get(employee.id, 0.0), precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
         for employee in self:
-            employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+            employee.allocation_used_count = float_round(employee.allocation_count - employee.remaining_leaves, precision_digits=2)
             employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
@@ -117,7 +119,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('state', 'not in', ('cancel', 'refuse'))
+            ('state', '=', 'validate'),
         ])
         leave_data = {}
         for holiday in holidays:
@@ -132,7 +134,7 @@ class HrEmployeeBase(models.AbstractModel):
             employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
             employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
             employee.current_leave_id = leave_data.get(employee.id, {}).get('current_leave_id')
-            employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id, {}).get('current_leave_state') not in ['cancel', 'refuse', 'draft']
+            employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id, {}).get('current_leave_state') in ['validate']
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
@@ -153,13 +155,21 @@ class HrEmployeeBase(models.AbstractModel):
                 employee.show_leaves = False
 
     def _search_absent_employee(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        # This search is only used for the 'Absent Today' filter however
+        # this only returns employees that are absent right now.
+        today_date = datetime.datetime.utcnow().date()
+        today_start = fields.Datetime.to_string(today_date)
+        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
-            ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', datetime.datetime.utcnow()),
-            ('date_to', '>=', datetime.datetime.utcnow())
+            ('state', '=', 'validate1'),
+            ('date_from', '<=', today_end),
+            ('date_to', '>=', today_start),
         ])
-        return [('id', 'in', holidays.mapped('employee_id').ids)]
+        operator = ['in', 'not in'][(operator == '=') != value]
+        return [('id', operator, holidays.mapped('employee_id').ids)]
 
     @api.model
     def create(self, values):
@@ -204,3 +214,13 @@ class HrEmployeeBase(models.AbstractModel):
             allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
         return res
+
+class HrEmployeePrivate(models.Model):
+    _inherit = 'hr.employee'
+
+class HrEmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    def _compute_leave_status(self):
+        super()._compute_leave_status()
+        self.current_leave_id = False

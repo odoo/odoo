@@ -9,15 +9,21 @@ from datetime import datetime
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
-from odoo import http, SUPERUSER_ID, _
+from odoo import http, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.translate import _
-from odoo.exceptions import ValidationError, UserError
+from odoo.tools.translate import _, _lt
+from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.addons.base.models.ir_qweb_fields import nl2br
+from odoo.tools.misc import hmac, consteq
 
 
 class WebsiteForm(http.Controller):
+
+    @http.route('/website_form/', type='http', auth="public", methods=['POST'], multilang=False)
+    def website_form_empty(self, **kwargs):
+        # This is a workaround to don't add language prefix to <form action="/website_form/" ...>
+        return ""
 
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True, csrf=False)
@@ -31,8 +37,13 @@ class WebsiteForm(http.Controller):
             raise BadRequest('Session expired (invalid CSRF token)')
 
         try:
-            if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
-                return self._handle_website_form(model_name, **kwargs)
+            # The except clause below should not let what has been done inside
+            # here be committed. It should not either roll back everything in
+            # this controller method. Instead, we use a savepoint to roll back
+            # what has been done inside the try clause.
+            with request.env.cr.savepoint():
+                if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
+                    return self._handle_website_form(model_name, **kwargs)
             error = _("Suspicious activity detected by Google reCaptcha.")
         except (ValidationError, UserError) as e:
             error = e.args[0]
@@ -61,6 +72,15 @@ class WebsiteForm(http.Controller):
                 # in case of an email, we want to send it immediately instead of waiting
                 # for the email queue to process
                 if model_name == 'mail.mail':
+                    form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
+                        'email_cc' in kwargs["website_form_signature"]
+                    # remove the email_cc information from the signature
+                    if kwargs.get("email_to"):
+                        kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
+                        value = kwargs['email_to'] + (':email_cc' if form_has_email_cc else '')
+                        hash_value = hmac(model_record.env, 'website_form_signature', value)
+                        if not consteq(kwargs["website_form_signature"], hash_value):
+                            raise AccessDenied('invalid website_form_signature')
                     request.env[model_name].sudo().browse(id_record).send()
 
         # Some fields have additional SQL constraints that we can't check generically
@@ -77,7 +97,7 @@ class WebsiteForm(http.Controller):
 
     # Constants string to make metadata readable on a text field
 
-    _meta_label = "%s\n________\n\n" % _("Metadata")  # Title for meta data
+    _meta_label = _lt("Metadata")  # Title for meta data
 
     # Dict of dynamically called filters following type of field to be fault tolerent
 
@@ -161,7 +181,7 @@ class WebsiteForm(http.Controller):
                     error_fields.append(field_name)
 
             # If it's a custom field
-            elif field_name != 'context':
+            elif field_name not in ('context', 'website_form_signature'):
                 custom_fields.append((field_name, field_value))
 
         data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])
@@ -194,8 +214,12 @@ class WebsiteForm(http.Controller):
     def insert_record(self, request, model, values, custom, meta=None):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
-            values.update({'reply_to': values.get('email_from')})
-        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(mail_create_nosubscribe=True).create(values)
+            email_from = _('"%s form submission" <%s>') % (request.env.company.name, request.env.company.email)
+            values.update({'reply_to': values.get('email_from'), 'email_from': email_from})
+        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
+            mail_create_nosubscribe=True,
+            commit_assetsbundle=False,
+        ).create(values)
 
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
@@ -205,7 +229,7 @@ class WebsiteForm(http.Controller):
             default_field_data = values.get(default_field.name, '')
             custom_content = (default_field_data + "\n\n" if default_field_data else '') \
                            + (_custom_label + custom + "\n\n" if custom else '') \
-                           + (self._meta_label + meta if meta else '')
+                           + (self._meta_label + "\n________\n\n" + meta if meta else '')
 
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead
@@ -241,7 +265,11 @@ class WebsiteForm(http.Controller):
             }
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
             if attachment_id and not custom_field:
-                record.sudo()[file.field_name] = [(4, attachment_id.id)]
+                record_sudo = record.sudo()
+                value = [(4, attachment_id.id)]
+                if record_sudo._fields[file.field_name].type == 'many2one':
+                    value = attachment_id.id
+                record_sudo[file.field_name] = value
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 
@@ -256,6 +284,7 @@ class WebsiteForm(http.Controller):
                     'no_auto_thread': False,
                     'res_id': id_record,
                     'attachment_ids': [(6, 0, orphan_attachment_ids)],
+                    'subtype_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
                 }
                 mail_id = request.env['mail.message'].with_user(SUPERUSER_ID).create(values)
         else:

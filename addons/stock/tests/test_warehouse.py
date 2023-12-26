@@ -256,10 +256,12 @@ class TestWarehouse(TestStockCommon):
             'code': 'STK',
         })
 
+        distribution_partner = self.env['res.partner'].create({'name': 'Distribution Center'})
         warehouse_distribution = self.env['stock.warehouse'].create({
             'name': 'Dist.',
             'code': 'DIST',
-            'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
+            'resupply_wh_ids': [(6, 0, [warehouse_stock.id])],
+            'partner_id': distribution_partner.id,
         })
 
         warehouse_shop = self.env['stock.warehouse'].create({
@@ -315,6 +317,9 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(self.env['stock.move'].search([('location_id', '=', warehouse_distribution.lot_stock_id.id)]))
         self.assertTrue(self.env['stock.move'].search([('location_dest_id', '=', warehouse_shop.lot_stock_id.id)]))
         self.assertTrue(self.env['stock.move'].search([('location_id', '=', warehouse_shop.lot_stock_id.id)]))
+
+        self.assertTrue(self.env['stock.picking'].search([('location_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', distribution_partner.id)]))
+        self.assertTrue(self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', distribution_partner.id)]))
 
     def test_mutiple_resupply_warehouse(self):
         """ Simulate the following situation:
@@ -508,6 +513,7 @@ class TestWarehouse(TestStockCommon):
 
         # Picking Type
         self.assertFalse(warehouse.in_type_id.active)
+        self.assertFalse(warehouse.in_type_id.show_operations)
         self.assertFalse(warehouse.out_type_id.active)
         self.assertFalse(warehouse.int_type_id.active)
         self.assertFalse(warehouse.pick_type_id.active)
@@ -532,6 +538,7 @@ class TestWarehouse(TestStockCommon):
 
         # Picking Type
         self.assertTrue(warehouse.in_type_id.active)
+        self.assertFalse(warehouse.in_type_id.show_operations)
         self.assertTrue(warehouse.out_type_id.active)
         self.assertTrue(warehouse.int_type_id.active)
         self.assertFalse(warehouse.pick_type_id.active)

@@ -187,6 +187,8 @@ return AbstractModel.extend({
         var fields = _.map(groupBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
+        const loadId = this.loadId ? ++this.loadId : 1;
+        this.loadId = loadId;
 
         if (this.chart.measure !== '__count__') {
             if (this.fields[this.chart.measure].type === 'many2one') {
@@ -209,7 +211,7 @@ return AbstractModel.extend({
                 fields: fields,
                 groupBy: groupBy,
                 lazy: false,
-            }).then(self._processData.bind(self, originIndex)));
+            }).then(self._processData.bind(self, originIndex, loadId)));
         });
         return Promise.all(proms);
     },
@@ -218,15 +220,14 @@ return AbstractModel.extend({
      * depending of some input, we have to normalize the result.
      * Each group coming from the read_group produces a dataPoint
      *
-     * @todo This is not good for race conditions.  The processing should get
-     *  the object this.chart in argument, or an array or something. We want to
-     *  avoid writing on a this.chart object modified by a subsequent read_group
-     *
      * @private
      * @param {number} originIndex
      * @param {any} rawData result from the read_group
      */
-    _processData: function (originIndex, rawData) {
+    _processData: function (originIndex, loadId, rawData) {
+        if (loadId < this.loadId) {
+            return;
+        }
         var self = this;
         var isCount = this.chart.measure === '__count__';
         var labels;

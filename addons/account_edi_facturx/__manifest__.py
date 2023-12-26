@@ -9,6 +9,8 @@
         'data/facturx_templates.xml',
     ],
     'installable': True,
+    'post_init_hook': '_post_init_hook',
     'application': False,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

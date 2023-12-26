@@ -29,7 +29,7 @@ class Followers(models.Model):
     res_id = fields.Many2oneReference(
         'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
     partner_id = fields.Many2one(
-        'res.partner', string='Related Partner', ondelete='cascade', index=True)
+        'res.partner', string='Related Partner', ondelete='cascade', index=True, domain=[('type', '!=', 'private')])
     channel_id = fields.Many2one(
         'mail.channel', string='Listener', ondelete='cascade', index=True)
     subtype_ids = fields.Many2many(
@@ -173,10 +173,13 @@ ORDER BY pid, cid, notif
                 query_pid = """
 SELECT partner.id as pid, NULL::int AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
-    users.notification_type AS notif, NULL AS groups
+    users.notification_type AS notif,
+    array_agg(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
 FROM res_partner partner
-LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-WHERE partner.id IN %s"""
+    LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+    LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+WHERE partner.id IN %s
+GROUP BY partner.id, users.notification_type"""
                 params.append(tuple(pids))
             if cids:
                 query_cid = """
@@ -366,11 +369,15 @@ GROUP BY fol.id%s%s""" % (
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
                     new_sids = set(partner_subtypes[partner_id]) - set(sids)
-                    old_sids = set(sids  if sids[0] is not None else []) - set(partner_subtypes[partner_id])
+                    old_sids = set(sids) - set(partner_subtypes[partner_id])
+                    update_cmd = []
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update_cmd += [(4, sid) for sid in new_sids]
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update_cmd += [(3, sid) for sid in old_sids]
+                    if update_cmd:
+                        update[fol_id] = {'subtype_ids': update_cmd}
+
             for channel_id in set(channel_ids or []):
                 if channel_id not in doc_cids[res_id]:
                     new.setdefault(res_id, list()).append({
@@ -382,9 +389,12 @@ GROUP BY fol.id%s%s""" % (
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[2] == channel_id), (False, []))
                     new_sids = set(channel_subtypes[channel_id]) - set(sids)
                     old_sids = set(sids) - set(channel_subtypes[channel_id])
+                    update_cmd = []
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update_cmd += [(4, sid) for sid in new_sids]
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update_cmd += [(3, sid) for sid in old_sids]
+                    if update_cmd:
+                        update[fol_id] = {'subtype_ids': update_cmd}
 
         return new, update

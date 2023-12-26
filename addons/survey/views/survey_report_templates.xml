@@ -8,7 +8,7 @@
                     <div t-if="user_input.test_entry" class="test-entry"/>
                     <div class="certification-top">
                         <div class="certification-bg-dark">
-                            <div class="certification-company-wrapper" t-field="user_input.survey_id.create_uid.company_id.logo" t-options="{'widget': 'image'}" role="img"/>
+                            <div class="certification-company-wrapper" t-field="user_input.env.company.logo" t-options="{'widget': 'image'}" role="img"/>
                         </div>
                         <div class="certification-name" t-field="user_input.survey_id.display_name"/>
                     </div>
@@ -19,7 +19,7 @@
                             <div class="user-name" t-esc="user_input.partner_id.name or user_input.email"/>
 
                             <div class="certification-description">
-                                <span t-field="user_input.survey_id.create_uid.company_id.display_name"/> is proud to award this certificate to
+                                <span t-field="user_input.env.company.display_name"/> is proud to award this certificate to
                                 <span t-esc="user_input.partner_id.name or user_input.email"/> for graduating <span t-field="user_input.survey_id.display_name"/>.
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                         <hr class="small"/>
 
                         <div class="certification-description">
-                            <span t-field="user_input.survey_id.create_uid.company_id.display_name"/> is proud to award this certificate to
+                            <span t-field="user_input.env.company.display_name"/> is proud to award this certificate to
                             <span t-esc="user_input.partner_id.name or user_input.email"/> for graduating <span t-field="user_input.survey_id.display_name"/>.
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                     <img src="/survey/static/src/img/certification_seal.svg" alt="Certification Seal" role="img"/>
 
                     <div class="certificate-signature">
-                        <span t-field="user_input.survey_id.create_uid.company_id.logo" t-options="{'widget': 'image'}" role="img"/>
+                        <span t-field="user_input.env.company.logo" t-options="{'widget': 'image'}" role="img"/>
                     </div>
                 </div>
             </div>

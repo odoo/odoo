@@ -151,8 +151,10 @@ var MockServer = Class.extend({
         if (abort) {
             abort = abort.bind(def);
         } else {
-            abort = function () {
-                throw new Error("Can't abort this request");
+            abort = function (rejectError = true) {
+                if (rejectError) {
+                    throw new ConnectionAbortedError("XmlHttpRequestError abort");
+                }
             };
         }
 
@@ -1209,12 +1211,18 @@ var MockServer = Class.extend({
      */
     _mockNameGet: function (model, args) {
         var ids = args[0];
+        if (!args.length) {
+            throw new Error("name_get: expected one argument");
+        }
+        else if (!ids) {
+            return []
+        }
         if (!_.isArray(ids)) {
             ids = [ids];
         }
         var records = this.data[model].records;
         var names = _.map(ids, function (id) {
-            return [id, _.findWhere(records, {id: id}).display_name];
+            return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, "False"];
         });
         return names;
     },
@@ -1247,10 +1255,12 @@ var MockServer = Class.extend({
      * @param {string} args[0]
      * @param {Array} args[1], search domain
      * @param {Object} _kwargs
+     * @param {number} [_kwargs.limit=100] server-side default limit
      * @returns {Array[]} a list of [id, display_name]
      */
     _mockNameSearch: function (model, args, _kwargs) {
         var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
+        const limit = _kwargs.limit || 100;
         var domain = (args && args[1]) || _kwargs.args || [];
         var records = this._getRecords(model, domain);
         if (str.length) {
@@ -1261,10 +1271,7 @@ var MockServer = Class.extend({
         var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
-        if (_kwargs.limit) {
-            return result.slice(0, _kwargs.limit);
-        }
-        return result;
+        return result.slice(0, limit);
     },
     /**
      * Simulate an 'onchange' rpc
@@ -1542,7 +1549,8 @@ var MockServer = Class.extend({
 
             // compute count key to match dumb server logic...
             var countKey;
-            if (kwargs.lazy) {
+            const groupByNoLeaf = kwargs.context ? 'group_by_no_leaf' in kwargs.context : false;
+            if (kwargs.lazy && (groupBy.length >= 2 || !groupByNoLeaf)) {
                 countKey = groupBy[0].split(':')[0] + "_count";
             } else {
                 countKey = "__count";
@@ -1586,6 +1594,15 @@ var MockServer = Class.extend({
         var data = {};
         _.each(records, function (record) {
             var groupByValue = record[groupBy]; // always technical value here
+
+            // special case for bool values: rpc call response with capitalized strings
+            if (!(groupByValue in data)) {
+                if (groupByValue === true) {
+                    groupByValue = "True";
+                } else if (groupByValue === false) {
+                    groupByValue = "False";
+                }
+            }
 
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
@@ -1635,7 +1652,10 @@ var MockServer = Class.extend({
      */
     _mockSearch: function (model, args, kwargs) {
         const limit = kwargs.limit || Number.MAX_VALUE;
-        return this._getRecords(model, args[0]).map(r => r.id).slice(0, limit);
+        const { context } = kwargs;
+        const active_test =
+          context && "active_test" in context ? context.active_test : true;
+        return this._getRecords(model, args[0], { active_test }).map(r => r.id).slice(0, limit);
     },
     /**
      * Simulate a 'search_count' operation
@@ -1689,7 +1709,12 @@ var MockServer = Class.extend({
      */
     _mockSearchReadController: function (args) {
         var self = this;
-        var records = this._getRecords(args.model, args.domain || []);
+        const { context } = args;
+        const active_test =
+          context && "active_test" in context ? context.active_test : true;
+        var records = this._getRecords(args.model, args.domain || [], {
+          active_test,
+        });
         var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;

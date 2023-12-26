@@ -393,6 +393,7 @@ class SurveyQuestion(models.Model):
             if question.question_type in ['simple_choice', 'multiple_choice', 'matrix']:
                 answer_lines = all_lines.filtered(
                     lambda line: line.answer_type == 'suggestion' or (
+                        line.skipped and not line.answer_type) or (
                         line.answer_type == 'char_box' and question.comment_count_as_answer)
                     )
                 comment_line_ids = all_lines.filtered(lambda line: line.answer_type == 'char_box')
@@ -438,7 +439,8 @@ class SurveyQuestion(models.Model):
 
         count_data = dict.fromkeys(suggested_answers, 0)
         for line in user_input_lines:
-            if line.suggested_answer_id or (line.value_char_box and self.comment_count_as_answer):
+            if line.suggested_answer_id in count_data\
+               or (line.value_char_box and self.comment_count_as_answer):
                 count_data[line.suggested_answer_id] += 1
 
         table_data = [{

@@ -54,6 +54,8 @@ class TestResourceCommon(TransactionCase):
             (0, 0, 0, '1', 'line_section', 10), (8, 16, 0, '1', False, 11), (7, 15, 2, '1', False, 12),
             (8, 16, 3, '1', False, 13), (10, 16, 4, '1', False, 14)], 'Europe/Brussels')
 
+        self.calendar_paul = self._define_calendar('Morning and evening shifts', sum([((2, 7, i), (10, 16, i)) for i in range(5)], ()), 'Brazil/DeNoronha')
+
         # Employee is linked to a resource.resource via resource.mixin
         self.jean = self.env['resource.test'].create({
             'name': 'Jean',
@@ -70,4 +72,9 @@ class TestResourceCommon(TransactionCase):
         self.jules = self.env['resource.test'].create({
             'name': 'Jules',
             'resource_calendar_id': self.calendar_jules.id,
+        })
+
+        self.paul = self.env['resource.test'].create({
+            'name': 'Paul',
+            'resource_calendar_id': self.calendar_paul.id,
         })

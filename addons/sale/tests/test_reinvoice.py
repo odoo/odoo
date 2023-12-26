@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import Form, tagged
 
@@ -26,7 +27,12 @@ class TestReInvoice(TestSaleCommon):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
-        cls.AccountMove = cls.env['account.move'].with_context(default_move_type='in_invoice', mail_notrack=True, mail_create_nolog=True)
+        cls.AccountMove = cls.env['account.move'].with_context(
+            default_move_type='in_invoice',
+            default_invoice_date=cls.sale_order.date_order,
+            mail_notrack=True,
+            mail_create_nolog=True,
+        )
 
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
@@ -109,6 +115,42 @@ class TestReInvoice(TestSaleCommon):
 
         self.assertEqual((sale_order_line5.price_unit, sale_order_line5.qty_delivered, sale_order_line5.product_uom_qty, sale_order_line5.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 2, 0, 0), 'Sale line 5 is wrong after confirming 2e vendor invoice')
         self.assertEqual((sale_order_line6.price_unit, sale_order_line6.qty_delivered, sale_order_line6.product_uom_qty, sale_order_line6.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 2, 0, 0), 'Sale line 6 is wrong after confirming 2e vendor invoice')
+
+    @freeze_time('2020-01-15')
+    def test_sales_team_invoiced(self):
+        """ Test invoiced field from  sales team ony take into account the amount the sales channel has invoiced this month """
+
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2020-01-10',
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1000.0})],
+            },
+            {
+                'move_type': 'out_refund',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2020-01-10',
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 500.0})],
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2020-01-01',
+                'date': '2020-01-01',
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 800.0})],
+            },
+        ])
+        invoices.action_post()
+
+        for invoice in invoices:
+            self.env['account.payment.register']\
+                .with_context(active_model='account.move', active_ids=invoice.ids)\
+                .create({})\
+                ._create_payments()
+
+        invoices.flush()
+        self.assertRecordValues(invoices.team_id, [{'invoiced': 500.0}])
 
     def test_sales_price(self):
         """ Test invoicing vendor bill at sales price for products based on delivered and ordered quantities. Check no existing SO line is incremented, but when invoicing a
@@ -218,3 +260,44 @@ class TestReInvoice(TestSaleCommon):
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+
+    def test_not_reinvoicing_invoiced_so_lines(self):
+        """ Test that invoiced SO lines are not re-invoiced. """
+        so_line1 = self.env['sale.order.line'].create({
+            'name': self.company_data['product_delivery_cost'].name,
+            'product_id': self.company_data['product_delivery_cost'].id,
+            'product_uom_qty': 1,
+            'product_uom': self.company_data['product_delivery_cost'].uom_id.id,
+            'price_unit': self.company_data['product_delivery_cost'].list_price,
+            'discount': 100.00,
+            'order_id': self.sale_order.id,
+        })
+        so_line1.product_id_change()
+        so_line2 = self.env['sale.order.line'].create({
+            'name': self.company_data['product_delivery_sales_price'].name,
+            'product_id': self.company_data['product_delivery_sales_price'].id,
+            'product_uom_qty': 1,
+            'product_uom': self.company_data['product_delivery_sales_price'].uom_id.id,
+            'price_unit': self.company_data['product_delivery_sales_price'].list_price,
+            'discount': 100.00,
+            'order_id': self.sale_order.id,
+        })
+        so_line2.product_id_change()
+
+        self.sale_order.onchange_partner_id()
+        self.sale_order._compute_tax_id()
+        self.sale_order.action_confirm()
+
+        for line in self.sale_order.order_line:
+            line.qty_delivered = 1
+        # create invoice and validate it
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        so_line3 = self.sale_order.order_line.filtered(lambda sol: sol != so_line1 and sol.product_id == self.company_data['product_delivery_cost'])
+        so_line4 = self.sale_order.order_line.filtered(lambda sol: sol != so_line2 and sol.product_id == self.company_data['product_delivery_sales_price'])
+
+        self.assertFalse(so_line3, "No re-invoicing should have created a new sale line with product #1")
+        self.assertFalse(so_line4, "No re-invoicing should have created a new sale line with product #2")
+        self.assertEqual(so_line1.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 1")
+        self.assertEqual(so_line2.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 2")

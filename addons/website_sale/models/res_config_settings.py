@@ -9,12 +9,6 @@ from odoo import api, models, fields
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    def _default_recovery_mail_template(self):
-        try:
-            return self.env.ref('website_sale.mail_template_sale_cart_recovery').id
-        except ValueError:
-            return False
-
     salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson', readonly=False)
     salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team', readonly=False)
     module_website_sale_delivery = fields.Boolean("eCommerce Shipping Costs")
@@ -35,9 +29,9 @@ class ResConfigSettings(models.TransientModel):
     module_account = fields.Boolean("Invoicing")
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
-                                                  default=_default_recovery_mail_template, related='website_id.cart_recovery_mail_template_id', readonly=False)
+                                                  related='website_id.cart_recovery_mail_template_id', readonly=False)
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
-                                        default=1.0, related='website_id.cart_abandoned_delay', readonly=False)
+                                        related='website_id.cart_abandoned_delay', readonly=False)
 
     @api.model
     def get_values(self):

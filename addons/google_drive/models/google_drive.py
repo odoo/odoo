@@ -14,7 +14,15 @@ from odoo.tools.translate import _
 
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
 
+from datetime import date
+
 _logger = logging.getLogger(__name__)
+
+# Google is depreciating their OOB Auth Flow on 3rd October 2022, the Google Drive
+# integration thus become irrelevant after that date.
+
+# https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html#disallowed-oob
+GOOGLE_AUTH_DEPRECATION_DATE = date(2022, 10, 3)
 
 
 class GoogleDrive(models.Model):
@@ -22,7 +30,13 @@ class GoogleDrive(models.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
+    def _module_deprecated(self):
+        return GOOGLE_AUTH_DEPRECATION_DATE < fields.Date.today()
+
     def get_google_drive_url(self, res_id, template_id):
+        if self._module_deprecated():
+            return
+
         self.ensure_one()
         self = self.sudo()
 
@@ -49,6 +63,9 @@ class GoogleDrive(models.Model):
 
     @api.model
     def get_access_token(self, scope=None):
+        if self._module_deprecated():
+            return
+
         Config = self.env['ir.config_parameter'].sudo()
         google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
         user_is_admin = self.env.is_admin()
@@ -84,6 +101,9 @@ class GoogleDrive(models.Model):
 
     @api.model
     def copy_doc(self, res_id, template_id, name_gdocs, res_model):
+        if self._module_deprecated():
+            return
+
         google_web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         access_token = self.get_access_token()
         # Copy template in to drive with help of new access token
@@ -165,7 +185,10 @@ class GoogleDrive(models.Model):
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
                     continue
-                domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                try:
+                    domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                except:
+                    raise UserError(_("The document filter must not include any 'dynamic' part, so it should not be based on the current time or current user, for example."))
                 additionnal_context = ast.literal_eval(config.filter_id.context)
                 google_doc_configs = self.env[config.filter_id.model_id].with_context(**additionnal_context).search(domain)
                 if google_doc_configs:
@@ -218,6 +241,9 @@ class GoogleDrive(models.Model):
     def _check_model_id(self):
         if self.filter_id and self.model_id.model != self.filter_id.model_id:
             return False
+        if self.model_id.model and self.filter_id:
+            # force an execution of the filter to verify compatibility
+            self.get_google_drive_config(self.model_id.model, 1)
         return True
 
     def get_google_scope(self):

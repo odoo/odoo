@@ -11,7 +11,7 @@ from datetime import date, datetime
 from lxml import etree
 
 from odoo import api, fields, models, _
-from odoo.tools import float_repr
+from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.tests.common import Form
@@ -37,7 +37,7 @@ class AccountMove(models.Model):
         ('delivered_expired', 'This invoice is delivered and expired (expiry of the maximum term for communication of acceptance/refusal)'),
         ('failed_delivery', 'Delivery impossible, ES certify that it has received the invoice and that the file \
                         could not be delivered to the addressee') # ok we must do nothing
-    ], default='to_send', copy=False)
+    ], default='to_send', copy=False, string="FatturaPA Send State")
 
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
 
@@ -56,87 +56,14 @@ class AccountMove(models.Model):
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
 
     def _check_before_xml_exporting(self):
-        self.ensure_one()
-        seller = self.company_id
-        buyer = self.commercial_partner_id
-
-        # <1.1.1.1>
-        if not seller.country_id:
-            raise UserError(_("%s must have a country") % (seller.display_name))
-
-        # <1.1.1.2>
-        if not seller.vat:
-            raise UserError(_("%s must have a VAT number") % (seller.display_name))
-        elif len(seller.vat) > 30:
-            raise UserError(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.") % (seller.display_name, seller.vat))
-
-        # <1.2.1.2>
-        if not seller.l10n_it_codice_fiscale:
-            raise UserError(_("%s must have a codice fiscale number") % (seller.display_name))
-
-        # <1.2.1.8>
-        if not seller.l10n_it_tax_system:
-            raise UserError(_("The seller's company must have a tax system."))
-
-        # <1.2.2>
-        if not seller.street and not seller.street2:
-            raise UserError(_("%s must have a street.") % (seller.display_name))
-        if not seller.zip:
-            raise UserError(_("%s must have a post code.") % (seller.display_name))
-        if len(seller.zip) != 5 and seller.country_id.code == 'IT':
-            raise UserError(_("%s must have a post code of length 5.") % (seller.display_name))
-        if not seller.city:
-            raise UserError(_("%s must have a city.") % (seller.display_name))
-        if not seller.country_id:
-            raise UserError(_("%s must have a country.") % (seller.display_name))
-
-        if seller.l10n_it_has_tax_representative and not seller.l10n_it_tax_representative_partner_id.vat:
-            raise UserError(_("Tax representative partner %s of %s must have a tax number.") % (seller.l10n_it_tax_representative_partner_id.display_name, seller.display_name))
-
-        # <1.4.1>
-        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
-            raise UserError(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).") % (buyer.display_name))
-
-        # <1.4.2>
-        if not buyer.street and not buyer.street2:
-            raise UserError(_("%s must have a street.") % (buyer.display_name))
-        if not buyer.zip:
-            raise UserError(_("%s must have a post code.") % (buyer.display_name))
-        if len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
-            raise UserError(_("%s must have a post code of length 5.") % (buyer.display_name))
-        if not buyer.city:
-            raise UserError(_("%s must have a city.") % (buyer.display_name))
-        if not buyer.country_id:
-            raise UserError(_("%s must have a country.") % (buyer.display_name))
-
-        # <2.2.1>
-        for invoice_line in self.invoice_line_ids:
-            if len(invoice_line.tax_ids) != 1:
-                raise UserError(_("You must select one and only one tax by line."))
-
-        for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
-            if not tax_line.tax_line_id.l10n_it_has_exoneration and tax_line.tax_line_id.amount == 0:
-                raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
+        # DEPRECATED use AccountEdiFormat._l10n_it_edi_check_invoice_configuration instead
+        errors = self.env['account.edi.format']._l10n_it_edi_check_invoice_configuration(self)
+        if errors:
+            raise UserError(self.env['account.edi.format']._format_error_message(_("Invalid configuration:"), errors))
 
     def invoice_generate_xml(self):
         self.ensure_one()
-        if self.l10n_it_einvoice_id and self.l10n_it_send_state not in ['invalid', 'to_send']:
-            return {'error': _("You can't regenerate an E-Invoice when the first one is sent and there are no errors")}
-        if self.l10n_it_einvoice_id:
-            self.l10n_it_einvoice_id.unlink()
-
-        a = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        n = self.id
-        progressive_number = ""
-        while n:
-            (n,m) = divmod(n,len(a))
-            progressive_number = a[m] + progressive_number
-
-        report_name = '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
-            'country_code': self.company_id.country_id.code,
-            'codice': self.company_id.l10n_it_codice_fiscale,
-            'progressive_number': progressive_number.zfill(5),
-            }
+        report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
         data = b"<?xml version='1.0' encoding='UTF-8'?>" + self._export_as_xml()
         description = _('Italian invoice: %s', self.move_type)
@@ -154,10 +81,85 @@ class AccountMove(models.Model):
         )
         return {'attachment': attachment}
 
-    def _export_as_xml(self):
-        ''' Create the xml file content.
-        :return: The XML content as str.
-        '''
+    def _is_commercial_partner_pa(self):
+        """
+            Returns True if the destination of the FatturaPA belongs to the Public Administration.
+        """
+        return len(self.commercial_partner_id.l10n_it_pa_index or '')  == 6
+
+    def _l10n_it_edi_prepare_fatturapa_line_details(self, reverse_charge_refund=False, is_downpayment=False, convert_to_euros=True):
+        """ Returns a list of dictionaries passed to the template for the invoice lines (DettaglioLinee)
+        """
+        invoice_lines = []
+        lines = self.invoice_line_ids.filtered(lambda l: not l.display_type)
+
+        for num, line in enumerate(lines):
+            sign = -1 if line.move_id.is_inbound() else 1
+            price_subtotal = (line.balance * sign) if convert_to_euros else line.price_subtotal
+            # The price_subtotal should be inverted when the line is a reverse charge refund.
+            if reverse_charge_refund:
+                price_subtotal = -price_subtotal
+
+            # Unit price
+            price_unit = 0
+            if line.quantity and line.discount != 100.0:
+                price_unit = price_subtotal / ((1 - (line.discount or 0.0) / 100.0) * abs(line.quantity))
+            else:
+                price_unit = line.price_unit
+
+            description = line.name
+            if not is_downpayment:
+                if line.price_subtotal < 0:
+                    moves = line._get_downpayment_lines().move_id
+                    if moves:
+                        description += ', '.join([move.name for move in moves])
+
+            line_dict = {
+                'line': line,
+                'line_number': num + 1,
+                'description': description or 'NO NAME',
+                'unit_price': price_unit,
+                'subtotal_price': price_subtotal,
+            }
+            invoice_lines.append(line_dict)
+        return invoice_lines
+
+    def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
+        """ Returns an adapted dictionary passed to the template for the tax lines (DatiRiepilogo)
+        """
+        for _tax_name, tax_dict in tax_details['tax_details'].items():
+            # The assumption is that the company currency is EUR.
+            base_amount = tax_dict['base_amount']
+            base_amount_currency = tax_dict['base_amount_currency']
+            tax_amount = tax_dict['tax_amount']
+            tax_amount_currency = tax_dict['tax_amount_currency']
+            tax_rate = tax_dict['tax'].amount
+            expected_base_amount_currency = tax_amount_currency * 100 / tax_rate if tax_rate else False
+            expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
+            # Constraints within the edi make local rounding on price included taxes a problem.
+            # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
+            #   taxable base = sum(taxable base for each unit) + Arrotondamento
+            if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
+                if expected_base_amount_currency and float_compare(base_amount_currency, expected_base_amount_currency, 2):
+                    tax_dict['rounding'] = base_amount_currency - (tax_amount_currency * 100 / tax_rate)
+                    tax_dict['base_amount_currency'] = base_amount_currency - tax_dict['rounding']
+                if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
+                    tax_dict['rounding_euros'] = base_amount - (tax_amount * 100 / tax_rate)
+                    tax_dict['base_amount'] = base_amount - tax_dict['rounding_euros']
+
+            if not reverse_charge_refund:
+                balance_multiplicator = -1 if self.is_inbound() else 1
+                if tax_dict['base_amount'] != 0:  # We shouldn't change 0 into -0
+                    tax_dict['base_amount'] *= balance_multiplicator
+                if tax_dict['base_amount_currency'] != 0:
+                    tax_dict['base_amount_currency'] *= balance_multiplicator
+                if tax_dict['tax_amount'] != 0:
+                    tax_dict['tax_amount'] *= balance_multiplicator
+                if tax_dict['tax_amount_currency'] != 0:
+                    tax_dict['tax_amount_currency'] *= balance_multiplicator
+        return tax_details
+
+    def _prepare_fatturapa_export_values(self):
         self.ensure_one()
 
         def format_date(dt):
@@ -196,53 +198,141 @@ class AccountMove(models.Model):
             return False
 
         def get_vat_number(vat):
+            if vat[:2].isdecimal():
+                return vat.replace(' ', '')
             return vat[2:].replace(' ', '')
 
         def get_vat_country(vat):
+            if vat[:2].isdecimal():
+                return 'IT'
             return vat[:2].upper()
 
-        def in_eu(partner):
-            europe = self.env.ref('base.europe', raise_if_not_found=False)
-            country = partner.country_id
-            if not europe or not country or country in europe.country_ids:
-                return True
-            return False
+        def format_alphanumeric(text_to_convert):
+            return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
 
-        formato_trasmissione = "FPR12"
-        if len(self.commercial_partner_id.l10n_it_pa_index or '1') == 6:
-            formato_trasmissione = "FPA12"
+        formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
-        if self.move_type == 'out_invoice':
-            document_type = 'TD01'
-        elif self.move_type == 'out_refund':
-            document_type = 'TD04'
-        else:
-            document_type = 'TD0X'
+        # Flags
+        in_eu = self.env['account.edi.format']._l10n_it_edi_partner_in_eu
+        is_self_invoice = self.env['account.edi.format']._l10n_it_edi_is_self_invoice(self)
+        document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
+        if self.env['account.edi.format']._l10n_it_is_simplified_document_type(document_type):
+            formato_trasmissione = "FSM10"
+
+        document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
+        # Represent if the document is a reverse charge refund in a single variable
+        reverse_charge = document_type in ['TD17', 'TD18', 'TD19']
+        is_downpayment = document_type in ['TD02']
+        reverse_charge_refund = self.move_type == 'in_refund' and reverse_charge
+        convert_to_euros = self.currency_id.name != 'EUR'
 
         pdf = self.env.ref('account.account_invoices')._render_qweb_pdf(self.id)[0]
         pdf = base64.b64encode(pdf)
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
+        # tax map for 0% taxes which have no tax_line_id
+        tax_map = dict()
+        for line in self.line_ids:
+            for tax in line.tax_ids:
+                if tax.amount == 0.0:
+                    tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
+
+        tax_details = self._prepare_edi_tax_details(
+            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
+        )
+
+        company = self.company_id
+        partner = self.commercial_partner_id
+        buyer = partner if not is_self_invoice else company
+        seller = company if not is_self_invoice else partner
+        codice_destinatario = (
+            (is_self_invoice and company.partner_id.l10n_it_pa_index)
+            or partner.l10n_it_pa_index
+            or (partner.country_id.code == 'IT' and '0000000')
+            or 'XXXXXXX')
+
+        # Self-invoices are technically -100%/+100% repartitioned
+        # but functionally need to be exported as 100%
+        document_total = self.amount_total
+        if is_self_invoice:
+            document_total += sum([abs(v['tax_amount_currency']) for k, v in tax_details['tax_details'].items()])
+            if reverse_charge_refund:
+                document_total = -abs(document_total)
+
+        # Reference line for finding the conversion rate used in the document
+        conversion_line = self.invoice_line_ids.sorted(lambda l: abs(l.balance), reverse=True)[0] if self.invoice_line_ids else None
+        conversion_rate = float_repr(
+            abs(conversion_line.balance / conversion_line.amount_currency), precision_digits=5,
+        ) if convert_to_euros and conversion_line else None
+
+        invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(reverse_charge_refund, is_downpayment, convert_to_euros)
+        tax_details = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, reverse_charge_refund)
+
         # Create file content.
         template_values = {
             'record': self,
+            'company': company,
+            'sender': company,
+            'sender_partner': company.partner_id,
+            'partner': partner,
+            'buyer': buyer,
+            'buyer_partner': partner if not is_self_invoice else company.partner_id,
+            'buyer_is_company': is_self_invoice or partner.is_company,
+            'seller': seller,
+            'seller_partner': company.partner_id if not is_self_invoice else partner,
+            'currency': self.currency_id or self.company_currency_id if not convert_to_euros else self.env.ref('base.EUR'),
+            'document_total': document_total,
+            'representative': company.l10n_it_tax_representative_partner_id,
+            'codice_destinatario': codice_destinatario,
+            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
+            'is_self_invoice': is_self_invoice,
+            'partner_bank': self.partner_bank_id,
             'format_date': format_date,
             'format_monetary': format_monetary,
             'format_numbers': format_numbers,
             'format_numbers_two': format_numbers_two,
             'format_phone': format_phone,
+            'format_alphanumeric': format_alphanumeric,
             'discount_type': discount_type,
-            'get_vat_number': get_vat_number,
-            'get_vat_country': get_vat_country,
-            'in_eu': in_eu,
-            'abs': abs,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
             'pdf': pdf,
             'pdf_name': pdf_name,
+            'tax_map': tax_map,
+            'tax_details': tax_details,
+            'abs': abs,
+            'normalize_codice_fiscale': partner._l10n_it_normalize_codice_fiscale,
+            'get_vat_number': get_vat_number,
+            'get_vat_country': get_vat_country,
+            'in_eu': in_eu,
+            'rc_refund': reverse_charge_refund,
+            'invoice_lines': invoice_lines,
+            'conversion_rate': conversion_rate,
         }
-        content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        return template_values
+
+    def _export_as_xml(self):
+        '''DEPRECATED : this will be moved to AccountEdiFormat in a future version.
+        Create the xml file content.
+        :return: The XML content as str.
+        '''
+        template_values = self._prepare_fatturapa_export_values()
+        if not self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
+            content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        else:
+            content = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')._render(template_values)
+            self.message_post(body=_("A simplified invoice was created instead of an ordinary one. This is because the invoice \
+                                    is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."))
         return content
+
+    def _post(self, soft=True):
+        # OVERRIDE
+        posted = super()._post(soft=soft)
+
+        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type in ['out_invoice', 'out_refund'] and m.company_id.country_id.code == 'IT'):
+            move.send_pec_mail()
+
+        return posted
 
     def send_pec_mail(self):
         self.ensure_one()
@@ -327,10 +417,27 @@ class AccountTax(models.Model):
     l10n_it_kind_exoneration = fields.Selection(selection=[
             ("N1", "[N1] Escluse ex art. 15"),
             ("N2", "[N2] Non soggette"),
+            ("N2.1", "[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR 633/72"),
+            ("N2.2", "[N2.2] Non soggette – altri casi"),
             ("N3", "[N3] Non imponibili"),
+            ("N3.1", "[N3.1] Non imponibili – esportazioni"),
+            ("N3.2", "[N3.2] Non imponibili – cessioni intracomunitarie"),
+            ("N3.3", "[N3.3] Non imponibili – cessioni verso San Marino"),
+            ("N3.4", "[N3.4] Non imponibili – operazioni assimilate alle cessioni all’esportazione"),
+            ("N3.5", "[N3.5] Non imponibili – a seguito di dichiarazioni d’intento"),
+            ("N3.6", "[N3.6] Non imponibili – altre operazioni che non concorrono alla formazione del plafond"),
             ("N4", "[N4] Esenti"),
             ("N5", "[N5] Regime del margine / IVA non esposta in fattura"),
             ("N6", "[N6] Inversione contabile (per le operazioni in reverse charge ovvero nei casi di autofatturazione per acquisti extra UE di servizi ovvero per importazioni di beni nei soli casi previsti)"),
+            ("N6.1", "[N6.1] Inversione contabile – cessione di rottami e altri materiali di recupero"),
+            ("N6.2", "[N6.2] Inversione contabile – cessione di oro e argento puro"),
+            ("N6.3", "[N6.3] Inversione contabile – subappalto nel settore edile"),
+            ("N6.4", "[N6.4] Inversione contabile – cessione di fabbricati"),
+            ("N6.5", "[N6.5] Inversione contabile – cessione di telefoni cellulari"),
+            ("N6.6", "[N6.6] Inversione contabile – cessione di prodotti elettronici"),
+            ("N6.7", "[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"),
+            ("N6.8", "[N6.8] Inversione contabile – operazioni settore energetico"),
+            ("N6.9", "[N6.9] Inversione contabile – altri casi"),
             ("N7", "[N7] IVA assolta in altro stato UE (vendite a distanza ex art. 40 c. 3 e 4 e art. 41 c. 1 lett. b,  DL 331/93; prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-sexies lett. f, g, art. 74-sexies DPR 633/72)")],
         string="Exoneration",
         help="Exoneration type",

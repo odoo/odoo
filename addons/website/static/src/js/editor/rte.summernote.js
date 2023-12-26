@@ -2,6 +2,7 @@ odoo.define('website.rte.summernote', function (require) {
 'use strict';
 
 var core = require('web.core');
+const rte = require('web_editor.rte');
 require('web_editor.rte.summernote');
 
 var eventHandler = $.summernote.eventHandler;
@@ -56,4 +57,22 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         .toggleClass('active', $(oStyle.image).is('[style*="transform"]'))
         .toggleClass('d-none', !$(oStyle.image).is('img'));
 };
+
+rte.Class.include({
+    /**
+     * @override
+     */
+    async start() {
+        const res = await this._super(...arguments);
+
+        // TODO review in master. This stable fix restores the possibility to
+        // edit the company team snippet images on subsequent editions. Indeed
+        // this badly relies on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save.
+        // grep: COMPANY_TEAM_CONTENTEDITABLE
+        this.__$editable.find('.s_company_team .o_not_editable img').prop('contenteditable', true);
+
+        return res;
+    },
+});
 });

@@ -120,6 +120,9 @@ MockServer.include({
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
         }
+        if (route === '/mail/thread/data') {
+            return this._mockRouteMailThreadData(args.thread_model, args.thread_id, args.request_list);
+        }
         // mail.activity methods
         if (args.model === 'mail.activity' && args.method === 'activity_format') {
             let res = this._mockRead(args.model, args.args, args.kwargs);
@@ -223,7 +226,8 @@ MockServer.include({
             return this._mockMailMessageModerate(args);
         }
         if (args.model === 'mail.message' && args.method === 'set_message_done') {
-            return this._mockMailMessageSetMessageDone(args);
+            const ids = args.args[0];
+            return this._mockMailMessageSetMessageDone(ids);
         }
         if (args.model === 'mail.message' && args.method === 'toggle_message_starred') {
             const ids = args.args[0];
@@ -389,10 +393,7 @@ MockServer.include({
         const currentPartner = this._getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
         const currentPartnerFormat = this._mockResPartnerMailPartnerFormat(currentPartner.id);
 
-        const needaction_inbox_counter = this._getRecords('mail.notification', [
-            ['res_partner_id', '=', this.currentPartnerId],
-            ['is_read', '=', false],
-        ]).length;
+        const needaction_inbox_counter = this._mockResPartnerGetNeedactionCount();
 
         const mailFailures = this._mockMailMessageMessageFetchFailed();
 
@@ -477,9 +478,62 @@ MockServer.include({
         return subtypes_list;
     },
 
+    /**
+      * Simulates the `/mail/thread/data` route.
+      *
+      * @param {string} thread_model
+      * @param {integer} thread_id
+      * @param {string[]} request_list
+      * @returns {Object}
+      */
+    async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
+        const res = {};
+        const thread = this._mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
+        if (request_list.includes('attachments')) {
+            const attachments = this._mockSearchRead('ir.attachment', [
+                [['res_id', '=', thread_id], ['res_model', '=', thread_model]],
+            ], {}); // order not done for simplicity
+            res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
+        }
+        return res;
+    },
+
     //--------------------------------------------------------------------------
     // Private Mocked Methods
     //--------------------------------------------------------------------------
+
+    /**
+     * Simulates `_attachment_format` on `ir.attachment`.
+     *
+     * @private
+     * @param {string} res_model
+     * @param {string} domain
+     * @returns {Object}
+     */
+    _mockIrAttachment_attachmentFormat(ids, commands = false) {
+        const attachments = this._mockRead('ir.attachment', [ids]);
+        return attachments.map(attachment => {
+            const res = {
+                'checksum': attachment.checksum,
+                'filename': attachment.name,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+            };
+            if (commands) {
+                res['originThread'] = [['insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                }]];
+            } else {
+                Object.assign(res, {
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                });
+            }
+            return res;
+        });
+    },
 
     /**
      * Simulates `get_activity_data` on `mail.activity`.
@@ -1076,9 +1130,9 @@ MockServer.include({
         ];
         if (domain) {
             const messages = this._getRecords('mail.message', domain);
-            notifDomain.push(
-                ['mail_message_id', 'in', messages.map(messages => messages.id)]
-            );
+            const ids = messages.map(messages => messages.id);
+            this._mockMailMessageSetMessageDone(ids);
+            return ids;
         }
         const notifications = this._getRecords('mail.notification', notifDomain);
         this._mockWrite('mail.notification', [
@@ -1104,7 +1158,7 @@ MockServer.include({
                 },
             ]);
         }
-        const notificationData = { type: 'mark_as_read', message_ids: messageIds };
+        const notificationData = { type: 'mark_as_read', message_ids: messageIds, needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
         const notification = [[false, 'res.partner', this.currentPartnerId], notificationData];
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         return messageIds;
@@ -1220,12 +1274,16 @@ MockServer.include({
             notifications = this._mockMailNotification_NotificationFormat(
                 notifications.map(notification => notification.id)
             );
+            const trackingValueIds = this._getRecords('mail.tracking.value', [
+                ['id', 'in', message.tracking_value_ids],
+            ]);
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
+                tracking_value_ids: trackingValueIds,
             });
             if (message.subtype_id) {
                 const subtype = this._getRecords('mail.message.subtype', [
@@ -1307,10 +1365,9 @@ MockServer.include({
      * messages have been marked as read, so that UI is updated.
      *
      * @private
-     * @param {Object} args
+     * @param {integer[]} ids
      */
-    _mockMailMessageSetMessageDone(args) {
-        const ids = args.args[0];
+    _mockMailMessageSetMessageDone(ids) {
         const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
 
         const notifications = this._getRecords('mail.notification', [
@@ -1335,7 +1392,7 @@ MockServer.include({
             ]);
             // NOTE server is sending grouped notifications per channel_ids but
             // this optimization is not needed here.
-            const data = { type: 'mark_as_read', message_ids: [message.id], channel_ids: message.channel_ids };
+            const data = { type: 'mark_as_read', message_ids: [message.id], channel_ids: message.channel_ids, needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
             const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
             this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
         }
@@ -1664,7 +1721,7 @@ MockServer.include({
             ['partner_id', 'in', partner_ids || []],
             ['channel_id', 'in', channel_ids || []],
         ]);
-        this._mockUnlink(model, [followers.map(follower => follower.id)]);
+        this._mockUnlink('mail.followers', [followers.map(follower => follower.id)]);
     },
     /**
      * Simulates `get_mention_suggestions` on `res.partner`.
@@ -1728,6 +1785,17 @@ MockServer.include({
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, limit);
         }
         return [mainMatchingPartners, extraMatchingPartners];
+    },
+    /**
+     * Simulates `get_needaction_count` on `res.partner`.
+     *
+     * @private
+     */
+    _mockResPartnerGetNeedactionCount() {
+        return this._getRecords('mail.notification', [
+            ['res_partner_id', '=', this.currentPartnerId],
+            ['is_read', '=', false],
+        ]).length;
     },
     /**
      * Simulates `im_search` on `res.partner`.

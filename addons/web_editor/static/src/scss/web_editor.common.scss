@@ -62,6 +62,9 @@
             @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or theme-color('secondary'));
         }
     }
+
+    @include print-variable('o-grid-gutter-width', $grid-gutter-width);
+    @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
 }
 
 html, body {
@@ -195,6 +198,9 @@ img.ml-auto, img.mx-auto {
 .fa.mx-auto {
     display: block;
     text-align: center;
+}
+.fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
+    width: auto;
 }
 
 div.media_iframe_video {
@@ -400,10 +406,13 @@ a.o_underline {
         @mixin ace-line-error-mixin {
             content: "";
             z-index: 1000;
-            display: block;
-            background-color: theme-color('danger');
-            opacity: 0.5;
-            pointer-events: none;
+            display: flex;
+            background-color: $o-we-color-danger;
+            color: white;
+            font-size: 1.2em;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
         }
 
         height: 70%; // in case flex is not supported
@@ -415,9 +424,16 @@ a.o_underline {
             .ace_gutter-cell.o_error {
                 position: relative;
 
+                &::before {
+                    @include o-position-absolute(-100vh, 0, -100vh);
+                    @include ace-line-error-mixin;
+                    width: 2px;
+                }
                 &::after {
                     @include o-position-absolute(-100%, 0, -100%, 0);
                     @include ace-line-error-mixin;
+                    font-family: FontAwesome;
+                    content: "\f071";
                 }
             }
         }
@@ -428,17 +444,29 @@ a.o_underline {
             height: 100%;
             cursor: ew-resize;
         }
-
-        .ace_scroller.o_error::after {
-            @include o-position-absolute(0, auto, 0, 0);
-            width: 3px;
-            @include ace-line-error-mixin;
-        }
     }
 }
 
-.ace_editor > .ace_gutter {
-    display: block !important; // display even with aria-hidden
+.o_ace_error_popover {
+    max-width: 40vw;
+
+    .popover-body {
+        background-color: lighten($o-we-ace-color, 10%);
+        color: #ebecee;
+    }
+    &.bs-popover-left .arrow::after {
+        border-left-color: lighten($o-we-ace-color, 10%);
+    }
+    &.bs-popover-right .arrow::after {
+        border-right-color: lighten($o-we-ace-color, 10%);
+    }
+    code {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: pre;
+        color: cyan;
+    }
 }
 
 .o_ace_select2_dropdown {
@@ -508,11 +536,11 @@ a.o_underline {
     // modal select media
     .o_technical_modal.o_web_editor_dialog {
         // see template 'web_editor.FieldTextHtml.fullscreen'
-        z-index: 2001;
+        z-index: $o-we-technical-modal-zindex;
 
         > .o_select_media_dialog {
             max-width: inherit !important;
-            z-index: 2001;
+            z-index: $o-we-technical-modal-zindex;
 
             .modal-dialog, .model-content {
                 height: 100%;
@@ -611,18 +639,21 @@ blockquote {
         .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
                                         // .dropdown-menu to counter a:not(.btn)
             &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                color: $dropdown-link-color;
+                color: $dropdown-link-color !important;
 
                 @include hover-focus {
-                    color: $dropdown-link-hover-color;
+                    color: $dropdown-link-hover-color !important;
                 }
             }
             &.disabled,
             &:disabled {
                 &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                    color: $dropdown-link-disabled-color;
+                    color: $dropdown-link-disabled-color !important;
                 }
             }
+        }
+        .dropdown-menu .dropdown-item-text .text-muted {
+            color: $text-muted !important;
         }
     }
 }
@@ -720,7 +751,11 @@ blockquote {
                 &:active {
                     &, h6 { // Quick fix: sometimes we use h6 in dropdowns
                         @include gradient-bg($-btn-primary-color);
-                        color: color-yiq($-btn-primary-color);
+                        color: color-yiq($-btn-primary-color) !important;
+
+                        @include hover-focus {
+                            color: color-yiq($-btn-primary-color) !important;
+                        }
                     }
                 }
             }

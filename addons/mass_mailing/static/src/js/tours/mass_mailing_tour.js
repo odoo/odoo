@@ -9,6 +9,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     tour.register('mass_mailing_tour', {
         url: '/web',
         rainbowManMessage: _t('Congratulations, I love your first mailing. :)'),
+        sequence: 200,
     }, [tour.stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
@@ -21,6 +22,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         edition: 'community',
     }, {
         trigger: '.o-kanban-button-new',
+        extra_trigger: '.oe_kanban_mass_mailing',
         content: _t("Start by creating your first <b>Mailing</b>."),
         position: 'bottom',
     }, {

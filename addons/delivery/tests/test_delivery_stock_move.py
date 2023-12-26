@@ -40,10 +40,6 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
 
     def test_01_delivery_stock_move(self):
         # Test if the stored fields of stock moves are computed with invoice before delivery flow
-        self.product_11.write({
-            'weight': 0.25,
-        })
-
         self.sale_prepaid = self.SaleOrder.create({
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
@@ -79,8 +75,6 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         self.invoice.action_post()
 
         # I pay the invoice.
-        self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.action_post()
         self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
 
         register_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.invoice.ids).create({
@@ -99,4 +93,104 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         self.assertEqual(moves[0].weight, 2.0, 'wrong move weight')
 
         # Ship
+        moves.move_line_ids.write({'qty_done': 2})
         self.picking = self.sale_prepaid.picking_ids._action_done()
+        self.assertEqual(moves[0].move_line_ids.sale_price, 1725.0, 'wrong shipping value')
+
+    def test_02_delivery_stock_move(self):
+        # Test if SN product shipment line has the correct amount
+        self.product_cable_management_box.write({
+            'tracking': 'serial'
+        })
+
+        serial_numbers = self.env['stock.production.lot'].create([{
+            'name': str(x),
+            'product_id': self.product_cable_management_box.id,
+            'company_id': self.env.company.id,
+        } for x in range(5)])
+ 
+
+        self.sale_prepaid = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'partner_invoice_id': self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'pricelist_id': self.pricelist_id.id,
+            'order_line': [(0, 0, {
+                'name': 'Cable Management Box',
+                'product_id': self.product_cable_management_box.id,
+                'product_uom_qty': 2,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        # I add delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': self.sale_prepaid.id,
+            'default_carrier_id': self.normal_delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        # I confirm the SO.
+        self.sale_prepaid.action_confirm()
+        moves = self.sale_prepaid.picking_ids.move_lines
+        # Ship
+        for ml, lot in zip(moves.move_line_ids, serial_numbers):
+            ml.write({'qty_done': 1, 'lot_id': lot.id})
+        self.picking = self.sale_prepaid.picking_ids._action_done()
+        self.assertEqual(moves[0].move_line_ids[0].sale_price, 862.5, 'wrong shipping value')
+
+    def test_delivery_carrier_from_confirmed_so(self):
+        """Test if adding shipping method in sale order after confirmation
+           will add it in pickings too"""
+
+        sale_order = self.SaleOrder.create({
+            "partner_id": self.partner_18.id,
+            "partner_invoice_id": self.partner_18.id,
+            "partner_shipping_id": self.partner_18.id,
+            "order_line": [(0, 0, {
+                "name": "Cable Management Box",
+                "product_id": self.product_cable_management_box.id,
+                "product_uom_qty": 2,
+                "product_uom": self.product_uom_unit.id,
+                "price_unit": 750.00,
+            })],
+        })
+
+        sale_order.action_confirm()
+        sale_order.picking_ids.move_lines.quantity_done = 2
+        sale_order.picking_ids.button_validate()
+
+        # Return picking
+        return_form = Form(self.env["stock.return.picking"].with_context(active_id=sale_order.picking_ids.id, active_model="stock.picking"))
+        return_wizard = return_form.save()
+        action = return_wizard.create_returns()
+        return_picking = self.env["stock.picking"].browse(action["res_id"])
+
+        # add new product so new picking is created
+        sale_order.write({
+            "order_line": [(0, 0, {
+                "name": "Another product to deliver",
+                "product_id": self.product_11.id,
+                "product_uom_qty": 2,
+                "product_uom": self.product_uom_unit.id,
+                "price_unit": 750.00,
+            })],
+        })
+
+        # Add delivery cost in Sales order
+        delivery_wizard = Form(self.env["choose.delivery.carrier"].with_context({
+            "default_order_id": sale_order.id,
+            "default_carrier_id": self.normal_delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        # Check the carrier in picking after confirm sale order
+        delivery_for_product_11 = sale_order.picking_ids.filtered(lambda p: self.product_11 in p.move_lines.product_id)
+        self.assertEqual(delivery_for_product_11.carrier_id, self.normal_delivery, "The shipping method should be set in pending deliveries.")
+
+        done_delivery = sale_order.picking_ids.filtered(lambda p: p.state == "done")
+        self.assertFalse(done_delivery.carrier_id.id, "The shipping method should not be set in done deliveries.")
+        self.assertFalse(return_picking.carrier_id.id, "The shipping method should not set in return pickings")

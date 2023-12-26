@@ -2,9 +2,10 @@
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+import sys
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests import tagged
+from odoo.tests import common, tagged
 from odoo.exceptions import AccessError
 
 
@@ -354,3 +355,109 @@ record['name'] = record.name + 'X'""",
         rec3.write({'name': 'a first record'})
         rec4 = Model.with_user(self.user_demo).create({'name': 'again another record'})
         rec4.write({'name': 'another value'})
+
+
+@common.tagged('post_install', '-at_install')
+class TestCompute(common.TransactionCase):
+    def test_inversion(self):
+        """ If a stored field B depends on A, an update to the trigger for A
+        should trigger the recomputaton of A, then B.
+
+        However if a search() is performed during the computation of A
+        ??? and _order is affected ??? a flush will be triggered, forcing the
+        computation of B, based on the previous A.
+
+        This happens if a rule has has a non-empty filter_pre_domain, even if
+        it's an empty list (``'[]'`` as opposed to ``False``).
+        """
+        company1 = self.env['res.partner'].create({
+            'name': "Gorofy",
+            'is_company': True,
+        })
+        company2 = self.env['res.partner'].create({
+            'name': "Awiclo",
+            'is_company': True
+        })
+        r = self.env['res.partner'].create({
+            'name': 'Bob',
+            'is_company': False,
+            'parent_id': company1.id
+        })
+        self.assertEqual(r.display_name, 'Gorofy, Bob')
+        r.parent_id = company2
+        self.assertEqual(r.display_name, 'Awiclo, Bob')
+
+        self.env['base.automation'].create({
+            'name': "test rule",
+            'filter_pre_domain': False,
+            'trigger': 'on_create_or_write',
+            'state': 'code', # no-op action
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
+        r.parent_id = company1
+        self.assertEqual(r.display_name, 'Gorofy, Bob')
+
+        self.env['base.automation'].create({
+            'name': "test rule",
+            'filter_pre_domain': '[]',
+            'trigger': 'on_create_or_write',
+            'state': 'code', # no-op action
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
+        r.parent_id = company2
+        self.assertEqual(r.display_name, 'Awiclo, Bob')
+
+    def test_recursion(self):
+        project = self.env['test_base_automation.project'].create({})
+
+        # this action is executed every time a task is assigned to project
+        self.env['base.automation'].create({
+            'name': 'dummy',
+            'model_id': self.env['ir.model']._get_id('test_base_automation.task'),
+            'state': 'code',
+            'trigger': 'on_create_or_write',
+            'filter_domain': repr([('project_id', '=', project.id)]),
+        })
+
+        # create one task in project with 10 subtasks; all the subtasks are
+        # automatically assigned to project, too
+        task = self.env['test_base_automation.task'].create({'project_id': project.id})
+        subtasks = task.create([{'parent_id': task.id} for _ in range(10)])
+        subtasks.flush()
+
+        # This test checks what happens when a stored recursive computed field
+        # is marked to compute on many records, and automated actions are
+        # triggered depending on that field.  In this case, we trigger the
+        # recomputation of 'project_id' on 'subtasks' by deleting their parent
+        # task.
+        #
+        # An issue occurs when the domain of automated actions is evaluated by
+        # method search(), because the latter flushes the fields to search on,
+        # which are also the ones being recomputed.  Combined with the fact
+        # that recursive fields are not computed in batch, this leads to a huge
+        # amount of recursive calls between the automated action and flush().
+        #
+        # The execution of task.unlink() looks like this:
+        # - mark 'project_id' to compute on subtasks
+        # - delete task
+        # - flush()
+        #   - recompute 'project_id' on subtask1
+        #     - call compute on subtask1
+        #     - in action, search([('id', 'in', subtask1.ids), ('project_id', '=', pid)])
+        #       - flush(['id', 'project_id'])
+        #         - recompute 'project_id' on subtask2
+        #           - call compute on subtask2
+        #           - in action search([('id', 'in', subtask2.ids), ('project_id', '=', pid)])
+        #             - flush(['id', 'project_id'])
+        #               - recompute 'project_id' on subtask3
+        #                 - call compute on subtask3
+        #                 - in action, search([('id', 'in', subtask3.ids), ('project_id', '=', pid)])
+        #                   - flush(['id', 'project_id'])
+        #                     - recompute 'project_id' on subtask4
+        #                       ...
+        limit = sys.getrecursionlimit()
+        try:
+            sys.setrecursionlimit(100)
+            task.unlink()
+        finally:
+            sys.setrecursionlimit(limit)

@@ -44,8 +44,8 @@ class IrTranslationImport(object):
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
         query = """ CREATE TEMP TABLE %s (
-                        imd_model VARCHAR(64),
-                        imd_name VARCHAR(128),
+                        imd_model VARCHAR,
+                        imd_name VARCHAR,
                         noupdate BOOLEAN
                     ) INHERITS (%s) """ % (self._table, self._model_table)
         self._cr.execute(query)
@@ -109,9 +109,11 @@ class IrTranslationImport(object):
                            WHERE type = 'code'
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state,
+                                                                                                             CASE WHEN %s.comments = 'openerp-web' THEN 'openerp-web' ELSE EXCLUDED.comments END
+                                                                                                            )
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
-                       """ % (self._model_table, self._table))
+                       """ % (self._model_table, self._table, self._model_table))
             count += cr.rowcount
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, lang, res_id, src, type, value, module, state, comments
@@ -504,13 +506,13 @@ class IrTranslation(models.Model):
 
         # collect translated field records (model_ids) and other translations
         trans_ids = []
-        model_ids = defaultdict(list)
-        model_fields = defaultdict(list)
+        model_ids = defaultdict(set)
+        model_fields = defaultdict(set)
         for trans in self:
-            if trans.type == 'model':
+            if trans.type in ('model', 'model_terms'):
                 mname, fname = trans.name.split(',')
-                model_ids[mname].append(trans.res_id)
-                model_fields[mname].append(fname)
+                model_ids[mname].add(trans.res_id)
+                model_fields[mname].add(fname)
             else:
                 trans_ids.append(trans.id)
 
@@ -523,9 +525,13 @@ class IrTranslation(models.Model):
         # check for read/write access on translated field records
         fmode = 'read' if mode == 'read' else 'write'
         for mname, ids in model_ids.items():
-            records = self.env[mname].browse(ids)
+            records = self.env[mname].browse(ids).exists()
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])
+            if mode == 'create' and set(records._ids) != ids:
+                raise ValidationError(_("Creating translation on non existing records"))
+            if not records:
+                continue
             records.check_access_rule(fmode)
 
     @api.constrains('type', 'name', 'value')
@@ -801,6 +807,7 @@ class IrTranslation(models.Model):
                 continue
             for lang in langs:
                 lang_code = tools.get_iso_codes(lang)
+                lang_overwrite = overwrite
                 base_lang_code = None
                 if '_' in lang_code:
                     base_lang_code = lang_code.split('_')[0]
@@ -810,28 +817,28 @@ class IrTranslation(models.Model):
                     base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                     if base_trans_file:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(self._cr, base_trans_file, lang, verbose=False, overwrite=overwrite)
-                        overwrite = True  # make sure the requested translation will override the base terms later
+                        tools.trans_load(self._cr, base_trans_file, lang, verbose=False, overwrite=lang_overwrite)
+                        lang_overwrite = True  # make sure the requested translation will override the base terms later
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
                         _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(self._cr, base_trans_extra_file, lang, verbose=False, overwrite=overwrite)
-                        overwrite = True  # make sure the requested translation will override the base terms later
+                        tools.trans_load(self._cr, base_trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
+                        lang_overwrite = True  # make sure the requested translation will override the base terms later
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
                 trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
                 if trans_file:
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
-                    tools.trans_load(self._cr, trans_file, lang, verbose=False, overwrite=overwrite)
+                    tools.trans_load(self._cr, trans_file, lang, verbose=False, overwrite=lang_overwrite)
                 elif lang_code != 'en_US':
                     _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
                 trans_extra_file = get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
-                    tools.trans_load(self._cr, trans_extra_file, lang, verbose=False, overwrite=overwrite)
+                    tools.trans_load(self._cr, trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
         return True
 
     @api.model

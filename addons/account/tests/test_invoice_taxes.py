@@ -490,6 +490,133 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             {'balance': 1100.0,     'tax_ids': [],              'tax_tag_ids': [],                      'tax_base_amount': 0,       'tax_repartition_line_id': False},
         ])
 
+    def test_misc_entry_tax_group_signs(self):
+        """ Tests sign inversion of the tags on misc operations made with tax
+        groups.
+        """
+        def _create_group_of_taxes(tax_type):
+            # We use asymmetric tags between the child taxes to avoid shadowing errors
+            child1_sale_tax = self.env['account.tax'].create({
+                'sequence': 1,
+                'name': 'child1_%s' % tax_type,
+                'type_tax_use': 'none',
+                'amount_type': 'percent',
+                'amount': 5,
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'repartition_type': 'base',
+                        'factor_percent': 100.0,
+                        'tag_ids': [(6, 0, self.base_tag_pos.ids)],
+                    }),
+                    (0, 0, {
+                        'repartition_type': 'tax',
+                        'factor_percent': 100.0,
+                        'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'repartition_type': 'base',
+                        'factor_percent': 100.0,
+                    }),
+                    (0, 0, {
+                        'repartition_type': 'tax',
+                        'factor_percent': 100.0,
+                    }),
+                ],
+            })
+            child2_sale_tax = self.env['account.tax'].create({
+                'sequence': 2,
+                'name': 'child2_%s' % tax_type,
+                'type_tax_use': 'none',
+                'amount_type': 'percent',
+                'amount': 10,
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'repartition_type': 'base',
+                        'factor_percent': 100.0,
+                    }),
+                    (0, 0, {
+                        'repartition_type': 'tax',
+                        'factor_percent': 100.0,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'repartition_type': 'base',
+                        'factor_percent': 100.0,
+                        'tag_ids': [(6, 0, self.base_tag_neg.ids)],
+                    }),
+                    (0, 0, {
+                        'repartition_type': 'tax',
+                        'factor_percent': 100.0,
+                        'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
+                    }),
+                ],
+            })
+            return self.env['account.tax'].create({
+                'name': 'group_%s' % tax_type,
+                'type_tax_use': tax_type,
+                'amount_type': 'group',
+                'amount': 10,
+                'children_tax_ids':[(6,0,[child1_sale_tax.id, child2_sale_tax.id])]
+            })
+
+        def _create_misc_operation(tax, tax_field):
+            with Form(self.env['account.move'], view='account.view_move_form') as move_form:
+                for line_field in ('debit', 'credit'):
+                    line_amount = tax_field == line_field and 1000 or 1150
+                    with move_form.line_ids.new() as line_form:
+                        line_form.name = '%s_line' % line_field
+                        line_form.account_id = self.company_data['default_account_revenue']
+                        line_form.debit = line_field == 'debit' and line_amount or 0
+                        line_form.credit = line_field == 'credit' and line_amount or 0
+
+                        if tax_field == line_field:
+                            line_form.tax_ids.clear()
+                            line_form.tax_ids.add(tax)
+
+            return move_form.save()
+
+        sale_group = _create_group_of_taxes('sale')
+        purchase_group = _create_group_of_taxes('purchase')
+
+        # Sale tax on debit: use refund repartition
+        debit_sale_move = _create_misc_operation(sale_group, 'debit')
+        self.assertRecordValues(debit_sale_move.line_ids.sorted('balance'), [
+            {'balance': -1150.0,    'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 0},
+            {'balance': 50.0,       'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 1000},
+            {'balance': 100.0,      'tax_ids': [],                  'tax_tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000},
+            {'balance': 1000.0,     'tax_ids': sale_group.ids,      'tax_tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0},
+        ])
+
+        # Sale tax on credit: use invoice repartition and invert tags
+        credit_sale_move = _create_misc_operation(sale_group, 'credit')
+        self.assertRecordValues(credit_sale_move.line_ids.sorted('balance'), [
+            {'balance': -1000.0,    'tax_ids': sale_group.ids,      'tax_tag_ids': self.base_tag_neg.ids,   'tax_base_amount': 0},
+            {'balance': -100.0,     'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 1000},
+            {'balance': -50.0,      'tax_ids': [],                  'tax_tag_ids': self.tax_tag_neg.ids,    'tax_base_amount': 1000},
+            {'balance': 1150.0,     'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 0},
+        ])
+
+        # Purchase tax on debit: use invoice repartition
+        debit_purchase_move = _create_misc_operation(purchase_group, 'debit')
+        self.assertRecordValues(debit_purchase_move.line_ids.sorted('balance'), [
+            {'balance': -1150.0,    'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 0},
+            {'balance': 50.0,       'tax_ids': [],                  'tax_tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000},
+            {'balance': 100.0,      'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 1000},
+            {'balance': 1000.0,     'tax_ids': purchase_group.ids,  'tax_tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0},
+        ])
+
+        # Purchase tax on credit: use refund repartition and invert tags
+        credit_purchase_move = _create_misc_operation(purchase_group, 'credit')
+        self.assertRecordValues(credit_purchase_move.line_ids.sorted('balance'), [
+            {'balance': -1000.0,    'tax_ids': purchase_group.ids,  'tax_tag_ids': self.base_tag_pos.ids,   'tax_base_amount': 0},
+            {'balance': -100.0,     'tax_ids': [],                  'tax_tag_ids': self.tax_tag_pos.ids,    'tax_base_amount': 1000},
+            {'balance': -50.0,      'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 1000},
+            {'balance': 1150.0,     'tax_ids': [],                  'tax_tag_ids': [],                      'tax_base_amount': 0},
+        ])
+
     def test_tax_calculation_foreign_currency_large_quantity(self):
         ''' Test:
         Foreign currency with rate of 1.1726 and tax of 21%
@@ -540,3 +667,157 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (50, self.percent_tax_3_incl),
         ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
         invoice.action_post()
+
+    def test_tax_calculation_multi_currency(self):
+        self.env['res.currency.rate'].create({
+            'name': '2018-01-01',
+            'rate': 0.273748,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.01
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': 155.32,
+                'tax_ids': [(6, 0, self.percent_tax_1.ids)],
+            })]
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,      # 155.32 * 1 / (1 / 0.273748)
+            'balance': -119.16,             # tax_base_amount * 0.21
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: not l.name), [{
+            'balance': 686.54
+        }])
+
+        with Form(invoice) as invoice_form:
+            invoice_form.currency_id = self.currency_data['currency']
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,
+            'balance': -119.16,
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable'), [{
+            'balance': 686.54
+        }])
+
+    def test_change_tax_line_account_when_tax_zero_percent(self):
+        """
+        This test checks the following flow:
+        - Invoice with three invoice lines:
+            • One with tax > 0%
+            • One with tax == 0%
+            • One with tax == 0 fixed
+        - On line_ids, change the account of the tax line
+        The tax line should still be there and the account should be effectively changed
+        """
+        tax_0_percent, tax_0_fixed = self.env['account.tax'].create([
+            {
+                'name': '0%',
+                'amount_type': 'percent',
+                'amount': 0,
+                'sequence': 10,
+            },
+            {
+                'name': '0 fixed',
+                'amount_type': 'fixed',
+                'amount': 0,
+                'sequence': 10,
+            }
+        ])
+
+
+        new_account_revenue = self.company_data['default_account_revenue'].copy()
+
+        invoice = self._create_invoice([(500, self.percent_tax_1), (300, tax_0_percent), (100, tax_0_fixed)], inv_type='out_invoice')
+
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': self.percent_tax_1.ids,
+                'debit': 0.0,
+                'credit': 500.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_percent.ids,
+                'debit': 0.0,
+                'credit': 300.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_fixed.ids,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': '21%',
+                'tax_ids': [],
+                'debit': 0.0,
+                'credit': 105.0,
+            },
+            {
+                'account_id': self.company_data['default_account_receivable'].id,
+                'name': '',
+                'tax_ids': [],
+                'debit': 1005.0,
+                'credit': 0.0,
+            }
+        ])
+
+        with Form(invoice) as invoice_form:
+            with invoice_form.line_ids.edit(3) as line:
+                line.account_id = new_account_revenue
+
+        self.assertRecordValues(invoice.line_ids, [
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': self.percent_tax_1.ids,
+                'debit': 0.0,
+                'credit': 500.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_percent.ids,
+                'debit': 0.0,
+                'credit': 300.0,
+            },
+            {
+                'account_id': self.company_data['default_account_revenue'].id,
+                'name': 'xxxx',
+                'tax_ids': tax_0_fixed.ids,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+            {
+                'account_id': new_account_revenue.id,
+                'name': '21%',
+                'tax_ids': [],
+                'debit': 0.0,
+                'credit': 105.0,
+            },
+            {
+                'account_id': self.company_data['default_account_receivable'].id,
+                'name': '',
+                'tax_ids': [],
+                'debit': 1005.0,
+                'credit': 0.0,
+            }
+        ])

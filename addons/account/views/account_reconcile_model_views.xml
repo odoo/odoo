@@ -156,7 +156,7 @@
                                        attrs="{'invisible': [('match_partner', '=', False)]}"/>
                             </group>
                             <group attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
-                                <label for="match_text_location_label" string="Match Invoice/bill with"/>
+                                <span class="o_form_label o_td_label">Match Invoice/bill with</span>
                                 <div>
                                     <span class="o_form_label" style="width: 2% !important">   </span>
                                     <label for="match_text_location_label" string="Label"/>
@@ -180,13 +180,13 @@
                                 <tree editable="bottom">
                                     <field name="account_id"/>
                                     <field name="amount_type"/>
-                                    <field name="journal_id" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
+                                    <field name="journal_id" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}" optional="hide"/>
                                     <field name="amount_string"/>
-                                    <field name="tax_ids" widget="many2many_tags"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                    <field name="tax_ids" widget="many2many_tags" optional="hide"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" optional="hide"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"  optional="hide"/>
                                     <field name="show_force_tax_included" invisible="1"/>
-                                    <field name="force_tax_included" attrs="{'invisible': [('show_force_tax_included', '=', False)]}" widget="boolean_toggle"/>
+                                    <field name="force_tax_included" attrs="{'invisible': [('show_force_tax_included', '=', False)]}" widget="boolean_toggle" optional="hide"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="label"/>
                                 </tree>

@@ -169,7 +169,7 @@ var PosDB = core.Class.extend({
         if (product.description_sale) {
             str += '|' + product.description_sale;
         }
-        str  = product.id + ':' + str.replace(/:/g,'') + '\n';
+        str  = product.id + ':' + str.replace(/[\n:]/g,'') + '\n';
         return str;
     },
     add_products: function(products){
@@ -236,7 +236,7 @@ var PosDB = core.Class.extend({
         if(partner.vat){
             str += '|' + partner.vat;
         }
-        str = '' + partner.id + ':' + str.replace(':','') + '\n';
+        str = '' + partner.id + ':' + str.replace(':', '').replace(/\n/g, ' ') + '\n';
         return str;
     },
     add_partners: function(partners){
@@ -363,7 +363,9 @@ var PosDB = core.Class.extend({
         var list = [];
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
-                list.push(this.product_by_id[product_ids[i]]);
+                const product = this.product_by_id[product_ids[i]];
+                if (!(product.active && product.available_in_pos)) continue;
+                list.push(product);
             }
         }
         return list;
@@ -385,7 +387,9 @@ var PosDB = core.Class.extend({
             var r = re.exec(this.category_search_string[category_id]);
             if(r){
                 var id = Number(r[1]);
-                results.push(this.get_product_by_id(id));
+                const product = this.get_product_by_id(id);
+                if (!(product.active && product.available_in_pos)) continue;
+                results.push(product);
             }else{
                 break;
             }
@@ -502,7 +506,7 @@ var PosDB = core.Class.extend({
         var saved = this.load('unpaid_orders',[]);
         var orders = [];
         saved.forEach(function(o) {
-            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length)){
+            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length || o.data.statement_ids.length)){
                 orders.push(o);
             }
         });

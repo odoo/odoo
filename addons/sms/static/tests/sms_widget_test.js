@@ -15,11 +15,13 @@ QUnit.module('fields', {
                 fields: {
                     message: {string: "message", type: "text"},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value"},
+                    mobile: {string: "mobile", type: "text"},
                 },
                 records: [{
                     id: 1,
                     message: "",
                     foo: 'yop',
+                    mobile: "+32494444444",
                 }, {
                     id: 2,
                     message: "",
@@ -174,6 +176,54 @@ QUnit.module('fields', {
             'None of the list element should have been activated');
 
         list.destroy();
+    });
+
+    QUnit.test('readonly sms phone field is properly rerendered after been changed by onchange', async function (assert) {
+        assert.expect(4);
+
+        const NEW_PHONE = '+32595555555';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<sheet>' +
+                '<group>' +
+                '<field name="foo" on_change="1"/>' + // onchange to update mobile in readonly mode directly
+                '<field name="mobile" widget="phone" readonly="1"/>' + // readonly only, we don't want to go through write mode
+                '</group>' +
+                '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        value: {
+                            mobile: NEW_PHONE, // onchange to update mobile in readonly mode directly
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // check initial rendering
+        assert.strictEqual(form.$('.o_field_phone').text(), "+32494444444",
+                           'Initial Phone text should be set');
+        assert.strictEqual(form.$('.o_field_phone_sms').text(), 'SMS',
+                           'SMS button label should be rendered');
+
+        // trigger the onchange to update phone field, but still in readonly mode
+        await testUtils.fields.editInput($('input[name="foo"]'), 'someOtherFoo');
+
+        // check rendering after changes
+        assert.strictEqual(form.$('.o_field_phone').text(), NEW_PHONE,
+                           'Phone text should be updated');
+        assert.strictEqual(form.$('.o_field_phone_sms').text(), 'SMS',
+                           'SMS button label should not be changed');
+
+        form.destroy();
     });
 });
 });

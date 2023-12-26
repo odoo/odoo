@@ -1979,8 +1979,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_external_button'));
             await testUtils.dom.click($('button:contains("Just do it !")'));
             assert.verifySteps(['action']);
-            await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
-            assert.verifySteps([]); // the second button is disabled, it can't be clicked
+            assert.ok($('button:contains("Just don\'t do it !")').get(0).disabled);
 
             await testUtils.dom.click($('.modal .btn-secondary:contains(Discard)'));
             await testUtils.dom.click(form.$('.o_external_button'));
@@ -2923,6 +2922,61 @@ QUnit.module('fields', {}, function () {
                 '/web/dataset/search_read', // after removal of dynamic filter
             ]);
 
+            form.destroy();
+        });
+
+        QUnit.test('search more in many2one: dropdown click', async function (assert) {
+            assert.expect(8);
+
+            for (let i = 0; i < 8; i++) {
+                this.data.partner.records.push({id: 100 + i, display_name: 'test_' + i});
+            }
+
+            // simulate modal-like element rendered by the field html
+            const $fakeDialog = $(`<div>
+                <div class="pouet">
+                    <div class="modal"></div>
+                </div>
+            </div>`);
+            $('body').append($fakeDialog);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                archs: {
+                    'partner,false,list': '<list><field name="display_name"/></list>',
+                    'partner,false,search': '<search></search>',
+                },
+            });
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {
+                item: 'Search More',
+                search: 'test',
+            });
+
+            // dropdown selector
+            let filterMenuCss = '.o_search_options > .o_filter_menu';
+            let groupByMenuCss = '.o_search_options > .o_group_by_menu';
+
+            await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .o_dropdown_toggler_btn`));
+
+            assert.hasClass(document.querySelector(filterMenuCss), 'show');
+            assert.isVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
+                "the filter dropdown menu should be visible");
+            assert.doesNotHaveClass(document.querySelector(groupByMenuCss), 'show');
+            assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
+                "the Group by dropdown menu should be not visible");
+
+            await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .o_dropdown_toggler_btn`));
+            assert.hasClass(document.querySelector(groupByMenuCss), 'show');
+            assert.isVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
+                "the group by dropdown menu should be visible");
+            assert.doesNotHaveClass(document.querySelector(filterMenuCss), 'show');
+            assert.isNotVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
+                "the filter dropdown menu should be not visible");
+
+            $fakeDialog.remove();
             form.destroy();
         });
 

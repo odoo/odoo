@@ -20,7 +20,7 @@ class TestLangUrl(HttpCase):
 
     def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):
-            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello/', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
+            self.assertEqual(url_lang('', '[lang]'), '/[lang]/hello', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
 
     def test_02_url_redirect(self):
         url = '/fr_WHATEVER/contactus'
@@ -60,3 +60,7 @@ class TestLangUrl(HttpCase):
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
         self.assertTrue('lang="fr-FR"' in r.text, "Ensure contactus did not soft crash + loaded in correct lang")
+
+    def test_05_reroute_unicode(self):
+        res = self.url_open('/fr/привет')
+        self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of non latin-1 characters")

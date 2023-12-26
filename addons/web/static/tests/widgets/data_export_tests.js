@@ -16,6 +16,7 @@ QUnit.module('widgets', {
                 fields: {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "char"},
+                    unexportable: {string: "Unexportable", type: "boolean", exportable: false},
                 },
                 records: [
                     {
@@ -193,6 +194,35 @@ QUnit.module('widgets', {
         list.destroy();
     });
 
+    QUnit.test('exporting view with non-exportable field', async function (assert) {
+        assert.expect(0);
+
+        var list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="unexportable"/></tree>',
+            viewOptions: {
+                hasActionMenus: true,
+            },
+            mockRPC: this.mockDataExportRPCs,
+            session: {
+                ...this.mockSession,
+                get_file: function (params) {
+                    assert.step(params.url);
+                    params.complete();
+                },
+            },
+        });
+
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, 'Export');
+
+        list.destroy();
+    });
+
     QUnit.test('saving fields list when exporting data', async function (assert) {
         assert.expect(4);
 
@@ -323,9 +353,11 @@ QUnit.module('widgets', {
                         fields: [{
                             name: 'foo',
                             label: 'Foo',
+                            type: 'char',
                         }, {
                             name: 'bar',
                             label: 'Bar',
+                            type: 'char',
                         }]
                     }, "should be called with correct params");
                     args.complete();
@@ -368,9 +400,11 @@ QUnit.module('widgets', {
                         fields: [{
                             name: 'foo',
                             label: 'Foo',
+                            type: 'char',
                         }, {
                             name: 'bar',
                             label: 'Bar',
+                            type: 'char',
                         }]
                     }, "should be called with correct params");
                     args.complete();

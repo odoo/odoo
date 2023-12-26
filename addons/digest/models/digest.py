@@ -145,14 +145,18 @@ class Digest(models.Model):
         )
         # create a mail_mail based on values, without attachments
         mail_values = {
-            'subject': '%s: %s' % (user.company_id.name, self.name),
-            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'auto_delete': True,
+            'email_from': (
+                self.company_id.partner_id.email_formatted
+                or self.env.user.email_formatted
+                or self.env.ref('base.user_root').email_formatted
+            ),
             'email_to': user.email_formatted,
             'body_html': full_mail,
-            'auto_delete': True,
+            'state': 'outgoing',
+            'subject': '%s: %s' % (user.company_id.name, self.name),
         }
         mail = self.env['mail.mail'].sudo().create(mail_values)
-        mail.send(raise_exception=False)
         return True
 
     @api.model
@@ -189,7 +193,7 @@ class Digest(models.Model):
         invalid_fields = []
         kpis = [
             dict(kpi_name=field_name,
-                 kpi_fullname=self._fields[field_name].string,
+                 kpi_fullname=self.env['ir.model.fields']._get(self._name, field_name).field_description,
                  kpi_action=False,
                  kpi_col1=dict(),
                  kpi_col2=dict(),

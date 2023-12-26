@@ -1,0 +1,25 @@
+<odoo>
+    <record id="local_peru" model="account.fiscal.position.template">
+        <field name="name">LOCAL PERU</field>
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="auto_apply">1</field>
+        <field name="country_id" ref="base.pe"/>
+        <field name="sequence">15</field>
+    </record>
+    <record id="exportation" model="account.fiscal.position.template">
+        <field name="name">EXTRANJERO - EXPORTACIÓN</field>
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="auto_apply">1</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="exportation_sales_goods_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="exportation"/>
+        <field name="tax_src_id" ref="sale_tax_igv_18"/>
+        <field name="tax_dest_id" ref="sale_tax_exp"/>
+    </record>
+    <record id="exportation_sales_goods_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="exportation"/>
+        <field name="tax_src_id" ref="sale_tax_igv_18_included"/>
+        <field name="tax_dest_id" ref="sale_tax_exp"/>
+    </record>
+</odoo>

@@ -90,6 +90,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {jQuery} [options.offsetElements.$left] Visible left offset element which width
      *        will be taken into account when triggering scroll at the left side of the
      *        $scrollTarget.
+     * @param {boolean} [options.disableHorizontalScroll = false] Disable horizontal scroll if not needed.
      */
     init(parent, $element, $scrollTarget, options = {}) {
         mixins.ParentedMixin.init.call(this);
@@ -98,6 +99,8 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         this.$element = $element;
         this.$scrollTarget = $scrollTarget;
         this.options = options;
+        this.targetWindow = this.$element[0].ownerDocument.defaultView;
+        const insideIframe = this.targetWindow !== window.top;
 
         // Setting optional options to their default value if not provided
         this.options.jQueryDraggableOptions = this.options.jQueryDraggableOptions || {};
@@ -126,10 +129,22 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         };
 
         this.options.jQueryDraggableOptions.scroll = false;
+        this.options.disableHorizontalScroll = this.options.disableHorizontalScroll || false;
         const draggableOptions = Object.assign({}, this.options.jQueryDraggableOptions, {
-            start: (ev, ui) => this._onSmoothDragStart(ev, ui, this.options.jQueryDraggableOptions.start),
+            start: (ev, ui) => {
+                this._onSmoothDragStart(ev, ui, this.options.jQueryDraggableOptions.start);
+                if (insideIframe) {
+                    this.onParentWindowMouseup = this._onParentWindowMouseup.bind(this);
+                    window.top.addEventListener('mouseup', this.onParentWindowMouseup, {once: true});
+                }
+            },
             drag: (ev, ui) => this._onSmoothDrag(ev, ui, this.options.jQueryDraggableOptions.drag),
-            stop: (ev, ui) => this._onSmoothDragStop(ev, ui, this.options.jQueryDraggableOptions.stop),
+            stop: (ev, ui) => {
+                if (insideIframe) {
+                    window.top.removeEventListener('mouseup', this.onParentWindowMouseup, {once: true});
+                }
+                this._onSmoothDragStop(ev, ui, this.options.jQueryDraggableOptions.stop);
+            }
         });
         this.$element.draggable(draggableOptions);
     },
@@ -203,10 +218,12 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
                     this.$scrollTarget.scrollTop() +
                     this.verticalDelta
                 );
-                this.$scrollTarget.scrollLeft(
-                    this.$scrollTarget.scrollLeft() +
-                    this.horizontalDelta
-                );
+                if (!this.options.disableHorizontalScroll) {
+                    this.$scrollTarget.scrollLeft(
+                        this.$scrollTarget.scrollLeft() +
+                        this.horizontalDelta
+                    );
+                }
             },
             this.options.scrollTimerInterval
         );
@@ -378,6 +395,17 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         if (typeof onDragEndCallBack === 'function') {
             onDragEndCallBack.call(ui.helper, ev, ui);
         }
+    },
+    /**
+     * Called when the mouse is released outside the page iframe (e.g. the
+     * editor panel in Website). This is only useful in Chrome, where the 'stop'
+     * event of jQuery Draggable does not trigger a 'mouseup' event outside of
+     * the "preview" page iframe.
+     *
+     * @private
+     */
+    _onParentWindowMouseup() {
+        this.targetWindow.document.dispatchEvent(new Event('mouseup'));
     },
 });
 

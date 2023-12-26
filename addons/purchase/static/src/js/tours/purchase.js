@@ -30,7 +30,8 @@ var _t = core._t;
 var PurchaseAdditionalTourSteps = require('purchase.purchase_steps');
 
 tour.register('purchase_tour' , {
-    url: "/web"
+    url: "/web",
+    sequence: 40,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     content: _t("Let's try the Purchase app to manage the flow from purchase to reception and invoice control."),
@@ -111,7 +112,7 @@ tour.register('purchase_tour' , {
     trigger: ".modal-footer button[name='action_send_mail']",
     extra_trigger: ".modal-footer button[name='action_send_mail']",
     content: _t("Send the request for quotation to your vendor."),
-    position: "bottom",
+    position: "left",
     run: 'click',
 }, {
     trigger: ".ui-sortable-handle",

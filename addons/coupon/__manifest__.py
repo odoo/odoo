@@ -21,4 +21,5 @@
         'demo/coupon_demo.xml',
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

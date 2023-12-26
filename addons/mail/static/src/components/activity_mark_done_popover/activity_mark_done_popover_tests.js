@@ -124,10 +124,10 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         '.o_ActivityMarkDonePopover_doneButton',
         "Popover component should NOT contain the done button"
     );
-    assert.containsNone(
+    assert.containsOnce(
         document.body,
         '.o_ActivityMarkDonePopover_discardButton',
-        "Popover component should NOT contain the discard button"
+        "Popover component should contain the discard button"
     );
 });
 

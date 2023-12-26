@@ -60,8 +60,10 @@
                 hasSquashCloseMessages="discuss.thread.model !== 'mail.box'"
                 haveMessagesMarkAsReadIcon="discuss.thread === env.messaging.inbox"
                 haveMessagesReplyIcon="discuss.thread === env.messaging.inbox"
+                isDoFocus="discuss.isDoFocus"
                 selectedMessageLocalId="discuss.replyingToMessage and discuss.replyingToMessage.localId"
                 threadViewLocalId="discuss.threadView.localId"
+                t-on-o-focusin-composer="_onFocusinComposer"
                 t-on-o-rendered="_onThreadRendered"
                 t-ref="threadView"
             />
@@ -92,7 +94,9 @@
                 hasCurrentPartnerAvatar="!env.messaging.device.isMobile"
                 hasDiscardButton="true"
                 hasThreadName="true"
+                isDoFocus="discuss.isDoFocus"
                 textInputSendShortcuts="['ctrl-enter', 'meta-enter']"
+                t-on-o-focusin-composer="_onFocusinComposer"
                 t-on-o-message-posted="_onReplyingToMessageMessagePosted"
                 t-ref="composer"
             />

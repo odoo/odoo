@@ -3,7 +3,7 @@
     <template id="report_delivery_document">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
-                <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)" />
+                <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
                 <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
                 <t t-if="partner" name="partner_header">
                     <t t-set="address">
@@ -204,7 +204,8 @@
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_done">
-                <span t-esc="aggregated_lines[line]['qty_done']"/>
+                <span t-esc="aggregated_lines[line]['qty_done']"
+                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
                 <span t-esc="aggregated_lines[line]['product_uom']"/>
             </td>
         </tr>
@@ -228,7 +229,7 @@
 
     <template id="report_deliveryslip">
         <t t-foreach="docs" t-as="o">
-            <t t-call="stock.report_delivery_document" t-lang="o.partner_id.lang"/>
+            <t t-call="stock.report_delivery_document" t-lang="o._get_report_lang()"/>
         </t>
     </template>
 </odoo>

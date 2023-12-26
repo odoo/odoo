@@ -48,7 +48,11 @@ class UtmCampaign(models.Model):
     def action_redirect_to_quotations(self):
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
         action['domain'] = [('campaign_id', '=', self.id)]
-        action['context'] = {'default_campaign_id': self.id}
+        action['context'] = {
+            'create': False,
+            'edit': False,
+            'default_campaign_id': self.id
+        }
         return action
 
     def action_redirect_to_invoiced(self):

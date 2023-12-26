@@ -20,6 +20,9 @@ class PadCommon(models.AbstractModel):
     _name = 'pad.common'
     _description = 'Pad Common'
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'pad_content_field' or super()._valid_field_parameter(field, name)
+
     @api.model
     def pad_is_configured(self):
         return bool(self.env.company.pad_server)
@@ -62,10 +65,12 @@ class PadCommon(models.AbstractModel):
             field = model._fields[self.env.context['field_name']]
             real_field = field.pad_content_field
 
+            res_id = self.env.context.get("object_id")
+            record = model.browse(res_id)
             # get content of the real field
-            for record in model.browse(self.env.context.get("object_id")):
-                    if record[real_field]:
-                        myPad.setHtmlFallbackText(path, record[real_field])
+            real_field_value = record[real_field] or self.env.context.get('record', {}).get(real_field, '')
+            if real_field_value:
+                myPad.setHtmlFallbackText(path, real_field_value)
 
         return {
             "server": pad["server"],

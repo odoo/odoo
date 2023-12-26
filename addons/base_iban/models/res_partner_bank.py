@@ -35,7 +35,7 @@ def validate_iban(iban):
         raise ValidationError(_("The IBAN is invalid, it should begin with the country code"))
 
     iban_template = _map_iban_template[country_code]
-    if len(iban) != len(iban_template.replace(' ', '')):
+    if len(iban) != len(iban_template.replace(' ', '')) or not re.fullmatch("[a-zA-Z0-9]+", iban):
         raise ValidationError(_("The IBAN does not seem to be correct. You should have entered something like this %s\n"
             "Where B = National bank code, S = Branch code, C = Account No, k = Check digit") % iban_template)
 
@@ -114,7 +114,7 @@ _map_iban_template = {
     'br': 'BRkk BBBB BBBB SSSS SCCC CCCC CCCT N',  # Brazil
     'by': 'BYkk BBBB AAAA CCCC CCCC CCCC CCCC',  # Belarus
     'ch': 'CHkk BBBB BCCC CCCC CCCC C',  # Switzerland
-    'cr': 'CRkk BBBC CCCC CCCC CCCC C',  # Costa Rica
+    'cr': 'CRkk BBBC CCCC CCCC CCCC CC',  # Costa Rica
     'cy': 'CYkk BBBS SSSS CCCC CCCC CCCC CCCC',  # Cyprus
     'cz': 'CZkk BBBB SSSS SSCC CCCC CCCC',  # Czech Republic
     'de': 'DEkk BBBB BBBB CCCC CCCC CC',  # Germany

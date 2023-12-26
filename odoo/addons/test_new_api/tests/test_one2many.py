@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import MissingError
 
 
 class One2manyCase(TransactionCase):
@@ -168,6 +168,25 @@ class One2manyCase(TransactionCase):
         self.assertTrue(model2.exists())
         self.assertEqual(model2.pArTneR_321_id, p1)
 
+    def test_merge_partner_archived(self):
+        partner = self.env['res.partner']
+
+        p1 = partner.create({'name': 'test1'})
+        p2 = partner.create({'name': 'test2'})
+        p3 = partner.create({'name': 'test3', 'active': False})
+        partners_ids = (p1 + p2 + p3)
+
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=partners_ids.ids, active_model='res.partner').create({})
+
+        self.assertEqual(wizard.partner_ids, partners_ids)
+        self.assertEqual(wizard.dst_partner_id, p2)
+
+        wizard.action_merge()
+
+        self.assertFalse(p1.exists())
+        self.assertTrue(p2.exists())
+        self.assertFalse(p3.exists())
+
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
         record0 = self.env['test_new_api.attachment.host'].create({})
@@ -255,3 +274,51 @@ class One2manyCase(TransactionCase):
         # at this point, member.container_id must be computed for member to
         # appear in container.member_ids
         self.assertEqual(container.member_ids, member)
+
+    def test_reward_line_delete(self):
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [
+                (0, 0, {'product': 'a'}),
+                (0, 0, {'product': 'b'}),
+                (0, 0, {'product': 'b', 'reward': True}),
+            ],
+        })
+        line0, line1, line2 = order.line_ids
+
+        # this is what the client sends to delete the 2nd line; it should not
+        # crash when deleting the 2nd line automatically deletes the 3rd line
+        order.write({
+            'line_ids': [(4, line0.id), (2, line1.id), (4, line2.id)],
+        })
+        self.assertEqual(order.line_ids, line0)
+
+        # but linking a missing line on purpose is an error
+        with self.assertRaises(MissingError):
+            order.write({
+                'line_ids': [(4, line0.id), (4, line1.id)],
+            })
+
+    def test_parent_id(self):
+        Team = self.env['test_new_api.team']
+        Member = self.env['test_new_api.team.member']
+
+        team1 = Team.create({'name': 'ORM'})
+        team2 = Team.create({'name': 'Bugfix', 'parent_id': team1.id})
+        team3 = Team.create({'name': 'Support', 'parent_id': team2.id})
+
+        Member.create({'name': 'Raphael', 'team_id': team1.id})
+        member2 = Member.create({'name': 'Noura', 'team_id': team3.id})
+        Member.create({'name': 'Ivan', 'team_id': team2.id})
+
+        # In this specific case...
+        self.assertEqual(member2.id, member2.team_id.parent_id.id)
+
+        # ...we had an infinite recursion on making the following search.
+        with self.assertRaises(ValueError):
+            Team.search([('member_ids', 'child_of', member2.id)])
+
+        # Also, test a simple infinite loop if record is marked as a parent of itself
+        team1.parent_id = team1.id
+        # Check that the search is not stuck in the loop
+        Team.search([('id', 'parent_of', team1.id)])
+        Team.search([('id', 'child_of', team1.id)])

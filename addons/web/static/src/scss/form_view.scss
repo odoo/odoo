@@ -100,6 +100,10 @@
                 display: inline-block;
             }
         }
+
+        .o_field_color_picker_preview > li > a {
+            cursor: default;
+        }
     }
 
     .o_form_uri {
@@ -471,6 +475,7 @@
             margin-top: 0;
             margin-bottom: 0;
             line-height: inherit;
+            overflow-wrap: anywhere;
 
             &.d-flex > .o_input {
                 height: max-content;
@@ -753,6 +758,8 @@
     // Boolean
     .o_field_boolean {
         margin-right: $o-form-spacing-unit;
+        max-width: 20px!important;
+        padding-right: 0!important;
     }
 
     // Timezone widget warning

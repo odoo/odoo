@@ -117,12 +117,13 @@ import collections.abc
 import warnings
 
 import logging
+import reprlib
 import traceback
 from functools import partial
 
 from datetime import date, datetime, time
 import odoo.modules
-from odoo.osv.query import Query
+from odoo.osv.query import Query, _generate_table_alias
 from odoo.tools import pycompat
 from odoo.tools.misc import get_lang
 from ..models import MAGIC_COLUMNS, BaseModel
@@ -310,7 +311,10 @@ def distribute_not(domain):
             if negate:
                 left, operator, right = token
                 if operator in TERM_OPERATORS_NEGATION:
-                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                    if token in (TRUE_LEAF, FALSE_LEAF):
+                        result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
+                    else:
+                        result.append((left, TERM_OPERATORS_NEGATION[operator], right))
                 else:
                     result.append(NOT_OPERATOR)
                     result.append(token)
@@ -526,42 +530,54 @@ class expression(object):
             if not ids:
                 return [FALSE_LEAF]
             if left_model._parent_store:
-                doms = OR([
+                domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
-                    for rec in left_model.browse(ids)
+                    for rec in left_model.sudo().browse(ids)
                 ])
-                if prefix:
-                    return [(left, 'in', left_model._search(doms, order='id'))]
-                return doms
             else:
+                # recursively retrieve all children nodes with sudo(); the
+                # filtering of forbidden records is done by the rest of the
+                # domain
                 parent_name = parent or left_model._parent_name
-                child_ids = set(ids)
-                while ids:
-                    ids = left_model._search([(parent_name, 'in', ids)], order='id')
-                    child_ids.update(ids)
-                return [(left, 'in', list(child_ids))]
+                if (left_model._name != left_model._fields[parent_name].comodel_name):
+                    raise ValueError(f"Invalid parent field: {left_model._fields[parent_name]}")
+                child_ids = set()
+                records = left_model.sudo().browse(ids)
+                while records:
+                    child_ids.update(records._ids)
+                    records = records.search([(parent_name, 'in', records.ids)], order='id') - records.browse(child_ids)
+                domain = [('id', 'in', list(child_ids))]
+            if prefix:
+                return [(left, 'in', left_model._search(domain, order='id'))]
+            return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,parent_ids)] """
+            if not ids:
+                return [FALSE_LEAF]
             if left_model._parent_store:
                 parent_ids = [
                     int(label)
-                    for rec in left_model.browse(ids)
+                    for rec in left_model.sudo().browse(ids)
                     for label in rec.parent_path.split('/')[:-1]
                 ]
-                if prefix:
-                    return [(left, 'in', parent_ids)]
-                return [('id', 'in', parent_ids)]
+                domain = [('id', 'in', parent_ids)]
             else:
+                # recursively retrieve all parent nodes with sudo() to avoid
+                # access rights errors; the filtering of forbidden records is
+                # done by the rest of the domain
                 parent_name = parent or left_model._parent_name
                 parent_ids = set()
-                for record in left_model.browse(ids):
-                    while record:
-                        parent_ids.add(record.id)
-                        record = record[parent_name]
-                return [(left, 'in', list(parent_ids))]
+                records = left_model.sudo().browse(ids)
+                while records:
+                    parent_ids.update(records._ids)
+                    records = records[parent_name] - records.browse(parent_ids)
+                domain = [('id', 'in', list(parent_ids))]
+            if prefix:
+                return [(left, 'in', left_model._search(domain, order='id'))]
+            return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,
                            'parent_of': parent_of_domain}
@@ -696,7 +712,7 @@ class expression(object):
                 # Non-stored field should provide an implementation of search.
                 if not field.search:
                     # field does not support search!
-                    _logger.error("Non-stored field %s cannot be searched.", field)
+                    _logger.error("Non-stored field %s cannot be searched.", field, exc_info=True)
                     if _logger.isEnabledFor(logging.DEBUG):
                         _logger.debug(''.join(traceback.format_stack()))
                     # Ignore it: generate a dummy leaf.
@@ -728,7 +744,8 @@ class expression(object):
 
             elif field.type == 'one2many':
                 domain = field.get_domain_list(model)
-                inverse_is_int = comodel._fields[field.inverse_name].type in ('integer', 'many2one_reference')
+                inverse_field = comodel._fields[field.inverse_name]
+                inverse_is_int = inverse_field.type in ('integer', 'many2one_reference')
                 unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
 
                 if right is not False:
@@ -744,36 +761,43 @@ class expression(object):
                     if inverse_is_int and domain:
                         ids2 = comodel._search([('id', 'in', ids2)] + domain, order='id')
 
-                    if isinstance(ids2, Query) and comodel._fields[field.inverse_name].store:
-                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.select('"%s"."%s"' % (comodel._table, field.inverse_name))
-                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
-                    elif ids2 and comodel._fields[field.inverse_name].store:
-                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "id" IN %%s' % (field.inverse_name, comodel._table)
-                        subparams = [tuple(ids2)]
-                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
+                    if inverse_field.store:
+                        # In the condition, one must avoid subqueries to return
+                        # NULL values, since it makes the IN test NULL instead
+                        # of FALSE.  This may discard expected results, as for
+                        # instance "id NOT IN (42, NULL)" is never TRUE.
+                        in_ = 'NOT IN' if operator in NEGATIVE_TERM_OPERATORS else 'IN'
+                        if isinstance(ids2, Query):
+                            if not inverse_field.required:
+                                ids2.add_where(f'"{comodel._table}"."{inverse_field.name}" IS NOT NULL')
+                            subquery, subparams = ids2.subselect(f'"{comodel._table}"."{inverse_field.name}"')
+                        else:
+                            subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "id" IN %s'
+                            if not inverse_field.required:
+                                subquery += f' AND "{inverse_field.name}" IS NOT NULL'
+                            subparams = [tuple(ids2) or (None,)]
+                        push_result(f'("{alias}"."id" {in_} ({subquery}))', subparams)
                     else:
                         # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
-                        ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
+                        ids1 = unwrap_inverse(recs.mapped(inverse_field.name))
                         # rewrite condition in terms of ids1
                         op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                         push(('id', op1, ids1), model, alias)
 
                 else:
-                    if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
+                    if inverse_field.store and not (inverse_is_int and domain):
                         # rewrite condition to match records with/without lines
                         op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        subquery = f'SELECT "{inverse_field.name}" FROM "{comodel._table}" WHERE "{inverse_field.name}" IS NOT NULL'
                         push(('id', op1, (subquery, [])), model, alias, internal=True)
                     else:
-                        comodel_domain = [(field.inverse_name, '!=', False)]
+                        comodel_domain = [(inverse_field.name, '!=', False)]
                         if inverse_is_int and domain:
                             comodel_domain += domain
                         recs = comodel.search(comodel_domain, order='id').sudo().with_context(prefetch_fields=False)
                         # determine ids1 = records with lines
-                        ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
+                        ids1 = unwrap_inverse(recs.mapped(inverse_field.name))
                         # rewrite condition to match records with/without lines
                         op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
                         push(('id', op1, ids1), model, alias)
@@ -791,8 +815,14 @@ class expression(object):
                     if comodel == model:
                         push(('id', 'in', ids2), model, alias)
                     else:
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        push(('id', 'inselect', (subquery, [tuple(ids2) or (None,)])), model, alias, internal=True)
+                        rel_alias = _generate_table_alias(alias, field.name)
+                        push_result(f"""
+                            EXISTS (
+                                SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                                WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                                AND "{rel_alias}"."{rel_id2}" IN %s
+                            )
+                        """, [tuple(ids2) or (None,)])
 
                 elif right is not False:
                     # determine ids2 in comodel
@@ -808,22 +838,33 @@ class expression(object):
 
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
-                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.select()
-                        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s)' % (rel_id1, rel_table, rel_id2, subquery)
-                        push(('id', subop, (query, subparams)), model, alias, internal=True)
+                        subquery, params = ids2.subselect()
+                        term_id2 = f"({subquery})"
                     else:
                         # rewrite condition in terms of ids2
-                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        ids2 = tuple(it for it in ids2 if it) or (None,)
-                        push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
+                        term_id2 = "%s"
+                        params = [tuple(it for it in ids2 if it) or (None,)]
+
+                    exists = 'NOT EXISTS' if operator in NEGATIVE_TERM_OPERATORS else 'EXISTS'
+                    rel_alias = _generate_table_alias(alias, field.name)
+                    push_result(f"""
+                        {exists} (
+                            SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            AND "{rel_alias}"."{rel_id2}" IN {term_id2}
+                        )
+                    """, params)
 
                 else:
                     # rewrite condition to match records with/without relations
-                    op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                    subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
-                    push(('id', op1, (subquery, [])), model, alias, internal=True)
+                    exists = 'EXISTS' if operator in NEGATIVE_TERM_OPERATORS else 'NOT EXISTS'
+                    rel_alias = _generate_table_alias(alias, field.name)
+                    push_result(f"""
+                        {exists} (
+                            SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                        )
+                    """, [])
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:
@@ -872,7 +913,7 @@ class expression(object):
                     push(('id', inselect_operator, (subselect, params)), model, alias, internal=True)
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
-                                  field.string, left, operator, right)
+                                  field.string, left, operator, reprlib.repr(right))
                     push(TRUE_LEAF, model, alias)
 
             # -------------------------------------------------
@@ -905,7 +946,7 @@ class expression(object):
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
-                    if sql_operator == 'in':
+                    if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
@@ -967,7 +1008,7 @@ class expression(object):
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
             elif isinstance(right, Query):
-                subquery, subparams = right.select()
+                subquery, subparams = right.subselect()
                 query = '(%s."%s" %s (%s))' % (table_alias, left, operator, subquery)
                 params = subparams
             elif isinstance(right, (list, tuple)):

@@ -4,9 +4,8 @@
 
 .o_AttachmentList {
     display: flex;
-    flex-flow: wrap;
+    flex-flow: column;
     justify-content: flex-start;
-    margin: map-get($spacers, 1);
 }
 
 /* Avoid overflow of long attachment text */
@@ -16,4 +15,15 @@
     margin-inline-end: map-get($spacers, 1);
     margin-inline-start: map-get($spacers, 0);
     max-width: 100%;
+}
+
+.o_AttachmentList_partialList {
+    display: flex;
+    flex: 1;
+    flex-flow: wrap;
+}
+
+.o_AttachmentList_partialListNonImages {
+    margin: map-get($spacers, 1);
+    justify-content: flex-start;
 }

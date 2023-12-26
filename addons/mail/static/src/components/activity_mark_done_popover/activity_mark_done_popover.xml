@@ -4,17 +4,17 @@
     <t t-name="mail.ActivityMarkDonePopover" owl="1">
         <div class="o_ActivityMarkDonePopover" t-on-keydown="_onKeydown">
             <t t-if="activity">
-                <textarea class="form-control o_ActivityMarkDonePopover_feedback" rows="3" placeholder="Write Feedback" t-ref="feedbackTextarea"/>
+                <textarea class="form-control o_ActivityMarkDonePopover_feedback" rows="3" placeholder="Write Feedback" t-on-blur="_onBlur" t-ref="feedbackTextarea"/>
                 <div class="o_ActivityMarkDonePopover_buttons">
                     <button type="button" class="o_ActivityMarkDonePopover_doneScheduleNextButton btn btn-sm btn-primary" t-on-click="_onClickDoneAndScheduleNext" t-esc="DONE_AND_SCHEDULE_NEXT"/>
                     <t t-if="!activity.force_next">
                         <button type="button" class="o_ActivityMarkDonePopover_doneButton btn btn-sm btn-primary" t-on-click="_onClickDone">
                             Done
                         </button>
-                        <button type="button" class="o_ActivityMarkDonePopover_discardButton btn btn-sm btn-link" t-on-click="_onClickDiscard">
-                            Discard
-                        </button>
                     </t>
+                    <button type="button" class="o_ActivityMarkDonePopover_discardButton btn btn-sm btn-link" t-on-click="_onClickDiscard">
+                        Discard
+                    </button>
                 </div>
             </t>
         </div>

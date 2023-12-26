@@ -36,5 +36,6 @@ This module provides the core of the Odoo Web Client.
         "static/src/xml/search_panel.xml",
         "static/src/xml/web_calendar.xml",
     ],
-    'bootstrap': True,  # load translations for login screen
+    'bootstrap': True,  # load translations for login screen,
+    'license': 'LGPL-3',
 }

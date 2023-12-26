@@ -9,4 +9,5 @@
     'data': ['data/gamification_sale_crm_data.xml'],
     'demo': ['data/gamification_sale_crm_demo.xml'],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

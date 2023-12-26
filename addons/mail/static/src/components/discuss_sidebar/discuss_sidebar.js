@@ -5,6 +5,7 @@ const components = {
     AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
     DiscussSidebarItem: require('mail/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -18,9 +19,10 @@ class DiscussSidebar extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(
             (...args) => this._useStoreSelector(...args),
-            { compareDepth: () => this._useStoreCompareDepth() }
+            { compareDepth: this._useStoreCompareDepth() }
         );
         useUpdate({ func: () => this._update() });
         /**
@@ -114,7 +116,17 @@ class DiscussSidebar extends Component {
                 thread.isPinned &&
                 thread.model === 'mail.channel'
             )
-            .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+            .sort((c1, c2) => {
+                if (c1.displayName && !c2.displayName) {
+                    return -1;
+                } else if (!c1.displayName && c2.displayName) {
+                    return 1;
+                } else if (c1.displayName && c2.displayName && c1.displayName !== c2.displayName) {
+                    return c1.displayName.toLowerCase() < c2.displayName.toLowerCase() ? -1 : 1;
+                } else {
+                    return c1.id - c2.id;
+                }
+            });
         if (!this.discuss.sidebarQuickSearchValue) {
             return allOrderedAndPinnedMultiUserChannels;
         }
@@ -150,7 +162,6 @@ class DiscussSidebar extends Component {
             allOrderedAndPinnedChats: 1,
             allOrderedAndPinnedMailboxes: 1,
             allOrderedAndPinnedMultiUserChannels: 1,
-            allPinnedChannelAmount: 1,
         };
     }
 
@@ -160,33 +171,20 @@ class DiscussSidebar extends Component {
      * @returns {Object}
      */
     _useStoreSelector(props) {
+        const discuss = this.env.messaging.discuss;
         return {
-            allOrderedAndPinnedChats:
-                this.env.models['mail.thread']
-                .all(thread =>
-                    thread.channel_type === 'chat' &&
-                    thread.isPinned &&
-                    thread.model === 'mail.channel'
-                )
-                .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
-                .map(chat => chat.__state),
-            allOrderedAndPinnedMailboxes: this.orderedMailboxes.map(mailbox => mailbox.__state),
-            allOrderedAndPinnedMultiUserChannels:
-                this.env.models['mail.thread']
-                .all(thread =>
-                    thread.channel_type === 'channel' &&
-                    thread.isPinned &&
-                    thread.model === 'mail.channel'
-                )
-                .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1)
-                .map(channel => channel.__state),
+            allOrderedAndPinnedChats: this.quickSearchPinnedAndOrderedChats,
+            allOrderedAndPinnedMailboxes: this.orderedMailboxes,
+            allOrderedAndPinnedMultiUserChannels: this.quickSearchOrderedAndPinnedMultiUserChannels,
             allPinnedChannelAmount:
                 this.env.models['mail.thread']
                 .all(thread =>
                     thread.isPinned &&
                     thread.model === 'mail.channel'
                 ).length,
-            discuss: this.env.messaging.discuss.__state,
+            discussIsAddingChannel: discuss && discuss.isAddingChannel,
+            discussIsAddingChat: discuss && discuss.isAddingChat,
+            discussSidebarQuickSearchValue: discuss && discuss.sidebarQuickSearchValue,
         };
     }
 

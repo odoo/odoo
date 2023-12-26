@@ -6,11 +6,12 @@
 # Sherif Abd Ekmoniem <sherif.tsupport@gmail.com>, 2020
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
 # amrnegm <amrnegm.01@gmail.com>, 2020
-# abdullah alsabi <alsabi.abdullah@gmail.com>, 2020
+# Abdullah Alsabi <alsabi.abdullah@gmail.com>, 2020
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2020
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2020
 # Shaima Safar <shaima.safar@open-inside.com>, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2020\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -40,6 +41,11 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>تهيئات Vantiv</i> تحديد أي حسابات Vantiv سوف يتم استخدامها عند\n"
+"                                معالجة معاملات البطاقة الائتمانية في نقطة البيع. ضبط تهيئة Vantiv\n"
+"                                سيمكنك من السماح بالمدفوعات عن طريق مختلف البطاقات الائتمانية\n"
+"                                (مثال: Visa ،MasterCard ،Discovery ،American Express، ...). بعد ضبط\n"
+"                                هذه التهيئة، يجب ربطها بطريقة الدفع في نقطة البيع. "
 
 #. module: pos_mercury
 #. openerp-web
@@ -192,11 +198,13 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"إذا لم يكن لديك حساب Vantiv بالفعل، تواصل مع Vantiv على +1 (800) 846-4472\n"
+"                                لإنشاء واحد. "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
-msgstr ""
+msgstr "رقم الفاتورة من Vantiv Pay "
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule____last_update
@@ -238,13 +246,13 @@ msgstr "الاسم"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Vantiv configuration"
-msgstr ""
+msgstr "اسم تهيئة Vantiv هذه "
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No Vantiv configuration associated with the payment method."
-msgstr ""
+msgstr "لا توجد تهيئة Vantiv مرتبطة بطريقة الدفع. "
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
@@ -257,7 +265,7 @@ msgstr "لم نتمكن من إيجاد جلسة نقطة بيع مفتوحة ل
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
-msgstr ""
+msgstr "ليس هناك رد من Vantiv (Vantiv متوقف؟) "
 
 #. module: pos_mercury
 #. openerp-web
@@ -292,24 +300,24 @@ msgstr "كلمة مرور التاجر المطلوبة لمصادقة اتصا�
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Pay with: "
-msgstr ""
+msgstr "الدفع باستخدام: "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Vantiv Pay"
-msgstr ""
+msgstr "رقم سجل الدفع من Vantiv Pay "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Vantiv Pay"
-msgstr ""
+msgstr "رقم مرجع الدفع من Vantiv Pay "
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "يرجى إعداد حساب تاجر Vantiv الخاص بك. "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -319,22 +327,22 @@ msgstr "أوامر نقطة البيع"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "طرق الدفع في نقطة البيع "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "مدفوعات نقطة البيع "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "تهيئة Vantiv في نقطة البيع "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "معاملة Vantiv في نقطة البيع "
 
 #. module: pos_mercury
 #. openerp-web
@@ -384,7 +392,7 @@ msgstr "رقم البطاقة المستخدمة في السداد."
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Vantiv used for this journal"
-msgstr ""
+msgstr "تهيئة Vantiv المستخدمة في دفتر اليومية هذا "
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -427,6 +435,10 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"استخدام تكامل Vantiv في نقطة البيع أمر سهل جداً: فقط قم بالضغط على\n"
+"                                طريقة الدفع المرتبطة. بعد ذلك، يمكن تعديل المبلغ (على سبيل المثال، استعادة المبلغ)\n"
+"                                تماماً كأي بند دفع آخر. متى ما تم ضبط بند الدفع، سيكون بالإمكان تمرير\n"
+"                                البطاقة عن طريق جهاز قراءة البطاقات. "
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
@@ -437,27 +449,27 @@ msgstr "حسابات Vantiv"
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr ""
+msgstr "تهيئات Vantiv "
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "بيانات اعتماد Vantiv "
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Vantiv invoice number"
-msgstr ""
+msgstr "رقم فاتورة Vantiv "
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr ""
+msgstr "رقم سجل Vantiv "
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr ""
+msgstr "رقم مرجع Vantiv "
 
 #. module: pos_mercury
 #. openerp-web

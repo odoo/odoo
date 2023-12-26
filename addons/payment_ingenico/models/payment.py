@@ -3,7 +3,7 @@ import base64
 import datetime
 import logging
 import time
-from hashlib import sha1
+from hashlib import new as hashnew
 from pprint import pformat
 from unicodedata import normalize
 
@@ -31,8 +31,8 @@ class PaymentAcquirerOgone(models.Model):
     ogone_pspid = fields.Char('PSPID', required_if_provider='ogone', groups='base.group_user')
     ogone_userid = fields.Char('API User ID', required_if_provider='ogone', groups='base.group_user')
     ogone_password = fields.Char('API User Password', required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_in = fields.Char('SHA Key IN', size=32, required_if_provider='ogone', groups='base.group_user')
-    ogone_shakey_out = fields.Char('SHA Key OUT', size=32, required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_in = fields.Char('SHA Key IN', required_if_provider='ogone', groups='base.group_user')
+    ogone_shakey_out = fields.Char('SHA Key OUT', required_if_provider='ogone', groups='base.group_user')
     ogone_alias_usage = fields.Char('Alias Usage', default="Allow saving my payment data",
                                     help="If you want to use Ogone Aliases, this default "
                                     "Alias Usage will be presented to the customer as the "
@@ -61,6 +61,7 @@ class PaymentAcquirerOgone(models.Model):
             'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect_utf8.asp' % (environment,),
             'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect_utf8.asp' % (environment,),
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
+            'ogone_maintenance_direct_url': 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % (environment,),
         }
 
     def _ogone_generate_shasign(self, inout, values):
@@ -153,8 +154,14 @@ class PaymentAcquirerOgone(models.Model):
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
-        shasign = sha1(sign).hexdigest()
-        return shasign
+
+        hash_function = self.env['ir.config_parameter'].sudo().get_param('payment_ogone.hash_function')
+        if not hash_function or hash_function.lower() not in ['sha1', 'sha256', 'sha512']:
+            hash_function = 'sha1'
+
+        shasign = hashnew(hash_function)
+        shasign.update(sign)
+        return shasign.hexdigest()
 
     def ogone_form_generate_values(self, values):
         base_url = self.get_base_url()
@@ -390,7 +397,7 @@ class PaymentTxOgone(models.Model):
 
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        direct_order_url = self.acquirer_id._get_ogone_urls('prod' if self.acquirer_id.state == 'enabled' else 'test')['ogone_direct_order_url']
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -424,7 +431,7 @@ class PaymentTxOgone(models.Model):
         }
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        direct_order_url = self.acquirer_id._get_ogone_urls('prod' if self.acquirer_id.state == 'enabled' else 'test')['ogone_maintenance_direct_url']
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -516,7 +523,7 @@ class PaymentTxOgone(models.Model):
             'PSWD': account.ogone_password,
         }
 
-        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        query_direct_url = self.acquirer_id._get_ogone_urls('prod' if self.acquirer_id.state == 'enabled' else 'test')['ogone_direct_query_url']
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -563,7 +570,7 @@ class PaymentToken(models.Model):
                 'PROCESS_MODE': 'CHECKANDPROCESS',
             }
 
-            url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % ('prod' if acquirer.state == 'enabled' else 'test')
+            url = acquirer._get_ogone_urls('prod' if acquirer.state == 'enabled' else 'test')['ogone_afu_agree_url']
             _logger.info("ogone_create: Creating new alias %s via url %s", alias, url)
             result = requests.post(url, data=data).content
 

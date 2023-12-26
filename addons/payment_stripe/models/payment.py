@@ -2,7 +2,7 @@
 
 from collections import namedtuple
 from datetime import datetime
-from hashlib import sha256
+from hashlib import sha1, sha256
 import hmac
 import json
 import logging
@@ -58,11 +58,13 @@ class PaymentAcquirerStripe(models.Model):
             'line_items[][quantity]': 1,
             'line_items[][name]': tx_values['reference'],
             'client_reference_id': tx_values['reference'],
-            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % tx_values['reference'],
-            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % tx_values['reference'],
+            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
+            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
             'payment_intent_data[description]': tx_values['reference'],
-            'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
+            'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email') or None,
         }
+        if tx_values['type'] == 'form_save':
+            stripe_session_data['payment_intent_data[setup_future_usage]'] = 'off_session'
 
         self._add_available_payment_method_types(stripe_session_data, tx_values)
 
@@ -88,8 +90,8 @@ class PaymentAcquirerStripe(models.Model):
             PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
         ]
 
-        existing_icons = [icon.name.lower() for icon in self.env['payment.icon'].search([])]
-        linked_icons = [icon.name.lower() for icon in self.payment_icon_ids]
+        existing_icons = [(icon.name or '').lower() for icon in self.env['payment.icon'].search([])]
+        linked_icons = [(icon.name or '').lower() for icon in self.payment_icon_ids]
 
         # We don't filter out pmt in the case the icon doesn't exist at all as it would be **implicit** exclusion
         icon_filtered = filter(lambda pmt: pmt.name == 'card' or
@@ -107,13 +109,15 @@ class PaymentAcquirerStripe(models.Model):
         for idx, payment_method_type in enumerate(available_payment_method_types):
             stripe_session_data[f'payment_method_types[{idx}]'] = payment_method_type
 
-    def _stripe_request(self, url, data=False, method='POST'):
+    def _stripe_request(self, url, data=False, method='POST', idempotency_key=None):
         self.ensure_one()
         url = urls.url_join(self._get_stripe_api_url(), url)
         headers = {
             'AUTHORIZATION': 'Bearer %s' % self.sudo().stripe_secret_key,
-            'Stripe-Version': '2019-05-16', # SetupIntent need a specific version
-            }
+            'Stripe-Version': '2019-05-16',  # SetupIntent need a specific version
+        }
+        if method == 'POST' and idempotency_key:
+            headers['Idempotency-Key'] = idempotency_key
         resp = requests.request(method, url, data=data, headers=headers)
         # Stripe can send 4XX errors for payment failure (not badly-formed requests)
         # check if error `code` is present in 4XX response and raise only if not
@@ -331,8 +335,10 @@ class PaymentTransactionStripe(models.Model):
         if not self.env.context.get('off_session'):
             charge_params.update(setup_future_usage='off_session', off_session=False)
         _logger.info('_stripe_create_payment_intent: Sending values to stripe, values:\n%s', pprint.pformat(charge_params))
-
-        res = self.acquirer_id._stripe_request('payment_intents', charge_params)
+        # Create an idempotency key using the hash of the transaction reference and the database UUID
+        database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        idempotency_key = sha1((database_uuid + self.reference).encode("utf-8")).hexdigest()
+        res = self.acquirer_id._stripe_request('payment_intents', charge_params, idempotency_key=idempotency_key)
         if res.get('charges') and res.get('charges').get('total_count'):
             res = res.get('charges').get('data')[0]
 
@@ -353,7 +359,10 @@ class PaymentTransactionStripe(models.Model):
         }
 
         _logger.info('_create_stripe_refund: Sending values to stripe URL, values:\n%s', pprint.pformat(refund_params))
-        res = self.acquirer_id._stripe_request('refunds', refund_params)
+        # Create an idempotency key using the hash of the transaction reference and the database UUID
+        database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        idempotency_key = sha1((database_uuid + self.reference + 'refunds').encode("utf-8")).hexdigest()
+        res = self.acquirer_id._stripe_request('refunds', refund_params, idempotency_key=idempotency_key)
         _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
 
         return res
@@ -441,7 +450,7 @@ class PaymentTransactionStripe(models.Model):
         invalid_parameters = []
         if data.get('amount') != int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)):
             invalid_parameters.append(('Amount', data.get('amount'), self.amount * 100))
-        if data.get('currency').upper() != self.currency_id.name:
+        if data.get('currency') and data.get('currency').upper() != self.currency_id.name:
             invalid_parameters.append(('Currency', data.get('currency'), self.currency_id.name))
         if data.get('payment_intent') and data.get('payment_intent') != self.stripe_payment_intent:
             invalid_parameters.append(('Payment Intent', data.get('payment_intent'), self.stripe_payment_intent))

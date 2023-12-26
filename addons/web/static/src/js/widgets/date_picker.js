@@ -30,7 +30,7 @@ var DateWidget = Widget.extend({
         this.options = _.extend({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
-            minDate: moment({ y: 1 }),
+            minDate: moment({ y: 1000 }),
             maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
@@ -78,6 +78,7 @@ var DateWidget = Widget.extend({
             window.removeEventListener('wheel', this._onScroll, true);
         }
         this.__libInput++;
+        this.$input.blur(); // force blur before widget is destroyed
         this.$el.datetimepicker('destroy');
         this.__libInput--;
         this._super.apply(this, arguments);

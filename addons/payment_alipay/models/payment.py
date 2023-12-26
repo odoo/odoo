@@ -57,7 +57,7 @@ class PaymentAcquirer(models.Model):
         fees = 0.0
         if self.fees_active:
             country = self.env['res.country'].browse(country_id)
-            if country and self.company_id.country_id.id == country.id:
+            if country and self.company_id.sudo().country_id.id == country.id:
                 percentage = self.fees_dom_var
                 fixed = self.fees_dom_fixed
             else:
@@ -86,7 +86,7 @@ class PaymentAcquirer(models.Model):
             'partner': self.alipay_merchant_partner_id,
             'return_url': urls.url_join(base_url, AlipayController._return_url),
             'subject': values.get('reference'),
-            'total_fee': values.get('amount') + values.get('fees'),
+            'total_fee': '%.2f' % (values.get('amount') + values.get('fees')),
         })
         if self.alipay_payment_method == 'standard_checkout':
             alipay_tx_values.update({

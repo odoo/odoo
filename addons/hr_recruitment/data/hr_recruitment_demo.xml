@@ -251,6 +251,7 @@
         <field name="partner_mobile">9898745745</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6630125</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
@@ -258,6 +259,7 @@
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="partner_name">Shane Williams</field>
         <field name="partner_mobile">9812398524</field>
         <field name="stage_id" ref="stage_job4"/>
@@ -270,6 +272,7 @@
         <field name="department_id" ref="hr.dep_ps"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="partner_name">David Billy</field>
         <field name="partner_mobile">9988774455</field>
         <field name="stage_id" ref="stage_job2"/>

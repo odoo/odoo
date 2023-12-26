@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -286,10 +286,10 @@ class TestBatchPicking(TransactionCase):
         self.assertFalse(sum(quant_B.mapped('quantity')))
 
     def test_batch_with_immediate_transfer_and_backorder_wizard_with_manual_operations(self):
-        """ Test a simple batch picking with only one quantity fully available.
-        The user set the quantity done only for the partially available picking.
-        The test should run the immediate transfer for the first picking and then
-        the backorder wizard for the second picking.
+        """ When validating a batch picking where some pickings have no quantities done + some
+        do, then avoid immediate transfers wizard and remove pickings with no quantities done
+        from the batch picking. This will make it so users can validate a partially done batch
+        picking in this case.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
@@ -304,27 +304,17 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
 
         self.picking_client_1.move_lines.quantity_done = 5
-        # There should be a wizard asking to process picking without quantity done
-        immediate_transfer_wizard_dict = self.batch.action_done()
-        self.assertTrue(immediate_transfer_wizard_dict)
-        immediate_transfer_wizard = Form(self.env[(immediate_transfer_wizard_dict.get('res_model'))].with_context(immediate_transfer_wizard_dict['context'])).save()
-        self.assertEqual(len(immediate_transfer_wizard.pick_ids), 1)
-        back_order_wizard_dict = immediate_transfer_wizard.process()
+        # There should be a wizard asking to make a backorder
+        back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
+        self.assertEqual(back_order_wizard_dict.get('res_model'), 'stock.backorder.confirmation')
         back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
-        self.assertEqual(len(back_order_wizard.pick_ids), 1)
+        self.assertEqual(len(back_order_wizard.pick_ids), 2)
         back_order_wizard.process()
 
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_lines.product_uom_qty, 5, 'initial demand should be 5 after picking split')
-        self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', self.picking_client_1.id)]), 'no back order created')
-
-        quant_A = self.env['stock.quant']._gather(self.productA, self.stock_location)
-        quant_B = self.env['stock.quant']._gather(self.productB, self.stock_location)
-
-        # ensure that quantity for picking has been moved
-        self.assertFalse(sum(quant_A.mapped('quantity')))
-        self.assertFalse(sum(quant_B.mapped('quantity')))
+        self.assertFalse(self.picking_client_2.batch_id, 'The picking should be removed from the batch')
 
     def test_put_in_pack(self):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
@@ -365,3 +355,119 @@ class TestBatchPicking(TransactionCase):
 
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
+
+
+@tagged('-at_install', 'post_install')
+class TestBatchPicking02(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.picking_type_internal = self.env.ref('stock.picking_type_internal')
+        self.productA = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.productB = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+    def test_same_package_several_pickings(self):
+        """
+        A batch with two transfers, source and destination are the same. The
+        first picking contains 3 x P, the second one 7 x P. The 10 P are in a
+        package. It should be possible to transfer the whole package across the
+        two pickings
+        """
+        package = self.env['stock.quant.package'].create({
+            'name': 'superpackage',
+        })
+
+        loc1, loc2 = self.stock_location.child_ids
+        self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10, package_id=package)
+
+        pickings = self.env['stock.picking'].create([{
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'move_lines': [(0, 0, {
+                'name': 'test_put_in_pack_from_multiple_pages',
+                'location_id': loc1.id,
+                'location_dest_id': loc2.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': qty,
+            })]
+        } for qty in (3, 7)])
+        pickings.action_confirm()
+        pickings.action_assign()
+
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(pickings[0])
+        batch_form.picking_ids.add(pickings[1])
+        batch = batch_form.save()
+        batch.action_confirm()
+
+        pickings.move_line_ids[0].qty_done = 3
+        pickings.move_line_ids[1].qty_done = 7
+        pickings.move_line_ids.result_package_id = package
+
+        batch.action_done()
+        self.assertRecordValues(pickings.move_lines, [
+            {'state': 'done', 'quantity_done': 3},
+            {'state': 'done', 'quantity_done': 7},
+        ])
+        self.assertEqual(pickings.move_line_ids.result_package_id, package)
+
+
+    def test_batch_validation_without_backorder(self):
+        loc1, loc2 = self.stock_location.child_ids
+        self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, loc1, 10)
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+
+        picking_2 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+        (picking_1 | picking_2).action_confirm()
+        (picking_1 | picking_2).action_assign()
+        picking_2.move_lines.move_line_ids.write({'qty_done': 1})
+
+        batch = self.env['stock.picking.batch'].create({
+            'name': 'Batch 1',
+            'company_id': self.env.company.id,
+            'picking_ids': [(4, picking_1.id), (4, picking_2.id)]
+        })
+        batch.action_confirm()
+        action = batch.action_done()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+        self.assertEqual(batch.state, 'done')

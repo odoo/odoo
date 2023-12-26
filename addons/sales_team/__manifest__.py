@@ -28,4 +28,5 @@ Using this application you can manage Sales Teams with CRM and/or Sales
     ],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

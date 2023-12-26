@@ -37,7 +37,7 @@
                     </div>
                 </t>
                 <!-- LOADING (if order asc)-->
-                <t t-if="props.order === 'asc' and threadView.messages.length > 0">
+                <t t-if="props.order === 'asc' and orderedMessages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
                 <!-- MESSAGES -->
@@ -79,7 +79,7 @@
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->
-                <t t-if="props.order === 'desc' and threadView.messages.length > 0">
+                <t t-if="props.order === 'desc' and orderedMessages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
             </t>

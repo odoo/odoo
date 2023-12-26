@@ -211,13 +211,16 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_translations: function () {
+        var lang = this.user_context.lang
         /* We need to get the website lang at this level.
            The only way is to get it is to take the HTML tag lang
            Without it, we will always send undefined if there is no lang
            in the user_context. */
         var html = document.documentElement,
-            htmlLang = (html.getAttribute('lang') || 'en_US').replace('-', '_'),
-            lang = this.user_context.lang || htmlLang;
+            htmlLang = html.getAttribute('lang');
+        if (!this.user_context.lang && htmlLang) {
+            lang = htmlLang.replace('-', '_');
+        }
 
         return _t.database.load_translations(this, this.module_list, lang, this.translationURL);
     },
@@ -329,7 +332,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {integer}
      */
     getTZOffset: function (date) {
-        return -new Date(date).getTimezoneOffset();
+        return -new Date(new Date(date).toISOString().replace('Z', '')).getTimezoneOffset();
     },
     //--------------------------------------------------------------------------
     // Public
@@ -387,9 +390,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @private
      */
     _configureLocale: function () {
+        const dow = (_t.database.parameters.week_start || 0) % 7;
         moment.updateLocale(moment.locale(), {
             week: {
-                dow: (_t.database.parameters.week_start || 0) % 7,
+                dow: dow,
+                doy: 7 + dow - 4 // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
             },
         });
     },

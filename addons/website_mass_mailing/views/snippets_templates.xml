@@ -14,13 +14,19 @@
 
 <template id="snippets" inherit_id="website.snippets">
     <xpath expr="//t[@id='mass_mailing_newsletter_block_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg"/>
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg" t-forbid-sanitize="form"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg" t-forbid-sanitize="form"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form"/>
     </xpath>
 </template>
 
@@ -29,8 +35,8 @@
         <div class="input-group">
             <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
             <span class="input-group-append">
-                <a role="button" href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
-                <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none" disabled="disabled">Thanks</a>
+                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+                <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit" disabled="disabled">Thanks</a>
             </span>
         </div>
     </div>
@@ -92,6 +98,9 @@
             data-selector=".o_newsletter_popup">
             <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
         </div>
+    </xpath>
+    <xpath expr="//div[@data-js='anchor']" position="attributes">
+        <attribute name="data-exclude" add=".o_newsletter_popup" separator=","/>
     </xpath>
 </template>
 

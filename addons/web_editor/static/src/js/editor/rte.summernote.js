@@ -25,6 +25,37 @@ var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
 
+// Summernote uses execCommand and, worth, obsolete queryCommandState function
+// to customize the edited content. Here we try to hack the function to solve
+// some problems by making the DOM and style easier to understand for the
+// base function for the duration of their executions. This won't obviously
+// solves all problems but this is an improvement while waiting for the new
+// Odoo editor coming in future versions.
+function protectCommand(callback) {
+    return function () {
+        var rng = range.create();
+        var $sc = (rng && rng.sc) ? $(rng.sc).parents(':o_editable').last() : $();
+        var $ec = (rng && rng.ec) ? $(rng.ec).parents(':o_editable').last() : $();
+        $sc.addClass('o_we_command_protector');
+        $ec.addClass('o_we_command_protector');
+        var restore = function () {
+            $sc.removeClass('o_we_command_protector');
+            $ec.removeClass('o_we_command_protector');
+        };
+        var result;
+        try {
+            result = callback.apply(this, arguments);
+        } catch (err) {
+            restore();
+            throw err;
+        }
+        restore();
+        return result;
+    };
+}
+document.execCommand = protectCommand(document.execCommand);
+document.queryCommandState = protectCommand(document.queryCommandState);
+
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
@@ -255,6 +286,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
             $container.find('button[data-event="resizefa"][data-value="5"]').toggleClass("active", $(oStyle.image).hasClass("fa-5x"));
             $container.find('button[data-event="resizefa"][data-value="1"]').toggleClass("active", !$container.find('.active[data-event="resizefa"]').length);
+            $container.find('button[data-event="cropImage"]').addClass('d-none');
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
@@ -262,6 +294,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         } else {
             $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
+            $container.find('button[data-event="cropImage"]').removeClass('d-none');
             $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
@@ -336,7 +369,9 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         oStyle.anchor = false;
     }
 
-    if (oStyle.image || oStyle.anchor || (oStyle.range && !$(oStyle.range.sc).closest('.note-editable').length)) {
+    if (oStyle.image || oStyle.anchor || (oStyle.range
+        && (!$(oStyle.range.sc).closest('.note-editable').length
+        || !$(oStyle.range.sc).parent().is(':o_editable')))) {
         $airPopover.hide();
     } else {
         $airPopover.show();
@@ -396,9 +431,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left'); break;
-        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto'); break;
-        case 'right': $target.toggleClass('float-right').removeClass('float-left d-block mx-auto'); break;
+        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left ml-auto'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto ml-auto'); break;
+        case 'right': $target.toggleClass('ml-auto float-right').removeClass('float-left d-block mx-auto'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {
@@ -432,7 +467,12 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     });
     return def;
 };
+var originalShowImageDialog = eventHandler.modules.imageDialog.showImageDialog;
 eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
+    var options = $editable.closest('.o_editable, .note-editor').data('options');
+    if (options.disableFullMediaDialog) {
+        return originalShowImageDialog.apply(this, arguments);
+    }
     var r = $editable.data('range');
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
@@ -440,7 +480,6 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     var media = $(r.sc).parents().addBack().filter(function (i, el) {
         return dom.isImg(el);
     })[0];
-    var options = $editable.closest('.o_editable, .note-editor').data('options');
     topBus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
@@ -448,10 +487,15 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
             onUpload: $editable.data('callbacks').onUpload,
             noVideos: options && options.noVideos,
         },
-        onSave: function (media) {
-            if(media && !document.body.contains(media)) {
-            r.insertNode(media);
-            };
+        onSave: function (newMedia) {
+            if (!newMedia) {
+                return;
+            }
+            if (media) {
+                $(media).replaceWith(newMedia);
+            } else {
+                r.insertNode(newMedia);
+            }
         },
     });
     return new $.Deferred().reject();
@@ -829,6 +873,9 @@ eventHandler.attach = function (oLayoutInfo, options) {
     oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
     $(document).on('mousedown', summernote_mousedown).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
+    oLayoutInfo.editor().find('.note-image-dialog').on('click', '.note-image-input', function (e) {
+        e.stopPropagation(); // let browser default happen for image file input
+    });
 
     /**
      * Open Media Dialog on double click on an image/video/icon.
@@ -1172,7 +1219,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         }
         data.__alreadyDone = true;
         new weWidgets.ImageCropWidget(this, data.media)
-            .appendTo(data.$editable);
+            .appendTo(data.$editable.parent());
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.
@@ -1210,11 +1257,15 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         }
         data.__alreadyDone = true;
 
+        const model = data.$editable.data('oe-model');
+        const field = data.$editable.data('oe-field');
+        const type = data.$editable.data('oe-type');
         var mediaDialog = new weWidgets.MediaDialog(this,
             _.extend({
-                res_model: data.$editable.data('oe-model'),
+                res_model: model,
                 res_id: data.$editable.data('oe-id'),
                 domain: data.$editable.data('oe-media-domain'),
+                useMediaLibrary: field && (model === 'ir.ui.view' && field === 'arch' || type === 'html'),
             }, data.options),
             data.media
         );

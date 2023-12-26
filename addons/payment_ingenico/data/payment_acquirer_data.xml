@@ -11,5 +11,10 @@
             <field name="registration_view_template_id" ref="ogone_s2s_form"/>
         </record>
 
+        <record model="ir.config_parameter" id="payment_ogone_hash_function" forcecreate="False">
+            <field name="key">payment_ogone.hash_function</field>
+            <field name="value">sha1</field>
+        </record>
+
     </data>
 </odoo>

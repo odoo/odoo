@@ -144,6 +144,13 @@ const ColorPaletteWidget = Widget.extend({
             defaultColor: defaultColor,
         });
         await this.colorPicker.prependTo($colorSection);
+
+        // TODO Added as a fix. In master, the widget should probably not be
+        // instantiated at all.
+        if (this.options.excluded.includes('custom')) {
+            this.colorPicker.$el.addClass('d-none');
+        }
+
         return res;
     },
     /**
@@ -151,6 +158,14 @@ const ColorPaletteWidget = Widget.extend({
      */
     getColorNames: function () {
         return this.colorNames;
+    },
+    /**
+     * Sets the currently selected color
+     *
+     * @param {string} color rgb[a]
+     */
+    setSelectedColor: function (color) {
+        this._selectColor({color: color});
     },
 
     //--------------------------------------------------------------------------
@@ -254,13 +269,16 @@ const ColorPaletteWidget = Widget.extend({
      * Set the selectedColor and trigger an event
      *
      * @param {Object} color
-     * @param {string} eventName
+     * @param {string} [eventName]
      */
     _selectColor: function (colorInfo, eventName) {
         this.selectedColor = colorInfo.color = this.colorToColorNames[colorInfo.color] || colorInfo.color;
-        this.trigger_up(eventName, colorInfo);
+        if (eventName) {
+            this.trigger_up(eventName, colorInfo);
+        }
         this._buildCustomColors();
         this._markSelectedColor();
+        this.colorPicker.setSelectedColor(colorInfo.color);
     },
     /**
      * Mark the selected color

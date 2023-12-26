@@ -37,7 +37,7 @@
                 <span t-att-class="'badge only_left_radius filter-all %s' % 'badge-secondary' if search_finished else 'badge-primary o_active_filter'">All surveys</span>
                 <span t-att-class="'badge only_right_radius filter-finished %s' % 'badge-secondary' if not search_finished else 'badge-primary o_active_filter'">Finished surveys</span>
                 <span t-foreach="search_filters" t-as="filter_data">
-                    <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['answers'])"></span>
+                    <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question']"></span><span class="badge badge-success only_right_radius" t-esc="filter_data['answers']"></span>
                 </span>
             </div>
         </div>
@@ -113,14 +113,13 @@
             </t>
             <!-- Scoring info -->
             <t t-if="question_scoring">
-                <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
+                <t t-if="question.question_type in ['simple_choice', 'multiple_choice'] or question.is_scored_question">
                     <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
+                </t>
+                <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
                     <span class="badge badge-warning ml-1" t-if="question.question_type == 'multiple_choice'">
                         <span t-esc="question_data['partial_inputs_count']"></span> Partial
                     </span>
-                </t>
-                <t t-if="question.is_scored_question">
-                    <span class="badge badge-success ml-3"><span t-esc="question_data['right_inputs_count']"></span> Correct</span>
                 </t>
             </t>
             <!-- Inputs info -->
@@ -352,7 +351,7 @@
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'survey_data_question_%d' % question.id">
                 <table class="table table-hover table-sm text-right">
-                    <thead>
+                    <thead t-if="table_data">
                         <tr>
                             <th></th>
                             <th class="text-right" t-foreach="table_data[0]['columns']" t-as="column_data">
@@ -366,7 +365,7 @@
                                 <span t-esc="choice_data['row'].value"></span>
                             </td>
                             <td class="survey_answer" t-foreach="choice_data['columns']" t-as="column_data">
-                                <span t-esc="round(column_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
+                                <span t-esc="round(column_data['count'] * 100.0/ (len(question_data['answer_input_done_ids']) or 1), 2)"></span> %
                                 <span class="badge badge-primary" t-esc="column_data['count']"></span>
                                 <i class="fa fa-filter text-primary survey_filter"
                                     t-att-data-question_id="question.id"

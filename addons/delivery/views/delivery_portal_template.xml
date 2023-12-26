@@ -21,7 +21,7 @@
             </div>
             <t t-if="i.carrier_id.get_return_label_from_portal and i.return_label_ids">
                 <div>
-                    <a class="ml-3"  t-attf-href="/web/content/#{i.return_label_ids[:1].id}" target="_blank">Print Return Label</a>
+                    <a class="ml-3"  t-attf-href="/web/content/#{i.return_label_ids[:1].id}?access_token=#{i.return_label_ids[:1].access_token}" target="_blank">Print Return Label</a>
                 </div>
             </t>
         </xpath>

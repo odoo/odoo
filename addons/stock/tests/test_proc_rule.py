@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
+from odoo.exceptions import UserError
 
 
 class TestProcRule(TransactionCase):
@@ -18,6 +19,40 @@ class TestProcRule(TransactionCase):
             'type': 'consu',
         })
         self.partner = self.env['res.partner'].create({'name': 'Partner'})
+
+    def test_endless_loop_rules_from_location(self):
+        """ Creates and configure a rule the way, when trying to get rules from
+        location, it goes in a state where the found rule tries to trigger another
+        rule but finds nothing else than itself and so get stuck in a recursion error."""
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        reception_route = warehouse.reception_route_id
+        self.product.type = 'product'
+
+        # Creates a delivery for this product, that way, this product will be to resupply.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.out_type_id
+        with picking_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 10
+        delivery = picking_form.save()
+        delivery.action_confirm()
+        self.product._compute_quantities()  # Computes `outgoing_qty` to have the orderpoint.
+
+        # Then, creates a rule and adds it into the route's rules.
+        reception_route.rule_ids.action_archive()
+        self.env['stock.rule'].create({
+            'name': 'Looping Rule',
+            'route_id': reception_route.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+            'action': 'pull_push',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+
+        # Tries to open the Replenishment view -> It should raise an UserError.
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will
@@ -235,6 +270,145 @@ class TestProcRule(TransactionCase):
         self.assertTrue(receipt_move2)
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
+
+    def test_fixed_procurement_01(self):
+        """ Run a procurement for 5 products when there are only 4 in stock then
+        check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
+        """
+        self.partner = self.env['res.partner'].create({'name': 'Partner'})
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        final_location = self.partner.property_stock_customer
+
+        # Create a product and add 10 units in stock
+        product_a = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 10.0)
+
+        # Create a route which will allows 'wave picking'
+        wave_pg = self.env['procurement.group'].create({'name': 'Wave PG'})
+        wave_route = self.env['stock.location.route'].create({
+            'name': 'Wave for ProductA',
+            'product_selectable': True,
+            'sequence': 1,
+            'rule_ids': [(0, 0, {
+                'name': 'Stock -> output rule',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_internal'),
+                'location_src_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.ref('stock.stock_location_output'),
+                'group_propagation_option': 'fixed',
+                'group_id': wave_pg.id,
+            })],
+        })
+
+        # Set this route on `product_a`
+        product_a.write({
+            'route_ids': [(4, wave_route.id)]
+        })
+
+        # Create a procurement for 2 units
+        pg = self.env['procurement.group'].create({'name': 'Wave 1'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                2.0,
+                product_a.uom_id,
+                final_location,
+                'wave_part_1',
+                'wave_part_1',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+
+        # 2 pickings should be created: 1 for pick, 1 for ship
+        picking_pick = self.env['stock.picking'].search([('group_id', '=', wave_pg.id)])
+        picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 2.0)
+        self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 2.0)
+
+        # Create a procurement for 3 units
+        pg = self.env['procurement.group'].create({'name': 'Wave 2'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                product_a,
+                3.0,
+                product_a.uom_id,
+                final_location,
+                'wave_part_2',
+                'wave_part_2',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+
+        # The picking for the pick operation should be reused and the lines merged.
+        picking_ship = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        self.assertAlmostEqual(picking_pick.move_lines.product_uom_qty, 5.0)
+        self.assertAlmostEqual(picking_ship.move_lines.product_uom_qty, 3.0)
+
+    def test_orderpoint_replenishment_view(self):
+        """ Create two warehouses + two moves
+        verify that the replenishment view is consistent"""
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse_2, warehouse_3 = self.env['stock.warehouse'].create([{
+            'name': 'Warehouse Two',
+            'code': 'WH2',
+            'resupply_wh_ids': [warehouse_1.id],
+        }, {
+            'name': 'Warehouse Three',
+            'code': 'WH3',
+            'resupply_wh_ids': [warehouse_1.id],
+        }])
+        route_2 = self.env['stock.location.route'].search([
+            ('supplied_wh_id', '=', warehouse_2.id),
+            ('supplier_wh_id', '=', warehouse_1.id),
+        ])
+        route_3 = self.env['stock.location.route'].search([
+            ('supplied_wh_id', '=', warehouse_3.id),
+            ('supplier_wh_id', '=', warehouse_1.id),
+        ])
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'route_ids': [route_2.id, route_3.id]
+        })
+        moves = self.env['stock.move'].create([{
+            'name': 'Move WH2',
+            'location_id': warehouse_2.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+        }, {
+            'name': 'Move WH3',
+            'location_id': warehouse_3.lot_stock_id.id,
+            'location_dest_id': self.partner.property_stock_customer.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+        }])
+        moves._action_confirm()
+        # activate action of opening the replenishment view
+        self.env['report.stock.quantity'].flush()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishments = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', product.id),
+        ])
+        # Verify that the location and the route make sense
+        self.assertRecordValues(replenishments, [
+            {'location_id': warehouse_2.lot_stock_id.id, 'route_id': route_2.id},
+            {'location_id': warehouse_3.lot_stock_id.id, 'route_id': route_3.id},
+        ])
 
 
 class TestProcRuleLoad(TransactionCase):

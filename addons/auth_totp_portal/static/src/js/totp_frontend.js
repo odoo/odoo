@@ -218,4 +218,42 @@ publicWidget.registry.DisableTOTPButton = publicWidget.Widget.extend({
         window.location = window.location;
     }
 });
+publicWidget.registry.RevokeTrustedDeviceButton = publicWidget.Widget.extend({
+    selector: '.fa.fa-trash.text-danger',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        await handleCheckIdentity(
+            this.proxy('_rpc'),
+            this._rpc({
+                model: 'res.users.apikeys',
+                method: 'remove',
+                args: [parseInt(this.target.id)]
+            })
+        );
+        window.location = window.location;
+    }
+});
+publicWidget.registry.RevokeAllTrustedDevicesButton = publicWidget.Widget.extend({
+    selector: '#auth_totp_portal_revoke_all_devices',
+    events: {
+        click: '_onClick'
+    },
+
+    async _onClick(e){
+        e.preventDefault();
+        await handleCheckIdentity(
+            this.proxy('_rpc'),
+            this._rpc({
+                model: 'res.users',
+                method: 'revoke_all_devices',
+                args: [this.getSession().user_id]
+            })
+        );
+        window.location = window.location;
+    }
+});
 });

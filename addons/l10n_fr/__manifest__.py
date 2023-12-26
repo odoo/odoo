@@ -5,7 +5,7 @@
 
 {
     'name': 'France - Accounting',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the module to manage the accounting chart for France in Odoo.
@@ -52,4 +52,5 @@ configuration of their taxes and fiscal positions manually.
         'demo/demo_company.xml',
     ],
     'post_init_hook': '_l10n_fr_post_init_hook',
+    'license': 'LGPL-3',
 }

@@ -50,13 +50,16 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         async handleAddChannelAutocompleteSelect(ev, ui) {
+            // Necessary in order to prevent AutocompleteSelect event's default
+            // behaviour as html tags visible for a split second in text area
+            ev.preventDefault();
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
             if (ui.item.special) {
                 const channel = await this.async(() =>
                     this.env.models['mail.thread'].performRpcCreateChannel({
                         name,
-                        privacy: ui.item.special,
+                        privacy: ui.item.special === 'private' ? 'private' : 'groups',
                     })
                 );
                 channel.open();
@@ -79,10 +82,18 @@ function factory(dependencies) {
             const value = req.term;
             const escapedValue = owl.utils.escape(value);
             this.update({ addingChannelValue: value });
+            const domain = [
+                ['channel_type', '=', 'channel'],
+                ['name', 'ilike', value],
+            ];
+            const fields = ['channel_type', 'name', 'public', 'uuid'];
             const result = await this.async(() => this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_search_to_join',
-                args: [value],
+                model: "mail.channel",
+                method: "search_read",
+                kwargs: {
+                    domain,
+                    fields,
+                },
             }));
             const items = result.map(data => {
                 let escapedName = owl.utils.escape(data.name);
@@ -182,6 +193,7 @@ function factory(dependencies) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
+                        name: this.env._t("Discuss"),
                         active_id: this.threadToActiveId(this),
                         clear_breadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(),

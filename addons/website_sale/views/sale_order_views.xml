@@ -15,6 +15,10 @@
                 <separator/>
                 <filter string="From Website" name="from_website" domain="[('website_id', '!=', False)]"/>
                 <separator/>
+                <!-- Dashboard filter - used by context -->
+                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
             </xpath>
         </field>
     </record>
@@ -73,6 +77,7 @@
         </field>
     </record>
 
+    <!-- Dashboard Action -->
     <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
@@ -111,11 +116,12 @@
         </field>
     </record>
 
+    <!-- Dashboard Action -->
     <record id="sale_order_action_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban</field>
-        <field name="domain">[('state', 'in', ('sale', 'done')), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
+        <field name="domain">[('state', 'in', ('sale', 'done')), ('order_line', '!=', False), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">

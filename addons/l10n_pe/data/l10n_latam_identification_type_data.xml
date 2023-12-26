@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record model='l10n_latam.identification.type' id='l10n_latam_base.it_vat'>
-        <field name='l10n_pe_vat_code'>6</field>
+        <field name='l10n_pe_vat_code'>0</field>
     </record>
     <record model='l10n_latam.identification.type' id='l10n_latam_base.it_pass'>
         <field name='l10n_pe_vat_code'>7</field>
@@ -64,5 +64,24 @@
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>E</field>
         <field name='sequence'>125</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_PTP'>
+        <field name='name'>PTP</field>
+        <field name='description'>Temporary Residence Permit</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>F</field>
+        <field name='sequence'>130</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_SP'>
+        <field name='name'>Safe Passage</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>G</field>
+        <field name='sequence'>135</field>
+    </record>
+    <record model='l10n_latam.identification.type' id='it_CPP'>
+        <field name='name'>License Permit Temp. Perman.</field>
+        <field name='country_id' ref='base.pe'/>
+        <field name='l10n_pe_vat_code'>H</field>
+        <field name='sequence'>140</field>
     </record>
 </odoo>

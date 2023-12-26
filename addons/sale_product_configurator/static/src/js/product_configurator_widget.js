@@ -59,13 +59,16 @@ ProductConfiguratorWidget.include({
     */
     _onTemplateChange: function (productTemplateId, dataPointId) {
         var self = this;
+        var ctx = {};
+        if (this.record && this.recordParams) {
+            ctx = this.record.getContext(this.recordParams);
+        }
 
         return this._rpc({
             model: 'product.template',
             method: 'get_single_product_variant',
-            args: [
-                productTemplateId
-            ]
+            args: [productTemplateId],
+            context: ctx,
         }).then(function (result) {
             if (result.product_id && !result.has_optional_products) {
                 self.trigger_up('field_changed', {
@@ -195,6 +198,7 @@ ProductConfiguratorWidget.include({
             this._super.apply(this, arguments);
             return;
         }
+        this.restoreProductTemplateId = this.recordData.product_template_id;
         // If line has been set up through the product_configurator:
         this._openProductConfigurator({
                 configuratorMode: 'edit',

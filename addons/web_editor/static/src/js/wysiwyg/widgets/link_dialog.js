@@ -26,6 +26,7 @@ var LinkDialog = Dialog.extend({
 
     /**
      * @constructor
+     * @param {Boolean} linkInfo.isButton - whether if the target is a button element.
      */
     init: function (parent, options, editable, linkInfo) {
         this.options = options || {};
@@ -40,8 +41,12 @@ var LinkDialog = Dialog.extend({
             },
         });
 
+        this.data = linkInfo || {};
+        this.isButton = this.data.isButton;
+        const isButtonLink = this.isButton || (this.data.range && this.data.range.isOnAnchor() && this.data.className.includes("btn-link"));
+        // Using explicit type 'link' to preserve style when the target is <button class="...btn-link"/>.
         this.colorsData = [
-            {type: '', label: _t("Link"), btnPreview: 'link'},
+            {type: isButtonLink ? 'link' : '', label: _t("Link"), btnPreview: 'link'},
             {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
             {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
             // Note: by compatibility the dialog should be able to remove old
@@ -51,8 +56,6 @@ var LinkDialog = Dialog.extend({
         ];
 
         this.editable = editable;
-        this.data = linkInfo || {};
-
         this.data.className = "";
         this.data.iniClassName = "";
 
@@ -60,10 +63,10 @@ var LinkDialog = Dialog.extend({
         this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
 
         if (this.data.range) {
-            const $link = $(this.data.range.sc).filter("a");
-            this.data.iniClassName = $link.attr("class") || "";
+            const $el = $(this.data.range.sc).filter(this.isButton ? "button" : "a");
+            this.data.iniClassName = $el.attr("class") || "";
             this.colorCombinationClass = false;
-            let $node = $link;
+            let $node = $el;
             while ($node.length && !$node.is('body')) {
                 const className = $node.attr('class') || '';
                 const m = className.match(/\b(o_cc\d+)\b/g);
@@ -156,6 +159,10 @@ var LinkDialog = Dialog.extend({
         this.data.className = this.data.iniClassName
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
+        // 'o_submit' class will force anchor to be handled as a button in linkdialog.
+        if (/(?:s_website_form_send|o_submit)/.test(this.data.className)) {
+            this.isButton = true;
+        }
     },
     /**
      * @override
@@ -167,8 +174,18 @@ var LinkDialog = Dialog.extend({
         this.$styleInputs.prop('checked', false).filter('[value=""]').prop('checked', true);
         if (this.data.iniClassName) {
             _.each(this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option'), el => {
-                var $option = $(el);
-                if ($option.val() && this.data.iniClassName.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
+                const $option = $(el);
+                const value = $option.val();
+                if (!value) {
+                    return;
+                }
+                const subValues = value.split(',');
+                let active = true;
+                for (let i = 0; i < subValues.length; i++) {
+                    const classPrefix = new RegExp('(^|btn-| |btn-outline-|btn-fill-)' + subValues[i]);
+                    active = active && classPrefix.test(this.data.iniClassName);
+                }
+                if (active) {
                     if ($option.is("input")) {
                         $option.prop("checked", true);
                     } else {
@@ -255,15 +272,15 @@ var LinkDialog = Dialog.extend({
     _getData: function () {
         var $url = this.$('input[name="url"]');
         var url = $url.val();
-        var label = this.$('input[name="label"]').val() || url;
+        var label = _.escape(this.$('input[name="label"]').val() || url);
 
         if (label && this.data.images) {
             for (var i = 0; i < this.data.images.length; i++) {
-                label = label.replace('<', "&lt;").replace('>', "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
+                label = label.replace(/\[IMG\]/, this.data.images[i].outerHTML);
             }
         }
 
-        if ($url.prop('required') && (!url || !$url[0].checkValidity())) {
+        if (!this.isButton && $url.prop('required') && (!url || !$url[0].checkValidity())) {
             return null;
         }
 

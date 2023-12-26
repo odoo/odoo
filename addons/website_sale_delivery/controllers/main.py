@@ -4,7 +4,7 @@
 from odoo import http, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class WebsiteSaleDelivery(WebsiteSale):
@@ -21,6 +21,13 @@ class WebsiteSaleDelivery(WebsiteSale):
                 return request.redirect("/shop/payment")
 
         return super(WebsiteSaleDelivery, self).payment(**post)
+
+    @http.route()
+    def payment_transaction(self, *args, **kwargs):
+        order = request.website.sale_get_order()
+        if not order.is_all_service and not order.delivery_set:
+            raise ValidationError(_('There is an issue with your delivery method. Please refresh the page and try again.'))
+        return super().payment_transaction(*args, **kwargs)
 
     @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
     def update_eshop_carrier(self, **post):
@@ -43,6 +50,22 @@ class WebsiteSaleDelivery(WebsiteSale):
         carrier = request.env['delivery.carrier'].sudo().browse(int(carrier_id))
         rate = carrier.rate_shipment(order)
         if rate.get('success'):
+            tax_ids = carrier.product_id.taxes_id.filtered(lambda t: t.company_id == order.company_id)
+            if tax_ids:
+                fpos = order.fiscal_position_id
+                tax_ids = fpos.map_tax(tax_ids, carrier.product_id, order.partner_shipping_id)
+                taxes = tax_ids.compute_all(
+                    rate['price'],
+                    currency=order.currency_id,
+                    quantity=1.0,
+                    product=carrier.product_id,
+                    partner=order.partner_shipping_id,
+                )
+                if request.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+                    rate['price'] = taxes['total_excluded']
+                else:
+                    rate['price'] = taxes['total_included']
+
             res['status'] = True
             res['new_amount_delivery'] = Monetary.value_to_html(rate['price'], {'display_currency': order.currency_id})
             res['is_free_delivery'] = not bool(rate['price'])

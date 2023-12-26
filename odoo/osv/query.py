@@ -130,6 +130,22 @@ class Query(object):
         )
         return query_str, params
 
+    def subselect(self, *args):
+        """ Similar to :meth:`.select`, but for sub-queries.
+            This one avoids the ORDER BY clause when possible.
+        """
+        if self.limit or self.offset:
+            # in this case, the ORDER BY clause is necessary
+            return self.select(*args)
+
+        from_clause, where_clause, params = self.get_sql()
+        query_str = 'SELECT {} FROM {} WHERE {}'.format(
+            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+            from_clause,
+            where_clause or "TRUE",
+        )
+        return query_str, params
+
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
         tables = [_from_table(table, alias) for alias, table in self._tables.items()]

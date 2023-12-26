@@ -118,12 +118,12 @@
                     <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 </search>
             </field>
         </record>
@@ -153,10 +153,12 @@
                         <field name="id" invisible="1"/>
                         <field name="is_move_sent" invisible="1"/>
                         <field name="is_reconciled" invisible="1"/>
+                        <field name="is_matched" invisible="1"/>
                         <field name="payment_method_code" invisible="1"/>
                         <field name="show_partner_bank_account" invisible="1"/>
                         <field name="require_partner_bank_account" invisible="1"/>
                         <field name="hide_payment_method" invisible="1"/>
+                        <field name="available_partner_bank_ids" invisible="1"/>
                         <field name="available_payment_method_ids" invisible="1"/>
                         <field name="suitable_journal_ids" invisible="1"/>
                         <field name="country_code" invisible="1"/>
@@ -209,7 +211,7 @@
                                 <field name="partner_id" context="{'default_is_company': True}"
                                        attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="destination_account_id"
-                                       options="{'no_create': True}"
+                                       options="{'no_create': True}" required="1"
                                        attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="is_internal_transfer"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -224,7 +226,7 @@
                                        required="1"
                                        attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method', '=', True)]}"/>
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}"
-                                       attrs="{'invisible': [('show_partner_bank_account', '=', False)], 'required': [('require_partner_bank_account', '=', True)]}"/>
+                                       attrs="{'invisible': [('show_partner_bank_account', '=', False)], 'required': [('require_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <!-- /!\ Required due to the _inherits but must not be required when saving a new
                                 record. Using 'required': [('id', '!=', False)] is not working due to the groups set on

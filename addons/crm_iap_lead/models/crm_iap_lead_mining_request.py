@@ -37,7 +37,7 @@ class CRMLeadMiningRequest(models.Model):
     # Request Data
     lead_number = fields.Integer(string='Number of Leads', required=True, default=3)
     search_type = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Target', required=True, default='companies')
-    error = fields.Text(string='Error', readonly=True)
+    error = fields.Text(string='Error', readonly=True, copy=False)
 
     # Lead / Opportunity Data
 

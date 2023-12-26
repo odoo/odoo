@@ -80,6 +80,7 @@ function factory(dependencies) {
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
          * @param {Object} param0.public_partner
+         * @param {Object[]} param0.public_partners
          * @param {Object[]} [param0.shortcodes=[]]
          * @param {integer} [param0.starred_counter=0]
          */
@@ -96,6 +97,7 @@ function factory(dependencies) {
             needaction_inbox_counter = 0,
             partner_root,
             public_partner,
+            public_partners,
             shortcodes = [],
             starred_counter = 0
         }) {
@@ -107,6 +109,7 @@ function factory(dependencies) {
                 moderation_channel_ids,
                 partner_root,
                 public_partner,
+                public_partners,
             });
             // mailboxes after partners and before other initializers that might
             // manipulate threads or messages
@@ -210,17 +213,17 @@ function factory(dependencies) {
          * @private
          * @param {Object} mailFailuresData
          */
-        _initMailFailures(mailFailuresData) {
-            const messages = this.env.models['mail.message'].insert(mailFailuresData.map(
-                messageData => this.env.models['mail.message'].convertData(messageData)
-            ));
-            for (const message of messages) {
+        async _initMailFailures(mailFailuresData) {
+            await executeGracefully(mailFailuresData.map(messageData => () => {
+                const message = this.env.models['mail.message'].insert(
+                    this.env.models['mail.message'].convertData(messageData)
+                );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
                     message.update({ author: [['link', this.messaging.currentPartner]] });
                 }
-            }
+            }));
             this.messaging.notificationGroupManager.computeGroups();
             // manually force recompute of counter (after computing the groups)
             this.messaging.messagingMenu.update();
@@ -233,8 +236,7 @@ function factory(dependencies) {
         async _initMentionPartnerSuggestions(mentionPartnerSuggestionsData) {
             return executeGracefully(mentionPartnerSuggestionsData.map(suggestions => () => {
                 return executeGracefully(suggestions.map(suggestion => () => {
-                    const { email, id, name } = suggestion;
-                    this.env.models['mail.partner'].insert({ email, id, name });
+                    this.env.models['mail.partner'].insert(this.env.models['mail.partner'].convertData(suggestion));
                 }));
             }));
         }
@@ -246,6 +248,7 @@ function factory(dependencies) {
          * @param {integer[]} moderation_channel_ids
          * @param {Object} partner_root
          * @param {Object} public_partner
+         * @param {Object[]} [public_partners=[]]
          */
         _initPartners({
             current_partner,
@@ -253,7 +256,9 @@ function factory(dependencies) {
             moderation_channel_ids = [],
             partner_root,
             public_partner,
+            public_partners = [],
         }) {
+            const publicPartner = this.env.models['mail.partner'].convertData(public_partner);
             this.messaging.update({
                 currentPartner: [['insert', Object.assign(
                     this.env.models['mail.partner'].convertData(current_partner),
@@ -271,7 +276,13 @@ function factory(dependencies) {
                 )]],
                 currentUser: [['insert', { id: currentUserId }]],
                 partnerRoot: [['insert', this.env.models['mail.partner'].convertData(partner_root)]],
-                publicPartner: [['insert', this.env.models['mail.partner'].convertData(public_partner)]],
+                publicPartner: [['insert', publicPartner]],
+                publicPartners: [
+                    ['insert', publicPartner],
+                    ['insert', public_partners.map(
+                        publicPartner => this.env.models['mail.partner'].convertData(publicPartner))
+                    ],
+                ],
             });
         }
 

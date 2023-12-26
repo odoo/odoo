@@ -189,6 +189,15 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             }
         });
 
+        // update the participant count when using the "Leave" button
+        jitsiRoom.addEventListener('videoConferenceLeft', async (event) => {
+            this.allParticipantIds = Object.keys(jitsiRoom._participants)
+            if (!this.allParticipantIds.length) {
+                // bypass the checks and timer of updateParticipantCount
+                this._updateParticipantCount(this.allParticipantIds.length, false);
+            }
+        });
+
         return jitsiRoom;
     },
 

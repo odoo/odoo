@@ -101,7 +101,17 @@ class MailController(http.Controller):
         else:
             record_action = record_sudo.get_access_action()
             if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
-                return cls._redirect_to_messaging()
+                url_params = {
+                    'model': model,
+                    'id': res_id,
+                    'active_id': res_id,
+                    'action': record_action.get('id'),
+                }
+                view_id = record_sudo.get_formview_id()
+                if view_id:
+                    url_params['view_id'] = view_id
+                url = '/web/login?redirect=#%s' % url_encode(url_params)
+                return werkzeug.utils.redirect(url)
 
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
@@ -126,6 +136,14 @@ class MailController(http.Controller):
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
+    @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
+    def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
+        res = {}
+        thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        if 'attachments' in request_list:
+            res['attachments'] = thread.env['ir.attachment'].search([('res_id', '=', thread.id), ('res_model', '=', thread._name)], order='id desc')._attachment_format(commands=True)
+        return res
+
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, res_model, res_id):
         request.env['mail.followers'].check_access_rights("read")
@@ -143,6 +161,7 @@ class MailController(http.Controller):
                 'partner_id': follower.partner_id.id,
                 'channel_id': follower.channel_id.id,
                 'name': follower.name,
+                'display_name': follower.display_name,
                 'email': follower.email,
                 'is_active': follower.is_active,
                 # When editing the followers, the "pencil" icon that leads to the edition of subtypes
@@ -211,7 +230,10 @@ class MailController(http.Controller):
         # ==============================================================================================
 
         if res_id and isinstance(res_id, str):
-            res_id = int(res_id)
+            try:
+                res_id = int(res_id)
+            except ValueError:
+                res_id = False
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
@@ -268,6 +290,7 @@ class MailController(http.Controller):
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
             'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
             'public_partner': request.env.ref('base.public_partner').sudo().mail_partner_format(),
+            'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),
             'current_user_id': request.env.user.id,
         }

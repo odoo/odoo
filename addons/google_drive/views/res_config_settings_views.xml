@@ -9,6 +9,10 @@
             <div id="msg_module_google_drive" position="replace">
                 <div class="content-group"
                      attrs="{'invisible': [('module_google_drive','=',False)]}">
+                    <div class="mt8 mb8 text-warning font-weight-bold">
+                        This module will stop working after the 3rd October 2022 due to
+                        <a href="https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html#disallowed-oob">changes in Google Authentication API</a>.
+                    </div>
                     <div class="mt8 row">
                         <div class="col-sm">
                             <field name="is_google_drive_token_generated" invisible="1"/>

@@ -116,6 +116,70 @@ tour.register('totp_login_enabled', {
     content: "check we're logged in",
     trigger: ".o_user_menu .oe_topbar_name",
     run: () => {}
+}]);
+
+tour.register('totp_login_device', {
+    test: true,
+    url: '/'
+}, [{
+    content: "check that we're on the login page or go to it",
+    trigger: 'input#login, a:contains(Sign in)'
+}, {
+    content: "input login",
+    trigger: 'input#login',
+    run: 'text demo',
+}, {
+    content: 'input password',
+    trigger: 'input#password',
+    run: 'text demo',
+}, {
+    content: "click da button",
+    trigger: 'button:contains("Log in")',
+}, {
+    content: "expect totp screen",
+    trigger: 'label:contains(Authentication Code)',
+}, {
+    content: "check remember device box",
+    trigger: 'label[for=switch-remember]',
+}, {
+    content: "input code",
+    trigger: 'input[name=totp_token]',
+    run(helpers) {
+        ajax.jsonRpc('/totphook', 'call', {}).then((token) => {
+            helpers._text(helpers._get_action_values(), token);
+            // FIXME: is there a way to put the button as its own step trigger without
+            //        the tour straight blowing through and not waiting for this?
+            helpers._click(helpers._get_action_values('button:contains("Verify")'));
+        });
+    }
+}, {
+    content: "check we're logged in",
+    trigger: ".o_user_menu .oe_topbar_name",
+    run: () => {}
+}, {
+    content: "click on the user",
+    trigger: 'li[class=o_user_menu] > a',
+}, {
+    content: "click the Log out button",
+    trigger: 'a[data-menu=logout]',
+}, {
+    content: "check that we're back on the login page or go to it",
+    trigger: 'input#login, a:contains(Log in)'
+}, {
+    content: "input login again",
+    trigger: 'input#login',
+    run: 'text demo',
+}, {
+    content: 'input password again',
+    trigger: 'input#password',
+    run: 'text demo',
+}, {
+    content: "click da button again",
+    trigger: 'button:contains("Log in")',
+},  {
+    content: "check we're logged in without 2FA",
+    trigger: ".o_user_menu .oe_topbar_name",
+    run: () => {}
 },
 // now go and disable totp would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't

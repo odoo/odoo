@@ -12,8 +12,6 @@ _logger = logging.getLogger(__name__)
 
 class InterfaceMetaClass(type):
     def __new__(cls, clsname, bases, attrs):
-        if clsname in interfaces:
-            return interfaces[clsname]
         new_interface = super(InterfaceMetaClass, cls).__new__(cls, clsname, bases, attrs)
         interfaces[clsname] = new_interface
         return new_interface
@@ -38,6 +36,15 @@ class Interface(Thread, metaclass=InterfaceMetaClass):
     def update_iot_devices(self, devices={}):
         added = devices.keys() - self._detected_devices
         removed = self._detected_devices - devices.keys()
+        # keys() returns a dict_keys, and the values of that stay in sync with the
+        # original dictionary if it changes. This means that get_devices needs to return
+        # a newly created dictionary every time. If it doesn't do that and reuses the
+        # same dictionary, this logic won't detect any changes that are made. Could be
+        # avoided by converting the dict_keys into a regular dict. The current logic
+        # also can't detect if a device is replaced by a different one with the same
+        # key. Also, _detected_devices starts out as a class variable but gets turned
+        # into an instance variable here. It would be better if it was an instance
+        # variable from the start to avoid confusion.
         self._detected_devices = devices.keys()
 
         for identifier in removed:
@@ -51,8 +58,12 @@ class Interface(Thread, metaclass=InterfaceMetaClass):
                     _logger.info('Device %s is now connected', identifier)
                     d = driver(identifier, devices[identifier])
                     d.daemon = True
-                    d.start()
                     iot_devices[identifier] = d
+                    # Start the thread after creating the iot_devices entry so the
+                    # thread can assume the iot_devices entry will exist while it's
+                    # running, at least until the `disconnect` above gets triggered
+                    # when `removed` is not empty.
+                    d.start()
                     break
 
     def get_devices(self):

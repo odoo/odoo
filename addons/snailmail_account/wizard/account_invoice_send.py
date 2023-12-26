@@ -21,7 +21,7 @@ class AccountInvoiceSend(models.TransientModel):
     @api.depends('invoice_ids')
     def _compute_invalid_addresses(self):
         for wizard in self:
-            invalid_invoices = wizard.invoice_ids.filtered(lambda i: not self.env['snailmail.letter']._is_valid_address(i.partner_id))
+            invalid_invoices = wizard.invoice_ids.filtered(lambda i: not i.partner_id or not self.env['snailmail.letter']._is_valid_address(i.partner_id))
             wizard.invalid_invoice_ids = invalid_invoices
             wizard.invalid_addresses = len(invalid_invoices)
 

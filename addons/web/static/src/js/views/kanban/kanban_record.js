@@ -173,7 +173,7 @@ var KanbanRecord = Widget.extend({
      */
     _getImageURL: function (model, field, id, placeholder) {
         id = (_.isArray(id) ? id[0] : id) || null;
-        var isCurrentRecord = this.modelName === model && this.recordData.id === id;
+        var isCurrentRecord = this.modelName === model && (this.recordData.id === id || (!this.recordData.id && !id));
         var url;
         if (isCurrentRecord && this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
             // Use magic-word technique for detecting image type

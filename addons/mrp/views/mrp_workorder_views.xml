@@ -61,7 +61,6 @@
                 <field name="company_id" invisible="1"/>
                 <field name="is_produced" invisible="1"/>
                 <field name="is_user_working" invisible="1"/>
-                <field name="name" invisible="1"/>
                 <field name="product_uom_id" invisible="1" readonly="0"/>
                 <field name="production_state" invisible="1"/>
                 <field name="production_bom_id" invisible="1"/>
@@ -80,15 +79,15 @@
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" attrs="{'invisible': [('production_state', 'in', ('draft', 'done'))]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
-                  attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
+                  attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
-                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
                 <button name="button_finish" type="object" string="Done" class="btn-success"
-                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                  attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
                 <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked')]}"/>
+                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked')]}"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
-                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '!=', 'blocked')]}"/>
+                  attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
                     context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
@@ -125,6 +124,7 @@
             <header>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
             </header>
+            <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
@@ -195,23 +195,8 @@
                     <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
                 </page>
                 </notebook>
+            </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="mrp_production_workorder_form_view_inherit_editable" model="ir.ui.view">
-        <field name="name">mrp.production.work.order.tree</field>
-        <field name="model">mrp.workorder</field>
-        <field name="mode">primary</field>
-        <field name="priority" eval="10"/>
-        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook" position="after">
-                <footer>
-                    <button string="Save" special="save" class="btn-primary"/>
-                    <button string="Discard" special="cancel"/>
-                </footer>
-            </xpath>
         </field>
     </record>
 
@@ -301,8 +286,8 @@
                         <div class="row no-gutters">
                             <div class="col">
                                 <ul class="pl-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
+                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('L LTS')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('L LTS')"/></li>
                                     <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
@@ -337,8 +322,8 @@
                         <div class="row no-gutters">
                             <div class="col">
                                 <ul class="pl-1 mb-0 list-unstyled">
-                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
-                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('YYYY-MM-DD HH:mm:ss')"/></li>
+                                    <li><strong>Start Date: </strong> <t t-esc="userTimezoneStartDate.format('L LTS')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="userTimezoneStopDate.format('L LTS')"/></li>
                                     <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
                                 </ul>
                             </div>
@@ -364,7 +349,9 @@
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
                 <field name="qty_production"/>
-                <field name="product_uom_id"/>
+                <field name="product_uom_id" force_save="1"/>
+                <field name="consumption"/>
+                <field name="operation_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -445,7 +432,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="view_id" ref="mrp_production_workorder_form_view_inherit_editable"/>
+        <field name="view_id" ref="mrp_production_workorder_form_view_inherit"/>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_workorder_todo">

@@ -9,9 +9,11 @@
     'version': '1.0',
     'depends': ['calendar', 'sms'],
     'data': [
+        'security/sms_security.xml',
         'data/sms_data.xml',
         'views/calendar_views.xml',
     ],
     'application': False,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

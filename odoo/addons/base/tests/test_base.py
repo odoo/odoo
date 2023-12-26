@@ -5,6 +5,7 @@ import ast
 
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
@@ -73,6 +74,7 @@ SAMPLES = [
 ]
 
 
+@tagged('res_partner')
 class TestBase(TransactionCase):
 
     def _check_find_or_create(self, test_string, expected_name, expected_email, check_partner=False, should_create=False):
@@ -88,12 +90,13 @@ class TestBase(TransactionCase):
     def test_00_res_partner_name_create(self):
         res_partner = self.env['res.partner']
         parse = res_partner._parse_partner_name
-        for text, name, mail in SAMPLES:
-            self.assertEqual((name, mail.lower()), parse(text))
-            partner_id, dummy = res_partner.name_create(text)
-            partner = res_partner.browse(partner_id)
-            self.assertEqual(name or mail.lower(), partner.name)
-            self.assertEqual(mail.lower() or False, partner.email)
+        for text, expected_name, expected_mail in SAMPLES:
+            with self.subTest(text=text):
+                self.assertEqual((expected_name, expected_mail.lower()), parse(text))
+                partner_id, dummy = res_partner.name_create(text)
+                partner = res_partner.browse(partner_id)
+                self.assertEqual(expected_name or expected_mail.lower(), partner.name)
+                self.assertEqual(expected_mail.lower() or False, partner.email)
 
         # name_create supports default_email fallback
         partner = self.env['res.partner'].browse(
@@ -196,7 +199,7 @@ class TestBase(TransactionCase):
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
-        # turn on sync again       
+        # turn on sync again
         p1.write({'type': 'contact'})
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -383,12 +386,12 @@ class TestBase(TransactionCase):
         for p in (p0, p1, p11, p2, p3):
             self.assertEqual(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
             self.assertEqual(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
-        sunhelmvat = 'BE0123456789'
+        sunhelmvat = 'BE0123456749'
         sunhelm.write({'vat': sunhelmvat})
         for p in (p0, p1, p11, p2, p3):
             self.assertEqual(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')
 
-        p1vat = 'BE0987654321'
+        p1vat = 'BE0987654394'
         p1.write({'vat': p1vat})
         for p in (sunhelm, p0, p11, p2, p3):
             self.assertEqual(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
@@ -401,7 +404,7 @@ class TestBase(TransactionCase):
         self.assertEqual(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
 
         # writing on parent should not touch child commercial entities
-        sunhelmvat2 = 'BE0112233445'
+        sunhelmvat2 = 'BE0112233453'
         sunhelm.write({'vat': sunhelmvat2})
         self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')

@@ -91,7 +91,37 @@ odoo.define('website_form_editor.tour', function (require) {
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop #wrap',
         }, {
-            content: "Check dropped snippet and select it",
+            content: "Select form by clicking on an input field",
+            extra_trigger: '.s_website_form_field',
+            trigger: 'section.s_website_form input',
+        }, {
+            content: "Verify that the form editor appeared",
+            trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
+            run: () => null,
+        }, {
+            content: "Go back to blocks to unselect form",
+            trigger: '.o_we_add_snippet_btn',
+        }, {
+            content: "Select form by clicking on a text area",
+            extra_trigger: '.s_website_form_field',
+            trigger: 'section.s_website_form textarea',
+        }, {
+            content: "Verify that the form editor appeared",
+            trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
+            run: () => null,
+        }, {
+            content: "Rename the field label",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Renamed",
+        }, {
+            content: "Leave the rename options",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text_blur",
+        }, {
+            content: "Go back to blocks to unselect form",
+            trigger: '.o_we_add_snippet_btn',
+        }, {
+            content: "Select form itself (not a specific field)",
             extra_trigger: '.s_website_form_field',
             trigger: 'section.s_website_form',
         },
@@ -226,6 +256,39 @@ odoo.define('website_form_editor.tour', function (require) {
 
         ...addExistingField('attachment_ids', 'file', 'Invoice Scan'),
 
+        // Edit the submit button using linkDialog.
+        {
+            content: "Double click submit button to edit it",
+            trigger: '.s_website_form_send',
+            run: 'dblclick',
+        }, {
+            content: "Check that no URL field is suggested",
+            trigger: 'form:has(#o_link_dialog_label_input:hidden)',
+            run: () => null,
+        }, {
+            content: "Check that preview element has the same style",
+            trigger: '.o_link_dialog_preview:has(.s_website_form_send.btn.btn-lg.btn-primary)',
+            run: () => null,
+        }, {
+            content: "Change button's style",
+            trigger: 'label:has(input[name="link_style_color"][value="secondary"])',
+            run: () => {
+                $('input[name="link_style_color"][value="secondary"]').click();
+                $('select[name="link_style_shape"]').val('rounded-circle').change();
+                $('select[name="link_style_size"]').val('sm').change();
+            },
+        }, {
+            content: "Check that preview is updated too",
+            trigger: '.o_link_dialog_preview:has(.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle)',
+            run: () => null,
+        }, {
+            content: "Save changes from linkDialog",
+            trigger: '.modal-footer .btn-primary',
+        }, {
+            content: "Check the resulting button",
+            trigger: '.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
+            run: () => null,
+        },
         // Save the page
         {
             trigger: 'body',
@@ -269,7 +332,8 @@ odoo.define('website_form_editor.tour', function (require) {
                             ":has(.s_website_form_field.s_website_form_required:has(label:contains('State')):has(select[name='State'][required]:has(option[value='France'])))" +
                             ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
                             ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
-                            ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))",
+                            ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" + 
+                            ":has(.s_website_form_field:has(input[name='website_form_signature']))",
             trigger:  ".s_website_form_send"
         },
         {

@@ -27,4 +27,5 @@ Thai accounting chart and localization.
         'demo/demo_company.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
+    'license': 'LGPL-3',
 }

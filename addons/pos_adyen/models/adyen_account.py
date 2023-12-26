@@ -35,7 +35,7 @@ class AdyenAccount(models.Model):
 class AdyenStore(models.Model):
     _name = 'adyen.store'
     _inherit = ['adyen.address.mixin']
-    _description = 'Adyen for Plaforms Store'
+    _description = 'Adyen for Platforms Store'
 
     adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
     store_reference = fields.Char('Reference', default=lambda self: uuid.uuid4().hex)
@@ -87,7 +87,7 @@ class AdyenStore(models.Model):
 
 class AdyenTerminal(models.Model):
     _name = 'adyen.terminal'
-    _description = 'Adyen for Plaforms Terminal'
+    _description = 'Adyen for Platforms Terminal'
     _rec_name = 'terminal_uuid'
 
     adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')

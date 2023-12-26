@@ -3,6 +3,12 @@
     $url: map-get($font-config, 'url');
     @if $url {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    } @else {
+        $name: map-get($font-config, 'name');
+        $attachment: map-get($font-config, 'attachment');
+        @if $attachment {
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+        }
     }
 }
 
@@ -36,6 +42,7 @@
     .btn {
         border: none;
         border-radius: 0;
+        padding: 0.375rem 0.75rem;
         font-size: $o-we-font-size;
         font-family: $o-we-font-family;
         font-weight: 400;
@@ -74,13 +81,17 @@
 }
 
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    background: rgba($o-we-content-to-translate-color, 0.5) !important;
-
-    &[data-oe-translation-state="translated"] {
-        background: rgba($o-we-translated-content-color, 0.5) !important;
+    &, .o_translation_select_option {
+        background: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
-    &.o_dirty {
+    &[data-oe-translation-state="translated"] {
+        &, .o_translation_select_option {
+            background: rgba($o-we-translated-content-color, 0.5) !important;
+        }
+    }
+
+    &.o_dirty, &.oe_translated, .oe_translated {
         background: rgba($o-we-translated-content-color, 0.25) !important;
     }
 }
@@ -92,7 +103,8 @@ $i: 1;
         font-family: o-safe-get($font-config, 'family', $font-family-base);
 
         &::before {
-            content: $font-name;
+            // Must prevail against the '/' for missing values.
+            content: $font-name !important;
         }
     }
     $i: $i + 1;
@@ -209,9 +221,26 @@ $i: 1;
 
 .pac-container { // google map autosuggestion
     z-index: $zindex-modal-backdrop; // > $o-we-zindex
-    min-width: 400px;
-
+    width: $o-we-sidebar-width !important;
+    font-size: $o-we-sidebar-font-size;
+    margin-left: -$o-we-sidebar-width/2;
+    border-top: none;
+    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
     &:after {
         display: none;
+    }
+    .pac-item {
+        border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+        color: $o-we-sidebar-content-field-clickable-color;
+        &:hover {
+            background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+            cursor: pointer;
+        }
+    }
+    .pac-item-query {
+        color: $o-we-sidebar-content-field-clickable-color;
     }
 }

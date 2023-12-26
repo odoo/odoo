@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
-# Platon BJS <raul.caballero.girol@gmail.com>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
@@ -28,8 +27,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
-"Cambiar la forma en que el sistema calcula el campo completo de la calle en "
-"función de los diferentes subcampos de la calle"
+"Cambiar la forma en que el sistema calcula el campo completo de \"calle\" en"
+" función de los diferentes subcampos de \"calle\""
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -74,12 +73,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
-"Formato a utilizar para las calle de este país.\n"
+"Formato a utilizar para las calles de este país.\n"
 "\n"
-"Puede utilizar código python para el formato de todos los campos de la calle (por ejemplo, utilice '%(street_name)s, %(street_number)s' si quiere mostrar el nombre de la calle, seguido de una coma y el número de la calle)\n"
+"Puedes utilizar código python para el formato de todos los campos de \"calle\" (por ejemplo, utilice '%(street_name)s, %(street_number)s' si quiere mostrar el nombre de la calle, seguido de una coma y el número de la calle)\n"
 "%(street_name)s: el nombre de la calle\n"
 "%(street_number)s: el número de la casa\n"
-"%(street_number2)s: el número complementario de la casa"
+"%(street_number2)s: el número interior"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number

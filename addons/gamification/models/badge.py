@@ -146,14 +146,25 @@ class GamificationBadge(models.Model):
             self.update(defaults)
             return
 
-        self.env.cr.execute("""
-            SELECT badge_id, count(user_id) as granted_count,
-                count(distinct(user_id)) as granted_users_count,
-                array_agg(distinct(user_id)) as unique_owner_ids
-            FROM gamification_badge_user
-            WHERE badge_id in %s
-            GROUP BY badge_id
-            """, [tuple(self.ids)])
+        Users = self.env["res.users"]
+        query = Users._where_calc([])
+        Users._apply_ir_rules(query)
+        badge_alias = query.join("res_users", "id", "gamification_badge_user", "user_id", "badges")
+
+        tables, where_clauses, where_params = query.get_sql()
+
+        self.env.cr.execute(
+            f"""
+              SELECT {badge_alias}.badge_id, count(res_users.id) as stat_count,
+                     count(distinct(res_users.id)) as stat_count_distinct,
+                     array_agg(distinct(res_users.id)) as unique_owner_ids
+                FROM {tables}
+               WHERE {where_clauses}
+                 AND {badge_alias}.badge_id IN %s
+            GROUP BY {badge_alias}.badge_id
+            """,
+            [*where_params, tuple(self.ids)]
+        )
 
         mapping = {
             badge_id: {

@@ -115,6 +115,12 @@ class PaymentProcessing(http.Controller):
         return result
 
 class WebsitePayment(http.Controller):
+    @staticmethod
+    def _get_acquirers_compatible_with_current_user(acquirers):
+        # s2s mode will always generate a token, which we don't want for public users
+        valid_flows = ['form'] if request.env.user._is_public() else ['form', 's2s']
+        return [acq for acq in acquirers if acq.payment_flow in valid_flows]
+
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self, **kwargs):
         acquirers = list(request.env['payment.acquirer'].search([
@@ -158,6 +164,8 @@ class WebsitePayment(http.Controller):
             if not token_ok:
                 raise werkzeug.exceptions.NotFound
 
+        invoice_id = kw.get('invoice_id')
+
         # Default values
         values = {
             'amount': 0.0,
@@ -168,7 +176,13 @@ class WebsitePayment(http.Controller):
         if order_id:
             try:
                 order_id = int(order_id)
-                order = env['sale.order'].browse(order_id)
+                if partner_id:
+                    # `sudo` needed if the user is not connected.
+                    # A public user woudn't be able to read the sale order.
+                    # With `partner_id`, an access_token should be validated, preventing a data breach.
+                    order = env['sale.order'].sudo().browse(order_id)
+                else:
+                    order = env['sale.order'].browse(order_id)
                 values.update({
                     'currency': order.currency_id,
                     'amount': order.amount_total,
@@ -176,6 +190,12 @@ class WebsitePayment(http.Controller):
                 })
             except:
                 order_id = None
+
+        if invoice_id:
+            try:
+                values['invoice_id'] = int(invoice_id)
+            except ValueError:
+                invoice_id = None
 
         # Check currency
         if currency_id:
@@ -240,9 +260,7 @@ class WebsitePayment(http.Controller):
         if not acquirers:
             acquirers = env['payment.acquirer'].search(acquirer_domain)
 
-        # s2s mode will always generate a token, which we don't want for public users
-        valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
-        values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in valid_flows]
+        values['acquirers'] = self._get_acquirers_compatible_with_current_user(acquirers)
         if partner_id:
             values['pms'] = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers.ids),
@@ -260,6 +278,7 @@ class WebsitePayment(http.Controller):
     def transaction(self, acquirer_id, reference, amount, currency_id, partner_id=False, **kwargs):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         order_id = kwargs.get('order_id')
+        invoice_id = kwargs.get('invoice_id')
 
         reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
         reference = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
@@ -273,8 +292,15 @@ class WebsitePayment(http.Controller):
             'type': 'form_save' if acquirer.save_token != 'none' and partner_id else 'form',
         }
 
+        render_values = {}
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
+            order = request.env['sale.order'].sudo().browse(order_id)
+            render_values.update({
+                'billing_partner_id': order.partner_invoice_id.id,
+            })
+        elif invoice_id:
+            values['invoice_ids'] = [(6, 0, [invoice_id])]
 
         reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
         reference_values.update(acquirer_id=int(acquirer_id))
@@ -287,9 +313,10 @@ class WebsitePayment(http.Controller):
 
         PaymentProcessing.add_payment_transaction(tx)
 
-        render_values = {
+        render_values.update({
             'partner_id': partner_id,
-        }
+            'type': tx.type,
+        })
 
         return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
 
@@ -299,6 +326,7 @@ class WebsitePayment(http.Controller):
     def payment_token(self, pm_id, reference, amount, currency_id, partner_id=False, return_url=None, **kwargs):
         token = request.env['payment.token'].browse(int(pm_id))
         order_id = kwargs.get('order_id')
+        invoice_id = kwargs.get('invoice_id')
 
         if not token:
             return request.redirect('/website_payment/pay?error_msg=%s' % _('Cannot setup the payment.'))
@@ -316,6 +344,8 @@ class WebsitePayment(http.Controller):
 
         if order_id:
             values['sale_order_ids'] = [(6, 0, [int(order_id)])]
+        if invoice_id:
+            values['invoice_ids'] = [(6, 0, [int(invoice_id)])]
 
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         PaymentProcessing.add_payment_transaction(tx)

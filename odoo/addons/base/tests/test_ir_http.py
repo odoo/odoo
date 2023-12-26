@@ -129,3 +129,28 @@ class test_ir_http_mimetype(common.TransactionCase):
         status = test_access(access_token=u'Secret')
         self.assertEqual(status, 404,
             "no access with access token for deleted attachment")
+
+    def test_ir_http_default_filename_extension(self):
+        """ Test attachment extension when the record has a dot in its name """
+        self.env.user.name = "Mr. John"
+        self.env.user.image_128 = GIF
+        _, _, filename, _, _ = self.env['ir.http']._binary_record_content(
+            self.env.user, 'image_128',
+        )
+        self.assertEqual(filename, "Mr. John.gif")
+
+        # For attachment, the name is considered to have the extension in the name
+        # and thus the extension should not be added again.
+        attachment = self.env['ir.attachment'].create({
+            'datas': GIF,
+            'name': 'image.gif'
+        })
+        _, _, filename, _, _ = self.env['ir.http']._binary_record_content(
+            attachment,
+        )
+        self.assertEqual(filename, 'image.gif')
+
+    def test_ir_http_public_user_image(self):
+        public_user = self.env.ref('base.public_user')
+        code, *_ = self.env['ir.http']._binary_record_content(public_user.with_user(public_user), 'image_128')
+        self.assertEqual(code, 404)

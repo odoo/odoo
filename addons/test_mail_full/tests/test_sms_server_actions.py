@@ -37,8 +37,8 @@ class TestServerAction(TestMailFullCommon, TestRecipients):
         with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
-        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
-        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], content='Dear %s this is an SMS.' % self.test_record_2.display_name)
 
     def test_action_sms_single(self):
         context = {
@@ -48,7 +48,7 @@ class TestServerAction(TestMailFullCommon, TestRecipients):
 
         with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
-        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
 
     def test_action_sms_w_log(self):
         self.action.sms_mass_keep_log = True
@@ -60,8 +60,8 @@ class TestServerAction(TestMailFullCommon, TestRecipients):
         with self.with_user('employee'), self.mockSMSGateway():
             self.action.with_user(self.env.user).with_context(**context).run()
 
-        self.assertSMSOutgoing(self.test_record.customer_id, None, 'Dear %s this is an SMS.' % self.test_record.display_name)
+        self.assertSMSOutgoing(self.test_record.customer_id, None, content='Dear %s this is an SMS.' % self.test_record.display_name)
         self.assertSMSLogged(self.test_record, 'Dear %s this is an SMS.' % self.test_record.display_name)
 
-        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], 'Dear %s this is an SMS.' % self.test_record_2.display_name)
+        self.assertSMSOutgoing(self.env['res.partner'], self.test_numbers_san[0], content='Dear %s this is an SMS.' % self.test_record_2.display_name)
         self.assertSMSLogged(self.test_record_2, 'Dear %s this is an SMS.' % self.test_record_2.display_name)

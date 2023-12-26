@@ -17,4 +17,5 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         'views/snippets.xml',
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

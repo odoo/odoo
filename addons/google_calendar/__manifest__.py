@@ -14,9 +14,11 @@
         'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
+        'views/google_calendar_views.xml',
         'views/google_calendar_templates.xml',
     ],
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

@@ -5,6 +5,7 @@ import datetime
 from datetime import datetime, timedelta, time
 
 from odoo import fields
+from odoo.tests import Form
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
 import re
@@ -186,6 +187,20 @@ class TestCalendar(SavepointCaseWithUserDemo):
                 self.assertEqual(d.hour, 15)
             self.assertEqual(d.minute, 30)
 
+    def test_recurring_ny(self):
+        self.env.user.tz = 'US/Eastern'
+        f = Form(self.CalendarEvent.with_context(tz='US/Eastern'))
+        f.name = 'test'
+        f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
+        f.recurrency = True
+        self.assertEqual(f.weekday, 'WE')
+        self.assertEqual(f.event_tz, 'US/Eastern', "The value should correspond to the user tz")
+        self.assertEqual(f.count, 1, "The default value should be displayed")
+        self.assertEqual(f.interval, 1, "The default value should be displayed")
+        self.assertEqual(f.month_by, "date", "The default value should be displayed")
+        self.assertEqual(f.end_type, "count", "The default value should be displayed")
+        self.assertEqual(f.rrule_type, "weekly", "The default value should be displayed")
+
     def test_event_activity_timezone(self):
         activty_type = self.env['mail.activity.type'].create({
             'name': 'Meeting',
@@ -315,3 +330,34 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # no more email should be sent
         _test_one_mail_per_attendee(self, partners)
+
+    def test_event_creation_sudo_other_company(self):
+        """ Check Access right issue when create event with sudo
+
+            Create a company, a user in that company
+            Create an event for someone else in another company as sudo
+            Should not failed for acces right check
+        """
+        now = fields.Datetime.context_timestamp(self.partner_demo, fields.Datetime.now())
+
+        web_company = self.env['res.company'].sudo().create({'name': "Website Company"})
+        web_user = self.env['res.users'].with_company(web_company).sudo().create({
+            'name': 'web user',
+            'login': 'web',
+            'company_id': web_company.id
+        })
+        self.CalendarEvent.with_user(web_user).with_company(web_company).sudo().create({
+            'name': "Test",
+            'allday': False,
+            'recurrency': False,
+            'partner_ids': [(6, 0, self.partner_demo.ids)],
+            'alarm_ids': [(0, 0, {
+                'name': 'Alarm',
+                'alarm_type': 'notification',
+                'interval': 'minutes',
+                'duration': 30,
+            })],
+            'user_id': self.user_demo.id,
+            'start': fields.Datetime.to_string(now + timedelta(hours=5)),
+            'stop': fields.Datetime.to_string(now + timedelta(hours=6)),
+        })

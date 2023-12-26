@@ -93,9 +93,9 @@ QUnit.test('base non-empty rendering', async function (assert) {
         }
     );
     await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('ir.attachment/search_read')) {
-                assert.step('ir.attachment/search_read');
+        async mockRPC(route) {
+            if (route.includes('/mail/thread/data')) {
+                assert.step('/mail/thread/data');
             }
             return this._super(...arguments);
         },
@@ -107,7 +107,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
     await thread.fetchAttachments();
     await this.createAttachmentBoxComponent(thread);
     assert.verifySteps(
-        ['ir.attachment/search_read'],
+        ['/mail/thread/data'],
         "should have fetched attachments"
     );
     assert.strictEqual(
@@ -228,9 +228,7 @@ QUnit.test('view attachments', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const firstAttachment = this.env.models['mail.attachment'].find(
-        attachment => attachment.id === 143
-    );
+    const firstAttachment = this.env.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
     await this.createAttachmentBoxComponent(thread);
 
     await afterNextRender(() =>
@@ -307,11 +305,11 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment_actionUnlink',
+        '.o_Attachment_asideItemUnlink',
         "attachment should have a delete button"
     );
 
-    await afterNextRender(() => document.querySelector('.o_Attachment_actionUnlink').click());
+    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
     assert.containsOnce(
         document.body,
         '.o_AttachmentDeleteConfirmDialog',

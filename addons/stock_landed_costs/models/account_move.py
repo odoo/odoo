@@ -32,7 +32,7 @@ class AccountMove(models.Model):
                 'name': l.product_id.name,
                 'account_id': l.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id,
                 'price_unit': l.currency_id._convert(l.price_subtotal, l.company_currency_id, l.company_id, l.move_id.date),
-                'split_method': 'equal',
+                'split_method': l.product_id.split_method_landed_cost or 'equal',
             }) for l in landed_costs_lines],
         })
         action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
@@ -59,13 +59,12 @@ class AccountMoveLine(models.Model):
         value can be set according to `self.product_id.landed_cost_ok`."""
         if self.product_id:
             accounts = self.product_id.product_tmpl_id._get_product_accounts()
+            aml_account = accounts['expense']
             if self.product_type != 'service':
-                self.account_id = accounts['expense']
                 self.is_landed_costs_line = False
-            elif self.is_landed_costs_line and self.move_id.company_id.anglo_saxon_accounting:
-                self.account_id = accounts['stock_input']
-            else:
-                self.account_id = accounts['expense']
+            elif self.is_landed_costs_line:
+                aml_account = (self.move_id.company_id.anglo_saxon_accounting and accounts['stock_input']) or aml_account
+            self.account_id = aml_account
 
     @api.onchange('product_id')
     def _onchange_is_landed_costs_line_product(self):
@@ -73,3 +72,6 @@ class AccountMoveLine(models.Model):
             self.is_landed_costs_line = True
         else:
             self.is_landed_costs_line = False
+
+    def _can_use_stock_accounts(self):
+        return super()._can_use_stock_accounts() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)

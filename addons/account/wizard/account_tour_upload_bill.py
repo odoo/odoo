@@ -26,9 +26,9 @@ class AccountTourUploadBill(models.TransientModel):
         journal_alias = self.env['account.journal'] \
             .search([('type', '=', 'purchase'), ('company_id', '=', self.env.company.id)], limit=1)
 
-        return [('sample', 'Try a sample vendor bill'),
-                ('upload', 'Upload your own bill'),
-                ('email', 'Or send a bill to %s@%s' % (journal_alias.alias_name, journal_alias.alias_domain))]
+        return [('sample', _('Try a sample vendor bill')),
+                ('upload', _('Upload your own bill')),
+                ('email', _('Or send a bill to %s@%s', journal_alias.alias_name, journal_alias.alias_domain))]
 
     def _compute_sample_bill_image(self):
         """ Retrieve sample bill with facturx to speed up onboarding """
@@ -40,6 +40,8 @@ class AccountTourUploadBill(models.TransientModel):
         return
 
     def _action_list_view_bill(self, bill_ids=[]):
+        context = dict(self._context)
+        context['default_move_type'] = 'in_invoice'
         return {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', bill_ids)],
@@ -47,7 +49,7 @@ class AccountTourUploadBill(models.TransientModel):
             'res_model': 'account.move',
             'views': [[False, "tree"], [False, "form"]],
             'type': 'ir.actions.act_window',
-            'context': self._context
+            'context': context
         }
 
     def apply(self):
@@ -61,9 +63,9 @@ class AccountTourUploadBill(models.TransientModel):
                 'res_model': 'mail.compose.message',
                 'datas': self.sample_bill_preview,
             })
-            bill = purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice')._create_invoice_from_single_attachment(attachment)
-            if self.selection == 'sample':
-                bill.write({
+            bill_action = purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_invoice_from_attachment(attachment.ids)
+            bill = self.env['account.move'].browse(bill_action['res_id'])
+            bill.write({
                     'partner_id': self.env.ref('base.main_partner').id,
                     'ref': 'INV/2020/0011'
                 })

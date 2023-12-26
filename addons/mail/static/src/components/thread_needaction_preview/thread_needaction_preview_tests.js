@@ -44,7 +44,7 @@ QUnit.module('thread_needaction_preview_tests.js', {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
 
     this.data['mail.message'].records.push({
         id: 21,
@@ -63,8 +63,16 @@ QUnit.test('mark as read', async function (assert) {
         hasChatWindow: true,
         hasMessagingMenu: true,
         async mockRPC(route, args) {
-            if (route.includes('set_message_done')) {
-                assert.step('set_message_done');
+            if (route.includes('mark_all_as_read')) {
+                assert.step('mark_all_as_read');
+                assert.deepEqual(
+                    args.kwargs.domain,
+                    [
+                        ['model', '=', 'res.partner'],
+                        ['res_id', '=', 11],
+                    ],
+                    "should mark all as read the correct thread"
+                );
             }
             return this._super(...arguments);
         },
@@ -87,8 +95,8 @@ QUnit.test('mark as read', async function (assert) {
         document.querySelector('.o_ThreadNeedactionPreview_markAsRead').click()
     );
     assert.verifySteps(
-        ['set_message_done'],
-        "should have marked the message as read"
+        ['mark_all_as_read'],
+        "should have marked the thread as read"
     );
     assert.containsNone(
         document.body,
@@ -98,7 +106,7 @@ QUnit.test('mark as read', async function (assert) {
 });
 
 QUnit.test('click on preview should mark as read and open the thread', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
 
     this.data['mail.message'].records.push({
         id: 21,
@@ -117,8 +125,16 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         hasChatWindow: true,
         hasMessagingMenu: true,
         async mockRPC(route, args) {
-            if (route.includes('set_message_done')) {
-                assert.step('set_message_done');
+            if (route.includes('mark_all_as_read')) {
+                assert.step('mark_all_as_read');
+                assert.deepEqual(
+                    args.kwargs.domain,
+                    [
+                        ['model', '=', 'res.partner'],
+                        ['res_id', '=', 11],
+                    ],
+                    "should mark all as read the correct thread"
+                );
             }
             return this._super(...arguments);
         },
@@ -146,7 +162,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         document.querySelector('.o_ThreadNeedactionPreview').click()
     );
     assert.verifySteps(
-        ['set_message_done'],
+        ['mark_all_as_read'],
         "should have marked the message as read on clicking on the preview"
     );
     assert.containsOnce(
@@ -342,6 +358,95 @@ QUnit.test('preview should display last needaction message preview even if there
         document.querySelector('.o_ThreadNeedactionPreview_inlineText').textContent,
         'Stranger: I am the oldest but needaction',
         "the displayed message should be the one that needs action even if there is a more recent message that is not needaction on the thread"
+    );
+});
+
+QUnit.test('needaction preview should only show on its origin thread', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 12 });
+    this.data['mail.message'].records.push({
+        channel_ids: [12],
+        id: 21,
+        model: 'res.partner',
+        needaction: true,
+        needaction_partner_ids: [this.data.currentPartnerId],
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        mail_message_id: 21,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: this.data.currentPartnerId,
+    });
+    await this.start({ hasMessagingMenu: true });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-thread-cache-loaded-messages',
+        func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
+        message: "should wait until inbox loaded initial needaction messages",
+        predicate: ({ threadCache }) => {
+            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadNeedactionPreview',
+        "should have only one preview"
+    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'res.partner',
+    });
+    assert.containsOnce(
+        document.body,
+        `.o_ThreadNeedactionPreview[data-thread-local-id="${thread.localId}"]`,
+        "preview should be on the origin thread"
+    );
+});
+
+QUnit.test('chat window header should not have unread counter for non-channel thread', async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({ id: 11 });
+    this.data['mail.message'].records.push({
+        author_id: 11,
+        body: 'not empty',
+        id: 21,
+        model: 'res.partner',
+        needaction: true,
+        needaction_partner_ids: [this.data.currentPartnerId],
+        res_id: 11,
+    });
+    this.data['mail.notification'].records.push({
+        mail_message_id: 21,
+        notification_status: 'sent',
+        notification_type: 'inbox',
+        res_partner_id: this.data.currentPartnerId,
+    });
+    await this.start({
+        hasChatWindow: true,
+        hasMessagingMenu: true,
+    });
+    await afterNextRender(() => this.afterEvent({
+        eventName: 'o-thread-cache-loaded-messages',
+        func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
+        message: "should wait until inbox loaded initial needaction messages",
+        predicate: ({ threadCache }) => {
+            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+        },
+    }));
+    await afterNextRender(() =>
+        document.querySelector('.o_ThreadNeedactionPreview').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have opened the chat window on clicking on the preview"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindowHeader_counter',
+        "chat window header should not have unread counter for non-channel thread"
     );
 });
 

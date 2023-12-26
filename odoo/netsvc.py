@@ -127,14 +127,20 @@ def init_logger():
     warnings.filterwarnings('default', category=DeprecationWarning)
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
-    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'^invalid escape sequence \'?\\.', category=DeprecationWarning)
+    # recordsets are both sequence and set so trigger warning despite no issue
+    warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+    # (Jammy) distutils, currentThread, isDaemon, setDaemon future removal are properly handled in upper versions
+    warnings.filterwarnings('ignore', r'^The distutils package is deprecated and slated for removal', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'^(currentThread|isDaemon|setDaemon)\(\) is deprecated', category=DeprecationWarning)
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
-        'setuptools.depends',# older setuptools version using imp
+        'babel.util', # deprecated parser module, no release yet
         'zeep.loader',# zeep using defusedxml.lxml
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
-        'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
         'ofxparse',# ofxparse importing ABC from collections
+        'astroid',  # deprecated imp module (fixed in 2.5.1)
+        'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 

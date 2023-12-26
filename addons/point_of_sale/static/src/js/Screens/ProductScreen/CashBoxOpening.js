@@ -4,19 +4,27 @@ odoo.define('point_of_sale.CashBoxOpening', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { Gui } = require('point_of_sale.Gui');
+    const field_utils = require('web.field_utils');
 
     class CashBoxOpening extends PosComponent {
         constructor() {
             super(...arguments);
             this.changes = {};
-            this.defaultValue = this.env.pos.bank_statement.balance_start || 0;
+            this.defaultValue = this.env.pos.format_currency_no_symbol(
+                this.env.pos.bank_statement.balance_start || 0
+            );
             this.symbol = this.env.pos.currency.symbol;
         }
         captureChange(event) {
             this.changes[event.target.name] = event.target.value;
         }
         startSession() {
-            let cashOpening = this.changes.cashBoxValue? this.changes.cashBoxValue: this.defaultValue;
+            let cashOpening = this.changes.cashBoxValue ? this.changes.cashBoxValue : this.defaultValue;
+            try {
+               cashOpening = field_utils.parse.float(cashOpening);
+            } catch (err) {
+                cashOpening = NaN;
+            }
             if(isNaN(cashOpening)) {
                 Gui.showPopup('ErrorPopup',{
                     'title': 'Wrong value',

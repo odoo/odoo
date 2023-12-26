@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="event.event_type_ticket_view_tree_from_type"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="product_id"/>
+                <field name="product_id" context="{'default_event_ok': 1, 'default_type': 'service'}"/>
             </field>
             <field name="description" position="after">
                 <field name="price"/>
@@ -22,7 +22,7 @@
         <field name="inherit_id" ref="event.event_type_ticket_view_form_from_type"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="product_id"/>
+                <field name="product_id" context="{'default_event_ok': 1, 'default_type': 'service'}"/>
             </field>
             <field name="description" position="after">
                 <field name="price"/>
@@ -43,7 +43,7 @@
                 <attribute name="string">Sales End</attribute>
             </field>
             <field name="name" position="after">
-                <field name="product_id" context="{'default_event_ok': 1}"/>
+                <field name="product_id" context="{'default_event_ok': 1, 'default_type': 'service'}"/>
             </field>
             <field name="description" position="after">
                 <field name="price"/>
@@ -57,7 +57,7 @@
         <field name="inherit_id" ref="event.event_event_ticket_view_form_from_event"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="product_id" context="{'default_event_ok':1}"/>
+                <field name="product_id" context="{'default_event_ok':1, 'default_type': 'service'}"/>
             </field>
             <field name="description" position="after">
                 <field name="price"/>

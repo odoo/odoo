@@ -6,6 +6,7 @@ import base64
 
 from PIL import Image
 
+from odoo.http import content_disposition
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -58,3 +59,25 @@ class TestImage(HttpCase):
         response2 = self.url_open('/web/image/%s' % attachment.id, headers={"If-None-Match": etag})
         self.assertEqual(response2.status_code, 304)
         self.assertEqual(len(response2.content), 0)
+
+    def test_03_web_content_filename(self):
+        """This test makes sure the Content-Disposition header matches the given filename"""
+
+        att = self.env['ir.attachment'].create({
+            'datas': b'R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=',
+            'name': 'testFilename.gif',
+            'public': True,
+            'mimetype': 'image/gif'
+        })
+
+        # CASE: no filename given
+        res = self.url_open('/web/image/%s/0x0/?download=true' % att.id)
+        self.assertEqual(res.headers['Content-Disposition'], content_disposition('testFilename.gif'))
+
+        # CASE: given filename without extension
+        res = self.url_open('/web/image/%s/0x0/custom?download=true' % att.id)
+        self.assertEqual(res.headers['Content-Disposition'], content_disposition('custom.gif'))
+
+        # CASE: given filename and extention
+        res = self.url_open('/web/image/%s/0x0/custom.png?download=true' % att.id)
+        self.assertEqual(res.headers['Content-Disposition'], content_disposition('custom.png'))

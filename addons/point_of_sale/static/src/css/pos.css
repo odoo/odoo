@@ -1213,15 +1213,19 @@ td {
     width:100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     /* troublesome in latest webkit
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     */
     /*background:#FFF;*/
     padding: 3px;
     padding-top:15px;
+}
+
+/*rtl:ignore*/
+.pos .product .product-name {
+    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
 }
 
 
@@ -1347,6 +1351,12 @@ td {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+}
+
+@media screen and (min-width: 768px) {
+    .screen .left-content {
+        max-width: 34%
+    }
 }
 
 .pos .btn-switch-payment {
@@ -1690,8 +1700,12 @@ td {
 }
 
 @media print {
+    body {
+        background: white;
+    }
     body * {
         visibility: hidden;
+        height: 0 !important;
     }
     .pos, .pos * {
         position: static !important;
@@ -1701,17 +1715,18 @@ td {
         top: 0;
         left: 0;
     }
-    .pos .receipt-screen .pos-receipt-container * {
+    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  * {
         visibility: visible;
         background: white !important;
         color: black !important;
+        height: auto !important;
     }
     .pos .pos-receipt {
         margin: 0 !important;
         margin-left: auto !important;
         margin-right: auto !important;
         border: none !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         width: 266px !important;
     }
 }
@@ -2472,6 +2487,7 @@ td {
     font-weight: normal;
     font-size: 18px;
     margin: 16px;
+    white-space: pre-line;
 }
 
 .pos .popup-lg .body {
@@ -2786,16 +2802,12 @@ td {
 }
 
 .drag-handle {
-    cursor: move; /* fallback if grab cursor is unsupported */
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/src/img/openhand.cur), grab;
 }
 
 .drag-handle:active {
     cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
 }
 
 

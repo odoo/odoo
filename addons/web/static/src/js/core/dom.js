@@ -60,6 +60,21 @@ var dom = {
         }
     },
     /**
+     * Detects if 2 elements are colliding.
+     *
+     * @param {Element} el1
+     * @param {Element} el2
+     * @returns {boolean}
+     */
+     areColliding(el1, el2) {
+        const el1Rect = el1.getBoundingClientRect();
+        const el2Rect = el2.getBoundingClientRect();
+        return el1Rect.bottom > el2Rect.top
+            && el1Rect.top < el2Rect.bottom
+            && el1Rect.right > el2Rect.left
+            && el1Rect.left < el2Rect.right;
+    },
+    /**
      * Autoresize a $textarea node, by recomputing its height when necessary
      * @param {number} [options.min_height] by default, 50.
      * @param {Widget} [options.parent] if set, autoresize will listen to some
@@ -343,17 +358,35 @@ var dom = {
             // part, the button is disabled without any visual effect.
             $button.addClass('o_debounce_disabled');
             Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
-                $button.addClass('disabled').prop('disabled', true);
                 $button.removeClass('o_debounce_disabled');
-
-                return Promise.resolve(result).then(function () {
-                    $button.removeClass('disabled').prop('disabled', false);
-                }).guardedCatch(function () {
-                    $button.removeClass('disabled').prop('disabled', false);
-                });
+                const restore = dom.addButtonLoadingEffect($button[0]);
+                return Promise.resolve(result).then(restore).guardedCatch(restore);
             });
 
             return result;
+        };
+    },
+    /**
+     * Gives the button a loading effect by disabling it and adding a `fa`
+     * spinner icon.
+     * The existing button `fa` icons will be hidden through css.
+     *
+     * @param {HTMLElement} btn - the button to disable/load
+     * @return {function} a callback function that will restore the button
+     *         initial state
+     */
+    addButtonLoadingEffect: function (btn) {
+        const $btn = $(btn);
+        $btn.addClass('o_website_btn_loading disabled');
+        $btn.prop('disabled', true);
+        const $loader = $('<span/>', {
+            class: 'fa fa-refresh fa-spin mr-2',
+        });
+        $btn.prepend($loader);
+        return () => {
+             $btn.removeClass('o_website_btn_loading disabled');
+             $btn.prop('disabled', false);
+             $loader.remove();
         };
     },
     /**
@@ -467,6 +500,9 @@ var dom = {
         if (options && options.prop) {
             $input.prop(options.prop);
         }
+        if (options && options.role) {
+            $input.attr('role', options.role);
+        }
         return $container.append($input, $label);
     },
     /**
@@ -501,7 +537,15 @@ var dom = {
         return size;
     },
     /**
-     * @param {HTMLElement} el - the element to stroll to
+     * @param {HTMLElement|string} el - the element to scroll to. If "el" is a
+     *      string, it must be a valid selector of an element in the DOM or
+     *      '#top' or '#bottom'. If it is an HTML element, it must be present
+     *      in the DOM.
+     *      Limitation: if the element is using a fixed position, this
+     *      function cannot work except if is the header (el is then either a
+     *      string set to '#top' or an HTML element with the "top" id) or the
+     *      footer (el is then a string set to '#bottom' or an HTML element
+     *      with the "bottom" id) for which exceptions have been made.
      * @param {number} [options] - same as animate of jQuery
      * @param {number} [options.extraOffset=0]
      *      extra offset to add on top of the automatic one (the automatic one
@@ -513,18 +557,31 @@ var dom = {
      */
     scrollTo(el, options = {}) {
         const $el = $(el);
-        const $scrollable = $el.parent().closestScrollable();
+        if (typeof(el) === 'string' && $el[0]) {
+            el = $el[0];
+        }
+        const isTopOrBottomHidden = (el === '#top' || el === '#bottom');
         const $topLevelScrollable = $().getScrollingElement();
+        const $scrollable = isTopOrBottomHidden ? $topLevelScrollable : $el.parent().closestScrollable();
         const isTopScroll = $scrollable.is($topLevelScrollable);
 
         function _computeScrollTop() {
+            if (el === '#top' || el.id === 'top') {
+                return 0;
+            }
+            if (el === '#bottom' || el.id === 'bottom') {
+                return $scrollable[0].scrollHeight - $scrollable[0].clientHeight;
+            }
+
             let offsetTop = $el.offset().top;
             if (el.classList.contains('d-none')) {
                 el.classList.remove('d-none');
                 offsetTop = $el.offset().top;
                 el.classList.add('d-none');
             }
-            const elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
+            const isDocScrollingEl = $scrollable.is(el.ownerDocument.scrollingElement);
+            const elPosition = offsetTop
+                - ($scrollable.offset().top - (isDocScrollingEl ? 0 : $scrollable[0].scrollTop));
             let offset = options.forcedOffset;
             if (offset === undefined) {
                 offset = (isTopScroll ? dom.scrollFixedOffset() : 0) + (options.extraOffset || 0);
@@ -547,12 +604,14 @@ var dom = {
                     options.progress.apply(this, ...arguments);
                 }
                 const newScrollTop = _computeScrollTop();
-                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0) {
+                if (Math.abs(newScrollTop - originalScrollTop) <= 1.0
+                        && (isTopOrBottomHidden || !(el.classList.contains('o_transitioning')))) {
                     return;
                 }
                 $scrollable.stop();
                 dom.scrollTo(el, Object.assign({}, options, {
                     duration: remainingMs,
+                    easing: 'linear',
                 })).then(() => resolve());
             };
 
@@ -593,10 +652,11 @@ var dom = {
         core.bus.on('resize', null, debouncedAdapt);
         _adapt();
 
+        $el.data('dom:autoMoreMenu:adapt', _adapt);
         $el.data('dom:autoMoreMenu:destroy', function () {
             _restore();
             core.bus.off('resize', null, debouncedAdapt);
-            $el.removeData('dom:autoMoreMenu:destroy');
+            $el.removeData(['dom:autoMoreMenu:destroy', 'dom:autoMoreMenu:adapt']);
         });
 
         function _restore() {

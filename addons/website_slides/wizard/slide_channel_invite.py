@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.tools import formataddr
 
 _logger = logging.getLogger(__name__)
@@ -18,8 +18,8 @@ class SlideChannelInvite(models.TransientModel):
     _description = 'Channel Invitation Wizard'
 
     # composer content
-    subject = fields.Char('Subject', compute='_compute_template_values', readonly=False, store=True)
-    body = fields.Html('Contents', default='', sanitize_style=True, compute='_compute_template_values', readonly=False, store=True)
+    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
+    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', readonly=False, store=True)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     template_id = fields.Many2one(
         'mail.template', 'Use template',
@@ -30,11 +30,20 @@ class SlideChannelInvite(models.TransientModel):
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
 
     @api.depends('template_id')
-    def _compute_template_values(self):
+    def _compute_subject(self):
         for invite in self:
             if invite.template_id:
                 invite.subject = invite.template_id.subject
+            elif not invite.subject:
+                invite.subject = False
+
+    @api.depends('template_id')
+    def _compute_body(self):
+        for invite in self:
+            if invite.template_id:
                 invite.body = invite.template_id.body_html
+            elif not invite.body:
+                invite.body = False
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
@@ -69,6 +78,12 @@ class SlideChannelInvite(models.TransientModel):
         if not self.env.user.email:
             raise UserError(_("Unable to post message, please configure the sender's email address."))
 
+        try:
+            self.channel_id.check_access_rights('write')
+            self.channel_id.check_access_rule('write')
+        except AccessError:
+            raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
+
         mail_values = []
         for partner_id in self.partner_ids:
             slide_channel_partner = self.channel_id._action_add_members(partner_id)
@@ -94,7 +109,7 @@ class SlideChannelInvite(models.TransientModel):
             'subject': subject,
             'body_html': body,
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'auto_delete': True,
+            'auto_delete': self.template_id.auto_delete if self.template_id else True,
             'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 

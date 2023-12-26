@@ -16,7 +16,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, registry, exceptions, tools
+from odoo import api, models, registry, exceptions, tools, http
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
@@ -133,7 +133,7 @@ def unslug_url(s):
 def url_lang(path_or_uri, lang_code=None):
     ''' Given a relative URL, make it absolute and add the required lang or
         remove useless lang.
-        Nothing will be done for absolute URL.
+        Nothing will be done for absolute or invalid URL.
         If there is only one language installed, the lang will not be handled
         unless forced with `lang` parameter.
 
@@ -143,9 +143,13 @@ def url_lang(path_or_uri, lang_code=None):
     Lang = request.env['res.lang']
     location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang_code is not None
-    url = werkzeug.urls.url_parse(location)
+    try:
+        url = werkzeug.urls.url_parse(location)
+    except ValueError:
+        # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+        url = False
     # relative URL with either a path or a force_lang
-    if not url.netloc and not url.scheme and (url.path or force_lang):
+    if url and not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
         lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
@@ -171,7 +175,7 @@ def url_lang(path_or_uri, lang_code=None):
 
 def url_for(url_from, lang_code=None, no_rewrite=False):
     ''' Return the url with the rewriting applied.
-        Nothing will be done for absolute URL, or short URL from 1 char.
+        Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
 
         :param url_from: The URL to convert.
         :param lang_code: Must be the lang `code`. It could also be something
@@ -194,8 +198,7 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
             and not path.startswith('/web/')
     )):
         new_url = request.env['ir.http'].url_rewrite(path)
-        new_url = new_url and qs and new_url + '?%s' % qs
-
+        new_url = new_url if not qs else new_url + '?%s' % qs
 
     return url_lang(new_url or url_from, lang_code=lang_code)
 
@@ -205,7 +208,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         To be considered as translatable, the URL should either:
         1. Match a POST (non-GET actually) controller that is `website=True` and
            either `multilang` specified to True or if not specified, with `type='http'`.
-        2. If not matching 1., everything not under /static/ will be translatable
+        2. If not matching 1., everything not under /static/ or /web/ will be translatable
     '''
     if not lang_url_codes:
         lang_url_codes = [url_code for _, url_code, *_ in request.env['res.lang'].get_available()]
@@ -217,26 +220,23 @@ def is_multilang_url(local_url, lang_url_codes=None):
 
     url = local_url.partition('#')[0].split('?')
     path = url[0]
-    query_string = url[1] if len(url) > 1 else None
-    router = request.httprequest.app.get_db_router(request.db).bind('')
 
-    def is_multilang_func(func):
-        return (func and func.routing.get('website', False) and
-                func.routing.get('multilang', func.routing['type'] == 'http'))
+    # Consider /static/ and /web/ files as non-multilang
+    if '/static/' in path or path.startswith('/web/'):
+        return False
+
+    query_string = url[1] if len(url) > 1 else None
+
     # Try to match an endpoint in werkzeug's routing table
     try:
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return is_multilang_func(func)
-    except werkzeug.exceptions.MethodNotAllowed:
-        func = router.match(path, method='GET', query_args=query_string)[0]
-        return is_multilang_func(func)
-    except werkzeug.exceptions.NotFound:
-        # Consider /static/ files as non-multilang
-        static_index = path.find('/static/', 1)
-        if static_index != -1 and static_index == path.find('/', 1):
-            return False
-        return True
-    except Exception:
+        func = request.env['ir.http']._get_endpoint_qargs(path, query_args=query_string)
+        # /page/xxx has no endpoint/func but is multilang
+        return (not func or (
+            func.routing.get('website', False)
+            and func.routing.get('multilang', func.routing['type'] == 'http')
+        ))
+    except Exception as exception:
+        _logger.warning(exception)
         return False
 
 
@@ -259,7 +259,7 @@ class ModelConverter(ModelConverter):
             # limited support for negative IDs due to our slug pattern, assume abs() if not found
             if not env[self.model].browse(record_id).exists():
                 record_id = abs(record_id)
-        return env[self.model].browse(record_id)
+        return env[self.model].with_context(_converter_value=value).browse(record_id)
 
 
 class IrHttp(models.AbstractModel):
@@ -396,7 +396,7 @@ class IrHttp(models.AbstractModel):
             if nearest_lang:
                 lang = Lang._lang_get(nearest_lang)
             else:
-                nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context['lang'])
+                nearest_ctx_lg = not is_a_bot and cls.get_nearest_lang(request.env.context.get('lang'))
                 nearest_ctx_lg = nearest_ctx_lg in lang_codes and nearest_ctx_lg
                 preferred_lang = Lang._lang_get(cook_lang or nearest_ctx_lg)
                 lang = preferred_lang or cls._get_default_lang()
@@ -519,6 +519,10 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def reroute(cls, path):
+        if isinstance(path, str):
+            path = path.encode("utf-8")
+        path = path.decode("latin1", "replace")
+
         if not hasattr(request, 'rerouting'):
             request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
@@ -528,8 +532,13 @@ class IrHttp(models.AbstractModel):
             raise Exception("Rerouting limit exceeded")
         request.httprequest.environ['PATH_INFO'] = path
         # void werkzeug cached_property. TODO: find a proper way to do this
-        for key in ('path', 'full_path', 'url', 'base_url'):
+        for key in ('full_path', 'url', 'base_url'):
             request.httprequest.__dict__.pop(key, None)
+        # since werkzeug 2.0 `path`` became an attribute and is not a cached property anymore
+        if hasattr(type(request.httprequest), 'path'): # cached property
+            request.httprequest.__dict__.pop('path', None)
+        else: # direct attribute
+            request.httprequest.path = '/' + path.lstrip('/')
 
         return cls._dispatch()
 
@@ -579,7 +588,7 @@ class IrHttp(models.AbstractModel):
             code = exception.code
 
         values.update(
-            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code,''),
+            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code, ''),
             status_code=code,
         )
 
@@ -657,17 +666,36 @@ class IrHttp(models.AbstractModel):
     @tools.ormcache('path')
     def url_rewrite(self, path):
         new_url = False
-        req = request.httprequest
-        router = req.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         try:
             _ = router.match(path, method='POST')
-        except werkzeug.exceptions.MethodNotAllowed as e:
+        except werkzeug.exceptions.MethodNotAllowed:
             _ = router.match(path, method='GET')
         except werkzeug.routing.RequestRedirect as e:
-            new_url = e.new_url[7:]  # remove scheme
-        except werkzeug.exceptions.NotFound as e:
+            # get path from http://{path}?{current query string}
+            new_url = e.new_url.split('?')[0][7:]
+        except werkzeug.exceptions.NotFound:
             new_url = path
         except Exception as e:
             raise e
 
         return new_url or path
+
+    # merge with def url_rewrite in master/14.1
+    @api.model
+    @tools.cache('path', 'query_args')
+    def _get_endpoint_qargs(self, path, query_args=None):
+        router = http.root.get_db_router(request.db).bind('')
+        endpoint = False
+        try:
+            endpoint = router.match(path, method='POST', query_args=query_args)
+        except werkzeug.exceptions.MethodNotAllowed:
+            endpoint = router.match(path, method='GET', query_args=query_args)
+        except werkzeug.routing.RequestRedirect as e:
+            new_url = e.new_url[7:]  # remove scheme
+            assert new_url != path
+            endpoint = self._get_endpoint_qargs(new_url, query_args)
+            endpoint = endpoint and [endpoint]
+        except werkzeug.exceptions.NotFound:
+            pass # endpoint = False
+        return endpoint and endpoint[0]

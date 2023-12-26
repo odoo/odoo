@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-
+from odoo.tools.float_utils import float_is_zero
+from odoo.osv.expression import AND
 
 class StockWarehouseOrderpoint(models.Model):
     _inherit = 'stock.warehouse.orderpoint'
@@ -14,9 +15,10 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
-        production = self.env['mrp.production'].search([
-            ('orderpoint_id', 'in', self.ids)
-        ], order='create_date desc', limit=1)
+        domain = [('orderpoint_id', 'in', self.ids)]
+        if self.env.context.get('written_after'):
+            domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+        production = self.env['mrp.production'].search(domain, limit=1)
         if production:
             action = self.env.ref('mrp.action_mrp_production_form')
             return {
@@ -42,6 +44,52 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.route_id.id in manufacture_route
 
+    def _quantity_in_progress(self):
+        bom_manufacture = self.env['mrp.bom']
+        bom_kit_orderpoints = {}
+        for orderpoint in self:
+            bom = self.env['mrp.bom']._bom_find(product=orderpoint.product_id)
+            if bom.type == 'phantom':
+                bom_kit_orderpoints[orderpoint] = bom
+            elif bom.type == 'normal':
+                bom_manufacture |= bom
+
+        orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(*bom_kit_orderpoints.keys())
+        res = super(StockWarehouseOrderpoint, orderpoints_without_kit)._quantity_in_progress()
+        for orderpoint in bom_kit_orderpoints:
+            boms, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
+            ratios_qty_available = []
+            # total = qty_available + in_progress
+            ratios_total = []
+            for bom_line, bom_line_data in bom_sub_lines:
+                component = bom_line.product_id
+                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                    continue
+                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                if not qty_per_kit:
+                    continue
+                qty_by_product_location, dummy = component._get_quantity_in_progress(orderpoint.location_id.ids)
+                qty_in_progress = qty_by_product_location.get((component.id, orderpoint.location_id.id), 0.0)
+                qty_available = component.qty_available / qty_per_kit
+                ratios_qty_available.append(qty_available)
+                ratios_total.append(qty_available + (qty_in_progress / qty_per_kit))
+            # For a kit, the quantity in progress is :
+            #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
+            product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
+            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+
+        productions_group = self.env['mrp.production'].read_group(
+            [('bom_id', 'in', bom_manufacture.ids), ('state', '=', 'draft'), ('orderpoint_id', 'in', orderpoints_without_kit.ids)],
+            ['orderpoint_id', 'product_qty', 'product_uom_id'],
+            ['orderpoint_id', 'product_uom_id'], lazy=False)
+        for p in productions_group:
+            uom = self.env['uom.uom'].browse(p['product_uom_id'][0])
+            orderpoint = self.env['stock.warehouse.orderpoint'].browse(p['orderpoint_id'][0])
+            res[orderpoint.id] += uom._compute_quantity(
+                p['product_qty'], orderpoint.product_uom, round=False)
+        return res
+
     def _set_default_route_id(self):
         route_id = self.env['stock.rule'].search([
             ('action', '=', 'manufacture')
@@ -55,3 +103,14 @@ class StockWarehouseOrderpoint(models.Model):
         values = super()._prepare_procurement_values(date=date, group=group)
         values['bom_id'] = self.bom_id
         return values
+
+    def _post_process_scheduler(self):
+        """ Confirm the productions only after all the orderpoints have run their
+        procurement to avoid the new procurement created from the production conflict
+        with them. """
+        self.env['mrp.production'].sudo().search([
+            ('orderpoint_id', 'in', self.ids),
+            ('move_raw_ids', '!=', False),
+            ('state', '=', 'draft'),
+        ]).action_confirm()
+        return super()._post_process_scheduler()

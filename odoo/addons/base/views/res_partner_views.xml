@@ -178,12 +178,12 @@
                         <group>
                             <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'delivery')]}">Delivery Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'other')]}">Other Address</b>
-                                <b attrs="{'invisible': [('type', '!=', 'private')]}">Private Address</b>
-                                <b attrs="{'invisible': [('type', '!=', False)]}">Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}">Company Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}">Invoice Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}">Delivery Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}">Other Address</b>
+                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}">Private Address</b>
+                                <b attrs="{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}">Address</b>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"
@@ -230,7 +230,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" name="contact_addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': None, 'default_user_id': user_id, 'default_type': 'other'}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
                                 <kanban>
                                     <field name="id"/>
                                     <field name="color"/>
@@ -328,6 +328,7 @@
                                         </group>
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
+                                        <field name="image_128" invisible="1"/>
                                     </sheet>
                                 </form>
                             </field>
@@ -366,7 +367,7 @@
                     <sheet>
                         <field name="type" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
-                        <label for="name" class="oe_editonly"/>
+                        <label for="name" class="oe_edit_only"/>
                         <field name="name" required="0"/>
                         <group>
                             <group>
@@ -386,6 +387,7 @@
                                 <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="email"/>
+                                <field name="lang"/>
                             </group>
                         </group>
                         <group string="Bank Accounts">

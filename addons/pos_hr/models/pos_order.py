@@ -21,3 +21,15 @@ class PosOrder(models.Model):
                 order.cashier = order.employee_id.name
             else:
                 order.cashier = order.user_id.name
+
+    def _export_for_ui(self, order):
+        result = super(PosOrder, self)._export_for_ui(order)
+        result.update({
+            'employee_id': order.employee_id.id,
+        })
+        return result
+
+    def _get_fields_for_draft_order(self):
+        fields = super(PosOrder, self)._get_fields_for_draft_order()
+        fields.append('employee_id')
+        return fields

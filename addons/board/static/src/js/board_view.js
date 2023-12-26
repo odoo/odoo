@@ -131,6 +131,16 @@ var BoardRenderer = FormRenderer.extend({
         this._boardFormViewIDs = {}; // for board: mapping subview controller to form view id
     },
     /**
+     * @override
+     * @return {Promise<void>}
+     */
+    async start() {
+        await this._super.apply(this, arguments);
+        if (config.device.isMobile) {
+            this.changeLayout("1");
+        }
+    },
+    /**
      * Call `on_attach_callback` for each subview
      *
      * @override
@@ -164,6 +174,9 @@ var BoardRenderer = FormRenderer.extend({
      */
     changeLayout: function (layout) {
         var $dashboard = this.$('.oe_dashboard');
+        if (!$dashboard.length) {
+            return;
+        }
         var current_layout = $dashboard.attr('data-layout');
         if (current_layout !== layout) {
             var clayout = current_layout.split('-').length,
@@ -237,7 +250,7 @@ var BoardRenderer = FormRenderer.extend({
                     // the action does not exist anymore
                     return Promise.resolve();
                 }
-                var evalContext = new Context(params.context).eval();
+                var evalContext = new Context(session.user_context, params.context).eval();
                 if (evalContext.group_by && evalContext.group_by.length === 0) {
                     delete evalContext.group_by;
                 }
@@ -249,8 +262,14 @@ var BoardRenderer = FormRenderer.extend({
 
                 action.context = context;
                 action.domain = domain;
-                var viewType = params.viewType || action.views[0][1];
-                var view = _.find(action.views, function (descr) {
+
+                // When creating a view, `action.views` is expected to be an array of dicts, while
+                // '/web/action/load' returns an array of arrays.
+                action._views = action.views;
+                action.views = $.map(action.views, function (view) { return {viewID: view[0], type: view[1]}});
+
+                var viewType = params.viewType || action._views[0][1];
+                var view = _.find(action._views, function (descr) {
                     return descr[1] === viewType;
                 }) || [false, viewType];
                 return self.loadViews(action.res_model, context, [view])
@@ -281,7 +300,7 @@ var BoardRenderer = FormRenderer.extend({
                     });
                     return view.getController(self).then(function (controller) {
                         self._boardFormViewIDs[controller.handle] = _.first(
-                            _.find(action.views, function (descr) {
+                            _.find(action._views, function (descr) {
                                 return descr[1] === 'form';
                             })
                         );
@@ -380,7 +399,9 @@ var BoardRenderer = FormRenderer.extend({
         Dialog.confirm(this, (_t("Are you sure you want to remove this item?")), {
             confirm_callback: function () {
                 $container.remove();
-                self.trigger_up('save_dashboard');
+                if (!config.device.isMobile) {
+                    self.trigger_up('save_dashboard');
+                }
             },
         });
     },
@@ -401,7 +422,9 @@ var BoardRenderer = FormRenderer.extend({
         }
         $e.toggleClass('oe_minimize oe_maximize');
         $action.find('.oe_content').toggle();
-        this.trigger_up('save_dashboard');
+        if (!config.device.isMobile) {
+            this.trigger_up('save_dashboard');
+        }
     },
     /**
      * Let FormController know which form view it should display based on the

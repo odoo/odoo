@@ -33,7 +33,9 @@ $o-we-border-color: $o-we-bg-light !default;
 
 $o-we-ace-color: #2F3129 !default;
 
-$o-we-handles-offset-to-hide: 10000px !default;
+// Needed to be changed to be high enough to not overflow when a user
+// has a page with a lot of content (10000px was proven to be too small)
+$o-we-handles-offset-to-hide: 100000px !default;
 $o-we-handles-btn-size: 20px !default;
 $o-we-handles-accent-color: $o-we-accent !default;
 $o-we-handles-accent-color-preview: $o-enterprise-color !default;
@@ -184,6 +186,8 @@ $o-we-sidebar-content-field-toggle-control-width: 11px !default;
 $o-we-sidebar-content-field-toggle-control-height: $o-we-sidebar-content-field-toggle-height - 2px !default;
 $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
 $o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest !default;
+
+$o-we-technical-modal-zindex: 2001;
 
 //------------------------------------------------------------------------------
 // Preview component Mixins
@@ -570,6 +574,7 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
     @if type-of($-related-color) == 'number' {
         // This is a preset to be applied, just extend it. This should probably
         // be avoided and use the class in XML if possible.
+        @extend .o_cc;
         @extend .o_cc#{$-related-color};
     } @else {
         @include o-bg-color(o-color($-related-color), $with-extras: $with-extras, $background: $background, $important: false);
@@ -650,7 +655,9 @@ $o-bg-shapes: ('web_editor': (
     'Blobs/11': ('position': center, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
     'Blobs/12': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
     'Blocks/01': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
+    'Blocks/01_001': ('position': top, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
     'Blocks/02': ('position': top, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
+    'Blocks/02_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
     'Blocks/03': ('position': bottom, 'size': 100% auto, 'colors': (1, 4), 'repeat-y': false),
     'Blocks/04': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3, 5), 'repeat-y': false),
     'Bold/01': ('position': top, 'size': 100% auto, 'colors': (2), 'repeat-y': false),
@@ -658,12 +665,16 @@ $o-bg-shapes: ('web_editor': (
     'Bold/03': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5), 'repeat-y': false),
     'Bold/04': ('position': top, 'size': 100% auto, 'colors': (2, 3), 'repeat-y': false),
     'Bold/05': ('position': center, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Bold/05_001': ('position': center, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
     'Bold/06': ('position': center, 'size': 100% auto, 'colors': (5), 'repeat-y': false),
+    'Bold/06_001': ('position': center, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
     'Bold/07': ('position': bottom, 'size': 100% auto, 'colors': (1, 2), 'repeat-y': false),
     'Bold/08': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
     'Bold/09': ('position': bottom, 'size': 100% auto, 'colors': (2, 3), 'repeat-y': false),
     'Bold/10': ('position': top, 'size': 100% auto, 'colors': (1, 3, 4, 5), 'repeat-y': false),
+    'Bold/10_001': ('position': top, 'size': 100% auto, 'colors': (1, 4, 5), 'repeat-y': false),
     'Bold/11': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3), 'repeat-y': false),
+    'Bold/11_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 2), 'repeat-y': false),
     'Bold/12': ('position': center, 'size': 100% auto, 'colors': (1, 2, 5), 'repeat-y': false),
     'Origins/01': ('position': bottom, 'size': 100% auto, 'colors': (2, 5), 'repeat-y': false),
     'Origins/02': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),

@@ -1,40 +1,71 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_margin
-#
+# 	* sale_margin
+# 
 # Translators:
+# Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021
+# Davit Matchakhelidze <david.machakhelidze@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Temur, 2021
+# Gvantsa Gvinianidze <gvantsa@live.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-08-25 10:24+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
-"Language: ka\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Gvantsa Gvinianidze <gvantsa@live.com>, 2021\n"
+"Language-Team: Georgian (https://app.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ka\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: sale_margin
-#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_purchase_price
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__purchase_price
 msgid "Cost"
 msgstr "ღირებულება"
 
 #. module: sale_margin
-#: model:ir.model.fields,help:sale_margin.field_sale_order_margin
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost."
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__display_name
+msgid "Display Name"
+msgstr "სახელი"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__id
+msgid "ID"
+msgstr "იდენტიფიკატორი/ID"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report____last_update
+msgid "Last Modified on"
+msgstr "ბოლოს განახლებულია"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__margin
+msgid "Margin"
+msgstr "მარჟა"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
 msgstr ""
 
 #. module: sale_margin
-#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_margin
-#: model:ir.model.fields,field_description:sale_margin.field_sale_order_margin
-#: model:ir.model.fields,field_description:sale_margin.field_sale_report_margin
-msgid "Margin"
-msgstr "მარჟა"
+#: model:ir.model,name:sale_margin.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "გაყიდვების ანალიზის ანგარიში"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order
@@ -45,8 +76,3 @@ msgstr "გაყიდვის ორდერი"
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "გაყიდვის ორდერის ხაზი"
-
-#. module: sale_margin
-#: model:ir.model,name:sale_margin.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr ""

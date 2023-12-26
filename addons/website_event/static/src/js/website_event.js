@@ -20,7 +20,8 @@ var EventRegistrationForm = Widget.extend({
                 .off('click')
                 .click(function (ev) {
                     self.on_click(ev);
-                });
+                })
+                .prop('disabled', false);
         });
         return res;
     },

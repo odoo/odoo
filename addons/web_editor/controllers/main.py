@@ -45,10 +45,10 @@ class Web_Editor(http.Controller):
             :returns PNG image converted from given font
         """
         # Make sure we have at least size=1
-        size = max(1, size)
+        size = max(1, min(size, 512))
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -98,7 +98,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/checklist', type='json', auth='user')
     def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
         record = request.env[res_model].browse(res_id)
-        value = getattr(record, filename, False)
+        value = filename in record._fields and record[filename]
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
         checked = bool(checked)
 
@@ -162,13 +162,13 @@ class Web_Editor(http.Controller):
         return True
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', generate_access_token=False, **kwargs):
         try:
             data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
         except UserError:
             pass  # not an image
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, generate_access_token=generate_access_token)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
@@ -240,8 +240,12 @@ class Web_Editor(http.Controller):
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', generate_access_token=False):
         """Create and return a new attachment."""
+        if name.lower().endswith('.bmp'):
+            # Avoid mismatch between content type and mimetype, see commit msg
+            name = name[:-4]
+
         if not name and url:
             name = url.split("/").pop()
 
@@ -268,6 +272,9 @@ class Web_Editor(http.Controller):
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
         attachment = request.env['ir.attachment'].create(attachment_data)
+        if generate_access_token:
+            attachment.generate_access_token()
+
         return attachment
 
     def _clean_context(self):
@@ -307,7 +314,7 @@ class Web_Editor(http.Controller):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
@@ -471,10 +478,14 @@ class Web_Editor(http.Controller):
         values = len_args > 1 and args[1] or {}
 
         View = request.env['ir.ui.view']
-        if request.env.user._is_public() \
-                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
-            View = View.sudo()
-        return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+        if xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            # For white listed assets, bypass access verification
+            # TODO in master this part should be removed and simply use the
+            # public group on the related views instead. And then let the normal
+            # flow handle the rendering.
+            return View.sudo()._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+        # Otherwise use normal flow
+        return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
@@ -519,7 +530,7 @@ class Web_Editor(http.Controller):
         """
         svg = None
         if module == 'illustration':
-            attachment = request.env['ir.attachment'].sudo().search([('url', '=like', request.httprequest.path), ('public', '=', True)], limit=1)
+            attachment = request.env['ir.attachment'].sudo().search([('url', '=', request.httprequest.path), ('public', '=', True)], limit=1)
             if not attachment:
                 raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
@@ -540,11 +551,11 @@ class Web_Editor(http.Controller):
                 user_colors.append([tools.html_escape(value), colorMatch.group(1)])
             elif key == 'flip':
                 if value == 'x':
-                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ', 1)
                 elif value == 'y':
-                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ', 1)
                 elif value == 'xy':
-                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
+                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ', 1)
 
         default_palette = {
             '1': '#3AADAA',

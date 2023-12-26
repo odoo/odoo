@@ -27,4 +27,5 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'static/src/components/discuss/discuss.xml',
         'static/src/components/visitor_banner/visitor_banner.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<odoo>
+<odoo noupdate="1">
     <record forcecreate="True" id="purchase_send_reminder_mail" model="ir.cron">
         <field name="name">Purchase reminder</field>
-        <field name="active" eval="True" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>

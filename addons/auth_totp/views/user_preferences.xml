@@ -40,7 +40,6 @@
         <field name="name">Disable TOTP on users</field>
         <field name="model_id" ref="base.model_res_users"/>
         <field name="binding_model_id" ref="base.model_res_users"/>
-        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
             action = records.totp_disable()
@@ -117,7 +116,7 @@
                             <span class="alert alert-info" role="status">
                                 <i class="fa fa-warning"/>
                                 Two-factor authentication not enabled
-                                <a href="https://www.odoo.com/documentation/user/general/auth/2fa.html"
+                                <a href="https://www.odoo.com/documentation/14.0/applications/general/auth/2fa.html"
                                    title="What is this?" class="o_doc_link" target="_blank"></a>
                             </span>
                             <button name="totp_enable_wizard" type="object" string="Enable two-factor authentication"
@@ -129,11 +128,36 @@
                             <span class="text-success">
                                 <i class="fa fa-check-circle"/>
                                 Two-factor authentication enabled
-                                <a href="https://www.odoo.com/documentation/user/general/auth/2fa.html"
+                                <a href="https://www.odoo.com/documentation/14.0/applications/general/auth/2fa.html"
                                    title="What is this?" class="o_doc_link" target="_blank"></a>
                             </span>
                             <button name="totp_disable" type="object" string="(Disable two-factor authentication)"
                                     class="btn btn-link text-muted"/>
+                        </div>
+                        <div colspan="2" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
+                            <field name="totp_trusted_device_ids" nolabel="1" colspan="4" readonly="1">
+
+                                <tree create="false" delete="false">
+                                    <field name="name" string="Trusted Devices"/>
+                                    <field name="create_date" string="Added On"/>
+                                    <button type="object" name="remove" icon="fa-trash"/>
+                                </tree>
+                                <form string="Trusted Device">
+                                    <group>
+                                        <group>
+                                            <field name="name" string="Device Name"/>
+                                            <field name="create_date" string="Added On"/>
+                                        </group>
+                                    </group>
+                                    <footer>
+                                        <button name="remove" string="Revoke" type="object" icon="fa-trash"/>
+                                        <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                                    </footer>
+                                </form>
+
+                            </field>
+                            <button name="revoke_all_devices" string="Revoke All" type="object" class="btn btn-secondary"
+                                    confirm="Are you sure? Two-factor authentication will be required again on all your devices"/>
                         </div>
                     </group>
             </button>

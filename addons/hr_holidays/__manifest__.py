@@ -65,4 +65,5 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'installable': True,
     'application': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

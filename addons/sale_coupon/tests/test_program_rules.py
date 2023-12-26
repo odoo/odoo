@@ -107,6 +107,66 @@ class TestProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should be applied as the initial amount required is now tax included")
 
+    def test_program_rules_minimum_purchased_amount_and_free_product(self):
+        # Test cases: Based on the minimum purchased and free product
+        self.immediate_promotion_program.write({
+            'rule_minimum_amount': 10,
+            'rule_products_domain': "[]",
+            'rule_minimum_amount_tax_inclusion': 'tax_excluded',
+        })
+
+        # Case 1: price unit = 5, qty = 2, total = 10, no reward
+        order = self.empty_order
+        order.write({
+            'order_line': [(0, False, {
+                'product_id': self.product_B.id,
+                'name': '2 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 2.0,
+            })]
+        })
+        order.recompute_coupon_lines()
+        msg = """
+            The promo shouldn't have been applied as the order amount is not enough after 
+            applying promo with free product.
+        """
+        self.assertEqual(len(order.order_line.ids), 1, msg)
+        self.assertEqual(order.amount_untaxed, 10)
+
+        # Case 2: price unit = 5, qty = 5, total = 25-5, 1 reward (5)
+        order = self.env['sale.order'].create({'partner_id': self.steve.id})
+        order.write({
+            'order_line': [(0, False, {
+                'product_id': self.product_B.id,
+                'name': '5 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 5.0,
+                })]
+        })
+        order.recompute_coupon_lines()
+        promo_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        msg = "The promo offer should have been applied only once."
+        self.assertEqual(len(promo_lines), 1, msg)
+        self.assertEqual(promo_lines[0].product_uom_qty, 1, msg)
+        self.assertEqual(order.amount_untaxed, 20)
+
+        # Case 3: price unit = 5, qty = 6, total = 30-10, 2 rewards (2*5)
+        order = self.env['sale.order'].create({'partner_id': self.steve.id})
+        order.write({
+            'order_line': [(0, False, {
+                'product_id': self.product_B.id,
+                'name': '6 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 6.0,
+                })]
+        })
+        order.recompute_coupon_lines()
+        promo_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        msg = "The promo offer should have been applied twice."
+        self.assertEqual(len(promo_lines), 1, msg)
+        self.assertEqual(promo_lines[0].product_uom_qty, 2, msg)
+        self.assertEqual(order.amount_untaxed, 20)
+
     def test_program_rules_validity_dates_and_uses(self):
         # Test case: Based on the validity dates and the number of allowed uses
 
@@ -221,6 +281,54 @@ class TestProgramRules(TestSaleCouponCommon):
         self.immediate_promotion_program.rule_id.write({
             'rule_date_from': Date.to_string((datetime.now() - timedelta(days=1))),
             'rule_date_to': False,
+        })
+        order.recompute_coupon_lines()
+        self.assertIn(self.immediate_promotion_program, order._get_applicable_programs())
+        self.assertEqual(len(order.order_line.ids), 3, "The promo offer should have been applied as we're between the validity dates")
+
+    def test_program_rules_date(self):
+        # Test case: Based on the validity dates
+
+        # VFE NOTE the .rule_id is necessary to ensure the dates constraints doesn't raise
+        # because the orm applies the related inverse one by one, raising the constraint...
+        self.immediate_promotion_program.rule_id.write({
+            'rule_date_from': Date.to_string((datetime.now() - timedelta(days=7))),
+            'rule_date_to': Date.to_string((datetime.now() - timedelta(days=2))),
+        })
+
+        order = self.empty_order
+        order.write({
+            'date_order': Date.to_string((datetime.now() - timedelta(days=5))),
+        })
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            }),
+            (0, False, {
+                'product_id': self.product_B.id,
+                'name': '2 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        order.recompute_coupon_lines()
+        self.assertNotIn(self.immediate_promotion_program, order._get_applicable_programs())
+        self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied we're not between the validity dates")
+
+        self.immediate_promotion_program.rule_id.write({
+            'rule_date_from': Date.to_string((datetime.now() + timedelta(days=2))),
+            'rule_date_to': Date.to_string((datetime.now() + timedelta(days=7))),
+        })
+        order.recompute_coupon_lines()
+        self.assertNotIn(self.immediate_promotion_program, order._get_applicable_programs())
+        self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied we're not between the validity dates")
+
+        self.immediate_promotion_program.rule_id.write({
+            'rule_date_from': Date.to_string((datetime.now() - timedelta(days=2))),
+            'rule_date_to': Date.to_string((datetime.now() + timedelta(days=2))),
         })
         order.recompute_coupon_lines()
         self.assertIn(self.immediate_promotion_program, order._get_applicable_programs())

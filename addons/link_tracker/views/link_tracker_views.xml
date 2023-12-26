@@ -115,7 +115,7 @@
             <field name="name">link.tracker.click.view.form</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <form string="Link Click">
+                <form string="Link Click" create="0">
                     <sheet>
                         <group>
                             <field name="link_id"/>
@@ -131,7 +131,7 @@
             <field name="name">link.tracker.click.view.tree</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <tree string="Links Clicks">
+                <tree string="Links Clicks" create="0">
                     <field name="link_id"/>
                     <field name="ip"/>
                     <field name="country_id"/>

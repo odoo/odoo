@@ -22,8 +22,8 @@ var LIVECHAT_COOKIE_HISTORY = 'im_livechat_history';
 var HISTORY_LIMIT = 15;
 
 var RATING_TO_EMOJI = {
-    "10": "😊",
-    "5": "😐",
+    "5": "😊",
+    "3": "😐",
     "1": "😞"
 };
 
@@ -90,7 +90,14 @@ var LivechatButton = Widget.extend({
                     self._history = history;
                 });
         }
-        return ready.then(this._loadQWebTemplate.bind(this));
+        session.user_context = {};
+        return ready
+            .then(this._loadQWebTemplate.bind(this))
+            .then(() => {
+                if (!session.is_frontend) {
+                    return session.load_translations(["im_livechat"]);
+                }
+            });
     },
     start: function () {
         this.$el.text(this.options.button_text);
@@ -409,6 +416,7 @@ var LivechatButton = Widget.extend({
         } else {
             this._closeChat();
         }
+        this._visitorLeaveSession();
     },
     /**
      * @private
@@ -457,6 +465,19 @@ var LivechatButton = Widget.extend({
     _onUpdatedUnreadCounter: function (ev) {
         ev.stopPropagation();
         this._chatWindow.renderHeader();
+    },
+    /**
+     * @private
+     * Called when the visitor leaves the livechat chatter the first time (first click on X button)
+     * this will deactivate the mail_channel, notify operator that visitor has left the channel.
+     */
+    _visitorLeaveSession: function () {
+        var cookie = utils.get_cookie('im_livechat_session');
+        if (cookie) {
+            var channel = JSON.parse(cookie);
+            session.rpc('/im_livechat/visitor_leave_session', {uuid: channel.uuid});
+            utils.set_cookie('im_livechat_session', "", -1); // remove cookie
+        }
     },
 });
 

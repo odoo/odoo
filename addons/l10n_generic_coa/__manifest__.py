@@ -25,4 +25,5 @@ Install some generic chart of accounts.
         'demo/account_reconcile_model.xml',
     ],
     'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

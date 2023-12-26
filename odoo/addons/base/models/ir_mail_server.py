@@ -14,11 +14,12 @@ from ssl import SSLError
 import sys
 import threading
 
-import html2text
+import idna
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr
+from odoo.tools import ustr, pycompat, formataddr, encapsulate_email, email_domain_extract
+
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -59,7 +60,7 @@ smtplib.stderr = WriteToLogger()
 def is_ascii(s):
     return all(ord(cp) < 128 for cp in s)
 
-address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
+address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
 
 def extract_rfc2822_addresses(text):
     """Returns a list of valid RFC2822 addresses
@@ -101,16 +102,21 @@ class IrMailServer(models.Model):
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
 
+    def _get_test_email_addresses(self):
+        self.ensure_one()
+        email_from = self.env.user.email
+        if not email_from:
+            raise UserError(_('Please configure an email on the current user to simulate '
+                              'sending an email message via this outgoing server'))
+        return email_from, 'noreply@odoo.com'
+
     def test_smtp_connection(self):
         for server in self:
             smtp = False
             try:
                 smtp = self.connect(mail_server_id=server.id)
                 # simulate sending an email from current user's address - without sending it!
-                email_from, email_to = self.env.user.email, 'noreply@odoo.com'
-                if not email_from:
-                    raise UserError(_('Please configure an email on the current user to simulate '
-                                      'sending an email message via this outgoing server'))
+                email_from, email_to = server._get_test_email_addresses()
                 # Testing the MAIL FROM step should detect sender filter problems
                 (code, repl) = smtp.mail(email_from)
                 if code != 250:
@@ -131,7 +137,7 @@ class IrMailServer(models.Model):
             except UserError as e:
                 # let UserErrors (messages) bubble up
                 raise e
-            except UnicodeError as e:
+            except (UnicodeError, idna.core.InvalidCodepoint) as e:
                 raise UserError(_("Invalid server name !\n %s", ustr(e)))
             except (gaierror, timeout) as e:
                 raise UserError(_("No response received. Check server address and port number.\n %s", ustr(e)))
@@ -140,7 +146,7 @@ class IrMailServer(models.Model):
             except smtplib.SMTPResponseException as e:
                 raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
             except smtplib.SMTPException as e:
-                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e.smtp_error)))
+                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e)))
             except SSLError as e:
                 raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", ustr(e)))
             except Exception as e:
@@ -189,6 +195,9 @@ class IrMailServer(models.Model):
         elif not host:
             mail_server = self.sudo().search([], order='sequence', limit=1)
 
+        if not mail_server:
+            mail_server = self.env['ir.mail_server']
+
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
@@ -234,18 +243,28 @@ class IrMailServer(models.Model):
 
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
-            # The user/password must be converted to bytestrings in order to be usable for
-            # certain hashing schemes, like HMAC.
-            # See also bug #597143 and python issue #5285
-            smtp_user = pycompat.to_text(ustr(smtp_user))
-            smtp_password = pycompat.to_text(ustr(smtp_password))
-            connection.login(smtp_user, smtp_password)
+            local, at, domain = smtp_user.rpartition('@')
+            if at:
+                smtp_user = local + at + idna.encode(domain).decode('ascii')
+            mail_server._smtp_login(connection, smtp_user, smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
         connection.ehlo_or_helo_if_needed()
 
         return connection
+
+    def _smtp_login(self, connection, smtp_user, smtp_password):
+        """Authenticate the SMTP connection.
+
+        Can be overridden in other module for different authentication methods.Can be
+        called on the model itself or on a singleton.
+
+        :param connection: The SMTP connection to authenticate
+        :param smtp_user: The user to used for the authentication
+        :param smtp_password: The password to used for the authentication
+        """
+        connection.login(smtp_user, smtp_password)
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
@@ -280,7 +299,7 @@ class IrMailServer(models.Model):
         """
         email_from = email_from or self._get_default_from_address()
         assert email_from, "You must either provide a sender address explicitly or configure "\
-                           "using the combintion of `mail.catchall.domain` and `mail.default.from` "\
+                           "using the combination of `mail.catchall.domain` and `mail.default.from` "\
                            "ICPs, in the server configuration file or with the "\
                            "--email-from startup parameter."
 
@@ -299,7 +318,12 @@ class IrMailServer(models.Model):
         if references:
             msg['references'] = references
         msg['Subject'] = subject
+
+        email_from, return_path = self._get_email_from(email_from)
         msg['From'] = email_from
+        if return_path:
+            headers.setdefault('Return-Path', return_path)
+
         del msg['Reply-To']
         msg['Reply-To'] = reply_to or email_from
         msg['To'] = email_to
@@ -313,9 +337,11 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
-            msg.add_alternative(html2text.html2text(email_body), subtype='plain', charset='utf-8')
+            msg['MIME-Version'] = '1.0'
+            msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         else:
@@ -326,6 +352,35 @@ class IrMailServer(models.Model):
                 maintype, subtype = mime.split('/') if mime and '/' in mime else ('application', 'octet-stream')
                 msg.add_attachment(fcontent, maintype, subtype, filename=fname)
         return msg
+
+    def _get_email_from(self, email_from):
+        """Logic which determines which email to use when sending the email.
+
+        - If the system parameter `mail.force.smtp.from` is set we encapsulate all
+          outgoing email from
+        - If the previous system parameter is not set and if both `mail.dynamic.smtp.from`
+          and `mail.catchall.domain` are set, we encapsulate the FROM only if the domain
+          of the email is not the same as the domain of the catchall parameter
+        - Otherwise we do not encapsulate the email and given email_from is used as is
+
+        :param email_from: The initial FROM headers
+        :return: The FROM to used in the headers and optionally the Return-Path
+        """
+        force_smtp_from = self.env['ir.config_parameter'].sudo().get_param('mail.force.smtp.from')
+        dynamic_smtp_from = self.env['ir.config_parameter'].sudo().get_param('mail.dynamic.smtp.from')
+        catchall_domain = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.domain')
+
+        if force_smtp_from:
+            rfc2822_force_smtp_from = extract_rfc2822_addresses(force_smtp_from)
+            rfc2822_force_smtp_from = rfc2822_force_smtp_from[0] if rfc2822_force_smtp_from else None
+            return encapsulate_email(email_from, force_smtp_from), rfc2822_force_smtp_from
+
+        elif dynamic_smtp_from and catchall_domain and email_domain_extract(email_from) != catchall_domain:
+            rfc2822_dynamic_smtp_from = extract_rfc2822_addresses(dynamic_smtp_from)
+            rfc2822_dynamic_smtp_from = rfc2822_dynamic_smtp_from[0] if rfc2822_dynamic_smtp_from else None
+            return encapsulate_email(email_from, dynamic_smtp_from), rfc2822_dynamic_smtp_from
+
+        return email_from, None
 
     @api.model
     def _get_default_bounce_address(self):

@@ -30,6 +30,20 @@ class TestEventNotifications(SavepointCase, MailCase):
         }):
             self.event.partner_ids = self.partner
 
+    def test_message_invite_allday(self):
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
+            self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
+                'name': 'Meeting',
+                'allday': True,
+                'start_date': fields.Date.today() + relativedelta(days=7),
+                'stop_date': fields.Date.today() + relativedelta(days=8),
+                'partner_ids': [(4, self.partner.id)],
+            }])
+
+
     def test_message_invite_self(self):
         with self.assertNoNotifications():
             self.event.with_user(self.user).partner_ids = self.partner
@@ -54,13 +68,13 @@ class TestEventNotifications(SavepointCase, MailCase):
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
-            self.event.start += relativedelta(days=-1)
+            self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
     def test_message_date_changed(self):
         self.event.write({
             'allday': True,
-            'start_date': date(2019, 10, 15),
-            'stop_date': date(2019, 10, 15),
+            'start_date': fields.Date.today() + relativedelta(days=7),
+            'stop_date': fields.Date.today() + relativedelta(days=8),
         })
         self.event.partner_ids = self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -68,6 +82,16 @@ class TestEventNotifications(SavepointCase, MailCase):
             'subtype': 'mail.mt_note',
         }):
             self.event.start_date += relativedelta(days=-1)
+
+    def test_message_date_changed_past(self):
+        self.event.write({
+            'allday': True,
+            'start_date': fields.Date.today(),
+            'stop_date': fields.Date.today() + relativedelta(days=1),
+        })
+        self.event.partner_ids = self.partner
+        with self.assertNoNotifications():
+            self.event.write({'start': date(2019, 1, 1)})
 
     def test_message_set_inactive_date_changed(self):
         self.event.write({

@@ -9,7 +9,9 @@ odoo.define('mail/static/src/model/model_field_command.js', function (require) {
 class FieldCommand {
     /**
      * @constructor
-     * @param {function} func function to call when executing this command
+     * @param {function} func function to call when executing this command. 
+     * The function should ALWAYS return a boolean value 
+     * to indicate whether the value changed.
      */
     constructor(func) {
         this.func = func;
@@ -35,11 +37,37 @@ function clear() {
     );
 }
 
+/**
+ * Returns a decrement command to give to the model manager at create/update.
+ *
+ * @param {number} [amount=1]
+ */
+function decrement(amount = 1) {
+    return new FieldCommand((field, record, options) => {
+        const oldValue = field.get(record);
+        return field.set(record, oldValue - amount, options);
+    });
+}
+
+/**
+ * Returns a increment command to give to the model manager at create/update.
+ *
+ * @param {number} [amount=1]
+ */
+function increment(amount = 1) {
+    return new FieldCommand((field, record, options) => {
+        const oldValue = field.get(record);
+        return field.set(record, oldValue + amount, options);
+    });
+}
+
 return {
     // class
     FieldCommand,
     // shortcuts
     clear,
+    decrement,
+    increment,
 };
 
 });

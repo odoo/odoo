@@ -51,8 +51,11 @@
                             <p><b>Amount:</b> <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></p>
                             <t t-call="payment.payment_tokens_list" t-if="reference and amount and currency">
                                 <t t-set="mode" t-value="'payment'"/>
+                                <t t-set="_overriden_reference" t-value="reference"/>
+                                <t t-set="reference" t-value="quote_plus(reference).replace('+','%20')"/>
                                 <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + (('/' + str(partner_id)) if partner_id else '')"/>
                                 <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + (('/' + str(partner_id)) if partner_id else '')"/>
+                                <t t-set="reference" t-value="_overriden_reference"/>
                             </t>
                             <div t-if="not acquirers" class="alert alert-danger" role="alert">
                                 <p>No payment acquirer found.</p>
@@ -95,7 +98,7 @@
                                 </div>
 
                                 <div t-if="tx.acquirer_id.qr_code">
-                                    <t t-set="qr_code" t-value="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_url(tx.amount, tx.reference, None, tx.currency_id, tx.partner_id)"/>
+                                    <t t-set="qr_code" t-value="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(tx.amount, tx.reference, None, tx.currency_id, tx.partner_id)"/>
                                     <div class="card-body" t-if="qr_code">
                                         <h3>Or scan me with your banking app.</h3>
                                         <img class="border border-dark rounded" t-att-src="qr_code"/>
@@ -125,7 +128,7 @@
         To be called with the 'payment_tx_id' value.
         -->
         <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable" role="status">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
             <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and reference">
@@ -133,7 +136,7 @@
             </div>
 
             <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
-                <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(payment_tx_id.amount,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(payment_tx_id.amount,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
                 <div class="card-body" t-if="qr_code">
                     <h3>Or scan me with your banking app.</h3>
                     <img class="border border-dark rounded" t-att-src="qr_code"/>
@@ -141,12 +144,12 @@
             </div>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'authorized' and payment_tx_id.acquirer_id.authorize_implemented" class="alert alert-success alert-dismissable" role="alert">
-            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">×</button>
             <!-- Your payment has been authorized. -->
             <span t-if='payment_tx_id.acquirer_id.auth_msg' t-raw="payment_tx_id.acquirer_id.auth_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">×</button>
             <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
             <div t-if="thanks_msg and payment_tx_id.acquirer_id.provider == 'transfer' and reference">
@@ -154,7 +157,7 @@
             </div>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">×</button>
             <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state_message">

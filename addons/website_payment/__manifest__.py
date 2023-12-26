@@ -17,4 +17,5 @@ This is a bridge module which integrates payment acquirers with Website app.
         'views/payment_acquirer.xml',
     ],
     'auto_install': False,
+    'license': 'LGPL-3',
 }

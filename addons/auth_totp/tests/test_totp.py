@@ -61,13 +61,16 @@ class TestTOTP(HttpCase):
                 'res.users', 'read', [uid, ['login']]
             )
 
-        # 3. Check 2FA is required and disable it
+        # 3. Check 2FA is required
         self.start_tour('/', 'totp_login_enabled', login=None)
 
-        # 4. Finally, check that 2FA is in fact disabled
+        # 4. Check 2FA is not requested on saved device and disable it
+        self.start_tour('/', 'totp_login_device', login=None)
+
+        # 5. Finally, check that 2FA is in fact disabled
         self.start_tour('/', 'totp_login_disabled', login=None)
 
-        # 5. Check that rpc is now re-allowed
+        # 6. Check that rpc is now re-allowed
         uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})
         self.assertEqual(uid, self.env.ref('base.user_demo').id)
         [r] = self.xmlrpc_object.execute_kw(

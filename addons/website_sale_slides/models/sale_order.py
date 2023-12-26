@@ -29,6 +29,6 @@ class SaleOrder(models.Model):
                         channels_per_so[so_line.order_id] = channels_per_so[so_line.order_id] | related_channel
 
         for sale_order, channels in channels_per_so.items():
-            channels._action_add_members(sale_order.partner_id)
+            channels.sudo()._action_add_members(sale_order.partner_id)
 
         return result

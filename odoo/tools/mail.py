@@ -38,6 +38,7 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      'data-o-mail-quote',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
+     'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      ])
 
 
@@ -214,6 +215,8 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         })
 
     try:
+        src = src.replace('--!>', '-->')
+        src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
@@ -304,7 +307,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(html)
 
-    if not html:
+    if not html.strip():
         return ''
 
     tree = etree.fromstring(html, parser=etree.HTMLParser())
@@ -456,7 +459,6 @@ mail_header_msgid_re = re.compile('<[^<>]+>')
 
 email_addr_escapes_re = re.compile(r'[\\"]')
 
-
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
 
@@ -511,15 +513,48 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     return res
 
 def email_split_tuples(text):
-    """ Return a list of (name, email) addresse tuples found in ``text``"""
+    """ Return a list of (name, email) addresses tuples found in ``text``"""
+    def _parse_based_on_spaces(pair):
+        """ With input 'name email@domain.com' (missing quotes for a formatting)
+        getaddresses returns ('', 'name email@domain.com). This when having no
+        name and an email a fallback to enhance parsing is to redo a getaddresses
+        by replacing spaces by commas. The new email will be split into sub pairs
+        allowing to find the email and name parts, allowing to make a new name /
+        email pair. Emails should not contain spaces thus this is coherent with
+        email formation. """
+        name, email = pair
+        if not name and email and ' ' in email:
+            inside_pairs = getaddresses([email.replace(' ', ',')])
+            name_parts, found_email = [], False
+            for pair in inside_pairs:
+                if pair[1] and '@' not in pair[1]:
+                    name_parts.append(pair[1])
+                if pair[1] and '@' in pair[1]:
+                    found_email = pair[1]
+            name, email = (' '.join(name_parts), found_email) if found_email else (name, email)
+        return (name, email)
+
     if not text:
         return []
-    return [(addr[0], addr[1]) for addr in getaddresses([text])
-                # getaddresses() returns '' when email parsing fails, and
-                # sometimes returns emails without at least '@'. The '@'
-                # is strictly required in RFC2822's `addr-spec`.
-                if addr[1]
-                if '@' in addr[1]]
+
+    # found valid pairs, filtering out failed parsing
+    valid_pairs = [
+        (addr[0], addr[1]) for addr in getaddresses([text])
+        # getaddresses() returns '' when email parsing fails, and
+        # sometimes returns emails without at least '@'. The '@'
+        # is strictly required in RFC2822's `addr-spec`.
+        if addr[1] and '@' in addr[1]
+    ]
+    # corner case: returning '@gmail.com'-like email (see test_email_split)
+    if any(pair[1].startswith('@') for pair in valid_pairs):
+        filtered = [
+            found_email for found_email in email_re.findall(text)
+            if found_email and not found_email.startswith('@')
+        ]
+        if filtered:
+            valid_pairs = [('', found_email) for found_email in filtered]
+
+    return list(map(_parse_based_on_spaces, valid_pairs))
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
@@ -534,24 +569,78 @@ def email_split_and_format(text):
         return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
-def email_normalize(text):
-    """ Sanitize and standardize email address entries.
-        A normalized email is considered as :
-        - having a left part + @ + a right part (the domain can be without '.something')
-        - being lower case
-        - having no name before the address. Typically, having no 'Name <>'
-        Ex:
-        - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
-        - Normalized Output Email : 'name@domain.com'
+def email_normalize(text, force_single=True):
+    """ Sanitize and standardize email address entries. As of rfc5322 section
+    3.4.1 local-part is case-sensitive. However most main providers do consider
+    the local-part as case insensitive. With the introduction of smtp-utf8
+    within odoo, this assumption is certain to fall short for international
+    emails. We now consider that
+
+      * if local part is ascii: normalize still 'lower' ;
+      * else: use as it, SMTP-UF8 is made for non-ascii local parts;
+
+    Concerning domain part of the address, as of v14 international domain (IDNA)
+    are handled fine. The domain is always lowercase, lowering it is fine as it
+    is probably an error. With the introduction of IDNA, there is an encoding
+    that allow non-ascii characters to be encoded to ascii ones, using 'idna.encode'.
+
+    A normalized email is considered as :
+    - having a left part + @ + a right part (the domain can be without '.something')
+    - having no name before the address. Typically, having no 'Name <>'
+    Ex:
+    - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
+    - Normalized Output Email : 'name@domain.com'
+
+    :param boolean force_single: if True, text should contain a single email
+      (default behavior in stable 14+). If more than one email is found no
+      normalized email is returned. If False the first found candidate is used
+      e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com>', result is either
+      False (force_single=True), either 'tony@e.com' (force_single=False).
     """
     emails = email_split(text)
-    if not emails or len(emails) != 1:
+    if not emails or (len(emails) != 1 and force_single):
         return False
-    return emails[0].lower()
+
+    local_part, at, domain = emails[0].rpartition('@')
+    try:
+        local_part.encode('ascii')
+    except UnicodeEncodeError:
+        pass
+    else:
+        local_part = local_part.lower()
+
+    return local_part + at + domain.lower()
+
+def email_normalize_all(text):
+    """ Tool method allowing to extract email addresses from a text input and returning
+    normalized version of all found emails. If no email is found, a void list
+    is returned.
+
+    e.g. if email is 'tony@e.com, "Tony2" <tony2@e.com' returned result is ['tony@e.com, tony2@e.com']
+
+    :return list: list of normalized emails found in text
+    """
+    if not text:
+        return []
+    emails = email_split(text)
+    return list(filter(None, [email_normalize(email) for email in emails]))
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
+
+
+def email_domain_extract(email):
+    """Return the domain of the given email."""
+    if not email:
+        return
+
+    email_split = getaddresses([email])
+    if not email_split or not email_split[0]:
+        return
+
+    _, _, domain = email_split[0][1].rpartition('@')
+    return domain
 
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
@@ -599,3 +688,31 @@ def formataddr(pair, charset='utf-8'):
             name = email_addr_escapes_re.sub(r'\\\g<0>', name)
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
+
+
+def encapsulate_email(old_email, new_email):
+    """Change the FROM of the message and use the old one as name.
+
+    e.g.
+    * Old From: "Admin" <admin@gmail.com>
+    * New From: notifications@odoo.com
+    * Output: "Admin" <notifications@odoo.com>
+    """
+    old_email_split = getaddresses([old_email])
+    if not old_email_split or not old_email_split[0]:
+        return old_email
+
+    new_email_split = getaddresses([new_email])
+    if not new_email_split or not new_email_split[0]:
+        return
+
+    old_name, old_email = old_email_split[0]
+    if old_name:
+        name_part = old_name
+    else:
+        name_part = old_email.split("@")[0]
+
+    return formataddr((
+        name_part,
+        new_email_split[0][1],
+    ))

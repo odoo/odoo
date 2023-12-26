@@ -25,4 +25,5 @@ Publish your customers as business references on your website to attract new pot
     ],
     'qweb': [],
     'installable': True,
+    'license': 'LGPL-3',
 }

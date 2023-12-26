@@ -42,4 +42,5 @@ If you want to save your employees' time and avoid them to always have coins in 
     'installable': True,
     'application': True,
     'certificate': '001292377792581874189',
+    'license': 'LGPL-3',
 }

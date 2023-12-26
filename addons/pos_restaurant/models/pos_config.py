@@ -31,6 +31,12 @@ class PosConfig(models.Model):
         if not self.iface_tipproduct:
             self.set_tip_after_payment = False
 
+    def _force_http(self):
+        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
+        if not enforce_https and self.printer_ids.filtered(lambda pt: pt.printer_type == 'epson_epos'):
+            return True
+        return super(PosConfig, self)._force_http()
+
     def get_tables_order_count(self):
         """         """
         self.ensure_one()

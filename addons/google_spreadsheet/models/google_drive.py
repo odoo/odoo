@@ -20,12 +20,48 @@ class GoogleDrive(models.Model):
 
     def get_google_scope(self):
         scope = super(GoogleDrive, self).get_google_scope()
-        return '%s https://spreadsheets.google.com/feeds' % scope
+        return '%s https://www.googleapis.com/auth/spreadsheets' % scope
 
     @api.model
     def write_config_formula(self, attachment_id, spreadsheet_key, model, domain, groupbys, view_id):
-        access_token = self.get_access_token(scope='https://spreadsheets.google.com/feeds')
+        access_token = self.get_access_token(scope='https://www.googleapis.com/auth/spreadsheets')
 
+        formula = self._get_data_formula(model, domain, groupbys, view_id)
+
+        url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        dbname = self._cr.dbname
+        user = self.env['res.users'].browse(self.env.user.id).read(['login', 'password'])[0]
+        username = user['login']
+        password = user['password']
+        if not password:
+            config_formula = '=oe_settings("%s";"%s")' % (url, dbname)
+        else:
+            config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
+        request = {
+            "valueInputOption": "USER_ENTERED",
+            "data": [
+                {"range": "A1", "values": [[formula]]},
+                {"range": "O60", "values": [[config_formula]]},
+            ]
+        }
+        try:
+            req = requests.post(
+                'https://sheets.googleapis.com/v4/spreadsheets/%s/values:batchUpdate?%s' % (spreadsheet_key, werkzeug.urls.url_encode({'access_token': access_token})),
+                data=json.dumps(request),
+                headers={'content-type': 'application/json', 'If-Match': '*'},
+                timeout=TIMEOUT,
+            )
+        except IOError:
+            _logger.warning("An error occured while writing the formula on the Google Spreadsheet.")
+
+        description = '''
+        formula: %s
+        ''' % formula
+        if attachment_id:
+            self.env['ir.attachment'].browse(attachment_id).write({'description': description})
+        return True
+
+    def _get_data_formula(self, model, domain, groupbys, view_id):
         fields = self.env[model].fields_view_get(view_id=view_id, view_type='tree')
         doc = etree.XML(fields.get('arch'))
         display_fields = []
@@ -41,53 +77,7 @@ class GoogleDrive(models.Model):
             formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
         else:
             formula = '=oe_browse("%s";"%s";"%s")' % (model, fields, domain)
-        url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        dbname = self._cr.dbname
-        user = self.env['res.users'].browse(self.env.user.id).read(['login', 'password'])[0]
-        username = user['login']
-        password = user['password']
-        if not password:
-            config_formula = '=oe_settings("%s";"%s")' % (url, dbname)
-        else:
-            config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
-        request = '''<feed xmlns="http://www.w3.org/2005/Atom"
-      xmlns:batch="http://schemas.google.com/gdata/batch"
-      xmlns:gs="http://schemas.google.com/spreadsheets/2006">
-  <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full</id>
-  <entry>
-    <batch:id>A1</batch:id>
-    <batch:operation type="update"/>
-    <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R1C1</id>
-    <link rel="edit" type="application/atom+xml"
-      href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R1C1"/>
-    <gs:cell row="1" col="1" inputValue="{formula}"/>
-  </entry>
-  <entry>
-    <batch:id>A2</batch:id>
-    <batch:operation type="update"/>
-    <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15</id>
-    <link rel="edit" type="application/atom+xml"
-      href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15"/>
-    <gs:cell row="60" col="15" inputValue="{config}"/>
-  </entry>
-</feed>''' .format(key=spreadsheet_key, formula=misc.html_escape(formula), config=misc.html_escape(config_formula))
-
-        try:
-            req = requests.post(
-                'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.urls.url_encode({'v': 3, 'access_token': access_token})),
-                data=request,
-                headers={'content-type': 'application/atom+xml', 'If-Match': '*'},
-                timeout=TIMEOUT,
-            )
-        except IOError:
-            _logger.warning("An error occured while writing the formula on the Google Spreadsheet.")
-
-        description = '''
-        formula: %s
-        ''' % formula
-        if attachment_id:
-            self.env['ir.attachment'].browse(attachment_id).write({'description': description})
-        return True
+        return formula
 
     @api.model
     def set_spreadsheet(self, model, domain, groupbys, view_id):
@@ -96,6 +86,14 @@ class GoogleDrive(models.Model):
         except ValueError:
             raise
         config = self.browse(config_id)
+
+        if self._module_deprecated():
+            return {
+                'url': config.google_drive_template_url,
+                'deprecated': True,
+                'formula': self._get_data_formula(model, domain, groupbys, view_id),
+            }
+
         title = 'Spreadsheet %s' % model
         res = self.copy_doc(False, config.google_drive_resource_id, title, model)
 

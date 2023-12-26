@@ -550,6 +550,174 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
     assert.verifySteps(['do-action'], "should have made an action on click on origin thread (to open form view)");
 });
 
+QUnit.test('subject should not be shown when subject is the same as the thread name', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "subject should not be shown when subject is the same as the thread name"
+    );
+});
+
+QUnit.test('subject should not be shown when subject is the same as the thread name and both have the same prefix', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "Re: Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Re: Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "subject should not be shown when subject is the same as the thread name and both have the same prefix"
+    );
+});
+
+QUnit.test('subject should not be shown when subject differs from thread name only by the "Re:" prefix', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "Re: Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "should not display subject when subject differs from thread name only by the 'Re:' prefix"
+    );
+});
+
+QUnit.test('subject should not be shown when subject differs from thread name only by the "Fw:" and "Re:" prefix', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "Fw: Re: Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "should not display subject when subject differs from thread name only by the 'Fw:' and Re:' prefix"
+    );
+});
+
+QUnit.test('subject should be shown when the thread name has an extra prefix compared to subject', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Re: Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message_subject',
+        "subject should be shown when the thread name has an extra prefix compared to subject"
+    );
+});
+
+QUnit.test('subject should not be shown when subject differs from thread name only by the "fw:" prefix and both contain another common prefix', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "fw: re: Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Re: Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "subject should not be shown when subject differs from thread name only by the 'fw:' prefix and both contain another common prefix"
+    );
+});
+
+QUnit.test('subject should not be shown when subject differs from thread name only by the "Re: Re:" prefix', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [100],
+        model: 'mail.channel',
+        res_id: 100,
+        needaction: true,
+        subject: "Re: Re: Salutations, voyageur",
+    });
+    this.data['mail.channel'].records.push({
+        id: 100,
+        name: "Salutations, voyageur",
+    });
+    await this.start();
+
+    assert.containsNone(
+        document.body,
+        '.o_Message_subject',
+        "should not display subject when subject differs from thread name only by the 'Re: Re:'' prefix"
+    );
+});
+
 });
 });
 });

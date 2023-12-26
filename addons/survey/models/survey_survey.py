@@ -7,7 +7,7 @@ import uuid
 import werkzeug
 
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 
@@ -512,10 +512,29 @@ class Survey(models.Model):
             if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
-                result = self.question_and_page_ids.filtered(
-                    lambda question: not question.is_page or not is_html_empty(question.description))
+                result = self._get_pages_and_questions_to_show()
 
         return result
+
+    def _get_pages_and_questions_to_show(self):
+        """
+        :return: survey.question recordset excluding invalid conditional questions and pages without description
+        """
+
+        self.ensure_one()
+        invalid_questions = self.env['survey.question']
+        questions_and_valid_pages = self.question_and_page_ids.filtered(
+            lambda question: not question.is_page or not is_html_empty(question.description))
+        for question in questions_and_valid_pages.filtered(lambda q: q.is_conditional).sorted():
+            trigger = question.triggering_question_id
+            if (trigger in invalid_questions
+                    or trigger.is_page
+                    or trigger.question_type not in ['simple_choice', 'multiple_choice']
+                    or not trigger.suggested_answer_ids
+                    or trigger.sequence > question.sequence
+                    or (trigger.sequence == question.sequence and trigger.id > question.id)):
+                invalid_questions |= question
+        return questions_and_valid_pages - invalid_questions
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ Generalized logic to retrieve the next question or page to show on the survey.
@@ -812,9 +831,16 @@ class Survey(models.Model):
 
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
-        # Ensure that this survey has at least one page with at least one question.
-        if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
-            raise exceptions.UserError(_('You cannot send an invitation for a survey that has no questions.'))
+        # Ensure that this survey has at least one question.
+        if not self.question_ids:
+            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
+
+        # Ensure that this survey has at least one section with question(s), if question layout is 'One page per section'.
+        if self.questions_layout == 'page_per_section':
+            if not self.page_ids:
+                raise UserError(_('You cannot send an invitation for a "One page per section" survey if the survey has no sections.'))
+            if not self.page_ids.mapped('question_ids'):
+                raise UserError(_('You cannot send an invitation for a "One page per section" survey if the survey only contains empty sections.'))
 
         if self.state == 'closed':
             raise exceptions.UserError(_("You cannot send invitations for closed surveys."))

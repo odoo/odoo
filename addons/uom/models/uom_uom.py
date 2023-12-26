@@ -14,7 +14,8 @@ class UoMCategory(models.Model):
     def unlink(self):
         uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
         uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
-        if any(categ.id in (uom_categ_unit + uom_categ_wtime).ids for categ in self):
+        uom_categ_kg = self.env.ref('uom.product_uom_categ_kgm')
+        if any(categ.id in (uom_categ_unit + uom_categ_wtime + uom_categ_kg).ids for categ in self):
             raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
         return super(UoMCategory, self).unlink()
 
@@ -109,7 +110,13 @@ class UoM(models.Model):
     def unlink(self):
         uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
         uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
-        if any(uom.category_id.id in (uom_categ_unit + uom_categ_wtime).ids and uom.uom_type == 'reference' for uom in self):
+        uom_categ_kg = self.env.ref('uom.product_uom_categ_kgm')
+        if any(uom.category_id.id in (uom_categ_unit + uom_categ_wtime + uom_categ_kg).ids and uom.uom_type == 'reference' for uom in self):
+            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        # UoM with external IDs shouldn't be deleted since they will most probably break the app somewhere else.
+        # For example, in addons/product/models/product_template.py, cubic meters are used in `_get_volume_uom_id_from_ir_config_parameter()`,
+        # meters in `_get_length_uom_id_from_ir_config_parameter()`, and so on.
+        if self.env['ir.model.data'].search_count([('model', '=', self._name), ('res_id', 'in', self.ids)]):
             raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
         return super(UoM, self).unlink()
 
@@ -141,19 +148,26 @@ class UoM(models.Model):
                 - if true, raise an exception if the conversion is not possible (different UoM category),
                 - otherwise, return the initial quantity
         """
-        if not self:
+        if not self or not qty:
             return qty
         self.ensure_one()
-        if self.category_id.id != to_unit.category_id.id:
+
+        if self != to_unit and self.category_id.id != to_unit.category_id.id:
             if raise_if_failure:
                 raise UserError(_('The unit of measure %s defined on the order line doesn\'t belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.') % (self.name, to_unit.name))
             else:
                 return qty
-        amount = qty / self.factor
-        if to_unit:
-            amount = amount * to_unit.factor
-            if round:
-                amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
+
+        if self == to_unit:
+            amount = qty
+        else:
+            amount = qty / self.factor
+            if to_unit:
+                amount = amount * to_unit.factor
+
+        if to_unit and round:
+            amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
+
         return amount
 
     def _compute_price(self, price, to_unit):

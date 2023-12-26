@@ -5,6 +5,7 @@ import json
 from ast import literal_eval
 
 from odoo import models, fields, api
+from odoo.tools import date_utils
 
 
 class pos_cache(models.Model):
@@ -30,7 +31,7 @@ class pos_cache(models.Model):
                 display_default_code=False, lang=cache.compute_user_id.lang)
             res = prod_ctx.read(cache.get_product_fields())
             cache.write({
-                'cache': base64.encodebytes(json.dumps(res).encode('utf-8')),
+                'cache': base64.encodebytes(json.dumps(res, default=date_utils.json_default).encode('utf-8')),
             })
 
     @api.model
@@ -41,13 +42,7 @@ class pos_cache(models.Model):
     def get_product_fields(self):
         return literal_eval(self.product_fields)
 
-    @api.model
-    def get_cache(self, domain, fields):
-        if not self.cache or domain != self.get_product_domain() or fields != self.get_product_fields():
-            self.product_domain = str(domain)
-            self.product_fields = str(fields)
-            self.refresh_cache()
-
+    def cache2json(self):
         return json.loads(base64.decodebytes(self.cache).decode('utf-8'))
 
 
@@ -61,34 +56,35 @@ class pos_config(models.Model):
             oldest_cache = pos_cache.search([('config_id', '=', cache.id)], order='write_date', limit=1)
             cache.oldest_cache_time = oldest_cache.write_date
 
-    # Use a related model to avoid the load of the cache when the pos load his config
     cache_ids = fields.One2many('pos.cache', 'config_id')
     oldest_cache_time = fields.Datetime(compute='_get_oldest_cache_time', string='Oldest cache time', readonly=True)
+    limit_products_per_request = fields.Integer(compute='_compute_limit_products_per_request')
 
-    def _get_cache_for_user(self):
-        pos_cache = self.env['pos.cache']
-        cache_for_user = pos_cache.search([('id', 'in', self.cache_ids.ids), ('compute_user_id', '=', self.env.uid)])
-
-        if cache_for_user:
-            return cache_for_user[0]
-        else:
-            return None
+    def _compute_limit_products_per_request(self):
+        limit = self.env['ir.config_parameter'].sudo().get_param('pos_cache.limit_products_per_request', 0)
+        self.update({'limit_products_per_request': int(limit)})
 
     def get_products_from_cache(self, fields, domain):
-        cache_for_user = self._get_cache_for_user()
+        fields_str = str(fields)
+        domain_str = str(domain)
+        pos_cache = self.env['pos.cache']
+        cache_for_user = pos_cache.search([
+            ('id', 'in', self.cache_ids.ids),
+            ('compute_user_id', '=', self.env.uid),
+            ('product_domain', '=', domain_str),
+            ('product_fields', '=', fields_str),
+        ])
 
-        if cache_for_user:
-            return cache_for_user.get_cache(domain, fields)
-        else:
-            pos_cache = self.env['pos.cache']
-            pos_cache.create({
+        if not cache_for_user:
+            cache_for_user = pos_cache.create({
                 'config_id': self.id,
-                'product_domain': str(domain),
-                'product_fields': str(fields),
+                'product_domain': domain_str,
+                'product_fields': fields_str,
                 'compute_user_id': self.env.uid
             })
-            new_cache = self._get_cache_for_user()
-            return new_cache.get_cache(domain, fields)
+            cache_for_user.refresh_cache()
+
+        return cache_for_user.cache2json()
 
     def delete_cache(self):
         # throw away the old caches

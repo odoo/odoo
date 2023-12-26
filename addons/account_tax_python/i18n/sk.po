@@ -7,6 +7,7 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # Jan Prokop, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
-"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
+"Last-Translator: Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,6 +37,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Skupina daní: Daň je skupinou čiastkových daní.\n"
+"    - Fixná: výška dane zostáva rovnaká bez ohľadu na cenu.\n"
+"    - Percento z ceny: Výška dane je % z ceny:\n"
+"        napr. 100 * (1 + 10%) = 110 (nie je zahrnuté v cene)\n"
+"        napr. 110 / (1 + 10%) = 100 (zahrnuté v cene)\n"
+"    - Percento z ceny vrátane dane: Výška dane je podielom z ceny:\n"
+"        napr. 180 / (1 - 10%) = 200 (nie je zahrnuté v cene)\n"
+"        napr. 200 * (1 - 10%) = 180 (zahrnuté v cene)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable

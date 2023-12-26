@@ -8,7 +8,7 @@
                    a stable release. -->
         <field name="view_id"/>
         <field name="search_view_id"/>
-        <field name="domain"/>
+        <field name="domain">[('employee_id.active','=',True)]</field>
         <field name="context">{'hide_employee_name': 1}</field>
     </record>
 

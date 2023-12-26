@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
         for line in requisition.line_ids:
             # Compute name
             product_lang = line.product_id.with_context(
-                lang=partner.lang,
+                lang=partner.lang or self.env.user.lang,
                 partner_id=partner.id
             )
             name = product_lang.display_name
@@ -84,7 +84,8 @@ class PurchaseOrder(models.Model):
             if po.requisition_id.type_id.exclusive == 'exclusive':
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
                 others_po.button_cancel()
-                po.requisition_id.action_done()
+                if po.state not in ['draft', 'sent', 'to approve']:
+                    po.requisition_id.action_done()
         return res
 
     @api.model
@@ -107,6 +108,12 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
+
+    def _compute_account_analytic_id(self):
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_account_analytic_id()
+
+    def _compute_analytic_tag_ids(self):
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_analytic_tag_ids()
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):

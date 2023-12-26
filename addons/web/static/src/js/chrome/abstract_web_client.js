@@ -485,7 +485,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
             return;
         }
         var offset = {top: ev.data.top, left: ev.data.left || 0};
-        if (!offset.top) {
+        if (ev.data.selector) {
             offset = dom.getPosition(document.querySelector(ev.data.selector));
             // Substract the position of the scrolling element
             offset.top -= dom.getPosition(scrollingEl).top;

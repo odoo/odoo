@@ -15,27 +15,92 @@ odoo.define("crm.crm_form", function (require) {
 
     var CrmFormController = FormController.extend({
         /**
-         * After data are saved we display a possible rainbowman
-         * message when the stage is won.
+         * Main method used when saving the record hitting the "Save" button.
+         * We check if the stage_id field was altered and if we need to display a rainbowman
+         * message.
+         *
+         * This method will also simulate a real "force_save" on the email and phone
+         * when needed. The "force_save" attribute only works on readonly field. For our
+         * use case, we need to write the email and the phone even if the user didn't
+         * change them, to synchronize those values with the partner (so the email / phone
+         * inverse method can be called).
+         *
+         * We base this synchronization on the value of "ribbon_message", which is a
+         * computed field that hold a value whenever we need to synch.
+         *
          * @override
          */
-        _applyChanges: async function (dataPointID, changes, event) {
-            var result = await this._super(...arguments);
-            if ('stage_id' in changes) {
-                const message = await this._rpc({
-                    model: 'crm.lead',
-                    method : 'get_rainbowman_message',
-                    args: [[parseInt(event.target.res_id)]],
-                });
-                if (message) {
-                    this.trigger_up('show_effect', {
-                        message: message,
-                        type: 'rainbow_man',
-                    });
-                }
+        saveRecord: function (recordID, options) {
+            recordID = recordID || this.handle;
+            const localData = this.model.localData[recordID];
+            const changes = localData._changes || {};
+
+            const needsSynchronization = changes.ribbon_message === undefined
+                ? localData.data.ribbon_message // original value
+                : changes.ribbon_message; // new value
+
+            if (needsSynchronization && changes.email_from === undefined && localData.data.email_from) {
+                changes.email_from = localData.data.email_from;
             }
-            return result;
+            if (needsSynchronization && changes.phone === undefined && localData.data.phone) {
+                changes.phone = localData.data.phone;
+            }
+            if (!localData._changes && Object.keys(changes).length) {
+                localData._changes = changes;
+            }
+
+            return this._super(...arguments).then((modifiedFields) => {
+                if (modifiedFields.indexOf('stage_id') !== -1) {
+                    this._checkRainbowmanMessage(this.renderer.state.res_id)
+                }
+            });
         },
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * Apply change may be called with 'event.data.force_save' set to True.
+         * This typically happens when directly clicking in the statusbar widget on a new stage.
+         * If it's the case, we check for a modified stage_id field and if we need to display a
+         * rainbowman message.
+         *
+         * @param {string} dataPointID
+         * @param {Object} changes
+         * @param {OdooEvent} event
+         * @override
+         * @private
+         */
+        _applyChanges: function (dataPointID, changes, event) {
+            return this._super(...arguments).then(() => {
+                if (event.data.force_save && 'stage_id' in changes) {
+                    this._checkRainbowmanMessage(parseInt(event.target.res_id));
+                }
+            });
+        },
+
+        /**
+         * When updating a crm.lead, through direct use of the status bar or when saving the
+         * record, we check for a rainbowman message to display.
+         *
+         * (see Widget docstring for more information).
+         *
+         * @param {integer} recordId
+         */
+        _checkRainbowmanMessage: async function(recordId) {
+            const message = await this._rpc({
+                model: 'crm.lead',
+                method : 'get_rainbowman_message',
+                args: [[recordId]],
+            });
+            if (message) {
+                this.trigger_up('show_effect', {
+                    message: message,
+                    type: 'rainbow_man',
+                });
+            }
+        }
     });
 
     var CrmFormView = FormView.extend({

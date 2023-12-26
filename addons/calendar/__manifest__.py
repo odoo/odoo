@@ -37,4 +37,5 @@ If you need to manage your meetings, you should install the CRM module.
     'installable': True,
     'application': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

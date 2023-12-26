@@ -15,12 +15,12 @@
                     <t t-set="canGoBack" t-value="false" />
                 </t>
                 <t t-if="canGoBack">
-                    <a class="text-primary" href="#">
+                    <a class="text-primary text-break" href="#">
                         <span t-esc="page.title" />
                     </a>
                 </t>
                 <t t-else="">
-                    <span t-att-class="(isActivePage ? 'text-black' : 'text-muted')"
+                    <span t-att-class="'text-break ' + (isActivePage ? 'text-black' : 'text-muted')"
                           t-esc="page.title" />
                 </t>
             </li>

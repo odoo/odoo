@@ -6,9 +6,6 @@ from collections.abc import Iterable
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.exceptions import UserError
-
-import werkzeug.urls
 
 def sanitize_account_number(acc_number):
     if acc_number:

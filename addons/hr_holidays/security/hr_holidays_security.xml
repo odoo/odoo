@@ -100,9 +100,9 @@
         <field name="name">Time Off All Approver read</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
         <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
@@ -134,6 +134,12 @@
     <record id="hr_leave_rule_multicompany" model="ir.rule">
         <field name="name">Time Off: multi company global rule</field>
         <field name="model_id" ref="model_hr_leave"/>
+        <field name="domain_force">['|', ('holiday_status_id.company_id', '=', False), ('holiday_status_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="hr_leave_allocation_rule_multicompany" model="ir.rule">
+        <field name="name">Leave Allocations: multi company global rule</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">['|', ('holiday_status_id.company_id', '=', False), ('holiday_status_id.company_id', 'in', company_ids)]</field>
     </record>
 

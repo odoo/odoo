@@ -252,7 +252,7 @@
                             <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}"/>
                             <field name="condition" widget="radio"/>
                         </group>
-                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
+                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', 'not in', ('sum', 'count'))]}">
                             <field name="batch_mode" />
                             <div colspan="2">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
                             <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}"

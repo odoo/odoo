@@ -18,12 +18,16 @@ Allows to contact directly the employee in case of unjustified absence.
     """,
     'depends': ['hr', 'hr_holidays', 'sms'],
     'data': [
+        'security/sms_security.xml',
+        'security/ir.model.access.csv',
         'data/ir_actions_server.xml',
         'views/hr_employee_views.xml',
         'data/sms_data.xml',
         'data/mail_data.xml',
+        'data/ir_cron.xml',
     ],
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

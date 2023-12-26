@@ -43,6 +43,50 @@ Content-Transfer-Encoding: quoted-printable
 ------=_Part_4200734_24778174.1344608186754--
 """
 
+MAIL_TEMPLATE_EXTRA_HTML = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Please call me as soon as possible this afternoon!
+
+--
+Sylvie
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>=20
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+ </head>=20
+ <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
+
+  <p>Please call me as soon as possible this afternoon!</p>
+  {extra_html}
+
+  <p>--<br/>
+     Sylvie
+  <p>
+ </body>
+</html>
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+
 MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
@@ -59,6 +103,36 @@ Please call me as soon as possible this afternoon!
 
 --
 Sylvie
+"""
+
+MAIL_TEMPLATE_HTML = """Return-Path: {return_path}
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>=20
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+ </head>=20
+ <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
+
+  <p>Please call me as soon as possible this afternoon!</p>
+
+  <p>--<br/>
+     Sylvie
+  <p>
+ </body>
+</html>
 """
 
 MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
@@ -169,6 +243,163 @@ Content-Type: text/html;
 
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
+
+MAIL_FILE_ENCODING = """MIME-Version: 1.0
+Date: Sun, 26 Mar 2023 05:23:22 +0200
+Message-ID: {msg_id}
+Subject: {subject}
+From: "Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>
+To: groups@test.com
+Content-Type: multipart/mixed; boundary="000000000000b951de05f7c47a9e"
+
+--000000000000b951de05f7c47a9e
+Content-Type: multipart/alternative; boundary="000000000000b951da05f7c47a9c"
+
+--000000000000b951da05f7c47a9c
+Content-Type: text/plain; charset="UTF-8"
+
+Test Body
+
+--000000000000b951da05f7c47a9c
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Test Body</div>
+
+--000000000000b951da05f7c47a9c--
+--000000000000b951de05f7c47a9e
+Content-Type: text/plain; name="test.txt"{charset}
+Content-Disposition: attachment; filename="test.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_lfosfm0l0
+Content-ID: <f_lfosfm0l0>
+
+{content}
+
+--000000000000b951de05f7c47a9e--
+"""
+
+MAIL_MULTIPART_BINARY_OCTET_STREAM = """X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 10 Nov 2021 06:04:01 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Content-Type: multipart/alternative;
+ boundary="Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227"
+Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \\(1878.6\\))
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+    charset=us-ascii
+
+The attached file contains b"Hello world\\n"
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Disposition: attachment;
+ filename="hello_world.dat"
+Content-Type: binary/octet-stream;
+ name="hello_world.dat"
+Content-Transfer-Encoding: base64
+
+SGVsbG8gd29ybGQK
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
+"""
+
+MAIL_MULTIPART_INVALID_ENCODING = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the Peppol Bis 3 attachment of your invoice (with an
+encoding error in the address)
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the Peppol Bis 3 attachment of your invoice (with an encoding error in the address)</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Type: text/xml; charset="US-ASCII";
+ name="bis3_with_error_encoding_address.xml"
+Content-Disposition: attachment; 
+	filename="bis3_with_error_encoding_address.xml"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lgxgdqx40>
+X-Attachment-Id: f_lgxgdqx40
+
+PEludm9pY2UgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2No
+ZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiIgeG1sbnM9InVybjpvYXNpczpuYW1lczpz
+cGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkludm9pY2UtMiI+DQo8Y2JjOlN0cmVldE5hbWU+
+Q2hhdXNz77+977+9ZSBkZSBCcnV4ZWxsZXM8L2NiYzpTdHJlZXROYW1lPg0KPC9JbnZvaWNlPg0K
+--00000000000005d9da05fa394cc0--
+"""
+
+MAIL_MULTIPART_OMITTED_CHARSET = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the UBL attachment of your invoice
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the UBL attachment of your invoice</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Disposition: attachment; filename="bis3.xml"
+Content-Transfer-Encoding: base64
+Content-Type: text/xml; name="bis3.xml"
+Content-ID: <f_lgxgdqx40>
+X-Attachment-Id: f_lgxgdqx40
+
+PEludm9pY2U+Q2hhdXNzw6llIGRlIEJydXhlbGxlczwvSW52b2ljZT4=
+--00000000000005d9da05fa394cc0--
+"""
+
 
 MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
@@ -467,6 +698,63 @@ Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo
 
 --------------A6B5FD5F68F4D73ECD739009--"""
 
+MAIL_EML_ATTACHMENT_BOUNCE_HEADERS="""\
+Date: Tue, 24 Dec 2019 11:32:07 +0100 (CET)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=16063919151.b32bE0eD.7
+Content-Transfer-Encoding: 7bit
+Subject: Undelivered Mail Returned to Sender
+From: {email_from}
+To: {to}
+Message-Id: <20191224103207.415713014C@example.com>
+Return-Path: <MAILER-DAEMON>
+Delivered-To: odoo+82240-account.invoice-19177@mycompany.example.com
+Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
+ 2019 11:32:07 +0100 (CET)
+Auto-Submitted: auto-replied
+
+
+--16063919151.b32bE0eD.7
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary=16063919150.2cD3F37.7
+Content-Transfer-Encoding: 7bit
+Content-ID: <16063919152.fD96.7@8f286b7b7880>
+
+
+--16063919150.2cD3F37.7
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+This is the mail system at host example.com.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+
+--16063919151.b32bE0eD.7
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: 7bit
+
+Return-Path: <bounce+82240-account.invoice-19177@mycompany.example.com>
+Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
+Content-Type: multipart/mixed; boundary="===============3600759226158551994=="
+MIME-Version: 1.0
+Message-Id: {msg_id}
+references: <1571814481.189281940460205.799582441238467-openerp-19177-account.invoice@mycompany.example.com>
+Subject: Test
+From: "Test" <noreply+srglvrz-gmail.com@mycompany.example.com>
+Reply-To: "MY COMPANY" <info@mycompany.example.com>
+To: "Test" <test@anothercompany.example.com>
+Date: Tue, 24 Dec 2019 10:32:05 -0000
+X-Odoo-Objects: account.invoice-19177
+
+--16063919151.b32bE0eD.7--"""
 
 MAIL_XHTML = """Return-Path: <xxxx@xxxx.com>
 Received: from xxxx.internal (xxxx.xxxx.internal [1.1.1.1])
@@ -826,3 +1114,173 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 
 --92726A5F09.1555335666/mail2.test.ironsky--
 """
+
+
+MAIL_BOUNCE_QP_RFC822_HEADERS = """\
+Received: by mailserver.odoo.com (Postfix)
+        id EA0B917B8E4; Tue, 29 Feb 2023 11:11:11 +0100 (CET)
+From: {email_from} 
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+        boundary="DFFDC17AA03.1673346179/mailserver.odoo.com"
+Message-Id: <40230110102259.EA0B917B8E4@mailserver.odoo.com>
+Content-Transfer-Encoding: 7bit
+Delivered-To: {delivered_to}
+Return-Path: <>
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Notification
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients.
+
+<rdesfrdgtfdrfesd@outlook.com>: host
+    outlook-com.olc.protection.outlook.com[104.47.56.33] said: 550 5.5.0
+    Requested action not taken: mailbox unavailable (S2017062302). (in re=
+ply to
+    RCPT TO command)
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mailserver.odoo.com
+X-Postfix-Queue-ID: DFFDC17AA03
+X-Postfix-Sender: rfc822; bounce@xxx.odoo.com
+Arrival-Date: Tue, 29 Feb 2023 10:10:10 +0100 (CET)
+
+Final-Recipient: rfc822; rdesfrdgtfdrfesd@outlook.com
+Original-Recipient: rfc822;rdesfrdgtfdrfesd@outlook.com
+Action: failed
+Status: 5.5.0
+Remote-MTA: dns; outlook-com.olc.protection.outlook.com
+Diagnostic-Code: smtp; 550 5.5.0 Requested action not taken: mailbox
+    unavailable (S2017062302).
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Undelivered Message Headers
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: quoted-printable
+
+Return-Path: <bounce@xxx.odoo.com>
+Received: from eupp00.odoo.com (00.72.79.34.bc.googleusercontent.com [34.=
+79.72.00])
+        by mailserver.odoo.com (Postfix) with ESMTPS id DFFDC17AA03;
+        Tue, 10 Jan 2023 11:22:57 +0100 (CET)
+DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Dsimple/simple; d=3Dxxx.be;
+        s=3Dodoo; t=3D1673346178;
+        bh=3DYPJOqkUi8B28X1MrRUsgmsL8KRz/ZIkpbYyc6wNITXA=3D;
+        h=3Dreferences:Subject:From:Reply-To:To:Date:From;
+        b=3DCMqh7mUvpgUw+JpCeGluv1+MZ3y6EsXd0acmsfzpYBjcoy1InvD6FLT1/lQCcgetf
+         cGyL/8R4vvDKATyE0AtOIpoYDsbpnMoiYWqaSXnDVuLTrEZzyrK/2j10ZTnHZ2uDTC
+         b7wPjFfQ9pted/t6CAUhVT1XydDNalSwEZovy/QI=3D
+Message-Id: <368396033905967.1673346177.695352554321289-openerp-11-sale.o=
+rder@eupp00>
+references: <792105153140463.1673746527.352018594741821-openerp-11-sale.o=
+rder@xxx.odoo.com> <368396033905967.1673346177.695352554321289-openerp-11=
+-sale.order@eupp00>
+Subject: Thi is a SO (Ref SO/11)
+From: info@xxx.odoo.com
+Reply-To: "SO/11" <catchall@xxx.odoo.com=
+>
+To: "rdesfrdgtfdrfesd@outlook.com" <rdesfrdgtfdrfesd@outlook.com>
+Date: Tue, 29 Feb 2023 06:09:06 -0000
+X-Odoo-Objects: sale.order-11
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=3D"=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D5706316606908750110=3D=3D"
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com--
+
+"""
+
+MAIL_NO_BODY = '''\
+Return-Path: <{email_from}>
+Delivered-To: catchall@xxxx.xxxx
+Received: from in66.mail.ovh.net (unknown [10.101.4.66])
+    by vr38.mail.ovh.net (Postfix) with ESMTP id 4GLCGr70Kyz1myr75
+    for <catchall@xxxx.xxxx>; Thu,  8 Jul 2021 10:30:12 +0000 (UTC)
+X-Comment: SPF check N/A for local connections - client-ip=213.186.33.59; helo=mail663.ha.ovh.net; envelope-from={email_from}; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in66.mail.ovh.net; dkim=none; dkim-atps=neutral
+Delivered-To: xxxx.xxxx-{email_to}
+X-ME-Helo: opme11oxm23aub.bagnolet.francetelecom.fr
+X-ME-Auth: ZnJlZGVyaWMuYmxhY2hvbjA3QG9yYW5nZS5mcg==
+X-ME-Date: Thu, 08 Jul 2021 12:30:11 +0200
+X-ME-IP: 86.221.151.111
+Date: Thu, 8 Jul 2021 12:30:11 +0200 (CEST)
+From: =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_BLACHON?= <{email_from}>
+Reply-To: 
+    =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_BLACHON?= <{email_from}>
+To: {email_to}
+Message-ID: <1024471522.82574.1625740211606.JavaMail.open-xchange@opme11oxm23aub.bagnolet.francetelecom.fr>
+Subject: transport autorisation 19T
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+    boundary="----=_Part_82573_178179506.1625740211587"
+
+------=_Part_82573_178179506.1625740211587
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+ </head><body style="font-family: arial,helvetica,sans-serif; font-size: 13pt"></body></html>
+'''
+
+MAIL_NO_FINAL_RECIPIENT = """\
+Return-Path: <bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com>
+Delivered-To: catchall@xxxx.xxxx
+Received: from in58.mail.ovh.net (unknown [10.101.4.58])
+	by vr46.mail.ovh.net (Postfix) with ESMTP id 4GvFsq2QLYz1t0N7r
+	for <catchall@xxxx.xxxx>; Tue, 24 Aug 2021 17:07:43 +0000 (UTC)
+Received-SPF: Softfail (mailfrom) identity=mailfrom; client-ip=46.105.72.169; helo=40.mo36.mail-out.ovh.net; envelope-from=bounce-md_9656353.6125275c.v1-f28f7746389e45f0bfbf9faefe9e0dc8@mandrillapp.com; receiver=catchall@xxxx.xxxx 
+Authentication-Results: in58.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+Delivered-To: xxxx.xxxx-{email_to}
+Authentication-Results: in62.mail.ovh.net;
+	dkim=pass (1024-bit key; unprotected) header.d=mandrillapp.com header.i=bounces-noreply@mandrillapp.com header.b="TDzUcdJs";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MyjddTY5";
+	dkim-atps=neutral
+From: MAILER-DAEMON <bounces-noreply@mandrillapp.com>
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=9656353.f28f7746389e45f0bfbf9faefe9e0dc8
+X-Mandrill-User: md_9656353
+Feedback-ID: 9656353:9656353.20210824:md
+Message-Id: <9656353.20210824170740.6125275cf21879.17950539@mail9.us4.mandrillapp.com>
+Date: Tue, 24 Aug 2021 17:07:40 +0000
+MIME-Version: 1.0
+Content-Type: multipart/report; boundary="_av-UfLe6y6qxNo54-urtAxbJQ"
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+    --- The following addresses had delivery problems ---
+
+<{email_from}>   (5.7.1 <{email_from}>: Recipient address rejected: Access denied)
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ
+Content-Type: message/delivery-status
+Content-Transfer-Encoding: 7bit
+
+Original-Recipient: <{email_from}>
+Action: failed
+Diagnostic-Code: smtp; 554 5.7.1 <{email_from}>: Recipient address rejected: Access denied
+Remote-MTA: 10.245.192.40
+
+
+
+--_av-UfLe6y6qxNo54-urtAxbJQ--"""

@@ -10,6 +10,7 @@ const {
     beforeEach,
     createRootComponent,
     dragenterFiles,
+    isScrolledToBottom,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -734,9 +735,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -833,9 +832,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 20 initially"
     );
 
@@ -857,9 +855,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         predicate: data => threadViewer === data.threadViewer,
     });
     const messageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should scroll to bottom on receiving new message because the list is initially scrolled to bottom"
     );
 });
@@ -904,9 +901,8 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 20 initially"
     );
 
@@ -970,9 +966,7 @@ QUnit.test("delete all attachments of message without content should no longer d
     // wait for messages of the thread to be loaded
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1028,9 +1022,7 @@ QUnit.test('delete all attachments of a message with some text content should st
     // wait for messages of the thread to be loaded
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1093,9 +1085,7 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     // wait for messages of the thread to be loaded
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1165,6 +1155,48 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     assert.containsOnce(
         document.querySelector(`.o_Message_content`),
         `.o_mail_redirect[data-oe-id="25"][data-oe-model="res.partner"]:contains("@TestPartner")`,
+        "Conversation should have a message that has been posted, which contains partner mention"
+    );
+});
+
+QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['res.partner'].records.push({
+        id: 1952,
+        email: "usatyi@example.com",
+        name: "Pynya's spokesman",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => {
+        ["@", "P", "y", "n"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        });
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_mail_redirect[data-oe-id="1952"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
         "Conversation should have a message that has been posted, which contains partner mention"
     );
 });
@@ -1421,6 +1453,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
         {
             id: 11,
             name: "my channel",
+            public: 'public', // mentioning another channel is possible only from a public channel
         },
         {
             id: 12,
@@ -1486,9 +1519,7 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1530,9 +1561,7 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1579,9 +1608,7 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1634,9 +1661,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true });
-        },
+        func: () => this.createThreadViewComponent(threadViewer.threadView, { order: 'asc' }, { isFixedSize: true }),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1697,10 +1722,11 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "/who"));
     await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').focus();
         document.querySelector('.o_Composer_buttonSend').click();
     });
 
+    // composer is focused by default, we remove that focus
+    document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
     await afterNextRender(() => this.env.services.rpc({
         route: '/mail/chat_post',
@@ -1729,6 +1755,32 @@ QUnit.test('first unseen message should be directly preceded by the new message 
             this.env.models['mail.message'].find(m => m.isTransient).localId
         }"] + .o_MessageList_separatorNewMessages`,
         "separator should be shown just after transient message"
+    );
+});
+
+QUnit.test('composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({id: 20,});
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.hasClass(
+        document.querySelector('.o_Composer'),
+        'o-focused',
+        "composer should be focused automatically after clicking on the send button"
     );
 });
 

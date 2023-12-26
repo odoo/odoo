@@ -11,8 +11,9 @@ const components = {
     ThreadTextualTypingStatus: require('mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js'),
 };
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const {
     isEventHandled,
     markEventHandled,
@@ -29,15 +30,33 @@ class Composer extends Component {
     constructor(...args) {
         super(...args);
         this.isDropZoneVisible = useDragVisibleDropZone();
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                textInputSendShortcuts: 1,
+            },
+        });
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const thread = composer && composer.thread;
             return {
-                composer: composer ? composer.__state : undefined,
+                composer,
+                composerAttachments: composer ? composer.attachments : [],
+                composerCanPostMessage: composer && composer.canPostMessage,
+                composerHasFocus: composer && composer.hasFocus,
+                composerIsLog: composer && composer.isLog,
+                composerSubjectContent: composer && composer.subjectContent,
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                thread: composer && composer.thread
-                    ? composer.thread.__state
-                    : undefined,
+                thread,
+                threadChannelType: thread && thread.channel_type, // for livechat override
+                threadDisplayName: thread && thread.displayName,
+                threadMassMailing: thread && thread.mass_mailing,
+                threadModel: thread && thread.model,
+                threadName: thread && thread.name,
             };
+        }, {
+            compareDepth: {
+                composerAttachments: 1,
+            },
         });
         useUpdate({ func: () => this._update() });
         /**
@@ -198,6 +217,9 @@ class Composer extends Component {
      * @private
      */
     _update() {
+        if (this.props.isDoFocus) {
+            this.focus();
+        }
         if (!this.composer) {
             return;
         }
@@ -261,6 +283,7 @@ class Composer extends Component {
      */
     _onClickSend() {
         this._postMessage();
+        this.focus();
     }
 
     /**
@@ -363,7 +386,6 @@ class Composer extends Component {
 Object.assign(Composer, {
     components,
     defaultProps: {
-        attachmentLocalIds: [],
         hasCurrentPartnerAvatar: true,
         hasDiscardButton: false,
         hasFollowers: false,
@@ -371,13 +393,10 @@ Object.assign(Composer, {
         hasThreadName: false,
         hasThreadTyping: false,
         isCompact: true,
+        isDoFocus: false,
         isExpandable: false,
     },
     props: {
-        attachmentLocalIds: {
-            type: Array,
-            element: String,
-        },
         attachmentsDetailsMode: {
             type: String,
             optional: true,
@@ -393,21 +412,16 @@ Object.assign(Composer, {
         hasSendButton: Boolean,
         hasThreadName: Boolean,
         hasThreadTyping: Boolean,
+        /**
+         * Determines whether this should become focused.
+         */
+        isDoFocus: Boolean,
         showAttachmentsExtensions: {
             type: Boolean,
             optional: true,
         },
         showAttachmentsFilenames: {
             type: Boolean,
-            optional: true,
-        },
-        initialAttachmentLocalIds: {
-            type: Array,
-            element: String,
-            optional: true,
-        },
-        initialTextInputHtmlContent: {
-            type: String,
             optional: true,
         },
         isCompact: Boolean,

@@ -166,7 +166,8 @@ var PurchaseKanbanDashboardRenderer = KanbanRenderer.extend({
             var purchase_dashboard = QWeb.render('purchase.PurchaseDashboard', {
                 values: values,
             });
-            self.$el.prepend(purchase_dashboard);
+            self.$el.parent().find(".o_purchase_dashboard").remove();
+            self.$el.before(purchase_dashboard);
         });
     },
 

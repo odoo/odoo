@@ -1,5 +1,7 @@
-odoo.define('web.Popover', function () {
+odoo.define('web.Popover', function (require) {
     'use strict';
+
+    const patchMixin = require('web.patchMixin');
 
     const { Component, hooks, misc, QWeb } = owl;
     const { Portal } = misc;
@@ -77,6 +79,10 @@ odoo.define('web.Popover', function () {
             });
             window.addEventListener('resize', this._onResizeWindow);
             this._hasGlobalEventListeners = true;
+        }
+
+        _close() {
+            this.state.displayed = false;
         }
 
         /**
@@ -184,7 +190,7 @@ odoo.define('web.Popover', function () {
             if (this.popoverRef.el && this.popoverRef.el.contains(ev.target)) {
                 return;
             }
-            this.state.displayed = false;
+            this._close();
         }
 
         /**
@@ -192,7 +198,7 @@ odoo.define('web.Popover', function () {
          * @param {Event} ev
          */
         _onPopoverClose(ev) {
-            this.state.displayed = false;
+            this._close();
         }
 
         /**
@@ -213,6 +219,9 @@ odoo.define('web.Popover', function () {
          * @param {Event} ev
          */
         _onResizeWindow(ev) {
+            if (this.__owl__.status === 5 /* destroyed */) {
+                return;
+            }
             this._compute();
         }
 
@@ -224,6 +233,9 @@ odoo.define('web.Popover', function () {
          * @param {Event} ev
          */
         _onScrollDocument(ev) {
+            if (this.__owl__.status === 5 /* destroyed */) {
+                return;
+            }
             this._compute();
         }
 
@@ -312,5 +324,5 @@ odoo.define('web.Popover', function () {
 
     QWeb.registerComponent('Popover', Popover);
 
-    return Popover;
+    return patchMixin(Popover);
 });

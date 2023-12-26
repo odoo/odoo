@@ -15,6 +15,7 @@ odoo.define('web.AbstractController', function (require) {
 var ActionMixin = require('web.ActionMixin');
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
+const config = require('web.config');
 const { ComponentWrapper } = require('web.OwlCompatibility');
 var mvc = require('web.mvc');
 var session = require('web.session');
@@ -119,6 +120,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     on_attach_callback: function () {
         ActionMixin.on_attach_callback.call(this);
         this.searchModel.on('search', this, this._onSearch);
+        if (!config.device.isMobileDevice) {
+            this.searchModel.trigger('focus-control-panel');
+        }
         if (this.withControlPanel) {
             this.searchModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }
@@ -338,7 +342,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _renderBanner: async function () {
         if (this.bannerRoute !== undefined) {
-            const response = await this._rpc({route: this.bannerRoute});
+            const response = await this._rpc({
+                route: this.bannerRoute,
+                params: {context: session.user_context},
+            });
             if (!response.html) {
                 this.$el.removeClass('o_has_banner');
                 return Promise.resolve();

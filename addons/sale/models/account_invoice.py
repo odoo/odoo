@@ -49,18 +49,12 @@ class AccountMove(models.Model):
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
 
-        res = super(AccountMove, self)._onchange_partner_id()
-
-        # Recompute 'narration' based on 'company.invoice_terms'.
-        if self.move_type == 'out_invoice':
-            self.narration = self.company_id.with_context(lang=self.partner_id.lang).invoice_terms
-
-        return res
+        return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
         if self.invoice_user_id and self.invoice_user_id.sale_team_id:
-            self.team_id = self.invoice_user_id.sale_team_id
+            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.invoice_user_id.id, domain=[('company_id', '=', self.company_id.id)])
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE
@@ -81,7 +75,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
-            payments = invoice.mapped('transaction_ids.payment_id')
+            payments = invoice.mapped('transaction_ids.payment_id').filtered(lambda p: p.state == 'posted')
             move_lines = payments.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)
@@ -103,3 +97,8 @@ class AccountMove(models.Model):
         # OVERRIDE
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()
+
+    def _is_downpayment(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False

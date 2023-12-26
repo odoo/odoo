@@ -16,7 +16,7 @@
         </div>
         <div t-if="widget.options.colorPreview" class="o_color_preview mb-1 w-100 p-2"/>
         <div class="o_color_picker_inputs d-flex justify-content-between mb-2">
-            <t t-set="input_classes">p-0 border-0 text-center text-monospace bg-transparent text-white</t>
+            <t t-set="input_classes" t-value="'p-0 border-0 text-center text-monospace bg-transparent text-white'" />
 
             <div class="o_hex_div bg-black-50 px-1 d-flex align-items-baseline">
                 <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"/>

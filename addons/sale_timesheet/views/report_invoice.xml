@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[hasclass('page')]/h2" position="after">
+                <a t-if="report_type == 'html' and o.move_type == 'out_invoice' and o.state in ('draft', 'posted') and o.timesheet_count > 0" target="_blank" t-att-href="'/my/timesheets?search_in=invoice_id&amp;search=%s' % o.id">View Timesheets</a>
+            </xpath>
+        </template>
+    </data>
+</odoo>

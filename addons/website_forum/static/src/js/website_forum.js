@@ -45,7 +45,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
             window.location.origin,
-            escape(window.location.href)
+            encodeURIComponent(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
 
@@ -88,6 +88,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     return {
                         query: term,
                         limit: 50,
+                        forum_id: $('#wrapwrap').data('forum_id'),
                     };
                 },
                 results: function (data) {
@@ -119,6 +120,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             var $form = $textarea.closest('form');
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
+            // Warning: Do not activate any option that adds inline style.
+            // Because the style is deleted after save.
             var toolbar = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -131,7 +134,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             toolbar.push(['history', ['undo', 'redo']]);
 
             var options = {
-                height: 200,
+                height: 350,
                 minHeight: 80,
                 toolbar: toolbar,
                 styleWithSpan: false,
@@ -141,6 +144,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                disableFullMediaDialog: true,
+                disableResizeImage: true,
             };
             if (!hasFullEdit) {
                 options.plugins = {
@@ -151,7 +156,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button .a-submit', () => {
+                // o_we_selected_image has not always been removed when
+                // saving a post so we need the line below to remove it if it is present.
+                $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+                $form.on('click', 'button, .a-submit', () => {
+                    $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
                     wysiwyg.save();
                 });
             });
@@ -163,7 +172,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 offset: 10,
                 animation: false,
                 html: true,
-            });
+            }).popover('hide').data('bs.popover').tip.classList.add('o_wforum_bio_popover_container');
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
@@ -193,7 +202,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         let $title = $form.find('input[name=post_name]');
         let $textarea = $form.find('textarea[name=content]');
         // It's not really in the textarea that the user write at first
-        let textareaContent = $form.find('.o_wysiwyg_wrapper .note-editable.panel-body').text().trim();
+        const fillableTextAreaEl = ev.currentTarget
+            .querySelector(".o_wysiwyg_wrapper .note-editable.panel-body");
+        const isTextAreaFilled = fillableTextAreaEl &&
+            (fillableTextAreaEl.innerText.trim() || fillableTextAreaEl.querySelector("img"));
 
         if ($title.length && $title[0].required) {
             if ($title.val()) {
@@ -207,7 +219,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // Because the textarea is hidden, we add the red or green border to its container
         if ($textarea[0] && $textarea[0].required) {
             let $textareaContainer = $form.find('.o_wysiwyg_wrapper .note-editor.panel.panel-default');
-            if (!textareaContent.length) {
+            if (!isTextAreaFilled) {
                 $textareaContainer.addClass('border border-danger rounded-top');
                 validForm = false;
             } else {
@@ -579,6 +591,24 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         }).then(function () {
             window.location.reload();
         });
+    },
+});
+
+publicWidget.registry.WebsiteForumBackButton = publicWidget.Widget.extend({
+    selector: '.o_back_button',
+    events: {
+        'click': '_onBackButtonClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onBackButtonClick() {
+        window.history.back();
     },
 });
 

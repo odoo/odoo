@@ -66,6 +66,65 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 0)
         self.assertEqual(coupon.state, 'new')
 
+    def test_program_coupon_double_consuming(self):
+        # Test case:
+        # - Generate a coupon
+        # - add to a sale order A, cancel the sale order
+        # - add to a sale order B, confirm the order
+        # - go back to A, reset to draft and confirm
+
+        self.code_promotion_program.reward_type = 'discount'
+
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = self.code_promotion_program.coupon_ids
+
+        sale_order_a = self.empty_order.copy()
+        sale_order_b = self.empty_order.copy()
+
+        sale_order_a.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=sale_order_a.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        sale_order_a.recompute_coupon_lines()
+        self.assertEqual(len(sale_order_a.order_line.ids), 2)
+        self.assertEqual(coupon.state, 'used')
+        self.assertEqual(coupon.sales_order_id, sale_order_a)
+
+        sale_order_a.action_cancel()
+
+        sale_order_b.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=sale_order_b.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        sale_order_b.recompute_coupon_lines()
+        self.assertEqual(len(sale_order_b.order_line.ids), 2)
+        self.assertEqual(coupon.state, 'used')
+        self.assertEqual(coupon.sales_order_id, sale_order_b)
+
+        sale_order_b.action_confirm()
+
+        sale_order_a.action_draft()
+        sale_order_a.action_confirm()
+        # reward line removed automatically
+        self.assertEqual(len(sale_order_a.order_line.ids), 1)
+
     def test_coupon_code_with_pricelist(self):
         # Test case: Generate a coupon (10% discount) and apply it on an order with a specific pricelist (10% discount)
 
@@ -243,3 +302,80 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order_bis.order_line), 2, "You should get 1 regular product_B and 1 free product_B")
         order_bis.recompute_coupon_lines()
         self.assertEqual(len(order_bis.order_line), 2, "Free product from a coupon generated from a promotion program on next order should not dissapear")
+
+    def test_edit_and_reapply_promotion_program(self):
+        # The flow:
+        # 1. Create a program auto applied, giving a fixed amount discount
+        # 2. Create a SO and apply the program
+        # 3. Change the program, requiring a mandatory code
+        # 4. Reapply the program on the same SO via code
+
+        # 1.
+        self.p1 = self.env['coupon.program'].create({
+            'name': 'Promo fixed amount',
+            'promo_code_usage': 'no_code_needed',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 10.0,
+            'program_type': 'promotion_program',
+        })
+        # 2.
+        order = self.empty_order.copy()
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line), 2, "You should get a discount line")
+        # 3.
+        self.p1.write({
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test',
+            })
+        order.recompute_coupon_lines()
+        # 4.
+        with self.assertRaises(UserError):
+            self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+                'coupon_code': 'test'
+            }).process_coupon()
+        self.assertEqual(len(order.order_line), 2, "You should get a discount line")
+
+    def test_apply_program_no_reward_link(self):
+        # Tests that applying a promo code that does not generate reward lines
+        #  does not link on the order
+        self.env['coupon.program'].create({
+            'name': 'Code for 10% on orders',
+            'promo_code_usage': 'code_needed',
+            'promo_code': 'test_10pc',
+            'discount_type': 'percentage',
+            'discount_percentage': 10.0,
+            'program_type': 'promotion_program',
+        })
+        self.empty_order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_C.id,
+                'name': '1 Product C',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=self.empty_order.id).create({
+            'coupon_code': 'test_10pc',
+        }).process_coupon()
+        self.assertFalse(self.empty_order.code_promo_program_id, 'The program should not be linked to the order')
+
+        # Same for a coupon's code
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = self.code_promotion_program_with_discount.coupon_ids
+        self.env['sale.coupon.apply.code'].with_context(active_id=self.empty_order.id).create({
+            'coupon_code': coupon.code,
+        }).process_coupon()
+        self.assertFalse(self.empty_order.applied_coupon_ids, 'No coupon should be linked to the order')
+        self.assertEqual(coupon.state, 'new', 'Coupon should be in a new state')

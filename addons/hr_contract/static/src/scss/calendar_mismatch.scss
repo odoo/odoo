@@ -4,15 +4,15 @@
     }
 
     .o_calendar_warning_tooltip {
-        position: absolute;
+        display: block;
+        height: 0;
         opacity: 0;
-        visibility: hidden;
     }
 
     .o_calendar_warning:hover + .o_calendar_warning_tooltip {
-        position: relative;
-        visibility: visible;
+        display: inline;
+        height: auto;
         opacity: 1;
-        transition: visibility 0s, opacity 0.5s linear;
+        transition: opacity 0.5s linear;
     }
 }

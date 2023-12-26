@@ -5,9 +5,10 @@
         <field name="model">ir.translation</field>
         <field name="inherit_id" ref="base.view_translation_tree"/>
         <field name="arch" type="xml">
-            <field name="lang" position="after">
+            <field name="state" position="after">
                 <field name="transifex_url"
-                       widget="link_button"
+                       widget="url"
+                       text="Contribute"
                        string="Transifex" />
             </field>
         </field>
@@ -18,9 +19,10 @@
         <field name="model">ir.translation</field>
         <field name="inherit_id" ref="base.view_translation_dialog_tree"/>
         <field name="arch" type="xml">
-            <field name="lang" position="after">
+            <field name="state" position="after">
                 <field name="transifex_url"
-                       widget="link_button"
+                       widget="url"
+                       text="Contribute"
                        string="Transifex" />
             </field>
         </field>

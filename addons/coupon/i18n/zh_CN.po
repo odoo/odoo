@@ -4,23 +4,25 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
 # roye w <159820@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -56,6 +58,12 @@ msgstr "%s%% 折扣（在产品上）"
 #, python-format
 msgid "%s%% discount on total amount"
 msgstr "%s%% 折扣（在总额上）"
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
+msgstr "%s，已经为您生成了一张优惠券"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -283,7 +291,7 @@ msgstr ""
 "        </p>\n"
 "        % if object.program_id.rule_min_quantity not in [0, 1]\n"
 "        <span style=\"font-size: 14px;\">\n"
-"            最低购买量 ${object.program_id.rule_min_quantity} products\n"
+"            最少采购数量 ${object.program_id.rule_min_quantity} products\n"
 "        </span><br/>\n"
 "        % endif\n"
 "        % if object.program_id.rule_minimum_amount != 0.00\n"
@@ -1118,7 +1126,7 @@ msgstr "开始日期"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
 msgid "State"
-msgstr "省/地区"
+msgstr "状态"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
@@ -1149,8 +1157,8 @@ msgstr "固定金额的折扣"
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
-msgid "The discount in percentage, between 1 to 100"
-msgstr "用百分比表示的折扣，在1-100之间"
+msgid "The discount in percentage, between 1 and 100"
+msgstr "折扣百分数应该在1-100之间"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0

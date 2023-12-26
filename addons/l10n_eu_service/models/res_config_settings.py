@@ -9,6 +9,11 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_eu_services_eu_country = fields.Boolean('Is European country?', compute='_compute_l10n_eu_services_european_country')
 
+    def refresh_eu_tax_mapping(self):
+        self.env.companies._map_eu_taxes()
+
     @api.depends('company_id')
     def _compute_l10n_eu_services_european_country(self):
-        self.l10n_eu_services_eu_country = self.company_id.country_id in self.env.ref('base.europe').country_ids
+        european_countries = self.env.ref('base.europe').country_ids
+        for record in self:
+            record.l10n_eu_services_eu_country = record.company_id.account_tax_fiscal_country_id in european_countries

@@ -319,3 +319,48 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         original_out_move = outgoing_shipment_neg.move_lines[0]
         self.assertEqual(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
         self.assertEqual(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')
+
+    def test_01_test_fifo(self):
+        """" This test ensures that unit price keeps its decimal precision """
+
+        unit_price_precision = self.env['ir.model.data'].xmlid_to_object('product.decimal_price')
+        unit_price_precision.digits = 3
+
+        tax = self.env["account.tax"].create({
+            "name": "Dummy Tax",
+            "amount": "0.00",
+            "type_tax_use": "purchase",
+        })
+
+        super_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'standard_price': 0.035,
+        })
+        self.assertEqual(super_product.cost_method, 'fifo')
+        self.assertEqual(super_product.valuation, 'real_time')
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.env.ref('base.res_partner_3').id,
+            'order_line': [(0, 0, {
+                'name': super_product.name,
+                'product_id': super_product.id,
+                'product_qty': 1000,
+                'product_uom': super_product.uom_id.id,
+                'price_unit': super_product.standard_price,
+                'date_planned': time.strftime('%Y-%m-%d'),
+                'taxes_id': [(4, tax.id)],
+            })],
+        })
+
+        purchase_order.button_confirm()
+        self.assertEqual(purchase_order.state, 'purchase')
+
+        picking = purchase_order.picking_ids[0]
+        res = picking.button_validate()
+        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+
+        self.assertEqual(super_product.standard_price, 0.035)
+        self.assertEqual(super_product.value_svl, 35.0)
+        self.assertEqual(picking.move_lines.price_unit, 0.035)

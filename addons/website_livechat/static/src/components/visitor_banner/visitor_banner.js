@@ -14,7 +14,9 @@ class VisitorBanner extends Component {
         super(...args);
         useStore(props => {
             const visitor = this.env.models['website_livechat.visitor'].get(props.visitorLocalId);
+            const country = visitor && visitor.country;
             return {
+                country: country && country.__state,
                 visitor: visitor ? visitor.__state : undefined,
             };
         });

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
 
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models, _
+from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import AccessError
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 logger = logging.getLogger(__name__)
 
@@ -43,21 +45,22 @@ class SeoMetadata(models.AbstractModel):
         title = (request.website or company).name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
+
         img_field = 'social_default_image' if request.website.has_social_default_image else 'logo'
-        img = request.website.image_url(request.website, img_field)
+
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
             'og:title': title,
             'og:site_name': company.name,
-            'og:url': request.httprequest.url,
-            'og:image': img,
+            'og:url': url_join(request.httprequest.url_root, url_for(request.httprequest.path)),
+            'og:image': request.website.image_url(request.website, img_field),
         }
         # Default meta for Twitter
         default_twitter = {
             'twitter:card': 'summary_large_image',
             'twitter:title': title,
-            'twitter:image': img + '/300x300',
+            'twitter:image': request.website.image_url(request.website, img_field, size='300x300'),
         }
         if company.social_twitter:
             default_twitter['twitter:site'] = "@%s" % company.social_twitter.split('/')[-1]
@@ -85,11 +88,8 @@ class SeoMetadata(models.AbstractModel):
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
             twitter_meta['twitter:description'] = self.website_meta_description
-        meta_image = self.website_meta_og_img or opengraph_meta['og:image']
-        if meta_image.startswith('/'):
-            meta_image = "%s%s" % (root_url, meta_image)
-        opengraph_meta['og:image'] = meta_image
-        twitter_meta['twitter:image'] = meta_image
+        opengraph_meta['og:image'] = url_join(root_url, url_for(self.website_meta_og_img or opengraph_meta['og:image']))
+        twitter_meta['twitter:image'] = url_join(root_url, url_for(self.website_meta_og_img or twitter_meta['twitter:image']))
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
@@ -102,7 +102,7 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
     _name = 'website.cover_properties.mixin'
     _description = 'Cover Properties Website Mixin'
 
-    cover_properties = fields.Text('Cover Properties', default=lambda s: json.dumps(s._default_cover_properties()))
+    cover_properties = fields.Text('Cover Properties', default=lambda s: json_scriptsafe.dumps(s._default_cover_properties()))
 
     def _default_cover_properties(self):
         return {
@@ -111,6 +111,29 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
             "opacity": "0.2",
             "resize_class": "o_half_screen_height",
         }
+
+    def write(self, vals):
+        if 'cover_properties' not in vals:
+            return super().write(vals)
+
+        cover_properties = json_scriptsafe.loads(vals['cover_properties'])
+        resize_classes = cover_properties.get('resize_class', '').split()
+        classes = ['o_half_screen_height', 'o_full_screen_height', 'cover_auto']
+        if not set(resize_classes).isdisjoint(classes):
+            # Updating cover properties and the given 'resize_class' set is
+            # valid, normal write.
+            return super().write(vals)
+
+        # If we do not receive a valid resize_class via the cover_properties, we
+        # keep the original one (prevents updates on list displays from
+        # destroying resize_class).
+        copy_vals = dict(vals)
+        for item in self:
+            old_cover_properties = json_scriptsafe.loads(item.cover_properties)
+            cover_properties['resize_class'] = old_cover_properties.get('resize_class', classes[0])
+            copy_vals['cover_properties'] = json_scriptsafe.dumps(cover_properties)
+            super(WebsiteCoverPropertiesMixin, item).write(copy_vals)
+        return True
 
 
 class WebsiteMultiMixin(models.AbstractModel):

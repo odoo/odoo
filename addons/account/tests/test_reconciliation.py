@@ -711,7 +711,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': self.company.id
         })
         inv1 = self.create_invoice(invoice_amount=800, currency_id=self.currency_usd_id)
-        inv2 = self.create_invoice(type="out_refund", invoice_amount=400, currency_id=self.currency_usd_id)
+        inv2 = self.create_invoice(move_type="out_refund", invoice_amount=400, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
             'date': time.strftime('%Y') + '-07-15',
@@ -777,7 +777,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self.create_invoice(invoice_amount=658, currency_id=self.currency_usd_id)
-        inv2 = self.create_invoice(type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id)
+        inv2 = self.create_invoice(move_type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
             'payment_method_id': self.inbound_payment_method.id,
@@ -851,7 +851,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self._create_invoice(invoice_amount=658, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-01', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         payment = self.env['account.payment'].create({
             'date': time.strftime('%Y') + '-07-15',
@@ -923,7 +923,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         })
 
         inv1 = self._create_invoice(invoice_amount=600, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         inv1_receivable = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         inv2_receivable = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
@@ -981,7 +981,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self._create_invoice(invoice_amount=600, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         inv1_receivable = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         inv2_receivable = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
@@ -1011,9 +1011,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertTrue(inv1_receivable.full_reconcile_id.exists())
         self.assertEqual(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
         self.assertEqual(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
-
-        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
         self.assertEqual(inv2.payment_state, 'paid')
@@ -1051,7 +1048,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self._create_invoice(invoice_amount=600, currency_id=foreign_1.id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=250, currency_id=foreign_1.id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=250, currency_id=foreign_1.id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         inv1_receivable = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         inv2_receivable = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
@@ -1081,14 +1078,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertTrue(inv1_receivable.full_reconcile_id.exists())
         self.assertEqual(inv1_receivable.full_reconcile_id, inv2_receivable.full_reconcile_id)
         self.assertEqual(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
-
-        # Before saas-13.4, there was no exchange difference entry generated because the amount was
-        # wrongly converted in the _amount_residual method at the invoice date like this:
-        # 315.15 * (600.0 / 540.25) = 515.15 * 1.110596946 = 350.004627487 ~= 350.0
-        # Now, the conversion is made using the payment rate using the _convert method and the
-        # encoded currency rate:
-        # 315.15 * 1.1106 = 350.00559 ~= 350.01
-        self.assertTrue(inv1_receivable.full_reconcile_id.exchange_move_id)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
         self.assertEqual(inv2.payment_state, 'paid')
@@ -1201,8 +1190,5 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertTrue(inv1_receivable.full_reconcile_id.exists())
         self.assertEqual(inv1_receivable.full_reconcile_id, payment_receivable.full_reconcile_id)
         self.assertEqual(move_balance_receiv.full_reconcile_id, inv1_receivable.full_reconcile_id)
-
-        exchange_rcv = inv1_receivable.full_reconcile_id.exchange_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
-        self.assertEqual(exchange_rcv.amount_currency, 0.01)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")

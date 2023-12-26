@@ -38,8 +38,8 @@ odoo.define('web.web_client', function (require) {
         webClient.isStarted = true;
         const chrome = new (Registries.Component.get(Chrome))(null, { webClient });
         await chrome.mount(document.querySelector('.o_action_manager'));
-        await chrome.start();
         configureGui({ component: chrome });
+        await chrome.start();
     }
 
     AbstractService.prototype.deployServices(env);

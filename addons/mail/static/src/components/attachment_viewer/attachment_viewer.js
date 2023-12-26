@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/components/attachment_viewer/attachment_viewer.js', function (require) {
 'use strict';
 
+const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component, QWeb } = owl;
@@ -18,6 +20,7 @@ class AttachmentViewer extends Component {
     constructor(...args) {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
             return {
@@ -31,16 +34,17 @@ class AttachmentViewer extends Component {
             };
         });
         /**
+         * Used to ensure that the ref is always up to date, which seems to be needed if the element
+         * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
+         * This was made to remove the display of the previous image as soon as the src changes.
+         */
+        this._getRefs = useRefs();
+        /**
          * Determine whether the user is currently dragging the image.
          * This is useful to determine whether a click outside of the image
          * should close the attachment viewer or not.
          */
         this._isDragging = false;
-        /**
-         * Reference to the image node. Useful in the computation of the zoomer
-         * style (based on user zoom in/out interactions).
-         */
-        this._imageRef = useRef('image');
         /**
          * Reference of the zoomer node. Useful to apply translate
          * transformation on image visualisation.
@@ -54,18 +58,12 @@ class AttachmentViewer extends Component {
          * position changes while dragging)
          */
         this._translate = { x: 0, y: 0, dx: 0, dy: 0 };
-        /**
-         * Tracked last rendered attachment. Useful to detect a new image is
-         * loading, in order to display spinner until it is fully loaded.
-         */
-        this._renderedAttachment = undefined;
         this._onClickGlobal = this._onClickGlobal.bind(this);
     }
 
     mounted() {
         this.el.focus();
         this._handleImageLoad();
-        this._renderedAttachment = this.attachmentViewer.attachment;
         document.addEventListener('click', this._onClickGlobal);
     }
 
@@ -74,7 +72,6 @@ class AttachmentViewer extends Component {
      */
     patched() {
         this._handleImageLoad();
-        this._renderedAttachment = this.attachmentViewer.attachment;
     }
 
     willUnmount() {
@@ -156,12 +153,16 @@ class AttachmentViewer extends Component {
      * @private
      */
     _handleImageLoad() {
+        if (!this.attachmentViewer || !this.attachmentViewer.attachment) {
+            return;
+        }
+        const refs = this._getRefs();
+        const image = refs[`image_${this.attachmentViewer.attachment.id}`];
         if (
             this.attachmentViewer.attachment.fileType === 'image' &&
-            this._renderedAttachment !== this.attachmentViewer.attachment
+            (!image || !image.complete)
         ) {
             this.attachmentViewer.update({ isImageLoading: true });
-            this._imageRef.el.addEventListener('load', ev => this._onLoadImage(ev));
         }
     }
 
@@ -260,10 +261,12 @@ class AttachmentViewer extends Component {
      */
     _updateZoomerStyle() {
         const attachmentViewer = this.attachmentViewer;
-        const tx = this._imageRef.el.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
+        const refs = this._getRefs();
+        const image = refs[`image_${this.attachmentViewer.attachment.id}`];
+        const tx = image.offsetWidth * attachmentViewer.scale > this._zoomerRef.el.offsetWidth
             ? this._translate.x + this._translate.dx
             : 0;
-        const ty = this._imageRef.el.offsetHeight * attachmentViewer.scale > this._zoomerRef.el.offsetHeight
+        const ty = image.offsetHeight * attachmentViewer.scale > this._zoomerRef.el.offsetHeight
             ? this._translate.y + this._translate.dy
             : 0;
         if (tx === 0) {

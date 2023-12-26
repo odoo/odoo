@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:31+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_address_city
 #: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
@@ -28,7 +28,7 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
-"Selezionare questa casella per fare in modo che tutti gli indirizzi creati "
+"Selezionare la casella per fare in modo che tutti gli indirizzi creati "
 "abbiano una \"Città\" scelta dall'elenco delle città della nazione."
 
 #. module: base_address_city
@@ -71,7 +71,7 @@ msgstr "Creato da"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
@@ -129,7 +129,7 @@ msgstr "Ricerca città"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
-msgstr "Stato"
+msgstr "Stato/Provincia"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode

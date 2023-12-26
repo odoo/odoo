@@ -5,7 +5,7 @@
 }
 
 .o_wysiwyg_loader {
-    @extend .form-control:disabled;
+    @extend :disabled;
     pointer-events: none;
     min-height: 100px;
     color: transparent;
@@ -22,12 +22,10 @@
 
     .ui-menu-item {
         padding: 0;
-        > a {
-            &.ui-state-active {
-                border: none;
-                font-weight: normal;
-                margin: 0;
-            }
+        > .ui-state-active {
+            border: none;
+            font-weight: normal;
+            margin: 0;
         }
     }
 }

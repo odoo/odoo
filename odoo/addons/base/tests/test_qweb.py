@@ -557,6 +557,30 @@ class TestQWebNS(TransactionCase):
         rendered = view2.with_context(lang=current_lang)._render().strip()
         self.assertEqual(rendered, b'9/000/000*00')
 
+    def test_render_barcode(self):
+        partner = self.env['res.partner'].create({
+            'name': 'bacode_test',
+            'barcode': 'test'
+        })
+
+        view = self.env['ir.ui.view'].create({
+            'name': "a_barcode_view",
+            'type': 'qweb',
+        })
+
+        view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30}"/>"""
+        rendered = view._render(values={'partner': partner}).strip().decode()
+        self.assertRegex(rendered, r'<div><img alt="Barcode test" src="data:image/png;base64,\S+"></div>')
+
+        partner.barcode = '4012345678901'
+        view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
+        ean_rendered = view._render(values={'partner': partner}).strip().decode()
+        self.assertRegex(ean_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
+
+        view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
+        auto_rendered = view._render(values={'partner': partner}).strip().decode()
+        self.assertRegex(auto_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
+
 
 from copy import deepcopy
 class FileSystemLoader(object):
@@ -699,6 +723,31 @@ class TestPageSplit(TransactionCase):
             rendered,
             E.div(E.table(E.tr(), E.tr(), E.tr()))
         )
+
+
+class TestQWebMisc(TransactionCase):
+    def test_render_comment_tail(self):
+        """ Test the rendering of a tail text, near a comment.
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': "qweb",
+            'arch': """
+            <t>
+                <!-- it is a comment -->
+                <!-- it is another comment -->
+                Text 1
+                <!-- it is still another comment -->
+                Text 2
+                <t>ok</t>
+            </t>
+            """
+        })
+        emptyline = b'\n                '
+        expected = emptyline * 3 + b'Text 1' + emptyline * 2 + b'Text 2' + emptyline + b'ok\n            '
+        self.assertEqual(view1._render(), expected)
+
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not

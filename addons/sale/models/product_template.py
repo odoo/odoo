@@ -89,7 +89,7 @@ class ProductTemplate(models.Model):
             'active_id': self._context.get('active_id'),
             'active_model': 'sale.report',
             'search_default_Sales': 1,
-            'time_ranges': {'field': 'date', 'range': 'last_365_days'}
+            'search_default_filter_order_date': 1,
         }
         return action
 
@@ -137,6 +137,11 @@ class ProductTemplate(models.Model):
             if not self.invoice_policy:
                 self.invoice_policy = 'order'
             self.service_type = 'manual'
+        if self._origin and self.sales_count > 0:
+            res['warning'] = {
+                'title': _("Warning"),
+                'message': _("You cannot change the product's type because it is already used in sales orders.")
+            }
         return res
 
     @api.model
@@ -237,13 +242,16 @@ class ProductTemplate(models.Model):
                 )
             list_price = product.price_compute('list_price')[product.id]
             price = product.price if pricelist else list_price
-            display_image = bool(product.image_1920)
+            display_image = bool(product.image_128)
             display_name = product.display_name
+            price_extra = (product.price_extra or 0.0 ) + (sum(no_variant_attributes_price_extra) or 0.0)
         else:
-            product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
+            current_attributes_price_extra = [v.price_extra or 0.0 for v in combination]
+            product_template = product_template.with_context(current_attributes_price_extra=current_attributes_price_extra)
+            price_extra = sum(current_attributes_price_extra)
             list_price = product_template.price_compute('list_price')[product_template.id]
             price = product_template.price if pricelist else list_price
-            display_image = bool(product_template.image_1920)
+            display_image = bool(product_template.image_128)
 
             combination_name = combination._get_combination_name()
             if combination_name:
@@ -252,6 +260,10 @@ class ProductTemplate(models.Model):
         if pricelist and pricelist.currency_id != product_template.currency_id:
             list_price = product_template.currency_id._convert(
                 list_price, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
+                fields.Date.today()
+            )
+            price_extra = product_template.currency_id._convert(
+                price_extra, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
                 fields.Date.today()
             )
 
@@ -265,8 +277,15 @@ class ProductTemplate(models.Model):
             'display_image': display_image,
             'price': price,
             'list_price': list_price,
+            'price_extra': price_extra,
             'has_discounted_price': has_discounted_price,
         }
+
+    def _can_be_added_to_cart(self):
+        """
+        Pre-check to `_is_add_to_cart_possible` to know if product can be sold.
+        """
+        return self.sale_ok
 
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
@@ -281,7 +300,7 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if not self.active:
+        if not self.active or not self._can_be_added_to_cart():
             # for performance: avoid calling `_get_possible_combinations`
             return False
         return next(self._get_possible_combinations(parent_combination), False) is not False

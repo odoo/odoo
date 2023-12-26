@@ -86,26 +86,22 @@ class CouponProgram(models.Model):
     def create(self, vals):
         program = super(CouponProgram, self).create(vals)
         if not vals.get('discount_line_product_id', False):
-            discount_line_product_id = self.env['product.product'].create({
-                'name': program.reward_id.display_name,
-                'type': 'service',
-                'taxes_id': False,
-                'supplier_taxes_id': False,
-                'sale_ok': False,
-                'purchase_ok': False,
-                'lst_price': 0, #Do not set a high value to avoid issue with coupon code
-            })
+            values = program._get_discount_product_values()
+            discount_line_product_id = self.env['product.product'].create(values)
             program.write({'discount_line_product_id': discount_line_product_id.id})
         return program
 
     def write(self, vals):
         res = super(CouponProgram, self).write(vals)
+        if not self:
+            return res
         reward_fields = [
             'reward_type', 'reward_product_id', 'discount_type', 'discount_percentage',
             'discount_apply_on', 'discount_specific_product_ids', 'discount_fixed_amount'
         ]
         if any(field in reward_fields for field in vals):
-            self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
+            for program in self:
+                program.discount_line_product_id.write({'name': program.reward_id.display_name})
         return res
 
     def unlink(self):
@@ -133,23 +129,38 @@ class CouponProgram(models.Model):
         return self.currency_id._convert(self[field], currency_to, self.company_id, fields.Date.today())
 
     def _is_valid_partner(self, partner):
-        if self.rule_partners_domain:
+        if self.rule_partners_domain and self.rule_partners_domain != '[]':
             domain = ast.literal_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
             return bool(self.env['res.partner'].search_count(domain))
         else:
             return True
 
     def _is_valid_product(self, product):
-        # NOTE: if you override this method, think of also overriding _get_valid_products
-        # we also encourage the use of _get_valid_products as its execution is faster
-        if self.rule_products_domain:
-            domain = ast.literal_eval(self.rule_products_domain) + [('id', '=', product.id)]
-            return bool(self.env['product.product'].search_count(domain))
-        else:
-            return True
+        """Check if the given product is valid for the program.
+
+        :param product: record of product.product
+        :rtype: bool
+        """
+        return bool(self._get_valid_products(product))
 
     def _get_valid_products(self, products):
-        if self.rule_products_domain:
+        """Get valid products for the program.
+
+        :param products: records of product.product
+        :return: valid products recordset
+        """
+        if self.rule_products_domain and self.rule_products_domain != "[]":
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products
+
+    def _get_discount_product_values(self):
+        return {
+            'name': self.reward_id.display_name,
+            'type': 'service',
+            'taxes_id': False,
+            'supplier_taxes_id': False,
+            'sale_ok': False,
+            'purchase_ok': False,
+            'lst_price': 0, #Do not set a high value to avoid issue with coupon code
+        }

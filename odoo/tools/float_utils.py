@@ -178,10 +178,21 @@ def float_repr(value, precision_digits):
 _float_repr = float_repr
 
 def float_split_str(value, precision_digits):
-    """ Splits the given float 'value' in its unitary and decimal parts. The value
-       is first rounded thanks to the ``precision_digits`` argument given.
+    """Splits the given float 'value' in its unitary and decimal parts,
+       returning each of them as a string, rounding the value using
+       the provided ``precision_digits`` argument.
 
-       Example: 1.432 would return (1, 43) for a digits precision of 2.
+       The length of the string returned for decimal places will always
+       be equal to ``precision_digits``, adding zeros at the end if needed.
+
+       In case ``precision_digits`` is zero, an empty string is returned for
+       the decimal places.
+
+       Examples:
+           1.432 with precision 2 => ('1', '43')
+           1.49  with precision 1 => ('1', '5')
+           1.1   with precision 3 => ('1', '100')
+           1.12  with precision 0 => ('1', '')
 
        :param float value: value to split.
        :param int precision_digits: number of fractional digits to round to.
@@ -190,16 +201,18 @@ def float_split_str(value, precision_digits):
     """
     value = float_round(value, precision_digits=precision_digits)
     value_repr = float_repr(value, precision_digits)
-    units, cents = value_repr.split('.')
-    return units, cents
+    return tuple(value_repr.split('.')) if precision_digits else (value_repr, '')
 
 def float_split(value, precision_digits):
     """ same as float_split_str() except that it returns the unitary and decimal
-        parts as integers instead of strings.
+        parts as integers instead of strings. In case ``precision_digits`` is zero,
+        0 is always returned as decimal part.
 
        :rtype: tuple(int, int)
     """
     units, cents = float_split_str(value, precision_digits)
+    if not cents:
+      return int(units), 0
     return int(units), int(cents)
 
 

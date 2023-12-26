@@ -200,9 +200,12 @@ class Website(models.Model):
 
     @api.model
     def sale_get_payment_term(self, partner):
+        pt = self.env.ref('account.account_payment_term_immediate', False).sudo()
+        if pt:
+            pt = (not pt.company_id.id or self.company_id.id == pt.company_id.id) and pt
         return (
             partner.property_payment_term_id or
-            self.env.ref('account.account_payment_term_immediate', False) or
+            pt or
             self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
         ).id
 
@@ -213,7 +216,7 @@ class Website(models.Model):
         addr = partner.address_get(['delivery'])
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
-            if last_sale_order:  # first = me
+            if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
                 addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
@@ -229,9 +232,6 @@ class Website(models.Model):
         company = self.company_id or pricelist.company_id
         if company:
             values['company_id'] = company.id
-            if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
-                values['note'] = company.sale_note or ""
-
         return values
 
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
@@ -258,13 +258,18 @@ class Website(models.Model):
         # Test validity of the sale_order_id
         sale_order = self.env['sale.order'].with_company(request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
+        # Ignore the current order if a payment has been initiated. We don't want to retrieve the
+        # cart and allow the user to update it when the payment is about to confirm it.
+        if sale_order and sale_order.get_portal_last_transaction().state in ('pending', 'authorized', 'done'):
+            sale_order = None
+
         # Do not reload the cart of this user last visit if the Fiscal Position has changed.
         if check_fpos and sale_order:
             fpos_id = (
                 self.env['account.fiscal.position'].sudo()
                 .with_company(sale_order.company_id.id)
                 .get_fiscal_position(sale_order.partner_id.id, delivery_id=sale_order.partner_shipping_id.id)
-            )
+            ).id
             if sale_order.fiscal_position_id.id != fpos_id:
                 sale_order = None
 
@@ -303,6 +308,9 @@ class Website(models.Model):
                     sale_order.onchange_partner_shipping_id()
 
             request.session['sale_order_id'] = sale_order.id
+
+            # The order was created with SUPERUSER_ID, revert back to request user.
+            sale_order = sale_order.with_user(self.env.user).sudo()
 
         # case when user emptied the cart
         if not request.session.get('sale_order_id'):
@@ -384,6 +392,19 @@ class Website(models.Model):
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
 
+    def _bootstrap_snippet_filters(self):
+        super(Website, self)._bootstrap_snippet_filters()
+        # The same behavior is done in the post_init hook
+        action = self.env.ref('website_sale.dynamic_snippet_products_action', raise_if_not_found=False)
+        if action:
+            self.env['website.snippet.filter'].create({
+                'action_server_id': action.id,
+                'field_names': 'display_name,description_sale,image_512,list_price',
+                'limit': 16,
+                'name': _('Products'),
+                'website_id': self.id,
+            })
+
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'
@@ -394,7 +415,7 @@ class WebsiteSaleExtraField(models.Model):
     sequence = fields.Integer(default=10)
     field_id = fields.Many2one(
         'ir.model.fields',
-        domain=[('model_id.model', '=', 'product.template')]
+        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])]
     )
     label = fields.Char(related='field_id.field_description')
     name = fields.Char(related='field_id.name')

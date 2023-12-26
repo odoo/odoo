@@ -775,6 +775,15 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status .btn.dropdown-toggle:contains('Purchase Order')"),
+{
+    trigger: '.o_form_button_edit',
+    content: _t('Edit the vendor bill'),
+    extra_trigger: 'body.o_web_client:not(.oe_wait)',
+}, {
+    trigger:".o_field_widget[name=invoice_date] input",
+    content: _t('Set the invoice date'),
+    run: "text 01/01/2020",
+},
 ...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
@@ -955,26 +964,6 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     edition: "enterprise",
     trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: 'a[data-name=action_configure_bank_journal]',
-    content: _t('Configure Bank Journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: '.js_configure_manually',
-    content: _t('Enter manual data for bank account'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=acc_number]",
-    content: _t("Enter an account number"),
-    position: "right",
-    run: "text 867656544",
-}, {
-    trigger: ".modal-footer .btn-primary",
-    content: _t('Save'),
     position: 'bottom',
 }, {
     edition: "enterprise",

@@ -47,7 +47,7 @@ list of filtered posts (by date or tag).
     <t t-call="website_blog.index">
         <t t-set="head">
             <link t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
-            <meta t-if="len(active_tag_ids)" name="robots" t-attf-content="#{len(active_tag_ids) > 1 and 'noindex,'} nofollow"/>
+            <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
         </t>
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
@@ -241,7 +241,7 @@ list of filtered posts (by date or tag).
                             <div t-field="blog_post.name" id="o_wblog_post_name" class="o_editable_no_shadow" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
                             <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle" class="o_editable_no_shadow" placeholder="Subtitle"/>
                         </div>
-                        <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class').split(' '))"/>
+                        <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class', '').split(' '))"/>
                         <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
                             id="o_wblog_post_content_jump" href="#o_wblog_post_main"
                             class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto mb-5 text-decoration-none">

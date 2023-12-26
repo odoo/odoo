@@ -6,6 +6,8 @@ import json
 
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
+from odoo.http import request
+from odoo.tools.sql import column_exists, create_column
 
 
 class WebsiteVisitor(models.Model):
@@ -16,6 +18,14 @@ class WebsiteVisitor(models.Model):
     mail_channel_ids = fields.One2many('mail.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
+
+    def _auto_init(self):
+        # Skip the computation of the field `livechat_operator_id` at the module installation
+        # We can assume no livechat operator attributed to visitor if it was not installed
+        if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):
+            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
+
+        return super()._auto_init()
 
     @api.depends('mail_channel_ids.livechat_active', 'mail_channel_ids.livechat_operator_id')
     def _compute_livechat_operator_id(self):
@@ -92,6 +102,12 @@ class WebsiteVisitor(models.Model):
                 notifications.append([(self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info])
             self.env['bus.bus'].sendmany(notifications)
 
+    def _link_to_visitor(self, target, keep_unique=True):
+        """ Copy sessions of the secondary visitors to the main partner visitor. """
+        if target.partner_id:
+            target.mail_channel_ids |= self.mail_channel_ids
+        super(WebsiteVisitor, self)._link_to_visitor(target, keep_unique=keep_unique)
+
     def _link_to_partner(self, partner, update_values=None):
         """ Adapt partner in members of related livechats """
         if partner:
@@ -100,3 +116,14 @@ class WebsiteVisitor(models.Model):
                 (4, partner.id),
             ]
         super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
+
+    def _create_visitor(self):
+        visitor = super(WebsiteVisitor, self)._create_visitor()
+        mail_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
+        if mail_channel_uuid:
+            mail_channel = request.env["mail.channel"].sudo().search([("uuid", "=", mail_channel_uuid)])
+            mail_channel.write({
+                'livechat_visitor_id': visitor.id,
+                'anonymous_name': visitor.display_name
+            })
+        return visitor

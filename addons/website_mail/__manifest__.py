@@ -16,4 +16,5 @@ Module holding mail improvements for website. It holds the follow widget.
     ],
     'installable': True,
     'auto_install': True,
+    'license': 'LGPL-3',
 }

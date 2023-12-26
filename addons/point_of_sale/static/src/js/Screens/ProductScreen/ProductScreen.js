@@ -8,6 +8,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { useState } = owl.hooks;
+    const { parse } = require('web.field_utils');
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {
@@ -20,6 +21,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('click-pay', this._onClickPay);
             useBarcodeReader({
                 product: this._barcodeProductAction,
+                quantity: this._barcodeProductAction,
                 weight: this._barcodeProductAction,
                 price: this._barcodeProductAction,
                 client: this._barcodeClientAction,
@@ -61,11 +63,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 return true;
             return false;
         }
-        async _clickProduct(event) {
-            if (!this.currentOrder) {
-                this.env.pos.add_new_order();
-            }
-            const product = event.detail;
+        async _getAddProductOptions(product) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
@@ -86,7 +84,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             }
 
             // Gather lot information if required.
-            if (['serial', 'lot'].includes(product.tracking)) {
+            if (['serial', 'lot'].includes(product.tracking) && (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots)) {
                 const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
                 if (isAllowOnlyOneLot) {
                     packLotLinesToEdit = [];
@@ -140,14 +138,18 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
 
+            return { draftPackLotLines, quantity: weight, description, price_extra };
+        }
+        async _clickProduct(event) {
+            if (!this.currentOrder) {
+                this.env.pos.add_new_order();
+            }
+            const product = event.detail;
+            const options = await this._getAddProductOptions(product);
+            // Do not add product if options is undefined.
+            if (!options) return;
             // Add the product after having the extra information.
-            this.currentOrder.add_product(product, {
-                draftPackLotLines,
-                description: description,
-                price_extra: price_extra,
-                quantity: weight,
-            });
-
+            this.currentOrder.add_product(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {
@@ -170,11 +172,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     });
                     return;
                 }
+                const parsedInput = event.detail.buffer && parse.float(event.detail.buffer) || 0;
                 if(lastId != selectedLine.cid)
                     this._showDecreaseQuantityPopup();
-                else if(currentQuantity < event.detail.buffer)
+                else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
-                else if(event.detail.buffer < currentQuantity)
+                else if(parsedInput < currentQuantity)
                     this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
@@ -201,22 +204,43 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
         }
-        _barcodeProductAction(code) {
-            // NOTE: scan_product call has side effect in pos if it returned true.
-            if (!this.env.pos.scan_product(code)) {
-                this._barcodeErrorAction(code);
+        async _barcodeProductAction(code) {
+            const product = this.env.pos.db.get_product_by_barcode(code.base_code)
+            if (!product) {
+                return this._barcodeErrorAction(code);
             }
+            const options = await this._getAddProductOptions(product);
+            // Do not proceed on adding the product when no options is returned.
+            // This is consistent with _clickProduct.
+            if (!options) return;
+
+            // update the options depending on the type of the scanned code
+            if (code.type === 'price') {
+                Object.assign(options, {
+                    price: code.value,
+                    extras: {
+                        price_manually_set: true,
+                    },
+                });
+            } else if (code.type === 'weight' || code.type === 'quantity') {
+                Object.assign(options, {
+                    quantity: code.value,
+                    merge: false,
+                });
+            } else if (code.type === 'discount') {
+                Object.assign(options, {
+                    discount: code.value,
+                    merge: false,
+                });
+            }
+            this.currentOrder.add_product(product,  options)
         }
         _barcodeClientAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
             if (partner) {
                 if (this.currentOrder.get_client() !== partner) {
                     this.currentOrder.set_client(partner);
-                    this.currentOrder.set_pricelist(
-                        _.findWhere(this.env.pos.pricelists, {
-                            id: partner.property_product_pricelist[0],
-                        }) || this.env.pos.default_pricelist
-                    );
+                    this.currentOrder.updatePricelist(partner);
                 }
                 return true;
             }
@@ -252,24 +276,23 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 startingValue: 0,
                 title: this.env._t('Set the new quantity'),
             });
-            let newQuantity = inputNumber !== ""? Math.abs(inputNumber): null;
-            if (confirmed && newQuantity !== null) {
-                let order = this.env.pos.get_order();
-                let selectedLine = this.env.pos.get_order().get_selected_orderline();
-                let currentQuantity = selectedLine.get_quantity()
+            if(!confirmed)
+                return;
+            let newQuantity = parse.float(inputNumber);
+            let order = this.env.pos.get_order();
+            let selectedLine = this.env.pos.get_order().get_selected_orderline();
+            let currentQuantity = selectedLine.get_quantity()
+            if(selectedLine.is_last_line() && currentQuantity === 1 && newQuantity < currentQuantity)
+                selectedLine.set_quantity(newQuantity);
+            else if(newQuantity >= currentQuantity)
+                selectedLine.set_quantity(newQuantity);
+            else {
+                let newLine = selectedLine.clone();
+                let decreasedQuantity = currentQuantity - newQuantity
+                newLine.order = order;
 
-                if(currentQuantity === 1 && newQuantity > 0)
-                    selectedLine.set_quantity(newQuantity);
-                else if(newQuantity >= currentQuantity)
-                    selectedLine.set_quantity(newQuantity);
-                else {
-                    let newLine = selectedLine.clone();
-                    let decreasedQuantity = currentQuantity - newQuantity
-                    newLine.order = order;
-
-                    newLine.set_quantity( - decreasedQuantity, true);
-                    order.add_orderline(newLine);
-                }
+                newLine.set_quantity( - decreasedQuantity, true);
+                order.add_orderline(newLine);
             }
         }
         async _onClickCustomer() {
@@ -284,8 +307,20 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 this.currentOrder.updatePricelist(newClient);
             }
         }
-        _onClickPay() {
-            this.showScreen('PaymentScreen');
+        async _onClickPay() {
+            if (this.env.pos.get_order().orderlines.any(line => line.get_product().tracking !== 'none' && !line.has_valid_product_lot() && (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots))) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Some Serial/Lot Numbers are missing'),
+                    body: this.env._t('You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?'),
+                    confirmText: this.env._t('Yes'),
+                    cancelText: this.env._t('No')
+                });
+                if (confirmed) {
+                    this.showScreen('PaymentScreen');
+                }
+            } else {
+                this.showScreen('PaymentScreen');
+            }
         }
         switchPane() {
             if (this.mobile_pane === "left") {

@@ -11,7 +11,9 @@
             <field name="categ_id" ref="delivery.product_category_deliveries"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="invoice_policy">order</field>
             <field name="list_price">20.0</field>
+            <field name="invoice_policy">order</field>
         </record>
 
         <record id="delivery_carrier" model="delivery.carrier">
@@ -29,6 +31,7 @@
             <field name="categ_id" ref="delivery.product_category_deliveries"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
+            <field name="invoice_policy">order</field>
             <field name="list_price">10.0</field>
         </record>
 

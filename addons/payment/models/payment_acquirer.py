@@ -6,14 +6,17 @@ import logging
 from datetime import datetime
 from dateutil import relativedelta
 import pprint
+import psycopg2
 
 from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
 from odoo.tools import consteq, float_round, image_process, ustr
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.http import request
 from odoo.osv import expression
+
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
 
@@ -109,7 +112,7 @@ class PaymentAcquirer(models.Model):
         help="Capture the amount from Odoo, when the delivery is completed.")
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]",
-        help="""Journal where the successful transactions will be posted""")
+        help="""Journal where the successful transactions will be posted""", ondelete='restrict')
     check_validity = fields.Boolean(string="Verify Card Validity",
         help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.
         Without this check, the validity will be verified at the very first transaction.""")
@@ -275,6 +278,16 @@ class PaymentAcquirer(models.Model):
             'outbound_payment_method_ids': [],
         }
 
+    def _get_acquirer_journal_domain(self):
+        """Returns a domain for finding a journal corresponding to an acquirer"""
+        self.ensure_one()
+        code_cutoff = self.env['account.journal']._fields['code'].size
+        return [
+            ('name', '=', self.name),
+            ('code', '=', self.name.upper()[:code_cutoff]),
+            ('company_id', '=', self.company_id.id),
+        ]
+
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):
         '''Create the journal for active acquirers.
@@ -283,22 +296,35 @@ class PaymentAcquirer(models.Model):
         (e.g. payment_paypal for Paypal). We can't do that in such modules because we have no guarantee the chart template
         is already installed.
         '''
-        # Search for installed acquirers modules.
+        # Search for installed acquirers modules that have no journal for the current company.
         # If this method is triggered by a post_init_hook, the module is 'to install'.
         # If the trigger comes from the chart template wizard, the modules are already installed.
-        acquirer_modules = self.env['ir.module.module'].search(
-            [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
-        acquirer_names = [a.name.split('_', 1)[1] for a in acquirer_modules]
-
-        # Search for acquirers having no journal
         company = company or self.env.company
-        acquirers = self.env['payment.acquirer'].search(
-            [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
+        acquirers = self.env['payment.acquirer'].search([
+            ('module_state', 'in', ('to install', 'installed')),
+            ('journal_id', '=', False),
+            ('company_id', '=', company.id),
+        ])
 
-        journals = self.env['account.journal']
+        # Here we will attempt to first create the journal since the most common case (first
+        # install) is to successfully to create the journal for the acquirer, in the case of a
+        # reinstall (least common case), the creation will fail because of a unique constraint
+        # violation, this is ok as we catch the error and then perform a search if need be
+        # and assign the existing journal to our reinstalled acquirer. It is better to ask for
+        # forgiveness than to ask for permission as this saves us the overhead of doing a select
+        # that would be useless in most cases.
+        Journal = journals = self.env['account.journal']
         for acquirer in acquirers.filtered(lambda l: not l.journal_id and l.company_id.chart_template_id):
-            acquirer.journal_id = self.env['account.journal'].create(acquirer._prepare_account_journal_vals())
-            journals += acquirer.journal_id
+            try:
+                with self.env.cr.savepoint():
+                    journal = Journal.create(acquirer._prepare_account_journal_vals())
+            except psycopg2.IntegrityError as e:
+                if e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                    journal = Journal.search(acquirer._get_acquirer_journal_domain(), limit=1)
+                else:
+                    raise
+            acquirer.journal_id = journal
+            journals += journal
         return journals
 
     @api.model
@@ -311,6 +337,20 @@ class PaymentAcquirer(models.Model):
         result = super(PaymentAcquirer, self).write(vals)
         self._check_required_if_provider()
         return result
+
+    def unlink(self):
+        """ Prevent the deletion of the payment acquirer if it has an xmlid. """
+        external_ids = self.get_external_id()
+        for acquirer in self:
+            external_id = external_ids[acquirer.id]
+            if external_id \
+               and not external_id.startswith('__export__') \
+               and not self._context.get(MODULE_UNINSTALL_FLAG):
+                raise UserError(_(
+                    "You cannot delete the payment acquirer %s; disable it or uninstall it instead.",
+                    acquirer.name,
+                ))
+        return super().unlink()
 
     def get_acquirer_extra_fees(self, amount, currency_id, country_id):
         extra_fees = {
@@ -421,7 +461,7 @@ class PaymentAcquirer(models.Model):
                 'partner_zip': partner.zip,
                 'partner_city': partner.city,
                 'partner_address': _partner_format_address(partner.street, partner.street2),
-                'partner_country_id': partner.country_id.id or self.env['res.company']._company_default_get().country_id.id,
+                'partner_country_id': partner.country_id.id or self.env.company.country_id.id,
                 'partner_country': partner.country_id,
                 'partner_phone': partner.phone,
                 'partner_state': partner.state_id,
@@ -473,7 +513,9 @@ class PaymentAcquirer(models.Model):
             values = method(values)
 
         values.update({
-            'tx_url': self._context.get('tx_url', self.get_form_action_url()),
+            'tx_url':  self._context.get(
+                'tx_url', self.with_context(form_action_url_values=values).get_form_action_url()
+            ),
             'submit_class': self._context.get('submit_class', 'btn btn-link'),
             'submit_txt': self._context.get('submit_txt'),
             'acquirer': self,
@@ -653,10 +695,10 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         payment_vals = {
-            'amount': self.amount,
+            'amount': abs(self.amount),
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_id.commercial_partner_id.id,
             'partner_type': 'customer',
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
@@ -853,7 +895,7 @@ class PaymentTransaction(models.Model):
             'date': fields.Datetime.now(),
             'state_message': msg,
         })
-        self._log_payment_transaction_received()
+        tx_to_process._log_payment_transaction_received()
 
     def _post_process_after_done(self):
         self._reconcile_after_transaction_done()
@@ -865,7 +907,8 @@ class PaymentTransaction(models.Model):
         if not self:
             ten_minutes_ago = datetime.now() - relativedelta.relativedelta(minutes=10)
             # we don't want to forever try to process a transaction that doesn't go through
-            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
+            # as for Paypal, it sometime takes 3 or 4 days for payment verification due to weekend. Set 4 here should be fine.
+            retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # we retrieve all the payment tx that need to be post processed
             self = self.search([('state', '=', 'done'),
                                 ('is_processed', '=', False),
@@ -973,7 +1016,7 @@ class PaymentTransaction(models.Model):
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
+                values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id', self._get_default_partner_country_id()))
             values['fees'] = fees
 
         # custom create

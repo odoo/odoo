@@ -9,6 +9,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"Last-Translator: Mads Søndergaard, 2022\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,7 +29,7 @@ msgstr ""
 #: code:addons/hr_fleet/controllers/main.py:0
 #, python-format
 msgid "%(car_name)s (driven from: %(date_start)s to %(date_end)s)"
-msgstr ""
+msgstr "%(car_name)s (kørt fra: %(date_start)s til %(date_end)s)"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
@@ -102,7 +103,7 @@ msgstr "Sidst ændret den"
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
 msgid "Mobility Card"
-msgstr ""
+msgstr "Mobilitetskort"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
@@ -117,7 +118,7 @@ msgstr "Offentlig ansat"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
+msgstr "Frigør Firmabil"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -128,6 +129,11 @@ msgid ""
 msgstr ""
 "Denne rapport vil kun indeholde PDF filer. Hvis du vil have alle dokumenter,"
 " bedes du venligst gå til køretøjs siden. Vil du fortsætte?"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/controllers/main.py:0
+msgid "There is no pdf attached to generate a claim report."
+msgstr "Der er ingen PDF vedhæftet til at generere en skadesrapport."
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_res_users

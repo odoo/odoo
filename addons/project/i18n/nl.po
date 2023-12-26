@@ -11,16 +11,17 @@
 # Alice Van Goethem <vga@odoo.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -317,6 +318,66 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            % if partner.name:\n"
+"                Hallo ${partner.name},<br/><br/>\n"
+"            % else:\n"
+"                Hallo,<br/><br/>\n"
+"            % endif\n"
+"            Neem even de tijd om onze services met betrekking tot de taak te beoordelen \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                toegewezen aan <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Vertel ons wat u van onze service vindt</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(klik op een van deze smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/5\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/3\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_3.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Wij waarderen uw feedback. Het helpt ons om continu te verbeteren.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenquête is verzonden omdat uw taak naar fase <b>${object.stage_id.name} is verplaatst</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête wordt verzonden <b>${object.project_id.rating_status_period}</b> zolang de taak in de <b>${object.stage_id.name}</b> fase is.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -416,8 +477,8 @@ msgid ""
 "<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">to </span>\n"
 "                                            <span class=\"font-weight-bold oe_edit_only\">to </span>"
 msgstr ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">t/m </span>\n"
-"                                            <span class=\"font-weight-bold oe_edit_only\">t/m </span>"
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">naar </span>\n"
+"                                            <span class=\"font-weight-bold oe_edit_only\">naar </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -631,6 +692,11 @@ msgid "All tasks"
 msgstr "Alle taken"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
+msgstr "Subtaken toestaan"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 msgid "Allowed Internal Users"
 msgstr "Toegestane interne gebruikers"
@@ -670,7 +736,7 @@ msgstr "April"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Archive"
-msgstr "Archief"
+msgstr "Archiveren"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -1250,16 +1316,23 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
-"Defines the visibility of the tasks of the project:\n"
-"- Invited employees: employees may only see the followed project and tasks.\n"
-"- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
-"   them or by someone of their company."
+"People to whom this project and its tasks will be visible.\n"
+"\n"
+"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"\n"
+"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"\n"
+"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following."
 msgstr ""
-"Definieert de zichtbaarheid van de taken van het project:\n"
-"- Uitgenodigde medewerkers: medewerkers mogen alleen het gevolgde project en de taken zien.\n"
-"- Alle medewerkers: medewerkers mogen alle projecten en taken zien.\n"
-"- Portaal gebruikers en alle medewerkers: medewerkers mogen alles zien. Portaal gebruikers mogen het project en de taken zien en door wie het gevolgd wordt door hen of door iemand van hun bedrijf."
+"Mensen voor wie dit project en zijn taken zichtbaar zullen zijn.\n"
+"\n"
+"- Uitgenodigde interne gebruikers: bij het volgen van een project krijgen interne gebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen.\n"
+"Een gebruiker met het project > beheerders toegangsrechtniveau heeft nog steeds toegang tot dit project en zijn taken, zelfs als ze niet expliciet deel uitmaken van de volgers.\n"
+"- Alle interne gebruikers: alle interne gebruikers hebben zonder onderscheid toegang tot het project en alle taken.\n"
+"- Uitgenodigde portaalgebruikers en alle interne gebruikers: alle interne gebruikers hebben zonder beperking toegang tot het project en al zijn taken.\n"
+"Bij het volgen van een project krijgen portaalgebruikers zonder beperking toegang tot alle taken. Anders krijgen ze alleen toegang tot de specifieke taken die ze volgen."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1590,7 +1663,7 @@ msgstr "Volgers (Relaties)"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon b.v. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -1870,7 +1943,7 @@ msgstr "Postvak in"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
-msgstr "Begroot aantal uren"
+msgstr "Geplande uren"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -2136,12 +2209,12 @@ msgstr "Hoofd bijlagen"
 #, python-format
 msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly "
-"acquired project, assign them and use the %s and %s to define if the project"
-" is ready for the next step. %s"
+"acquired projects, assign them and use the %s and %s to define if the "
+"project is ready for the next step. %s"
 msgstr ""
-"Beheer de levenscyclus van je project met de kanbanweergave. Voeg een nieuw "
-"verworven project toe, wijs ze toe en gebruik de %s 'and' %s om te bepalen "
-"of het project klaar is voor de volgende stap. %s"
+"Beheer de levenscyclus van uw project met de kanbanweergave. Voeg nieuw "
+"verworven projecten toe, wijs ze toe en gebruik de %s en %s om te bepalen of"
+" het project klaar is voor de volgende stap. %s"
 
 #. module: project
 #. openerp-web
@@ -2322,7 +2395,7 @@ msgstr "Volgende activiteit type"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
 msgid "Next Recurrence Date"
-msgstr "Volgende terugkerende taak"
+msgstr "Volgende herhalingsdatum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
@@ -2583,11 +2656,11 @@ msgstr "Telefoon"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
-"Plan resource allocation accross projets and tasks, and estimate deadlines "
+"Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
-"Plan de toewijzing van middelen over projecten en taken, en schat deadlines "
-"nauwkeuriger in."
+"Plan de toewijzing van resources over projecten en taken, en schat deadlines"
+" nauwkeuriger in"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -2977,7 +3050,7 @@ msgstr "Terugkerend"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 msgid "Recurring Tasks"
-msgstr "Terugkerende taak"
+msgstr "Terugkerende taken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
@@ -4158,7 +4231,7 @@ msgstr "Bijv. Bedrijfsfeest"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr "bijv. kantoorfeest"
+msgstr "Bijv. kantoorfeest"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -4169,11 +4242,6 @@ msgstr "voor project:"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
 msgstr "in fase:"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
-msgid "project.project"
-msgstr "project.project"
 
 #. module: project
 #: code:addons/project/models/project.py:0

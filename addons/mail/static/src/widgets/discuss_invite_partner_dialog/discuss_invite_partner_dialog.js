@@ -31,7 +31,7 @@ const PartnerInviteDialog = Dialog.extend({
         this.channelId = channel.id;
         this.env = env;
         this._super(parent, {
-            title: _.str.sprintf(this.env._t("Invite people to #%s"), channel.displayName),
+            title: _.str.sprintf(this.env._t("Invite people to #%s"), owl.utils.escape(channel.displayName)),
             size: 'medium',
             buttons: [{
                 text: this.env._t("Invite"),
@@ -57,9 +57,9 @@ const PartnerInviteDialog = Dialog.extend({
                 if (item.id === 'odoobot') {
                     status = 'bot';
                 } else {
-                    const partner = this.env.models['mail.partner'].find(partner =>
-                        partner.id === item.id
-                    );
+                    const partner = this.env.models['mail.partner'].findFromIdentifyingData({
+                        id: item.id,
+                    });
                     status = partner.im_status;
                 }
                 const $status = QWeb.render('mail.widgets.UserStatus', { status });
@@ -114,7 +114,6 @@ const PartnerInviteDialog = Dialog.extend({
         );
         this.env.services['notification'].notify({
             message: notification,
-            title: this.env._t("New people"),
             type: 'warning',
         });
     },

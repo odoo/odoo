@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentina - Accounting',
-    'version': "3.0",
+    'version': "3.5",
     'description': """
 Functional
 ----------
@@ -76,7 +76,7 @@ Master Data:
         'data/l10n_latam_identification_type_data.xml',
         'data/l10n_ar_afip_responsibility_type_data.xml',
         'data/account_chart_template_data.xml',
-        'data/account_group_data.xml',
+        'data/account.group.template.csv',
         'data/account.account.template.csv',
         'data/account_chart_template_data2.xml',
         'data/account_tax_group.xml',
@@ -84,6 +84,7 @@ Master Data:
         'data/account_fiscal_template.xml',
         'data/uom_uom_data.xml',
         'data/l10n_latam.document.type.csv',
+        'data/l10n_latam.document.type.xml',
         'data/res_partner_data.xml',
         'data/res.currency.csv',
         'data/res.country.csv',
@@ -110,7 +111,6 @@ Master Data:
         'demo/mono_demo.xml',
         'demo/respinsc_demo.xml',
         'demo/res_partner_demo.xml',
-        'demo/account_tax_demo.xml',
         'demo/product_product_demo.xml',
         'demo/account_customer_invoice_demo.xml',
         'demo/account_customer_refund_demo.xml',
@@ -122,4 +122,5 @@ Master Data:
     'installable': True,
     'auto_install': False,
     'application': False,
+    'license': 'LGPL-3',
 }

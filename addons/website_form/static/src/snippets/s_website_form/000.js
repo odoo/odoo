@@ -6,6 +6,8 @@ odoo.define('website_form.s_website_form', function (require) {
     const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
+    const dom = require('web.dom');
+    const session = require('web.session');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -28,6 +30,7 @@ odoo.define('website_form.s_website_form', function (require) {
         willStart: function () {
             const res = this._super(...arguments);
             if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+                this._recaptchaLoaded = true;
                 this._recaptcha.loadLibs();
             }
             return res;
@@ -37,7 +40,7 @@ odoo.define('website_form.s_website_form', function (require) {
 
             // Initialize datetimepickers
             var datepickers_options = {
-                minDate: moment({ y: 1 }),
+                minDate: moment({ y: 1000 }),
                 maxDate: moment({y: 9999, M: 11, d: 31}),
                 calendarWeeks: true,
                 icons: {
@@ -62,13 +65,23 @@ odoo.define('website_form.s_website_form', function (require) {
             // Because, using t-att- inside form make it non-editable
             var $values = $('[data-for=' + this.$target.attr('id') + ']');
             if ($values.length) {
-                var values = JSON.parse($values.data('values').replace('False', '""').replace('None', '""').replace(/'/g, '"'));
+                const values = JSON.parse($values.data('values')
+                    // replaces `True` by `true` if they are after `,` or `:` or `[`
+                    .replace(/([,:\[]\s*)True/g, '$1true')
+                    // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
+                    .replace(/([,:\[]\s*)(False|None)/g, '$1""')
+                    // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
+                    .replace(/'(\s*[,:\]}])/g, '"$1')
+                    // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
+                    .replace(/([{\[:,]\s*)'/g, '$1"')
+                );
                 var fields = _.pluck(this.$target.serializeArray(), 'name');
                 _.each(fields, function (field) {
                     if (_.has(values, field)) {
                         var $field = self.$target.find('input[name="' + field + '"], textarea[name="' + field + '"]');
                         if (!$field.val()) {
                             $field.val(values[field]);
+                            $field.data('website_form_original_default_value', $field.val());
                         }
                     }
                 });
@@ -146,22 +159,33 @@ odoo.define('website_form.s_website_form', function (require) {
             // force server date format usage for existing fields
             this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
             .find('.s_website_form_date, .s_website_form_datetime').each(function () {
+                const $input = $(this).find('input');
+
+                // Datetimepicker('viewDate') will return `new Date()` if the
+                // input is empty but we want to keep the empty value
+                if (!$input.val()) {
+                    return;
+                }
+
                 var date = $(this).datetimepicker('viewDate').clone().locale('en');
                 var format = 'YYYY-MM-DD';
                 if ($(this).hasClass('s_website_form_datetime')) {
                     date = date.utc();
                     format = 'YYYY-MM-DD HH:mm:ss';
                 }
-                form_values[$(this).find('input').attr('name')] = date.format(format);
+                form_values[$input.attr('name')] = date.format(format);
             });
 
-            const tokenObj = await this._recaptcha.getToken('website_form');
-            if (tokenObj.token) {
-                form_values['recaptcha_token_response'] = tokenObj.token;
-            } else if (tokenObj.error) {
-                self.update_status('error', tokenObj.error);
-                return false;
+            if (this._recaptchaLoaded) {
+                const tokenObj = await this._recaptcha.getToken('website_form');
+                if (tokenObj.token) {
+                    form_values['recaptcha_token_response'] = tokenObj.token;
+                } else if (tokenObj.error) {
+                    self.update_status('error', tokenObj.error);
+                    return false;
+                }
             }
+
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
@@ -186,9 +210,45 @@ odoo.define('website_form.s_website_form', function (require) {
                         successMode = successPage ? 'redirect' : 'nothing';
                     }
                     switch (successMode) {
-                        case 'redirect':
-                            $(window.location).attr('href', successPage);
+                        case 'redirect': {
+                            let hashIndex = successPage.indexOf("#");
+                            if (hashIndex > 0) {
+                                // URL containing an anchor detected: extract
+                                // the anchor from the URL if the URL is the
+                                // same as the current page URL so we can scroll
+                                // directly to the element (if found) later
+                                // instead of redirecting.
+                                // Note that both currentUrlPath and successPage
+                                // can exist with or without a trailing slash
+                                // before the hash (e.g. "domain.com#footer" or
+                                // "domain.com/#footer"). Therefore, if they are
+                                // not present, we add them to be able to
+                                // compare the two variables correctly.
+                                let currentUrlPath = window.location.pathname;
+                                if (!currentUrlPath.endsWith("/")) {
+                                    currentUrlPath = currentUrlPath + "/";
+                                }
+                                if (!successPage.includes("/#")) {
+                                    successPage = successPage.replace("#", "/#");
+                                    hashIndex++;
+                                }
+                                if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + '#'))) {
+                                    successPage = successPage.substring(hashIndex);
+                                }
+                            }
+                            if (successPage.charAt(0) === "#") {
+                                const successAnchorEl = document.getElementById(successPage.substring(1));
+                                if (successAnchorEl) {
+                                    dom.scrollTo(successAnchorEl, {
+                                        duration: 500,
+                                        extraOffset: 0,
+                                    });
+                                }
+                            } else {
+                                $(window.location).attr('href', successPage);
+                            }
                             break;
+                        }
                         case 'message':
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');

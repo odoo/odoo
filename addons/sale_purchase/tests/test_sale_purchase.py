@@ -243,3 +243,33 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(len(purchase_order2.order_line), 1, "The 2nd PO has only one line")
         self.assertEqual(purchase_line2.sale_line_id, self.sol1_service_purchase_1, "The 2nd PO line came from the SO line sol1_service_purchase_1")
         self.assertEqual(purchase_line2.product_qty, delta, "The quantity of the new PO line is the quantity added on the Sale Line, after first PO confirmation")
+
+    def test_pol_description(self):
+        service = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'service',
+            'service_to_purchase': True,
+            'seller_ids': [(0, 0, {
+                'name': self.partner_vendor_service.id,
+                'min_qty': 1,
+                'price': 10,
+                'product_code': 'C01',
+                'product_name': 'Name01',
+                'sequence': 1,
+            })]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': service.name,
+                    'product_id': service.id,
+                    'product_uom_qty': 1,
+                })
+            ],
+        })
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_vendor_service.id)], order='id desc', limit=1)
+        self.assertEqual(po.order_line.name, "[C01] Name01")

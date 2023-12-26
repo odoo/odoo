@@ -132,6 +132,7 @@
                                                             data-model="project.task"
                                                             data-views='[[false, "list"], [false, "form"]]'
                                                             t-att-data-domain="json.dumps([['project_id', 'in', projects.ids], ['sale_line_id', '=', False]])"
+                                                            t-att-data-context="json.dumps({'active_test': False})"
                                                         >
                                                             <span class="btn-link"
                                                                   style="font-weight:normal;"
@@ -239,6 +240,14 @@
                                                     </td>
                                                     <td title="Costs from expenses that were reinvoiced to your customer (provided that the Analytic Account of the Project was set on the Expense).">
                                                         Re-invoiced costs
+                                                    </td>
+                                                </tr>
+                                                <tr t-if="display_cost &amp; (dashboard['profit']['expense_amount_untaxed_to_invoice'] != 0)">
+                                                    <td class="o_timesheet_plan_dashboard_cell">
+                                                        <t t-esc="dashboard['profit']['expense_amount_untaxed_to_invoice']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </td>
+                                                    <td title="Costs from expenses that still need to be reinvoiced to your customer (provided that the Analytic Account of the Project was set on the Expense).">
+                                                        To re-invoice costs
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -404,9 +413,14 @@
                                                                 <span t-if="foldable" t-att-class="('fa fa-caret-down' if row_type == 'sale_order' else 'fa fa-caret-right') + (' project_overview_foldable' if foldable else '')"
                                                                       style="cursor: pointer;" t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
                                                                 <t t-if="row_type == 'sale_order'">
-                                                                    <a type="action" t-att-data-model="row_value['res_model']" t-att-data-res-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
+                                                                    <t t-if="env.user.has_group('sales_team.group_sale_salesman')">
+                                                                        <a type="action" t-att-data-model="row_value['res_model']" t-att-data-res-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
+                                                                           <t t-esc="row_value.get('label')"/>
+                                                                        </a>
+                                                                    </t>
+                                                                    <t t-else="">
                                                                         <t t-esc="row_value.get('label')"/>
-                                                                    </a>
+                                                                    </t>
                                                                     <span t-if="row_value.get('canceled')" class="badge badge-pill o_canceled_tag">
                                                                         Cancelled
                                                                     </span>

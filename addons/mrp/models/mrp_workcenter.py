@@ -5,6 +5,7 @@ from dateutil import relativedelta
 from datetime import timedelta
 from functools import partial
 import datetime
+from pytz import timezone
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import ValidationError
@@ -223,8 +224,8 @@ class MrpWorkcenter(models.Model):
         self.ensure_one()
         start_datetime, revert = make_aware(start_datetime)
 
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals, domain=[('time_type', 'in', ['other', 'leave'])], resource=self.resource_id)
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals, domain=[('time_type', '=', 'other')], resource=self.resource_id)
+        get_available_intervals = partial(self.resource_calendar_id._work_intervals, domain=[('time_type', 'in', ['other', 'leave'])], resource=self.resource_id, tz=timezone(self.resource_calendar_id.tz))
+        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals, domain=[('time_type', '=', 'other')], resource=self.resource_id, tz=timezone(self.resource_calendar_id.tz))
 
         remaining = duration
         start_interval = start_datetime
@@ -235,19 +236,41 @@ class MrpWorkcenter(models.Model):
             available_intervals = get_available_intervals(dt, dt + delta)
             workorder_intervals = get_workorder_intervals(dt, dt + delta)
             for start, stop, dummy in available_intervals:
-                interval_minutes = (stop - start).total_seconds() / 60
-                # If the remaining minutes has never decrease update start_interval
-                if remaining == duration:
-                    start_interval = start
-                # If there is a overlap between the possible available interval and a others WO
-                if Intervals([(start_interval, start + timedelta(minutes=min(remaining, interval_minutes)), dummy)]) & workorder_intervals:
-                    remaining = duration
-                    start_interval = start
-                elif float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
-                    return revert(start_interval), revert(start + timedelta(minutes=remaining))
-                # Decrease a part of the remaining duration
-                remaining -= interval_minutes
+                # Shouldn't loop more than 2 times because the available_intervals contains the workorder_intervals
+                # And remaining == duration can only occur at the first loop and at the interval intersection (cannot happen several time because available_intervals > workorder_intervals
+                for i in range(2):
+                    interval_minutes = (stop - start).total_seconds() / 60
+                    # If the remaining minutes has never decrease update start_interval
+                    if remaining == duration:
+                        start_interval = start
+                    # If there is a overlap between the possible available interval and a others WO
+                    if Intervals([(start_interval, start + timedelta(minutes=min(remaining, interval_minutes)), dummy)]) & workorder_intervals:
+                        remaining = duration
+                    elif float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
+                        return revert(start_interval), revert(start + timedelta(minutes=remaining))
+                    else:
+                        # Decrease a part of the remaining duration
+                        remaining -= interval_minutes
+                        # Go to the next available interval because the possible current interval duration has been used
+                        break
         return False, 'Not available slot 700 days after the planned start'
+
+    def action_archive(self):
+        res = super().action_archive()
+        filtered_workcenters = ", ".join(workcenter.name for workcenter in self.filtered('routing_line_ids'))
+        if filtered_workcenters:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                'title': _("Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
+                           "To prevent this, deletion of the work center is recommended instead.", filtered_workcenters),
+                'type': 'warning',
+                'sticky': True,  #True/False will display for few seconds if false
+                'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+        return res
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
@@ -328,7 +351,7 @@ class MrpWorkcenterProductivity(models.Model):
     @api.depends('date_end', 'date_start')
     def _compute_duration(self):
         for blocktime in self:
-            if blocktime.date_end:
+            if blocktime.date_start and blocktime.date_end:
                 d1 = fields.Datetime.from_string(blocktime.date_start)
                 d2 = fields.Datetime.from_string(blocktime.date_end)
                 diff = d2 - d1
@@ -339,6 +362,13 @@ class MrpWorkcenterProductivity(models.Model):
                     blocktime.duration = round(diff.total_seconds() / 60.0, 2)
             else:
                 blocktime.duration = 0.0
+
+    @api.constrains('workorder_id')
+    def _check_open_time_ids(self):
+        for workorder in self.workorder_id:
+            open_time_ids_by_user = self.env["mrp.workcenter.productivity"].read_group([("id", "in", workorder.time_ids.ids), ("date_end", "=", False)], ["user_id", "open_time_ids_count:count(id)"], ["user_id"])
+            if any(data["open_time_ids_count"] > 1 for data in open_time_ids_by_user):
+                raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
 
     def button_block(self):
         self.ensure_one()

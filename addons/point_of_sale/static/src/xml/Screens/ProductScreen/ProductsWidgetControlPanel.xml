@@ -3,36 +3,38 @@
 
     <t t-name="ProductsWidgetControlPanel" owl="1">
         <div class="products-widget-control">
-            <div class="rightpane-header" t-att-class="{
-                'green-border-bottom': !env.pos.config.iface_display_categ_images,
-                'grey-border-bottom': env.pos.config.iface_display_categ_images,
-            }">
-                <!-- Breadcrumbs -->
-                <div class="breadcrumbs">
-                    <HomeCategoryBreadcrumb subcategories="props.subcategories" currentCat="props.breadcrumbs[props.breadcrumbs.length - 1]"/>
-                    <t t-if="!env.isMobile">
-                        <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
-                            <CategoryBreadcrumb category="category" />
+            <t t-if="!props.hasNoCategories">
+                <div class="rightpane-header" t-att-class="{
+                    'green-border-bottom': !env.pos.config.iface_display_categ_images,
+                    'grey-border-bottom': env.pos.config.iface_display_categ_images,
+                }">
+                    <!-- Breadcrumbs -->
+                    <div class="breadcrumbs">
+                        <HomeCategoryBreadcrumb subcategories="props.subcategories" currentCat="props.breadcrumbs[props.breadcrumbs.length - 1]"/>
+                        <t t-if="!env.isMobile">
+                            <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
+                                <CategoryBreadcrumb category="category" />
+                            </t>
+                        </t>
+                    </div>
+                    <!-- Subcategories -->
+                    <t t-if="props.subcategories.length > 0 and !env.pos.config.iface_display_categ_images and !env.isMobile">
+                        <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                            <CategorySimpleButton category="category" />
                         </t>
                     </t>
                 </div>
-                <!-- Subcategories -->
-                <t t-if="props.subcategories.length > 0 and !env.pos.config.iface_display_categ_images and !env.isMobile">
-                    <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                        <CategorySimpleButton category="category" />
-                    </t>
-                </t>
-            </div>
-            <t t-if="props.subcategories.length > 0 and env.pos.config.iface_display_categ_images and !env.isMobile">
-                <div class="categories">
-                    <div class="category-list-scroller">
-                        <div class="category-list">
-                            <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                <CategoryButton category="category" />
-                            </t>
+                <t t-if="props.subcategories.length > 0 and env.pos.config.iface_display_categ_images and !env.isMobile">
+                    <div class="categories">
+                        <div class="category-list-scroller">
+                            <div class="category-list">
+                                <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                    <CategoryButton category="category" />
+                                </t>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </t>
             <Portal target="'.pos .search-bar-portal'">
                 <div class="search-box">

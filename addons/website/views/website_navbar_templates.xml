@@ -5,7 +5,7 @@
         <t groups="website.group_website_publisher" t-if="'website_published' in main_object.fields_get() and ('can_publish' not in main_object.fields_get() or main_object.can_publish)">
             <li t-attf-class="js_publish_management #{extra_classes} #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
                 <label class="o_switch o_switch_danger js_publish_btn" t-att-accesskey="desktop_navbar and 'p'">
-                    <input type="checkbox" t-att-checked="main_object.website_published"/>
+                    <input type="checkbox" disabled="disabled" t-att-checked="main_object.website_published"/>
                     <span/>
                     <span class="css_publish">Unpublished</span>
                     <span class="css_unpublish">Published</span>
@@ -20,6 +20,7 @@
             <t t-set="body_classname" t-value="(body_classname if body_classname else '') + (' o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else '')"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
+            <div t-if="'enable_new_content' in request.params" id="o_website_page_loader"/>
             <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar">
                 <ul id="oe_applications">
                     <li class="dropdown active">
@@ -32,7 +33,7 @@
                     </li>
                 </ul>
 
-                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
+                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu" groups="website.group_website_designer"/>
 
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
@@ -109,9 +110,9 @@
                                             <p>Page</p>
                                         </a>
                                     </div>
-                                    <t groups="base.group_system">
+                                    <t>
                                         <t t-set="mod" t-value="env.ref('base.module_website_blog')"/>
-                                        <div name="module_website_blog"
+                                        <div name="module_website_blog" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element">
@@ -121,7 +122,7 @@
                                             </a>
                                         </div>
                                         <t t-set="mod" t-value="env.ref('base.module_website_event')"/>
-                                        <div name="module_website_event"
+                                        <div name="module_website_event" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element">
@@ -131,7 +132,7 @@
                                             </a>
                                         </div>
                                         <t t-set="mod" t-value="env.ref('base.module_website_forum')"/>
-                                        <div name="module_website_forum"
+                                        <div name="module_website_forum" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
@@ -141,7 +142,7 @@
                                             </a>
                                         </div>
                                         <t t-set="mod" t-value="env.ref('base.module_website_hr_recruitment')"/>
-                                        <div name="module_website_hr_recruitment"
+                                        <div name="module_website_hr_recruitment" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element">
@@ -151,7 +152,7 @@
                                             </a>
                                         </div>
                                         <t t-set="mod" t-value="env.ref('base.module_website_sale')"/>
-                                        <div name="module_website_sale"
+                                        <div name="module_website_sale" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element">
@@ -161,7 +162,7 @@
                                             </a>
                                         </div>
                                         <t t-set="mod" t-value="env.ref('base.module_website_slides')"/>
-                                        <div name="module_website_slides"
+                                        <div name="module_website_slides" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element">
@@ -172,7 +173,7 @@
                                             </a>
                                         </div>
                                         <t t-set="mod" t-value="env.ref('base.module_website_livechat')"/>
-                                        <div name="module_website_livechat"
+                                        <div name="module_website_livechat" groups="base.group_system"
                                              t-att-data-module-id="mod.id"
                                              t-att-data-module-shortdesc="mod.shortdesc"
                                              class="col-md-4 mb8 o_new_content_element o_new_content_element_once">

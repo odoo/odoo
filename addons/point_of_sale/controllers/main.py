@@ -51,13 +51,17 @@ class PosController(http.Controller):
         if not pos_session:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         # The POS only work in one company, so we enforce the one of the session in the context
+        company = pos_session.company_id
         session_info = request.env['ir.http'].session_info()
-        session_info['user_context']['allowed_company_ids'] = pos_session.company_id.ids
+        session_info['user_context']['allowed_company_ids'] = company.ids
+        session_info['user_companies'] = {'current_company': (company.id, company.name), 'allowed_companies': [(company.id, company.name)]}
         context = {
             'session_info': session_info,
             'login_number': pos_session.login(),
         }
-        return request.render('point_of_sale.index', qcontext=context)
+        response = request.render('point_of_sale.index', context)
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @http.route('/pos/ui/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):

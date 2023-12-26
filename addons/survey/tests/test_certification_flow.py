@@ -116,6 +116,10 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         self.assertEqual(user_inputs.scoring_percentage, 87.5)
         self.assertTrue(user_inputs.scoring_success)
 
+        # Check that the certification is still successful even if scoring_success_min of certification is modified
+        certification.write({'scoring_success_min': 90})
+        self.assertTrue(user_inputs.scoring_success)
+
         # Check answer correction is taken into account
         self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_text_box'))
         self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_text_box'))

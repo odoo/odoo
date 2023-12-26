@@ -181,15 +181,15 @@
     // Misc types, constants and helpers
     //------------------------------------------------------------------------------
     const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
-    const WORD_REPLACEMENT = {
+    const WORD_REPLACEMENT = Object.assign(Object.create(null), {
         and: "&&",
         or: "||",
         gt: ">",
         gte: ">=",
         lt: "<",
         lte: "<=",
-    };
-    const STATIC_TOKEN_MAP = {
+    });
+    const STATIC_TOKEN_MAP = Object.assign(Object.create(null), {
         "{": "LEFT_BRACE",
         "}": "RIGHT_BRACE",
         "[": "LEFT_BRACKET",
@@ -198,14 +198,14 @@
         ",": "COMMA",
         "(": "LEFT_PAREN",
         ")": "RIGHT_PAREN",
-    };
+    });
     // note that the space after typeof is relevant. It makes sure that the formatted
     // expression has a space after typeof
     const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
     let tokenizeString = function (expr) {
         let s = expr[0];
         let start = s;
-        if (s !== "'" && s !== '"') {
+        if (s !== "'" && s !== '"' && s !== "`") {
             return false;
         }
         let i = 1;
@@ -227,6 +227,17 @@
             throw new Error("Invalid expression");
         }
         s += start;
+        if (start === "`") {
+            return {
+                type: "TEMPLATE_STRING",
+                value: s,
+                replace(replacer) {
+                    return s.replace(/\$\{(.*?)\}/g, (match, group) => {
+                        return "${" + replacer(group) + "}";
+                    });
+                },
+            };
+        }
         return { type: "VALUE", value: s };
     };
     let tokenizeNumber = function (expr) {
@@ -320,6 +331,8 @@
     //------------------------------------------------------------------------------
     // Expression "evaluator"
     //------------------------------------------------------------------------------
+    const isLeftSeparator = (token) => token && (token.type === "LEFT_BRACE" || token.type === "COMMA");
+    const isRightSeparator = (token) => token && (token.type === "RIGHT_BRACE" || token.type === "COMMA");
     /**
      * This is the main function exported by this file. This is the code that will
      * process an expression (given as a string) and returns another expression with
@@ -346,15 +359,35 @@
      * the list of variables so it does not get replaced by a lookup in the context
      */
     function compileExprToArray(expr, scope) {
+        const localVars = new Set();
         scope = Object.create(scope);
         const tokens = tokenize(expr);
-        for (let i = 0; i < tokens.length; i++) {
+        let i = 0;
+        let stack = []; // to track last opening [ or {
+        while (i < tokens.length) {
             let token = tokens[i];
             let prevToken = tokens[i - 1];
             let nextToken = tokens[i + 1];
+            let groupType = stack[stack.length - 1];
+            switch (token.type) {
+                case "LEFT_BRACE":
+                case "LEFT_BRACKET":
+                    stack.push(token.type);
+                    break;
+                case "RIGHT_BRACE":
+                case "RIGHT_BRACKET":
+                    stack.pop();
+            }
             let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
             if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
                 if (prevToken) {
+                    // normalize missing tokens: {a} should be equivalent to {a:a}
+                    if (groupType === "LEFT_BRACE" &&
+                        isLeftSeparator(prevToken) &&
+                        isRightSeparator(nextToken)) {
+                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, Object.assign({}, token));
+                        nextToken = tokens[i + 1];
+                    }
                     if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
                         isVar = false;
                     }
@@ -365,6 +398,9 @@
                     }
                 }
             }
+            if (token.type === "TEMPLATE_STRING") {
+                token.value = token.replace((expr) => compileExpr(expr, scope));
+            }
             if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
                 if (token.type === "RIGHT_PAREN") {
                     let j = i - 1;
@@ -372,12 +408,14 @@
                         if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
                             tokens[j].value = tokens[j].originalValue;
                             scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
+                            localVars.add(tokens[j].value);
                         }
                         j--;
                     }
                 }
                 else {
                     scope[token.value] = { id: token.value, expr: token.value };
+                    localVars.add(token.value);
                 }
             }
             if (isVar) {
@@ -389,6 +427,14 @@
                     token.originalValue = token.value;
                     token.value = `scope['${token.value}']`;
                 }
+            }
+            i++;
+        }
+        // Mark all variables that have been used locally.
+        // This assumes the expression has only one scope (incorrect but "good enough for now")
+        for (const token of tokens) {
+            if (token.type === "SYMBOL" && localVars.has(token.value)) {
+                token.isLocal = true;
             }
         }
         return tokens;
@@ -541,8 +587,24 @@
             const tokens = compileExprToArray(expr, this.variables);
             const done = new Set();
             return tokens
-                .map((tok) => {
-                if (tok.varName) {
+                .map((tok, i) => {
+                // "this" in captured expressions should be the current component
+                if (tok.value === "this") {
+                    if (!done.has("this")) {
+                        done.add("this");
+                        this.addLine(`const this_${argId} = utils.getComponent(context);`);
+                    }
+                    tok.value = `this_${argId}`;
+                }
+                // Variables that should be looked up in the scope. isLocal is for arrow
+                // function arguments that should stay untouched (eg "ev => ev" should
+                // not become "const ev_1 = scope['ev']; ev_1 => ev_1")
+                if (tok.varName &&
+                    !tok.isLocal &&
+                    // HACK: for backwards compatibility, we don't capture bare methods
+                    // this allows them to be called with the rendering context/scope
+                    // as their this value.
+                    (!tokens[i + 1] || tokens[i + 1].type !== "LEFT_PAREN")) {
                     if (!done.has(tok.varName)) {
                         done.add(tok.varName);
                         this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
@@ -793,7 +855,8 @@
         klass = klass || {};
         elm = vnode.elm;
         for (name in oldClass) {
-            if (name && !klass[name]) {
+            if (name && !klass[name] && !Object.prototype.hasOwnProperty.call(klass, name)) {
+                // was `true` and now not provided
                 elm.classList.remove(name);
             }
         }
@@ -854,16 +917,16 @@
         }
         return map;
     }
-    const hooks = ["create", "update", "remove", "destroy", "pre", "post"];
+    const hooks$1 = ["create", "update", "remove", "destroy", "pre", "post"];
     function init(modules, domApi) {
         let i, j, cbs = {};
         const api = domApi !== undefined ? domApi : htmlDomApi;
-        for (i = 0; i < hooks.length; ++i) {
-            cbs[hooks[i]] = [];
+        for (i = 0; i < hooks$1.length; ++i) {
+            cbs[hooks$1[i]] = [];
             for (j = 0; j < modules.length; ++j) {
-                const hook = modules[j][hooks[i]];
+                const hook = modules[j][hooks$1[i]];
                 if (hook !== undefined) {
-                    cbs[hooks[i]].push(hook);
+                    cbs[hooks$1[i]].push(hook);
                 }
             }
         }
@@ -1240,6 +1303,7 @@
 
     const patch = init([eventListenersModule, attrsModule, propsModule, classModule]);
 
+    let localStorage = null;
     const browser = {
         setTimeout: window.setTimeout.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -1249,7 +1313,12 @@
         random: Math.random,
         Date: window.Date,
         fetch: (window.fetch || (() => { })).bind(window),
-        localStorage: window.localStorage,
+        get localStorage() {
+            return localStorage || window.localStorage;
+        },
+        set localStorage(newLocalStorage) {
+            localStorage = newLocalStorage;
+        },
     };
 
     /**
@@ -1364,6 +1433,7 @@
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
     const lineBreakRE = /[\r\n]/;
     const whitespaceRE = /\s+/g;
+    const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
     const NODE_HOOKS_PARAMS = {
         create: "(_, n)",
         insert: "vn",
@@ -1394,20 +1464,53 @@
     }
     const UTILS = {
         zero: Symbol("zero"),
-        toObj(expr) {
+        toClassObj(expr) {
+            const result = {};
             if (typeof expr === "string") {
+                // we transform here a list of classes into an object:
+                //  'hey you' becomes {hey: true, you: true}
                 expr = expr.trim();
                 if (!expr) {
                     return {};
                 }
                 let words = expr.split(/\s+/);
-                let result = {};
                 for (let i = 0; i < words.length; i++) {
                     result[words[i]] = true;
                 }
                 return result;
             }
-            return expr;
+            // this is already an object, but we may need to split keys:
+            // {'a b': true, 'a c': false} should become {a: true, b: true, c: false}
+            for (let key in expr) {
+                const value = expr[key];
+                const words = key.split(/\s+/);
+                for (let word of words) {
+                    result[word] = result[word] || value;
+                }
+            }
+            return result;
+        },
+        /**
+         * This method combines the current context with the variables defined in a
+         * scope for use in a slot.
+         *
+         * The implementation is kind of tricky because we want to preserve the
+         * prototype chain structure of the cloned result. So we need to traverse the
+         * prototype chain, cloning each level respectively.
+         */
+        combine(context, scope) {
+            let clone = context;
+            const scopeStack = [];
+            while (!isComponent(scope)) {
+                scopeStack.push(scope);
+                scope = scope.__proto__;
+            }
+            while (scopeStack.length) {
+                let scope = scopeStack.pop();
+                clone = Object.create(clone);
+                Object.assign(clone, scope);
+            }
+            return clone;
         },
         shallowEqual,
         addNameSpace(vnode) {
@@ -1537,6 +1640,9 @@
          * template, with the name given by the t-name attribute.
          */
         addTemplates(xmlstr) {
+            if (!xmlstr) {
+                return;
+            }
             const doc = typeof xmlstr === "string" ? parseXML(xmlstr) : xmlstr;
             const templates = doc.getElementsByTagName("templates")[0];
             if (!templates) {
@@ -1622,17 +1728,8 @@
                 return vnode.text;
             }
             const node = document.createElement(vnode.sel);
-            const elem = patch(node, vnode).elm;
-            function escapeTextNodes(node) {
-                if (node.nodeType === 3) {
-                    node.textContent = escape(node.textContent);
-                }
-                for (let n of node.childNodes) {
-                    escapeTextNodes(n);
-                }
-            }
-            escapeTextNodes(elem);
-            return elem.outerHTML;
+            const result = patch(node, vnode);
+            return result.elm.outerHTML;
         }
         /**
          * Force all widgets connected to this QWeb instance to rerender themselves.
@@ -1660,6 +1757,7 @@
                 ctx.variables = Object.create(null);
                 ctx.parentNode = ctx.generateID();
                 ctx.allowMultipleRoots = true;
+                ctx.shouldDefineParent = true;
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
@@ -1718,7 +1816,8 @@
                 }
                 if (this.translateFn) {
                     if (node.parentNode.getAttribute("t-translation") !== "off") {
-                        text = this.translateFn(text);
+                        const match = translationRE.exec(text);
+                        text = match[1] + this.translateFn(match[2]) + match[3];
                     }
                 }
                 if (ctx.parentNode) {
@@ -1744,7 +1843,7 @@
                 return;
             }
             if (node.tagName !== "t" && node.hasAttribute("t-call")) {
-                const tCallNode = document.createElement("t");
+                const tCallNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
                 tCallNode.setAttribute("t-call", node.getAttribute("t-call"));
                 node.removeAttribute("t-call");
                 node.prepend(tCallNode);
@@ -1771,7 +1870,7 @@
                         throw new Error(`Unknown QWeb directive: '${attrName}'`);
                     }
                     if (node.tagName !== "t" && (attrName === "t-esc" || attrName === "t-raw")) {
-                        const tNode = document.createElement("t");
+                        const tNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
                         tNode.setAttribute(attrName, node.getAttribute(attrName));
                         for (let child of Array.from(node.childNodes)) {
                             tNode.appendChild(child);
@@ -1822,14 +1921,22 @@
                     }
                 }
             }
-            if (node.nodeName !== "t") {
-                let nodeID = this._compileGenericNode(node, ctx, withHandlers);
-                ctx = ctx.withParent(nodeID);
+            if (node.nodeName !== "t" || node.hasAttribute("t-tag")) {
                 let nodeHooks = {};
                 let addNodeHook = function (hook, handler) {
                     nodeHooks[hook] = nodeHooks[hook] || [];
                     nodeHooks[hook].push(handler);
                 };
+                if (node.tagName === "select" && node.hasAttribute("t-att-value")) {
+                    const value = node.getAttribute("t-att-value");
+                    let exprId = ctx.generateID();
+                    ctx.addLine(`let expr${exprId} = ${ctx.formatExpression(value)};`);
+                    let expr = `expr${exprId}`;
+                    node.setAttribute("t-att-value", expr);
+                    addNodeHook("create", `n.elm.value=${expr};`);
+                }
+                let nodeID = this._compileGenericNode(node, ctx, withHandlers);
+                ctx = ctx.withParent(nodeID);
                 for (let { directive, value, fullName } of validDirectives) {
                     if (directive.atNodeCreation) {
                         directive.atNodeCreation({
@@ -1900,16 +2007,18 @@
                         isProp = key === "selected" || key === "disabled";
                         break;
                     case "textarea":
-                        isProp = key === "readonly" || key === "disabled";
+                        isProp = key === "readonly" || key === "disabled" || key === "value";
+                        break;
+                    case "select":
+                        isProp = key === "disabled" || key === "value";
                         break;
                     case "button":
-                    case "select":
                     case "optgroup":
                         isProp = key === "disabled";
                         break;
                 }
                 if (isProp) {
-                    props.push(`${key}: _${val}`);
+                    props.push(`${key}: ${val}`);
                 }
             }
             let classObj = "";
@@ -1944,7 +2053,7 @@
                             name = '"' + name + '"';
                         }
                         attrs.push(`${name}: _${attID}`);
-                        handleProperties(name, attID);
+                        handleProperties(name, `_${attID}`);
                     }
                 }
                 // dynamic attributes
@@ -1954,7 +2063,7 @@
                     let formattedValue = typeof v === "string" ? ctx.formatExpression(v) : `scope.${v.id}`;
                     if (attName === "class") {
                         ctx.rootContext.shouldDefineUtils = true;
-                        formattedValue = `utils.toObj(${formattedValue})`;
+                        formattedValue = `utils.toClassObj(${formattedValue})`;
                         if (classObj) {
                             ctx.addLine(`Object.assign(${classObj}, ${formattedValue})`);
                         }
@@ -1979,9 +2088,15 @@
                             const attrIndex = attrs.findIndex((att) => att.startsWith(attName + ":"));
                             attrs.splice(attrIndex, 1);
                         }
-                        ctx.addLine(`let _${attID} = ${formattedValue};`);
-                        attrs.push(`${attName}: _${attID}`);
-                        handleProperties(attName, attID);
+                        if (node.nodeName === "select" && attName === "value") {
+                            attrs.push(`${attName}: ${v}`);
+                            handleProperties(attName, v);
+                        }
+                        else {
+                            ctx.addLine(`let _${attID} = ${formattedValue};`);
+                            attrs.push(`${attName}: _${attID}`);
+                            handleProperties(attName, "_" + attID);
+                        }
                     }
                 }
                 if (name.startsWith("t-attf-")) {
@@ -2035,7 +2150,14 @@
                 ctx.addLine(`}`);
                 ctx.closeIf();
             }
-            ctx.addLine(`let vn${nodeID} = h('${node.nodeName}', p${nodeID}, c${nodeID});`);
+            let nodeName = `'${node.nodeName}'`;
+            if (node.hasAttribute("t-tag")) {
+                const tagExpr = node.getAttribute("t-tag");
+                node.removeAttribute("t-tag");
+                nodeName = `tag${ctx.generateID()}`;
+                ctx.addLine(`let ${nodeName} = ${ctx.formatExpression(tagExpr)};`);
+            }
+            ctx.addLine(`let vn${nodeID} = h(${nodeName}, p${nodeID}, c${nodeID});`);
             if (ctx.parentNode) {
                 ctx.addLine(`c${ctx.parentNode}.push(vn${nodeID});`);
             }
@@ -2060,6 +2182,7 @@
         att: 1,
         attf: 1,
         translation: 1,
+        tag: 1,
     };
     QWeb.DIRECTIVES = [];
     QWeb.TEMPLATES = {};
@@ -2360,7 +2483,9 @@
             }
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
-            const parentComponent = `utils.getComponent(context)`;
+            const parentComponent = ctx.rootContext.shouldDefineParent
+                ? `parent`
+                : `utils.getComponent(context)`;
             const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
@@ -2401,7 +2526,8 @@
             ctx.addLine(`if (!_${arrayID}) { throw new Error('QWeb error: Invalid loop expression')}`);
             let keysID = ctx.generateID();
             let valuesID = ctx.generateID();
-            ctx.addLine(`let _${keysID} = _${valuesID} = _${arrayID};`);
+            ctx.addLine(`let _${keysID} = _${arrayID};`);
+            ctx.addLine(`let _${valuesID} = _${arrayID};`);
             ctx.addIf(`!(_${arrayID} instanceof Array)`);
             ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
             ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
@@ -2521,9 +2647,10 @@
             // we need to capture every variable in it
             putInCache = false;
             code = ctx.captureExpression(value);
+            code = `const res = (() => { return ${code} })(); if (typeof res === 'function') { res(e) }`;
         }
         const modCode = mods.map((mod) => modcodes[mod]).join("");
-        let handler = `function (e) {if (!context.__owl__.isMounted){return}${modCode}${code}}`;
+        let handler = `function (e) {if (context.__owl__.status === ${5 /* DESTROYED */}){return}${modCode}${code}}`;
         if (putInCache) {
             const key = ctx.generateTemplateKey(event);
             ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || ${handler};`);
@@ -2628,7 +2755,15 @@
         const durations = (styles.transitionDuration || "").split(", ");
         const timeout = getTimeout(delays, durations);
         if (timeout > 0) {
-            elm.addEventListener("transitionend", cb, { once: true });
+            const transitionEndCB = () => {
+                if (!elm.parentNode)
+                    return;
+                cb();
+                browser.clearTimeout(fallbackTimeout);
+                elm.removeEventListener("transitionend", transitionEndCB);
+            };
+            elm.addEventListener("transitionend", transitionEndCB, { once: true });
+            const fallbackTimeout = browser.setTimeout(transitionEndCB, timeout + 1);
         }
         else {
             cb();
@@ -2660,7 +2795,8 @@
         priority: 80,
         atNodeEncounter({ ctx, value, node, qweb }) {
             const slotKey = ctx.generateID();
-            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + '${value}'];`);
+            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
+            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
             ctx.addIf(`slot${slotKey}`);
             let parentNode = `c${ctx.parentNode}`;
             if (!ctx.parentNode) {
@@ -2790,7 +2926,9 @@
         },
     });
 
-    const config = {};
+    const config = {
+        translatableAttributes: TRANSLATABLE_ATTRS,
+    };
     Object.defineProperty(config, "mode", {
         get() {
             return QWeb.dev ? "dev" : "prod";
@@ -2798,11 +2936,10 @@
         set(mode) {
             QWeb.dev = mode === "dev";
             if (QWeb.dev) {
-                const url = `https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode`;
-                console.warn(`Owl is running in 'dev' mode.  This is not suitable for production use. See ${url} for more information.`);
-            }
-            else {
-                console.log(`Owl is now running in 'prod' mode.`);
+                console.info(`Owl is running in 'dev' mode.
+
+This is not suitable for production use.
+See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`);
             }
         },
     });
@@ -3056,7 +3193,12 @@
                 else if (!name.startsWith("t-")) {
                     if (name !== "class" && name !== "style") {
                         // this is a prop!
-                        props[name] = ctx.formatExpression(value) || "undefined";
+                        if (value.includes("=>")) {
+                            props[name] = ctx.captureExpression(value);
+                        }
+                        else {
+                            props[name] = ctx.formatExpression(value) || "undefined";
+                        }
                     }
                 }
             }
@@ -3065,7 +3207,19 @@
                 .map((k) => k + ":" + props[k])
                 .join(",");
             let componentID = ctx.generateID();
-            const templateKey = ctx.generateTemplateKey();
+            let hasDefinedKey = false;
+            let templateKey;
+            if (node.tagName === "t" && !node.hasAttribute("t-key") && value.match(INTERP_REGEXP)) {
+                defineComponentKey();
+                const id = ctx.generateID();
+                // the ___ is to make sure we have no possible conflict with normal
+                // template keys
+                ctx.addLine(`let k${id} = '___' + componentKey${componentID}`);
+                templateKey = `k${id}`;
+            }
+            else {
+                templateKey = ctx.generateTemplateKey();
+            }
             let ref = node.getAttribute("t-ref");
             let refExpr = "";
             let refKey = "";
@@ -3110,7 +3264,7 @@
                 if (tattClass) {
                     let tattExpr = ctx.formatExpression(tattClass);
                     if (tattExpr[0] !== "{" || tattExpr[tattExpr.length - 1] !== "}") {
-                        tattExpr = `utils.toObj(${tattExpr})`;
+                        tattExpr = `utils.toClassObj(${tattExpr})`;
                     }
                     if (classAttr) {
                         ctx.addLine(`Object.assign(${classObj}, ${tattExpr})`);
@@ -3147,7 +3301,7 @@
             }
             if (hasDynamicProps) {
                 const dynamicProp = ctx.formatExpression(node.getAttribute("t-props"));
-                ctx.addLine(`let props${componentID} = Object.assign({${propStr}}, ${dynamicProp});`);
+                ctx.addLine(`let props${componentID} = Object.assign({}, ${dynamicProp}, {${propStr}});`);
             }
             else {
                 ctx.addLine(`let props${componentID} = {${propStr}};`);
@@ -3162,12 +3316,12 @@
             }
             // SLOTS
             const hasSlots = node.childNodes.length;
-            let scope = hasSlots ? `Object.assign(Object.create(context), scope)` : "undefined";
+            let scope = hasSlots ? `utils.combine(context, scope)` : "undefined";
             ctx.addIf(`w${componentID}`);
             // need to update component
             let styleCode = "";
             if (tattStyle) {
-                styleCode = `.then(()=>{if (w${componentID}.__owl__.isDestroyed) {return};w${componentID}.el.style=${tattStyle};});`;
+                styleCode = `.then(()=>{if (w${componentID}.__owl__.status === ${5 /* DESTROYED */}) {return};w${componentID}.el.style=${tattStyle};});`;
             }
             ctx.addLine(`w${componentID}.__updateProps(props${componentID}, extra.fiber, ${scope})${styleCode};`);
             ctx.addLine(`let pvnode = w${componentID}.__owl__.pvnode;`);
@@ -3179,13 +3333,16 @@
             }
             ctx.addElse();
             // new component
-            let dynamicFallback = "";
-            if (!value.match(INTERP_REGEXP)) {
-                dynamicFallback = `|| ${ctx.formatExpression(value)}`;
+            function defineComponentKey() {
+                if (!hasDefinedKey) {
+                    const interpValue = ctx.interpolate(value);
+                    ctx.addLine(`let componentKey${componentID} = ${interpValue};`);
+                    hasDefinedKey = true;
+                }
             }
-            const interpValue = ctx.interpolate(value);
-            ctx.addLine(`let componentKey${componentID} = ${interpValue};`);
-            ctx.addLine(`let W${componentID} = context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}]${dynamicFallback};`);
+            defineComponentKey();
+            const contextualValue = value.match(INTERP_REGEXP) ? "false" : ctx.formatExpression(value);
+            ctx.addLine(`let W${componentID} = ${contextualValue} || context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}];`);
             // maybe only do this in dev mode...
             ctx.addLine(`if (!W${componentID}) {throw new Error('Cannot find the definition of component "' + componentKey${componentID} + '"')}`);
             ctx.addLine(`w${componentID} = new W${componentID}(parent, props${componentID});`);
@@ -3244,12 +3401,17 @@
                     }
                 }
                 if (clone.childNodes.length) {
+                    let hasContent = false;
                     const t = clone.ownerDocument.createElement("t");
                     for (let child of Object.values(clone.childNodes)) {
+                        hasContent =
+                            hasContent || (child instanceof Text ? Boolean(child.textContent.trim().length) : true);
                         t.appendChild(child);
                     }
-                    const slotFn = qweb._compile(`slot_default_template`, { elem: t, hasParent: true });
-                    QWeb.slots[`${slotId}_default`] = slotFn;
+                    if (hasContent) {
+                        const slotFn = qweb._compile(`slot_default_template`, { elem: t, hasParent: true });
+                        QWeb.slots[`${slotId}_default`] = slotFn;
+                    }
                 }
             }
             ctx.addLine(`let fiber = w${componentID}.__prepare(extra.fiber, ${scope}, () => { const vnode = fiber.vnode; pvnode.sel = vnode.sel; ${createHook}});`);
@@ -3408,6 +3570,7 @@
             this.parent = parent;
             let oldFiber = __owl__.currentFiber;
             if (oldFiber && !oldFiber.isCompleted) {
+                this.force = true;
                 if (oldFiber.root === oldFiber && !parent) {
                     // both oldFiber and this fiber are root fibers
                     this._reuseFiber(oldFiber);
@@ -3430,6 +3593,8 @@
          */
         _reuseFiber(oldFiber) {
             oldFiber.cancel(); // cancel children fibers
+            oldFiber.target = this.target || oldFiber.target;
+            oldFiber.position = this.position || oldFiber.position;
             oldFiber.isCompleted = false; // keep the root fiber alive
             oldFiber.isRendered = false; // the fiber has to be re-rendered
             if (oldFiber.child) {
@@ -3509,26 +3674,30 @@
         complete() {
             let component = this.component;
             this.isCompleted = true;
-            if (!this.target && !component.__owl__.isMounted) {
+            const status = component.__owl__.status;
+            if (status === 5 /* DESTROYED */) {
                 return;
             }
             // build patchQueue
             const patchQueue = [];
             const doWork = function (f) {
+                f.component.__owl__.currentFiber = null;
                 patchQueue.push(f);
                 return f.child;
             };
             this._walk(doWork);
             const patchLen = patchQueue.length;
             // call willPatch hook on each fiber of patchQueue
-            for (let i = 0; i < patchLen; i++) {
-                const fiber = patchQueue[i];
-                if (fiber.shouldPatch) {
-                    component = fiber.component;
-                    if (component.__owl__.willPatchCB) {
-                        component.__owl__.willPatchCB();
+            if (status === 3 /* MOUNTED */) {
+                for (let i = 0; i < patchLen; i++) {
+                    const fiber = patchQueue[i];
+                    if (fiber.shouldPatch) {
+                        component = fiber.component;
+                        if (component.__owl__.willPatchCB) {
+                            component.__owl__.willPatchCB();
+                        }
+                        component.willPatch();
                     }
-                    component.willPatch();
                 }
             }
             // call __patch on each fiber of (reversed) patchQueue
@@ -3555,8 +3724,9 @@
                     component.__patch(target, fiber.vnode);
                 }
                 else {
-                    if (fiber.shouldPatch) {
-                        component.__patch(component.__owl__.vnode, fiber.vnode);
+                    const vnode = component.__owl__.vnode;
+                    if (fiber.shouldPatch && vnode) {
+                        component.__patch(vnode, fiber.vnode);
                         // When updating a Component's props (in directive),
                         // the component has a pvnode AND should be patched.
                         // However, its pvnode.elm may have changed if it is a High Order Component
@@ -3568,9 +3738,6 @@
                         component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
                         component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
                     }
-                }
-                if (fiber === component.__owl__.currentFiber) {
-                    component.__owl__.currentFiber = null;
                 }
             }
             // insert into the DOM (mount case)
@@ -3588,17 +3755,26 @@
                 this.component.env.qweb.trigger("dom-appended");
             }
             // call patched/mounted hook on each fiber of (reversed) patchQueue
-            for (let i = patchLen - 1; i >= 0; i--) {
-                const fiber = patchQueue[i];
-                component = fiber.component;
-                if (fiber.shouldPatch && !this.target) {
-                    component.patched();
-                    if (component.__owl__.patchedCB) {
-                        component.__owl__.patchedCB();
+            if (status === 3 /* MOUNTED */ || inDOM) {
+                for (let i = patchLen - 1; i >= 0; i--) {
+                    const fiber = patchQueue[i];
+                    component = fiber.component;
+                    if (fiber.shouldPatch && !this.target) {
+                        component.patched();
+                        if (component.__owl__.patchedCB) {
+                            component.__owl__.patchedCB();
+                        }
+                    }
+                    else {
+                        component.__callMounted();
                     }
                 }
-                else if (this.target ? inDOM : true) {
-                    component.__callMounted();
+            }
+            else {
+                for (let i = patchLen - 1; i >= 0; i--) {
+                    const fiber = patchQueue[i];
+                    component = fiber.component;
+                    component.__owl__.status = 4 /* UNMOUNTED */;
                 }
             }
         }
@@ -3627,22 +3803,42 @@
             this.vnode = component.__owl__.vnode || h("div");
             const qweb = component.env.qweb;
             let root = component;
-            let canCatch = false;
-            while (component && !(canCatch = !!component.catchError)) {
-                root = component;
-                component = component.__owl__.parent;
+            function handle(error) {
+                let canCatch = false;
+                qweb.trigger("error", error);
+                while (component && !(canCatch = !!component.catchError)) {
+                    root = component;
+                    component = component.__owl__.parent;
+                }
+                if (canCatch) {
+                    try {
+                        component.catchError(error);
+                    }
+                    catch (e) {
+                        root = component;
+                        component = component.__owl__.parent;
+                        return handle(e);
+                    }
+                    return true;
+                }
+                return false;
             }
-            qweb.trigger("error", error);
-            if (canCatch) {
-                component.catchError(error);
-            }
-            else {
+            let isHandled = handle(error);
+            if (!isHandled) {
                 // the 3 next lines aim to mark the root fiber as being in error, and
                 // to force it to end, without waiting for its children
                 this.root.counter = 0;
                 this.root.error = error;
                 scheduler.flush();
-                root.destroy();
+                // at this point, the state of the application is corrupted and we could
+                // have a lot of issues or crashes. So we destroy the application in a try
+                // catch and swallow these errors because the fiber is already in error,
+                // and this is the actual issue that needs to be solved, not those followup
+                // errors.
+                try {
+                    root.destroy();
+                }
+                catch (e) { }
             }
         }
     }
@@ -3688,16 +3884,17 @@
                         continue;
                     }
                 }
-                let isValid;
+                let whyInvalid;
                 try {
-                    isValid = isValidProp(props[propName], propsDef[propName]);
+                    whyInvalid = whyInvalidProp(props[propName], propsDef[propName]);
                 }
                 catch (e) {
                     e.message = `Invalid prop '${propName}' in component ${Widget.name} (${e.message})`;
                     throw e;
                 }
-                if (!isValid) {
-                    throw new Error(`Invalid Prop '${propName}' in component '${Widget.name}'`);
+                if (whyInvalid !== null) {
+                    whyInvalid = whyInvalid.replace(/\${propName}/g, propName);
+                    throw new Error(`Invalid Prop '${propName}' in component '${Widget.name}': ${whyInvalid}`);
                 }
             }
             for (let propName in props) {
@@ -3708,11 +3905,11 @@
         }
     };
     /**
-     * Check if an invidual prop value matches its (static) prop definition
+     * Check why an invidual prop value doesn't match its (static) prop definition
      */
-    function isValidProp(prop, propDef) {
+    function whyInvalidProp(prop, propDef) {
         if (propDef === true) {
-            return true;
+            return null;
         }
         if (typeof propDef === "function") {
             // Check if a value is constructed by some Constructor.  Note that there is a
@@ -3721,46 +3918,70 @@
             // So, even though 1 is not an instance of Number, we want to consider that
             // it is valid.
             if (typeof prop === "object") {
-                return prop instanceof propDef;
+                if (prop instanceof propDef) {
+                    return null;
+                }
+                return `\${propName} is not an instance of ${propDef.name}`;
             }
-            return typeof prop === propDef.name.toLowerCase();
+            if (typeof prop === propDef.name.toLowerCase()) {
+                return null;
+            }
+            return `type of \${propName} is not ${propDef.name}`;
         }
         else if (propDef instanceof Array) {
             // If this code is executed, this means that we want to check if a prop
             // matches at least one of its descriptor.
-            let result = false;
+            let reasons = [];
             for (let i = 0, iLen = propDef.length; i < iLen; i++) {
-                result = result || isValidProp(prop, propDef[i]);
+                const why = whyInvalidProp(prop, propDef[i]);
+                if (why === null) {
+                    return null;
+                }
+                reasons.push(why);
             }
-            return result;
+            if (reasons.length > 1) {
+                return reasons.slice(0, -1).join(", ") + " and " + reasons[reasons.length - 1];
+            }
+            else {
+                return reasons[0];
+            }
         }
         // propsDef is an object
         if (propDef.optional && prop === undefined) {
-            return true;
+            return null;
         }
-        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
-        if (propDef.validate) {
-            result = result && propDef.validate(prop);
+        if (propDef.type) {
+            const why = whyInvalidProp(prop, propDef.type);
+            if (why !== null) {
+                return why;
+            }
+        }
+        if (propDef.validate && !propDef.validate(prop)) {
+            return "${propName} could not be validated by `validate` function";
         }
         if (propDef.type === Array && propDef.element) {
             for (let i = 0, iLen = prop.length; i < iLen; i++) {
-                result = result && isValidProp(prop[i], propDef.element);
+                const why = whyInvalidProp(prop[i], propDef.element);
+                if (why !== null) {
+                    return why.replace(/\${propName}/g, `\${propName}[${i}]`);
+                }
             }
         }
         if (propDef.type === Object && propDef.shape) {
             const shape = propDef.shape;
             for (let key in shape) {
-                result = result && isValidProp(prop[key], shape[key]);
+                const why = whyInvalidProp(prop[key], shape[key]);
+                if (why !== null) {
+                    return why.replace(/\${propName}/g, `\${propName}['${key}']`);
+                }
             }
-            if (result) {
-                for (let propName in prop) {
-                    if (!(propName in shape)) {
-                        throw new Error(`unknown prop '${propName}'`);
-                    }
+            for (let propName in prop) {
+                if (!(propName in shape)) {
+                    return `unknown prop \${propName}['${propName}']`;
                 }
             }
         }
-        return result;
+        return null;
     }
 
     /**
@@ -3830,6 +4051,15 @@
         document.head.appendChild(sheet);
     }
 
+    var STATUS;
+    (function (STATUS) {
+        STATUS[STATUS["CREATED"] = 0] = "CREATED";
+        STATUS[STATUS["WILLSTARTED"] = 1] = "WILLSTARTED";
+        STATUS[STATUS["RENDERED"] = 2] = "RENDERED";
+        STATUS[STATUS["MOUNTED"] = 3] = "MOUNTED";
+        STATUS[STATUS["UNMOUNTED"] = 4] = "UNMOUNTED";
+        STATUS[STATUS["DESTROYED"] = 5] = "DESTROYED";
+    })(STATUS || (STATUS = {}));
     const portalSymbol = Symbol("portal"); // FIXME
     //------------------------------------------------------------------------------
     // Component
@@ -3872,20 +4102,23 @@
                 if (!this.env.qweb) {
                     this.env.qweb = new QWeb();
                 }
+                // TODO: remove this in owl 2.0
                 if (!this.env.browser) {
                     this.env.browser = browser;
                 }
                 this.env.qweb.on("update", this, () => {
-                    if (this.__owl__.isMounted) {
-                        this.render(true);
-                    }
-                    if (this.__owl__.isDestroyed) {
-                        // this is unlikely to happen, but if a root widget is destroyed,
-                        // we want to remove our subscription.  The usual way to do that
-                        // would be to perform some check in the destroy method, but since
-                        // it is very performance sensitive, and since this is a rare event,
-                        // we simply do it lazily
-                        this.env.qweb.off("update", this);
+                    switch (this.__owl__.status) {
+                        case 3 /* MOUNTED */:
+                            this.render(true);
+                            break;
+                        case 5 /* DESTROYED */:
+                            // this is unlikely to happen, but if a root widget is destroyed,
+                            // we want to remove our subscription.  The usual way to do that
+                            // would be to perform some check in the destroy method, but since
+                            // it is very performance sensitive, and since this is a rare event,
+                            // we simply do it lazily
+                            this.env.qweb.off("update", this);
+                            break;
                     }
                 });
                 depth = 0;
@@ -3897,8 +4130,7 @@
                 depth: depth,
                 vnode: null,
                 pvnode: null,
-                isMounted: false,
-                isDestroyed: false,
+                status: 0 /* CREATED */,
                 parent: parent || null,
                 children: {},
                 cmap: {},
@@ -3920,6 +4152,7 @@
             if (constr.style) {
                 this.__applyStyles(constr);
             }
+            this.setup();
         }
         /**
          * The `el` is the root element of the component.  Note that it could be null:
@@ -3928,6 +4161,16 @@
         get el() {
             return this.__owl__.vnode ? this.__owl__.vnode.elm : null;
         }
+        /**
+         * setup is run just after the component is constructed. This is the standard
+         * location where the component can setup its hooks. It has some advantages
+         * over the constructor:
+         *  - it can be patched (useful in odoo ecosystem)
+         *  - it does not need to propagate the arguments to the super call
+         *
+         * Note: this method should not be called manually.
+         */
+        setup() { }
         /**
          * willStart is an asynchronous hook that can be implemented to perform some
          * action before the initial rendering of a component.
@@ -4006,52 +4249,53 @@
          * Note that a component can be mounted an unmounted several times
          */
         async mount(target, options = {}) {
-            const position = options.position || "last-child";
-            const __owl__ = this.__owl__;
-            if (__owl__.isMounted) {
-                if (position !== "self" && this.el.parentNode !== target) {
-                    // in this situation, we are trying to mount a component on a different
-                    // target. In this case, we need to unmount first, otherwise it will
-                    // not work.
-                    this.unmount();
-                }
-                else {
-                    return Promise.resolve();
-                }
-            }
-            if (__owl__.isDestroyed) {
-                throw new Error("Cannot mount a destroyed component");
-            }
-            if (__owl__.currentFiber) {
-                const currentFiber = __owl__.currentFiber;
-                if (currentFiber.target === target && currentFiber.position === position) {
-                    return scheduler.addFiber(currentFiber);
-                }
-                else {
-                    scheduler.rejectFiber(currentFiber, "Mounting operation cancelled");
-                }
-            }
             if (!(target instanceof HTMLElement || target instanceof DocumentFragment)) {
                 let message = `Component '${this.constructor.name}' cannot be mounted: the target is not a valid DOM node.`;
                 message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
                 throw new Error(message);
             }
-            const fiber = new Fiber(null, this, false, target, position);
-            fiber.shouldPatch = false;
-            if (!__owl__.vnode) {
-                this.__prepareAndRender(fiber, () => { });
+            const position = options.position || "last-child";
+            const __owl__ = this.__owl__;
+            const currentFiber = __owl__.currentFiber;
+            switch (__owl__.status) {
+                case 0 /* CREATED */: {
+                    const fiber = new Fiber(null, this, true, target, position);
+                    fiber.shouldPatch = false;
+                    this.__prepareAndRender(fiber, () => { });
+                    return scheduler.addFiber(fiber);
+                }
+                case 1 /* WILLSTARTED */:
+                case 2 /* RENDERED */:
+                    currentFiber.target = target;
+                    currentFiber.position = position;
+                    return scheduler.addFiber(currentFiber);
+                case 4 /* UNMOUNTED */: {
+                    const fiber = new Fiber(null, this, true, target, position);
+                    fiber.shouldPatch = false;
+                    this.__render(fiber);
+                    return scheduler.addFiber(fiber);
+                }
+                case 3 /* MOUNTED */: {
+                    if (position !== "self" && this.el.parentNode !== target) {
+                        const fiber = new Fiber(null, this, true, target, position);
+                        fiber.shouldPatch = false;
+                        this.__render(fiber);
+                        return scheduler.addFiber(fiber);
+                    }
+                    else {
+                        return Promise.resolve();
+                    }
+                }
+                case 5 /* DESTROYED */:
+                    throw new Error("Cannot mount a destroyed component");
             }
-            else {
-                this.__render(fiber);
-            }
-            return scheduler.addFiber(fiber);
         }
         /**
          * The unmount method is the opposite of the mount method.  It is useful
          * to call willUnmount calls and remove the component from the DOM.
          */
         unmount() {
-            if (this.__owl__.isMounted) {
+            if (this.__owl__.status === 3 /* MOUNTED */) {
                 this.__callWillUnmount();
                 this.el.remove();
             }
@@ -4068,10 +4312,7 @@
         async render(force = false) {
             const __owl__ = this.__owl__;
             const currentFiber = __owl__.currentFiber;
-            if (!__owl__.isMounted && !currentFiber) {
-                // if we get here, this means that the component was either never mounted,
-                // or was unmounted and some state change  triggered a render. Either way,
-                // we do not want to actually render anything in this case.
+            if (!__owl__.vnode && !currentFiber) {
                 return;
             }
             if (currentFiber && !currentFiber.isRendered && !currentFiber.isCompleted) {
@@ -4080,15 +4321,13 @@
             // if we aren't mounted at this point, it implies that there is a
             // currentFiber that is already rendered (isRendered is true), so we are
             // about to be mounted
-            const isMounted = __owl__.isMounted;
+            const status = __owl__.status;
             const fiber = new Fiber(null, this, force, null, null);
             Promise.resolve().then(() => {
-                if (__owl__.isMounted || !isMounted) {
-                    if (fiber.isCompleted) {
+                if (__owl__.status === 3 /* MOUNTED */ || status !== 3 /* MOUNTED */) {
+                    if (fiber.isCompleted || fiber.isRendered) {
                         return;
                     }
-                    // we are mounted (__owl__.isMounted), or if we are currently being
-                    // mounted (!isMounted), so we call __render
                     this.__render(fiber);
                 }
                 else {
@@ -4112,7 +4351,7 @@
          */
         destroy() {
             const __owl__ = this.__owl__;
-            if (!__owl__.isDestroyed) {
+            if (__owl__.status !== 5 /* DESTROYED */) {
                 const el = this.el;
                 this.__destroy(__owl__.parent);
                 if (el) {
@@ -4153,13 +4392,12 @@
          */
         __destroy(parent) {
             const __owl__ = this.__owl__;
-            const isMounted = __owl__.isMounted;
-            if (isMounted) {
+            if (__owl__.status === 3 /* MOUNTED */) {
                 if (__owl__.willUnmountCB) {
                     __owl__.willUnmountCB();
                 }
                 this.willUnmount();
-                __owl__.isMounted = false;
+                __owl__.status = 4 /* UNMOUNTED */;
             }
             const children = __owl__.children;
             for (let key in children) {
@@ -4170,7 +4408,7 @@
                 delete parent.__owl__.children[id];
                 __owl__.parent = null;
             }
-            __owl__.isDestroyed = true;
+            __owl__.status = 5 /* DESTROYED */;
             delete __owl__.vnode;
             if (__owl__.currentFiber) {
                 __owl__.currentFiber.isCompleted = true;
@@ -4178,8 +4416,7 @@
         }
         __callMounted() {
             const __owl__ = this.__owl__;
-            __owl__.isMounted = true;
-            __owl__.currentFiber = null;
+            __owl__.status = 3 /* MOUNTED */;
             this.mounted();
             if (__owl__.mountedCB) {
                 __owl__.mountedCB();
@@ -4191,7 +4428,7 @@
                 __owl__.willUnmountCB();
             }
             this.willUnmount();
-            __owl__.isMounted = false;
+            __owl__.status = 4 /* UNMOUNTED */;
             if (__owl__.currentFiber) {
                 __owl__.currentFiber.isCompleted = true;
                 __owl__.currentFiber.root.counter = 0;
@@ -4199,7 +4436,7 @@
             const children = __owl__.children;
             for (let id in children) {
                 const comp = children[id];
-                if (comp.__owl__.isMounted) {
+                if (comp.__owl__.status === 3 /* MOUNTED */) {
                     comp.__callWillUnmount();
                 }
             }
@@ -4319,17 +4556,23 @@
         }
         async __prepareAndRender(fiber, cb) {
             try {
-                await Promise.all([this.willStart(), this.__owl__.willStartCB && this.__owl__.willStartCB()]);
+                const proms = Promise.all([
+                    this.willStart(),
+                    this.__owl__.willStartCB && this.__owl__.willStartCB(),
+                ]);
+                this.__owl__.status = 1 /* WILLSTARTED */;
+                await proms;
+                if (this.__owl__.status === 5 /* DESTROYED */) {
+                    return Promise.resolve();
+                }
             }
             catch (e) {
                 fiber.handleError(e);
                 return Promise.resolve();
             }
-            if (this.__owl__.isDestroyed) {
-                return Promise.resolve();
-            }
             if (!fiber.isCompleted) {
                 this.__render(fiber);
+                this.__owl__.status = 2 /* RENDERED */;
                 cb();
             }
         }
@@ -4351,7 +4594,7 @@
                 for (let childKey in __owl__.children) {
                     const child = __owl__.children[childKey];
                     const childOwl = child.__owl__;
-                    if (!childOwl.isMounted && childOwl.parentLastFiberId < fiber.id) {
+                    if (childOwl.status !== 3 /* MOUNTED */ && childOwl.parentLastFiberId < fiber.id) {
                         // we only do here a "soft" destroy, meaning that we leave the child
                         // dom node alone, without removing it.  Most of the time, it does not
                         // matter, because the child component is already unmounted.  However,
@@ -4398,16 +4641,6 @@
             }
         }
         /**
-         * Only called by qweb t-component directive (when t-keepalive is set)
-         */
-        __remount() {
-            const __owl__ = this.__owl__;
-            if (!__owl__.isMounted) {
-                __owl__.isMounted = true;
-                this.mounted();
-            }
-        }
-        /**
          * Apply default props (only top level).
          *
          * Note that this method does modify in place the props
@@ -4427,6 +4660,23 @@
     Component.env = {};
     // expose scheduler s.t. it can be mocked for testing purposes
     Component.scheduler = scheduler;
+    async function mount(C, params) {
+        const { env, props, target } = params;
+        let origEnv = C.hasOwnProperty("env") ? C.env : null;
+        if (env) {
+            C.env = env;
+        }
+        const component = new C(null, props);
+        if (origEnv) {
+            C.env = origEnv;
+        }
+        else {
+            delete C.env;
+        }
+        const position = params.position || "last-child";
+        await component.mount(target, { position });
+        return component;
+    }
 
     /**
      * The `Context` object provides a way to share data between an arbitrary number
@@ -4459,7 +4709,7 @@
             return acc;
         }, []);
     }
-    class Context extends EventBus {
+    class Context$1 extends EventBus {
         constructor(state = {}) {
             super();
             this.rev = 1;
@@ -4533,16 +4783,6 @@
             __owl__.observer = new Observer();
             __owl__.observer.notifyCB = component.render.bind(component);
         }
-        const currentCB = __owl__.observer.notifyCB;
-        __owl__.observer.notifyCB = function () {
-            if (ctx.rev > mapping[id]) {
-                // in this case, the context has been updated since we were rendering
-                // last, and we do not need to render here with the observer. A
-                // rendering is coming anyway, with the correct props.
-                return;
-            }
-            currentCB();
-        };
         mapping[id] = 0;
         const renderFn = __owl__.renderFn;
         __owl__.renderFn = function (comp, params) {
@@ -4582,7 +4822,7 @@
      * will return an observed object (or array).  Changes to that value will then
      * trigger a rerendering of the current component.
      */
-    function useState(state) {
+    function useState$1(state) {
         const component = Component.current;
         const __owl__ = component.__owl__;
         if (!__owl__.observer) {
@@ -4650,12 +4890,20 @@
         const __owl__ = Component.current.__owl__;
         return {
             get el() {
+                var _a, _b;
                 const val = __owl__.refs && __owl__.refs[name];
+                if (val instanceof Component) {
+                    return val.el;
+                }
                 if (val instanceof HTMLElement) {
                     return val;
                 }
-                else if (val instanceof Component) {
-                    return val.el;
+                // Extra check in case the app was created outside an iframe but mounted into one
+                // on Firefox 109+, the prototype of the element changes to use the iframe window's HTMLElement
+                // see https://bugzilla.mozilla.org/show_bug.cgi?id=1813499
+                const ownerWindow = (_b = (_a = val) === null || _a === void 0 ? void 0 : _a.ownerDocument) === null || _b === void 0 ? void 0 : _b.defaultView;
+                if (ownerWindow && val instanceof ownerWindow.HTMLElement) {
+                    return val;
                 }
                 return null;
             },
@@ -4664,6 +4912,23 @@
                 return val instanceof Component ? val : null;
             },
         };
+    }
+    // -----------------------------------------------------------------------------
+    // "Builder" hooks
+    // -----------------------------------------------------------------------------
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the component calling them.
+     */
+    function useComponent() {
+        return Component.current;
+    }
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the env of the component calling them.
+     */
+    function useEnv() {
+        return Component.current.env;
     }
     // -----------------------------------------------------------------------------
     // useSubEnv
@@ -4701,7 +4966,7 @@
 
     var _hooks = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        useState: useState,
+        useState: useState$1,
         onMounted: onMounted,
         onWillUnmount: onWillUnmount,
         onWillPatch: onWillPatch,
@@ -4709,11 +4974,13 @@
         onWillStart: onWillStart,
         onWillUpdateProps: onWillUpdateProps,
         useRef: useRef,
+        useComponent: useComponent,
+        useEnv: useEnv,
         useSubEnv: useSubEnv,
         useExternalListener: useExternalListener
     });
 
-    class Store extends Context {
+    class Store$1 extends Context$1 {
         constructor(config) {
             super(config.state);
             this.actions = config.actions;
@@ -4742,13 +5009,17 @@
             }, ...payload);
             return result;
         }
+        __notifyComponents() {
+            this.trigger("before-update");
+            return super.__notifyComponents();
+        }
     }
     const isStrictEqual = (a, b) => a === b;
     function useStore(selector, options = {}) {
         const component = Component.current;
         const componentId = component.__owl__.id;
         const store = options.store || component.env.store;
-        if (!(store instanceof Store)) {
+        if (!(store instanceof Store$1)) {
             throw new Error(`No store found when connecting '${component.constructor.name}'`);
         }
         let result = selector(store.state, component.props);
@@ -4764,12 +5035,15 @@
             const newRevNumber = hashFn(result);
             if ((newRevNumber > 0 && revNumber !== newRevNumber) || !isEqual(oldResult, result)) {
                 revNumber = newRevNumber;
-                if (options.onUpdate) {
-                    options.onUpdate(result);
-                }
                 return true;
             }
             return false;
+        }
+        if (options.onUpdate) {
+            store.on("before-update", component, () => {
+                const newValue = selector(store.state, component.props);
+                options.onUpdate(newValue);
+            });
         }
         store.updateFunctions[componentId].push(function () {
             return selectCompareUpdate(store.state, component.props);
@@ -4789,6 +5063,9 @@
         const __destroy = component.__destroy;
         component.__destroy = (parent) => {
             delete store.updateFunctions[componentId];
+            if (options.onUpdate) {
+                store.off("before-update", component);
+            }
             __destroy.call(component, parent);
         };
         if (typeof result !== "object" || result === null) {
@@ -5076,6 +5353,7 @@
   `;
 
     const paramRegexp = /\{\{(.*?)\}\}/;
+    const globalParamRegexp = new RegExp(paramRegexp.source, "g");
     class Router {
         constructor(env, routes, options = { mode: "history" }) {
             this.currentRoute = null;
@@ -5097,6 +5375,7 @@
                     this.validateDestination(partialRoute.redirect);
                 }
                 partialRoute.params = partialRoute.path ? findParams(partialRoute.path) : [];
+                partialRoute.extractionRegExp = makeExtractionRegExp(partialRoute.path);
                 this.routes[partialRoute.name] = partialRoute;
                 this.routeIds.push(partialRoute.name);
             }
@@ -5129,7 +5408,10 @@
             const initialParams = this.currentParams;
             const result = await this.matchAndApplyRules(path);
             if (result.type === "match") {
-                const finalPath = this.routeToPath(result.route, result.params);
+                let finalPath = this.routeToPath(result.route, result.params);
+                if (path.indexOf("?") > -1) {
+                    finalPath += "?" + path.split("?")[1];
+                }
                 const isPopStateEvent = ev && ev instanceof PopStateEvent;
                 if (!isPopStateEvent) {
                     this.setUrlFromPath(finalPath);
@@ -5171,19 +5453,12 @@
             }
         }
         routeToPath(route, params) {
-            const path = route.path;
-            const parts = path.split("/");
-            const l = parts.length;
-            for (let i = 0; i < l; i++) {
-                const part = parts[i];
-                const match = part.match(paramRegexp);
-                if (match) {
-                    const key = match[1].split(".")[0];
-                    parts[i] = params[key];
-                }
-            }
             const prefix = this.mode === "hash" ? "#" : "";
-            return prefix + parts.join("/");
+            return (prefix +
+                route.path.replace(globalParamRegexp, (match, param) => {
+                    const [key] = param.split(".");
+                    return params[key];
+                }));
         }
         currentPath() {
             let result = this.mode === "history" ? window.location.pathname : window.location.hash.slice(1);
@@ -5237,45 +5512,52 @@
             if (route.path === "*") {
                 return {};
             }
+            if (path.indexOf("?") > -1) {
+                path = path.split("?")[0];
+            }
             if (path.startsWith("#")) {
                 path = path.slice(1);
             }
-            const descrParts = route.path.split("/");
-            const targetParts = path.split("/");
-            const l = descrParts.length;
-            if (l !== targetParts.length) {
+            const paramsMatch = path.match(route.extractionRegExp);
+            if (!paramsMatch) {
                 return false;
             }
             const result = {};
-            for (let i = 0; i < l; i++) {
-                const descr = descrParts[i];
-                let target = targetParts[i];
-                const match = descr.match(paramRegexp);
-                if (match) {
-                    const [key, suffix] = match[1].split(".");
-                    if (suffix === "number") {
-                        target = parseInt(target, 10);
-                    }
-                    result[key] = target;
+            route.params.forEach((param, index) => {
+                const [key, suffix] = param.split(".");
+                const paramValue = paramsMatch[index + 1];
+                if (suffix === "number") {
+                    return (result[key] = parseInt(paramValue, 10));
                 }
-                else if (descr !== target) {
-                    return false;
-                }
-            }
+                return (result[key] = paramValue);
+            });
             return result;
         }
     }
     function findParams(str) {
-        const globalParamRegexp = /\{\{(.*?)\}\}/g;
         const result = [];
         let m;
         do {
             m = globalParamRegexp.exec(str);
             if (m) {
-                result.push(m[1].split(".")[0]);
+                result.push(m[1]);
             }
         } while (m);
         return result;
+    }
+    function escapeRegExp(str) {
+        return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    }
+    function makeExtractionRegExp(path) {
+        // replace param strings with capture groups so that we can build a regex to match over the path
+        const extractionString = path
+            .split(paramRegexp)
+            .map((part, index) => {
+            return index % 2 ? "(.*)" : escapeRegExp(part);
+        })
+            .join("");
+        // Example: /home/{{param1}}/{{param2}} => ^\/home\/(.*)\/(.*)$
+        return new RegExp(`^${extractionString}$`);
     }
 
     /**
@@ -5284,15 +5566,15 @@
      *
      * Note that dynamic values, such as a date or a commit hash are added by rollup
      */
-    const Context$1 = Context;
-    const useState$1 = useState;
+    const Context = Context$1;
+    const useState = useState$1;
     const core = { EventBus, Observer };
     const router = { Router, RouteComponent, Link };
-    const Store$1 = Store;
+    const Store = Store$1;
     const utils = _utils;
     const tags = _tags;
     const misc = { AsyncRoot, Portal };
-    const hooks$1 = Object.assign({}, _hooks, {
+    const hooks = Object.assign({}, _hooks, {
         useContext: useContext,
         useDispatch: useDispatch,
         useGetters: useGetters,
@@ -5301,23 +5583,27 @@
     const __info__ = {};
 
     exports.Component = Component;
-    exports.Context = Context$1;
+    exports.Context = Context;
     exports.QWeb = QWeb;
-    exports.Store = Store$1;
+    exports.Store = Store;
     exports.__info__ = __info__;
+    exports.browser = browser;
     exports.config = config;
     exports.core = core;
-    exports.hooks = hooks$1;
+    exports.hooks = hooks;
     exports.misc = misc;
+    exports.mount = mount;
     exports.router = router;
     exports.tags = tags;
-    exports.useState = useState$1;
+    exports.useState = useState;
     exports.utils = utils;
 
+    Object.defineProperty(exports, '__esModule', { value: true });
 
-    __info__.version = '1.0.13';
-    __info__.date = '2020-10-26T07:38:42.693Z';
-    __info__.hash = 'd615ffd';
+
+    __info__.version = '1.4.11';
+    __info__.date = '2023-01-30T13:09:39.141Z';
+    __info__.hash = 'a38c534';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -62,33 +62,33 @@ class Partner(models.Model):
     def _compute_meeting(self):
         if self.ids:
             all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+
+            event_id = self.env['calendar.event']._search([])  # ir.rules will be applied
+            subquery_string, subquery_params = event_id.select()
+            subquery = self.env.cr.mogrify(subquery_string, subquery_params).decode()
+
             self.env.cr.execute("""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
-                 WHERE res_partner_id IN %s
+                 WHERE res_partner_id IN %s AND calendar_event_id IN ({})
               GROUP BY res_partner_id, calendar_event_id
-            """, [tuple(all_partners.ids)])
+            """.format(subquery), [tuple(all_partners.ids)])
+
             meeting_data = self.env.cr.fetchall()
 
-            # Keep only valid meeting data based on record rules of events
-            events = [row[1] for row in meeting_data]
-            events = self.env['calendar.event'].search([('id', 'in', events)]).ids
-            meeting_data = [m for m in meeting_data if m[1] in events]
-
             # Create a dict {partner_id: event_ids} and fill with events linked to the partner
-            meetings = {p.id: set() for p in all_partners}
-            for m in meeting_data:
-                meetings[m[0]].add(m[1])
+            meetings = {}
+            for p_id, m_id, _ in meeting_data:
+                meetings.setdefault(p_id, set()).add(m_id)
 
             # Add the events linked to the children of the partner
-            all_partners.read(['parent_id'])
-            for p in all_partners:
+            for p in self.browse(meetings.keys()):
                 partner = p
-                while partner:
-                    if partner in self:
-                        meetings[partner.id] |= meetings[p.id]
+                while partner.parent_id:
                     partner = partner.parent_id
-            return {p.id: list(meetings[p.id]) for p in self}
+                    if partner in self:
+                        meetings[partner.id] = meetings.get(partner.id, set()) | meetings[p.id]
+            return {p_id: list(meetings[p_id]) if p_id in meetings else [] for p_id in self.ids}
         return {}
 
 
@@ -99,6 +99,7 @@ class Partner(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
         action['context'] = {
             'default_partner_ids': partner_ids,
+            'default_attendee_ids': [(0, 0, {'partner_id': pid}) for pid in partner_ids],
         }
         action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
         return action

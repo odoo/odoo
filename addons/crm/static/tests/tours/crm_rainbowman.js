@@ -19,8 +19,8 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
             content: "complete name",
             run: "text Test Lead 1",
         }, {
-            trigger: "div[name=planned_revenue] > input",
-            content: "complete planned revenue",
+            trigger: "div[name=expected_revenue] > input",
+            content: "complete expected revenue",
             run: "text 999999997",
         }, {
             trigger: "button.o_kanban_add",
@@ -30,23 +30,34 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
             content: "move to won stage",
             run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(3) "
         }, {
-            trigger: ".o-kanban-button-new",
+            trigger: ".o_reward_rainbow",
             extra_trigger: ".o_reward_rainbow",
-            content: "click create",
+            run: function () {} // check rainbowman is properly displayed
+        }, {
+            trigger: ".o-kanban-button-new",
+            content: "create second lead",
         }, {
             trigger: "input[name=name]",
             content: "complete name",
             run: "text Test Lead 2",
         }, {
-            trigger: "div[name=planned_revenue] > input",
-            content: "complete planned revenue",
+            trigger: "div[name=expected_revenue] > input",
+            content: "complete expected revenue",
             run: "text 999999998",
         }, {
             trigger: "button.o_kanban_add",
             content: "create lead",
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
-            content: "click on lead",
+            run: function () {} // wait for the record to be properly created
+        }, {
+            // move first test back to new stage to be able to test rainbowman a second time
+            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
+            content: "move back to new stage",
+            run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(0) "
+        }, {
+            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
+            content: "click on second lead",
         }, {
             trigger: ".o_statusbar_status button[data-value='4']",
             content: "move lead to won stage",

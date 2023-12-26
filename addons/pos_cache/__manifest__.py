@@ -18,5 +18,6 @@ time it takes to load a POS session with a lot of products.
         'security/ir.model.access.csv',
         'views/pos_cache_views.xml',
         'views/pos_cache_templates.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

@@ -7,6 +7,77 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event_track.tests.common import TestEventTrackOnlineCommon
+from odoo.tests.common import users
+
+
+class TestTrackData(TestEventTrackOnlineCommon):
+
+    @users('user_eventmanager')
+    def test_track_partner_sync(self):
+        """ Test registration computed fields about partner """
+        test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
+        test_phone = '0456001122'
+        test_bio = '<p>UserInput</p>'
+        test_bio_void = '<p><br/></p>'
+
+        event = self.env['event.event'].browse(self.event_0.ids)
+        customer = self.env['res.partner'].browse(self.event_customer.id)
+
+        # take all from partner
+        new_track = self.env['event.track'].create({
+            'event_id': event.id,
+            'name': 'Mega Track',
+            'partner_id': customer.id,
+        })
+        self.assertEqual(new_track.partner_id, customer)
+        self.assertEqual(new_track.partner_name, customer.name)
+        self.assertEqual(new_track.partner_email, customer.email)
+        self.assertEqual(new_track.partner_phone, customer.phone)
+        self.assertEqual(new_track.partner_biography, customer.website_description)
+        self.assertIn(customer.name, new_track.partner_biography, 'Low-level test: ensure correctly updated')
+
+        # partial update
+        new_track = self.env['event.track'].create({
+            'event_id': event.id,
+            'name': 'Mega Track',
+            'partner_id': customer.id,
+            'partner_name': 'Nibbler In Space',
+            'partner_email': test_email,
+        })
+        self.assertEqual(new_track.partner_id, customer)
+        self.assertEqual(
+            new_track.partner_name, 'Nibbler In Space',
+            'Track should take user input over computed partner value')
+        self.assertEqual(
+            new_track.partner_email, test_email,
+            'Track should take user input over computed partner value')
+        self.assertEqual(
+            new_track.partner_phone, customer.phone,
+            'Track should take partner value if not user input')
+
+        # already filled information should not be updated
+        new_track = self.env['event.track'].create({
+            'event_id': event.id,
+            'name': 'Mega Track',
+            'partner_name': 'Nibbler In Space',
+            'partner_phone': test_phone,
+            'partner_biography': test_bio,
+        })
+        self.assertEqual(new_track.partner_name, 'Nibbler In Space')
+        self.assertEqual(new_track.partner_email, False)
+        self.assertEqual(new_track.partner_phone, test_phone)
+        self.assertEqual(new_track.partner_biography, test_bio)
+        new_track.write({'partner_id': customer.id})
+        self.assertEqual(new_track.partner_id, customer)
+        self.assertEqual(
+            new_track.partner_name, customer.name,
+            'Track customer should take over existing value')
+        self.assertEqual(
+            new_track.partner_email, customer.email,
+            'Track customer should take over existing value')
+        self.assertEqual(
+            new_track.partner_phone, customer.phone,
+            'Track customer should take over existing value')
 
 
 class TestTrackSuggestions(TestEventTrackOnlineCommon):

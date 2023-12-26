@@ -18,5 +18,6 @@
     ],
     'demo': [
         'data/product_matrix_demo.xml'
-    ]
+    ],
+    'license': 'LGPL-3',
 }

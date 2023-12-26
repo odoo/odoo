@@ -60,12 +60,12 @@ class MailComposeMessage(models.TransientModel):
             for res_id in res_ids:
                 mail_values = res[res_id]
                 if mail_values.get('email_to'):
-                    mail_to = tools.email_normalize(mail_values['email_to'])
+                    mail_to = tools.email_normalize(mail_values['email_to'], force_single=False)
                 else:
                     partner_id = (mail_values.get('recipient_ids') or [(False, '')])[0][1]
-                    mail_to = tools.email_normalize(partners_email.get(partner_id))
+                    mail_to = tools.email_normalize(partners_email.get(partner_id), force_single=False)
                 if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
-                        or (not mail_to or not email_re.findall(mail_to)):
+                        or not mail_to:
                     # prevent sending to blocked addresses that were included by mistake
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
@@ -74,7 +74,8 @@ class MailComposeMessage(models.TransientModel):
                     'model': self.model,
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id,
-                    'email': mail_to,
+                    # if mail_to is void, keep falsy values to allow searching / debugging traces
+                    'email': mail_to or mail_values.get('email_to'),
                 }
                 if mail_values.get('body_html') and mass_mail_layout:
                     mail_values['body_html'] = mass_mail_layout._render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)

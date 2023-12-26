@@ -13,10 +13,13 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Paweł Michoń <michon.pawel@wp.pl>, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2020
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2020
-# Paweł Wodyński <pw@myodoo.pl>, 2020
-# Maksym <ms@myodoo.pl>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
+# Maksym <ms@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,8 +27,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2020\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -35,17 +38,17 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr ""
+msgstr "<span class=\"button\" id=\"button_open_report\">Otwórz Raport</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"odoo_link_text\">Odoo</span>"
-msgstr ""
+msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr ""
+msgstr "<span style=\"color: #8f8f8f;\">Anuluj subskrypcję</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -61,6 +64,8 @@ msgstr "Aktywowane"
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
+"Dodawaj nowych użytkowników jako odbiorców cyklicznej wiadomości email z "
+"najważniejszymi wskaźnikami"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -70,13 +75,13 @@ msgstr "Grupa upoważniona"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__available_fields
 msgid "Available Fields"
-msgstr ""
+msgstr "Dostępne pola"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Choose the metrics you care about"
-msgstr ""
+msgstr "Wybierz metrykę która dla Ciebie znaczy najwięcej"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -91,7 +96,7 @@ msgstr "Ustawienia konfiguracji"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
-msgstr ""
+msgstr "Konfiguruj emaile podsumowujące"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -102,7 +107,7 @@ msgstr "Połącz"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected
 msgid "Connected Users"
-msgstr ""
+msgstr "Połączonych użytkowników"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -115,13 +120,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_date
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__currency_id
@@ -141,7 +146,7 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
 msgid "Deactivated"
-msgstr ""
+msgstr "Dezaktywowano"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
@@ -152,7 +157,7 @@ msgstr "Podsumowanie"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
-msgstr ""
+msgstr "Podsumowanie Email"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
@@ -162,19 +167,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
-msgstr ""
+msgstr "Emaile podsumowujące"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr ""
+msgstr "Skróty Subskrypcji"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_tip_action
 #: model:ir.model,name:digest.model_digest_tip
 #: model:ir.ui.menu,name:digest.digest_tip_menu
 msgid "Digest Tips"
-msgstr ""
+msgstr "Skróty Podpowiedzi"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -200,6 +205,9 @@ msgid ""
 "Have a question about a document? Click on the responsible user's picture to"
 " start a conversation. If his avatar has a green dot, he is online."
 msgstr ""
+"Masz pytanie dotyczące dokumentu? Kliknij zdjęcie odpowiedzialnego "
+"użytkownika, aby rozpocząć rozmowę. Jeśli jego awatar ma zieloną kropkę, "
+"jest dostępny."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -223,28 +231,28 @@ msgstr ""
 #: code:addons/digest/controllers/portal.py:0
 #, python-format
 msgid "Invalid periodicity set on digest"
-msgstr ""
+msgstr "Nieprawidłowa częstotliwość ustawiona w podsumowaniu"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
 msgid "Is user subscribed"
-msgstr ""
+msgstr "Czy użytkownik zasubskrybował"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
-msgstr ""
+msgstr "Podsumowanie KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
 msgid "KPI Digest Tip"
-msgstr ""
+msgstr "Podpowiedź podsumowania KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_tree
 msgid "KPI Digest Tips"
-msgstr ""
+msgstr "Podpowiedzi podsumowania KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -254,7 +262,7 @@ msgstr "KPIs"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total_value
 msgid "Kpi Mail Message Total Value"
-msgstr ""
+msgstr "Cąłkowita liczba wiadomości mailowych KPI"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_res_users_connected_value
@@ -315,6 +323,8 @@ msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
 msgstr ""
+"Nowi użytkownicy są automatycznie dodawani jako odbiorcy następującego "
+"emaila podsumowującego"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -324,7 +334,7 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Odoo Mobile"
-msgstr ""
+msgstr "Odoo Mobile"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
@@ -341,7 +351,7 @@ msgstr "Zasilane przez"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Prefer a broader overview ?"
-msgstr ""
+msgstr "Wolisz szerszy przegląd?"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -349,6 +359,8 @@ msgid ""
 "Press ALT in any screen to highlight shortcuts for every button in the "
 "screen. It is useful to process multiple documents in batch."
 msgstr ""
+"Wciśnij ALT na dowolnym ekranie aby podświetlić skróty dla każdego przycisku"
+" na ekranie. To użyteczne przy przetwarzaniu wielu dokumentów w partii."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
@@ -365,7 +377,7 @@ msgstr "Odbiorcy"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
-msgstr ""
+msgstr "Prowadź biznes skądkolwiek z <b>Odoo Mobile</b>."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -380,12 +392,12 @@ msgstr "Wyślij teraz"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "Sent by"
-msgstr ""
+msgstr "Wysłano przez"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
-msgstr "Numeracja"
+msgstr "Sekwencja"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
@@ -406,62 +418,62 @@ msgstr "Subskrybuj"
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Switch to weekly Digests"
-msgstr ""
+msgstr "Zmień na tygodniowe podsumowania"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
 msgid "Tip description"
-msgstr ""
+msgstr "Opis podpowiedzi"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
 msgid "Tip: A calculator in Odoo"
-msgstr ""
+msgstr "Podpowiedź: kalkulator w Odoo"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
 msgid "Tip: Click on an avatar to chat with a user"
-msgstr ""
+msgstr "Porada: Kliknij na awatar, aby porozmawiać z użytkownikiem"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
 msgid "Tip: How to ping users in internal notes?"
-msgstr ""
+msgstr "Podpowiedź: jak pingować użytkowników w wewnętrznych notatkach?"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
-msgstr ""
+msgstr "Podpowiedź: wiedza to potęga"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
 msgid "Tip: Speed up your workflow with shortcuts"
-msgstr ""
+msgstr "Podpowiedź: przyspiesz pracę ze skrótami"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_2
 msgid "Tip: A calculator in Odoo"
-msgstr ""
+msgstr "Podpowiedź: kalkulator w Odoo"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_1
 msgid "Tip: Click on an avatar to chat with a user"
-msgstr ""
+msgstr "Porada: Kliknij na awatar, aby porozmawiać z użytkownikiem"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_3
 msgid "Tip: How to ping users in internal notes?"
-msgstr ""
+msgstr "Podpowiedź: jak pingować użytkowników w wewnętrznych notatkach?"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
-msgstr ""
+msgstr "Podpowiedź: wiedza to potęga"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_0
 msgid "Tip: Speed up your workflow with shortcuts"
-msgstr ""
+msgstr "Podpowiedź: przyspiesz pracę ze skrótami"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
@@ -469,16 +481,20 @@ msgid ""
 "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
 "Try to notify @OdooBot to test the feature."
 msgstr ""
+"Wpisz \"@\" aby powiadomić kogoś poprzez wiadomość, lub \"#\" aby "
+"podlinkować kanał. Spróbuj powiadomić @OdooBot aby przetestować tą funkcję."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
-msgstr ""
+msgstr "Zrezygnuj z subskrypcji"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
 msgstr ""
+"Używany do wyświetlania podpowiedzi podsumowania w szablonie emaila bazując "
+"na zamówieniu."
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -488,13 +504,13 @@ msgstr "Użytkownicy"
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__user_ids
 msgid "Users having already received this tip"
-msgstr ""
+msgstr "Użytkownicy którzy odebrali już tą podpowiedź"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Want to customize this email?"
-msgstr ""
+msgstr "Czy chcesz dostosować ten email?"
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -516,6 +532,9 @@ msgid ""
 "This is useful when computing a margin or a discount on a quotation, sale "
 "order or invoice."
 msgstr ""
+"Podczas edycji liczby, możesz użyć formuły poprzez wpisanie znaku `=`. Jest "
+"to użyteczne podczas obliczania marży lub rabatu na ofercie, zleceniu "
+"sprzedaży lub fakturze."
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
@@ -523,6 +542,8 @@ msgid ""
 "When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
 "Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
+"Podczas śledzenia dokumentów, użyj ikony ołówka, aby doprecyzować informacje, które chcesz otrzymywać.\n"
+"Śledź projekt / zespół sprzedaży, aby śledzić zadania tego projektu / możliwości tego zespołu."
 
 #. module: digest
 #: code:addons/digest/models/digest.py:0
@@ -533,17 +554,17 @@ msgstr "Wczoraj"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from"
-msgstr ""
+msgstr "Zostałeś wypisany z"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "You may want to add new computed fields with Odoo Studio:"
-msgstr ""
+msgstr "Może chcesz dodać nowe policzone pola z Odoo Studio:"
 
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
 msgid "Your Odoo Periodic Digest"
-msgstr ""
+msgstr "Twoje periodyczne podsumowanie Odoo"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form

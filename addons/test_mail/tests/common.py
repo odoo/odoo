@@ -12,6 +12,29 @@ class TestMailCommon(MailCommon):
     def _create_channel_listener(cls):
         cls.channel_listen = cls.env['mail.channel'].with_context(cls._test_context).create({'name': 'Listener'})
 
+    @classmethod
+    def _create_records_for_batch(cls, model, count):
+        # TDE note: to be cleaned in master
+        records = cls.env[model]
+        partners = cls.env['res.partner']
+        country_id = cls.env.ref('base.be').id
+
+        partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
+            'name': 'Partner_%s' % (x),
+            'email': '_test_partner_%s@example.com' % (x),
+            'country_id': country_id,
+            'mobile': '047500%02d%02d' % (x, x)
+        } for x in range(count)])
+
+        records = cls.env[model].with_context(**cls._test_context).create([{
+            'name': 'Test_%s' % (x),
+            'customer_id': partners[x].id,
+        } for x in range(count)])
+
+        cls.records = cls._reset_mail_context(records)
+        cls.partners = partners
+        return cls.records, cls.partners
+
 
 class TestMailMultiCompanyCommon(MailCommon):
 

@@ -58,7 +58,7 @@
 
         <record id="mass_mail_1" model="mailing.mailing">
             <field name="name">Newsletter 1</field>
-            <field name="subject" eval="'%s Newsletter' % (DateTime.today().strftime('%B'))"/>
+            <field name="subject">Monthly Newsletter</field>
             <field name="state">done</field>
             <field name="user_id" ref="base.user_admin"/>
             <field name="email_from">info@yourcompany.example.com</field>

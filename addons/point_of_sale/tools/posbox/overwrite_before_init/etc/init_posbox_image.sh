@@ -51,8 +51,6 @@ PKGS_TO_INSTALL="
     python3-decorator \
     python3-dev \
     python3-docutils \
-    python3-feedparser \
-    python3-html2text \
     python3-jinja2 \
     python3-ldap \
     python3-libsass \
@@ -66,7 +64,6 @@ PKGS_TO_INSTALL="
     python3-psutil \
     python3-psycopg2 \
     python3-pydot \
-    python3-pyparsing \
     python3-pypdf2 \
     python3-qrcode \
     python3-reportlab \

@@ -1,6 +1,7 @@
 odoo.define('web.DatePickerOwl', function (require) {
     "use strict";
 
+    const config = require('web.config');
     const field_utils = require('web.field_utils');
     const time = require('web.time');
     const { useAutofocus } = require('web.custom_hooks');
@@ -81,7 +82,9 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @param {...any} args anything that will be passed to the datetimepicker function.
          */
         _datetimepicker(...args) {
+            this.ignoreBootstrapEvents = true;
             $(this.el).datetimepicker(...args);
+            this.ignoreBootstrapEvents = false;
         }
 
         /**
@@ -120,6 +123,9 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @private
          */
         _onDateTimePickerHide() {
+            if (this.ignoreBootstrapEvents) {
+                return;
+            }
             const date = this._parseInput(this.inputRef.el.value);
             this.state.warning = date.format('YYYY-MM-DD') > moment().format('YYYY-MM-DD');
             this.trigger('datetime-changed', { date });
@@ -132,6 +138,9 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @private
          */
         _onDateTimePickerShow() {
+            if (this.ignoreBootstrapEvents) {
+                return;
+            }
             this.inputRef.el.select();
         }
 
@@ -159,7 +168,7 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @private
          */
         _onWindowScroll(ev) {
-            if (ev.target !== this.inputRef.el) {
+            if (!config.device.isIOS && ev.target !== this.inputRef.el) {
                 this._datetimepicker('hide');
             }
         }
@@ -178,9 +187,9 @@ odoo.define('web.DatePickerOwl', function (require) {
             today: 'fa fa-calendar-check-o',
             up: 'fa fa-chevron-up',
         },
-        locale: moment.locale(),
+        get locale() {return moment.locale();},
         maxDate: moment({ y: 9999, M: 11, d: 31 }),
-        minDate: moment({ y: 1 }),
+        minDate: moment({ y: 1000 }),
         useCurrent: false,
         widgetParent: 'body',
     };
@@ -248,7 +257,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         }
     }
 
-    DateTimePicker.defaultProps = Object.assign({}, DatePicker.defaultProps, {
+    DateTimePicker.defaultProps = Object.assign(Object.create(DatePicker.defaultProps), {
         buttons: {
             showClear: false,
             showClose: true,

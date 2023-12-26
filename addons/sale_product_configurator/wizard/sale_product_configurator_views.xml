@@ -7,14 +7,18 @@
             <form js_class="product_configurator_form">
                 <group>
                     <field name="product_template_id" class="oe_product_configurator_product_template_id" />
-                    <field name="product_template_attribute_value_ids" invisible="1" />
+                    <field name="product_template_attribute_value_ids" invisible="1">
+                        <tree limit="10000"/>
+                    </field>
                     <field name="product_custom_attribute_value_ids" invisible="1" widget="one2many" >
                         <tree limit="10000">
                             <field name="custom_product_template_attribute_value_id"/>
                             <field name="custom_value"/>
                         </tree>
                     </field>
-                    <field name="product_no_variant_attribute_value_ids" invisible="1" />
+                    <field name="product_no_variant_attribute_value_ids" invisible="1">
+                        <tree limit="10000"/>
+                    </field>
                     <field name="quantity" invisible="1" />
                 </group>
                 <footer>

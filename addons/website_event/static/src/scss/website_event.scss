@@ -30,7 +30,9 @@
 
 .o_wevent_social_link {
     $o_link_size: 3em;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     @include size($o_link_size);
     margin: 0 ($spacer * .25) ($spacer * .5) ($spacer * .25);
     line-height: $o_link_size;
@@ -59,6 +61,11 @@
                 @include hover-focus {
                     transform: scale(1.05);
                 }
+            }
+        }
+        @include media-breakpoint-up(sm) {
+            #o_wevent_index_main_col article div.col {
+                min-width: 0;
             }
         }
         &.opt_event_list_cards_bg {
@@ -249,4 +256,11 @@
     > .modal-backdrop {
         z-index: $zindex-dropdown - 1;
     }
+}
+
+// Country snippet
+.country_events_list .o_wevent_sidebar_title > img {
+    max-height: 1em;
+    vertical-align: top;
+    margin: 2px 0.2em 0;
 }

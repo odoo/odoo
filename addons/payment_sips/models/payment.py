@@ -30,8 +30,8 @@ class AcquirerSips(models.Model):
     provider = fields.Selection(selection_add=[('sips', 'Sips')], ondelete={'sips': 'set default'})
     sips_merchant_id = fields.Char('Merchant ID', required_if_provider='sips', groups='base.group_user')
     sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
-    sips_test_url = fields.Char("Test url", required_if_provider='sips', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
-    sips_prod_url = fields.Char("Production url", required_if_provider='sips', default='https://payment-webinit.sips-atos.com/paymentInit')
+    sips_test_url = fields.Char("Test url", required_if_provider='sips', default='https://payment-webinit.simu.sips-services.com/paymentInit')
+    sips_prod_url = fields.Char("Production url", required_if_provider='sips', default='https://payment-webinit.sips-services.com/paymentInit')
     sips_version = fields.Char("Interface Version", required_if_provider='sips', default='HP_2.31')
     sips_key_version = fields.Integer("Secret Key Version", required_if_provider='sips', default=2)
 

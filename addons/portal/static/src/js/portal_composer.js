@@ -133,6 +133,8 @@ var PortalComposer = publicWidget.Widget.extend({
                 });
             });
         })).then(function () {
+            // ensures any selection triggers a change, even if the same files are selected again
+            self.$fileInput[0].value = null;
             self.$sendButton.prop('disabled', false);
         });
     },

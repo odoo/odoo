@@ -45,8 +45,8 @@ class WebsiteHrRecruitment(http.Controller):
 
         # Filter job / office for country
         if country and not kwargs.get('all_countries'):
-            jobs = [j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id]
-            offices = set(j.address_id for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+            jobs = [j for j in jobs if not j.address_id or j.address_id.country_id.id == country.id]
+            offices = set(j.address_id for j in jobs if not j.address_id or j.address_id.country_id.id == country.id)
         else:
             offices = set(j.address_id for j in jobs if j.address_id)
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_payment_form_inherit" model="ir.ui.view">
+            <field name="name">account.payment.form.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account_edi.view_payment_form_inherit" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(account_edi.action_open_payment_edi_documents)d']" position="after">
+                    <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
+                </xpath>
+                <xpath expr="//field[@name='edi_document_ids']/tree" position="inside">
+                    <field name="blocking_level" invisible="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_export_xml']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('error', '=', False), ('blocking_level', '=', 'info')]}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

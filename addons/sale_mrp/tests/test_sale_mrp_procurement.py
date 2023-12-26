@@ -69,6 +69,9 @@ class TestSaleMrpProcurement(TransactionCase):
         mo = self.env['mrp.production'].search([('origin', 'like', sale_order_so0.name)], limit=1)
         self.assertTrue(mo, 'Manufacturing order has not been generated')
 
+        # Check the mo is displayed on the so
+        self.assertEqual(mo.id, sale_order_so0.action_view_mrp_production()['res_id'])
+
     def test_sale_mrp_pickings(self):
         """ Test sale of multiple mrp products in MTO
         to avoid generating multiple deliveries
@@ -77,10 +80,10 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
         self.customer_location = self.env['ir.model.data'].xmlid_to_res_id('stock.stock_location_customers')
-        warehouse_form = Form(self.env['stock.warehouse'])
-        warehouse_form.name = 'Test Warehouse'
-        warehouse_form.code = 'TWH'
-        self.warehouse = warehouse_form.save()
+        self.warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH'
+        })
 
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
@@ -161,6 +164,9 @@ class TestSaleMrpProcurement(TransactionCase):
         sale_order_so0 = so_form.save()
 
         sale_order_so0.action_confirm()
+
+        # Verify buttons are working as expected
+        self.assertEqual(sale_order_so0.mrp_production_count, 2, "User should see the correct number of manufacture orders in smart button")
 
         pickings = sale_order_so0.picking_ids
 

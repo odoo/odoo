@@ -3,10 +3,9 @@
 # 	* http_routing
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Paolo Valier, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.403
@@ -33,6 +32,8 @@ msgid ""
 "<b>Don't panic.</b> If you think it's our mistake, please send us a message "
 "on"
 msgstr ""
+"<b>Niente panico.</b> Se si tratta di un nostro errore, invia un messaggio "
+"da"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.error_message
@@ -70,7 +71,7 @@ msgstr "Instradamento HTTP"
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 #: model_terms:ir.ui.view,arch_db:http_routing.500
 msgid "Home"
-msgstr "Home"
+msgstr "Pagina iniziale"
 
 #. module: http_routing
 #: model:ir.model.fields,field_description:http_routing.field_ir_http__id
@@ -87,7 +88,7 @@ msgstr "Ultima modifica il"
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "Maybe you were looking for one of these <b>popular pages?</b>"
-msgstr ""
+msgstr "Forse stavi cercando una delle <b>pagine popolari:</b>"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.400
@@ -102,12 +103,12 @@ msgstr "QWeb"
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.400
 msgid "Take a look at the error message below."
-msgstr ""
+msgstr "Esamina il messaggio di errore sottostante."
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "The error occured while rendering the template"
-msgstr "L'errore si è verificato nella renderizzazione del template"
+msgstr "L'errore si è verificato durante la rappresentazione del modello"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.403
@@ -117,7 +118,7 @@ msgstr "Nessuna autorizzazione per accedere alla pagina."
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "Traceback"
-msgstr "Traceback"
+msgstr "Analisi"
 
 #. module: http_routing
 #: model:ir.model,name:http_routing.model_ir_ui_view
@@ -127,7 +128,7 @@ msgstr "Vista"
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "We couldn't find the page you're looking for!"
-msgstr ""
+msgstr "Impossibile trovare la pagina richiesta."
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -137,4 +138,4 @@ msgstr "e nella valutazione della seguente espressione:"
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "this page"
-msgstr "questa"
+msgstr "questa pagina"

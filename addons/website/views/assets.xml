@@ -19,15 +19,24 @@
 
 <template id="assets_tests" name="Website Assets Tests" inherit_id="web.assets_tests">
     <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website/static/tests/tours/carousel_content_removal.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/automatic_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/reset_password.js"></script>
         <script type="text/javascript" src="/website/static/tests/tours/rte.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/focus_blur_snippets.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/html_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/restricted_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/dashboard_tour.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/specific_website_editor.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/parallax.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/public_user_editor.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/website_navbar_menu.js"/>
         <script type="text/javascript" src="/website/static/tests/tours/snippet_version.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/website_style_edition.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_empty_parent_autoremove.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_countdown.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/snippet_image_gallery.js"/>
+        <script type="text/javascript" src="/website/static/tests/tours/unsplash_beacon.js"/>
     </xpath>
 </template>
 
@@ -48,6 +57,7 @@
 
 <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
     <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/tests/dashboard_tests.js"/>
         <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
     </xpath>
 </template>
@@ -74,7 +84,6 @@
         <script type="text/javascript" src="/website/static/src/js/content/website_root_instance.js"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/set_view_track.js"/>
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
@@ -150,6 +159,7 @@
 
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
 
+    <script type="text/javascript" src="/website/static/src/js/set_view_track.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/editor_menu.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/editor_menu_translate.js"/>
 

@@ -12,13 +12,11 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        line_ids = self.mapped('line_ids').filtered(lambda line: any(line.sale_line_ids.mapped('is_downpayment')))
         for line in line_ids:
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
-                #To keep positive amount on the sale order and to have the right price for the invoice
-                #We need the - before our untaxed_amount_to_invoice
-                line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+                line.sale_line_ids.price_unit = line.price_unit
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking
@@ -69,6 +67,8 @@ class AccountMoveLine(models.Model):
             For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
         """
         self.ensure_one()
+        if self.sale_line_ids:
+            return False
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
@@ -135,6 +135,9 @@ class AccountMoveLine(models.Model):
 
         # create the sale lines in batch
         new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
+        for sol in new_sale_lines:
+            if sol.product_id.expense_policy != 'cost':
+                sol._onchange_discount()
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
@@ -199,12 +202,16 @@ class AccountMoveLine(models.Model):
         amount = (self.credit or 0.0) - (self.debit or 0.0)
 
         if self.product_id.expense_policy == 'sales_price':
-            return self.product_id.with_context(
-                partner=order.partner_id.id,
+            product = self.product_id.with_context(
+                partner=order.partner_id,
                 date_order=order.date_order,
                 pricelist=order.pricelist_id.id,
-                uom=self.product_uom_id.id
-            ).price
+                uom=self.product_uom_id.id,
+                quantity=unit_amount
+            )
+            if order.pricelist_id.discount_policy == 'with_discount':
+                return product.price
+            return product.lst_price
 
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
@@ -220,3 +227,7 @@ class AccountMoveLine(models.Model):
         if currency_id and currency_id != order.currency_id:
             price_unit = currency_id._convert(price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.today())
         return price_unit
+
+    def _get_downpayment_lines(self):
+        # OVERRIDE
+        return self.sale_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())

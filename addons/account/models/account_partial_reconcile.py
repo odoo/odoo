@@ -107,19 +107,25 @@ class AccountPartialReconcile(models.Model):
         if not self:
             return True
 
-        # Reverse all exchange moves at once.
+        # Retrieve the matching number to unlink.
+        full_to_unlink = self.full_reconcile_id
+
+        # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
-        today = fields.Date.context_today(self)
+
+        # Unlink partials before doing anything else to avoid 'Record has already been deleted' due to the recursion.
+        res = super().unlink()
+
+        # Reverse CABA entries.
         default_values_list = [{
-            'date': move.date if move.date > (move.company_id.period_lock_date or date.min) else today,
+            'date': move._get_accounting_date(move.date, move._affect_tax_report()),
             'ref': _('Reversal of: %s') % move.name,
         } for move in moves_to_reverse]
         moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
-        # Unlink partials then the full in this order to avoid a recursive call to the same partials.
-        full_to_unlink = self.full_reconcile_id
-        res = super().unlink()
+        # Remove the matching numbers.
         full_to_unlink.unlink()
+
         return res
 
     # -------------------------------------------------------------------------
@@ -162,16 +168,32 @@ class AccountPartialReconcile(models.Model):
                 partial_amount_currency = 0.0
                 rate_amount = 0.0
                 rate_amount_currency = 0.0
+
                 if partial.debit_move_id.move_id == move:
                     partial_amount += partial.amount
                     partial_amount_currency += partial.debit_amount_currency
                     rate_amount -= partial.credit_move_id.balance
                     rate_amount_currency -= partial.credit_move_id.amount_currency
+                    source_line = partial.debit_move_id
+                    counterpart_line = partial.credit_move_id
+
                 if partial.credit_move_id.move_id == move:
                     partial_amount += partial.amount
                     partial_amount_currency += partial.credit_amount_currency
                     rate_amount += partial.debit_move_id.balance
                     rate_amount_currency += partial.debit_move_id.amount_currency
+                    source_line = partial.credit_move_id
+                    counterpart_line = partial.debit_move_id
+
+                if partial.debit_move_id.move_id.is_invoice(include_receipts=True) and partial.credit_move_id.move_id.is_invoice(include_receipts=True):
+                    # Will match when reconciling a refund with an invoice.
+                    # In this case, we want to use the rate of each businness document to compute its cash basis entry,
+                    # not the rate of what it's reconciled with.
+                    rate_amount = source_line.balance
+                    rate_amount_currency = source_line.amount_currency
+                    payment_date = move.date
+                else:
+                    payment_date = counterpart_line.date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Percentage made on company's currency.
@@ -180,7 +202,16 @@ class AccountPartialReconcile(models.Model):
                     # Percentage made on foreign currency.
                     percentage = partial_amount_currency / move_values['total_amount_currency']
 
-                if rate_amount:
+                if source_line.currency_id != counterpart_line.currency_id:
+                    # When the invoice and the payment are not sharing the same foreign currency, the rate is computed
+                    # on-the-fly using the payment date.
+                    payment_rate = self.env['res.currency']._get_conversion_rate(
+                        counterpart_line.company_currency_id,
+                        source_line.currency_id,
+                        counterpart_line.company_id,
+                        payment_date,
+                    )
+                elif rate_amount:
                     payment_rate = rate_amount_currency / rate_amount
                 else:
                     payment_rate = 0.0
@@ -261,7 +292,7 @@ class AccountPartialReconcile(models.Model):
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
             'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
             'tax_tag_ids': [(6, 0, tax_line._convert_tags_for_cash_basis(tax_line.tax_tag_ids).ids)],
-            'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.account_id.id,
+            'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.company_id.account_cash_basis_base_account_id.id or tax_line.account_id.id,
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,
@@ -361,6 +392,7 @@ class AccountPartialReconcile(models.Model):
         :param pending_cash_basis_lines:    The previously generated lines during this reconciliation but not yet created.
         :param partial_lines_to_create:     The generated lines for the current and last partial making the move fully paid.
         '''
+        # DEPRECATED: TO BE REMOVED IN MASTER
         residual_amount_per_group = {}
         move = move_values['move']
 
@@ -451,6 +483,7 @@ class AccountPartialReconcile(models.Model):
         :return: The newly created journal entries.
         '''
         tax_cash_basis_values_per_move = self._collect_tax_cash_basis_values()
+        today = fields.Date.context_today(self)
 
         moves_to_create = []
         to_reconcile_after = []
@@ -458,14 +491,15 @@ class AccountPartialReconcile(models.Model):
             move = move_values['move']
             pending_cash_basis_lines = []
 
-            for i, partial_values in enumerate(move_values['partials']):
+            for partial_values in move_values['partials']:
                 partial = partial_values['partial']
-                is_last_partial = i == len(move_values['partials']) - 1
 
                 # Init the journal entry.
+                lock_date = move.company_id._get_user_fiscal_lock_date()
+                move_date = partial.max_date if partial.max_date > (lock_date or date.min) else today
                 move_vals = {
                     'move_type': 'entry',
-                    'date': partial.max_date,
+                    'date': move_date,
                     'ref': move.name,
                     'journal_id': partial.company_id.tax_cash_basis_journal_id.id,
                     'line_ids': [],
@@ -502,46 +536,40 @@ class AccountPartialReconcile(models.Model):
                     if line.tax_repartition_line_id:
                         # Tax line.
 
-                        cb_tax_line_vals = self._prepare_cash_basis_tax_line_vals(line, balance, amount_currency)
-                        grouping_key = self._get_cash_basis_tax_line_grouping_key_from_vals(cb_tax_line_vals)
-                        partial_lines_to_create[grouping_key] = {
-                            'tax_line': line,
-                            'vals': cb_tax_line_vals,
-                        }
-
+                        cb_line_vals = self._prepare_cash_basis_tax_line_vals(line, balance, amount_currency)
+                        grouping_key = self._get_cash_basis_tax_line_grouping_key_from_vals(cb_line_vals)
                     elif line.tax_ids:
                         # Base line.
 
-                        cb_base_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
-                        grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_base_line_vals)
+                        cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
+                        grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_line_vals)
 
-                        if grouping_key in partial_lines_to_create:
-                            aggregated_vals = partial_lines_to_create[grouping_key]['vals']
-                            balance = aggregated_vals['debit'] - aggregated_vals['credit']
-                            balance += cb_base_line_vals['debit'] - cb_base_line_vals['credit']
+                    if grouping_key in partial_lines_to_create:
+                        aggregated_vals = partial_lines_to_create[grouping_key]['vals']
 
+                        debit = aggregated_vals['debit'] + cb_line_vals['debit']
+                        credit = aggregated_vals['credit'] + cb_line_vals['credit']
+                        balance = debit - credit
+
+                        aggregated_vals.update({
+                            'debit': balance if balance > 0 else 0,
+                            'credit': -balance if balance < 0 else 0,
+                            'amount_currency': aggregated_vals['amount_currency'] + cb_line_vals['amount_currency'],
+                        })
+
+                        if line.tax_repartition_line_id:
                             aggregated_vals.update({
-                                'debit': balance if balance > 0.0 else 0.0,
-                                'credit': -balance if balance < 0.0 else 0.0,
+                                'tax_base_amount': aggregated_vals['tax_base_amount'] + cb_line_vals['tax_base_amount'],
                             })
-                            aggregated_vals['amount_currency'] += cb_base_line_vals['amount_currency']
-                        else:
-                            partial_lines_to_create[grouping_key] = {
-                                'vals': cb_base_line_vals,
-                            }
-
-                # ==========================================================================
-                # Ensure the full coverage by replacing the balance of the journal items
-                # created by the last partial.
-                # ==========================================================================
-
-                if move_values['is_fully_paid'] and is_last_partial:
-                    self._fix_cash_basis_full_balance_coverage(
-                        move_values,
-                        partial_values,
-                        pending_cash_basis_lines,
-                        partial_lines_to_create,
-                    )
+                            partial_lines_to_create[grouping_key]['tax_line'] += line
+                    else:
+                        partial_lines_to_create[grouping_key] = {
+                            'vals': cb_line_vals,
+                        }
+                        if line.tax_repartition_line_id:
+                            partial_lines_to_create[grouping_key].update({
+                                'tax_line': line,
+                            })
 
                 # ==========================================================================
                 # Create the counterpart journal items.
@@ -584,13 +612,20 @@ class AccountPartialReconcile(models.Model):
         moves._post(soft=False)
 
         # Reconcile the tax lines being on a reconcile tax basis transfer account.
-        for line, move_index, sequence in to_reconcile_after:
+        for lines, move_index, sequence in to_reconcile_after:
+
+            # In expenses, all move lines are created manually without any grouping on tax lines.
+            # In that case, 'lines' could be already reconciled.
+            lines = lines.filtered(lambda x: not x.reconciled)
+            if not lines:
+                continue
+
             counterpart_line = moves[move_index].line_ids.filtered(lambda line: line.sequence == sequence)
 
             # When dealing with tiny amounts, the line could have a zero amount and then, be already reconciled.
             if counterpart_line.reconciled:
                 continue
 
-            (line + counterpart_line).reconcile()
+            (lines + counterpart_line).reconcile()
 
         return moves

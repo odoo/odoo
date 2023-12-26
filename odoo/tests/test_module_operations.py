@@ -9,7 +9,7 @@ import time
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
 import odoo
-from odoo.tools import topological_sort, unique
+from odoo.tools import config, topological_sort, unique
 from odoo.netsvc import init_logger
 from odoo.tests import standalone_tests
 import odoo.tests.loader
@@ -47,16 +47,25 @@ def cycle(db_name, module_id, module_name):
     install(db_name, module_id, module_name)
 
 
+class CheckAddons(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        self.values = namespace
+        config._check_addons_path(self, option_string, values, self)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Script for testing the install / uninstall / reinstall cycle of Odoo modules")
     parser.add_argument("--database", "-d", type=str, required=True,
         help="The database to test (note: must have only 'base' installed)")
+    parser.add_argument("--data-dir", "-D", dest="data_dir", type=str,
+        help="Directory where to store Odoo data"
+    )
     parser.add_argument("--skip", "-s", type=str,
         help="Comma-separated list of modules to skip (they will only be installed)")
     parser.add_argument("--resume-at", "-r", type=str,
         help="Skip modules (only install) up to the specified one in topological order")
-    parser.add_argument("--addons-path", "-p", type=str,
+    parser.add_argument("--addons-path", "-p", type=str, action=CheckAddons,
         help="Comma-separated list of paths to directories containing extra Odoo modules")
     parser.add_argument("--uninstall", "-U", type=str,
         help="Comma-separated list of modules to uninstall/reinstall")
@@ -151,15 +160,20 @@ if __name__ == '__main__':
     # handle paths option
     if args.addons_path:
         odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])
+        if args.data_dir:
+            odoo.tools.config['data_dir'] = args.data_dir
         odoo.modules.module.initialize_sys_path()
 
     init_logger()
     logging.getLogger('odoo.modules.loading').setLevel(logging.CRITICAL)
     logging.getLogger('odoo.sql_db').setLevel(logging.CRITICAL)
 
-    if args.uninstall:
-        test_uninstall(args)
-    elif args.standalone:
-        test_scripts(args)
-    else:
-        test_full(args)
+    try:
+        if args.uninstall:
+            test_uninstall(args)
+        elif args.standalone:
+            test_scripts(args)
+        else:
+            test_full(args)
+    except Exception as e:
+        _logger.exception("An error occured during standalone tests: %s", e)

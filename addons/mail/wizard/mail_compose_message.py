@@ -63,25 +63,26 @@ class MailComposer(models.TransientModel):
             if missing_author:
                 result['author_id'] = author_id
 
-        result['composition_mode'] = result.get('composition_mode', 'comment')
-        result['model'] = result.get('model', self._context.get('active_model'))
-        result['res_id'] = result.get('res_id', self._context.get('active_id'))
-        if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
-            result['no_auto_thread'] = True
+        if 'model' in fields and 'model' not in result:
+            result['model'] = self._context.get('active_model')
+        if 'res_id' in fields and 'res_id' not in result:
+            result['res_id'] = self._context.get('active_id')
+        if 'no_auto_thread' in fields and 'no_auto_thread' not in result and result.get('model'):
+            # doesn't support threading
+            if result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post'):
+                result['no_auto_thread'] = True
 
-        vals = {}
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            vals['active_domain'] = '%s' % self._context.get('active_domain')
-        if result['composition_mode'] == 'comment':
-            vals.update(self.get_record_data(result))
+            result['active_domain'] = '%s' % self._context.get('active_domain')
+        if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name', 'subject'])):
+            result.update(self.get_record_data(result))
 
-        for field in vals:
-            if field in fields:
-                result[field] = vals[field]
+        # when being in new mode, create_uid is not granted -> ACLs issue may arise
+        if 'create_uid' in fields and 'create_uid' not in result:
+            result['create_uid'] = self.env.uid
 
-        if fields is not None:
-            [result.pop(field, None) for field in list(result) if field not in fields]
-        return result
+        filtered_result = dict((fname, result[fname]) for fname in result if fname in fields)
+        return filtered_result
 
     # content
     subject = fields.Char('Subject')
@@ -134,7 +135,8 @@ class MailComposer(models.TransientModel):
                             help='Whether the message is an internal note (comment mode only)')
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
-        'wizard_id', 'partner_id', 'Additional Contacts')
+        'wizard_id', 'partner_id', 'Additional Contacts',
+        domain=[('type', '!=', 'private')])
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     auto_delete = fields.Boolean('Delete Emails',
@@ -178,7 +180,7 @@ class MailComposer(models.TransientModel):
     # to ensure the context is passed correctly
     def action_send_mail(self):
         self.send_mail()
-        return {'type': 'ir.actions.act_window_close', 'infos': 'mail_sent'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
@@ -248,7 +250,7 @@ class MailComposer(models.TransientModel):
                             subtype_id=subtype_id,
                             email_layout_xmlid=notif_layout,
                             add_sign=not bool(wizard.template_id),
-                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
+                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
                             model_description=model_description)
                         post_params.update(mail_values)
                         if ActiveModel._name == 'mail.thread':
@@ -279,12 +281,16 @@ class MailComposer(models.TransientModel):
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
             records = self.env[self.model].browse(res_ids)
-            reply_to_value = records._notify_get_reply_to(default=self.email_from)
+            reply_to_value = records._notify_get_reply_to(default=False)
+            # when having no specific reply-to, fetch rendered email_from value
+            for res_id, reply_to in reply_to_value.items():
+                if not reply_to:
+                    reply_to_value[res_id] = rendered_values.get(res_id, {}).get('email_from', False)
 
         blacklisted_rec_ids = set()
         if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             self.env['mail.blacklist'].flush(['email'])
-            self._cr.execute("SELECT email FROM mail_blacklist")
+            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
             blacklist = {x[0] for x in self._cr.fetchall()}
             if blacklist:
                 targets = self.env[self.model].browse(res_ids).read(['email_normalized'])
@@ -338,7 +344,7 @@ class MailComposer(models.TransientModel):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
                 attachment_ids.reverse()
-                mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
+                mail_values['attachment_ids'] = self.env['mail.thread'].with_context(attached_to=record)._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
@@ -420,9 +426,18 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
+                'use_default_to': True,
             }
             template = self.env['mail.template'].create(values)
+
+            if record.attachment_ids:
+                # transfer pending attachments to the new template
+                attachments = self.env['ir.attachment'].sudo().browse(record.attachment_ids.ids).filtered(
+                    lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+                if attachments:
+                    attachments.write({'res_model': template._name, 'res_id': template.id})
+                template.attachment_ids |= record.attachment_ids
+
             # generate the saved template
             record.write({'template_id': template.id})
             record.onchange_template_id_wrapper()

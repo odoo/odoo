@@ -16,6 +16,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 date_field: { name: 'date_field', string: "A date", type: 'date', searchable: true },
                 date_time_field: { name: 'date_time_field', string: "DateTime", type: 'datetime', searchable: true },
                 boolean_field: { name: 'boolean_field', string: "Boolean Field", type: 'boolean', default: true, searchable: true },
+                binary_field: { name: 'binary_field', string: "Binary Field", type: 'binary', searchable: true },
                 char_field: { name: 'char_field', string: "Char Field", type: 'char', default: "foo", trim: true, searchable: true },
                 float_field: { name: 'float_field', string: "Floaty McFloatface", type: 'float', searchable: true },
                 color: { name: 'color', string: "Color", type: 'selection', selection: [['black', "Black"], ['white', "White"]], searchable: true },
@@ -70,6 +71,49 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             cfi.destroy();
         });
 
+        QUnit.test('binary field: basic search', async function (assert) {
+            assert.expect(4);
+
+            let expectedFilters;
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    assert.deepEqual(preFilters, expectedFilters);
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            // Default value
+            expectedFilters = [{
+                description: 'Binary Field is set',
+                domain: '[["binary_field","!=",False]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
+            await cpHelpers.applyFilter(cfi);
+
+            // Updated value
+            expectedFilters = [{
+                description: 'Binary Field is not set',
+                domain: '[["binary_field","=",False]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), '=');
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
         QUnit.test('selection field: default and updated value', async function (assert) {
             assert.expect(4);
 
@@ -91,7 +135,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // Default value
             expectedFilters = [{
-                description: 'Color is "black"',
+                description: 'Color is "Black"',
                 domain: '[["color","=","black"]]',
                 type: 'filter',
             }];
@@ -101,7 +145,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // Updated value
             expectedFilters = [{
-                description: 'Color is "white"',
+                description: 'Color is "White"',
                 domain: '[["color","=","white"]]',
                 type: 'filter',
             }];
@@ -112,6 +156,38 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             cfi.destroy();
         });
+        QUnit.test('selection field: no value', async function (assert) {
+            assert.expect(2);
+
+            this.fields.color.selection = [];
+            let expectedFilters;
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    assert.deepEqual(preFilters, expectedFilters);
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            // Default value
+            expectedFilters = [{
+                description: 'Color is ""',
+                domain: '[["color","=",""]]',
+                type: 'filter',
+            }];
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        })
 
         QUnit.test('adding a simple filter works', async function (assert) {
             assert.expect(6);
@@ -137,6 +213,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             });
 
             await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'boolean_field');
             await cpHelpers.applyFilter(cfi);
 
             // The only thing visible should be the button 'Add Custome Filter';
@@ -145,6 +222,54 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             cfi.destroy();
         });
+
+        QUnit.test('filtering by ID interval works', async function (assert) {
+            assert.expect(2);
+            this.fields.id_field = { name: 'id_field', string: "ID", type: "id", searchable: true };
+
+            const expectedDomains = [
+                [['id_field','>', 10]],
+                [['id_field','<=', 20]],
+            ];
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    const preFilter = preFilters[0];
+                    // this step combine a tokenization/parsing followed by a string formatting
+                    let domain = pyUtils.assembleDomains([preFilter.domain]);
+                    domain = Domain.prototype.stringToArray(domain);
+                    assert.deepEqual(domain, expectedDomains.shift());
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            async function testValue(operator, value) {
+                // open filter menu generator, select ID field, switch operator, type value, then click apply
+                await cpHelpers.toggleAddCustomFilter(cfi);
+                await testUtils.fields.editSelect(cfi.el.querySelector('select.o_generator_menu_field'), 'id_field');
+                await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), operator);
+                await testUtils.fields.editInput(cfi.el.querySelector(
+                    'div.o_filter_condition > span.o_generator_menu_value input'),
+                    value
+                );
+                await cpHelpers.applyFilter(cfi);
+            }
+
+            for (const domain of expectedDomains) {
+                await testValue(domain[0][1], domain[0][2]);
+            }
+
+            cfi.destroy();
+        });
+
 
         QUnit.test('commit search with an extended proposition with field char does not cause a crash', async function (assert) {
             assert.expect(12);
@@ -284,8 +409,47 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             cfi.destroy();
         });
 
+        QUnit.test('default custom filter datetime', async function (assert) {
+            assert.expect(5);
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const domain = JSON.parse(args[0][0].domain);
+                    assert.strictEqual(domain[0][2].split(' ')[1],
+                        '04:00:00',
+                        "domain should be in UTC format");
+                    assert.strictEqual(domain[1][2].split(' ')[1],
+                        '03:59:59',
+                        "domain should be in UTC format");
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
+                },
+                env: { searchModel },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_time_field');
+
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_field').value, 'date_time_field');
+            assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
+
+            await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
         QUnit.test('input value parsing', async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
@@ -310,16 +474,63 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.strictEqual(idInput.value, "0");
 
             // Float parsing
-            await testUtils.fields.editInput(floatInput, 4.2);
+            await testUtils.fields.editAndTrigger(floatInput, "4.2", ["input", "change"]);
             assert.strictEqual(floatInput.value, "4.2");
-            await testUtils.fields.editInput(floatInput, "DefinitelyValidFloat");
-            assert.strictEqual(floatInput.value, "4.2");
+            await testUtils.fields.editAndTrigger(floatInput, "DefinitelyValidFloat", ["input", "change"]);
+            // String input in a number input gives "", which is parsed as 0
+            assert.strictEqual(floatInput.value, "0.0");
 
             // Number parsing
-            await testUtils.fields.editInput(idInput, 4);
+            await testUtils.fields.editAndTrigger(idInput, "4", ["input", "change"]);
             assert.strictEqual(idInput.value, "4");
-            await testUtils.fields.editInput(idInput, "DefinitelyValidID");
+            await testUtils.fields.editAndTrigger(idInput, "4.2", ["input", "change"]);
             assert.strictEqual(idInput.value, "4");
+            await testUtils.fields.editAndTrigger(idInput, "DefinitelyValidID", ["input", "change"]);
+            // String input in a number input gives "", which is parsed as 0
+            assert.strictEqual(idInput.value, "0");
+
+            cfi.destroy();
+        });
+
+        QUnit.test('input value parsing with language', async function (assert) {
+            assert.expect(5);
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: {
+                    searchModel: new ActionModel(),
+                    _t: Object.assign(s => s, { database: { parameters: { decimal_point: "," } }}),
+                },
+                translateParameters: {
+                    decimal_point: ",",
+                    thousands_sep: "",
+                    grouping: [3, 0],
+                },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.dom.click('button.o_add_condition');
+
+            const [floatSelect] = cfi.el.querySelectorAll('.o_generator_menu_field');
+            await testUtils.fields.editSelect(floatSelect, 'float_field');
+
+            const [floatInput] = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
+
+            // Default values
+            assert.strictEqual(floatInput.value, "0,0");
+
+            // Float parsing
+            await testUtils.fields.editInput(floatInput, '4,');
+            assert.strictEqual(floatInput.value, "4,");
+            await testUtils.fields.editAndTrigger(floatInput, '4,2',["input", "change"]);
+            assert.strictEqual(floatInput.value, "4,2");
+            await testUtils.fields.editAndTrigger(floatInput, '4,2,',["input", "change"]);
+            assert.strictEqual(floatInput.value, "4,2");
+            await testUtils.fields.editAndTrigger(floatInput, "DefinitelyValidFloat", ["input", "change"]);
+            // The input here is a string, resulting in a parsing error instead of 0
+            assert.strictEqual(floatInput.value, "4,2");
 
             cfi.destroy();
         });
@@ -386,7 +597,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.fields.editInput(getCondition(2, '.o_generator_menu_value .o_input'), "I will be deleted anyway");
 
             await testUtils.fields.editSelect(getCondition(3, '.o_generator_menu_field'), 'float_field');
-            await testUtils.fields.editInput(getCondition(3, '.o_generator_menu_value .o_input'), 7.2);
+            await testUtils.fields.editAndTrigger(getCondition(3, '.o_generator_menu_value .o_input'), 7.2, ["input", "change"]);
 
             await testUtils.fields.editSelect(getCondition(4, '.o_generator_menu_field'), 'id');
             await testUtils.fields.editInput(getCondition(4, '.o_generator_menu_value .o_input'), 9);
@@ -394,6 +605,42 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.dom.click(getCondition(2, '.o_generator_menu_delete'));
 
             await cpHelpers.applyFilter(cfi);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('float input can be empty', async function (assert) {
+            assert.expect(2);
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: {
+                    searchModel: new ActionModel(),
+                    _t: Object.assign(s => s, { database: { parameters: { decimal_point: "," } }}),
+                },
+                translateParameters: {
+                    decimal_point: ",",
+                    thousands_sep: "",
+                    grouping: [3, 0],
+                },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.dom.click('button.o_add_condition');
+
+            const [floatSelect] = cfi.el.querySelectorAll('.o_generator_menu_field');
+            await testUtils.fields.editSelect(floatSelect, 'float_field');
+
+            const [floatInput] = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
+
+            // We introduce a previous value in case we don't have a default value
+            await testUtils.fields.editInput(floatInput, '3,14');
+            assert.strictEqual(floatInput.value, '3,14');
+            // Input value can be completely cleared
+            await testUtils.fields.editInput(floatInput, '');
+            assert.strictEqual(floatInput.value, '');
 
             cfi.destroy();
         });

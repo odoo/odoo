@@ -46,24 +46,39 @@ weWidgets.LinkDialog.include({
     _adaptPageAnchor: function () {
         var urlInputValue = this.$('input[name="url"]').val();
         var $pageAnchor = this.$('.o_link_dialog_page_anchor');
+        if (!$pageAnchor.length) {
+            return;
+        }
         var isFromWebsite = urlInputValue[0] === '/';
         var $selectMenu = this.$('select[name="link_anchor"]');
         var $anchorsLoading = this.$('.o_anchors_loading');
 
-        $anchorsLoading.removeClass('d-none');
-        $pageAnchor.toggleClass('d-none', !isFromWebsite);
-        $selectMenu.empty();
-        wUtils.loadAnchors(urlInputValue).then(function (anchors) {
-            _.each(anchors, function (anchor) {
-                $selectMenu.append($('<option>', {text: anchor}));
-            });
+        if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
+            $anchorsLoading.removeClass('d-none');
+            $pageAnchor.toggleClass('d-none', !isFromWebsite);
+            $selectMenu.empty();
+            const urlWithoutHash = urlInputValue.split("#")[0];
+            wUtils.loadAnchors(urlWithoutHash).then(function (anchors) {
+                _.each(anchors, function (anchor) {
+                    $selectMenu.append($('<option>', {text: anchor}));
+                });
+                always();
+            }).guardedCatch(always);
+        } else {
             always();
-        }).guardedCatch(always);
+        }
 
         function always() {
             $anchorsLoading.addClass('d-none');
-            $selectMenu.prop("selectedIndex", -1);
+            const anchor = `#${urlInputValue.split('#')[1]}`;
+            let anchorIndex = -1;
+            if (anchor) {
+                const optionEls = $selectMenu[0].querySelectorAll('option');
+                anchorIndex = Array.from(optionEls).findIndex(el => el.textContent === anchor);
+            }
+            $selectMenu.prop("selectedIndex", anchorIndex);
         }
+        $selectMenu.data("anchor-for", urlInputValue);
     },
 
     //--------------------------------------------------------------------------

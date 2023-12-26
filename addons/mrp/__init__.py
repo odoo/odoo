@@ -11,12 +11,16 @@ from odoo import api, SUPERUSER_ID
 
 def _pre_init_mrp(cr):
     """ Allow installing MRP in databases with large stock.move table (>1M records)
-        - Creating the computed+stored field stock_move.is_done is terribly slow with the ORM and
-          leads to "Out of Memory" crashes
+        - Creating the computed+stored field stock_move.is_done and
+          stock_move.unit_factor is terribly slow with the ORM and leads to "Out of
+          Memory" crashes
     """
     cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
     cr.execute("""UPDATE stock_move
                      SET is_done=COALESCE(state in ('done', 'cancel'), FALSE);""")
+    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision;""")
+    cr.execute("""UPDATE stock_move
+                     SET unit_factor=1;""")
 
 def _create_warehouse_data(cr, registry):
     """ This hook is used to add a default manufacture_pull_id, manufacture
@@ -30,12 +34,13 @@ def _create_warehouse_data(cr, registry):
 def uninstall_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     warehouses = env["stock.warehouse"].search([])
-    subcontracting_routes = warehouses.mapped("pbm_route_id")
+    pbm_routes = warehouses.mapped("pbm_route_id")
     warehouses.write({"pbm_route_id": False})
     # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
     # we don't try to do anything.
     try:
-        subcontracting_routes.unlink()
+        with env.cr.savepoint():
+            pbm_routes.unlink()
     except:
         pass
 

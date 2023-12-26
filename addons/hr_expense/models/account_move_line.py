@@ -4,27 +4,20 @@
 from odoo import api, fields, models
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
-
-    def action_invoice_paid(self):
-        # OVERRIDE to mark as paid the expense sheets.
-        res = super().action_invoice_paid()
-
-        if self:
-            expense_sheets = self.env['hr.expense.sheet'].search([
-                ('account_move_id', 'in', self.ids),
-                ('state', '!=', 'done'),
-            ])
-            expense_sheets.set_to_paid()
-
-        return res
-
-
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     expense_id = fields.Many2one('hr.expense', string='Expense', copy=False, help="Expense where the move line come from")
+
+    def reconcile(self):
+        # OVERRIDE
+        not_paid_expenses = self.expense_id.filtered(lambda expense: expense.state != 'done')
+        not_paid_expense_sheets = not_paid_expenses.sheet_id
+        res = super().reconcile()
+        paid_expenses = not_paid_expenses.filtered(lambda expense: expense.currency_id.is_zero(expense.amount_residual))
+        paid_expenses.write({'state': 'done'})
+        not_paid_expense_sheets.filtered(lambda sheet: all(expense.state == 'done' for expense in sheet.expense_line_ids)).set_to_paid()
+        return res
 
     def _get_attachment_domains(self):
         attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()

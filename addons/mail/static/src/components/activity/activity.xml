@@ -7,7 +7,7 @@
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">
                         <t t-if="activity.assignee">
-                            <img class="o_Activity_userAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                            <img class="o_Activity_userAvatar o_object_fit_cover" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-alt="activity.assignee.nameOrDisplayName"/>
                         </t>
                         <div class="o_Activity_iconContainer"
                             t-att-class="{
@@ -47,7 +47,7 @@
                                 <t t-esc="assignedUserText"/>
                             </div>
                         </t>
-                        <a class="o_Activity_detailsButton btn btn-link" t-on-click="_onClickDetailsButton" role="button">
+                        <a href="#" class="o_Activity_detailsButton btn btn-link" t-att-aria-expanded="state.areDetailsVisible ? 'true' : 'false'" t-on-click="_onClickDetailsButton" role="button">
                             <i class="fa fa-info-circle" role="img" title="Info"/>
                         </a>
                     </div>

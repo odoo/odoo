@@ -16,10 +16,11 @@ Pedro M. Baeza pedro.baeza@tecnativa.com https://github.com/pedrobaeza
 Rafael Blasco rafael.blasco@tecnativa.com https://github.com/rafaelbn
 Sergio Teruel sergio.teruel@tecnativa.com https://github.com/sergio-teruel
 Carlos Dauden carlos.dauden@tecnativa.com https://github.com/carlosdauden
-Jairo Llopis jairo.llopis@tecnativa.com https://github.com/yajo
+Jairo Llopis jairo.llopis@tecnativa.com https://github.com/yajo (up to 2021-11-25)
 David Vidal david.vidal@tecnativa.com https://github.com/chienandalu
 Cristina Martín cristina.martin@tecnativa.com https://github.com/cristinamartinrod (up to 2019-04-30)
 Ernesto Tejeda ernesto.tejeda@tecnativa.com https://github.com/ernestotejeda
 Alexandre Díaz alexandre.diaz@tecnativa.com https://github.com/Tardo
 Víctor Martínez victor.martinez@tecnativa.com https://github.com/victoralmau
 João Marques joao.marques@tecnativa.com https://github.com/joao-p-marques
+Carlos Roca carlos.roca@tecnativa.com https://github.com/CarlosRoca13

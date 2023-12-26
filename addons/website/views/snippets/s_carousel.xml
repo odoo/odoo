@@ -11,6 +11,9 @@
                 <li data-target="#myCarousel" data-slide-to="2"/>
             </ol>
             <!-- Content -->
+            <!-- TODO in master: remove the `content` classes in the div with
+                the class `row`, to avoid having unwanted dropzones when
+                dragging inner content. -->
             <div class="carousel-inner">
                 <!-- #01 -->
                 <div class="carousel-item active oe_img_bg pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
@@ -56,11 +59,11 @@
                 </div>
             </div>
             <!-- Controls -->
-            <a class="carousel-control-prev" href="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+            <a class="carousel-control-prev o_not_editable" contenteditable="false" href="#myCarousel" data-slide="prev" role="img" aria-label="Previous" title="Previous">
                 <span class="carousel-control-prev-icon"/>
                 <span class="sr-only">Previous</span>
             </a>
-            <a class="carousel-control-next" href="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
+            <a class="carousel-control-next o_not_editable" contenteditable="false" href="#myCarousel" data-slide="next" role="img" aria-label="Next" title="Next">
                 <span class="carousel-control-next-icon"/>
                 <span class="sr-only">Next</span>
             </a>
