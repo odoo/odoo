@@ -842,6 +842,31 @@ class BaseModel(metaclass=MetaModel):
         cls._onchange_methods = BaseModel._onchange_methods
 
     @property
+    def _table_sql(self) -> SQL:
+        """ Return an :class:`SQL` object that represents SQL table identifier
+        or table query.
+        """
+        table_query = self._table_query
+        table_sql = SQL(f"({table_query})") if table_query else SQL.identifier(self._table)
+        if not self._depends:
+            return table_sql
+
+        # add self._depends (and its transitive closure) as metadata to table_sql
+        fields_to_flush = []
+        models = [self]
+        while models:
+            current_model = models.pop()
+            for model_name, field_names in current_model._depends.items():
+                model = self.env[model_name]
+                models.append(model)
+                fields_to_flush.extend(model._fields[fname] for fname in field_names)
+
+        return SQL().join([
+            table_sql,
+            *(SQL(to_flush=field) for field in fields_to_flush),
+        ])
+
+    @property
     def _constraint_methods(self):
         """ Return a list of methods implementing Python constraints. """
         def is_constraint(func):
@@ -1907,9 +1932,8 @@ class BaseModel(metaclass=MetaModel):
 
         self._flush_search(domain, fnames_to_flush)
 
-        self.env.cr.execute(SQL("\n").join(query_parts))
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
-        row_values = self.env.cr.fetchall()
+        row_values = self.env.execute_query(SQL("\n").join(query_parts))
 
         if not row_values:
             return row_values
@@ -2753,11 +2777,17 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
-    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None) -> SQL:
+    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
+        The method also checks that the field is accessible for reading.
+
         The query object is necessary for inherited fields, many2one fields and
         properties fields, where joins are added to the query.
+
+        When parameter ``flush`` is true, the method adds some metadata in the
+        result to make method :meth:`~odoo.api.Environment.execute_query` flush
+        the field before executing the query.
         """
         full_fname = fname
         property_name = None
@@ -2808,18 +2838,21 @@ class BaseModel(metaclass=MetaModel):
             query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
             return SQL.identifier(rel_alias, field.column2)
 
-        elif field.translate and not self.env.context.get('prefetch_langs'):
-            sql_field = SQL.identifier(alias, fname)
+        if field.type == 'properties' and property_name:
+            return self._field_properties_to_sql(alias, fname, property_name, query)
+
+        self.check_field_access_rights('read', [field.name])
+        field_to_flush = field if flush and fname != 'id' else None
+        sql_field = SQL.identifier(alias, fname, to_flush=field_to_flush)
+
+        if field.translate and not self.env.context.get('prefetch_langs'):
             langs = field.get_translation_fallback_langs(self.env)
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
             if len(sql_field_langs) == 1:
                 return sql_field_langs[0]
             return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
 
-        elif field.type == 'properties' and property_name:
-            return self._field_properties_to_sql(alias, fname, property_name, query)
-
-        return SQL.identifier(alias, fname)
+        return sql_field
 
     def _field_properties_to_sql(self, alias: str, fname: str, property_name: str,
                                  query: Query) -> SQL:
@@ -2929,6 +2962,11 @@ class BaseModel(metaclass=MetaModel):
         """ Return an :class:`SQL` object that represents the domain condition
         given by the triple ``(fname, operator, value)`` with the given table
         alias, and in the context of the given query.
+
+        The method is also responsible for checking that the field is accessible
+        for reading, and should include metadata in the result object to make
+        sure that the necessary fields are flushed before executing the final
+        SQL query.
         """
         # sanity checks - should never fail
         assert operator in (expression.TERM_OPERATORS + ('inselect', 'not inselect')), \
@@ -3982,18 +4020,14 @@ class BaseModel(metaclass=MetaModel):
             assert field.store
             (column_fields if field.column_type else other_fields).add(field)
 
-        # necessary to retrieve the en_US value of fields without a translation
-        translated_field_names = [field.name for field in column_fields if field.translate]
-        if translated_field_names:
-            self.flush_model(translated_field_names)
-
         context = self.env.context
 
         if column_fields:
             # the query may involve several tables: we need fully-qualified names
             sql_terms = [SQL.identifier(self._table, 'id')]
             for field in column_fields:
-                sql = self._field_to_sql(self._table, field.name, query)
+                # flushing is necessary to retrieve the en_US value of fields without a translation
+                sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
                 if field.type == 'binary' and (
                         context.get('bin_size') or context.get('bin_size_' + field.name)):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
@@ -4001,8 +4035,7 @@ class BaseModel(metaclass=MetaModel):
                 sql_terms.append(sql)
 
             # select the given columns from the rows in the query
-            self.env.cr.execute(query.select(*sql_terms))
-            rows = self.env.cr.fetchall()
+            rows = self.env.execute_query(query.select(*sql_terms))
 
             if not rows:
                 return self.browse()
@@ -4020,7 +4053,6 @@ class BaseModel(metaclass=MetaModel):
                 values = next(column_values)
                 # store values in cache, but without overwriting
                 self.env.cache.insert_missing(fetched, field, values)
-
         else:
             fetched = self.browse(query)
 
@@ -4226,16 +4258,14 @@ class BaseModel(metaclass=MetaModel):
         if not self._ids:
             return self
 
-        query = Query(self.env.cr, self._table, self._table_query)
+        query = Query(self.env, self._table, self._table_sql)
         self._apply_ir_rules(query, operation)
         if not query.where_clause:
             return self
 
         # determine ids in database that satisfy ir.rules
-        self._flush_search([])
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(self.ids)))
-        self._cr.execute(query.select())
-        valid_ids = {row[0] for row in self._cr.fetchall()}
+        valid_ids = {id_ for id_, in self.env.execute_query(query.select())}
 
         # return new ids without origin and ids with origin in valid_ids
         return self.browse([
@@ -5189,7 +5219,7 @@ class BaseModel(metaclass=MetaModel):
         if domain:
             return expression.expression(domain, self).query
         else:
-            return Query(self.env.cr, self._table, self._table_query)
+            return Query(self.env, self._table, self._table_sql)
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -5220,7 +5250,8 @@ class BaseModel(metaclass=MetaModel):
     def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
                       reverse: bool = False) -> SQL:
         """ Return an :class:`SQL` object that represents the given ORDER BY
-        clause, without the ORDER BY keyword.
+        clause, without the ORDER BY keyword.  The method also checks whether
+        the fields in the order are accessible for reading.
         """
         order = order or self._order
         if not order:
@@ -5257,7 +5288,8 @@ class BaseModel(metaclass=MetaModel):
     def _order_field_to_sql(self, alias: str, field_name: str, direction: SQL,
                             nulls: SQL, query: Query) -> SQL:
         """ Return an :class:`SQL` object that represents the ordering by the
-        given field.
+        given field.  The method also checks whether the field is accessible for
+        reading.
 
         :param direction: one of ``SQL("ASC")``, ``SQL("DESC")``, ``SQL()``
         :param nulls: one of ``SQL("NULLS FIRST")``, ``SQL("NULLS LAST")``, ``SQL()``
@@ -5345,6 +5377,7 @@ class BaseModel(metaclass=MetaModel):
         Note that ``order=None`` actually means no order, so if you expect some
         fallback order, you have to provide it yourself.
         """
+        warnings.warn("Since 18.0, _flush_search are deprecated")
         if seen is None:
             seen = set()
         elif self._name in seen:
@@ -5457,9 +5490,6 @@ class BaseModel(metaclass=MetaModel):
             # optimization: no need to query, as no record satisfies the domain
             return self.browse()._as_query()
 
-        # the flush must be done before the _where_calc(), as the latter can do some selects
-        self._flush_search(domain, order=order)
-
         query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
 
@@ -5476,7 +5506,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param ordered: whether the recordset order must be enforced by the query
         """
-        query = Query(self.env.cr, self._table, self._table_query)
+        query = Query(self.env, self._table, self._table_sql)
         query.set_result_ids(self._ids, ordered)
         return query
 
@@ -5649,7 +5679,7 @@ class BaseModel(metaclass=MetaModel):
         new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
             return self
-        query = Query(self.env.cr, self._table, self._table_query)
+        query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         self.env.cr.execute(query.select())
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)

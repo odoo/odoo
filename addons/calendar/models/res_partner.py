@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models
+from odoo.tools import SQL
 
 
 class Partner(models.Model):
@@ -29,16 +30,15 @@ class Partner(models.Model):
             )
 
             query = self.env['calendar.event']._search([])  # ir.rules will be applied
-            query_str, params = query.subselect()
-
-            self.env.cr.execute(f"""
+            meeting_data = self.env.execute_query(SQL("""
                 SELECT res_partner_id, calendar_event_id, count(1)
                   FROM calendar_event_res_partner_rel
-                 WHERE res_partner_id IN %s AND calendar_event_id IN {query_str}
+                 WHERE res_partner_id IN %s AND calendar_event_id IN %s
               GROUP BY res_partner_id, calendar_event_id
-            """, [tuple(all_partners.ids)] + params)
-
-            meeting_data = self.env.cr.fetchall()
+                """,
+                all_partners._ids,
+                query.subselect(),
+            ))
 
             # Create a dict {partner_id: event_ids} and fill with events linked to the partner
             meetings = {}

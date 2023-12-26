@@ -1689,15 +1689,18 @@ class AccountMoveLine(models.Model):
                 line._copy_data_extend_business_fields(values)
         return data_list
 
-    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None) -> SQL:
+    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname != 'payment_date':
-            return super()._field_to_sql(alias, fname, query)
+            return super()._field_to_sql(alias, fname, query, flush)
         return SQL("""
             CASE
-                 WHEN discount_date >= %(today)s THEN discount_date
-                 ELSE date_maturity
-            END
-        """, today=fields.Date.context_today(self))
+                 WHEN %(discount_date)s >= %(today)s THEN %(discount_date)s
+                 ELSE %(date_maturity)s
+            END""",
+            today=fields.Date.context_today(self),
+            discount_date=super()._field_to_sql(alias, "discount_date", query, flush),
+            date_maturity=super()._field_to_sql(alias, "date_maturity", query, flush),
+        )
 
     def _order_field_to_sql(self, alias: str, field_name: str, direction: SQL, nulls: SQL, query: Query) -> SQL:
         if field_name != 'payment_date':
@@ -1715,16 +1718,15 @@ class AccountMoveLine(models.Model):
         # Override in order to not read the complete move line table and use the index instead
         query = self._search(domain, limit=1)
         query.add_where('account.id = account_move_line.account_id')
-        query_str, query_param = query.select()
-        self.env.cr.execute(f"""
+        id_rows = self.env.execute_query(SQL("""
             SELECT account.root_id
               FROM account_account account,
-                   LATERAL ({query_str}) line
+                   LATERAL (%s) line
              WHERE account.company_id IN %s
-        """, query_param + [tuple(self.env.companies.ids)])
+        """, query.select(), tuple(self.env.companies.ids)))
         return {
             root.id: {'id': root.id, 'display_name': root.display_name}
-            for root in self.env['account.root'].browse(id for [id] in self.env.cr.fetchall())
+            for root in self.env['account.root'].browse(id_ for [id_] in id_rows)
         }
 
     # -------------------------------------------------------------------------

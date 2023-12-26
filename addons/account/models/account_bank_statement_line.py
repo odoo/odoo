@@ -181,10 +181,7 @@ class AccountBankStatementLine(models.Model):
         # the user can split on that lines, but their balance should be the same as previous posted line
         # we do the same for the canceled lines, in order to keep using them as anchor points
 
-        self.statement_id.flush_model(['balance_start', 'first_line_index'])
-        self.flush_model(['internal_index', 'date', 'journal_id', 'statement_id', 'amount', 'state'])
         record_by_id = {x.id: x for x in self}
-
         for journal in self.journal_id:
             journal_lines_indexes = self.filtered(lambda line: line.journal_id == journal)\
                 .sorted('internal_index')\
@@ -192,6 +189,7 @@ class AccountBankStatementLine(models.Model):
             min_index, max_index = journal_lines_indexes[0], journal_lines_indexes[-1]
 
             # Find the oldest index for each journal.
+            self.env['account.bank.statement'].flush_model(['first_line_index', 'journal_id', 'balance_start'])
             self._cr.execute(
                 """
                     SELECT first_line_index, COALESCE(balance_start, 0.0)
@@ -213,6 +211,9 @@ class AccountBankStatementLine(models.Model):
                 extra_clause = "AND st_line.internal_index >= %s"
                 extra_params.append(starting_index)
 
+            self.flush_model(['amount', 'move_id', 'statement_id', 'internal_index'])
+            self.env['account.bank.statement'].flush_model(['first_line_index', 'balance_start'])
+            self.env['account.move'].flush_model(['state', 'journal_id'])
             self._cr.execute(
                 f"""
                     SELECT
