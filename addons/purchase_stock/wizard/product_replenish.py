@@ -42,7 +42,7 @@ class ProductReplenish(models.TransientModel):
         for rec in self:
             rec.show_vendor = rec._get_show_vendor(rec.route_id)
 
-    @api.onchange('route_id')
+    @api.depends('route_id')
     def _onchange_route_id(self):
         for rec in self:
             if rec.route_id == self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False) and not rec.product_id.product_tmpl_id.seller_ids:
