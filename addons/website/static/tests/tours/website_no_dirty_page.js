@@ -64,5 +64,15 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         content: "Make sure the paragraph still acts as a default paragraph",
         trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
         run: () => null,
+    }, {
+        content: "Click on button",
+        trigger: 'iframe .s_text_image .btn',
+        run: function (actions) {
+            actions.click();
+            const el = this.$anchor[0];
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
 ]));
