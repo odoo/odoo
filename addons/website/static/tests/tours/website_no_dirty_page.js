@@ -64,5 +64,15 @@ tour.register('website_no_dirty_page', {
         content: "Make sure the paragraph still acts as a default paragraph",
         trigger: '.s_text_image h2 + p.o_default_snippet_text',
         run: () => null,
+    }, {
+        content: "Click on button",
+        trigger: '.s_text_image .btn',
+        run: function (actions) {
+            actions.click();
+            const sel = document.getSelection();
+            const el = this.$anchor[0];
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
 ]));
