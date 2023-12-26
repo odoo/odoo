@@ -68,6 +68,14 @@ const PALETTE_NAMES = [
     'default-18',
     'default-19',
     'default-20',
+    'default-21',
+    'default-22',
+    'default-23',
+    'default-24',
+    'default-25',
+    'default-26',
+    'default-27',
+    'default-28',
 ];
 
 // Attributes for which background color should be retrieved
