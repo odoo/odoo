@@ -1042,6 +1042,18 @@ class AccountPayment(models.Model):
             'res_id': self.destination_journal_id.id,
         }
         return action
+    
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_posted(self):
+        posted_payments = self.filtered(lambda a:a.state == 'posted')
+        if posted_payments:
+            raise ValidationError("Cannot delete a posted payment.  Set to draft then cancel instead")
+        moves = self.mapped('move_id')
+        moves_posted_before = moves.filtered(lambda a:a.posted_before)
+        if moves_posted_before:
+            raise ValidationError("Cannot delete a payment that was posted once.  You can cancel")
+    
+
 
 # For optimization purpose, creating the reverse relation of m2o in _inherits saves
 # a lot of SQL queries
