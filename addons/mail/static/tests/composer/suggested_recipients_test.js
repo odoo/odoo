@@ -12,6 +12,14 @@ const views = {
                 <field name="message_follower_ids"/>
             </div>
         </form>`,
+    "res.partner,false,form": `
+        <form string="Partner">
+            <sheet>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+            </sheet>
+        </form>`,
 };
 
 QUnit.module("suggested_recipients");
@@ -282,5 +290,43 @@ QUnit.test(
         await insertText(".o-mail-Composer-input", "Dummy Message");
         await click(".o-mail-Composer-send");
         assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
+    }
+);
+
+QUnit.test(
+    "suggested partner unchecked/checked -> partner creation in wizard with defaults",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const fakeId = pyEnv["res.fake"].create({
+            email_cc: "john@test.be",
+        });
+        let partner = pyEnv["res.partner"].search([["email", "=", "john@test.be"]]);
+        assert.strictEqual(partner.length, 0);
+        const { openFormView } = await start({
+            serverData: { views },
+            async mockRPC(route, args, performRPC) {
+                // Override mockRPC response to simulate retrieving default values
+                // for the suggested recipient through `_get_customer_information`
+                if (route === "/mail/thread/data") {
+                    const res = await performRPC(route, args);
+                    assert.strictEqual(res["suggestedRecipients"].length, 1);
+                    assert.deepEqual(res["suggestedRecipients"][0][1], "john@test.be");
+                    res["suggestedRecipients"][0].push({
+                        company_name: "Test Company",
+                    });
+                    return res;
+                }
+            },
+        });
+        await openFormView("res.fake", fakeId);
+        await click("button:contains(Send message)");
+        await click(".o-mail-SuggestedRecipient input");
+        await click(".o-mail-SuggestedRecipient input");
+        await click(".o_dialog .o_form_button_save");
+        partner = pyEnv["res.partner"].search([
+            ["email", "=", "john@test.be"],
+            ["company_name", "=", "Test Company"],
+        ]);
+        assert.strictEqual(partner.length, 1);
     }
 );
