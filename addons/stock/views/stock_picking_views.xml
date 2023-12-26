@@ -671,4 +671,12 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('group_id','=',active_id)]</field>
         </record>
+        <record id="stock_split_picking" model="ir.actions.server">
+            <field name="name">Split</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_split_transfer()</field>
+        </record>
 </odoo>
