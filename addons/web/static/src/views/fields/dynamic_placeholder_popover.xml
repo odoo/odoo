@@ -3,15 +3,17 @@
 
     <t t-name="web.DynamicPlaceholderPopover">
         <t t-if="state.isPathSelected">
-            <div class="o_model_field_selector_popover" t-on-keydown="onInputKeydown">
-                <div class="o_model_field_selector_popover_header text-center">
-                    <div class="o_model_field_selector_popover_title">Default value</div>
-                    <i class="fa fa-times o_model_field_selector_popover_option o_model_field_selector_popover_close"
-                       title="Close"
-                       role="img"
-                       aria-label="Close"
-                       t-on-click="props.close"
-                    />
+            <div class="o_model_field_selector_popover" t-on-keydown="onInputKeydown" tabindex="-1">
+                <div class="border-bottom p-2 text-dark fw-bolder">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="o_model_field_selector_popover_title">Default value</div>
+                        <i class="o_model_field_selector_popover_close btn btn-link me-n2 fa fa-times text-dark"
+                           title="Close"
+                           role="img"
+                           aria-label="Close"
+                           t-on-click="props.close"
+                        />
+                    </div>
                     <div class="o_model_field_selector_default_value_input mt-2">
                         <input type="text"
                                placeholder='Type a default text or press ENTER'
@@ -22,9 +24,9 @@
                     </div>
                 </div>
                 <div class="o_model_field_selector_popover_body">
-                    <ul class="o_model_field_selector_popover_page">
-                        <li class="o_model_field_selector_popover_item">
-                            <button class="o_model_field_selector_popover_item_name btn flex-fill text-start"  t-on-click="() => this.validate()">
+                    <ul class="o_model_field_selector_popover_page list-unstyled mb-0 overflow-auto">
+                        <li t-attf-class="o_model_field_selector_popover_item border-bottom #{state.defaultValue === '' and 'active'}">
+                            <button class="o_model_field_selector_popover_item_name btn flex-fill border-0 rounded-0 text-start"  t-on-click="() => this.validate()">
                                 <t t-if="state.defaultValue === ''">
                                     <div class="text-muted o_model_field_selector_item_title">Default text is used when no values are set</div>
                                 </t>
@@ -35,7 +37,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="o_model_field_selector_popover_footer">
+                <div class="o_model_field_selector_popover_footer border-top py-1 px-2">
                     <input type="text" class="o_input o_model_field_selector_debug" disabled="disabled" t-att-value="state.path" />
                 </div>
             </div>
