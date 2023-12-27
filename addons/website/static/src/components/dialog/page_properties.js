@@ -162,7 +162,7 @@ DuplicatePageDialog.template = xml`
 </WebsiteDialog>
 `;
 DuplicatePageDialog.props = {
-    onDuplicate: {type: Function, optional: true},
+    onDuplicate: Function,
     close: Function,
     pageId: Number,
 };
