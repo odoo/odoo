@@ -346,13 +346,14 @@ PortalChatter.include({
         var messageIndex = $source.data("mes_index");
 
         var comment = this.messages[messageIndex].rating.publisher_comment;
-        this._getCommentContainer($source).empty();
+        const $commentContainer = this._getCommentContainer($source);
+        $commentContainer.empty();
         if (comment) {
             var data = {
                 rating: this.messages[messageIndex].rating,
                 is_publisher: this.options.is_user_publisher,
             };
-            this._getCommentContainer($source).append(renderToElement("portal_rating.chatter_rating_publisher_comment", data));
+            $commentContainer.append(renderToElement("portal_rating.chatter_rating_publisher_comment", data));
         }
     },
 
