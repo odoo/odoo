@@ -2,7 +2,9 @@
 
 import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/helpers/mock_websocket";
 
+import { patch, unpatch } from "@web/core/utils/patch";
 import { makeDeferred } from "@web/../tests/helpers/utils";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 // should be enough to decide whether or not notifications/channel
 // subscriptions... are received.
@@ -18,32 +20,41 @@ const TIMEOUT = 500;
  *
  * @returns {import("@web/core/utils/concurrency").Deferred} */
 export function waitForChannels(channels, { operation = "add" } = {}) {
-    const successDeferred = makeDeferred();
-    const failTimeout = setTimeout(() => {
-        const failMessage = `Waited ${TIMEOUT}ms for ${channels.join(", ")} to be ${
-            operation === "add" ? "added" : "deleted"
-        }`;
-        QUnit.assert.ok(false, failMessage);
-        successDeferred.resolve();
-    }, TIMEOUT);
-    const channelsSeen = new Set();
-    patchWebsocketWorkerWithCleanup({
+    const uuid = String(Date.now() + Math.random());
+    const missingChannels = new Set(channels);
+    const deferred = makeDeferred();
+    function check({ crashOnFail = false } = {}) {
+        const success = missingChannels.size === 0;
+        if (!success && !crashOnFail) {
+            return;
+        }
+        unpatch(worker, uuid);
+        clearTimeout(failTimeout);
+        const msg = success
+            ? `Channel(s) [${channels.join(", ")}] ${operation === "add" ? "added" : "deleted"}.`
+            : `Waited ${TIMEOUT}ms for [${channels.join(", ")}] to be ${
+                  operation === "add" ? "added" : "deleted"
+              }`;
+        QUnit.assert.ok(success, msg);
+        if (success) {
+            deferred.resolve();
+        } else {
+            deferred.reject(new Error(msg));
+        }
+    }
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
+    registerCleanup(() => {
+        if (missingChannels.length > 0) {
+            check({ crashOnFail: true });
+        }
+    });
+    const worker = patchWebsocketWorkerWithCleanup();
+    patch(worker, uuid, {
         async [operation === "add" ? "_addChannel" : "_deleteChannel"](client, channel) {
             await this._super(client, channel);
-            if (channels.includes(channel)) {
-                channelsSeen.add(channel);
-            }
-            if (channelsSeen.size === channels.length) {
-                QUnit.assert.ok(
-                    true,
-                    `Channel(s) ${channels.join(", ")} ${
-                        operation === "add" ? "added" : "deleted"
-                    }.`
-                );
-                successDeferred.resolve();
-                clearTimeout(failTimeout);
-            }
+            missingChannels.delete(channel);
+            check();
         },
     });
-    return successDeferred;
+    return deferred;
 }
