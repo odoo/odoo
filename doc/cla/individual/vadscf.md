@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Scafari Vadim vadim.scafari@gmail.com https://github.com/vadimscafari
+Scafari Vadim vadim.scafari@gmail.com https://github.com/vadscf
