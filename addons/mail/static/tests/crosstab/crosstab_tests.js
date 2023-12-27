@@ -6,7 +6,7 @@ import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferr
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("crosstab");
 
@@ -89,7 +89,7 @@ QUnit.test("Thread description update", async () => {
     });
 });
 
-QUnit.test("Channel subscription is renewed when channel is added from invite", async (assert) => {
+QUnit.test("Channel subscription is renewed when channel is added from invite", async () => {
     const pyEnv = await startServer();
     const [, channelId] = pyEnv["discuss.channel"].create([
         { name: "R&D" },
@@ -98,7 +98,7 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     const { env, openDiscuss } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
-            assert.step("update-channels");
+            step("update-channels");
         },
     });
     openDiscuss();
@@ -107,11 +107,10 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
         partner_ids: [pyEnv.currentPartnerId],
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
-    await new Promise((resolve) => setTimeout(resolve)); // update of channels is debounced
-    assert.verifySteps(["update-channels"]);
+    await assertSteps(["update-channels"]);
 });
 
-QUnit.test("Channel subscription is renewed when channel is left", async (assert) => {
+QUnit.test("Channel subscription is renewed when channel is left", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Sales" });
     const { openDiscuss } = await start();
