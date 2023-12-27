@@ -189,13 +189,14 @@ class Module(models.Model):
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
                     if doc.startswith(XML_DECLARATION):
-                        warnings.warn(
-                            f"XML declarations in HTML module descriptions are "
-                            f"deprecated since Odoo 17, {module.name} can just "
-                            f"have a UTF8 description with not need for a "
-                            f"declaration.",
-                            category=DeprecationWarning,
-                        )
+                        pass
+                        # warnings.warn(
+                        #     f"XML declarations in HTML module descriptions are "
+                        #     f"deprecated since Odoo 17, {module.name} can just "
+                        #     f"have a UTF8 description with not need for a "
+                        #     f"declaration.",
+                        #     category=DeprecationWarning,
+                        # )
                     else:
                         try:
                             doc = doc.decode()
