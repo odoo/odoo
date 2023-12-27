@@ -71,19 +71,6 @@ class AccountMove(models.Model):
     _rec_names_search = ['name', 'partner_id.name', 'ref']
     _systray_view = 'activity'
 
-    @property
-    def _sequence_monthly_regex(self):
-        return self.journal_id.sequence_override_regex or super()._sequence_monthly_regex
-
-    @property
-    def _sequence_yearly_regex(self):
-        return self.journal_id.sequence_override_regex or super()._sequence_yearly_regex
-
-    @property
-    def _sequence_fixed_regex(self):
-        return self.journal_id.sequence_override_regex or super()._sequence_fixed_regex
-
-
     # ==============================================================================================
     #                                          JOURNAL ENTRY
     # ==============================================================================================
@@ -747,11 +734,13 @@ class AccountMove(models.Model):
     @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'payment_id')
     def _compute_name(self):
         self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
-
         for move in self:
+            # if move.date in (fields.Date.to_date('2016-01-15'), fields.Date.to_date('2016-01-10')):
+            #     import pudb
+            #     pudb.set_trace()
             move_has_name = move.name and move.name != '/'
             if move_has_name or move.state != 'posted':
-                if not move.posted_before and not move._sequence_matches_date():
+                if not move.posted_before:
                     if move._get_last_sequence():
                         # The name does not match the date and the move is not the first in the period:
                         # Reset to draft
@@ -764,7 +753,7 @@ class AccountMove(models.Model):
                         # - doesn't have a name, but is not the first in the period
                         # so we don't recompute the name
                         continue
-            if move.date and (not move_has_name or not move._sequence_matches_date()):
+            if move.date and (not move_has_name or move._deduce_sequence_number_reset()=='never'):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
@@ -774,7 +763,8 @@ class AccountMove(models.Model):
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
         for record in self:
-            record.highest_name = record._get_last_sequence()
+            last = record._get_last_sequence()
+            record.highest_name = last and last.name or False
 
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
@@ -1767,54 +1757,34 @@ class AccountMove(models.Model):
         else:
             self.show_name_warning = False
 
-        origin_name = self._origin.name
-        if not origin_name or origin_name == '/':
-            origin_name = self.highest_name
+        origin = self._get_last_sequence(relaxed=True)
+        if not origin:
+            return {}
         if (
             self.name and self.name != '/'
-            and origin_name and origin_name != '/'
-            and self.date == self._origin.date
-            and self.journal_id == self._origin.journal_id
+            and origin.name and origin.name != '/'
         ):
-            new_format, new_format_values = self._get_sequence_format_param(self.name)
-            origin_format, origin_format_values = self._get_sequence_format_param(origin_name)
+            smatch, speriod = self._find_sequence()
+            smatch = smatch.groupdict()
+            omatch, operiod = origin._find_sequence()
+            omatch = omatch.groupdict()
+            for key in self._get_sequence_keys().keys():    # check all prefixes & suffix
+                smatch.pop(key, None)
+                omatch.pop(key, None)
 
-            if (
-                new_format != origin_format
-                or dict(new_format_values, year=0, month=0, seq=0) != dict(origin_format_values, year=0, month=0, seq=0)
-            ):
+            if (speriod != operiod) or (omatch != smatch):
                 changed = _(
                     "It was previously '%(previous)s' and it is now '%(current)s'.",
-                    previous=origin_name,
+                    previous=origin.name,
                     current=self.name,
                 )
-                reset = self._deduce_sequence_number_reset(self.name)
+                reset = self._deduce_sequence_number_reset()
                 if reset == 'month':
-                    detected = _(
-                        "The sequence will restart at 1 at the start of every month.\n"
-                        "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
-                        "The incrementing number in this case is '%(formatted_seq)s'."
-                    )
+                    detected = _("The sequence will restart at 1 at the start of every month.")
                 elif reset == 'year':
-                    detected = _(
-                        "The sequence will restart at 1 at the start of every year.\n"
-                        "The year detected here is '%(year)s'.\n"
-                        "The incrementing number in this case is '%(formatted_seq)s'."
-                    )
-                elif reset == 'year_range':
-                    detected = _(
-                        "The sequence will restart at 1 at the start of every financial year.\n"
-                        "The financial start year detected here is '%(year)s'.\n"
-                        "The financial end year detected here is '%(year_end)s'.\n"
-                        "The incrementing number in this case is '%(formatted_seq)s'."
-                    )
+                    detected = _("The sequence will restart at 1 at the start of every year.")
                 else:
-                    detected = _(
-                        "The sequence will never restart.\n"
-                        "The incrementing number in this case is '%(formatted_seq)s'."
-                    )
-                new_format_values['formatted_seq'] = "{seq:0{seq_length}d}".format(**new_format_values)
-                detected = detected % new_format_values
+                    detected = _("The sequence will never restart.")
                 return {'warning': {
                     'title': _("The sequence format has changed."),
                     'message': "%s\n\n%s" % (changed, detected)
@@ -2459,11 +2429,6 @@ class AccountMove(models.Model):
                 move._check_fiscalyear_lock_date()
                 move.line_ids._check_tax_lock_date()
 
-            if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
-                if not self.env.user.has_group('account.group_account_manager'):
-                    raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
-                move.journal_id.sequence_override_regex = False
-
         to_protect = []
         for fname in vals:
             field = self._fields[fname]
@@ -2513,7 +2478,11 @@ class AccountMove(models.Model):
         return res
 
     def check_move_sequence_chain(self):
-        return self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain()
+        for rec in self.filtered(lambda move: move.name != '/'):
+            last = rec._get_last_sequence(with_prefix=rec.sequence_prefix)
+            if last and last.sequence_number > rec.sequence_number:
+                return False
+        return True
 
     @api.ondelete(at_uninstall=False)
     def _unlink_forbid_parts_of_chain(self):
@@ -2655,21 +2624,19 @@ class AccountMove(models.Model):
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             if self.journal_id.payment_sequence:
                 domain += [('payment_id', '!=' if self.payment_id else '=', False)]
-            reference_move_name = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
-            if not reference_move_name:
-                reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
-            sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
-            date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
-            where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
-            param['date_start'] = date_start
-            param['date_end'] = date_end
-            if sequence_number_reset in ('year', 'year_range'):
-                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
-            elif sequence_number_reset == 'never':
-                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
-
-            if param.get('anti_regex') and not self.journal_id.sequence_override_regex:
-                where_string += " AND sequence_prefix !~ %(anti_regex)s "
+            reference_move = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1)
+            if not reference_move:
+                reference_move = self.sudo().search(domain, order='date asc', limit=1)
+            if reference_move:
+                where_string += " AND sequence_prefix=%(prefix)s "
+                param['prefix'] = reference_move.sequence_prefix
+            sequence_number_reset = reference_move._deduce_sequence_number_reset()
+            if sequence_number_reset == 'year':
+                where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
+                param['date'] = self.date
+            elif sequence_number_reset == 'month':
+                where_string += " AND date_trunc('month', date::timestamp without time zone) = date_trunc('month', %(date)s) "
+                param['date'] = self.date
 
         if self.journal_id.refund_sequence:
             if self.move_type in ('out_refund', 'in_refund'):
@@ -4230,18 +4197,19 @@ class AccountMove(models.Model):
         """
         lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
         today = fields.Date.today()
-        highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
-        number_reset = self._deduce_sequence_number_reset(highest_name)
+
+        highest_move = self._get_last_sequence(relaxed=True)
+        number_reset = highest_move and highest_move._deduce_sequence_number_reset() or 'never'
         if lock_dates:
             invoice_date = lock_dates[-1][0] + timedelta(days=1)
         if self.is_sale_document(include_receipts=True):
             if lock_dates:
-                if not highest_name or number_reset == 'month':
+                if not highest_move or number_reset == 'month':
                     return min(today, date_utils.get_month(invoice_date)[1])
                 elif number_reset == 'year':
                     return min(today, date_utils.end_of(invoice_date, 'year'))
         else:
-            if not highest_name or number_reset == 'month':
+            if not highest_move or number_reset == 'month':
                 if (today.year, today.month) > (invoice_date.year, invoice_date.month):
                     return date_utils.get_month(invoice_date)[1]
                 else:
