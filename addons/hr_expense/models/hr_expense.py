@@ -289,7 +289,7 @@ class HrExpense(models.Model):
         for expense in self:
             expense.product_uom_id = expense.product_id.uom_id
 
-    @api.depends('product_id', 'attachment_number', 'currency_rate')
+    @api.depends('product_id', 'product_has_cost', 'attachment_number', 'currency_rate', 'total_amount_company', 'quantity')
     def _compute_unit_amount(self):
         for expense in self:
             if expense.product_id and expense.product_has_cost and not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
