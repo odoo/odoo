@@ -180,10 +180,10 @@ class AccountPayment(models.Model):
         writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in self._get_valid_liquidity_accounts():
-                liquidity_lines += line
-            elif line.account_id.account_type in ('asset_receivable', 'liability_payable') or line.account_id == self.company_id.transfer_account_id:
+            if line.account_id.account_type in ('asset_receivable', 'liability_payable') or line.account_id == self.company_id.transfer_account_id:
                 counterpart_lines += line
+            elif line.account_id in self._get_valid_liquidity_accounts() or line.account_id.reconcile:
+                liquidity_lines += line
             else:
                 writeoff_lines += line
 
