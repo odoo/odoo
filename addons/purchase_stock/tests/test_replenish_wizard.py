@@ -273,6 +273,44 @@ class TestReplenishWizard(TestStockCommon):
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 60)
 
+    def test_chose_supplier_5(self):
+        """ Choose supplier based on discounted price
+        replenish 1
+
+        1)seq1 vendor 100 discount 10%
+        2)seq2 vendor 110 discount 20%
+        -> 2) should be chosen
+        """
+        self.supplierinfo.product_tmpl_id = self.product1.product_tmpl_id.id
+        self.supplierinfo.price = 100
+        self.supplierinfo.discount = 10.0
+
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'partner_id': self.vendor.id,
+            'price': 110,
+            'discount': 20.0,
+        })
+
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 1,
+            'warehouse_id': self.wh.id,
+        })
+        generated_picking = replenish_wizard.launch_replenishment()
+        links = generated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        last_po_id = False
+        if purchase_order_id and model_name:
+            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
+        self.assertEqual(last_po_id.partner_id, self.vendor)
+        self.assertEqual(last_po_id.order_line.price_unit, 110)
+        self.assertEqual(last_po_id.order_line.discount, 20.0)
+
     def test_supplier_delay(self):
         product_to_buy = self.env['product.product'].create({
             'name': "Furniture Service",
