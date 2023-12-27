@@ -6,6 +6,7 @@ from odoo import Command, fields
 
 
 from datetime import timedelta
+import pytz
 
 
 @tagged('-at_install', 'post_install')
@@ -70,9 +71,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertTrue(purchase_order.name.startswith('PO/2020/'))
 
     def test_reminder_1(self):
-        """Set to send reminder today, check if a reminder can be send to the
+        """Set to send reminder tomorrow, check if a reminder can be send to the
         partner.
         """
+        # set partner to send reminder in Company 2
+        self.partner_a.with_company(self.env.companies[1]).receipt_reminder_email = True
+        self.partner_a.with_company(self.env.companies[1]).reminder_date_before_receipt = 1
+        # Create the PO in Company 1
+        self.env.user.tz = 'Europe/Brussels'
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
@@ -84,25 +90,49 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_qty = 10
             po_line.price_unit = 200
         # set to send reminder today
-        po.date_planned = fields.Datetime.now() + timedelta(days=1)
-        po.receipt_reminder_email = True
-        po.reminder_date_before_receipt = 1
+        date_planned = fields.Datetime.now().replace(hour=23, minute=0) + timedelta(days=2)
+        po.date_planned = date_planned
         po = po.save()
         po.button_confirm()
+        # Check that reminder is not set in Company 1 and the mail will not be sent
+        self.assertEqual(po.company_id, self.env.companies[0])
+        self.assertFalse(po.receipt_reminder_email)
+        self.assertEqual(po.reminder_date_before_receipt, 1, "The default value should be taken from the company")
+        old_messages = po.message_ids
+        po._send_reminder_mail()
+        messages_send = po.message_ids - old_messages
+        self.assertFalse(messages_send)
+        # Set to send reminder in Company 1
+        self.partner_a.receipt_reminder_email = True
+        self.partner_a.reminder_date_before_receipt = 2
+        # Invalidate the cache to ensure that the computed fields are recomputed
+        self.env.invalidate_all()
+        self.assertTrue(po.receipt_reminder_email)
+        self.assertEqual(po.reminder_date_before_receipt, 2)
+
+        # check date_planned is correctly set
+        self.assertEqual(po.date_planned, date_planned)
+        po_tz = pytz.timezone(po.user_id.tz)
+        localized_date_planned = po.date_planned.astimezone(po_tz)
+        self.assertEqual(localized_date_planned, po.get_localized_date_planned())
 
         # check vendor is a message recipient
         self.assertTrue(po.partner_id in po.message_partner_ids)
 
+        # check reminder send
         old_messages = po.message_ids
         po._send_reminder_mail()
         messages_send = po.message_ids - old_messages
-        # check reminder send
         self.assertTrue(messages_send)
         self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
 
-        # check confirm button
+        # check confirm button + date planned localized in message
+        old_messages = po.message_ids
         po.confirm_reminder_mail()
+        messages_send = po.message_ids - old_messages
         self.assertTrue(po.mail_reminder_confirmed)
+        self.assertEqual(len(messages_send), 1)
+        self.assertIn(str(localized_date_planned.date()), messages_send.body)
 
     def test_reminder_2(self):
         """Set to send reminder tomorrow, check if no reminder can be send.
@@ -119,9 +149,9 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.price_unit = 200
         # set to send reminder tomorrow
         po.date_planned = fields.Datetime.now() + timedelta(days=2)
-        po.receipt_reminder_email = True
-        po.reminder_date_before_receipt = 1
         po = po.save()
+        self.partner_a.receipt_reminder_email = True
+        self.partner_a.reminder_date_before_receipt = 1
         po.button_confirm()
 
         # check vendor is a message recipient
