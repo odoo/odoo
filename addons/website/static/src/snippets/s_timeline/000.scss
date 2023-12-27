@@ -47,24 +47,21 @@
         }
     }
     .s_timeline_date {
+        position: relative;
+        margin: 20px 0px;
+        padding: 5px;
+        background-color: var(--o-cc-bg, #{$body-bg});
+        text-align: center;
+
         @include media-breakpoint-up(md) {
             position: absolute;
-            left: 0%;
-            right: 0%;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        @include media-breakpoint-down(md) {
-            position: relative;
-            margin: 20px 0px;
-        }
-        span:not(.fa) {
-            display: inline-block;
-            padding: 5px;
-            background-color: var(--o-cc-bg, #{$body-bg});
-        }
+
         .fa {
             margin: 0 $grid-gutter-width/2;
         }
-        text-align: center;
     }
     .s_timeline_icon {
         flex: 0 0 auto;
