@@ -126,23 +126,25 @@ class ReportSaleDetails(models.AbstractModel):
                 cash_counted = session.cash_register_balance_end_real
             is_cash_method = False
             for payment in payments:
-                account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
-                        for account_payment in account_payments:
-                            if payment['id'] == account_payment.pos_payment_method_id.id:
-                                payment['final_count'] = payment['total']
-                                payment['money_counted'] = account_payment.amount
-                                payment['money_difference'] = payment['money_counted'] - payment['final_count']
-                                payment['cash_moves'] = []
-                                if payment['money_difference'] > 0:
-                                    move_name = 'Difference observed during the counting (Profit)'
-                                    payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
-                                elif payment['money_difference'] < 0:
-                                    move_name = 'Difference observed during the counting (Loss)'
-                                    payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
-                                payment['count'] = True
-                                break
+                        ref_value = "Closing difference in %s (%s)" % (payment['name'], session.name)
+                        account_move = self.env['account.move'].search([("ref", "=", ref_value)], limit=1)
+                        if account_move:
+                            payment_method = self.env['pos.payment.method'].browse(payment['id'])
+                            is_loss = any(l.account_id == payment_method.journal_id.loss_account_id for l in account_move.line_ids)
+                            is_profit = any(l.account_id == payment_method.journal_id.profit_account_id for l in account_move.line_ids)
+                            payment['final_count'] = payment['total']
+                            payment['money_difference'] = -account_move.amount_total if is_loss else account_move.amount_total
+                            payment['money_counted'] = payment['final_count'] + payment['money_difference']
+                            payment['cash_moves'] = []
+                            if is_profit:
+                                move_name = 'Difference observed during the counting (Profit)'
+                                payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
+                            elif is_loss:
+                                move_name = 'Difference observed during the counting (Loss)'
+                                payment['cash_moves'] = [{'name': move_name, 'amount': payment['money_difference']}]
+                            payment['count'] = True
                     else:
                         is_cash_method = True
                         previous_session = self.env['pos.session'].search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
