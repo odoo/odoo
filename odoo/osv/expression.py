@@ -125,6 +125,7 @@ from psycopg2.sql import Composable, SQL
 import odoo.modules
 from ..models import BaseModel
 from odoo.tools import pycompat, Query, _generate_table_alias, sql
+from odoo.modules.db import FunctionStatus
 
 
 # Domain operators.
@@ -406,7 +407,7 @@ def _unaccent_wrapper(x):
     return 'unaccent({})'.format(x)
 
 def get_unaccent_wrapper(cr):
-    if odoo.registry(cr.dbname).has_unaccent:
+    if odoo.registry(cr.dbname).has_unaccent == FunctionStatus.INDEXABLE:
         return _unaccent_wrapper
     return lambda x: x
 
