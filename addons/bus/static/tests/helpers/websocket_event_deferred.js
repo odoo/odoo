@@ -123,11 +123,14 @@ function _waitNotification(notification) {
             if (notification.type !== type) {
                 continue;
             }
-            if (JSON.stringify(notification.payload) === JSON.stringify(payload)) {
+            if (
+                payload === undefined ||
+                JSON.stringify(notification.payload) === JSON.stringify(payload)
+            ) {
                 QUnit.assert.ok(
                     received,
                     `Notification of type "${type}" with payload ${JSON.stringify(
-                        payload
+                        notification.payload
                     )} receveived.`
                 );
                 notificationDeferred.resolve();
