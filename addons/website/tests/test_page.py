@@ -308,6 +308,7 @@ class WithContext(HttpCase):
 
     def test_website_homepage_url_change(self):
         website = self.env['website'].browse([1])
+        self.assertFalse(website.homepage_url)
 
         test_page = self.env['website.page'].create({
             'name': 'HomepageUrlTest',
@@ -336,12 +337,24 @@ class WithContext(HttpCase):
             test_page.url = '/url-changed'
 
         # .. the `homepage_url` should be changed to follow the new page URL
+        self.assertEqual(website.homepage_url, '/url-changed')
         r = self.url_open('/')
         self.assertEqual(r.status_code, 200)
         self.assertEqual(
             r.url, home_url_full, """URL should still be '/', note that if this
             `assert` fail, the loaded URL will probably be the first available
             menu different from '/', see homepage controller.""")
+        self.assertIn(b"HomepageUrlTest", r.content)
+
+        # Side test: ensure `slugify` and `get_unique_path` changes are
+        # correctly replicated in the synced website homepage_url
+        with MockRequest(self.env, website=website):
+            # `/url-changed_two` will become `/url-changed-two`
+            test_page.url = '/url-changed_two'
+        self.assertEqual(website.homepage_url, '/url-changed-two')
+        r = self.url_open('/')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
         self.assertIn(b"HomepageUrlTest", r.content)
 
     def test_06_homepage_url(self):
