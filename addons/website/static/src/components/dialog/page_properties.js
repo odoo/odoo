@@ -119,7 +119,7 @@ export class DuplicatePageDialog extends Component {
     </WebsiteDialog>
     `;
     static props = {
-        onDuplicate: { type: Function, optional: true },
+        onDuplicate: Function,
         close: Function,
         pageId: Number,
     };
