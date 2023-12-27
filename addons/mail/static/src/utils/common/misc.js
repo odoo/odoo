@@ -69,3 +69,24 @@ export function onChange(target, key, callback) {
 export function closeStream(stream) {
     stream?.getTracks?.().forEach((track) => track.stop());
 }
+
+/**
+ * Compare two Luxon datetime.
+ *
+ * @param {import("@web/core/l10n/dates").NullableDateTime} date1
+ * @param {import("@web/core/l10n/dates").NullableDateTime} date2
+ * @returns {number} Negative if date1 is less than date2, positive if date1 is
+ *  greater than date2, and 0 if they are equal.
+ */
+export function compareDatetime(date1, date2) {
+    if (date1?.ts === date2?.ts) {
+        return 0;
+    }
+    if (!date1) {
+        return -1;
+    }
+    if (!date2) {
+        return 1;
+    }
+    return date1.ts - date2.ts;
+}

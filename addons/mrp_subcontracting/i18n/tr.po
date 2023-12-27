@@ -1,38 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-#
+# 
 # Translators:
-# İmat Yahya Çataklı <yahya.catakli@soluto.com.tr>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
-# gezgin biri <gezginbiri@hotmail.com>, 2022
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Buket Şeker <buket_skr@hotmail.com>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
-# Martin Trigaux, 2022
+# İmat Yahya Çataklı <yahya.catakli@soluto.com.tr>, 2023
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2023
+# abc Def <hdogan1974@gmail.com>, 2023
+# gezgin biri <gezginbiri@hotmail.com>, 2023
+# Levent Karakaş <levent@mektup.at>, 2023
+# Umur Akın <umura@projetgrup.com>, 2023
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2023
+# Murat Kaplan <muratk@projetgrup.com>, 2023
+# Buket Şeker <buket_skr@hotmail.com>, 2023
 # Ediz Duman <neps1192@gmail.com>, 2023
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2023
 # İlknur Gözütok, 2023
-#
+# Tugay Hatıl <tugayh@projetgrup.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: İlknur Gözütok, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
+msgid "/my/productions"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -79,12 +83,19 @@ msgstr "Üretim Miktarını Değiştir"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
-msgid "Check this box to create a new dedicated subcontracting location for this company. Note that standard subcontracting routes will be adapted so as to take these into account automatically."
-msgstr "Bu şirket için yeni bir ayrılmış taşeron konumu oluşturmak üzere bu kutuyu işaretleyin. Standart taşeron rotalarının, bunları otomatik olarak dikkate alacak şekilde uyarlanacağını unutmayın."
+msgid ""
+"Check this box to create a new dedicated subcontracting location for this "
+"company. Note that standard subcontracting routes will be adapted so as to "
+"take these into account automatically."
+msgstr ""
+"Bu şirket için yeni bir ayrılmış fason konumu oluşturmak üzere bu kutuyu "
+"işaretleyin. Standart fason rotalarının, bunları otomatik olarak dikkate "
+"alacak şekilde uyarlanacağını unutmayın."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
-msgid "Choose a vendor of type subcontractor if you want to subcontract the product"
+msgid ""
+"Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr "Ürünü fasonda yapmak istiyorsanız fason tipi bir satıcı seçin"
 
 #. module: mrp_subcontracting
@@ -156,6 +167,11 @@ msgid "Facultative"
 msgstr "İsteğe bağlı"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
+msgid "Follow manufacturing orders you have to fulfill"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
 msgid "Has been recorded?"
 msgstr "Kaydedildi mi?"
@@ -169,8 +185,12 @@ msgstr "Gizle"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 #, python-format
-msgid "In order to manage stock accurately, subcontracting locations must be type Internal, linked to the appropriate company and not specific to a warehouse."
-msgstr "Stokları doğru bir şekilde yönetmek için, fason konumları Dahili tipinde olmalı, uygun şirkete bağlı olmalı ve bir depoya özgü olmamalıdır."
+msgid ""
+"In order to manage stock accurately, subcontracting locations must be type "
+"Internal, linked to the appropriate company and not specific to a warehouse."
+msgstr ""
+"Stokları doğru bir şekilde yönetmek için, fason konumları Dahili tipinde "
+"olmalı, uygun şirkete bağlı olmalı ve bir depoya özgü olmamalıdır."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -194,8 +214,12 @@ msgstr "Fason Üretim Yeri mi?"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
-msgid "List of Products used in the BoM, used to filter the list of products in the subcontracting portal view"
-msgstr "BoM'de kullanılan Ürünlerin Listesi, alt yüklenici portalı görünümündeki ürün listesini filtrelemek için kullanılır"
+msgid ""
+"List of Products used in the BoM, used to filter the list of products in the"
+" subcontracting portal view"
+msgstr ""
+"BoM'de kullanılan Ürünlerin Listesi, alt yüklenici portalı görünümündeki "
+"ürün listesini filtrelemek için kullanılır"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -207,8 +231,12 @@ msgstr "İş Ortağının alt yüklenici olduğu MRP Üretimleri"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move_line.py:0
 #, python-format
-msgid "Make sure you validate or adapt the related resupply picking to your subcontractor in order to avoid inconsistencies in your stock."
-msgstr "Stokunuzdaki tutarsızlıkları önlemek için ilgili ikmal toplamayı alt yüklenicinize doğruladığınızdan veya uyarladığınızdan emin olun."
+msgid ""
+"Make sure you validate or adapt the related resupply picking to your "
+"subcontractor in order to avoid inconsistencies in your stock."
+msgstr ""
+"Stokunuzdaki tutarsızlıkları önlemek için ilgili ikmal toplamayı alt "
+"yüklenicinize doğruladığınızdan veya uyarladığınızdan emin olun."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -216,6 +244,7 @@ msgid "Mandatory"
 msgstr "Zorunlu"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Manufacturing Orders"
 msgstr "Üretim Emirleri"
@@ -224,11 +253,6 @@ msgstr "Üretim Emirleri"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Manufacturing Reference"
 msgstr "Üretim Referansı"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_nosuggest_ids
-msgid "Move Line Nosuggest"
-msgstr "Hareket Satırları "
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -256,7 +280,7 @@ msgstr "Kaydedilecek bir şey yok"
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "İşlem desteklenmiyor"
+msgstr "Operasyon desteklenmiyor"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -266,7 +290,7 @@ msgstr "Operasyonlar"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr "Paketsiz işlemler"
+msgstr "Paketsiz operasyonlar"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -277,13 +301,22 @@ msgstr "Sipariş"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
-msgid "Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."
-msgstr "Portal kullanıcıları 'Bitti' durumunda bir stok hareketi oluşturamaz veya mevcut durumu 'Bitti' olarak değiştiremez."
+msgid ""
+"Portal users cannot create a stock move with a state 'Done' or change the "
+"current state to 'Done'."
+msgstr ""
+"Portal kullanıcıları 'Bitti' durumunda bir stok hareketi oluşturamaz veya "
+"mevcut durumu 'Bitti' olarak değiştiremez."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Ürün Hareketleri (Stok Hareket Satırları)"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_product_replenish
+msgid "Product Replenish"
+msgstr "Ürün İkmali"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -297,7 +330,6 @@ msgstr "Üretim Emri"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Productions"
 msgstr "Üretimler"
@@ -324,7 +356,7 @@ msgstr "Hazır"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
 msgid "Record Production"
-msgstr "Üretimi Kaydını İşle"
+msgstr "Üretim Kaydını İşle"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
@@ -332,7 +364,6 @@ msgid "Record components"
 msgstr "Bileşen kayıtları"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Register components for subcontracted product"
 msgstr "Fason ürün için bileşenleri kaydetme"
@@ -342,15 +373,11 @@ msgstr "Fason ürün için bileşenleri kaydetme"
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr ""
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
-msgid "Reserved"
-msgstr "Rezerve"
+msgstr "(MTO) Sipariş Üzerine İkmal "
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
@@ -359,6 +386,7 @@ msgstr "İkmal Fasoncu"
 
 #. module: mrp_subcontracting
 #. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
@@ -407,7 +435,7 @@ msgstr "Kaynak Belge"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "State"
-msgstr "İl/Eyalet"
+msgstr "Durum"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
@@ -453,6 +481,7 @@ msgstr "Fason imalat siparişleri birleştirilemez."
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #, python-format
 msgid "Subcontracting"
 msgstr "Fason"
@@ -515,7 +544,7 @@ msgstr "Alt yüklenici: %s"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
 msgid "Subcontractor"
-msgstr "Alt Yükleniciler "
+msgstr "Alt Yükleniciler"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -542,8 +571,12 @@ msgstr "Hareket fason alımdır"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
-msgid "The stock location used as source and destination when sending        goods to this contact during a subcontracting process."
-msgstr "Fason işlemi sırasında bu kişiye mal gönderilirken kaynak ve varış yeri olarak kullanılan stok yeri."
+msgid ""
+"The stock location used as source and destination when sending        goods "
+"to this contact during a subcontracting process."
+msgstr ""
+"Fason işlemi sırasında bu kişiye mal gönderilirken kaynak ve varış yeri "
+"olarak kullanılan stok yeri."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -554,7 +587,9 @@ msgstr "Şu anda hesabınız için herhangi bir üretim bulunmamaktadır."
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
-msgid "There shouldn't be multiple productions to record for the same subcontracted move."
+msgid ""
+"There shouldn't be multiple productions to record for the same subcontracted"
+" move."
 msgstr "Aynı fason taşıma için kaydedilecek birden fazla üretim olmamalıdır."
 
 #. module: mrp_subcontracting
@@ -565,13 +600,6 @@ msgid "This MO isn't related to a subcontracted move"
 msgstr "Bu MO, fason bir hareketle ilgili değil"
 
 #. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-#, python-format
-msgid "To subcontract, use a planned transfer."
-msgstr "Fason yapmak için planlanan transfer oluştur."
-
-#. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
 msgstr "Toplam Tüketilen"
@@ -580,12 +608,14 @@ msgstr "Toplam Tüketilen"
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__incoming_picking
 msgid "Transfer"
-msgstr "Transfer"
+msgstr "Aktarım"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
-msgstr "Kayıt Kuralları aracılığıyla portal kullanıcısına erişimi kısıtlamak için kullanılır"
+msgstr ""
+"Kayıt Kuralları aracılığıyla portal kullanıcısına erişimi kısıtlamak için "
+"kullanılır"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
@@ -594,15 +624,23 @@ msgstr "Depo"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
-msgid "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
-msgstr "Uyarı/sınırda tüketim ve MO (ürün reçetesiyle ilişkili) için fazla bileşen tüketilmesi durumu sihirbazı"
+msgid ""
+"Wizard in case of consumption in warning/strict and more component has been "
+"used for a MO (related to the bom)"
+msgstr ""
+"Uyarı/sınırda tüketim ve MO (ürün reçetesiyle ilişkili) için fazla bileşen "
+"tüketilmesi durumu sihirbazı"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
 #, python-format
-msgid "You can not set a Bill of Material with operations or by-product line as subcontracting."
-msgstr "Operasyonları veya yan ürünleri olan bir ürün ağacını fason olarak ayarlayamazsınız."
+msgid ""
+"You can not set a Bill of Material with operations or by-product line as "
+"subcontracting."
+msgstr ""
+"Operasyonları veya yan ürünleri olan bir ürün ağacını fason olarak "
+"ayarlayamazsınız."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -636,8 +674,12 @@ msgstr "Her satır için bir seri numarası girmelisiniz %s"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
-msgid "You must indicate a non-zero amount consumed for at least one of your components"
-msgstr "Bileşenlerinizin en az biri için sıfır olmayan bir tüketim miktarı belirtmelisiniz."
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Bileşenlerinizin en az biri için sıfır olmayan bir tüketim miktarı "
+"belirtmelisiniz."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view

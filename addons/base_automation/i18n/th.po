@@ -29,13 +29,15 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "เพิ่มแท็ก \"%s\" แล้ว"
 
 #. module: base_automation
 #. odoo-python
@@ -45,20 +47,22 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"กฎอัตโนมัติ \"ในการอัปเดตแบบไลฟ์\" สามารถใช้ได้เฉพาะกับประเภทการดำเนินการ "
+"\"เรียกใช้โค้ด Python\" เท่านั้น"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "%s actions"
-msgstr ""
+msgstr "การดำเนินการ %s"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "1 action"
-msgstr ""
+msgstr "1 การดำเนินการ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -80,6 +84,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
+"<code>เพย์โหลด</code>: เพย์โหลดของการโทร (พารามิเตอร์ GET, เนื้อความ JSON) "
+"เป็นคำสั่ง"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -93,7 +99,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"การดำเนินการ\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -101,6 +107,9 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> "
+"ตัวรับบันทึกเป้าหมายเริ่มต้นจะทำงานได้ทันทีสำหรับเว็บฮุคที่มาจากอินสแตนซ์อื่นของ"
+" Odoo"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -109,11 +118,14 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/>กฎการทำงานอัตโนมัติที่ทริกเกอร์โดยการเปลี่ยนแปลง"
+" UI จะถูกดำเนินการ<em>ทุกครั้ง</em>ที่มีการเปลี่ยนแปลงฟิลด์ที่เฝ้าดู "
+"<em>ไม่ว่าคุณจะบันทึกหรือไม่ก็ตาม</em>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> ตัวแปรที่มีอยู่: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -121,6 +133,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
 "                                                                <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">ถึง</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">เป็น</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -129,31 +143,36 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
+"<span invisible=\"trigger != 'on_time_created'\">หลังจากการสร้าง</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">หลังจากการอัพเดตครั้งล่าสุด</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">หลังจาก</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>โดยการเพิ่ม</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>โดยการล้าง</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>โดยการถอด</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>โดยตั้งค่าเป็น</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-lock\"/> เก็บมันไว้เป็นความลับ "
+"เพื่อความปลอดภัย</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -169,7 +188,7 @@ msgstr "การดำเนินการ"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "การกระทำที่ต้องทำ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -179,7 +198,7 @@ msgstr "เปิดใช้งาน"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "เพิ่มการกระทำ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -187,24 +206,24 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Add followers"
-msgstr ""
+msgstr "เพิ่มผู้ติดตาม"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "เพิ่มผู้ติดตาม: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "หลังจากการสร้าง"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "หลังจากอัปเดตครั้งล่าสุด"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -221,7 +240,7 @@ msgstr "เก็บถาวรแล้ว"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "ทำให้<em>ทุกอย่าง</em>เป็นอัตโนมัติด้วยกฎการทำงานอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -248,7 +267,7 @@ msgstr "กฎการทำงานอัตโนมัติ"
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "กฎการทำงานอัตโนมัติ: ตรวจสอบและดำเนินการ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -260,7 +279,7 @@ msgstr "ระบบอัตโนมัติ"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "ขึ้นอยู่กับฟิลด์วันที่"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -273,6 +292,8 @@ msgid ""
 "Change the URL's secret if you think the URL is no longer secure. You will "
 "have to update any automated system that calls this webhook to the new URL."
 msgstr ""
+"เปลี่ยนข้อมูลลับของ URL หากคุณคิดว่า URL นั้นไม่ปลอดภัยอีกต่อไป "
+"คุณจะต้องอัปเดตระบบอัตโนมัติที่เรียกเว็บฮุคนี้เป็น URL ใหม่"
 
 #. module: base_automation
 #. odoo-python
@@ -286,7 +307,7 @@ msgstr "คำนวน"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "สร้าง %(model_name)s ด้วยชื่อ %(value)s"
 
 #. module: base_automation
 #. odoo-javascript
@@ -301,7 +322,7 @@ msgstr "สร้างรายการใหม่"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "สร้างกิจกรรม: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
@@ -370,14 +391,14 @@ msgstr "ประเภทการล่าช้า"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "ลบการกระทำ"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "เลิกใช้แล้ว (อย่าใช้)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
@@ -389,7 +410,7 @@ msgstr "คำอธิบาย"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Automation Rule"
-msgstr ""
+msgstr "ปิดใช้งานกฎการทำงานอัตโนมัติ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -401,6 +422,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"การปิดใช้งานกฎอัตโนมัตินี้จะช่วยให้คุณสามารถดำเนินการเวิร์กโฟลว์ต่อไปได้ \n"
+"              แต่ข้อมูลใดที่สร้างขึ้นหลังจากนั้นอาจเสียหายได้\n"
+"              เนื่องจากคุณกำลังปิดใช้งานการปรับแต่งที่อาจตั้งค่า\n"
+"              ฟิลด์สำคัญและ/หรือจำเป็นอย่างมีประสิทธิภาพ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -412,7 +437,7 @@ msgstr "แสดงชื่อ"
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit Automation Rule"
-msgstr ""
+msgstr "แก้ไขกฎการทำงานอัตโนมัติ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -426,7 +451,7 @@ msgstr "อีเมล"
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Email Events"
-msgstr ""
+msgstr "กิจกรรมอีเมล"
 
 #. module: base_automation
 #. odoo-python
@@ -436,6 +461,8 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"ไม่สามารถใช้ประเภทการดำเนินการของอีเมล ผู้ติดตาม หรือกิจกรรมเมื่อลบบันทึก "
+"เนื่องจากไม่มีบันทึกอีกต่อไปที่จะใช้การเปลี่ยนแปลงเหล่านี้!"
 
 #. module: base_automation
 #. odoo-javascript
@@ -463,7 +490,7 @@ msgstr "ภายนอก"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Extra Conditions"
-msgstr ""
+msgstr "เงื่อนไขพิเศษ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -475,7 +502,7 @@ msgstr "ฟิลด์ที่ทริกเกอร์การเปลี
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Generic User"
-msgstr ""
+msgstr "ผู้ใช้ทั่วไป"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
@@ -509,7 +536,7 @@ msgstr "หากมี จะต้องเป็นไปตามเงื�
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "ติดตามว่าระบบอัตโนมัตินี้ทำอะไรและเพราะอะไรถึงมีอยู่..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -549,6 +576,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"ไม่สามารถกำหนดค่าเหตุการณ์เมลในโมเดล %s ได้ "
+"สามารถใช้ได้เฉพาะโมเดลที่มีฟีเจอร์ของแชทเท่านั้น"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -573,6 +602,7 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"รูปแบบการกระทำ %(action_name)s ควรตรงกับรูปแบบจากกฎอัตโนมัติ %(rule_name)s"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -592,7 +622,7 @@ msgstr "เดือน"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "ไม่พบบันทึกที่จะเรียกใช้ระบบอัตโนมัติ"
 
 #. module: base_automation
 #. odoo-python
@@ -602,6 +632,7 @@ msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
 msgstr ""
+"โปรดทราบว่ากฎอัตโนมัตินี้สามารถทริกเกอร์ได้สูงสุด %d นาที หลังจากกำหนดเวลา"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -616,52 +647,52 @@ msgstr "เมื่อเปลี่ยนทริกเกอร์ฟิล
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "เมื่อเปลี่ยน UI"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "เมื่อเก็บถาวร"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr ""
+msgstr "เมื่อมีการสร้าง"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "เมื่อมีการลบ"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "เมื่อมีข้อความขาเข้า"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "เมื่อมีข้อความขาออก"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr ""
+msgstr "เมื่อบันทึก"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "เมื่อยกเลิกการเก็บถาวร"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "เมื่อมีการอัปเดต"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "บนเว็บฮุค"
 
 #. module: base_automation
 #. odoo-javascript
@@ -680,7 +711,7 @@ msgstr "โพสต์เป็นโน๊ต"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "ลำดับความสำคัญถูกตั้งค่าเป็น"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
@@ -693,34 +724,34 @@ msgstr "บันทึก Getter"
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Remove followers"
-msgstr ""
+msgstr "ลบผู้ติดตาม"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Remove followers: %(partner_names)s"
-msgstr ""
+msgstr "ลบผู้ติดตาม: %(partner_names)s"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Rotate Secret"
-msgstr ""
+msgstr "หมุนข้อมูลลับ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "เลือกช่องวันที่..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "เลือกค่า..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "เลือกฟิลด์..."
 
 #. module: base_automation
 #. odoo-javascript
@@ -735,14 +766,14 @@ msgstr "ส่งข้อความ SMS"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send SMS: %(template_name)s"
-msgstr ""
+msgstr "ส่ง SMS: %(template_name)s"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "ส่งการแจ้งเตือน Webhook"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -751,6 +782,9 @@ msgid ""
 "                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"ส่งอีเมลเมื่อออบเจ็กต์เปลี่ยนสถานะ เก็บถาวรบันทึก\n"
+"              หลังจากไม่มีการใช้งานเป็นเวลาหนึ่งเดือน หรือเตือนตัวเองให้ติดตาม\n"
+"              งานเมื่อมีการเพิ่มแท็กเฉพาะ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -765,7 +799,7 @@ msgstr "ส่งอีเมล"
 #: code:addons/base_automation/models/ir_actions_server.py:0
 #, python-format
 msgid "Send email: %(template_name)s"
-msgstr ""
+msgstr "ส่งอีเมล: %(template_name)s"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -800,29 +834,29 @@ msgstr "ผู้ใช้เฉพาะ"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "ขั้นตอนถูกตั้งค่าเป็น"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "ขั้นตอนถูกตั้งค่าเป็น \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "ขั้นตอนถูกตั้งค่าเป็น"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "เพิ่มแท็กแล้ว"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "บันทึกเป้าหมาย"
 
 #. module: base_automation
 #. odoo-python
@@ -830,7 +864,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Target model of actions %(action_names)s are different from rule model."
-msgstr ""
+msgstr "รูปแบบเป้าหมายของการกระทำ %(action_names)s แตกต่างจากรูปแบบกฎ"
 
 #. module: base_automation
 #. odoo-python
@@ -840,6 +874,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s ใช้ได้กับประเภทการกระทำ "
+"\"%(state_value)s\" เท่านั้น"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -858,6 +894,8 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"เกิดข้อผิดพลาดระหว่างการดำเนินการกฎอัตโนมัติ\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -871,7 +909,7 @@ msgstr "รหัสนี้จะถูกเรียกใช้เพื่
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Timing Conditions"
-msgstr ""
+msgstr "เงื่อนไขการกำหนดเวลา"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -921,7 +959,7 @@ msgstr "URL"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "URL will be created once the rule is saved."
-msgstr ""
+msgstr "URL จะถูกสร้างขึ้นเมื่อบันทึกกฎแล้ว"
 
 #. module: base_automation
 #. odoo-python
@@ -957,14 +995,14 @@ msgstr "ใช้ปฏิทิน"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "ผู้ใช้ถูกตั้งค่าแล้ว"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Values Updated"
-msgstr ""
+msgstr "อัปเดตค่าแล้ว"
 
 #. module: base_automation
 #. odoo-python
@@ -979,14 +1017,14 @@ msgstr "คำเตือน"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Log"
-msgstr ""
+msgstr "บันทึก Webhook"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Logs"
-msgstr ""
+msgstr "บันทึก Webhook"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
@@ -1026,7 +1064,7 @@ msgstr "เมื่อยกเลิกการเลือก กฎจะ�
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "เมื่อทำการอัปเดต"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -1034,6 +1072,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"ด้วยกฎการทำงานอัตโนมัติ คุณสามารถทำให้เป็นอัตโนมัติได้\n"
+"                ขั้นตอนการทำงาน<em>ใดๆ</em>"
 
 #. module: base_automation
 #. odoo-javascript
@@ -1041,14 +1081,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You can ask an administrator to disable or correct this automation rule."
-msgstr ""
+msgstr "คุณสามารถขอให้ผู้ดูแลระบบปิดใช้งานหรือแก้ไขกฎอัตโนมัตินี้ได้"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automation rule or edit it to solve the issue."
-msgstr ""
+msgstr "คุณสามารถปิดใช้งานกฎการทำงานอัตโนมัตินี้หรือแก้ไขเพื่อแก้ไขปัญหาได้"
 
 #. module: base_automation
 #. odoo-python
@@ -1058,26 +1098,29 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"คุณไม่สามารถส่งอีเมล เพิ่มผู้ติดตาม หรือสร้างกิจกรรมสำหรับบันทึกที่ถูกลบได้ "
+"เพราะว่ามันไม่สามารถทำได้"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
+"URL เว็บฮุคของคุณมีข้อมูลลับ อย่าแชร์ทางออนไลน์หรือดำเนินการโดยไม่ระมัดระวัง"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "ขึ้นอยู่กับ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "e.g. Support flow"
-msgstr ""
+msgstr "เช่น การรองรับโฟลว์"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 #, python-format
 msgid "no action defined..."
-msgstr ""
+msgstr "ไม่มีการกำหนดการกระทำ..."

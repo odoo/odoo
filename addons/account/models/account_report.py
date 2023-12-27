@@ -596,7 +596,8 @@ class AccountReportExpression(models.Model):
             self._create_tax_tags(tag_name, country)
             return super().write(vals)
 
-        if 'formula' not in vals:
+        # In case the engine is changed we don't propagate any change to the tags themselves
+        if 'formula' not in vals or (vals.get('engine') and vals['engine'] != 'tax_tags'):
             return super().write(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')

@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
 
-from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import SaleCommon
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
 from odoo.addons.website.tools import MockRequest
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
@@ -73,7 +73,6 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
         self.env['delivery.carrier'].create([
             {
                 'name': 'Over 300',
-                'fixed_price': 20.0,
                 'delivery_type': 'base_on_rule',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
@@ -82,16 +81,52 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
                         'operator': '>=',
                         'max_value': 300,
                         'variable': 'price',
-                        'list_base_price': 0,
-                    })
-                ]
+                    }),
+                ],
             }, {
-                'name': 'No rules',
-                'fixed_price': 20.0,
+                'name': 'Under 300',
                 'delivery_type': 'base_on_rule',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
-            }
+                'price_rule_ids': [
+                    Command.create({
+                        'operator': '<',
+                        'max_value': 300,
+                        'variable': 'price',
+                    }),
+                ],
+            }, {
+                'name': 'No rules',
+                'delivery_type': 'base_on_rule',
+                'product_id': self.product_delivery_poste.id,
+                'website_published': True,
+            }, {
+                'name': 'Fixed',
+                'product_id': self.product_delivery_poste.id,
+                'website_published': True,
+            },
         ])
 
-        self.assertFalse(self.empty_order._get_delivery_methods())
+        self.assertEqual(
+            self.empty_order._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
+        )
+
+    def test_validate_payment_with_no_available_delivery_method(self):
+        """
+        An error should be raised if you try to validate an order with a storable
+        product without any delivery method available
+        """
+        storable_product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'sale_ok': True,
+            'type': 'product',
+            'website_published': True,
+        })
+        carriers = self.env['delivery.carrier'].search([])
+        carriers.write({'website_published': False})
+
+        with MockRequest(self.env, website=self.website):
+            self.website.sale_get_order(force_create=True)
+            self.Controller.cart_update_json(product_id=storable_product.id, add_qty=1)
+            with self.assertRaises(ValidationError):
+                self.Controller.shop_payment_validate()

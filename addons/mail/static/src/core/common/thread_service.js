@@ -11,6 +11,7 @@ import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
 import { escape } from "@web/core/utils/strings";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 const FETCH_LIMIT = 30;
 
@@ -429,7 +430,8 @@ export class ThreadService {
             String.prototype.localeCompare.call(t1.name, t2.name)
         );
         this.store.discuss.chats.threads.sort(
-            (t1, t2) => t2.lastInterestDateTime.ts - t1.lastInterestDateTime.ts
+            (t1, t2) =>
+                compareDatetime(t2.lastInterestDateTime, t1.lastInterestDateTime) || t2.id - t1.id
         );
     }
 

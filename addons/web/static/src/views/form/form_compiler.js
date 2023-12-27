@@ -130,6 +130,7 @@ export class FormCompiler extends ViewCompiler {
 
         el.classList.remove("oe_button_box");
         const buttonBox = createElement("ButtonBox");
+        buttonBox.setAttribute("t-if", "!__comp__.env.inDialog");
         let slotId = 0;
         let hasContent = false;
         for (const child of el.children) {
@@ -655,12 +656,9 @@ export class FormCompiler extends ViewCompiler {
                 continue;
             }
             if (compiled.nodeName === "ButtonBox") {
-                let isVisibleExpr = "__comp__.env.inDialog";
-                if (compiled.hasAttribute("t-if")) {
-                    const formerTif = compiled.getAttribute("t-if");
-                    isVisibleExpr = `( ${formerTif} ) and ${isVisibleExpr}`;
-                }
-                compiled.setAttribute("t-if", isVisibleExpr);
+                // in form views with a sheet, the button box is moved to the
+                // control panel, and in dialogs, there's no button box
+                continue;
             }
             if (getTag(child, true) === "field") {
                 compiled.setAttribute("showTooltip", true);

@@ -78,12 +78,16 @@ QUnit.test("Sort partner suggestions by recent chats", async () => {
         { partner_id: partner_3 },
     ]);
     pyEnv["discuss.channel"].create([
-        { name: "General", channel_type: "channel", channel_member_ids: [
-            Command.create({ partner_id: pyEnv.currentPartnerId }),
-            Command.create({ partner_id: partner_1 }),
-            Command.create({ partner_id: partner_2 }),
-            Command.create({ partner_id: partner_3 }),
-        ]},
+        {
+            name: "General",
+            channel_type: "channel",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partner_1 }),
+                Command.create({ partner_id: partner_2 }),
+                Command.create({ partner_id: partner_3 }),
+            ],
+        },
         {
             channel_member_ids: [
                 Command.create({
@@ -126,8 +130,8 @@ QUnit.test("Sort partner suggestions by recent chats", async () => {
     await insertText(".o-mail-Composer-input", "User");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
     await contains(":nth-child(1 of .o-mail-Composer-suggestion) strong", { text: "User 2" });
-    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "User 1" });
-    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "User 3" });
+    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "User 3" });
+    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "User 1" });
 });
 
 QUnit.test("mention suggestion are shown after deleting a character", async () => {

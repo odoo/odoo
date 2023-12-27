@@ -13,7 +13,7 @@
                 }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                     Send message
                 </button>
-                <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{
+                <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-1" t-att-class="{
                     'btn-primary active': state.composerType === 'note',
                     'btn-secondary': state.composerType !== 'note',
                     'my-2': !props.compactHeight

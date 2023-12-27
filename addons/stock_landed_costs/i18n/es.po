@@ -245,7 +245,7 @@ msgstr "Método de división predeterminado"
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr "Método de división predeterminado cuando se usa para costo en destino"
+msgstr "Método de división predeterminado cuando se usa para coste en destino"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -287,6 +287,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Igual: el coste se dividirá por igual.\n"
+"Por cantidad: el coste se dividirá según la cantidad del producto.\n"
+"Por coste actual: el coste se dividirá según el coste actual del producto.\n"
+"Por peso: el coste se dividirá dependiendo de su peso.\n"
+"Por volumen: el coste se dividirá dependiendo de su volumen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -353,8 +358,8 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
-"Indica si el producto es un costo en destino: al recibir una factura de "
-"proveedor, puede asignar este costo en recibos precedentes."
+"Indica si el producto es un coste en destino: al recibir una factura de "
+"proveedor, puede asignar este coste en recibos precedentes."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -433,6 +438,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Los costes en destino le permiten incluir costes adicionales (envío, seguro,"
+" derechos de aduana, etc) en el coste del producto."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -563,7 +570,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
-msgstr "Por favor, defina %s en que se aplicarán esos costos adicionales."
+msgstr "Por favor, defina %s en que se aplicarán esos costes adicionales."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -744,8 +751,8 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
-"No puede aplicar costos en destino en los %s elegidos. Los costos en destino"
-" solo se pueden aplicar en productos con PEPS o método de costo promedio."
+"No puede aplicar costes en destino en los %s elegidos. Los costes en destino"
+" solo se pueden aplicar en productos con PEPS o método de coste promedio."
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -755,5 +762,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
-"No puede cambiar el tipo de producto o deshabilitar la opción de costo en "
+"No puede cambiar el tipo de producto o deshabilitar la opción de coste en "
 "destino porque el producto se utiliza en una línea de movimiento de cuenta."

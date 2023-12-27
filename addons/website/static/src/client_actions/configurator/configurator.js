@@ -5,7 +5,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
-import {svgToPNG} from '@website/js/utils';
+import { svgToPNG, webpToPNG } from "@website/js/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { mixCssColors } from '@web/core/utils/colors';
@@ -235,9 +235,27 @@ class PaletteSelectionScreen extends Component {
         this.logoInputRef.el.click();
     }
 
+    /**
+     * Removes the previously uploaded logo.
+     *
+     * @param {Event} ev
+     */
+    async removeLogo(ev) {
+        ev.stopPropagation();
+        // Permit to trigger onChange even with the same file.
+        this.logoInputRef.el.value = "";
+        if (this.state.logoAttachmentId) {
+            await this._removeAttachments([this.state.logoAttachmentId]);
+        }
+        this.state.changeLogo();
+        // Remove recommended palette.
+        this.state.setRecommendedPalette();
+    }
+
     async changeLogo() {
         const logoSelectInput = this.logoInputRef.el;
         if (logoSelectInput.files.length === 1) {
+            const previousLogoAttachmentId = this.state.logoAttachmentId;
             const file = logoSelectInput.files[0];
             const data = await getDataURLFromFile(file);
             const attachment = await this.rpc('/web_editor/attachment/add_data', {
@@ -246,6 +264,9 @@ class PaletteSelectionScreen extends Component {
                 'is_image': true,
             });
             if (!attachment.error) {
+                if (previousLogoAttachmentId) {
+                    await this._removeAttachments([previousLogoAttachmentId]);
+                }
                 this.state.changeLogo(data, attachment.id);
                 this.updatePalettes();
             } else {
@@ -264,6 +285,9 @@ class PaletteSelectionScreen extends Component {
         if (img.startsWith('data:image/svg+xml')) {
             img = await svgToPNG(img);
         }
+        if (img.startsWith('data:image/webp')) {
+            img = await webpToPNG(img);
+        }
         img = img.split(',')[1];
         const [color1, color2] = await this.orm.call('base.document.layout',
             'extract_image_primary_secondary_colors',
@@ -276,6 +300,16 @@ class PaletteSelectionScreen extends Component {
     selectPalette(paletteName) {
         this.state.selectPalette(paletteName);
         this.props.navigate(ROUTES.featuresSelectionScreen);
+    }
+
+    /**
+     * Removes the attachments from the DB.
+     *
+     * @private
+     * @param {Array<number>} ids the attachment ids to remove
+     */
+    async _removeAttachments(ids) {
+        this.rpc("/web_editor/attachment/remove", { ids: ids });
     }
 }
 
@@ -556,6 +590,7 @@ class Store {
         } else {
             this.recommendedPalette = undefined;
         }
+        this.selectedPalette = this.recommendedPalette;
     }
 
     updateRecommendedThemes(themes) {

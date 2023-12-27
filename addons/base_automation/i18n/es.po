@@ -46,6 +46,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"Las reglas de automatización \"Al actualizar en tiempo real\" solo se pueden"
+" ejecutar mediante una acción de tipo \"Ejecutar código Python\"."
 
 #. module: base_automation
 #. odoo-javascript
@@ -104,6 +106,9 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> El método getter de registros de destino "
+"por defecto funcionará al instante para cualquier webhook procedente de otra"
+" instancia de Odoo."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -112,6 +117,9 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Las reglas de automatización activada por "
+"cambios de la interfaz de usuario se ejecutarán <em>cada vez que</em> los "
+"campos observados cambien, <em>sin importar si los guarda o no</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -124,6 +132,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
 "                                                                <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">a</span>\n"
+"                                                                <span invisible=\"evaluation_type != 'equation'\">como</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -144,7 +154,7 @@ msgstr "<span>al agregar</span>"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>al limpiar</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -267,7 +277,7 @@ msgstr "Automatizaciones"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Basado en el campo de fecha"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -363,6 +373,9 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Plazo después de la fecha de activación. Puede poner un número negativo si "
+"necesita un plazo antes de la fecha de activación, como enviar un "
+"recordatorio 15 minutos antes de una reunión. "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -408,6 +421,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Deshabilitar esta acción automatizada le permitirá continuar con su flujo de trabajo\n"
+"                pero cualquiera de los datos que haya creado después de esto podrían estar dañados,\n"
+"                ya que está deshabilitando la personalización configurada en los \n"
+"                campos importantes o requeridos"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -443,6 +460,9 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"Los correos electrónicos, seguidores o tipos de acción de las actividades ya"
+" no se pueden utilizar al eliminar los registros, ya que no hay más "
+"registros en donde se puedan aplicar estos cambios."
 
 #. module: base_automation
 #. odoo-javascript
@@ -520,7 +540,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "Siga de lo que hace esta automatización y por qué existe..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -545,7 +565,7 @@ msgstr "Mínimo de retraso del mensaje"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "Registrar llamadas"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -633,7 +653,7 @@ msgstr "Activar al modificar campos"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Al cambio de la interfaz"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
@@ -678,7 +698,7 @@ msgstr "Al actualizar"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Al usar webhook"
 
 #. module: base_automation
 #. odoo-javascript
@@ -768,6 +788,9 @@ msgid ""
 "                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Envíe un correo electrónico cuando un objeto cambie de estado, archive los registros \n"
+"                después de un mes de inactividad o establezca un recordatorio para realizar seguimiento \n"
+"                de las tareas al agregar una etiqueta específica."
 
 #. module: base_automation
 #. odoo-javascript
@@ -795,6 +818,8 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Algunos activadores necesitan una referencia a un campo de selección, este "
+"campo se usa para almacenarlo."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
@@ -802,6 +827,8 @@ msgid ""
 "Some triggers need a reference to another field. This field is used to store"
 " it."
 msgstr ""
+"Algunos activadores necesitan una referencia de otro campo. Este campo está "
+"habituado a almacenarla."
 
 #. module: base_automation
 #. odoo-javascript
@@ -830,12 +857,12 @@ msgstr "El estado está establecido como"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Se agregó la etiqueta"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Registro de destino"
 
 #. module: base_automation
 #. odoo-python
@@ -844,6 +871,8 @@ msgstr ""
 msgid ""
 "Target model of actions %(action_names)s are different from rule model."
 msgstr ""
+"El modelo de destino de las acciones %(action_names)s es distinto al modelo "
+"de la regla."
 
 #. module: base_automation
 #. odoo-python
@@ -905,12 +934,12 @@ msgstr "Fecha activación"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "Campo de activador"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "Modelo del campo de activador"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -920,12 +949,12 @@ msgstr "Campos de activación"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "Referencia del activador "
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
 msgid "Trigger Reference Display Name"
-msgstr ""
+msgstr "Nombre de la referencia del activador"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
@@ -1097,7 +1126,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "basado en"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form

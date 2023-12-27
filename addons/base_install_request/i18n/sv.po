@@ -1,0 +1,250 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_install_request
+# 
+# Translators:
+# Haojun Zou <apollo_zhj@msn.com>, 2023
+# Robin Calvin, 2023
+# Martin Trigaux, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Lasse L, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Lasse L, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_install_request
+#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br><br>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span> module. This module is included in your subscription. It has <span style=\"color: #875A7B; font-weight: bold;\">no extra cost</span>, but an administrator role is required to activate it.\n"
+"        <br><br>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"></t>\n"
+"        </blockquote>\n"
+"        <br><br>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"        <br><br>\n"
+"        Thanks,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej!\n"
+"        <br><br>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> har begärt att få aktivera modulen <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span>. Denna modul ingår i din prenumeration. Den har <span style=\"color: #875A7B; font-weight: bold;\">ingen extra kostnad</span>, men en administratörsroll krävs för att aktivera den.\n"
+"       <br><br>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"></t>\n"
+"        </blockquote>\n"
+"       <br><br>\n"
+"       <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Begäran om granskning</a>\n"
+"       <br><br>\n"
+"        Med vänliga hälsningar\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"       <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/models/ir_module_module.py:0
+#, python-format
+msgid "Activation Request of \"%s\""
+msgstr "Begäran om aktivering av \"%s\""
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
+msgid "Body"
+msgstr "Bulk"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__create_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
+msgid "Depending Apps"
+msgstr "Beroende appar"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "Install App"
+msgstr "Installera app"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: base_install_request
+#: model:mail.template,name:base_install_request.mail_template_base_install_request
+msgid "Mail: Install Request"
+msgstr "Mail: Begäran om installation"
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_ir_module_module
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
+msgid "Module"
+msgstr "Modul"
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_request
+msgid "Module Activation Request"
+msgstr "Begäran om aktivering av modul"
+
+#. module: base_install_request
+#: model:mail.template,subject:base_install_request.mail_template_base_install_request
+msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
+msgstr "Begäran om aktivering av modul för \"{{ object.module_id.shortdesc }}\""
+
+#. module: base_install_request
+#: model:ir.model,name:base_install_request.model_base_module_install_review
+msgid "Module Activation Review"
+msgstr "Granskning av modulaktivering"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
+msgid "Modules Description"
+msgstr "Moduler Beskrivning"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "No extra cost, this application is free."
+msgstr "Ingen extra kostnad, denna applikation är gratis."
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+#, python-format
+msgid "No module selected."
+msgstr "Ingen modul vald."
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
+msgid "Request Access"
+msgstr "Begär tillgång"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Request Activation"
+msgstr "Begär aktivering"
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Send to:"
+msgstr "Skicka till:"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
+msgid "The following apps will be installed:"
+msgstr "Följande appar kommer att installeras:"
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+#, python-format
+msgid "The module is already installed."
+msgstr "Modulen är redan installerad."
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"This app is included in your subscription. It's free to activate, but only "
+"an administrator can do it. Fill this form to send an activation request."
+msgstr ""
+"Den här appen ingår i din prenumeration. Det är gratis att aktivera den, men"
+" endast en administratör kan göra det. Fyll i formuläret för att skicka en "
+"begäran om aktivering."
+
+#. module: base_install_request
+#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
+msgid "User"
+msgstr "Användare"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Why do you need this module?"
+msgstr ""
+
+#. module: base_install_request
+#: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
+msgid "You are about to install an extra application"
+msgstr "Du håller på att installera en extra applikation"
+
+#. module: base_install_request
+#. odoo-python
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
+#, python-format
+msgid "Your request has been successfully sent"
+msgstr "Din förfrågan har skickats framgångsrikt"
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid ""
+"e.g. I'd like to use the SMS Marketing module to organize the promotion of "
+"our internal events, and exhibitions. I need access for 3 people of my team."
+msgstr ""
+"jag skulle t.ex. vilja använda modulen SMS Marketing för att organisera "
+"marknadsföringen av våra interna evenemang och utställningar. Jag behöver "
+"åtkomst för 3 personer i mitt team."

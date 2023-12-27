@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +124,8 @@ msgstr "Cancelar pago"
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 #, python-format
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr "No se puede crear un pago en línea para el PdV sin un pago contable."
+msgstr ""
+"No se puede crear un pago en línea para el TPV sin un registro de pago."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -133,7 +135,7 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
-"No se puede crear un pago para el PdV con un método de pago que no está en "
+"No se puede crear un pago para el TPV con un método de pago que no está en "
 "línea y un pago contable en línea."
 
 #. module: pos_online_payment
@@ -142,7 +144,7 @@ msgstr ""
 #, python-format
 msgid "Cannot edit a POS online payment essential data."
 msgstr ""
-"No se puede editar la información esencial del pago en línea para el PdV."
+"No se puede editar la información esencial del pago en línea para el TPV."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -362,7 +364,7 @@ msgstr "Error de servidor"
 #, python-format
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr ""
-"El pago en línea del PdV (tx.id=%d) no se pudo guardar de la forma adecuada"
+"El pago en línea del TPV (tx.id=%d) no se pudo guardar de la forma adecuada"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -372,7 +374,7 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
-"El pago en línea del PdV (tx.id=%d) no se pudo guardar de manera correcta ya"
+"El pago en línea del TPV (tx.id=%d) no se pudo guardar de manera correcta ya"
 " que no fue posible encontrar el método de pago en línea"
 
 #. module: pos_online_payment
@@ -380,7 +382,7 @@ msgstr ""
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 #, python-format
 msgid "The POS session is not opened."
-msgstr "La sesión del PdV no está abierta."
+msgstr "La sesión del TPV no está abierta."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
@@ -440,7 +442,7 @@ msgstr "La orden no se guardó de manera correcta en el servidor."
 #: code:addons/pos_online_payment/models/pos_session.py:0
 #, python-format
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr "El contacto del pago en línea del PdV (id=%d) no se pudo encontrar"
+msgstr "El contacto del pago en línea del TPV (id=%d) no se pudo encontrar"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -519,8 +521,8 @@ msgid ""
 "There is a problem with the server. The order cannot be saved and therefore "
 "the online payment is not possible."
 msgstr ""
-"Hay un problema con el servidor. No podemos guardar la orden, por lo tanto, "
-"no es posible realizar el pago en línea."
+"Hay un problema con el servidor. No podemos guardar el pedido, por lo que no"
+" es posible realizar el pago en línea."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -578,9 +580,9 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
-"Para usar un método de pago en línea en la configuración de un Punto de "
-"venta, debe tener al menos un proveedor de pago publicado que además sea "
-"compatible con la moneda en la configuración del Punto de venta."
+"Para usar un método de pago en línea en la configuración de un TPV, debe "
+"tener al menos un proveedor de pago publicado que además sea compatible con "
+"la moneda en la configuración del TPV."
 
 #. module: pos_online_payment
 #. odoo-python

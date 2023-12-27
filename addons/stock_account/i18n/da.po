@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-#
+# 
 # Translators:
-# Kenneth Hansen <kenneth@vkdata.dk>, 2022
-# Mads Søndergaard, 2022
-# Ejner Sønniksen <ejner@vkdata.dk>, 2022
-# Martin Trigaux, 2022
-#
+# Kenneth Hansen <kenneth@vkdata.dk>, 2023
+# Mads Søndergaard, 2023
+# Ejner Sønniksen <ejner@vkdata.dk>, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
@@ -39,22 +39,34 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
-msgstr "%(user)s ændrede omkostning fra %(previous)s til %(new_price)s - %(product)s"
+msgstr ""
+"%(user)s ændrede omkostning fra %(previous)s til %(new_price)s - %(product)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
-msgid "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s"
-msgstr "%(user)s ændrede lager evaluering fra %(previous)s til %(new_value)s - %(product)s"
+msgid ""
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
+"%(product)s"
+msgstr ""
+"%(user)s ændrede lager evaluering fra %(previous)s til %(new_value)s - "
+"%(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "6.00"
 msgstr ""
 
 #. module: stock_account
@@ -121,8 +133,11 @@ msgstr "Tilføj Manuel Evaluering"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Add additional cost (transport, customs, ...) in the value of the product."
-msgstr "Tilføj yderligere omkostning (transport, told, ...) til værdien af produktet."
+msgid ""
+"Add additional cost (transport, customs, ...) in the value of the product."
+msgstr ""
+"Tilføj yderligere omkostning (transport, told, ...) til værdien af "
+"produktet."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -137,12 +152,26 @@ msgstr "Tilføjet værdi"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Affect landed costs on reception operations and split them among products to update their cost price."
-msgstr "Påvirk landede omkostninger ved modtagelsesoperationer og opdel dem mellem produkter for at opdatere deres omkostningspris."
+msgid ""
+"Affect landed costs on reception operations and split them among products to"
+" update their cost price."
+msgstr ""
+"Påvirk landede omkostninger ved modtagelsesoperationer og opdel dem mellem "
+"produkter for at opdatere deres omkostningspris."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+#: model:ir.model,name:stock_account.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analysekonto"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_analytic_plan
+msgid "Analytic Plans"
 msgstr ""
 
 #. module: stock_account
@@ -166,6 +195,16 @@ msgid "Average Cost (AVCO)"
 msgstr "Gennemsnitlig omkostning (AVCO)"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "BC46282798"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "Bacon"
+msgstr "Bacon"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Cancel"
 msgstr "Annullér"
@@ -174,26 +213,46 @@ msgstr "Annullér"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation."
-msgstr "Kan ikke finde en lagertilgangskonto for dette produktet %s. Du skal definere en på produktkategorien eller på lokationen, før du fortsætter denne handling."
+msgid ""
+"Cannot find a stock input account for the product %s. You must define one on"
+" the product category, or on the location, before processing this operation."
+msgstr ""
+"Kan ikke finde en lagertilgangskonto for dette produktet %s. Du skal "
+"definere en på produktkategorien eller på lokationen, før du fortsætter "
+"denne handling."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation."
-msgstr "Kan ikke finde lagerafgangskonto for dette produktet %s. Du skal definere en på produktkategorien eller på lokationen, før du fortsætter denne handling."
+msgid ""
+"Cannot find a stock output account for the product %s. You must define one "
+"on the product category, or on the location, before processing this "
+"operation."
+msgstr ""
+"Kan ikke finde lagerafgangskonto for dette produktet %s. Du skal definere en"
+" på produktkategorien eller på lokationen, før du fortsætter denne handling."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"
-msgstr "Ændring af din omkostningsmetode er en vigtig ændring, som vil have en indvirkning på din inventar vurdering. Er du sikker på du vil foretage ændringen?"
+msgid ""
+"Changing your cost method is an important change that will impact your "
+"inventory valuation. Are you sure you want to make that change?"
+msgstr ""
+"Ændring af din omkostningsmetode er en vigtig ændring, som vil have en "
+"indvirkning på din inventar vurdering. Er du sikker på du vil foretage "
+"ændringen?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
+msgid "Cogs Origin"
 msgstr ""
 
 #. module: stock_account
@@ -211,8 +270,12 @@ msgstr "Konfigurer opsætning"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "Configuration error. Please configure the price difference account on the product or its category to process this operation."
-msgstr "Konfigurationsfejl. Venligst opsæt en konto for prisdifferencer på produktet eller dets kategori, for at fuldføre denne handling. "
+msgid ""
+"Configuration error. Please configure the price difference account on the "
+"product or its category to process this operation."
+msgstr ""
+"Konfigurationsfejl. Venligst opsæt en konto for prisdifferencer på produktet"
+" eller dets kategori, for at fuldføre denne handling. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -286,8 +349,12 @@ msgstr "Dato"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
-msgid "Date at which the accounting entries will be created in case of automated inventory valuation. If empty, the inventory date will be used."
-msgstr "Dato hvorpå konto posteringerne vil blive oprettet, i tilfælde af automatisk inventar vurdering. Hvis efterladt tom, vil inventar datoen anvendes."
+msgid ""
+"Date at which the accounting entries will be created in case of automated "
+"inventory valuation. If empty, the inventory date will be used."
+msgstr ""
+"Dato hvorpå konto posteringerne vil blive oprettet, i tilfælde af automatisk"
+" inventar vurdering. Hvis efterladt tom, vil inventar datoen anvendes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -319,8 +386,10 @@ msgstr "Vis Serie & lot nummer på faktura"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "Due to a change of product category (from %s to %s), the costing method                                has changed for product template %s: from %s to %s."
-msgstr "På grund af en ændring af produkt kategori (fra %s til %s), er omkostningsmetoden ændret for produkt skabelon %s: fra %s til %s."
+msgid ""
+"Due to a change of product category (from %s to %s), the costing method has "
+"changed for product template %s: from %s to %s."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -696,7 +765,9 @@ msgstr "Lager vurdering lag"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
-msgid "Technical field to correctly show the currently selected company's currency that corresponds to the totaled value of the product's valuation layers"
+msgid ""
+"Technical field to correctly show the currently selected company's currency "
+"that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
 
 #. module: stock_account
@@ -712,15 +783,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account."
-msgstr "Lager Input og/eller Output konti kan ikke være de samme som Lager Evaluerings kontoen."
+msgid ""
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
+"Valuation account."
+msgstr ""
+"Lager Input og/eller Output konti kan ikke være de samme som Lager "
+"Evaluerings kontoen."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "The action leads to the creation of a journal entry, for which you don't have the access rights."
-msgstr "Handlingen fører til oprettelsen af en journalpostering, som du ikke har adgangsrettigheder til."
+msgid ""
+"The action leads to the creation of a journal entry, for which you don't "
+"have the access rights."
+msgstr ""
+"Handlingen fører til oprettelsen af en journalpostering, som du ikke har "
+"adgangsrettigheder til."
 
 #. module: stock_account
 #. odoo-python
@@ -733,27 +813,43 @@ msgstr "Den tilføjede værdi har ikke nogen indflydelse på lager evalueringen"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "The move lines are not in a consistent state: some are entering and other are leaving the company."
-msgstr "Bevægelses linjerne er ikke i en ensartet tilstand: nogle er indgående, og andre er udgående fra virksomheden."
+msgid ""
+"The move lines are not in a consistent state: some are entering and other "
+"are leaving the company."
+msgstr ""
+"Bevægelses linjerne er ikke i en ensartet tilstand: nogle er indgående, og "
+"andre er udgående fra virksomheden."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."
-msgstr "Bevægelses linjerne er ikke i en ensartet tilstand: de udfører en inter-virksomhed i et enkelt trin, imens de burde gå gennem inter-virksomheds transit stedet."
+msgid ""
+"The move lines are not in a consistent states: they are doing an "
+"intercompany in a single step while they should go through the intercompany "
+"transit location."
+msgstr ""
+"Bevægelses linjerne er ikke i en ensartet tilstand: de udfører en inter-"
+"virksomhed i et enkelt trin, imens de burde gå gennem inter-virksomheds "
+"transit stedet."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "The move lines are not in a consistent states: they do not share the same origin or destination company."
-msgstr "Bevægelses linjerne er ikke i en ensartet tilstand: de deler ikke samme oprindelse eller destinations virksomhed."
+msgid ""
+"The move lines are not in a consistent states: they do not share the same "
+"origin or destination company."
+msgstr ""
+"Bevægelses linjerne er ikke i en ensartet tilstand: de deler ikke samme "
+"oprindelse eller destinations virksomhed."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
-msgid "There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock."
+msgid ""
+"There are no valuation layers. Valuation layers are created when there are "
+"product moves that impact the valuation of the stock."
 msgstr ""
 
 #. module: stock_account
@@ -783,8 +879,12 @@ msgstr "Overfør"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
-msgid "Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order"
-msgstr "Udlys en sænkning af kvantiteten på leveret/modtaget i den tilhørende salg-/købsordre"
+msgid ""
+"Trigger a decrease of the delivered/received quantity in the associated Sale"
+" Order/Purchase Order"
+msgstr ""
+"Udlys en sænkning af kvantiteten på leveret/modtaget i den tilhørende "
+"salg-/købsordre"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -810,13 +910,33 @@ msgstr "Opdater kvantiteter på SO/PO"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
-msgid "Used for real-time inventory valuation. When set on a virtual location (non internal type), this account will be used to hold the value of products being moved from an internal location into this location, instead of the generic Stock Output Account set on the product. This has no effect for internal locations."
-msgstr "Bruges ved real-time lagerværdiansættelse. Når den er sat på en virtuel lokation (ikke-intern type), vil denne konto blive anvendt til at vise værdien af produkter der flyttes fra en intern lokation til denne lokation, i stedet for den generiske udgående lagerkonto der er sat på produktet. Dette har ingen effekt på interne lokationer. "
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"Bruges ved real-time lagerværdiansættelse. Når den er sat på en virtuel "
+"lokation (ikke-intern type), vil denne konto blive anvendt til at vise "
+"værdien af produkter der flyttes fra en intern lokation til denne lokation, "
+"i stedet for den generiske udgående lagerkonto der er sat på produktet. "
+"Dette har ingen effekt på interne lokationer. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
-msgid "Used for real-time inventory valuation. When set on a virtual location (non internal type), this account will be used to hold the value of products being moved out of this location and into an internal location, instead of the generic Stock Output Account set on the product. This has no effect for internal locations."
-msgstr "Bruges ved real-time lagerværdiansættelse. Når den er sat på en virtuel lokation (ikke-intern type), vil denne konto blive anvendt til at vise værdien af produkter der flyttes ud af denne lokation og ind på en intern lokation, i stedet for den generiske udgående lagerkonto der er sat på produktet. Dette har ingen effekt på interne lokationer. "
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr ""
+"Bruges ved real-time lagerværdiansættelse. Når den er sat på en virtuel "
+"lokation (ikke-intern type), vil denne konto blive anvendt til at vise "
+"værdien af produkter der flyttes ud af denne lokation og ind på en intern "
+"lokation, i stedet for den generiske udgående lagerkonto der er sat på "
+"produktet. Dette har ingen effekt på interne lokationer. "
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -875,8 +995,12 @@ msgstr "Advarsel"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
-msgid "When automated inventory valuation is enabled on a product, this account will hold the current value of the products."
-msgstr "Når automatiseret inventar vurdering er aktiveret for et produkt, vil denne konto holde den nuværende værdi af produkterne."
+msgid ""
+"When automated inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+"Når automatiseret inventar vurdering er aktiveret for et produkt, vil denne "
+"konto holde den nuværende værdi af produkterne."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -891,8 +1015,13 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
-msgid "When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."
-msgstr "Ved udførsel af automatiseret inventar vurdering, er dette regnskabsjournalen hvori der poster vil blive posteret automatisk når lager bevægelser behandles."
+msgid ""
+"When doing automated inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+"Ved udførsel af automatiseret inventar vurdering, er dette "
+"regnskabsjournalen hvori der poster vil blive posteret automatisk når lager "
+"bevægelser behandles."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -904,7 +1033,8 @@ msgstr "Guide model til genevaluering af et lager inventar for et produkt"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr "Du kan ikke genevaluerer et produkt med en standard omkostnings metode."
+msgstr ""
+"Du kan ikke genevaluerer et produkt med en standard omkostnings metode."
 
 #. module: stock_account
 #. odoo-python
@@ -917,37 +1047,59 @@ msgstr "Du kan ikke genevaluerer et produkt med et tomt eller negativt lager."
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."
-msgstr "Du kan ikke opdatere omkostningen af et produkt i automatiseret evaluering, eftersom det fører til oprettelsen af en journalpostering, som du ikke har adgangsrettigheder til."
+msgid ""
+"You cannot update the cost of a product in automated valuation as it leads "
+"to the creation of a journal entry, for which you don't have the access "
+"rights."
+msgstr ""
+"Du kan ikke opdatere omkostningen af et produkt i automatiseret evaluering, "
+"eftersom det fører til oprettelsen af en journalpostering, som du ikke har "
+"adgangsrettigheder til."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You don't have any input valuation account defined on your product category. You must define one before processing this operation."
-msgstr "Du har ikke nogen input vurderings konto defineret på din produkt kategori. Du skal definere en, før behandling af denne operation."
+msgid ""
+"You don't have any input valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
+"Du har ikke nogen input vurderings konto defineret på din produkt kategori. "
+"Du skal definere en, før behandling af denne operation."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "You don't have any stock input account defined on your product category. You must define one before processing this operation."
+msgid ""
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "You don't have any stock journal defined on your product category, check if you have installed a chart of accounts."
-msgstr "Du har ikke en lager journal defineret på din produkt kategori, tjek om du har installeret en kontoplan."
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts."
+msgstr ""
+"Du har ikke en lager journal defineret på din produkt kategori, tjek om du "
+"har installeret en kontoplan."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
-msgid "You don't have any stock valuation account defined on your product category. You must define one before processing this operation."
-msgstr "Du har ikke defineret en konto for lagerværdien på din produktkategori. Du skal definere en før du kan gennemføre denne handling. "
+msgid ""
+"You don't have any stock valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
+"Du har ikke defineret en konto for lagerværdien på din produktkategori. Du "
+"skal definere en før du kan gennemføre denne handling. "
 
 #. module: stock_account
 #. odoo-python
@@ -970,3 +1122,8 @@ msgstr "for"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
 msgstr "lokationer"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "units"
+msgstr ""

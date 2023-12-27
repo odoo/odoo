@@ -25,25 +25,7 @@ class RazorpayController(http.Controller):
         save_session=False
     )
     def razorpay_return_from_checkout(self, reference, **data):
-        """ Process the notification data sent by Razorpay after redirection from checkout.
-
-        :param str reference: The transaction reference embedded in the return URL.
-        :param dict data: The notification data.
-        """
-        _logger.info("Handling redirection from Razorpay with data:\n%s", pprint.pformat(data))
-        if all(f'razorpay_{key}' in data for key in ('order_id', 'payment_id', 'signature')):
-            # Check the integrity of the notification.
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'razorpay', {'description': reference}
-            )  # Use the same key as for webhook notifications' data.
-            self._verify_notification_signature(data, data.get('razorpay_signature'), tx_sudo)
-
-            # Handle the notification data.
-            tx_sudo._handle_notification_data('razorpay', data)
-        else:  # The customer cancelled the payment or the payment failed.
-            pass  # Don't try to process this case because the payment id was not provided.
-
-        # Redirect the user to the status page.
+        # TODO: Remove me in master
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
@@ -81,7 +63,7 @@ class RazorpayController(http.Controller):
     @staticmethod
     def _verify_notification_signature(
         notification_data, received_signature, tx_sudo, is_redirect=True
-    ):
+    ):  # TODO in master: remove the `is_redirect` parameter.
         """ Check that the received signature matches the expected one.
 
         :param dict|bytes notification_data: The notification data.

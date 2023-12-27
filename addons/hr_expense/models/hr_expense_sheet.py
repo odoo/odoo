@@ -684,13 +684,15 @@ class HrExpenseSheet(models.Model):
         return moves
 
     def _do_reverse_moves(self):
-        draft_moves = self.account_move_ids.filtered(lambda account_move: account_move.state == 'draft')
-        draft_moves.unlink()
-        moves = self.account_move_ids - draft_moves
-        moves._reverse_moves(
-            default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in moves],
-            cancel=True,
+        self = self.with_context(clean_context(self.env.context))
+        moves = self.account_move_ids
+        draft_moves = moves.filtered(lambda m: m.state == 'draft')
+        non_draft_moves = moves - draft_moves
+        non_draft_moves._reverse_moves(
+            default_values_list=[{'invoice_date': fields.Date.context_today(move), 'ref': False} for move in non_draft_moves],
+            cancel=True
         )
+        draft_moves.unlink()
 
     def _prepare_bills_vals(self):
         self.ensure_one()

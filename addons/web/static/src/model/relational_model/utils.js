@@ -181,7 +181,7 @@ export function patchActiveFields(activeField, patch) {
     if ("limit" in patch) {
         activeField.limit = patch.limit;
     }
-    if ("defaultOrderBy" in patch) {
+    if (patch.defaultOrderBy) {
         activeField.defaultOrderBy = patch.defaultOrderBy;
     }
 }

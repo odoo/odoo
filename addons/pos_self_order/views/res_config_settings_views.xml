@@ -15,7 +15,7 @@
                     <setting string="QR menu &amp; Kiosk activation" help="Let your customers order using their mobile or a kiosk.">a
                         <div class="content-group row">
                             <label for="pos_self_ordering_mode" class="col-lg-4" string="Self Ordering"/>
-                            <field name="pos_self_ordering_mode" />
+                            <field name="pos_self_ordering_mode" invisible="not pos_config_id"/>
                         </div>
                         <div class="d-flex flex-column align-items-start w-50" invisible="pos_self_ordering_mode == 'nothing'">
                             <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview Web interface"/>

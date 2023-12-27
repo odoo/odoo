@@ -86,13 +86,23 @@ class SaleReport(models.Model):
             select_ += template % (value, fname)
         return select_
 
+    def _available_additional_pos_fields(self):
+        """Hook to replace the additional fields from sale with the one from pos_sale."""
+        return {
+            'warehouse_id': 'picking.warehouse_id',
+        }
+
     def _fill_pos_fields(self, additional_fields):
         """Hook to fill additional fields for the pos_sale.
 
         :param values: dictionary of values to fill
         :type values: dict
         """
-        return {x: 'NULL' for x in additional_fields}
+        filled_fields = {x: 'NULL' for x in additional_fields}
+        for fname, value in self._available_additional_pos_fields().items():
+            if fname in additional_fields:
+                filled_fields[fname] = value
+        return filled_fields
 
     def _from_pos(self):
         return """
@@ -104,6 +114,7 @@ class SaleReport(models.Model):
             LEFT JOIN uom_uom u ON u.id=t.uom_id
             LEFT JOIN pos_session session ON session.id = pos.session_id
             LEFT JOIN pos_config config ON config.id = session.config_id
+            LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
             JOIN {currency_table} ON currency_table.company_id = pos.company_id
             """.format(
             currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
@@ -138,7 +149,8 @@ class SaleReport(models.Model):
             partner.zip,
             u.factor,
             pos.crm_team_id,
-            currency_table.rate"""
+            currency_table.rate,
+            picking.warehouse_id"""
 
     def _query(self):
         res = super()._query()

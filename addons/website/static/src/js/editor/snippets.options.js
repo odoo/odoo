@@ -8,7 +8,7 @@ import weUtils from "@web_editor/js/common/utils";
 import options from "@web_editor/js/editor/snippets.options";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "@website/js/utils";
-import {isImageSupportedForStyle} from "@web_editor/js/editor/image_processing";
+import {isImageCorsProtected, isImageSupportedForStyle} from "@web_editor/js/editor/image_processing";
 import "@website/snippets/s_popup/options";
 import { range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
@@ -3607,7 +3607,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetVisibility(widgetName, params) {
+    async _computeWidgetVisibility(widgetName, params) {
         const hasAnimateClass = this.$target[0].classList.contains("o_animate");
         switch (widgetName) {
             case 'no_animation_opt': {
@@ -3649,7 +3649,11 @@ options.registry.WebsiteAnimate = options.Class.extend({
                 if (hoverEffectOverlayWidget) {
                     const hoverEffectWidget = hoverEffectOverlayWidget.getParent();
                     const imageToolsOpt = hoverEffectWidget.getParent();
-                    return !imageToolsOpt._isDeviceShape() && !imageToolsOpt._isAnimatedShape();
+                    return (
+                        !imageToolsOpt._isDeviceShape()
+                        && !imageToolsOpt._isAnimatedShape()
+                        && !await isImageCorsProtected(this.$target[0])
+                    );
                 }
                 return false;
             }

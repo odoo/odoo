@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { makeServerError } from "@web/../tests/helpers/mock_server";
-import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     clickSave,
@@ -48,118 +47,32 @@ import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 
+import {
+    patchDialog,
+    reload,
+    getCard,
+    getColumn,
+    getCardTexts,
+    getCounters,
+    getProgressBars,
+    getTooltips,
+    createRecord,
+    quickCreateRecord,
+    editQuickCreateInput,
+    validateRecord,
+    editRecord,
+    discardRecord,
+    toggleRecordDropdown,
+    createColumn,
+    editColumnName,
+    validateColumn,
+    toggleColumnActions,
+    loadMore,
+} from "./helpers";
+
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
 const viewRegistry = registry.category("views");
-
-// ----------------------------------------------------------------------------
-// Helpers
-// ----------------------------------------------------------------------------
-
-function patchDialog(addDialog) {
-    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
-}
-
-// Kanban
-// WOWL remove this helper and use the control panel instead
-async function reload(kanban, params = {}) {
-    kanban.env.searchModel.reload(params);
-    kanban.env.searchModel.search();
-    await nextTick();
-}
-
-function getCard(cardIndex = 0) {
-    return target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")[cardIndex];
-}
-
-function getColumn(groupIndex = 0, ignoreFolded = false) {
-    let selector = ".o_kanban_group";
-    if (ignoreFolded) {
-        selector += ":not(.o_column_folded)";
-    }
-    return target.querySelectorAll(selector)[groupIndex];
-}
-
-function getCardTexts(groupIndex) {
-    const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
-    return [...root.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")]
-        .map((card) => card.innerText.trim())
-        .filter(Boolean);
-}
-
-function getCounters() {
-    return [...target.querySelectorAll(".o_animated_number")].map((counter) => counter.innerText);
-}
-
-function getProgressBars(columnIndex) {
-    const column = getColumn(columnIndex);
-    return [...column.querySelectorAll(".o_column_progress .progress-bar")];
-}
-
-function getTooltips(groupIndex) {
-    const root = groupIndex >= 0 ? getColumn(groupIndex) : target;
-    return [...root.querySelectorAll(".o_column_progress .progress-bar")]
-        .map((card) => card.dataset.tooltip)
-        .filter(Boolean);
-}
-
-// Record
-async function createRecord() {
-    await click(target, ".o_control_panel_main_buttons .d-none button.o-kanban-button-new");
-}
-
-async function quickCreateRecord(groupIndex) {
-    await click(getColumn(groupIndex), ".o_kanban_quick_add");
-}
-
-async function editQuickCreateInput(field, value) {
-    await editInput(target, `.o_kanban_quick_create .o_field_widget[name=${field}] input`, value);
-}
-
-async function validateRecord() {
-    await click(target, ".o_kanban_quick_create .o_kanban_add");
-}
-
-async function editRecord() {
-    await click(target, ".o_kanban_quick_create .o_kanban_edit");
-}
-
-async function discardRecord() {
-    await click(target, ".o_kanban_quick_create .o_kanban_cancel");
-}
-
-async function toggleRecordDropdown(recordIndex) {
-    const group = target.querySelectorAll(`.o_kanban_record`)[recordIndex];
-    await click(group, ".o_dropdown_kanban .dropdown-toggle");
-}
-
-// Column
-async function createColumn() {
-    await click(target, ".o_column_quick_create > .o_quick_create_folded");
-}
-
-async function editColumnName(value) {
-    await editInput(target, ".o_column_quick_create input", value);
-}
-
-async function validateColumn() {
-    await click(target, ".o_column_quick_create .o_kanban_add");
-}
-
-async function toggleColumnActions(columnIndex) {
-    const group = getColumn(columnIndex);
-    await click(group, ".o_kanban_config .dropdown-toggle");
-    const buttons = group.querySelectorAll(".o_kanban_config .dropdown-menu .dropdown-item");
-    return (buttonText) => {
-        const re = new RegExp(`\\b${buttonText}\\b`, "i");
-        const button = [...buttons].find((b) => re.test(b.innerText));
-        return click(button);
-    };
-}
-
-async function loadMore(columnIndex) {
-    await click(getColumn(columnIndex), ".o_kanban_load_more button");
-}
 
 let serverData;
 let target;
@@ -563,7 +476,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
         assert.verifySteps(["rendered"]);
 
-        await toggleColumnActions(0);
+        await toggleColumnActions(target, 0);
 
         // check available actions in kanban header's config dropdown
         assert.containsOnce(
@@ -655,7 +568,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            const clickColumnAction = await toggleColumnActions(1);
+            const clickColumnAction = await toggleColumnActions(target, 1);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
@@ -674,8 +587,8 @@ QUnit.module("Views", (hooks) => {
             await clickColumnAction("Archive All");
 
             assert.containsN(target, ".o_kanban_group", 2);
-            assert.containsOnce(getColumn(0), ".o_kanban_record");
-            assert.containsNone(getColumn(1), ".o_kanban_record");
+            assert.containsOnce(getColumn(target, 0), ".o_kanban_record");
+            assert.containsNone(getColumn(target, 1), ".o_kanban_record");
             assert.verifySteps(["open-dialog"]);
         }
     );
@@ -738,7 +651,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            const clickColumnAction = await toggleColumnActions(0);
+            const clickColumnAction = await toggleColumnActions(target, 0);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsOnce(
@@ -757,8 +670,8 @@ QUnit.module("Views", (hooks) => {
             await clickColumnAction("Archive All");
 
             assert.containsN(target, ".o_kanban_group", 2);
-            assert.containsNone(getColumn(0), ".o_kanban_record");
-            assert.containsN(getColumn(1), ".o_kanban_record", 3);
+            assert.containsNone(getColumn(target, 0), ".o_kanban_record");
+            assert.containsN(getColumn(target, 1), ".o_kanban_record", 3);
             assert.verifySteps(["open-dialog"]);
         }
     );
@@ -787,7 +700,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await toggleColumnActions(0);
+            await toggleColumnActions(target, 0);
 
             // check archive/restore all actions in kanban header's config dropdown
             assert.containsNone(
@@ -843,8 +756,8 @@ QUnit.module("Views", (hooks) => {
                 ["None 1", "gold yop blip", "silver yop gnap"]
             );
 
-            await click(getColumn(0));
-            await toggleColumnActions(0);
+            await click(getColumn(target, 0));
+            await toggleColumnActions(target, 0);
 
             // check archive/restore all actions in kanban header's config dropdown
             // despite the fact that the kanban view is configured to be archivable,
@@ -1660,7 +1573,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             groupBy: ["product_id"],
         });
-        let column = getColumn();
+        let column = getColumn(target);
         assert.containsN(column, ".o_kanban_record", 2);
         assert.containsNone(column, ".o_kanban_load_more");
 
@@ -1668,7 +1581,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal .btn-primary");
-        column = getColumn();
+        column = getColumn(target);
         assert.containsOnce(column, ".o_kanban_record");
         assert.containsNone(column, ".o_kanban_load_more");
     });
@@ -1707,7 +1620,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
-        await createRecord();
+        await createRecord(target);
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
         assert.verifySteps([
             "get_views",
@@ -1738,7 +1651,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsNone(target, ".o_kanban_quick_add");
 
-        await createRecord();
+        await createRecord(target);
 
         assert.containsNone(target, ".o_kanban_quick_create");
         assert.verifySteps(["create record"]);
@@ -1766,7 +1679,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(target, ".o_column_quick_create");
 
-        await createRecord();
+        await createRecord(target);
 
         assert.containsOnce(target, ".o_kanban_group:first-child > .o_kanban_quick_create");
         assert.strictEqual(target.querySelector(".o_column_title").innerText, "hello");
@@ -1885,7 +1798,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
-        await createRecord();
+        await createRecord(target);
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
 
@@ -1930,7 +1843,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
 
         // click on 'Create' -> should open the quick create in the first column
-        await createRecord();
+        await createRecord(target);
 
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
 
@@ -1946,8 +1859,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fill the quick create and validate
-        await editQuickCreateInput("display_name", "new partner");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await validateRecord(target);
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
 
@@ -2004,7 +1917,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
 
         // click on 'Create' -> should open the quick create in the first column
-        await createRecord();
+        await createRecord(target);
 
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
         const quickCreate = target.querySelector(
@@ -2021,10 +1934,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(quickCreate, ".o_field_widget", 3, "should have rendered three widgets");
 
         // fill the quick create and validate
-        await editQuickCreateInput("foo", "new partner");
-        await editQuickCreateInput("int_field", 4);
+        await editQuickCreateInput(target, "foo", "new partner");
+        await editQuickCreateInput(target, "int_field", 4);
         await click(quickCreate, ".o_field_widget[name=state] .o_priority_star:first-child");
-        await validateRecord();
+        await validateRecord(target);
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
 
         assert.verifySteps([
@@ -2084,7 +1997,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // click on 'Create' -> should open the quick create in the first column
-        await createRecord();
+        await createRecord(target);
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
@@ -2097,11 +2010,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(quickCreate, ".o_field_widget", 3, "should have rendered three widgets");
 
         // fill the quick create and validate
-        await editQuickCreateInput("foo", "new partner");
-        await editQuickCreateInput("int_field", 4);
+        await editQuickCreateInput(target, "foo", "new partner");
+        await editQuickCreateInput(target, "int_field", 4);
         await click(quickCreate, ".o_field_widget[name=state] .o_priority_star:first-child");
         def = makeDeferred();
-        await validateRecord();
+        await validateRecord(target);
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
         def.resolve();
@@ -2141,12 +2054,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         // click on 'Create' -> should open the quick create in the first column
-        await createRecord();
+        await createRecord(target);
 
         // fill the quick create and validate
-        await editQuickCreateInput("foo", "new partner");
+        await editQuickCreateInput(target, "foo", "new partner");
         def = makeDeferred();
-        await validateRecord();
+        await validateRecord(target);
         assert.containsNone(target, ".o_kanban_load_more");
         def.resolve();
         await nextTick();
@@ -2176,7 +2089,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await createRecord();
+            await createRecord(target);
             assert.strictEqual(
                 document.activeElement,
                 target.querySelector(".o_field_widget[name=int_field] input")
@@ -2207,7 +2120,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await createRecord();
+            await createRecord(target);
             assert.strictEqual(
                 document.activeElement,
                 target.querySelector(".o_field_widget[name=foo] input")
@@ -2234,7 +2147,7 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
             groupBy: ["bar"],
-            createRecord() {
+            createRecord(target) {
                 assert.step("create record");
             },
         });
@@ -2243,7 +2156,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group .o_kanban_quick_add", 2);
 
         // click on 'Create' in control panel -> should not open the quick create
-        await createRecord();
+        await createRecord(target);
         assert.containsNone(target, ".o_kanban_quick_create");
         assert.verifySteps(["create record"]);
 
@@ -2288,9 +2201,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create', fill the quick create and validate
-        await createRecord();
-        await editQuickCreateInput("display_name", "new partner");
-        await validateRecord();
+        await createRecord(target);
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -2356,14 +2269,14 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
 
         // click on 'Create', fill the quick create and validate
-        await createRecord();
+        await createRecord(target);
         const quickCreate = target.querySelector(
             ".o_kanban_group:first-child .o_kanban_quick_create"
         );
-        await editQuickCreateInput("foo", "new partner");
-        await editQuickCreateInput("int_field", 4);
+        await editQuickCreateInput(target, "foo", "new partner");
+        await editQuickCreateInput(target, "int_field", 4);
         await click(quickCreate, ".o_field_widget[name=state] .o_priority_star:first-child");
-        await validateRecord();
+        await validateRecord(target);
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
 
@@ -2412,9 +2325,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create', fill the quick create and validate
-        await quickCreateRecord(1);
-        await editQuickCreateInput("display_name", "new partner");
-        await validateRecord();
+        await quickCreateRecord(target, 1);
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -2469,9 +2382,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create', fill the quick create and validate
-        await quickCreateRecord(0);
-        await editQuickCreateInput("display_name", "new partner");
-        await validateRecord();
+        await quickCreateRecord(target, 0);
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -2535,9 +2448,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create', fill the quick create and validate
-        await quickCreateRecord(1);
-        await editQuickCreateInput("foo", "new partner");
-        await validateRecord();
+        await quickCreateRecord(target, 1);
+        await editQuickCreateInput(target, "foo", "new partner");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -2598,7 +2511,7 @@ QUnit.module("Views", (hooks) => {
             "gold column should contain one records"
         );
         // click on 'Create', fill the quick create and validate
-        await quickCreateRecord(1);
+        await quickCreateRecord(target, 1);
 
         // verify that the quick create m2m field contains the column value
         assert.containsOnce(
@@ -2608,8 +2521,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(target.querySelector(".o_tag_badge_text").textContent, "gold");
 
-        await editQuickCreateInput("foo", "new partner");
-        await validateRecord();
+        await editQuickCreateInput(target, "foo", "new partner");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -2651,11 +2564,11 @@ QUnit.module("Views", (hooks) => {
         });
         assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
 
-        await createRecord();
+        await createRecord(target);
         assert.verifySteps(["onchange"]);
 
         // do not fill anything and validate
-        await validateRecord();
+        await validateRecord(target);
         assert.verifySteps([]);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
         assert.hasClass(target.querySelector("[name=display_name]"), "o_field_invalid");
@@ -2695,7 +2608,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // click on 'Create' -> should open the quick create in the first column
-        await createRecord();
+        await createRecord(target);
         const quickCreate = target.querySelector(
             ".o_kanban_group:first-child .o_kanban_quick_create"
         );
@@ -2708,7 +2621,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fill the 'foo' field -> should trigger the onchange
-        await editQuickCreateInput("foo", "new partner");
+        await editQuickCreateInput(target, "foo", "new partner");
 
         assert.strictEqual(
             quickCreate.querySelector(".o_field_widget[name=int_field] input").value,
@@ -2747,7 +2660,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
         // create a new record
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.hasClass(
             target.querySelector(".o_kanban_quick_create .o_field_widget[name=foo]"),
             "o_required_modifier",
@@ -2760,7 +2673,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fill 'foo' field
-        await editQuickCreateInput("foo", "new partner");
+        await editQuickCreateInput(target, "foo", "new partner");
 
         assert.containsOnce(
             target,
@@ -2815,13 +2728,13 @@ QUnit.module("Views", (hooks) => {
         ]);
 
         // click on 'Create' -> should open the quick create in the first column
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.verifySteps(["get_views", "onchange"]);
 
         // fill the 'foo' field -> should trigger the onchange
-        await editQuickCreateInput("foo", "new partner");
+        await editQuickCreateInput(target, "foo", "new partner");
         assert.verifySteps(["onchange"]);
-        await validateRecord();
+        await validateRecord(target);
         assert.verifySteps(["web_save", "web_read", "onchange"]);
     });
 
@@ -2856,13 +2769,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Quick create kanban record
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "Test");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "Test");
+        await validateRecord(target);
 
         // Select state in kanban
-        await click(getCard(0), ".o_status");
-        await click(getCard(0), ".o_field_state_selection .dropdown-item:nth-child(2)");
+        await click(getCard(target, 0), ".o_status");
+        await click(getCard(target, 0), ".o_field_state_selection .dropdown-item:nth-child(2)");
 
         assert.hasClass(
             target.querySelector(".o_status"),
@@ -2886,7 +2799,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
         });
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.hasClass(
             target.querySelector(".o_kanban_quick_create .o_form_view"),
             "o_xxs_form_view"
@@ -2920,7 +2833,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
             // click to add an element and cancel the quick creation by pressing ESC
-            await quickCreateRecord();
+            await quickCreateRecord(target);
 
             assert.containsOnce(target, ".o_kanban_quick_create");
 
@@ -2935,7 +2848,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // click to add and element and click outside, should cancel the quick creation
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsNone(
                 target,
@@ -2944,7 +2857,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // click to input and drag the mouse outside, should not cancel the quick creation
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             await triggerEvent(target, ".o_kanban_quick_create input", "mousedown");
             await triggerEvent(
                 target,
@@ -2958,8 +2871,8 @@ QUnit.module("Views", (hooks) => {
             );
 
             // click to really add an element
-            await quickCreateRecord();
-            await editQuickCreateInput("foo", "new partner");
+            await quickCreateRecord(target);
+            await editQuickCreateInput(target, "foo", "new partner");
 
             // clicking outside should no longer destroy the quick create as it is dirty
             await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
@@ -2975,7 +2888,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
-            assert.deepEqual(getCardTexts(0), ["new partner", "blip"]);
+            assert.deepEqual(getCardTexts(target, 0), ["new partner", "blip"]);
         }
     );
 
@@ -2999,9 +2912,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record", 4, "should have 4 records at the beginning");
 
         // add an element and confirm by pressing ENTER
-        await quickCreateRecord();
-        await editQuickCreateInput("foo", "new partner");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "foo", "new partner");
+        await validateRecord(target);
         // triggers a navigation event, leading to the 'commitChanges' and record creation
 
         assert.containsN(target, ".o_kanban_record", 5, "should have created a new record");
@@ -3040,8 +2953,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record", 4, "should have 4 records at the beginning");
 
         // add an element and press ENTER twice
-        await quickCreateRecord();
-        await editQuickCreateInput("foo", "new partner");
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "foo", "new partner");
         await triggerEvent(
             target,
             ".o_kanban_quick_create .o_field_widget[name=foo] input",
@@ -3108,10 +3021,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record", 4, "should have 4 records at the beginning");
 
         // add an element and click 'Add' twice
-        await quickCreateRecord();
-        await editQuickCreateInput("foo", "new partner");
-        await validateRecord();
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "foo", "new partner");
+        await validateRecord(target);
+        await validateRecord(target);
 
         assert.containsN(target, ".o_kanban_record", 4, "should not have created the record yet");
         assert.strictEqual(
@@ -3179,9 +3092,9 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Create and save a record
-            await quickCreateRecord();
-            await editQuickCreateInput("display_name", "new partner");
-            await validateRecord();
+            await quickCreateRecord(target);
+            await editQuickCreateInput(target, "display_name", "new partner");
+            await validateRecord(target);
             assert.containsN(
                 target,
                 ".o_kanban_record",
@@ -3200,7 +3113,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Create a new record during the save of the first one
-            await createRecord();
+            await createRecord(target);
             assert.containsN(
                 target,
                 ".o_kanban_record",
@@ -3292,9 +3205,9 @@ QUnit.module("Views", (hooks) => {
             );
 
             // add an element and press ENTER twice
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             shouldDelayOnchange = true;
-            await editQuickCreateInput("foo", "new partner");
+            await editQuickCreateInput(target, "foo", "new partner");
             await triggerEvent(
                 target,
                 ".o_kanban_quick_create .o_field_widget[name=foo] input",
@@ -3398,10 +3311,10 @@ QUnit.module("Views", (hooks) => {
             );
 
             // add an element and click 'add'
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             shouldDelayOnchange = true;
-            await editQuickCreateInput("foo", "new partner");
-            await validateRecord();
+            await editQuickCreateInput(target, "foo", "new partner");
+            await validateRecord(target);
 
             assert.containsN(
                 target,
@@ -3467,7 +3380,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fold the first column
-        let clickColumnAction = await toggleColumnActions(0);
+        let clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Fold");
 
         assert.hasClass(
@@ -3477,7 +3390,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create' to open the quick create in the first column
-        await createRecord();
+        await createRecord(target);
 
         assert.doesNotHaveClass(
             target.querySelector(".o_kanban_group:first-child"),
@@ -3491,7 +3404,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // fold again the first column
-        clickColumnAction = await toggleColumnActions(0);
+        clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Fold");
 
         assert.hasClass(
@@ -3527,7 +3440,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to add an element
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.containsOnce(
             target,
             ".o_kanban_quick_create",
@@ -3535,7 +3448,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click again to add an element -> should have kept the quick create open
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.containsOnce(
             target,
             ".o_kanban_quick_create",
@@ -3551,7 +3464,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to reopen the quick create
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.containsOnce(
             target,
             ".o_kanban_quick_create",
@@ -3568,7 +3481,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to reopen the quick create
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.containsOnce(
             target,
             ".o_kanban_quick_create",
@@ -3576,8 +3489,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Discard': should remove the quick create
-        await quickCreateRecord();
-        await discardRecord();
+        await quickCreateRecord(target);
+        await discardRecord(target);
         assert.containsNone(
             target,
             ".o_kanban_quick_create",
@@ -3591,7 +3504,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to reopen the quick create
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.containsOnce(
             target,
             ".o_kanban_quick_create",
@@ -3629,7 +3542,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // click to add an element
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.containsOnce(target, ".o_kanban_quick_create");
 
         await editInput(target, ".o_kanban_quick_create input", "test");
@@ -3672,7 +3585,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to add an element and edit it
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(
             target,
@@ -3680,7 +3593,7 @@ QUnit.module("Views", (hooks) => {
             "should have open the quick create widget"
         );
 
-        await editQuickCreateInput("display_name", "some value");
+        await editQuickCreateInput(target, "display_name", "some value");
 
         // click outside: should not remove the quick create
         await click(target, ".o_kanban_group:first-child .o_kanban_record");
@@ -3701,7 +3614,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to reopen quick create and edit it
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(
             target,
@@ -3709,10 +3622,10 @@ QUnit.module("Views", (hooks) => {
             "should have open the quick create widget"
         );
 
-        await editQuickCreateInput("display_name", "some value");
+        await editQuickCreateInput(target, "display_name", "some value");
 
         // click on 'Discard': should remove the quick create
-        await discardRecord();
+        await discardRecord(target);
 
         assert.containsNone(
             target,
@@ -3759,9 +3672,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to add and edit a record
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "new partner");
-        await editRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await editRecord(target);
 
         assert.strictEqual(
             serverData.models.partner.records.length,
@@ -3802,12 +3715,12 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to add an element, fill the input and press ENTER
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create", "the quick create should be open");
 
-        await editQuickCreateInput("display_name", "new partner 1");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "new partner 1");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -3822,9 +3735,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // create a second element in a row
-        await createRecord();
-        await editQuickCreateInput("display_name", "new partner 2");
-        await validateRecord();
+        await createRecord(target);
+        await editQuickCreateInput(target, "display_name", "new partner 2");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -3866,12 +3779,12 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click to add a record, and add two in a row (first one will be delayed)
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create", "the quick create should be open");
 
-        await editQuickCreateInput("display_name", "new partner 1");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "new partner 1");
+        await validateRecord(target);
 
         assert.containsOnce(
             target,
@@ -3928,11 +3841,11 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
-        await createRecord();
+        await createRecord(target);
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
 
-        await editQuickCreateInput("display_name", "test");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "test");
+        await validateRecord(target);
         assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
 
@@ -3990,11 +3903,11 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
-        await quickCreateRecord(0);
+        await quickCreateRecord(target, 0);
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
 
-        await editQuickCreateInput("display_name", "test");
-        await editRecord();
+        await editQuickCreateInput(target, "display_name", "test");
+        await editRecord(target);
         assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(target.querySelector(".modal .o_field_many2one input").value, "hello");
 
@@ -4036,11 +3949,11 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
-        await createRecord();
+        await createRecord(target);
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
 
-        await editQuickCreateInput("display_name", "test");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "test");
+        await validateRecord(target);
         assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
 
         await click(target.querySelector(".modal .o_form_button_cancel"));
@@ -4084,9 +3997,9 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target.querySelector(".o_kanban_group"), ".o_kanban_record", 2);
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "test");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "test");
+        await validateRecord(target);
 
         assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(
@@ -4134,9 +4047,9 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_record");
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "test");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "test");
+        await validateRecord(target);
 
         assert.containsOnce(target, ".modal .o_form_view .o_form_editable");
         assert.strictEqual(
@@ -4190,7 +4103,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2, "there should be 2 columns");
         assert.containsNone(target, ".o_kanban_record", "both columns should be empty");
 
-        await createRecord();
+        await createRecord(target);
 
         assert.containsOnce(
             target,
@@ -4223,7 +4136,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // clicking on CREATE in control panel should not open a quick create
-        await createRecord();
+        await createRecord(target);
         assert.containsNone(
             target,
             ".o_kanban_quick_create",
@@ -4239,7 +4152,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // clicking on CREATE in control panel should not open a quick create
-        await createRecord();
+        await createRecord(target);
         assert.containsNone(
             target,
             ".o_kanban_quick_create",
@@ -4315,9 +4228,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_header .o_kanban_quick_add i", 3);
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "new record");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "new record");
+        await validateRecord(target);
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
     });
@@ -4346,9 +4259,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_header .o_kanban_quick_add i", 2);
         assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 3);
 
-        await quickCreateRecord(1);
-        await editQuickCreateInput("display_name", "new record");
-        await validateRecord();
+        await quickCreateRecord(target, 1);
+        await editQuickCreateInput(target, "display_name", "new record");
+        await validateRecord(target);
 
         assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 4);
     });
@@ -4386,9 +4299,9 @@ QUnit.module("Views", (hooks) => {
             "first column (abc) should contain 1 record"
         );
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "new record");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "new record");
+        await validateRecord(target);
 
         assert.containsN(
             target,
@@ -4428,13 +4341,13 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_header .o_kanban_quick_add i", 3);
             assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
 
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             assert.strictEqual(
                 target.querySelector(".o_kanban_quick_create input").value,
                 "blip",
                 "should have set the correct foo value by default"
             );
-            await validateRecord();
+            await validateRecord(target);
 
             assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
         }
@@ -4475,13 +4388,13 @@ QUnit.module("Views", (hooks) => {
             );
             assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 3);
 
-            await quickCreateRecord(1);
+            await quickCreateRecord(target, 1);
 
             assert.ok(
                 target.querySelector(".o_kanban_quick_create .o_field_boolean input").checked
             );
 
-            await validateRecord();
+            await validateRecord(target);
 
             assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 4);
         }
@@ -4525,13 +4438,13 @@ QUnit.module("Views", (hooks) => {
                 "first column (abc) should contain 1 record"
             );
 
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             assert.strictEqual(
                 target.querySelector(".o_kanban_quick_create select").value,
                 '"abc"',
                 "should have set the correct state value by default"
             );
-            await validateRecord();
+            await validateRecord(target);
 
             assert.containsN(
                 target,
@@ -4569,18 +4482,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_column_quick_create");
         assert.isNotVisible(target.querySelector(".o_column_quick_create input"));
 
-        await createColumn();
+        await createColumn(target);
 
         assert.isVisible(target.querySelector(".o_column_quick_create input"));
 
-        await editColumnName("new column");
-        await validateColumn();
+        await editColumnName(target, "new column");
+        await validateColumn(target);
 
         assert.strictEqual(target.querySelector(".o_column_quick_create input").value, "");
         assert.containsN(target, ".o_kanban_group", 2);
 
         // click to add a new record
-        await createRecord();
+        await createRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
 
@@ -4592,8 +4505,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_quick_create");
 
         // quick create record in first column
-        await editQuickCreateInput("display_name", "new record");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "new record");
+        await validateRecord(target);
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 3);
     });
@@ -4628,13 +4541,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_column_folded");
 
         // click to quick create a new record in the first column (this operation is delayed)
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.verifySteps(["get_views"]);
         assert.containsNone(target, ".o_form_view");
 
         // click to fold the first column
-        const clickColumnAction = await toggleColumnActions(0);
+        const clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Fold");
 
         assert.containsOnce(target, ".o_column_folded");
@@ -4646,7 +4559,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_form_view");
         assert.containsOnce(target, ".o_column_folded");
 
-        await createRecord();
+        await createRecord(target);
 
         assert.verifySteps([]); // "get_views" should have already be done
         assert.containsOnce(target, ".o_form_view");
@@ -4670,7 +4583,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             // Click on quick create in first column
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             assert.containsOnce(target, ".o_kanban_quick_create");
             assert.containsOnce(
                 target.querySelector(".o_kanban_group:first-child"),
@@ -4678,7 +4591,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Click on quick create in second column
-            await quickCreateRecord(1);
+            await quickCreateRecord(target, 1);
             assert.containsOnce(target, ".o_kanban_quick_create");
             assert.containsOnce(
                 target.querySelector(".o_kanban_group:nth-child(2)"),
@@ -4686,7 +4599,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Click on quick create in first column once again
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             assert.containsOnce(target, ".o_kanban_quick_create");
             assert.containsOnce(
                 target.querySelector(".o_kanban_group:first-child"),
@@ -4731,12 +4644,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(
-            getCard(0),
+            getCard(target, 0),
             ".o_field_many2many_tags .o_tag",
             2,
             "first record should contain 2 tags"
         );
-        assert.containsOnce(getCard(0), ".o_tag.o_tag_color_2", "first tag should have color 2");
+        assert.containsOnce(
+            getCard(target, 0),
+            ".o_tag.o_tag_color_2",
+            "first tag should have color 2"
+        );
         assert.verifySteps([
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/web_search_read",
@@ -5217,7 +5134,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
         assert.containsOnce(target, ".o_kanban_group:nth-child(3) .o_kanban_record");
 
-        assert.deepEqual(getCardTexts(0), ["blipDEF", "blipGHI"]);
+        assert.deepEqual(getCardTexts(target, 0), ["blipDEF", "blipGHI"]);
 
         // second record of first column moved at first place
         await dragAndDrop(
@@ -5226,7 +5143,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // should still be able to resequence
-        assert.deepEqual(getCardTexts(0), ["blipGHI", "blipDEF"]);
+        assert.deepEqual(getCardTexts(target, 0), ["blipGHI", "blipDEF"]);
 
         await reload(kanban, { groupBy: ["bar"] });
 
@@ -5234,7 +5151,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
 
-        assert.deepEqual(getCardTexts(0), ["blipGHI"]);
+        assert.deepEqual(getCardTexts(target, 0), ["blipGHI"]);
 
         // first record of first column moved to the bottom of second column
         await dragAndDrop(
@@ -5247,7 +5164,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
 
-        assert.deepEqual(getCardTexts(0), ["blipGHI"]);
+        assert.deepEqual(getCardTexts(target, 0), ["blipGHI"]);
 
         await reload(kanban, { groupBy: ["product_id"] });
 
@@ -5255,7 +5172,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
 
-        assert.deepEqual(getCardTexts(0), ["yopABC", "gnapGHI"]);
+        assert.deepEqual(getCardTexts(target, 0), ["yopABC", "gnapGHI"]);
 
         // first record of first column moved to the bottom of second column
         await dragAndDrop(
@@ -5268,7 +5185,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 0);
 
-        assert.deepEqual(getCardTexts(0), ["yopABC", "gnapGHI"]);
+        assert.deepEqual(getCardTexts(target, 0), ["yopABC", "gnapGHI"]);
         assert.verifySteps([]);
     });
 
@@ -5492,7 +5409,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.deepEqual(
-            getProgressBars(0).map((pb) => pb.style.width),
+            getProgressBars(target, 0).map((pb) => pb.style.width),
             ["5%", "5%", "90%"]
         );
     });
@@ -5516,7 +5433,7 @@ QUnit.module("Views", (hooks) => {
             // testing initial state
             assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
             assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
-            assert.deepEqual(getCardTexts(), ["yop", "gnap", "blip", "blip"]);
+            assert.deepEqual(getCardTexts(target), ["yop", "gnap", "blip", "blip"]);
             assert.containsNone(target, ".o_draggable");
 
             // attempt to drag&drop a record in another column
@@ -5539,7 +5456,7 @@ QUnit.module("Views", (hooks) => {
                 "Second column should still contain 2 records"
             );
             assert.deepEqual(
-                getCardTexts(),
+                getCardTexts(target),
                 ["yop", "gnap", "blip", "blip"],
                 "Records should not have moved"
             );
@@ -5551,7 +5468,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             assert.deepEqual(
-                getCardTexts(),
+                getCardTexts(target),
                 ["yop", "gnap", "blip", "blip"],
                 "Records should not have moved"
             );
@@ -5730,7 +5647,7 @@ QUnit.module("Views", (hooks) => {
                 assert.equal(mode, "edit");
             },
         });
-        await click(getCard(0), "a");
+        await click(getCard(target, 0), "a");
     });
 
     QUnit.test("environment is updated when (un)folding groups", async (assert) => {
@@ -5748,20 +5665,20 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
 
         // fold the second group and check that the res_ids it contains are no
         // longer in the environment
-        const clickColumnAction = await toggleColumnActions(1);
+        const clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Fold");
 
-        assert.deepEqual(getCardTexts(), ["1", "3"]);
+        assert.deepEqual(getCardTexts(target), ["1", "3"]);
 
         // re-open the second group and check that the res_ids it contains are
         // back in the environment
-        await click(getColumn(1));
+        await click(getColumn(target, 1));
 
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
     });
 
     QUnit.test("create a column in grouped on m2o", async (assert) => {
@@ -5795,7 +5712,7 @@ QUnit.module("Views", (hooks) => {
             "the input should not be visible"
         );
 
-        await createColumn();
+        await createColumn(target);
 
         assert.containsOnce(target, ".o_column_quick_create input", "the input should be visible");
 
@@ -5810,43 +5727,50 @@ QUnit.module("Views", (hooks) => {
             "the input should not be visible"
         );
 
-        await createColumn();
+        await createColumn(target);
 
         assert.containsOnce(target, ".o_column_quick_create input", "the input should be visible");
 
-        await editColumnName("new value");
-        await validateColumn();
+        await editColumnName(target, "new value");
+        await validateColumn(target);
 
         assert.containsN(target, ".o_kanban_group", 3);
         assert.containsOnce(
-            getColumn(2),
+            getColumn(target, 2),
             "span:contains(new value)",
             "the last column should be the newly created one"
         );
-        assert.ok(getColumn(2).dataset.id, "the created column should have an associated id");
+        assert.ok(
+            getColumn(target, 2).dataset.id,
+            "the created column should have an associated id"
+        );
         assert.doesNotHaveClass(
-            getColumn(2),
+            getColumn(target, 2),
             "o_column_folded",
             "the created column should not be folded"
         );
         assert.verifySteps(["name_create", "/web/dataset/resequence", "3,5,6"]);
 
         // fold and unfold the created column, and check that no RPCs are done (as there are no records)
-        const clickColumnAction = await toggleColumnActions(2);
+        const clickColumnAction = await toggleColumnActions(target, 2);
         await clickColumnAction("Fold");
 
-        assert.hasClass(getColumn(2), "o_column_folded", "the created column should now be folded");
+        assert.hasClass(
+            getColumn(target, 2),
+            "o_column_folded",
+            "the created column should now be folded"
+        );
 
-        await click(getColumn(2));
+        await click(getColumn(target, 2));
 
-        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 1), "o_column_folded");
         assert.verifySteps([], "no rpc should have been done when folding/unfolding");
 
         // quick create a record
-        await createRecord();
+        await createRecord(target);
 
         assert.hasClass(
-            getColumn(0).querySelector(":scope > div:nth-child(2)"),
+            getColumn(target, 0).querySelector(":scope > div:nth-child(2)"),
             "o_kanban_quick_create",
             "clicking on create should open the quick_create in the first column"
         );
@@ -5893,9 +5817,9 @@ QUnit.module("Views", (hooks) => {
                 "the input should not be visible"
             );
 
-            await createColumn();
-            await editColumnName("new value");
-            await validateColumn();
+            await createColumn(target);
+            await editColumnName(target, "new value");
+            await validateColumn(target);
 
             assert.verifySteps(["name_create", "/web/dataset/resequence", "3,5,6"]);
         }
@@ -5942,15 +5866,15 @@ QUnit.module("Views", (hooks) => {
         });
 
         // we look if column are folded/unfolded according to what is expected
-        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
-        assert.doesNotHaveClass(getColumn(3), "o_column_folded");
-        assert.doesNotHaveClass(getColumn(9), "o_column_folded");
-        assert.hasClass(getColumn(2), "o_column_folded");
-        assert.hasClass(getColumn(8), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 1), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 3), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 9), "o_column_folded");
+        assert.hasClass(getColumn(target, 2), "o_column_folded");
+        assert.hasClass(getColumn(target, 8), "o_column_folded");
 
         // we look if columns are actually folded after we reached the limit
-        assert.hasClass(getColumn(12), "o_column_folded");
-        assert.hasClass(getColumn(13), "o_column_folded");
+        assert.hasClass(getColumn(target, 12), "o_column_folded");
+        assert.hasClass(getColumn(target, 13), "o_column_folded");
 
         // we look if we have the right count of folded/unfolded column
         assert.containsN(target, ".o_kanban_group:not(.o_column_folded)", 10);
@@ -6015,15 +5939,15 @@ QUnit.module("Views", (hooks) => {
         });
 
         // we look if column are folded/unfolded according to what is expected
-        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
-        assert.doesNotHaveClass(getColumn(3), "o_column_folded");
-        assert.doesNotHaveClass(getColumn(9), "o_column_folded");
-        assert.hasClass(getColumn(2), "o_column_folded");
-        assert.hasClass(getColumn(8), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 1), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 3), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(target, 9), "o_column_folded");
+        assert.hasClass(getColumn(target, 2), "o_column_folded");
+        assert.hasClass(getColumn(target, 8), "o_column_folded");
 
         // we look if columns are actually folded after we reached the limit
-        assert.hasClass(getColumn(12), "o_column_folded");
-        assert.hasClass(getColumn(13), "o_column_folded");
+        assert.hasClass(getColumn(target, 12), "o_column_folded");
+        assert.hasClass(getColumn(target, 13), "o_column_folded");
 
         // we look if we have the right count of folded/unfolded column
         assert.containsN(target, ".o_kanban_group:not(.o_column_folded)", 10);
@@ -6060,13 +5984,13 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["product_id"],
             });
 
-            await createColumn();
+            await createColumn(target);
             await nextTick(); // Wait for the autofocus to trigger after the update
 
             assert.containsOnce(target, ".o_discard_msg", "the ESC to discard message is visible");
 
             // click outside the column (to lose focus)
-            await click(getColumn(0), ".o_kanban_header");
+            await click(getColumn(target, 0), ".o_kanban_header");
 
             assert.containsNone(
                 target,
@@ -6122,55 +6046,59 @@ QUnit.module("Views", (hooks) => {
         // check the initial rendering
         assert.containsN(target, ".o_kanban_group", 2, "should have two columns");
         assert.strictEqual(
-            getColumn(0).querySelector(".o_column_title").innerText,
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
             "hello",
             'first column should be [3, "hello"]'
         );
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "xmo",
             'second column should be [5, "xmo"]'
         );
         assert.containsN(
-            getColumn(1),
+            getColumn(target, 1),
             ".o_kanban_record",
             2,
             "second column should have two records"
         );
 
         // check available actions in kanban header's config dropdown
-        await toggleColumnActions(0);
+        await toggleColumnActions(target, 0);
         assert.containsOnce(
-            getColumn(0),
+            getColumn(target, 0),
             ".o_kanban_toggle_fold",
             "should be able to fold the column"
         );
-        assert.containsOnce(getColumn(0), ".o_column_edit", "should be able to edit the column");
         assert.containsOnce(
-            getColumn(0),
+            getColumn(target, 0),
+            ".o_column_edit",
+            "should be able to edit the column"
+        );
+        assert.containsOnce(
+            getColumn(target, 0),
             ".o_column_delete",
             "should be able to delete the column"
         );
         assert.containsNone(
-            getColumn(0),
+            getColumn(target, 0),
             ".o_column_archive_records",
             "should not be able to archive all the records"
         );
         assert.containsNone(
-            getColumn(0),
+            getColumn(target, 0),
             ".o_column_unarchive_records",
             "should not be able to restore all the records"
         );
 
         // delete second column (first cancel the confirm request, then confirm)
-        let clickColumnAction = await toggleColumnActions(1);
+        let clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Delete");
 
         dialogProps.cancel();
         await nextTick();
 
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "xmo",
             'column [5, "xmo"] should still be there'
         );
@@ -6178,42 +6106,46 @@ QUnit.module("Views", (hooks) => {
         dialogProps.confirm();
         await nextTick();
 
-        clickColumnAction = await toggleColumnActions(1);
+        clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Delete");
 
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "hello",
             'last column should now be [3, "hello"]'
         );
         assert.containsN(target, ".o_kanban_group", 2, "should still have two columns");
         assert.strictEqual(
-            getColumn(0).querySelector(".o_column_title").innerText,
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
             "None\n2",
             "first column should have no id (Undefined column)"
         );
 
         // check available actions on 'Undefined' column
-        await click(getColumn(0));
-        await toggleColumnActions(0);
+        await click(getColumn(target, 0));
+        await toggleColumnActions(target, 0);
         assert.containsOnce(
-            getColumn(0),
+            getColumn(target, 0),
             ".o_kanban_toggle_fold",
             "should be able to fold the column"
         );
-        assert.containsNone(getColumn(0), ".o_column_edit", "should be able to edit the column");
         assert.containsNone(
-            getColumn(0),
+            getColumn(target, 0),
+            ".o_column_edit",
+            "should be able to edit the column"
+        );
+        assert.containsNone(
+            getColumn(target, 0),
             ".o_column_delete",
             "should be able to delete the column"
         );
         assert.containsNone(
-            getColumn(0),
+            getColumn(target, 0),
             ".o_column_archive_records",
             "should not be able to archive all the records"
         );
         assert.containsNone(
-            getColumn(0),
+            getColumn(target, 0),
             ".o_column_unarchive_records",
             "should not be able to restore all the records"
         );
@@ -6244,9 +6176,9 @@ QUnit.module("Views", (hooks) => {
             [],
             "resequencing require at least 2 not Undefined columns"
         );
-        await createColumn();
-        await editColumnName("once third column");
-        await validateColumn();
+        await createColumn(target);
+        await editColumnName(target, "once third column");
+        await validateColumn(target);
 
         assert.deepEqual(resequencedIDs, [3, 4], "creating a column should trigger a resequence");
 
@@ -6289,24 +6221,24 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group", 2);
 
-        await createColumn();
-        await editColumnName("new column 1");
-        await validateColumn();
+        await createColumn(target);
+        await editColumnName(target, "new column 1");
+        await validateColumn(target);
 
         assert.containsN(target, ".o_kanban_group", 3);
 
-        const clickColumnAction = await toggleColumnActions(2);
+        const clickColumnAction = await toggleColumnActions(target, 2);
         await clickColumnAction("Delete");
 
         assert.containsN(target, ".o_kanban_group", 2);
 
-        await createColumn();
-        await editColumnName("new column 2");
-        await validateColumn();
+        await createColumn(target);
+        await editColumnName(target, "new column 2");
+        await validateColumn(target);
 
         assert.containsN(target, ".o_kanban_group", 3);
         assert.strictEqual(
-            getColumn(2).querySelector("span").innerText,
+            getColumn(target, 2).querySelector("span").innerText,
             "new column 2",
             "the last column should be the newly created one"
         );
@@ -6335,13 +6267,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "xmo",
             'title of the column should be "xmo"'
         );
 
         // edit the title of column [5, 'xmo'] and close without saving
-        let clickColumnAction = await toggleColumnActions(1);
+        let clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Edit");
 
         assert.containsOnce(
@@ -6361,14 +6293,14 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".modal");
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "xmo",
             'title of the column should still be "xmo"'
         );
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and discard
-        clickColumnAction = await toggleColumnActions(1);
+        clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Edit");
         await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
@@ -6376,14 +6308,14 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".modal");
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "xmo",
             'title of the column should still be "xmo"'
         );
         assert.strictEqual(nbRPCs, 0, "no RPC should have been done");
 
         // edit the title of column [5, 'xmo'] and save
-        clickColumnAction = await toggleColumnActions(1);
+        clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Edit");
         await editInput(target, ".modal .o_form_editable input", "ged"); // change the value
         nbRPCs = 0;
@@ -6391,7 +6323,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".modal", "the modal should be closed");
         assert.strictEqual(
-            getColumn(1).querySelector(".o_column_title").innerText,
+            getColumn(target, 1).querySelector(".o_column_title").innerText,
             "ged",
             'title of the column should be "ged"'
         );
@@ -6435,7 +6367,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        const clickColumnAction = await toggleColumnActions(1);
+        const clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Edit");
     });
 
@@ -6534,7 +6466,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // add a new column
-        await createColumn();
+        await createColumn(target);
         assert.containsNone(
             target,
             ".o_column_quick_create .o_quick_create_folded:visible",
@@ -6545,8 +6477,8 @@ QUnit.module("Views", (hooks) => {
             ".o_column_quick_create .o_quick_create_unfolded:visible",
             "the ColumnQuickCreate should be unfolded"
         );
-        await editColumnName("New Column 1");
-        await validateColumn();
+        await editColumnName(target, "New Column 1");
+        await validateColumn(target);
         assert.containsN(target, ".o_kanban_group", 3, "should now have three columns");
 
         // add another column
@@ -6560,8 +6492,8 @@ QUnit.module("Views", (hooks) => {
             ".o_column_quick_create .o_quick_create_unfolded:visible",
             "the ColumnQuickCreate should still be unfolded"
         );
-        await editColumnName("New Column 2");
-        await validateColumn();
+        await editColumnName(target, "New Column 2");
+        await validateColumn(target);
         assert.containsN(target, ".o_kanban_group", 4);
     });
 
@@ -6581,8 +6513,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         // add a new column
-        await createColumn();
-        await editColumnName("New Column 1");
+        await createColumn(target);
+        await editColumnName(target, "New Column 1");
         await triggerEvent(target, ".o_column_quick_create input", "keydown", {
             key: "Enter",
         });
@@ -6624,7 +6556,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_column_quick_create", "should have quick create available");
 
         // open the quick create
-        await createColumn();
+        await createColumn(target);
 
         assert.containsOnce(
             target,
@@ -6726,9 +6658,9 @@ QUnit.module("Views", (hooks) => {
             </kanban>`,
             groupBy: ["product_id"],
         });
-        await createColumn();
-        await editColumnName("New Column 1");
-        await validateColumn();
+        await createColumn(target);
+        await editColumnName(target, "New Column 1");
+        await validateColumn(target);
         assert.containsN(target, ".o_kanban_group", 3, "should now have three columns");
     });
 
@@ -6827,7 +6759,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // open the quick create
-        await createColumn();
+        await createColumn(target);
 
         // click to see the examples
         await click(target, ".o_column_quick_create .o_kanban_examples");
@@ -6980,9 +6912,9 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_view_nocontent", "the nocontent helper is displayed");
 
             // add a record
-            await quickCreateRecord();
-            await editQuickCreateInput("display_name", "twilight sparkle");
-            await validateRecord();
+            await quickCreateRecord(target);
+            await editQuickCreateInput(target, "display_name", "twilight sparkle");
+            await validateRecord(target);
 
             assert.containsNone(
                 target,
@@ -6991,7 +6923,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // cancel quick create
-            await discardRecord();
+            await discardRecord(target);
             assert.containsNone(
                 target,
                 ".o_view_nocontent",
@@ -7074,7 +7006,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:last-child .o_kanban_record", 3);
 
         // archive the records of the last column
-        const clickColumnAction = await toggleColumnActions(0);
+        const clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Archive All");
 
         // check no content helper is exist
@@ -7206,8 +7138,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // creating a new column
-        await editColumnName("applejack");
-        await validateColumn();
+        await editColumnName(target, "applejack");
+        await validateColumn(target);
 
         assert.containsNone(
             target,
@@ -7256,7 +7188,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_view_nocontent", "there should be a nocontent helper");
 
-        await createColumn();
+        await createColumn(target);
 
         assert.containsNone(
             target,
@@ -7299,9 +7231,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_view_nocontent", "there should be a nocontent helper");
 
         // add a record
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "twilight sparkle");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "twilight sparkle");
+        await validateRecord(target);
 
         assert.containsNone(
             target,
@@ -7344,8 +7276,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_view_nocontent", "there should be a nocontent helper");
 
         // add a record
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "twilight sparkle");
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "twilight sparkle");
 
         assert.containsNone(
             target,
@@ -7388,7 +7320,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             // add a record
-            await quickCreateRecord();
+            await quickCreateRecord(target);
 
             await click(target);
 
@@ -7589,7 +7521,7 @@ QUnit.module("Views", (hooks) => {
             "there should be 8 sample records by column"
         );
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record");
         assert.containsNone(target, ".o_view_nocontent");
@@ -7598,8 +7530,8 @@ QUnit.module("Views", (hooks) => {
             ".o_kanban_quick_create"
         );
 
-        await editQuickCreateInput("display_name", "twilight sparkle");
-        await validateRecord();
+        await editQuickCreateInput(target, "display_name", "twilight sparkle");
+        await validateRecord(target);
 
         assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsOnce(
@@ -7649,7 +7581,7 @@ QUnit.module("Views", (hooks) => {
             "there should be 8 sample records by column"
         );
 
-        await createRecord();
+        await createRecord(target);
         assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record");
         assert.containsNone(target, ".o_kanban_load_more");
@@ -7699,7 +7631,7 @@ QUnit.module("Views", (hooks) => {
             "there should be 8 sample records by column"
         );
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
         assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsNone(target, ".o_kanban_record");
         assert.containsNone(target, ".o_view_nocontent");
@@ -7740,7 +7672,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await toggleColumnActions(0);
+        await toggleColumnActions(target, 0);
 
         assert.containsN(target, ".o_kanban_record", 16);
         assert.hasClass(document.activeElement, "o_searchview_input");
@@ -7956,9 +7888,9 @@ QUnit.module("Views", (hooks) => {
             "should contain sample records"
         );
 
-        await createColumn();
-        await editColumnName("Yoohoo");
-        await validateColumn();
+        await createColumn(target);
+        await editColumnName(target, "Yoohoo");
+        await validateColumn(target);
 
         assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
         assert.containsN(target, ".o_kanban_group", 3);
@@ -8003,7 +7935,7 @@ QUnit.module("Views", (hooks) => {
             "should contain sample records"
         );
 
-        await toggleColumnActions(0);
+        await toggleColumnActions(target, 0);
 
         assert.hasClass(target.querySelector(".o_kanban_config .o_kanban_toggle_fold"), "disabled");
     });
@@ -8044,7 +7976,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // Fold the column
-        const clickColumnAction = await toggleColumnActions(0);
+        const clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Fold");
 
         assert.containsOnce(target, ".o_kanban_group");
@@ -8109,7 +8041,7 @@ QUnit.module("Views", (hooks) => {
 
         // Delete the first column
         groups = [];
-        const clickColumnAction = await toggleColumnActions(0);
+        const clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Delete");
 
         assert.containsNone(target, ".o_kanban_group");
@@ -8159,9 +8091,9 @@ QUnit.module("Views", (hooks) => {
             );
 
             // add a new column
-            await createColumn();
-            await editColumnName("Yoohoo");
-            await validateColumn();
+            await createColumn(target);
+            await editColumnName(target, "Yoohoo");
+            await validateColumn(target);
 
             assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
             assert.containsN(target, ".o_kanban_group", 3);
@@ -8171,7 +8103,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // delete the column we just created
-            const clickColumnAction = await toggleColumnActions(2);
+            const clickColumnAction = await toggleColumnActions(target, 2);
             await clickColumnAction("Delete");
 
             assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
@@ -8222,7 +8154,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(target, ".o_view_nocontent");
 
-        await createRecord(target);
+        await createRecord(target, target);
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal .o_cp_buttons .o_form_button_save");
@@ -8388,13 +8320,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            getCard(0).querySelector("span").textContent,
+            getCard(target, 0).querySelector("span").textContent,
             "yop",
             "should display 'yop' record"
         );
-        await click(getCard(0), "button.toggle-active");
+        await click(getCard(target, 0), "button.toggle-active");
         assert.notEqual(
-            getCard(0).querySelector("span").textContent,
+            getCard(target, 0).querySelector("span").textContent,
             "yop",
             "should remove 'yop' record from the view"
         );
@@ -8491,8 +8423,11 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.strictEqual(getCard(0).querySelector(".date").innerText, "01/25/2017");
-        assert.strictEqual(getCard(1).querySelector(".datetime").innerText, "12/12/2016 11:55:05");
+        assert.strictEqual(getCard(target, 0).querySelector(".date").innerText, "01/25/2017");
+        assert.strictEqual(
+            getCard(target, 1).querySelector(".datetime").innerText,
+            "12/12/2016 11:55:05"
+        );
     });
 
     QUnit.test("rendering date and datetime (raw value)", async (assert) => {
@@ -8516,9 +8451,12 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.equal(getCard(0).querySelector(".date").innerText, "2017-01-25T00:00:00.000+01:00");
         assert.equal(
-            getCard(1).querySelector(".datetime").innerText,
+            getCard(target, 0).querySelector(".date").innerText,
+            "2017-01-25T00:00:00.000+01:00"
+        );
+        assert.equal(
+            getCard(target, 1).querySelector(".datetime").innerText,
             "2016-12-12T11:55:05.000+01:00"
         );
     });
@@ -8541,7 +8479,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.deepEqual(getCardTexts(), ["hello", "hello", "xmo"]);
+        assert.deepEqual(getCardTexts(target), ["hello", "hello", "xmo"]);
     });
 
     QUnit.test("rendering many2one (raw value)", async (assert) => {
@@ -8562,7 +8500,7 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.deepEqual(getCardTexts(), ["3", "false", "3", "5"]);
+        assert.deepEqual(getCardTexts(target), ["3", "false", "3", "5"]);
     });
 
     QUnit.test("evaluate conditions on relational fields", async (assert) => {
@@ -8625,22 +8563,28 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.strictEqual(
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
+            "hello"
+        );
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
 
         await dragAndDrop(".o_kanban_group:first-child", ".o_kanban_group:nth-child(2)");
 
         // Drag & drop on column (not title) should not work
-        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.strictEqual(
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
+            "hello"
+        );
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
 
         await dragAndDrop(
             ".o_kanban_group:first-child .o_column_title",
             ".o_kanban_group:nth-child(2)"
         );
 
-        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "xmo");
-        assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
+        assert.strictEqual(getColumn(target, 0).querySelector(".o_column_title").innerText, "xmo");
+        assert.deepEqual(getCardTexts(target), ["2", "4", "1", "3"]);
     });
 
     QUnit.test(
@@ -8679,21 +8623,21 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await createColumn();
-            await editColumnName("foo");
-            await validateColumn();
+            await createColumn(target);
+            await editColumnName(target, "foo");
+            await validateColumn(target);
             assert.verifySteps([JSON.stringify({ ids: [3, 5, 6] })]);
 
-            await editColumnName("bar");
-            await validateColumn();
+            await editColumnName(target, "bar");
+            await validateColumn(target);
             assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7] })]);
 
-            await editColumnName("baz");
-            await validateColumn();
+            await editColumnName(target, "baz");
+            await validateColumn(target);
             assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8] })]);
 
-            await editColumnName("boo");
-            await validateColumn();
+            await editColumnName(target, "boo");
+            await validateColumn(target);
             assert.verifySteps([JSON.stringify({ ids: [3, 5, 6, 7, 8, 9] })]);
 
             // When rearranging, only resequence the affected records. In this example,
@@ -8725,22 +8669,31 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.strictEqual(
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
+            "hello"
+        );
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
 
         await dragAndDrop(".o_kanban_group:first-child", ".o_kanban_group:nth-child(2)");
 
         // Drag & drop on column (not title) should not work
-        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.strictEqual(
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
+            "hello"
+        );
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
 
         await dragAndDrop(
             ".o_kanban_group:first-child .o_column_title",
             ".o_kanban_group:nth-child(2)"
         );
 
-        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.strictEqual(
+            getColumn(target, 0).querySelector(".o_column_title").innerText,
+            "hello"
+        );
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
     });
 
     QUnit.test(
@@ -8823,7 +8776,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await toggleRecordDropdown(0);
+        await toggleRecordDropdown(target, 0);
 
         assert.containsNone(
             target,
@@ -8845,7 +8798,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
 
         assert.verifySteps(["write-color-9"], "should write on the color field");
-        assert.hasClass(getCard(0), "oe_kanban_color_9");
+        assert.hasClass(getCard(target, 0), "oe_kanban_color_9");
     });
 
     QUnit.test(
@@ -8878,9 +8831,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             });
 
-            await toggleRecordDropdown(0);
+            await toggleRecordDropdown(target, 0);
             await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
-            assert.hasClass(getCard(0), "oe_kanban_color_9");
+            assert.hasClass(getCard(target, 0), "oe_kanban_color_9");
         }
     );
 
@@ -8905,7 +8858,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
         });
 
-        await toggleRecordDropdown(0);
+        await toggleRecordDropdown(target, 0);
 
         assert.containsNone(
             target,
@@ -8935,35 +8888,35 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(
-            getColumn(1),
+            getColumn(target, 1),
             ".o_kanban_record",
             2,
             "there should be 2 records in the column"
         );
-        assert.deepEqual(getCardTexts(1), ["1", "2"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1", "2"]);
 
         // load more
-        await loadMore(1);
+        await loadMore(target, 1);
 
         assert.containsN(
-            getColumn(1),
+            getColumn(target, 1),
             ".o_kanban_record",
             3,
             "there should now be 3 records in the column"
         );
         assert.verifySteps(["2 - 0", "2 - 0", "4 - 0"], "the records should be correctly fetched");
-        assert.deepEqual(getCardTexts(1), ["1", "2", "3"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1", "2", "3"]);
 
         // reload
         await validateSearch(target);
 
         assert.containsN(
-            getColumn(1),
+            getColumn(target, 1),
             ".o_kanban_record",
             3,
             "there should still be 3 records in the column after reload"
         );
-        assert.deepEqual(getCardTexts(1), ["1", "2", "3"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1", "2", "3"]);
         assert.verifySteps(["2 - 0", "4 - 0"]);
     });
 
@@ -8996,19 +8949,23 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 2);
         assert.deepEqual(
-            [...getColumn(1).querySelectorAll("[name='category_ids']")].map((el) => el.textContent),
+            [...getColumn(target, 1).querySelectorAll("[name='category_ids']")].map(
+                (el) => el.textContent
+            ),
             ["silver", ""]
         );
         assert.verifySteps(["web_search_read 2-0", "web_search_read 2-0"]);
 
         // load more
-        await loadMore(1);
+        await loadMore(target, 1);
 
-        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 3);
         assert.deepEqual(
-            [...getColumn(1).querySelectorAll("[name='category_ids']")].map((el) => el.textContent),
+            [...getColumn(target, 1).querySelectorAll("[name='category_ids']")].map(
+                (el) => el.textContent
+            ),
             ["silver", "", "gold"]
         );
         assert.verifySteps(["web_search_read 4-0"]);
@@ -9031,8 +8988,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o-kanban-button-new");
 
-        await editColumnName("new column");
-        await validateColumn();
+        await editColumnName(target, "new column");
+        await validateColumn(target);
 
         assert.containsOnce(
             target,
@@ -9263,15 +9220,15 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        await editColumnName("column1");
-        await validateColumn();
+        await editColumnName(target, "column1");
+        await validateColumn(target);
 
-        await editColumnName("column2");
-        await validateColumn();
+        await editColumnName(target, "column2");
+        await validateColumn(target);
 
-        await quickCreateRecord(1);
-        await editQuickCreateInput("display_name", "new partner");
-        await validateRecord();
+        await quickCreateRecord(target, 1);
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await validateRecord(target);
 
         assert.containsNone(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_record");
@@ -9316,21 +9273,21 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await editColumnName("column1");
-        await validateColumn();
+        await editColumnName(target, "column1");
+        await validateColumn(target);
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "record1");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "record1");
+        await validateRecord(target);
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "record2");
-        await validateRecord();
-        await discardRecord(); // close quick create
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "record2");
+        await validateRecord(target);
+        await discardRecord(target); // close quick create
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.deepEqual(
-            getCardTexts(),
+            getCardTexts(target),
             ["record2", "record1"],
             "records should be correctly ordered"
         );
@@ -9341,7 +9298,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.deepEqual(
-            getCardTexts(),
+            getCardTexts(target),
             ["record1", "record2"],
             "records should be correctly ordered"
         );
@@ -9350,7 +9307,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.deepEqual(
-            getCardTexts(),
+            getCardTexts(target),
             ["record2", "record1"],
             "records should be correctly ordered"
         );
@@ -9387,7 +9344,10 @@ QUnit.module("Views", (hooks) => {
             </kanban>`,
         });
 
-        assert.strictEqual(getCard(2).querySelector(".o_widget").innerText, '{"foo":"gnap"}');
+        assert.strictEqual(
+            getCard(target, 2).querySelector(".o_widget").innerText,
+            '{"foo":"gnap"}'
+        );
     });
 
     QUnit.test("kanban card: record value should be update", async (assert) => {
@@ -9420,11 +9380,11 @@ QUnit.module("Views", (hooks) => {
             </kanban>`,
         });
 
-        assert.strictEqual(getCard(0).querySelector(".foo").innerText, "yop");
+        assert.strictEqual(getCard(target, 0).querySelector(".foo").innerText, "yop");
 
-        await click(getCard(0).querySelector("button"));
+        await click(getCard(target, 0).querySelector("button"));
         await nextTick();
-        assert.strictEqual(getCard(0).querySelector(".foo").innerText, "yolo");
+        assert.strictEqual(getCard(target, 0).querySelector(".foo").innerText, "yolo");
     });
 
     QUnit.test("column progressbars properly work", async (assert) => {
@@ -9457,7 +9417,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.deepEqual(
-            getCounters(),
+            getCounters(target),
             ["-4", "36"],
             "counter should display the sum of int_field values"
         );
@@ -9500,7 +9460,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.deepEqual(getCounters(target), ["1", "4"]);
         assert.containsN(target, ".o_kanban_group:last-child .o_column_progress .progress-bar", 4);
         assert.containsOnce(
             target,
@@ -9526,7 +9486,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_kanban_group:last-child"),
             "o_kanban_group_show_200"
         );
-        assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.deepEqual(getCounters(target), ["1", "1"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -9569,7 +9529,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.deepEqual(getCounters(), ["-4", "51"]);
+        assert.deepEqual(getCounters(target), ["-4", "51"]);
 
         await click(target, ".o_kanban_group:last-child .o_column_progress .progress-bar.bg-200");
 
@@ -9579,7 +9539,7 @@ QUnit.module("Views", (hooks) => {
             ),
             "progress-bar-animated"
         );
-        assert.deepEqual(getCounters(), ["-4", "15"]);
+        assert.deepEqual(getCounters(target), ["-4", "15"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -9612,7 +9572,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCardTexts(), ["name", "name", "name", "name"]);
+        assert.deepEqual(getCardTexts(target), ["name", "name", "name", "name"]);
         assert.verifySteps(
             ["get_views", "web_search_read"],
             "no read on progress bar data is done"
@@ -9645,9 +9605,9 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_counter", 2);
 
             // Create a new column: this should create an empty progressbar
-            await createColumn();
-            await editColumnName("test");
-            await validateColumn();
+            await createColumn(target);
+            await editColumnName(target, "test");
+            await validateColumn(target);
 
             assert.containsN(
                 target,
@@ -9687,17 +9647,17 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCounters(), ["1", "3"]);
+        assert.deepEqual(getCounters(target), ["1", "3"]);
 
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "Test");
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "Test");
 
-        assert.deepEqual(getCounters(), ["1", "3"]);
+        assert.deepEqual(getCounters(target), ["1", "3"]);
 
-        await validateRecord();
+        await validateRecord(target);
 
         assert.deepEqual(
-            getCounters(),
+            getCounters(target),
             ["2", "3"],
             "kanban counters should have updated on quick create"
         );
@@ -9736,12 +9696,12 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCardTexts(0), ["1"]);
+        assert.deepEqual(getCardTexts(target, 0), ["1"]);
 
-        await loadMore(0);
-        await loadMore(0);
+        await loadMore(target, 0);
+        await loadMore(target, 0);
 
-        assert.deepEqual(getCardTexts(0), ["1", "2", "3"], "intended records are loaded");
+        assert.deepEqual(getCardTexts(target, 0), ["1", "2", "3"], "intended records are loaded");
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -9781,12 +9741,12 @@ QUnit.module("Views", (hooks) => {
 
             await click(target, ".o_column_progress .progress-bar.bg-success");
 
-            assert.deepEqual(getCardTexts(), ["5"], "we should have 1 record shown");
+            assert.deepEqual(getCardTexts(target), ["5"], "we should have 1 record shown");
 
-            await loadMore(0);
-            await loadMore(0);
+            await loadMore(target, 0);
+            await loadMore(target, 0);
 
-            assert.deepEqual(getCardTexts(), ["5", "6", "7"]);
+            assert.deepEqual(getCardTexts(target), ["5", "6", "7"]);
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
@@ -9827,20 +9787,28 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCounters(), ["-4", "36"], "counter should contain the correct value");
         assert.deepEqual(
-            getTooltips(1),
+            getCounters(target),
+            ["-4", "36"],
+            "counter should contain the correct value"
+        );
+        assert.deepEqual(
+            getTooltips(target, 1),
             ["1 yop", "1 gnap", "1 blip"],
             "the counter progressbars should be correctly displayed"
         );
 
         // archive all records of the second columns
-        const clickColumnAction = await toggleColumnActions(1);
+        const clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Archive All");
 
-        assert.deepEqual(getCounters(), ["-4", "0"], "counter should contain the correct value");
+        assert.deepEqual(
+            getCounters(target),
+            ["-4", "0"],
+            "counter should contain the correct value"
+        );
         assert.containsNone(
-            getColumn(1),
+            getColumn(target, 1),
             ".progress-bar",
             "the counter progressbars should have been correctly updated"
         );
@@ -9892,13 +9860,13 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.deepEqual(getCardTexts(), ["4", "1", "2", "3"]);
+            assert.deepEqual(getCardTexts(target), ["4", "1", "2", "3"]);
 
             // archive all records of the first column
-            const clickColumnAction = await toggleColumnActions(0);
+            const clickColumnAction = await toggleColumnActions(target, 0);
             await clickColumnAction("Archive All");
 
-            assert.deepEqual(getCardTexts(), ["1", "2", "3"]);
+            assert.deepEqual(getCardTexts(target), ["1", "2", "3"]);
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
@@ -9975,11 +9943,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Activate "yop" on second column
-        await click(getColumn(1), ".progress-bar.bg-success");
+        await click(getColumn(target, 1), ".progress-bar.bg-success");
         // Activate "gnap" on second column
-        await click(getColumn(1), ".progress-bar.bg-warning");
+        await click(getColumn(target, 1), ".progress-bar.bg-warning");
         // Deactivate "gnap" on second column
-        await click(getColumn(1), ".progress-bar.bg-warning");
+        await click(getColumn(target, 1), ".progress-bar.bg-warning");
 
         assert.verifySteps([
             // initial load
@@ -10021,30 +9989,30 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Unfold first column
-        await click(getColumn(0));
+        await click(getColumn(target, 0));
 
-        assert.deepEqual(getCounters(), ["1", "1", "2"]);
+        assert.deepEqual(getCounters(target), ["1", "1", "2"]);
 
         await dragAndDrop(
             ".o_kanban_group:first-child .o_kanban_record",
             ".o_kanban_group:nth-child(2)"
         );
 
-        assert.deepEqual(getCounters(), ["0", "2", "2"]);
+        assert.deepEqual(getCounters(target), ["0", "2", "2"]);
 
         await dragAndDrop(
             ".o_kanban_group:nth-child(2) .o_kanban_record",
             ".o_kanban_group:first-child"
         );
 
-        assert.deepEqual(getCounters(), ["1", "1", "2"]);
+        assert.deepEqual(getCounters(target), ["1", "1", "2"]);
 
         await dragAndDrop(
             ".o_kanban_group:first-child .o_kanban_record",
             ".o_kanban_group:nth-child(3)"
         );
 
-        assert.deepEqual(getCounters(), ["0", "1", "3"]);
+        assert.deepEqual(getCounters(target), ["0", "1", "3"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -10105,14 +10073,14 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.deepEqual(getCounters(), ["13", "19"]);
+            assert.deepEqual(getCounters(target), ["13", "19"]);
 
             await dragAndDrop(
                 ".o_kanban_group:first-child .o_kanban_record",
                 ".o_kanban_group:nth-child(2)"
             );
 
-            assert.deepEqual(getCounters(), ["-4", "36"]);
+            assert.deepEqual(getCounters(target), ["-4", "36"]);
 
             assert.verifySteps([
                 "get_views",
@@ -10148,11 +10116,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCounters(), ["1", "3"]);
+        assert.deepEqual(getCounters(target), ["1", "3"]);
 
         await click(target, ".o_kanban_group:nth-child(2) .bg-success");
 
-        assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.deepEqual(getCounters(target), ["1", "1"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -10184,8 +10152,8 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.deepEqual(getTooltips(), ["1 blip", "1 yop", "1 gnap", "1 blip"]);
-            assert.deepEqual(getCounters(), ["1", "3"]);
+            assert.deepEqual(getTooltips(target), ["1 blip", "1 yop", "1 gnap", "1 blip"]);
+            assert.deepEqual(getCounters(target), ["1", "3"]);
 
             // Drag the last kanban record to the first column
             await dragAndDrop(
@@ -10193,8 +10161,8 @@ QUnit.module("Views", (hooks) => {
                 ".o_kanban_group:first-child"
             );
 
-            assert.deepEqual(getTooltips(), ["1 gnap", "1 blip", "1 yop", "1 blip"]);
-            assert.deepEqual(getCounters(), ["2", "2"]);
+            assert.deepEqual(getTooltips(target), ["1 gnap", "1 blip", "1 yop", "1 blip"]);
+            assert.deepEqual(getCounters(target), ["2", "2"]);
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
@@ -10244,8 +10212,8 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
-        assert.deepEqual(getCounters(), ["1", "6"]);
+        assert.deepEqual(getTooltips(target), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(target), ["1", "6"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -10254,16 +10222,16 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
         ]);
 
-        await click(getColumn(1), ".progress-bar.bg-success");
+        await click(getColumn(target, 1), ".progress-bar.bg-success");
 
-        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
-        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.deepEqual(getTooltips(target), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(target), ["1", "4"]);
         assert.verifySteps(["web_search_read"]);
 
         // Add searchdomain to something restricting progressbars' values (records still in filtered group)
         await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
-        assert.deepEqual(getTooltips(), ["3 yop"]);
-        assert.deepEqual(getCounters(), ["3"]);
+        assert.deepEqual(getTooltips(target), ["3 yop"]);
+        assert.deepEqual(getCounters(target), ["3"]);
         assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
     });
 
@@ -10305,8 +10273,8 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
-        assert.deepEqual(getCounters(), ["-4", "636"]);
+        assert.deepEqual(getTooltips(target), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(target), ["-4", "636"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -10315,10 +10283,10 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
         ]);
 
-        await click(getColumn(1), ".progress-bar.bg-success");
+        await click(getColumn(target, 1), ".progress-bar.bg-success");
 
-        assert.deepEqual(getTooltips(), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
-        assert.deepEqual(getCounters(), ["-4", "610"]);
+        assert.deepEqual(getTooltips(target), ["1 blip", "4 yop", "1 gnap", "1 blip"]);
+        assert.deepEqual(getCounters(target), ["-4", "610"]);
         assert.verifySteps([
             "web_read_group", // recomputes aggregates
             "web_search_read",
@@ -10326,8 +10294,8 @@ QUnit.module("Views", (hooks) => {
 
         // Add searchdomain to something restricting progressbars' values (records still in filtered group)
         await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
-        assert.deepEqual(getTooltips(), ["3 yop"]);
-        assert.deepEqual(getCounters(), ["600"]);
+        assert.deepEqual(getTooltips(target), ["3 yop"]);
+        assert.deepEqual(getCounters(target), ["600"]);
         assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
     });
 
@@ -10351,8 +10319,16 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        assert.deepEqual(getCardTexts(0), ["4"], "first column's first record must be id 4");
-        assert.deepEqual(getCardTexts(1), ["1"], "second column's records should be only the id 1");
+        assert.deepEqual(
+            getCardTexts(target, 0),
+            ["4"],
+            "first column's first record must be id 4"
+        );
+        assert.deepEqual(
+            getCardTexts(target, 1),
+            ["1"],
+            "second column's records should be only the id 1"
+        );
 
         // Drag the first kanban record on top of the last
         await dragAndDrop(
@@ -10361,12 +10337,12 @@ QUnit.module("Views", (hooks) => {
         );
 
         // load more twice to load all records of second column
-        await loadMore(1);
-        await loadMore(1);
+        await loadMore(target, 1);
+        await loadMore(target, 1);
 
         // Check records of the second column
         assert.deepEqual(
-            getCardTexts(1),
+            getCardTexts(target, 1),
             ["4", "1", "2", "3"],
             "first column's first record must be id 4"
         );
@@ -10399,14 +10375,14 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.deepEqual(getCounters(), ["-4", "36"]);
+            assert.deepEqual(getCounters(target), ["-4", "36"]);
 
-            await createRecord();
-            await editQuickCreateInput("int_field", 44);
-            await validateRecord();
+            await createRecord(target);
+            await editQuickCreateInput(target, "int_field", 44);
+            await validateRecord(target);
 
             assert.deepEqual(
-                getCounters(),
+                getCounters(target),
                 ["40", "36"],
                 "kanban counters should have been updated on quick create"
             );
@@ -10456,30 +10432,30 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await click(getColumn(0), ".progress-bar.bg-danger");
+            await click(getColumn(target, 0), ".progress-bar.bg-danger");
 
-            assert.containsOnce(getColumn(0), ".o_kanban_record");
-            assert.containsOnce(getColumn(0), ".oe_kanban_card_danger");
-            assert.deepEqual(getCounters(), ["-4", "36"]);
+            assert.containsOnce(getColumn(target, 0), ".o_kanban_record");
+            assert.containsOnce(getColumn(target, 0), ".oe_kanban_card_danger");
+            assert.deepEqual(getCounters(target), ["-4", "36"]);
 
             // open the quick create
-            await createRecord();
+            await createRecord(target);
 
             // fill it with a record that satisfies the active filter
-            await editQuickCreateInput("int_field", 44);
-            await editQuickCreateInput("foo", "blip");
-            await validateRecord();
+            await editQuickCreateInput(target, "int_field", 44);
+            await editQuickCreateInput(target, "foo", "blip");
+            await validateRecord(target);
 
             // fill it again with another record that DOES NOT satisfy the active filter
-            await editQuickCreateInput("int_field", 1000);
-            await editQuickCreateInput("foo", "yop");
-            await validateRecord();
+            await editQuickCreateInput(target, "int_field", 1000);
+            await editQuickCreateInput(target, "foo", "yop");
+            await validateRecord(target);
 
-            assert.containsN(getColumn(0), ".o_kanban_record", 3);
-            assert.containsN(getColumn(0), ".oe_kanban_card_danger", 2);
-            assert.containsOnce(getColumn(0), ".oe_kanban_card_success");
+            assert.containsN(getColumn(target, 0), ".o_kanban_record", 3);
+            assert.containsN(getColumn(target, 0), ".oe_kanban_card_danger", 2);
+            assert.containsOnce(getColumn(target, 0), ".oe_kanban_card_success");
             assert.deepEqual(
-                getCounters(),
+                getCounters(target),
                 ["40", "36"],
                 "kanban counters should have been updated on quick create, respecting the active filter"
             );
@@ -10530,14 +10506,14 @@ QUnit.module("Views", (hooks) => {
                     }
                 },
             });
-            await createRecord();
+            await createRecord(target);
             assert.strictEqual(
                 target.querySelector(".o_kanban_quick_create").closest(".o_kanban_group"),
                 target.querySelector(".o_kanban_group"),
                 "quick create should have been added in the first column"
             );
             await dragAndDrop(".o_kanban_record", ".o_kanban_group:nth-child(2)");
-            await createRecord();
+            await createRecord(target);
             assert.strictEqual(
                 target.querySelector(".o_kanban_quick_create").closest(".o_kanban_group"),
                 target.querySelector(".o_kanban_group"),
@@ -10799,7 +10775,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await createRecord();
+        await createRecord(target);
         assert.verifySteps(["createRecord"]);
     });
 
@@ -10817,20 +10793,28 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
         });
 
-        getCard(0).focus();
-        assert.strictEqual(document.activeElement, getCard(0), "the kanban cards are focussable");
+        getCard(target, 0).focus();
+        assert.strictEqual(
+            document.activeElement,
+            getCard(target, 0),
+            "the kanban cards are focussable"
+        );
 
         triggerHotkey("ArrowRight");
 
         assert.strictEqual(
             document.activeElement,
-            getCard(1),
+            getCard(target, 1),
             "the second card should be focussed"
         );
 
         triggerHotkey("ArrowLeft");
 
-        assert.strictEqual(document.activeElement, getCard(0), "the first card should be focussed");
+        assert.strictEqual(
+            document.activeElement,
+            getCard(target, 0),
+            "the first card should be focussed"
+        );
     });
 
     QUnit.test(
@@ -10850,12 +10834,12 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates></kanban>",
             });
 
-            getCard(0).querySelector(".o-this-is-focussable").focus();
+            getCard(target, 0).querySelector(".o-this-is-focussable").focus();
             triggerHotkey("ArrowDown");
 
             assert.strictEqual(
                 document.activeElement,
-                getCard(1),
+                getCard(target, 1),
                 "the second card should be focussed"
             );
         }
@@ -10998,7 +10982,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test(
         "keyboard navigation on kanban when the focus is on a link that " +
-        "has an action and the kanban has no oe_kanban_global_... class",
+            "has an action and the kanban has no oe_kanban_global_... class",
         async (assert) => {
             await makeView({
                 type: "kanban",
@@ -11016,7 +11000,7 @@ QUnit.module("Views", (hooks) => {
                     );
                 },
             });
-            const firstCard = getCard(0);
+            const firstCard = getCard(target, 0);
             firstCard.focus();
             await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
         }
@@ -11048,7 +11032,7 @@ QUnit.module("Views", (hooks) => {
                     );
                 },
             });
-            const firstCard = getCard(0);
+            const firstCard = getCard(target, 0);
             firstCard.focus();
             await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
         }
@@ -11103,10 +11087,10 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await toggleRecordDropdown(0);
-        await click(getCard(0), ".oe_kanban_action");
+        await toggleRecordDropdown(target, 0);
+        await click(getCard(target, 0), ".oe_kanban_action");
 
-        assert.containsNone(getCard(0), "img", "Initially there is no image.");
+        assert.containsNone(getCard(target, 0), "img", "Initially there is no image.");
 
         await click(document.body, ".modal .o_kanban_cover_image img", {
             skipVisibilityCheck: true,
@@ -11115,8 +11099,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
-        await toggleRecordDropdown(1);
-        const coverButton = getCard(1).querySelector("a");
+        await toggleRecordDropdown(target, 1);
+        const coverButton = getCard(target, 1).querySelector("a");
         assert.strictEqual(coverButton.innerText.trim(), "Set Cover Image");
         await click(coverButton);
 
@@ -11165,11 +11149,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCardTexts(), ["blip", "blip", "yop", "gnap"]);
+        assert.deepEqual(getCardTexts(target), ["blip", "blip", "yop", "gnap"]);
 
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
-        assert.deepEqual(getCardTexts(), ["blip", "yop", "gnap", "blip"]);
+        assert.deepEqual(getCardTexts(target), ["blip", "yop", "gnap", "blip"]);
     });
 
     QUnit.test("ungrouped kanban without handle field", async (assert) => {
@@ -11191,11 +11175,11 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
+        assert.deepEqual(getCardTexts(target), ["yop", "blip", "gnap", "blip"]);
 
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
-        assert.deepEqual(getCardTexts(), ["yop", "blip", "gnap", "blip"]);
+        assert.deepEqual(getCardTexts(target), ["yop", "blip", "gnap", "blip"]);
         assert.verifySteps([]);
     });
 
@@ -11264,7 +11248,7 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        assert.containsOnce(getCard(0), "div.o_field_boolean .o-checkbox");
+        assert.containsOnce(getCard(target, 0), "div.o_field_boolean .o-checkbox");
     });
 
     QUnit.test("kanban view with boolean toggle widget", async (assert) => {
@@ -11282,12 +11266,12 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
         });
-        assert.ok(getCard(0).querySelector("[name='bar'] input").checked);
-        assert.ok(getCard(1).querySelector("[name='bar'] input").checked);
+        assert.ok(getCard(target, 0).querySelector("[name='bar'] input").checked);
+        assert.ok(getCard(target, 1).querySelector("[name='bar'] input").checked);
 
-        await click(getCard(1), "[name='bar'] input");
-        assert.ok(getCard(0).querySelector("[name='bar'] input").checked);
-        assert.notOk(getCard(1).querySelector("[name='bar'] input").checked);
+        await click(getCard(target, 1), "[name='bar'] input");
+        assert.ok(getCard(target, 0).querySelector("[name='bar'] input").checked);
+        assert.notOk(getCard(target, 1).querySelector("[name='bar'] input").checked);
     });
 
     QUnit.test("kanban view with monetary and currency fields without widget", async (assert) => {
@@ -11310,7 +11294,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
         });
 
-        assert.deepEqual(getCardTexts(), [
+        assert.deepEqual(getCardTexts(target), [
             `$${nbsp}1750.00`,
             `$${nbsp}1500.00`,
             `2000.00${nbsp}€`,
@@ -11336,12 +11320,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Open quick create
-        await createRecord();
+        await createRecord(target);
 
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
 
         // Fill in mandatory field
-        await editQuickCreateInput("display_name", "aaa");
+        await editQuickCreateInput(target, "display_name", "aaa");
 
         // Tab -> goes to first primary button
         const nameInput = target.querySelector(".o_field_widget[name=display_name] input");
@@ -11441,8 +11425,8 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), ["1 blip"]);
-            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
 
             // Apply an active filter
             await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
@@ -11461,7 +11445,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_kanban_group");
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show");
             assert.strictEqual(target.querySelector(".o_column_title").innerText, "Yes");
-            assert.deepEqual(getTooltips(), ["1 yop"]);
+            assert.deepEqual(getTooltips(target), ["1 yop"]);
 
             // Undo searchdomain
             await reload(kanban, { domain: [] });
@@ -11473,8 +11457,8 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), ["1 blip"]);
-            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
@@ -11526,10 +11510,10 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), ["1 blip"]);
-            assert.deepEqual(getCardTexts(0), ["4blip"]);
-            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
-            assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
+            assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(target, 0), ["4blip"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(target, 1), ["1yop", "2blip", "3gnap"]);
 
             // Apply an active filter
             await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
@@ -11539,8 +11523,8 @@ QUnit.module("Views", (hooks) => {
                     .innerText,
                 "Yes"
             );
-            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
-            assert.deepEqual(getCardTexts(1), ["1yop"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(target, 1), ["1yop"]);
 
             // Add searchdomain to something restricting progressbars' values + emptying the filtered group
             await reload(kanban, { domain: [["foo", "=", "blip"]] });
@@ -11552,10 +11536,10 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), ["1 blip"]);
-            assert.deepEqual(getCardTexts(0), ["4blip"]);
-            assert.deepEqual(getTooltips(1), ["1 blip"]);
-            assert.deepEqual(getCardTexts(1), ["2blip"]);
+            assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(target, 0), ["4blip"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 blip"]);
+            assert.deepEqual(getCardTexts(target, 1), ["2blip"]);
 
             // Undo searchdomain
             await reload(kanban, { domain: [] });
@@ -11567,10 +11551,10 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), ["1 blip"]);
-            assert.deepEqual(getCardTexts(0), ["4blip"]);
-            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
-            assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
+            assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(target, 0), ["4blip"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(target, 1), ["1yop", "2blip", "3gnap"]);
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
@@ -11625,10 +11609,10 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), ["1 blip"]);
-            assert.deepEqual(getCardTexts(0), ["4blip"]);
-            assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
-            assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
+            assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+            assert.deepEqual(getCardTexts(target, 0), ["4blip"]);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(target, 1), ["1yop", "2blip", "3gnap"]);
 
             // Apply an active filter
             await click(target, ".o_kanban_group:nth-child(2) .progress-bar.bg-success");
@@ -11644,7 +11628,7 @@ QUnit.module("Views", (hooks) => {
                 "Yes"
             );
             assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
-            assert.deepEqual(getCardTexts(1), ["1yop"]);
+            assert.deepEqual(getCardTexts(target, 1), ["1yop"]);
 
             // Drop in the non-matching record from first column
             await dragAndDrop(
@@ -11659,10 +11643,10 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
                 ["No", "Yes"]
             );
-            assert.deepEqual(getTooltips(0), []);
-            assert.deepEqual(getCardTexts(0), []);
-            assert.deepEqual(getTooltips(1), ["1 yop", "2 blip", "1 Other"]);
-            assert.deepEqual(getCardTexts(1), ["1yop", "4blip"]);
+            assert.deepEqual(getTooltips(target, 0), []);
+            assert.deepEqual(getCardTexts(target, 0), []);
+            assert.deepEqual(getTooltips(target, 1), ["1 yop", "2 blip", "1 Other"]);
+            assert.deepEqual(getCardTexts(target, 1), ["1yop", "4blip"]);
             assert.verifySteps([
                 "get_views",
                 "web_read_group",
@@ -11709,10 +11693,10 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
             ["No", "Yes"]
         );
-        assert.deepEqual(getTooltips(0), ["1 blip"]);
-        assert.deepEqual(getCardTexts(0), ["4blip"]);
-        assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
-        assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
+        assert.deepEqual(getTooltips(target, 0), ["1 blip"]);
+        assert.deepEqual(getCardTexts(target, 0), ["4blip"]);
+        assert.deepEqual(getTooltips(target, 1), ["1 yop", "1 blip", "1 Other"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1yop", "2blip", "3gnap"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -11734,7 +11718,7 @@ QUnit.module("Views", (hooks) => {
             "Yes"
         );
         assert.containsOnce(target, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
-        assert.deepEqual(getCardTexts(1), ["1yop"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1yop"]);
         assert.verifySteps(["web_search_read"]);
 
         // Drag out its only record onto the first column
@@ -11750,10 +11734,10 @@ QUnit.module("Views", (hooks) => {
             [...target.querySelectorAll(".o_column_title")].map((el) => el.innerText),
             ["No", "Yes"]
         );
-        assert.deepEqual(getTooltips(0), ["1 yop", "1 blip"]);
-        assert.deepEqual(getCardTexts(0), ["4blip", "1yop"]);
-        assert.deepEqual(getTooltips(1), ["1 blip", "1 Other"]);
-        assert.deepEqual(getCardTexts(1), ["2blip", "3gnap"]);
+        assert.deepEqual(getTooltips(target, 0), ["1 yop", "1 blip"]);
+        assert.deepEqual(getCardTexts(target, 0), ["4blip", "1yop"]);
+        assert.deepEqual(getTooltips(target, 1), ["1 blip", "1 Other"]);
+        assert.deepEqual(getCardTexts(target, 1), ["2blip", "3gnap"]);
         assert.verifySteps([
             "web_save",
             "read_progress_bar",
@@ -11878,7 +11862,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.verifySteps(["warning"]);
-        assert.strictEqual(getCard(0).innerText, "123");
+        assert.strictEqual(getCard(target, 0).innerText, "123");
     });
 
     QUnit.test("Quick created record is rendered after load", async (assert) => {
@@ -11910,20 +11894,20 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.deepEqual(getCardTexts(0), ["0", "1"]);
+        assert.deepEqual(getCardTexts(target, 0), ["0", "1"]);
         assert.verifySteps([]);
 
         def = makeDeferred();
 
-        await quickCreateRecord(0);
-        await editQuickCreateInput("display_name", "Test");
-        await validateRecord();
-        assert.deepEqual(getCardTexts(0), ["0", "1"]);
+        await quickCreateRecord(target, 0);
+        await editQuickCreateInput(target, "display_name", "Test");
+        await validateRecord(target);
+        assert.deepEqual(getCardTexts(target, 0), ["0", "1"]);
 
         def.resolve();
         await nextTick();
 
-        assert.deepEqual(getCardTexts(0), ["0", "0", "1"]);
+        assert.deepEqual(getCardTexts(target, 0), ["0", "0", "1"]);
         assert.verifySteps(["name_create", "web_read"]);
     });
 
@@ -11943,7 +11927,12 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
         });
 
-        assert.deepEqual(getCardTexts(), ["EDITDELETE", "EDITDELETE", "EDITDELETE", "EDITDELETE"]);
+        assert.deepEqual(getCardTexts(target), [
+            "EDITDELETE",
+            "EDITDELETE",
+            "EDITDELETE",
+            "EDITDELETE",
+        ]);
     });
 
     QUnit.test("folded groups are kept when leaving and coming back", async (assert) => {
@@ -11981,7 +11970,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record", 4);
 
         // fold the first group
-        const clickColumnAction = await toggleColumnActions(0);
+        const clickColumnAction = await toggleColumnActions(target, 0);
         await clickColumnAction("Fold");
         assert.containsOnce(target, ".o_column_folded");
         assert.containsN(target, ".o_kanban_record", 2);
@@ -12030,10 +12019,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Filter on state "abc" => matches 2 records
-        await click(getProgressBars(1)[0]);
+        await click(getProgressBars(target, 1)[0]);
 
-        assert.deepEqual(getCardTexts(0), ["4"]);
-        assert.deepEqual(getCardTexts(1), ["1", "2"]);
+        assert.deepEqual(getCardTexts(target, 0), ["4"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1", "2"]);
 
         // open a record
         await click(target.querySelectorAll(".o_kanban_record")[1]);
@@ -12042,8 +12031,8 @@ QUnit.module("Views", (hooks) => {
         // go back to kanban view
         await click(target.querySelector(".breadcrumb-item a"));
 
-        assert.deepEqual(getCardTexts(0), ["4"]);
-        assert.deepEqual(getCardTexts(1), ["1", "2"]);
+        assert.deepEqual(getCardTexts(target, 0), ["4"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1", "2"]);
 
         // open a record
         await click(target.querySelectorAll(".o_kanban_record")[1]);
@@ -12054,8 +12043,8 @@ QUnit.module("Views", (hooks) => {
         // go back to kanban view
         await click(target.querySelector(".breadcrumb-item a"));
 
-        assert.deepEqual(getCardTexts(0), ["4"]);
-        assert.deepEqual(getCardTexts(1), ["2"]);
+        assert.deepEqual(getCardTexts(target, 0), ["4"]);
+        assert.deepEqual(getCardTexts(target, 1), ["2"]);
     });
 
     QUnit.test(
@@ -12097,7 +12086,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_record", 4);
 
             // fold the second column
-            const clickColumnAction = await toggleColumnActions(1);
+            const clickColumnAction = await toggleColumnActions(target, 1);
             await clickColumnAction("Fold");
             assert.containsOnce(target, ".o_column_folded");
             assert.containsOnce(target, ".o_kanban_record");
@@ -12145,7 +12134,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record", 2);
 
         // load more records in second group
-        await loadMore(1);
+        await loadMore(target, 1);
         assert.containsN(target, ".o_kanban_record", 3);
 
         // open a record and go back
@@ -12241,7 +12230,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_kanban_quick_create");
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
@@ -12250,12 +12239,12 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_kanban_quick_create");
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
 
-        await quickCreateRecord(1);
+        await quickCreateRecord(target, 1);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_quick_create");
@@ -12264,14 +12253,14 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_kanban_quick_create");
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
 
         assert.verifySteps([]);
 
-        await createRecord();
+        await createRecord(target);
 
         assert.verifySteps(["create record"]);
         assert.containsNone(target, ".o_kanban_quick_create");
@@ -12301,7 +12290,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_kanban_quick_create");
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
@@ -12322,7 +12311,7 @@ QUnit.module("Views", (hooks) => {
             "ABC"
         );
 
-        await quickCreateRecord(1);
+        await quickCreateRecord(target, 1);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_quick_create");
@@ -12342,7 +12331,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_kanban_quick_create");
 
-        await quickCreateRecord();
+        await quickCreateRecord(target);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(1) .o_kanban_quick_create");
@@ -12355,7 +12344,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps([]);
 
-        await createRecord();
+        await createRecord(target);
 
         assert.verifySteps(["create record"]);
         assert.containsNone(target, ".o_kanban_quick_create");
@@ -12382,7 +12371,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(target, ".o_kanban_quick_create");
 
-        await quickCreateRecord(1);
+        await quickCreateRecord(target, 1);
 
         assert.containsOnce(target, ".o_kanban_quick_create");
         assert.containsOnce(target, ".o_kanban_group:nth-child(2) .o_kanban_quick_create");
@@ -12488,11 +12477,11 @@ QUnit.module("Views", (hooks) => {
                 ),
                 ["1 yop", "1 gnap", "1 blip", "1 Other"]
             );
-            assert.deepEqual(getCounters(), ["2", "4"]);
+            assert.deepEqual(getCounters(target), ["2", "4"]);
 
             await click(target.querySelector(".o_kanban_group:nth-child(2) .progress-bar"));
 
-            assert.deepEqual(getCounters(), ["2", "1"]);
+            assert.deepEqual(getCounters(target), ["2", "1"]);
             assert.strictEqual(
                 target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
                 "ABC"
@@ -12503,7 +12492,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(2)")
             );
 
-            assert.deepEqual(getCounters(), ["2", "1"]);
+            assert.deepEqual(getCounters(target), ["2", "1"]);
             assert.strictEqual(
                 target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
                 "GHI"
@@ -12514,7 +12503,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(4)")
             );
 
-            assert.deepEqual(getCounters(), ["2", "1"]);
+            assert.deepEqual(getCounters(target), ["2", "1"]);
             assert.strictEqual(
                 target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
                 ""
@@ -12558,52 +12547,52 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
-        assert.deepEqual(getCounters(), ["1", "4"]);
-        assert.containsN(getColumn(1), ".o_kanban_record", 4);
-        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
-        assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
-        assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
-        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+        assert.deepEqual(getCounters(target), ["1", "4"]);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 4);
+        assert.containsN(getColumn(target, 1), ".o_column_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(target, 1)[0].style.width, "50%"); // abc: 2
+        assert.strictEqual(getProgressBars(target, 1)[1].style.width, "25%"); // def: 1
+        assert.strictEqual(getProgressBars(target, 1)[2].style.width, "25%"); // ghi: 1
 
         // Filter on state "abc" => matches 2 records
-        await click(getProgressBars(1)[0]);
+        await click(getProgressBars(target, 1)[0]);
 
-        assert.deepEqual(getCounters(), ["1", "2"]);
-        assert.containsN(getColumn(1), ".o_kanban_record", 2);
-        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
-        assert.strictEqual(getProgressBars(1)[0].style.width, "50%"); // abc: 2
-        assert.strictEqual(getProgressBars(1)[1].style.width, "25%"); // def: 1
-        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+        assert.deepEqual(getCounters(target), ["1", "2"]);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(target, 1), ".o_column_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(target, 1)[0].style.width, "50%"); // abc: 2
+        assert.strictEqual(getProgressBars(target, 1)[1].style.width, "25%"); // def: 1
+        assert.strictEqual(getProgressBars(target, 1)[2].style.width, "25%"); // ghi: 1
 
         // Changes the state of the first record of the "Yes" column to "def"
         // The updated record should remain visible
-        await click(getCard(2), ".o_status");
-        await click(getCard(2), ".o_field_state_selection .dropdown-item:nth-child(2)");
+        await click(getCard(target, 2), ".o_status");
+        await click(getCard(target, 2), ".o_field_state_selection .dropdown-item:nth-child(2)");
 
-        assert.deepEqual(getCounters(), ["1", "1"]);
-        assert.containsN(getColumn(1), ".o_kanban_record", 2);
-        assert.containsN(getColumn(1), ".o_column_progress .progress-bar", 3);
-        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
-        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
-        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+        assert.deepEqual(getCounters(target), ["1", "1"]);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(target, 1), ".o_column_progress .progress-bar", 3);
+        assert.strictEqual(getProgressBars(target, 1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(target, 1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(target, 1)[2].style.width, "25%"); // ghi: 1
 
         // Filter on state "def" => matches 2 records (including the one we just changed)
-        await click(getProgressBars(1)[1]);
+        await click(getProgressBars(target, 1)[1]);
 
-        assert.deepEqual(getCounters(), ["1", "2"]);
-        assert.containsN(getColumn(1), ".o_kanban_record", 2);
-        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
-        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
-        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+        assert.deepEqual(getCounters(target), ["1", "2"]);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 2);
+        assert.strictEqual(getProgressBars(target, 1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(target, 1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(target, 1)[2].style.width, "25%"); // ghi: 1
 
         // Filter back on state "abc" => matches only 1 record
-        await click(getProgressBars(1)[0]);
+        await click(getProgressBars(target, 1)[0]);
 
-        assert.deepEqual(getCounters(), ["1", "1"]);
-        assert.containsN(getColumn(1), ".o_kanban_record", 1);
-        assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
-        assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
-        assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+        assert.deepEqual(getCounters(target), ["1", "1"]);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 1);
+        assert.strictEqual(getProgressBars(target, 1)[0].style.width, "25%"); // abc: 1
+        assert.strictEqual(getProgressBars(target, 1)[1].style.width, "50%"); // def: 2
+        assert.strictEqual(getProgressBars(target, 1)[2].style.width, "25%"); // ghi: 1
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -12647,17 +12636,17 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Initial state: 2 columns, the "No" column contains 1 record, The "Yes" column contains 4 records
-        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.deepEqual(getCounters(target), ["1", "4"]);
 
         // Filter on state "abc" => matches 2 records
-        await click(getProgressBars(1)[0]);
+        await click(getProgressBars(target, 1)[0]);
 
         // Filtered state: 2 columns, the "No" column contains 1 record, The "Yes" column contains 2 records
-        assert.deepEqual(getCounters(), ["1", "2"]);
+        assert.deepEqual(getCounters(target), ["1", "2"]);
 
         def = makeDeferred();
         // UnFiltered the "Yes" column
-        await click(getProgressBars(1)[0]);
+        await click(getProgressBars(target, 1)[0]);
         assert.containsNone(
             target,
             ".o_kanban_load_more",
@@ -12666,7 +12655,7 @@ QUnit.module("Views", (hooks) => {
         def.resolve();
         await nextTick();
         //Return to initial state
-        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.deepEqual(getCounters(target), ["1", "4"]);
         assert.containsNone(
             target,
             ".o_kanban_load_more",
@@ -12710,17 +12699,17 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Create a new column
-        await editColumnName("new column");
-        await validateColumn();
+        await editColumnName(target, "new column");
+        await validateColumn(target);
 
         // Crete a record in the new column
-        await quickCreateRecord();
-        await editQuickCreateInput("display_name", "new product");
-        await validateRecord();
+        await quickCreateRecord(target);
+        await editQuickCreateInput(target, "display_name", "new product");
+        await validateRecord(target);
         assert.containsOnce(target, ".o_kanban_record");
 
         // Togggle the progressBar
-        await click(getProgressBars(0)[0]);
+        await click(getProgressBars(target, 0)[0]);
         assert.containsOnce(target, ".o_kanban_record");
 
         assert.verifySteps(["web_search_read"]);
@@ -12750,8 +12739,8 @@ QUnit.module("Views", (hooks) => {
 
             // Check that there is a column quick create
             assert.containsOnce(target, ".o_column_quick_create");
-            await editColumnName("new col");
-            await validateColumn();
+            await editColumnName(target, "new col");
+            await validateColumn(target);
 
             // Check that there is only one group and no kanban card
             assert.containsOnce(target, ".o_kanban_group");
@@ -12759,7 +12748,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".o_kanban_record");
 
             // Check that the focus is on the searchview input
-            await quickCreateRecord();
+            await quickCreateRecord(target);
             assert.containsOnce(target, ".o_kanban_group.o_kanban_no_records");
             assert.containsOnce(target, ".o_kanban_quick_create");
             assert.containsNone(target, ".o_kanban_record");
@@ -13103,21 +13092,21 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
-        assert.containsN(getColumn(0), ".o_kanban_record", 2);
-        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+        assert.containsN(getColumn(target, 0), ".o_kanban_record", 2);
+        assert.containsN(getColumn(target, 1), ".o_kanban_record", 2);
 
-        const clickColumnAction = await toggleColumnActions(1);
+        const clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Fold");
 
-        assert.containsN(getColumn(0), ".o_kanban_record", 2);
-        assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo\n2");
+        assert.containsN(getColumn(target, 0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(target, 1), "o_column_folded");
+        assert.strictEqual(getColumn(target, 1).innerText, "xmo\n2");
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
 
-        assert.containsN(getColumn(0), ".o_kanban_record", 1);
-        assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo\n3");
+        assert.containsN(getColumn(target, 0), ".o_kanban_record", 1);
+        assert.hasClass(getColumn(target, 1), "o_column_folded");
+        assert.strictEqual(getColumn(target, 1).innerText, "xmo\n3");
     });
 
     QUnit.test("drag record on initially folded column should not unfold it", async (assert) => {
@@ -13143,15 +13132,15 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsN(getColumn(0), ".o_kanban_record", 2);
-        assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo\n2");
+        assert.containsN(getColumn(target, 0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(target, 1), "o_column_folded");
+        assert.strictEqual(getColumn(target, 1).innerText, "xmo\n2");
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
 
-        assert.containsN(getColumn(0), ".o_kanban_record", 1);
-        assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo\n3");
+        assert.containsN(getColumn(target, 0), ".o_kanban_record", 1);
+        assert.hasClass(getColumn(target, 1), "o_column_folded");
+        assert.strictEqual(getColumn(target, 1).innerText, "xmo\n3");
     });
 
     QUnit.test("drag record to folded column, with progressbars", async (assert) => {
@@ -13180,34 +13169,34 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
         assert.deepEqual(
-            getProgressBars(0).map((pb) => pb.style.width),
+            getProgressBars(target, 0).map((pb) => pb.style.width),
             ["50%", "50%"]
         );
         assert.deepEqual(
-            getProgressBars(1).map((pb) => pb.style.width),
+            getProgressBars(target, 1).map((pb) => pb.style.width),
             ["50%", "50%"]
         );
-        assert.deepEqual(getCounters(), ["6", "26"]);
+        assert.deepEqual(getCounters(target), ["6", "26"]);
 
-        const clickColumnAction = await toggleColumnActions(1);
+        const clickColumnAction = await toggleColumnActions(target, 1);
         await clickColumnAction("Fold");
 
-        assert.containsN(getColumn(0), ".o_kanban_record", 2);
-        assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "Yes\n2");
+        assert.containsN(getColumn(target, 0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(target, 1), "o_column_folded");
+        assert.strictEqual(getColumn(target, 1).innerText, "Yes\n2");
 
         await dragAndDrop(
             ".o_kanban_group:first-child .o_kanban_record",
             ".o_kanban_group:nth-child(2)"
         );
 
-        assert.containsOnce(getColumn(0), ".o_kanban_record");
-        assert.strictEqual(getColumn(1).innerText, "Yes\n3");
+        assert.containsOnce(getColumn(target, 0), ".o_kanban_record");
+        assert.strictEqual(getColumn(target, 1).innerText, "Yes\n3");
         assert.deepEqual(
-            getProgressBars(0).map((pb) => pb.style.width),
+            getProgressBars(target, 0).map((pb) => pb.style.width),
             ["100%"]
         );
-        assert.deepEqual(getCounters(), ["-4"]);
+        assert.deepEqual(getCounters(target), ["-4"]);
         assert.verifySteps([
             "get_views",
             "web_read_group",
@@ -13273,9 +13262,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".modal");
 
         // click on 'Create', fill the quick create and validate
-        await createRecord();
-        await editQuickCreateInput("display_name", "new partner");
-        await validateRecord();
+        await createRecord(target);
+        await editQuickCreateInput(target, "display_name", "new partner");
+        await validateRecord(target);
 
         assert.containsOnce(target, ".modal");
         await clickSave(target.querySelector(".modal"));
@@ -13407,22 +13396,22 @@ QUnit.module("Views", (hooks) => {
 
         def = makeDeferred();
 
-        assert.deepEqual(getCardTexts(), ["1", "2", "3", "4"]);
+        assert.deepEqual(getCardTexts(target), ["1", "2", "3", "4"]);
 
         // Move 3 at end of 1st column
         await dragAndDrop(".o_kanban_group:last-of-type .o_kanban_record", ".o_kanban_group");
 
-        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+        assert.deepEqual(getCardTexts(target), ["1", "3", "2", "4"]);
 
         // Move 4 at end of 1st column
         await dragAndDrop(".o_kanban_group:last-of-type .o_kanban_record", ".o_kanban_group");
 
-        assert.deepEqual(getCardTexts(), ["1", "3", "4", "2"]);
+        assert.deepEqual(getCardTexts(target), ["1", "3", "4", "2"]);
 
         def.resolve();
         await nextTick();
 
-        assert.deepEqual(getCardTexts(), ["1", "3", "4", "2"]);
+        assert.deepEqual(getCardTexts(target), ["1", "3", "4", "2"]);
     });
 
     QUnit.test("drag & drop: content scrolls when reaching the edges", async (assert) => {
@@ -13628,7 +13617,7 @@ QUnit.module("Views", (hooks) => {
         MyField.template = xml`<span t-esc="renderCount"/>`;
         registry.category("fields").add("my_field", { component: MyField });
 
-        serverData.models.partner.onchanges = { product_id: () => { } };
+        serverData.models.partner.onchanges = { product_id: () => {} };
 
         await makeView({
             type: "kanban",
@@ -13801,10 +13790,10 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(params.top, 0);
         };
 
-        await click(getProgressBars(0)[0]);
+        await click(getProgressBars(target, 0)[0]);
         assert.verifySteps(["scrolled"]);
 
-        const column1 = getColumn(1);
+        const column1 = getColumn(target, 1);
         assert.hasClass(column1, "o_column_folded");
         await click(column1);
         assert.verifySteps(["scrolled"]);
@@ -13939,20 +13928,20 @@ QUnit.module("Views", (hooks) => {
             // check the initial rendering
             assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
             // check availability of delete action in kanban header's config dropdown
-            await toggleColumnActions(2);
+            await toggleColumnActions(target, 2);
             assert.containsOnce(
-                getColumn(2),
+                getColumn(target, 2),
                 ".o_column_delete",
                 "should be able to delete the column"
             );
             // delete second column (first cancel the confirm request, then confirm)
-            let clickColumnAction = await toggleColumnActions(1);
+            let clickColumnAction = await toggleColumnActions(target, 1);
             await clickColumnAction("Delete");
             dialogProps.cancel();
             await nextTick();
 
             assert.strictEqual(
-                getColumn(1).querySelector(".o_column_title").innerText,
+                getColumn(target, 1).querySelector(".o_column_title").innerText,
                 "gold",
                 'column [6, "gold"] should still be there'
             );
@@ -13960,23 +13949,22 @@ QUnit.module("Views", (hooks) => {
             dialogProps.confirm();
             await nextTick();
 
-            clickColumnAction = await toggleColumnActions(1);
+            clickColumnAction = await toggleColumnActions(target, 1);
             await clickColumnAction("Delete");
 
             assert.strictEqual(
-                getColumn(1).querySelector(".o_column_title").innerText,
+                getColumn(target, 1).querySelector(".o_column_title").innerText,
                 "silver",
                 'last column should now be [7, "silver"]'
             );
             assert.containsN(target, ".o_kanban_group", 2, "should now have two columns");
             assert.strictEqual(
-                getColumn(0).querySelector(".o_column_title").innerText,
+                getColumn(target, 0).querySelector(".o_column_title").innerText,
                 "None\n3",
                 "first column should have no id (Undefined column)"
             );
         }
     );
-
 
     QUnit.test("searchbar filters are displayed directly", async (assert) => {
         let def;

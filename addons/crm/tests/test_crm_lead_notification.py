@@ -112,7 +112,7 @@ class NewLeadNotification(TestCrmCommon):
             }
         ])
         expected_list = [
-            (False, self.test_email, None, 'Customer Email', {'lang': 'fr_FR'}),
+            (False, self.test_email, None, 'Customer Email', {'lang': None}),
             (False, self.test_email, 'en_US', 'Customer Email', {'lang': 'en_US'}),
         ]
         for lead, expected in zip(leads, expected_list):
@@ -121,7 +121,7 @@ class NewLeadNotification(TestCrmCommon):
                 self.assertEqual(len(res), 1)
                 self.assertEqual(res[0][:4], expected[:4])
                 for partner_fname in expected[4]:
-                    found = res[0][4][partner_fname]
+                    found = res[0][4].get(partner_fname)
                     expected = expected[4][partner_fname]
                     self.assertEqual(
                         found, expected,

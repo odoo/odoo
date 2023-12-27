@@ -18,10 +18,12 @@
 
                 <xpath expr="//field[@name='acc_number']" position="attributes">
                     <attribute name="readonly">lock_trust_fields</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="readonly">lock_trust_fields</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='allow_out_payment']" position="replace">

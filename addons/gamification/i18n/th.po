@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -220,6 +221,94 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- ส่วนหัว -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">เหรียญรางวัลของคุณ</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.badge_id.name or ''\"></span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.user_id.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- เนื้อหา -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        ขอแสดงความยินดี <t t-out=\"object.user_id.name or ''\"></t>!<br>\n"
+"                        คุณเพิ่งได้รับตราสัญลักษณ์ <strong t-out=\"object.badge_id.name or ''\"></strong>!<br>\n"
+"                        <table t-if=\"not is_html_empty(object.badge_id.description)\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
+"                            <tbody><tr>\n"
+"                                <td valign=\"center\">\n"
+"                                    <img t-attf-src=\"/web/image/gamification.badge/{{ object.badge_id.id }}/image_128/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                                </td>\n"
+"                                <td valign=\"center\">\n"
+"                                    <cite t-out=\"object.badge_id.description or ''\"></cite>\n"
+"                                </td>\n"
+"                            </tr></tbody>\n"
+"                        </table>\n"
+"                        <br>\n"
+"                        <t t-if=\"object.sender_id\">\n"
+"                            ตราสัญลักษณ์นี้ได้รับมอบโดย <strong t-out=\"object.sender_id.name or ''\"></strong>.\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <t t-if=\"object.comment\" t-out=\"object.comment or ''\"></t>\n"
+"                        <br><br>\n"
+"                        ขอขอบคุณ\n"
+"                        <t t-if=\"object.sender_id.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"object.sender_id.signature or ''\"></t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- ส่วนท้าย -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- สนับสนุนโดย -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        สนับสนุนโดย<a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=gamification\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -425,9 +514,9 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
-"ป้ายเป็นโทเคนสัญลักษณ์ที่มอบให้กับผู้ใช้เพื่อเป็นเครื่องหมายแห่งรางวัล\n"
+"เหรียญรางวัลเป็นโทเค็นสัญลักษณ์ที่มอบให้กับผู้ใช้เพื่อเป็นเครื่องหมายแห่งรางวัล\n"
 "               สามารถรับได้โดยอัตโนมัติเมื่อผู้ใช้ปฏิบัติตามเงื่อนไขบางประการหรือด้วยตนเอง\n"
-"                ป้ายบางอันนั้นยากกว่าอันอื่น ๆ ที่จะโดยมีเงื่อนไขเฉพาะ"
+"                เหรียญรางวัลบางอันนั้นยากกว่าอันอื่น โดยมีเงื่อนไขเฉพาะ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -570,34 +659,34 @@ msgstr "ปริญญาตรี"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__badge_id
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
-msgstr "ป้าย"
+msgstr "เหรียญรางวัล"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
-msgstr "คำอธิบายป้าย"
+msgstr "คำอธิบายของเหรียญรางวัล"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__level
 msgid "Badge Level"
-msgstr "ระดับป้าย"
+msgstr "ระดับเหรียญรางวัล"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
-msgstr "รายการป้าย"
+msgstr "รายการเหรียญรางวัล"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_name
 msgid "Badge Name"
-msgstr "ชื่อป้าย"
+msgstr "ชื่อเหรียญรางวัล"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.model.fields,field_description:gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr "ป้ายรางวัล"
+msgstr "เหรียญรางวัล"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -607,7 +696,7 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"จะได้รับป้ายตราเมื่อการท้าทายเสร็จสิ้น "
+"จะได้รับเหรียญรางวัลเมื่อการท้าทายเสร็จสิ้น "
 "ซึ่งอาจเป็นเมื่อสิ้นสุดระยะเวลาดำเนินการ (เช่น "
 "สิ้นเดือนสำหรับการท้าทายรายเดือน) ในวันที่สิ้นสุดการท้าทาย "
 "(หากไม่มีการกำหนดช่วงเวลา) หรือเมื่อปิดการการท้าทายด้วยตนเอง"
@@ -703,7 +792,7 @@ msgstr "การท้าทาย"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "เลือกเพื่อกำหนดขีดจำกัดรายเดือนต่อคนที่ส่งป้ายนี้"
+msgstr "เลือกเพื่อกำหนดขีดจำกัดรายเดือนต่อคนที่ส่งเหรียญรางวัลนี้"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -764,7 +853,7 @@ msgstr "สร้างผู้ใช้"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Create a new badge"
-msgstr "สร้างป้ายใหม่"
+msgstr "สร้างเหรียญรางวัลใหม่"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
@@ -1054,7 +1143,7 @@ msgstr "ตัวเลือกการจัดรูปแบบ"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__level
 msgid "Forum Badge Level"
-msgstr "ระดับป้ายฟอรั่ม"
+msgstr "ระดับเหรียญรางวัลของฟอรั่ม"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -1074,7 +1163,7 @@ msgstr "กำไร"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "ป้ายรางวัลในรูปแบบเกม"
+msgstr "เหรียญรางวัลในรูปแบบเกม"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
@@ -1104,12 +1193,12 @@ msgstr "เครื่องมือเกม"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr "ป้ายผู้ใช้รูปแบบเกม"
+msgstr "เหรียญรางวัลของผู้ใช้รูปแบบเกม"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "ตัวช่วยป้ายผู้ใช้รูปแบบเกม"
+msgstr "ตัวช่วยเหรียญรางวัลของผู้ใช้รูปแบบเกม"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
@@ -1119,7 +1208,7 @@ msgstr "เป้าหมายทั่วไปของเกมเพื่
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
 msgid "Gamification: Badge Received"
-msgstr ""
+msgstr "Gamification: ได้รับเหรียญรางวัลแล้ว"
 
 #. module: gamification
 #: model:mail.template,name:gamification.simple_report_template
@@ -1229,18 +1318,18 @@ msgstr "มอบ"
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "มอบป้าย"
+msgstr "มอบเหรียญรางวัล"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "มอบป้ายถึง"
+msgstr "มอบเหรียญรางวัลถึง"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "มอบป้ายนี้"
+msgstr "มอบเหรียญรางวัลนี้"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
@@ -1630,7 +1719,7 @@ msgstr "ค่า Karma ใหม่"
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
 msgid "New badge {{ object.badge_id.name }} granted"
-msgstr "ป้ายใหม่ {{ object.badge_id.name }} ถูกมอบ"
+msgstr "เหรียญรางวัลใหม่ {{ object.badge_id.name }} ถูกมอบให้แล้ว"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
@@ -1685,13 +1774,15 @@ msgid ""
 "Nobody has succeeded to reach every goal, no badge is rewarded for this "
 "challenge."
 msgstr ""
+"ยังไม่มีใครประสบความสำเร็จในการบรรลุทุกเป้าหมาย "
+"ไม่มีเหรียญรางวัลสำหรับการท้าทายนี้"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "ไม่มีใครบรรลุเงื่อนไขที่กำหนดเพื่อรับป้ายพิเศษ"
+msgstr "ยังไม่มีใครบรรลุเงื่อนไขที่กำหนดเพื่อรับเหรียญรางวัลพิเศษ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
@@ -1750,12 +1841,13 @@ msgstr "เมื่อเปลี่ยนแปลง"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr "เฉพาะผู้คนที่มีป้ายเหล่านี้เท่านั้นที่สามารถให้ป้ายนี้ได้"
+msgstr ""
+"เฉพาะผู้คนที่มีเหรียญรางวัลเหล่านี้เท่านั้นที่สามารถให้เหรียญรางวัลนี้ได้"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "เฉพาะผู้คนเหล่านี้เท่านั้นที่สามารถให้ป้ายนี้"
+msgstr "เฉพาะผู้คนเหล่านี้เท่านั้นที่สามารถให้เหรียญรางวัลนี้ได้"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1782,7 +1874,7 @@ msgstr "ผู้มีส่วนร่วม"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
-msgstr "ผู้คนจะมีป้าย"
+msgstr "ผู้คนจะมีเหรียญรางวัล"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1940,7 +2032,7 @@ msgstr "เทมเพลตรายงาน"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr "ป้ายที่จำเป็น"
+msgstr "เหรียญรางวัลที่จำเป็น"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
@@ -1977,6 +2069,8 @@ msgid ""
 "Reward (badge %(badge_name)s) for every succeeding user was sent to "
 "%(users)s."
 msgstr ""
+"รางวัล (เหรียญรางวัล %(badge_name)s) "
+"สำหรับผู้ใช้ที่ประสบความสำเร็จทุกคนจะถูกส่งไปยัง %(users)s"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
@@ -2021,7 +2115,7 @@ msgstr "กำหนดเวลา"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr "ค้นหาป้าย"
+msgstr "ค้นหาเหรียญรางวัล"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -2054,7 +2148,7 @@ msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
 msgstr ""
-"กฎความปลอดภัยเพื่อกำหนดว่าใครได้รับอนุญาตให้มอบป้ายสัญลักษณ์ด้วยตนเอง "
+"กฎความปลอดภัยเพื่อกำหนดว่าใครได้รับอนุญาตให้มอบเหรียญรางวัลด้วยตนเอง "
 "ไม่บังคับใช้สำหรับผู้ดูแลระบบ"
 
 #. module: gamification
@@ -2085,7 +2179,7 @@ msgstr ""
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_badge_received
 msgid "Sent automatically to the user who received a badge"
-msgstr ""
+msgstr "ส่งไปยังผู้ใช้ที่ได้รับเหรียญรางวัลโดยอัตโนมัติ"
 
 #. module: gamification
 #: model:mail.template,description:gamification.mail_template_data_new_rank_reached
@@ -2302,7 +2396,7 @@ msgstr "ยิ่งสูงยิ่งดี"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr "รายการอินสแตนซ์ของป้ายสัญลักษณ์นี้ที่มอบให้แก่ผู้ใช้"
+msgstr "รายการอินสแตนซ์ของเหรียญรางวัลนี้ที่มอบให้แก่ผู้ใช้"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
@@ -2312,7 +2406,7 @@ msgstr "รายการโมเดลที่ขยายโมเดลป
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr "รายชื่อผู้ใช้ที่ไม่ซ้ำที่ได้รับป้ายนี้"
+msgstr "รายชื่อผู้ใช้ที่ไม่ซ้ำกันที่ได้รับเหรียญรางวัลนี้"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
@@ -2323,7 +2417,7 @@ msgstr "ยิ่งต่ำยิ่งดี"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
-msgstr "จำนวนครั้งสูงสุดที่สามารถส่งป้ายนี้ต่อเดือนต่อคน"
+msgstr "จำนวนครั้งสูงสุดที่สามารถส่งเหรียญรางวัลนี้ต่อเดือนต่อคน"
 
 #. module: gamification
 #. odoo-python
@@ -2364,32 +2458,32 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
-msgstr "จำนวนครั้งที่ผู้ใช้ปัจจุบันได้รับป้ายนี้ในเดือนนี้"
+msgstr "จำนวนครั้งที่ผู้ใช้ปัจจุบันได้รับเหรียญรางวัลนี้ในเดือนนี้"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr "จำนวนครั้งที่ผู้ใช้ปัจจุบันได้รับป้ายนี้"
+msgstr "จำนวนครั้งที่ผู้ใช้ปัจจุบันได้รับเหรียญรางวัลนี้"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "จำนวนครั้งที่ผู้ใช้ปัจจุบันส่งป้ายนี้ในเดือนนี้"
+msgstr "จำนวนครั้งที่ผู้ใช้ปัจจุบันส่งเหรียญรางวัลนี้ในเดือนนี้"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
-msgstr "จำนวนครั้งที่ได้รับป้ายนี้โดยผู้ใช้ที่ไม่ซ้ำ"
+msgstr "จำนวนครั้งที่ได้รับเหรียญรางวัลนี้โดยผู้ใช้ที่ไม่ซ้ำ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr "จำนวนครั้งที่ได้รับป้ายนี้ในเดือนนี้"
+msgstr "จำนวนครั้งที่ได้รับเหรียญรางวัลนี้ในเดือนนี้"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_count
 msgid "The number of time this badge has been received."
-msgstr "จำนวนครั้งที่ได้รับป้ายนี้"
+msgstr "จำนวนครั้งที่ได้รับเหรียญรางวัลนี้"
 
 #. module: gamification
 #: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
@@ -2413,7 +2507,7 @@ msgstr "หน่วยของเป้าหมายและค่าปั
 msgid ""
 "The users that have succeeded these goals will receive automatically the "
 "badge."
-msgstr ""
+msgstr "ผู้ใช้ที่บรรลุเป้าหมายเหล่านี้จะได้รับเหรียญรางวัลโดยอัตโนมัติ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
@@ -2440,7 +2534,7 @@ msgstr ""
 #: code:addons/gamification/models/gamification_badge.py:0
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr "ผู้ใช้ไม่สามารถส่งป้ายนี้"
+msgstr "ผู้ใช้ไม่สามารถส่งเหรียญรางวัลนี้ได้"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -2550,7 +2644,7 @@ msgstr "รายสัปดาห์"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr "ใครสามารถมอบป้ายนี้ได้บ้าง"
+msgstr "ใครสามารถมอบเหรียญรางวัลนี้ได้บ้าง"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -2563,8 +2657,8 @@ msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
-"เมื่อเปิดใช้งานตัวเลือกนี้ ผู้ใช้จะได้รับป้ายสัญลักษณ์เพียงครั้งเดียว ป้าย 3"
-" อันดับแรกยังคงได้รับรางวัลเมื่อสิ้นสุดการท้าทายเท่านั้น"
+"เมื่อเปิดใช้งานตัวเลือกนี้ ผู้ใช้จะได้รับเหรียญรางวัลเพียงครั้งเดียว "
+"เหรียญรางวัล 3 อันดับแรกยังคงได้รับรางวัลเมื่อสิ้นสุดการท้าทายเท่านั้น"
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
@@ -2589,7 +2683,7 @@ msgstr "คุณไม่ได้อยู่ในรายชื่อผู
 #: code:addons/gamification/wizard/grant_badge.py:0
 #, python-format
 msgid "You can not grant a badge to yourself."
-msgstr "คุณไม่สามารถมอบป้ายให้ตัวเองได้"
+msgstr "คุณไม่สามารถมอบเหรียญรางวัลให้ตัวเองได้"
 
 #. module: gamification
 #. odoo-python
@@ -2613,19 +2707,19 @@ msgstr "คุณทำได้ดีในงานของคุณ"
 #: code:addons/gamification/models/gamification_badge.py:0
 #, python-format
 msgid "You do not have the required badges."
-msgstr "คุณไม่มีป้ายที่จำเป็น"
+msgstr "คุณไม่มีเหรียญรางวัลที่จำเป็น"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "คุณส่งป้ายนี้หลายครั้งเกินไปในเดือนนี้"
+msgstr "คุณส่งเหรียญรางวัลนี้หลายครั้งเกินไปในเดือนนี้"
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr "คุณได้พบป้ายที่ซ่อนอยู่"
+msgstr "คุณได้พบเหรียญรางวัลที่ซ่อนอยู่"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
@@ -2655,7 +2749,7 @@ msgstr "ตอนนี้คุณเป็นพาดาวันแล้ว
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr "ป้ายเดือนนี้"
+msgstr "เหรียญรางวัลเดือนนี้"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view

@@ -38,8 +38,8 @@
     </record>
 
     <record model="ir.actions.act_window" id="account_analytic_line_action">
-        <field name="context">{'search_default_group_date': 1, 'default_account_id': active_id}</field>
-        <field name="domain">[('account_id','=', active_id)]</field>
+        <field name="context">{'search_default_group_date': 1}</field>
+        <field name="domain">[('auto_account_id','=', active_id)]</field>
         <field name="name">Gross Margin</field>
         <field name="res_model">account.analytic.line</field>
         <field name="view_mode">tree,form,graph,pivot</field>

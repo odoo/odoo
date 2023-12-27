@@ -5973,7 +5973,7 @@ class BaseModel(metaclass=MetaModel):
         cache = self.env.cache
         fields = self._fields
         try:
-            field_values = [(fields[name], value) for name, value in values.items()]
+            field_values = [(fields[name], value) for name, value in values.items() if name != 'id']
         except KeyError as e:
             raise ValueError("Invalid field %r on model %r" % (e.args[0], self._name))
 
@@ -5987,17 +5987,10 @@ class BaseModel(metaclass=MetaModel):
                 inv_recs = self[field.name].filtered(lambda r: not r.id)
                 if not inv_recs:
                     continue
+                # we need to adapt the value of the inverse fields to integrate self into it:
+                # x2many fields should add self, while many2one fields should replace with self
                 for invf in self.pool.field_inverses[field]:
-                    # DLE P98: `test_40_new_fields`
-                    # /home/dle/src/odoo/master-nochange-fp/odoo/addons/test_new_api/tests/test_new_fields.py
-                    # Be careful to not break `test_onchange_taxes_1`, `test_onchange_taxes_2`, `test_onchange_taxes_3`
-                    # If you attempt to find a better solution
-                    for inv_rec in inv_recs:
-                        if not cache.contains(inv_rec, invf):
-                            val = invf.convert_to_cache(self, inv_rec, validate=False)
-                            cache.set(inv_rec, invf, val)
-                        else:
-                            invf._update(inv_rec, self)
+                    invf._update(inv_recs, self)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the

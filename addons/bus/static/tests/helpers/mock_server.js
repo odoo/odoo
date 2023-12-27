@@ -7,6 +7,11 @@ import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import { registry } from "@web/core/registry";
 
+QUnit.testDone(() => {
+    const callbackRegistry = registry.category("mock_server_websocket_callbacks");
+    callbackRegistry.getEntries().map(([key]) => callbackRegistry.remove(key));
+});
+
 patch(MockServer.prototype, {
     init() {
         super.init(...arguments);

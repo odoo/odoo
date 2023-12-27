@@ -23,10 +23,9 @@ const callbackRegistry = registry.category("mock_server_websocket_callbacks");
 export function waitUntilSubscribe(...requiredChannels) {
     const subscribeDeferred = makeDeferred();
     const failTimeout = setTimeout(() => {
-        subscribeDeferred.reject(
-            new Error(`Waited ${TIMEOUT}ms for ${requiredChannels} subscription.`)
-        );
-        console.error(`Waited ${TIMEOUT}ms for ${requiredChannels} subscription.`);
+        const errMsg = `Subscription to ${JSON.stringify(requiredChannels)} not received.`;
+        subscribeDeferred.reject(new Error(errMsg));
+        QUnit.assert.ok(false, errMsg);
     }, TIMEOUT);
     const lastCallback = callbackRegistry.get("subscribe", () => {});
     callbackRegistry.add(
@@ -39,6 +38,10 @@ export function waitUntilSubscribe(...requiredChannels) {
             );
             if (allChannelsSubscribed) {
                 subscribeDeferred.resolve();
+                QUnit.assert.ok(
+                    true,
+                    `Subscription to ${JSON.stringify(requiredChannels)} received.`
+                );
                 clearTimeout(failTimeout);
             }
         },
@@ -164,7 +167,12 @@ export function waitForBusEvent(env, eventType, { received = true } = {}) {
     const eventReceivedDeferred = makeDeferred();
     const failTimeout = setTimeout(() => {
         env.services["bus_service"].removeEventListener(eventType, callback);
-        QUnit.assert.ok(!received, `Waited ${TIMEOUT}ms for ${eventType} event.`);
+        QUnit.assert.ok(
+            !received,
+            received
+                ? `Waited ${TIMEOUT}ms for ${eventType} event.`
+                : `Event of type "${eventType}" not received.`
+        );
         eventReceivedDeferred.resolve();
     }, TIMEOUT);
     const callback = () => {

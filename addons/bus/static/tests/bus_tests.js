@@ -14,7 +14,7 @@ import { busParametersService } from "@bus/bus_parameters_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
@@ -293,12 +293,7 @@ QUnit.test("Can reconnect after late close event", async (assert) => {
     addBusServicesToRegistry();
     let subscribeSent = 0;
     const closeDeferred = makeDeferred();
-    let openDeferred = makeDeferred();
     const worker = patchWebsocketWorkerWithCleanup({
-        _onWebsocketOpen() {
-            super._onWebsocketOpen();
-            openDeferred.resolve();
-        },
         _sendToServer({ event_name }) {
             if (event_name === "subscribe") {
                 subscribeSent++;
@@ -308,7 +303,7 @@ QUnit.test("Can reconnect after late close event", async (assert) => {
     const pyEnv = await startServer();
     const env = await makeTestEnv();
     env.services["bus_service"].start();
-    await openDeferred;
+    await waitForBusEvent(env, "connect");
     patchWithCleanup(worker.websocket, {
         close(code = WEBSOCKET_CLOSE_CODES.CLEAN, reason) {
             this.readyState = 2;
@@ -322,38 +317,24 @@ QUnit.test("Can reconnect after late close event", async (assert) => {
             }
         },
     });
-    env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
-    env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
-    env.services["bus_service"].addEventListener("reconnecting", () => assert.step("reconnecting"));
-    env.services["bus_service"].addEventListener("reconnect", () => assert.step("reconnect"));
     // Connection will be closed when passing offline. But the close event
     // will be delayed to come after the next open event. The connection
     // will thus be in the closing state in the meantime.
     window.dispatchEvent(new Event("offline"));
-    await nextTick();
-    openDeferred = makeDeferred();
     // Worker reconnects upon the reception of the online event.
     window.dispatchEvent(new Event("online"));
-    await openDeferred;
-    closeDeferred.resolve();
+    await waitForBusEvent(env, "disconnect");
+    await waitForBusEvent(env, "connect");
     // Trigger the close event, it shouldn't have any effect since it is
     // related to an old connection that is no longer in use.
-    await nextTick();
-    openDeferred = makeDeferred();
+    closeDeferred.resolve();
+    await waitForBusEvent(env, "disconnect", { received: false });
     // Server closes the connection, the worker should reconnect.
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
-    await openDeferred;
-    await nextTick();
+    await waitForBusEvent(env, "reconnecting");
+    await waitForBusEvent(env, "reconnect");
     // 3 connections were opened, so 3 subscriptions are expected.
     assert.strictEqual(subscribeSent, 3);
-    assert.verifySteps([
-        "connect",
-        "disconnect",
-        "connect",
-        "disconnect",
-        "reconnecting",
-        "reconnect",
-    ]);
 });
 
 QUnit.test("Fallback on simple worker when shared worker failed to initialize", async (assert) => {
