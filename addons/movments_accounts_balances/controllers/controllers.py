@@ -287,35 +287,48 @@ class AccountBalance(models.Model):
     #### create / get / delete_invoice_payment
 
     @api.model
-    def create_invoice_payment(self, invoice_vals, partner_id, invoice_date, invoice_date_due, ref, narration):
+    def create_ar_invoice_payment(self, invoice_id, journal_id, payment_date, payment_amount, payment_method_id):
         """
-        Create a payment based on the provided data.
+        This method processes a payment for an Accounts Receivable (AR) invoice.
 
-        :param invoice_vals: List of dictionaries containing line data for the payment.
-        :param partner_id: Partner ID for the payment.
-        :param invoice_date: Invoice date for the payment.
-        :param invoice_date_due: Due date for the payment.
-        :param ref: Reference for the payment.
-        :param narration: Narration for the payment.
-        :return: The created payment record.
+        Args:
+            invoice_id (int): The ID of the AR invoice to be paid.
+            journal_id (int): The ID of the payment journal.
+            payment_date (date): The date when the payment is made.
+            payment_amount (float): The total amount of the payment.
+            payment_method_id (int): The ID of the used payment method.
+
+        Returns:
+            dict: A dictionary containing either a success message and payment ID, or an error message.
         """
-        # Create a new payment record
+        # Fetching the specified AR invoice
+        invoice = self.env['account.move'].browse(invoice_id)
+
+        # Validation checks for the invoice
+        if not invoice or invoice.move_type != 'out_invoice':
+            return {'error': 'Invalid invoice: Not found or not a customer invoice.'}
+        if invoice.state != 'posted':
+            return {'error': 'Invoice processing error: Must be in "posted" state.'}
+        payment_method_line = self.env['account.payment.method.line'].search(
+            [('payment_method_id', '=', payment_method_id)], limit=1)
+        if not payment_method_line:
+            return {'error': 'Invalid payment method or payment method line not found.'}
+
+        # Creating the payment record
         payment = self.env['account.payment'].create({
-            'move_type': 'out_invoice',
-            'partner_id': partner_id,
-            'invoice_date': invoice_date,
-            'invoice_date_due': invoice_date_due,
-            'ref': ref,
-            'narration': narration,
-            'invoice_line_ids': [(0, 0, {
-                'name': line.get('description', ''),
-                'price_unit': line.get('amount', 0.0),
-                'account_id': line.get('account_id'),
-                # 'analytic_account_id': line.get('analytic_account_id', False),
-            }) for line in invoice_vals],
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': invoice.partner_id.id,
+            'amount': payment_amount,
+            'journal_id': journal_id,
+            'payment_method_line_id': payment_method_line.id,
+            'invoice_line_ids': [(6, 0, [invoice_id])],
         })
 
-        return payment
+        # Validating the payment
+        payment.action_post()
+        return {'success': 'Payment successfully processed.', 'payment_id': payment.id}
+
 
     @api.model
     def get_invoice_payment(self, payment_id):
