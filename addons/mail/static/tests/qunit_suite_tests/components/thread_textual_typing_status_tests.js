@@ -6,14 +6,13 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_textual_typing_status_tests.js");
 
         QUnit.test('receive other member typing status "is typing"', async function (assert) {
-            assert.expect(2);
-
             const pyEnv = await startServer();
             const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
             const mailChannelId1 = pyEnv["mail.channel"].create({
@@ -28,31 +27,19 @@ QUnit.module("mail", {}, function () {
                 },
             });
             await openDiscuss();
-
-            assert.strictEqual(
-                document.querySelector(".o_ThreadTextualTypingStatusView").textContent,
-                "",
-                "Should display no one is currently typing"
-            );
-
+            await contains(".o_ThreadTextualTypingStatusView", { text: "" });
             // simulate receive typing notification from demo
-            await afterNextRender(() =>
-                messaging.rpc({
-                    route: "/mail/channel/notify_typing",
-                    params: {
-                        channel_id: mailChannelId1,
-                        context: {
-                            mockedPartnerId: resPartnerId1,
-                        },
-                        is_typing: true,
+            messaging.rpc({
+                route: "/mail/channel/notify_typing",
+                params: {
+                    channel_id: mailChannelId1,
+                    context: {
+                        mockedPartnerId: resPartnerId1,
                     },
-                })
-            );
-            assert.strictEqual(
-                document.querySelector(".o_ThreadTextualTypingStatusView").textContent,
-                "Demo is typing...",
-                "Should display that demo user is typing"
-            );
+                    is_typing: true,
+                },
+            });
+            await contains(".o_ThreadTextualTypingStatusView", { text: "Demo is typing..." });
         });
 
         QUnit.test(
