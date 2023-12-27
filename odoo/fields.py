@@ -3589,9 +3589,10 @@ class Properties(Field):
 
     def _get_properties_definition(self, record):
         """Return the properties definition of the given record."""
-        container = record[self.definition_record]
-        if container:
-            return container.sudo()[self.definition_record_field]
+        if self.definition_record:
+            container = record[self.definition_record]
+            if container:
+                return container.sudo()[self.definition_record_field]
 
     @classmethod
     def _add_display_name(cls, values_list, env, value_keys=('value', 'default')):
