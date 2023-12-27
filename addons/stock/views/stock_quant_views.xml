@@ -36,7 +36,7 @@
                     <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
                     <filter name="to_count" string="To Count" domain="[('inventory_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
-                    <filter name="priority_products" string="Starred Products" domain="[('priority', '=', 1)]"/>
+                    <filter name="priority_products" string="Starred Products" domain="[('is_favorite', '=', True)]"/>
                     <separator/>
                     <filter name="in_stock" string="In Stock" domain="[('quantity', '&gt;', 0.0)]"/>
                     <filter name="conflicts" string="Conflicts" domain="[('is_outdated', '=', True)]"/>
@@ -464,7 +464,7 @@ in this location. That leads to a negative stock.
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False)" readonly="id" options="{'no_create': True}"/>
                 <field name="storage_category_id" groups="stock.group_stock_storage_categories" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="cyclic_inventory_frequency" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
-                <field name="priority" widget="priority" nolabel="1" optional="hidden"/>
+                <field name="is_favorite" widget="boolean_favorite" nolabel="1" optional="hidden"/>
                 <field name="product_id" readonly="context.get('single_product', False) or id" force_save="1" options="{'no_create': True}"/>
                 <field name="product_categ_id" optional="hide"/>
                 <button name="action_warning_duplicated_sn" type="object" invisible="not sn_duplicated" title="This lot/serial number is already in another location" class="btn btn-secondary text-warning float-end" icon="fa-warning"/>
