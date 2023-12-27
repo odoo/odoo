@@ -376,7 +376,6 @@ class ResourceCalendar(models.Model):
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
-        self.ensure_one()
 
         if not resources:
             resources = self.env['resource.resource']
