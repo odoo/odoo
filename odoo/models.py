@@ -3727,7 +3727,7 @@ class BaseModel(metaclass=MetaModel):
 
         return result
 
-    def _fetch_field(self, field):
+    def _fetch_field(self, field, source_record):
         """ Read from the database in order to fetch ``field`` (:class:`Field`
             instance) for ``self`` in cache.
         """
@@ -3746,7 +3746,12 @@ class BaseModel(metaclass=MetaModel):
                 fnames.append(field.name)
         else:
             fnames = [field.name]
-        self.fetch(fnames)
+
+        records = self.fetch(fnames)
+        if source_record not in records:
+            forbidden = source_record.exists()
+            if forbidden:
+                raise self.env['ir.rule']._make_access_error('read', forbidden)
 
     def fetch(self, field_names):
         """ Make sure the given fields are in memory for the records in ``self``,
@@ -3761,48 +3766,19 @@ class BaseModel(metaclass=MetaModel):
         :meth:`_fetch_query`, and should not be overridden.
         """
         if not self or not field_names:
-            return
+            return self
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names, ignore_when_in_cache=True)
 
         if not fields_to_fetch:
-            # there is nothing to fetch, but we expect an error anyway in case
-            # self is not accessible
-            self.check_access_rights('read')
-            try:
-                self.check_access_rule('read')
-            except MissingError:
-                # Method fetch() should never raise a MissingError, but method
-                # check_access_rule() can, because it must read fields on self.
-                # So we restrict 'self' to existing records (to avoid an extra
-                # exists() at the end of the method).
-                self.exists().check_access_rule('read')
-            return
+            return self
 
         # first determine a query that satisfies the domain and access rules
-        if any(field.column_type for field in fields_to_fetch):
-            query = self.with_context(active_test=False)._search([('id', 'in', self.ids)])
-        else:
-            self.check_access_rights('read')
-            try:
-                self.check_access_rule('read')
-            except MissingError:
-                # Method fetch() should never raise a MissingError, but method
-                # check_access_rule() can, because it must read fields on self.
-                # So we restrict 'self' to existing records (to avoid an extra
-                # exists() at the end of the method).
-                self = self.exists()
-                self.check_access_rule('read')
-            query = self._as_query(ordered=False)
+        # note that the query won't be used if no column are necessary (example X2Many)
+        query = self.with_context(active_test=False)._search([('id', 'in', self.ids)])
 
         # fetch the fields
-        fetched = self._fetch_query(query, fields_to_fetch)
-
-        # possibly raise exception for the records that could not be read
-        if fetched != self:
-            forbidden = (self - fetched).exists()
-            if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+        return self._fetch_query(query, fields_to_fetch)
 
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> List["Field"]:
         """

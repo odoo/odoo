@@ -1163,12 +1163,7 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.store and record.id:
             # real record: fetch from database
             recs = record._in_cache_without(self)
-            try:
-                recs._fetch_field(self)
-            except AccessError:
-                if len(recs) == 1:
-                    raise
-                record._fetch_field(self)
+            recs._fetch_field(self, record)
             if not env.cache.contains(record, self):
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
