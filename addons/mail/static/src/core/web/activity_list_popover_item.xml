@@ -47,7 +47,7 @@
             </div>
             <ActivityMarkAsDone t-if="state.hasMarkDoneView" activity="props.activity" close="closeMarkAsDone" onClickDoneAndScheduleNext="props.onClickDoneAndScheduleNext" onActivityChanged="props.onActivityChanged"/>
             <div t-if="props.activity.mail_template_ids.length > 0" class="mx-3 mt-2">
-                <ActivityMailTemplate activity="props.activity" onClickButtons="props.onClickEditActivityButton" onUpdate="props.onActivityChanged"/>
+                <ActivityMailTemplate activity="props.activity" onClickButtons="props.onClickEditActivityButton" onActivityChanged="props.onActivityChanged"/>
             </div>
         </div>
     </t>
