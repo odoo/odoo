@@ -22,6 +22,12 @@ class IrWebsocket(models.AbstractModel):
     @add_guest_to_context
     def _build_bus_channel_list(self, channels):
         channels = list(channels)  # do not alter original list
+        for channel in list(channels):
+            if isinstance(channel, str) and channel.startswith("mail.guest_"):
+                channels.remove(channel)
+                guest = self.env["mail.guest"]._get_guest_from_token(channel.split("_")[1])
+                if guest:
+                    self = self.with_context(guest=guest)
         guest = self.env["mail.guest"]._get_guest_from_context()
         if guest:
             channels.append(guest)

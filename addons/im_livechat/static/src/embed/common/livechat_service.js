@@ -144,7 +144,6 @@ export class LivechatService {
                 await rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
             }
         } finally {
-            localStorage.removeItem(this.GUEST_TOKEN_STORAGE_KEY);
             cookie.delete(this.SESSION_COOKIE);
             this.state = SESSION_STATE.NONE;
             this.sessionInitialized = false;
@@ -238,17 +237,7 @@ export class LivechatService {
     }
 
     async initializePersistedSession() {
-        if (this.guestToken) {
-            await this.busService.updateContext({
-                ...this.busService.context,
-                guest_token: this.guestToken,
-            });
-        }
-        if (this.busService.isActive) {
-            this.busService.forceUpdateChannels();
-        } else {
-            await this.busService.start();
-        }
+        await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.messaging"].initialize();
     }
 
