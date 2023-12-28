@@ -77,12 +77,25 @@ option.css_not_available {
     color: #ccc;
 }
 
+$-arrow-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='175' height='100' fill='#000'><polygon points='0,0 100,0 50,50'/></svg>");
+
 select.form-select.css_attribute_select {
-    background-image: str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='175' height='100' fill='#{$input-color}'><polygon points='0,0 100,0 50,50'/></svg>"), "#", "%23") ;
+    background-image: str-replace($-arrow-url, "#000", str-replace(#{$input-color}, "#", "%23"));
     background-size: 20px;
     background-position: 100% 65%;
     background-repeat: no-repeat;
     max-width: 400px;
+}
+// In the case of a modal, we cannot rely on '$input-color' to define the color
+// of the select arrow because '$input-color' is set based on the background
+// color of the body. In modals, the input color is adjusted based on the
+// modal's background color (see 'bootstrap_review_frontend.scss').
+@if ($modal-content-color == null) and ($form-select-bg == $body-bg) {
+    .modal-content {
+        select.form-select.css_attribute_select {
+            background-image: str-replace($-arrow-url, "#000", str-replace(#{color-contrast($modal-content-bg)}, "#", "%23"));
+        }
+    }
 }
 
 label, .o_variant_pills {
