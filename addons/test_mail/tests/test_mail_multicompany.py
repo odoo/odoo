@@ -25,7 +25,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
         cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].with_context(**cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})
@@ -36,7 +36,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
              'company_id': cls.user_employee_c2.company_id.id},
         ])
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.partner_1 = cls.env['res.partner'].with_context(**cls._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })

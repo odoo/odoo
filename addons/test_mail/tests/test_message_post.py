@@ -45,7 +45,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         )
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.simple'].with_context(**cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -106,7 +106,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_by_mail_add_signature(self):
-        test_track = self.env['mail.test.track'].with_context(self._test_context).with_user(self.user_employee).create({
+        test_track = self.env['mail.test.track'].with_context(**self._test_context).with_user(self.user_employee).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -1183,7 +1183,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         octet_attachment_data.write({'mimetype': 'application/octet-stream'})
         pdf_attachment_data.write({'mimetype': 'application/pdf'})
 
-        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple.main.attachment'].with_context(**self._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })
@@ -1248,7 +1248,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         )
         _attachment_records[1].write({'mimetype': 'image/png'})  # to test message_main_attachment heuristic
 
-        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.simple.main.attachment'].with_context(**self._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })

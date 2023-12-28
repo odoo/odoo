@@ -169,12 +169,12 @@ class TestMailgateway(MailCommon):
         cls.mail_test_gateway_company_model = cls.env['ir.model']._get('mail.test.gateway.company')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].with_context(**cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.partner_1 = cls.env['res.partner'].with_context(**cls._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })

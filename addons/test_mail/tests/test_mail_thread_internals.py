@@ -19,7 +19,7 @@ class TestAPI(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestAPI, cls).setUpClass()
-        cls.ticket_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create({
+        cls.ticket_record = cls.env['mail.test.ticket'].with_context(**cls._test_context).create({
             'email_from': '"Paulette Vachette" <paulette@test.example.com>',
             'name': 'Test',
             'user_id': cls.user_employee.id,
@@ -175,7 +175,7 @@ class TestChatterTweaks(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestChatterTweaks, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.simple'].with_context(**cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
     def test_post_no_subscribe_author(self):
         original = self.test_record.message_follower_ids
@@ -275,7 +275,7 @@ class TestDiscuss(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestDiscuss, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.simple'].with_context(**cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })

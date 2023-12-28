@@ -49,7 +49,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         })
 
         # test users + fetch admin user for testing (recipient, ...)
-        cls.user_account = cls.env['res.users'].with_context(cls._test_context).create({
+        cls.user_account = cls.env['res.users'].with_context(**cls._test_context).create({
             'company_id': cls.company_main.id,
             'company_ids': [
                 (6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)
@@ -67,7 +67,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             'notification_type': 'inbox',
             'signature': '--\nErnest',
         })
-        cls.user_account_other = cls.env['res.users'].with_context(cls._test_context).create({
+        cls.user_account_other = cls.env['res.users'].with_context(**cls._test_context).create({
             'company_id': cls.company_admin.id,
             'company_ids': [(4, cls.company_admin.id)],
             'country_id': cls.env.ref('base.be').id,

@@ -14,14 +14,14 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def setUp(self):
         super(TestSMSPerformance, self).setUp()
         self.env.company.country_id = self.env.ref('base.us')
-        self.test_record = self.env['mail.test.sms'].with_context(self._test_context).create({
+        self.test_record = self.env['mail.test.sms'].with_context(**self._test_context).create({
             'name': 'Test',
             'customer_id': self.customer.id,
             'phone_nbr': '0456999999',
         })
 
         # prepare recipients to test for more realistic workload
-        self.partners = self.env['res.partner'].with_context(self._test_context).create([
+        self.partners = self.env['res.partner'].with_context(**self._test_context).create([
             {'name': 'Test %s' % x,
              'email': 'test%s@example.com' % x,
              'mobile': '0456%s%s0000' % (x, x),

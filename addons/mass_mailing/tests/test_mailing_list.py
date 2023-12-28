@@ -65,7 +65,7 @@ class TestMailingListMerge(MassMailCommon):
         super(TestMailingListMerge, cls).setUpClass()
         cls._create_mailing_list()
 
-        cls.mailing_list_3 = cls.env['mailing.list'].with_context(cls._test_context).create({
+        cls.mailing_list_3 = cls.env['mailing.list'].with_context(**cls._test_context).create({
             'name': 'ListC',
             'contact_ids': [
                 (0, 0, {'name': 'Norberto', 'email': 'norbert@example.com'}),

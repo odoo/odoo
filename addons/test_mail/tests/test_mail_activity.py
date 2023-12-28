@@ -23,7 +23,7 @@ class TestActivityCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestActivityCommon, cls).setUpClass()
-        cls.test_record, cls.test_record_2 = cls.env['mail.test.activity'].with_context(cls._test_context).create([
+        cls.test_record, cls.test_record_2 = cls.env['mail.test.activity'].with_context(**cls._test_context).create([
             {'name': 'Test'}, {'name': 'Test_2'},
         ])
         # reset ctx
@@ -730,7 +730,7 @@ class TestActivityMixin(TestActivityCommon):
             'user_id': self.user_employee.id,
         })
 
-        test_record_1 = self.env['mail.test.activity'].with_context(self._test_context).create({'name': 'Test 1'})
+        test_record_1 = self.env['mail.test.activity'].with_context(**self._test_context).create({'name': 'Test 1'})
         Activity.create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'date_deadline': date_today,

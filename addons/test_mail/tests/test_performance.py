@@ -20,14 +20,14 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 
         # creating partners is required notably with template usage
         cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
-        cls.user_test = cls.user_test_inbox = cls.env['res.users'].with_context(cls._test_context).create({
+        cls.user_test = cls.user_test_inbox = cls.env['res.users'].with_context(**cls._test_context).create({
             'name': 'Paulette Testouille',
             'login': 'paul',
             'email': 'user.test.paulette@example.com',
             'notification_type': 'inbox',
             'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
-        cls.user_test_email = cls.env['res.users'].with_context(cls._test_context).create({
+        cls.user_test_email = cls.env['res.users'].with_context(**cls._test_context).create({
             'name': 'Georgette Testouille',
             'login': 'george',
             'email': 'user.test.georgette@example.com',
@@ -35,7 +35,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
             'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
 
-        cls.customers = cls.env['res.partner'].with_context(cls._test_context).create([
+        cls.customers = cls.env['res.partner'].with_context(**cls._test_context).create([
             {
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'customer.test@example.com',
@@ -58,7 +58,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         self.patch(self.env.registry, 'ready', True)
 
     def _create_test_records(self):
-        test_record_full = self.env['mail.test.ticket'].with_context(self._test_context).create({
+        test_record_full = self.env['mail.test.ticket'].with_context(**self._test_context).create({
             'name': 'TestRecord',
             'customer_id': self.customer.id,
             'user_id': self.user_test.id,
@@ -751,7 +751,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.user_portal = cls.env['res.users'].with_context(cls._test_context).create({
+        cls.user_portal = cls.env['res.users'].with_context(**cls._test_context).create({
             'name': 'Olivia Portal',
             'login': 'port',
             'email': 'p.p@example.com',
@@ -765,7 +765,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'customer_id': cls.customers[0].id,
             'name': 'Test Container',
         })
-        cls.partners = cls.env['res.partner'].with_context(cls._test_context).create([
+        cls.partners = cls.env['res.partner'].with_context(**cls._test_context).create([
             {
                 'name': f'Test {idx}',
                 'email': f'test{idx}@example.com',
@@ -1124,7 +1124,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
                 'name': 'Test Container 2',
             },
         ])
-        cls.partners = cls.env['res.partner'].with_context(cls._test_context).create([
+        cls.partners = cls.env['res.partner'].with_context(**cls._test_context).create([
             {
                 'name': f'Test {idx}',
                 'email': f'test{idx}@example.com',
@@ -1305,21 +1305,21 @@ class TestPerformance(BaseMailPerformance):
             'alias_name': 'test-alias',
         })
         # followers
-        self.user_follower_email = self.env['res.users'].with_context(self._test_context).create({
+        self.user_follower_email = self.env['res.users'].with_context(**self._test_context).create({
             'name': 'user_follower_email',
             'login': 'user_follower_email',
             'email': 'user_follower_email@example.com',
             'notification_type': 'email',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
-        self.user_follower_inbox = self.env['res.users'].with_context(self._test_context).create({
+        self.user_follower_inbox = self.env['res.users'].with_context(**self._test_context).create({
             'name': 'user_follower_inbox',
             'login': 'user_follower_inbox',
             'email': 'user_follower_inbox@example.com',
             'notification_type': 'inbox',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
-        self.partner_follower = self.env['res.partner'].with_context(self._test_context).create({
+        self.partner_follower = self.env['res.partner'].with_context(**self._test_context).create({
             'name': 'partner_follower',
             'email': 'partner_follower@example.com',
         })
@@ -1330,21 +1330,21 @@ class TestPerformance(BaseMailPerformance):
         ])
 
         # partner_ids
-        self.user_inbox = self.env['res.users'].with_context(self._test_context).create({
+        self.user_inbox = self.env['res.users'].with_context(**self._test_context).create({
             'name': 'user_inbox',
             'login': 'user_inbox',
             'email': 'user_inbox@example.com',
             'notification_type': 'inbox',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
-        self.user_email = self.env['res.users'].with_context(self._test_context).create({
+        self.user_email = self.env['res.users'].with_context(**self._test_context).create({
             'name': 'user_email',
             'login': 'user_email',
             'email': 'user_email@example.com',
             'notification_type': 'email',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
-        self.partner = self.env['res.partner'].with_context(self._test_context).create({
+        self.partner = self.env['res.partner'].with_context(**self._test_context).create({
             'name': 'partner',
             'email': 'partner@example.com',
         })

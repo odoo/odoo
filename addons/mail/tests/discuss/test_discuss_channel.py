@@ -20,8 +20,8 @@ class TestChannelInternals(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)
-        cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.test_channel = cls.env['discuss.channel'].with_context(**cls._test_context).channel_create(name='Channel', group_id=None)
+        cls.test_partner = cls.env['res.partner'].with_context(**cls._test_context).create({
             'name': 'Test Partner',
             'email': 'test_customer@example.com',
         })
@@ -216,15 +216,15 @@ class TestChannelInternals(MailCommon):
             "name": "Jonas",
         })
         test_partner = test_user.partner_id
-        group_restricted_channel = self.env['discuss.channel'].with_context(self._test_context).create({
+        group_restricted_channel = self.env['discuss.channel'].with_context(**self._test_context).create({
             'name': 'Sic Mundus',
             'group_public_id': self.env.ref('base.group_user').id,
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
-        self.test_channel.with_context(self._test_context).write({
+        self.test_channel.with_context(**self._test_context).write({
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
-        private_group = self.env['discuss.channel'].with_user(self.user_employee).with_context(self._test_context).create({
+        private_group = self.env['discuss.channel'].with_user(self.user_employee).with_context(**self._test_context).create({
             'name': 'test',
             'channel_type': 'group',
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],

@@ -17,7 +17,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestMailTemplateCommon, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.lang'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.lang'].with_context(**cls._test_context).create({
             'email_from': 'ignasse@example.com',
             'name': 'Test',
         })

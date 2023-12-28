@@ -19,7 +19,7 @@ class TestTracking(MailCommon):
 
         record = cls.env['mail.test.ticket'].with_user(
             cls.user_employee
-        ).with_context(cls._test_context).create({
+        ).with_context(**cls._test_context).create({
             'name': 'Test',
         })
         cls.record = record.with_context(mail_notrack=False)
@@ -44,7 +44,7 @@ class TestTracking(MailCommon):
         """Check that the default tracking log message defined on the model is used
         and that setting a log message overrides it. See `_track_get_default_log_message`"""
 
-        record = self.env['mail.test.track'].with_context(self._test_context).create({
+        record = self.env['mail.test.track'].with_context(**self._test_context).create({
             'name': 'Test',
             'track_enable_default_log': True,
         }).with_context(mail_notrack=False)
@@ -297,7 +297,7 @@ class TestTracking(MailCommon):
     def test_message_track_template_at_create(self):
         """ Create a record with tracking template on create, template should be sent."""
 
-        Model = self.env['mail.test.ticket'].with_user(self.user_employee).with_context(self._test_context)
+        Model = self.env['mail.test.ticket'].with_user(self.user_employee).with_context(**self._test_context)
         Model = Model.with_context(mail_notrack=False)
         with self.mock_mail_gateway():
             record = Model.create({

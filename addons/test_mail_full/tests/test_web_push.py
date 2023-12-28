@@ -23,7 +23,7 @@ class TestWebPushNotification(SMSCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        channel = cls.env['discuss.channel'].with_context(cls._test_context)
+        channel = cls.env['discuss.channel'].with_context(**cls._test_context)
 
         cls.user_email = cls.user_employee
         cls.user_email.notification_type = 'email'
@@ -33,7 +33,7 @@ class TestWebPushNotification(SMSCommon):
             notification_type='inbox'
         )
 
-        cls.record_simple = cls.env['mail.test.simple'].with_context(cls._test_context).create({
+        cls.record_simple = cls.env['mail.test.simple'].with_context(**cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
         })
@@ -123,7 +123,7 @@ class TestWebPushNotification(SMSCommon):
         push_to_end_point.reset_mock()
 
         # Test Tracking Message
-        mail_test_ticket = self.env['mail.test.ticket'].with_context(self._test_context)
+        mail_test_ticket = self.env['mail.test.ticket'].with_context(**self._test_context)
         record_full = mail_test_ticket.with_user(self.user_email).create({
             'name': 'Test',
         })
@@ -220,7 +220,7 @@ class TestWebPushNotification(SMSCommon):
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     def test_push_notifications_mail_replay(self, push_to_end_point):
-        test_record = self.env['mail.test.gateway'].with_context(self._test_context).create({
+        test_record = self.env['mail.test.gateway'].with_context(**self._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         })

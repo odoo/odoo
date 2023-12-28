@@ -18,7 +18,7 @@ class TestMessageValues(MailCommon):
     def setUpClass(cls):
         super(TestMessageValues, cls).setUpClass()
 
-        cls.alias_record = cls.env['mail.test.container'].with_context(cls._test_context).create({
+        cls.alias_record = cls.env['mail.test.container'].with_context(**cls._test_context).create({
             'name': 'Pigs',
             'alias_name': 'pigs',
             'alias_contact': 'followers',
@@ -471,7 +471,7 @@ class TestMessageAccess(MailCommon):
     def test_mail_message_access_create_wo_parent_access(self):
         """ Purpose is to test posting a message on a record whose first message / parent
         is not accessible by current user. """
-        test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        test_record = self.env['mail.test.simple'].with_context(**self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         partner_1 = self.env['res.partner'].create({
             'name': 'Jitendra Prajapati (jpr-odoo)',
             'email': 'jpr@odoo.com',

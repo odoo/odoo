@@ -27,7 +27,7 @@ class TestMailMail(MailCommon):
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].with_context(**cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
         }).with_context({})

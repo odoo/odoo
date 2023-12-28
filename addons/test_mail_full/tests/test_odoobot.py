@@ -15,7 +15,7 @@ class TestOdoobot(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestOdoobot, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.test_record = cls.env['mail.test.simple'].with_context(**cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
         cls.odoobot = cls.env.ref("base.partner_root")
         cls.message_post_default_kwargs = {

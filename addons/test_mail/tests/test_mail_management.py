@@ -12,7 +12,7 @@ class TestMailManagement(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestMailManagement, cls).setUpClass()
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test'})
+        cls.test_record = cls.env['mail.test.simple'].with_context(**cls._test_context).create({'name': 'Test'})
         cls._reset_mail_context(cls.test_record)
         cls.msg = cls.test_record.message_post(body='TEST BODY', author_id=cls.partner_employee.id)
         cls.notif_p1 = cls.env['mail.notification'].create({
