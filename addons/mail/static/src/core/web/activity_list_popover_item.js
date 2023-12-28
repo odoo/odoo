@@ -14,7 +14,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
 /**
  * @typedef {Object} Props
  * @property {import("models").Activity} activity
- * @property {function} onActivityChanged
+ * @property {function} [onActivityChanged]
  * @property {function} [onClickDoneAndScheduleNext]
  * @property {function} onClickEditActivityButton
  * @extends {Component<Props, Env>}
@@ -81,7 +81,7 @@ export class ActivityListPopoverItem extends Component {
         this.props.onClickEditActivityButton();
         this.env.services["mail.activity"]
             .edit(this.props.activity.id)
-            .then(() => this.props.onActivityChanged());
+            .then(() => this.props.onActivityChanged?.());
     }
 
     onClickMarkAsDone() {
@@ -91,7 +91,7 @@ export class ActivityListPopoverItem extends Component {
     async onFileUploaded(data) {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
         await this.env.services["mail.activity"].markAsDone(this.props.activity, [attachmentId]);
-        this.props.onActivityChanged();
+        this.props.onActivityChanged?.();
     }
 
     get activityAssigneeAvatar() {

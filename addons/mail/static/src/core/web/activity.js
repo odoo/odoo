@@ -77,7 +77,7 @@ export class Activity extends Component {
         this.markDonePopover.open(ev.currentTarget, {
             activity: this.props.data,
             hasHeader: true,
-            reload: this.props.onActivityChanged,
+            onActivityChanged: this.props.onActivityChanged,
         });
     }
 
