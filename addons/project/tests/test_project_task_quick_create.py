@@ -9,7 +9,7 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user1, cls.user2 = cls.env['res.users'].with_context({'no_reset_password': True}).create([{
+        cls.user1, cls.user2 = cls.env['res.users'].create([{
             'name': 'Raouf 1',
             'login': 'raouf1',
             'password': 'raouf1aa',

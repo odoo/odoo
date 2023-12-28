@@ -8,9 +8,7 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
     @classmethod
     def setUpClass(cls):
         super(TestProjectStagesMulticompany, cls).setUpClass()
-
-        Users = cls.env['res.users'].with_context({'no_reset_password': True})
-        cls.user_manager_companies = Users.create({
+        cls.user_manager_companies = cls.env['res.users'].create({
             'name': 'Manager Companies',
             'login': 'manager-all',
             'email': 'manager@companies.com',

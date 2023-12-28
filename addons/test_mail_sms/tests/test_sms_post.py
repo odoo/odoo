@@ -312,7 +312,6 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
-            'no_reset_password': True,
         }).create({
             'name': 'Ernestine Loubine',
             'email': 'ernestine.loubine@agrolait.com',

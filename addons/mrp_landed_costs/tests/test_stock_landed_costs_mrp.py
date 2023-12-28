@@ -72,7 +72,7 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'name': 'Landed Cost',
             'type': 'service',
         })
-        cls.allow_user = cls.env['res.users'].with_context({'no_reset_password': True}).create({
+        cls.allow_user = cls.env['res.users'].create({
             'name': "Adviser",
             'login': "fm",
             'email': "accountmanager@yourcompany.com",
@@ -142,7 +142,7 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             to a Manufacturing order without the need for MRP access
         """
         # Create a user with only manager access to stock
-        stock_manager = self.env['res.users'].with_context({'no_reset_password': True}).create({
+        stock_manager = self.env['res.users'].create({
             'name': "Stock Manager",
             'login': "test",
             'email': "test@test.com",

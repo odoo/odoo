@@ -15,7 +15,7 @@ class TestRedirect(HttpCase):
     def setUp(self):
         super(TestRedirect, self).setUp()
 
-        self.user_portal = self.env['res.users'].with_context({'no_reset_password': True}).create({
+        self.user_portal = self.env['res.users'].create({
             'name': 'Test Website Portal User',
             'login': 'portal_user',
             'password': 'portal_user',

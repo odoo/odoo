@@ -17,7 +17,7 @@ class TestGamificationCommon(TransactionCaseGamification):
 
         # Push demo user into the challenge before creating a new one
         self.env.ref('gamification.challenge_base_discover')._update_all()
-        self.robot = self.env['res.users'].with_context(no_reset_password=True).create({
+        self.robot = self.env['res.users'].create({
             'name': 'R2D2',
             'login': 'r2d2@openerp.com',
             'email': 'r2d2@openerp.com',

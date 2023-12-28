@@ -236,7 +236,7 @@ class TestProjectPortalCommon(TestProjectCommon):
 
     def setUp(self):
         super(TestProjectPortalCommon, self).setUp()
-        self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+        self.user_noone = self.env['res.users'].with_context({'mail_create_nosubscribe': True}).create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
             'email': 'n.n@example.com',

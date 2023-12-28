@@ -31,7 +31,7 @@ class TestProjectCommon(TransactionCase):
             'email': 'valid.poilboeuf@gmail.com'})
 
         # Test users to use through the various tests
-        Users = cls.env['res.users'].with_context({'no_reset_password': True})
+        Users = cls.env['res.users']
         cls.user_public = Users.create({
             'name': 'Bert Tartignole',
             'login': 'bert',

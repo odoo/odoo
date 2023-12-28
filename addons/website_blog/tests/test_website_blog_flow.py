@@ -12,7 +12,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
     def setUp(self):
         super(TestWebsiteBlogFlow, self).setUp()
         group_portal = self.env.ref('base.group_portal')
-        self.user_portal = self.env['res.users'].with_context({'no_reset_password': True}).create({
+        self.user_portal = self.env['res.users'].create({
             'name': 'Dorian Portal',
             'login': 'portal_user',
             'email': 'portal_user@example.com',

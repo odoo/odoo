@@ -65,7 +65,7 @@ class TestRecruitmentProcess(TestHrCommon):
         new_application_mt = self.env.ref(
             "hr_recruitment.mt_applicant_new"
         )
-        user = self.env["res.users"].with_context(no_reset_password=True).create(
+        user = self.env["res.users"].create(
             {
                 "name": "user_1",
                 "login": "user_1",

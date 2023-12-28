@@ -535,7 +535,7 @@ class RecipientsNotificationTest(MailCommon):
             'name': 'Common Partner',
             'phone': '+32455998877',
         })
-        cls.user_1, cls.user_2 = cls.env['res.users'].with_context(no_reset_password=True).create([
+        cls.user_1, cls.user_2 = cls.env['res.users'].create([
             {'groups_id': [(4, cls.env.ref('base.group_portal').id)],
              'login': '_login_portal',
              'notification_type': 'email',
@@ -643,7 +643,7 @@ class RecipientsNotificationTest(MailCommon):
             'phone': '+32455998877',
         })
         cids = (company_other + self.company_admin).ids
-        user_2_1, user_2_2, user_2_3 = self.env['res.users'].sudo().with_context(no_reset_password=True).create([
+        user_2_1, user_2_2, user_2_3 = self.env['res.users'].sudo().create([
             {'company_ids': [(6, 0, cids)],
              'company_id': self.company_admin.id,
              'groups_id': [(4, self.env.ref('base.group_portal').id)],

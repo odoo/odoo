@@ -52,7 +52,7 @@ class TestSaleCommonBase(TransactionCase):
 
     @classmethod
     def setup_sale_configuration_for_company(cls, company):
-        Users = cls.env['res.users'].with_context(no_reset_password=True)
+        Users = cls.env['res.users']
 
         company_data = {
             # Sales Team

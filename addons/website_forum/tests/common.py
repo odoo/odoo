@@ -33,7 +33,7 @@ class TestForumCommon(common.TransactionCase):
         Post = cls.env['forum.post']
 
         # Test users
-        TestUsersEnv = cls.env['res.users'].with_context({'no_reset_password': True})
+        TestUsersEnv = cls.env['res.users']
         group_employee_id = cls.env.ref('base.group_user').id
         group_portal_id = cls.env.ref('base.group_portal').id
         group_public_id = cls.env.ref('base.group_public').id

@@ -17,9 +17,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         group_employee = cls.env.ref('base.group_user')
         group_partner_manager = cls.env.ref('base.group_partner_manager')
 
-        cls.purchase_user = cls.env['res.users'].with_context(
-            no_reset_password=True
-        ).create({
+        cls.purchase_user = cls.env['res.users'].create({
             'name': 'Purchase user',
             'login': 'purchaseUser',
             'email': 'pu@odoo.com',

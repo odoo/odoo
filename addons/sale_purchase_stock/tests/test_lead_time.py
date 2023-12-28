@@ -19,7 +19,7 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
         cls.mto_route = cls.env.ref('stock.route_warehouse0_mto')
         cls.mto_route.active = True
         cls.vendor = cls.env['res.partner'].create({'name': 'The Emperor'})
-        cls.user_salesperson = cls.env['res.users'].with_context(no_reset_password=True).create({
+        cls.user_salesperson = cls.env['res.users'].create({
             'name': 'Le Grand Horus',
             'login': 'grand.horus',
             'email': 'grand.horus@chansonbelge.dz',

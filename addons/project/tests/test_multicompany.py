@@ -34,7 +34,7 @@ class TestMultiCompanyCommon(TransactionCase):
 
         # users to use through the various tests
         user_group_employee = cls.env.ref('base.group_user')
-        Users = cls.env['res.users'].with_context({'no_reset_password': True})
+        Users = cls.env['res.users']
 
         cls.user_employee_company_a = Users.create({
             'name': 'Employee Company A',

@@ -13,7 +13,6 @@ class TestRecipients(TransactionCase):
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
-            'no_reset_password': True,
         })
         cls.partner_1 = Partner.create({
             'name': 'Valid Lelitre',

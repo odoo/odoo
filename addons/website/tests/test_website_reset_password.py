@@ -93,7 +93,7 @@ class TestWebsiteResetPassword(HttpCase):
         ])
 
         login = 'user@example.com'  # same login for both users
-        user_website_1, user_website_2 = self.env['res.users'].with_context(no_reset_password=True).create([
+        user_website_1, user_website_2 = self.env['res.users'].create([
             {'website_id': website_1.id, 'login': login, 'email': login, 'name': login},
             {'website_id': website_2.id, 'login': login, 'email': login, 'name': login},
         ])
