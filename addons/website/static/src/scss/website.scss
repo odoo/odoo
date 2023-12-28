@@ -237,7 +237,14 @@ body:not(.o_fullscreen) {
     }
 }
 
-.navbar-light {
+// ":not(.bg-light)" was added as a fix in the stable version because, without
+// it, the two classes ".navbar-light" and ".bg-light" did not work together
+// correctly. For instance, if a ".navbar-light" element had a dark background
+// (resulting in light text), combining it with the "bg-light" class would keep
+// the background light, rendering the light text invisible.
+// TODO: In the Master, we should remove this ':where(:not(.bg-light))' and find
+// a more consistent solution.
+.navbar-light:where(:not(.bg-light)) {
     // Style only navbar-light which Odoo is only supposed to use in standard
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
@@ -1383,6 +1390,18 @@ header {
         .show > .nav-link {
             border-color: currentColor;
         }
+    }
+
+    // On the "/Help" page (with "website_helpdesk" installed), the navbar for
+    // helpdesk teams uses the both "navbar-nav" and "nav-tabs" BS classes on
+    // the same element, which is not compatible. This results in the text and
+    // background of the active "nav-link" having the same color if the
+    // background of the website is black, and consequently, the text is not
+    // visible.
+    // TODO: In Master, modify the layout of the navbar for helpdesk teams to
+    // avoid using BS Tabs within a BS Navbar.
+    &.nav-tabs > .nav-item.active > .nav-link.active {
+        color: color-yiq($nav-tabs-link-active-bg, $light: $navbar-light-active-color, $dark: $navbar-dark-active-color);
     }
 }
 
