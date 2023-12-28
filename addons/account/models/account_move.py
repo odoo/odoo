@@ -291,6 +291,7 @@ class AccountMove(models.Model):
         comodel_name='account.payment.term',
         string='Payment Terms',
         compute='_compute_invoice_payment_term_id', store=True, readonly=False, precompute=True,
+        inverse='_inverse_invoice_payment_term_id',
         states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]},
         check_company=True,
     )
@@ -1053,8 +1054,7 @@ class AccountMove(models.Model):
                         company=invoice.company_id,
                         sign=sign
                     )
-                    multiple_installments = len(invoice_payment_terms['line_ids']) > 1
-                    for i, term_line in enumerate(invoice_payment_terms['line_ids']):
+                    for term_line in invoice_payment_terms['line_ids']:
                         key = frozendict({
                             'move_id': invoice.id,
                             'date_maturity': fields.Date.to_date(term_line.get('date')),
@@ -1063,13 +1063,10 @@ class AccountMove(models.Model):
                         values = {
                             'balance': term_line['company_amount'],
                             'amount_currency': term_line['foreign_amount'],
-                            'name': invoice.payment_reference or '',
                             'discount_date': invoice_payment_terms.get('discount_date'),
                             'discount_balance': invoice_payment_terms.get('discount_balance') or 0.0,
                             'discount_amount_currency': invoice_payment_terms.get('discount_amount_currency') or 0.0,
                         }
-                        if multiple_installments:
-                            values['name'] = f'{values["name"]} installment #{i + 1}'.lstrip()
                         if key not in invoice.needed_terms:
                             invoice.needed_terms[key] = values
                         else:
@@ -4679,3 +4676,9 @@ class AccountMove(models.Model):
         :return: an array of ir.model.fields for which the user should provide values.
         """
         return []
+
+    @api.onchange('invoice_payment_term_id')
+    def _inverse_invoice_payment_term_id(self):
+        self.line_ids._conditional_add_to_compute('name', lambda l: (
+            l.display_type == 'payment_term'
+        ))
