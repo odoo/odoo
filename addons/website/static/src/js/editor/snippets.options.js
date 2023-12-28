@@ -1157,6 +1157,17 @@ options.registry.ReplaceMedia.include({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (widgetName === "replace_media_opt"
+            && this.$target[0].classList.contains("o_translatable_attribute")
+        ) {
+            return !!this.$target[0].getAttribute("src");
+        }
+        return this._super(...arguments);
+    },
+    /**
      * Fills the dropdown with the available anchors for the page referenced in
      * the href.
      *
@@ -3905,30 +3916,32 @@ options.registry.sizing.include({
     start() {
         const defs = this._super(...arguments);
         const self = this;
-        this.$handles.on('mousedown', function (ev) {
-            // Since website is edited in an iframe, a div that goes over the
-            // iframe is necessary to catch mousemove and mouseup events,
-            // otherwise the iframe absorbs them.
-            const $body = $(this.ownerDocument.body);
-            if (!self.divEl) {
-                self.divEl = document.createElement('div');
-                self.divEl.style.position = 'absolute';
-                self.divEl.style.height = '100%';
-                self.divEl.style.width = '100%';
-                self.divEl.setAttribute('id', 'iframeEventOverlay');
-                $body.append(self.divEl);
-            }
-            const documentMouseUp = () => {
-                // Multiple mouseup can occur if mouse goes out of the window
-                // while moving.
-                if (self.divEl) {
-                    self.divEl.remove();
-                    self.divEl = undefined;
+        if (this.canUseHandle) {
+            this.$handles.on('mousedown', function (ev) {
+                // Since website is edited in an iframe, a div that goes over the
+                // iframe is necessary to catch mousemove and mouseup events,
+                // otherwise the iframe absorbs them.
+                const $body = $(this.ownerDocument.body);
+                if (!self.divEl) {
+                    self.divEl = document.createElement('div');
+                    self.divEl.style.position = 'absolute';
+                    self.divEl.style.height = '100%';
+                    self.divEl.style.width = '100%';
+                    self.divEl.setAttribute('id', 'iframeEventOverlay');
+                    $body.append(self.divEl);
                 }
-                $body.off('mouseup', documentMouseUp);
-            };
-            $body.on('mouseup', documentMouseUp);
-        });
+                const documentMouseUp = () => {
+                    // Multiple mouseup can occur if mouse goes out of the window
+                    // while moving.
+                    if (self.divEl) {
+                        self.divEl.remove();
+                        self.divEl = undefined;
+                    }
+                    $body.off('mouseup', documentMouseUp);
+                };
+                $body.on('mouseup', documentMouseUp);
+            });
+        }
         return defs;
     },
 

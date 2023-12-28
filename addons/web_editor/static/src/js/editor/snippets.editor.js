@@ -108,7 +108,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
         this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !isUnremovable(this.$target[0]);
-        this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
+        this.displayOverlayOptions = !this.options.enableTranslation && (this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable);
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -1937,34 +1937,6 @@ var SnippetsMenu = Widget.extend({
                 return tipContent;
             },
         });
-
-        if (this.options.enableTranslation) {
-            // Load the sidebar with the style tab only.
-            await this._loadSnippetsTemplates();
-            defs.push(this._updateInvisibleDOM());
-            this.$el.find('.o_we_website_top_actions').removeClass('d-none');
-            this.$('.o_snippet_search_filter').addClass('d-none');
-            this.$('#o_scroll').addClass('d-none');
-            this.$('button[data-action="mobilePreview"]').addClass('d-none');
-            this.$('#snippets_menu button').removeClass('active').prop('disabled', true);
-            this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
-            this.$('o_we_ui_loading').addClass('d-none');
-            $(this.customizePanel).removeClass('d-none');
-            this.$('#o_we_editor_toolbar_container').hide();
-            this.$('#o-we-editor-table-container').addClass('d-none');
-            return Promise.all(defs);
-        }
-
-        this.emptyOptionsTabContent = document.createElement('div');
-        this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
-        this.emptyOptionsTabContent.append(_t("Select a block on your page to style it."));
-
-        // Fetch snippet templates and compute it
-        defs.push((async () => {
-            await this._loadSnippetsTemplates(this.options.invalidateSnippetCache);
-            await this._updateInvisibleDOM();
-        })());
-
         // Active snippet editor on click in the page
         this.$document.on('click.snippets_menu', '*', this._onClick);
         // Needed as bootstrap stop the propagation of click events for dropdowns
@@ -2030,6 +2002,33 @@ var SnippetsMenu = Widget.extend({
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
         this.$scrollingTarget[0].addEventListener('scroll', this._onScrollingElementScroll, {capture: true});
+
+        if (this.options.enableTranslation) {
+            // Load the sidebar with the style tab only.
+            await this._loadSnippetsTemplates();
+            defs.push(this._updateInvisibleDOM());
+            this.$el.find('.o_we_website_top_actions').removeClass('d-none');
+            this.$('.o_snippet_search_filter').addClass('d-none');
+            this.$('#o_scroll').addClass('d-none');
+            this.$('button[data-action="mobilePreview"]').addClass('d-none');
+            this.$('#snippets_menu button').removeClass('active').prop('disabled', true);
+            this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
+            this.$('o_we_ui_loading').addClass('d-none');
+            $(this.customizePanel).removeClass('d-none');
+            this.$('#o_we_editor_toolbar_container').hide();
+            this.$('#o-we-editor-table-container').addClass('d-none');
+            return Promise.all(defs);
+        }
+
+        this.emptyOptionsTabContent = document.createElement('div');
+        this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
+        this.emptyOptionsTabContent.append(_t("Select a block on your page to style it."));
+
+        // Fetch snippet templates and compute it
+        defs.push((async () => {
+            await this._loadSnippetsTemplates(this.options.invalidateSnippetCache);
+            await this._updateInvisibleDOM();
+        })());
 
         // Auto-selects text elements with a specific class and remove this
         // on text changes
@@ -2636,10 +2635,11 @@ var SnippetsMenu = Widget.extend({
      *          (might be async when an editor must be created)
      */
     _activateSnippet: async function ($snippet, previewMode, ifInactiveOptions) {
-        if (this.options.enableTranslation) {
-            // In translate mode, do not activate the snippet when enabling its
-            // corresponding invisible element. Indeed, in translate mode, we
-            // only want to toggle its visibility.
+        if (this.options.enableTranslation
+            && $snippet[0]
+            && !$snippet[0].matches(".o_translatable_attribute")
+            && !$snippet[0].querySelector(".o_translatable_attribute")
+        ) {
             return;
         }
         if (this._blockPreviewOverlays && previewMode) {
@@ -3592,6 +3592,9 @@ var SnippetsMenu = Widget.extend({
         this._hideTooltips();
         this._closeWidgets();
 
+        if (this.options.enableTranslation) {
+            tab = this.tabs.OPTIONS;
+        }
         this._currentTab = tab || this.tabs.BLOCKS;
 
         if (this._$toolbarContainer) {
@@ -3762,7 +3765,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _allowParentsEditors($snippet) {
-        return !this.options.enableTranslation;
+        return true;
     },
 
     //--------------------------------------------------------------------------
