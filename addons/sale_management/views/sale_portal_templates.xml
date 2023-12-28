@@ -64,9 +64,9 @@
                                             </div>
                                         </strong>
                                     </td>
-                                    <td class="text-center" t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'">
+                                    <td class="text-end" t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'">
                                         <a t-att-data-option-id="option.id" href="#" class="mb8 js_add_optional_products d-print-none" aria-label="Add to cart" title="Add to cart">
-                                            <span class="fa fa-shopping-cart"/>
+                                            <span class="btn btn-secondary">Add to order</span>
                                         </a>
                                     </td>
                                 </t>
