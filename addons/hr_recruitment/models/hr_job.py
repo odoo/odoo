@@ -61,6 +61,26 @@ class Job(models.Model):
     activities_overdue = fields.Integer(compute='_compute_activities')
     activities_today = fields.Integer(compute='_compute_activities')
 
+    # Overridden fields
+    no_of_hired_employee = fields.Integer(
+        compute='_compute_no_of_hired_employee',
+        string='Hired Employees', copy=False,
+        help='Number of hired employees for this job position during recruitment phase.',
+        store=True)
+
+    @api.depends('application_ids.date_closed')
+    def _compute_no_of_hired_employee(self):
+        all_hired = self.env['hr.applicant'].search(
+            [
+                ('job_id', 'in', self.ids),
+                ('date_closed', '!=', False),
+                '|',
+                    ('active', '=', False),
+                    ('active', '=', True),
+            ])
+        for job in self:
+            job.no_of_hired_employee = len(all_hired.filtered(lambda a: a.job_id.id == job.id))
+
     @api.depends_context('uid')
     def _compute_activities(self):
         self.env.cr.execute("""
