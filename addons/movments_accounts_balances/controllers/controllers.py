@@ -471,40 +471,54 @@ class AccountBalance(models.Model):
         return invoice
 
     @api.model
-    def get_invoice(self, invoice_id):
-        # Define search criteria to filter bills
+    def get_ar_invoice(self, invoice_id):
+        """
+        Retrieve an AR invoice based on the provided invoice ID.
+        :param invoice_id: ID of the invoice to retrieve.
+        :return: A dictionary containing the AR invoice data or an error message.
+        """
+        # Define search criteria to filter AR invoices
         domain = [
             ('id', '=', invoice_id),
-            ('move_type', '=', 'out_invoice'),
+            ('move_type', '=', 'out_invoice'),  # AR invoices have the move_type 'out_invoice'
         ]
 
-        # Retrieve bills based on the criteria
-        invoice = self.env['account.move'].search(domain, order='invoice_date')
+        # Retrieve the AR invoice based on the criteria
+        invoice = self.env['account.move'].search(domain, limit=1)
 
-        # Prepare a list to store bill data
-        invoice_data = []
+        if not invoice:
+            return {'error': 'AR invoice not found'}
 
-        # for bill in bills:
-        # Retrieve invoice lines for each bill
-        invoice_lines = invoice.invoice_line_ids
-        selected_account_id = (
-                invoice_lines and invoice_lines[0].account_id.name or False
-        )
+        # Prepare a list to store invoice line data
+        invoice_line_data = []
+        for line in invoice.invoice_line_ids:
+            invoice_line_data.append({
+                'line_id': line.id,
+                'product_id': line.product_id.id if line.product_id else False,
+                'product_name': line.product_id.name if line.product_id else '',
+                'account_id': line.account_id.id,
+                'account_name': line.account_id.name,
+                'quantity': line.quantity,
+                'price_unit': line.price_unit,
+                'analytic_account_id': line.analytic_account_id.id if line.analytic_account_id else False,
+                'analytic_account_name': line.analytic_account_id.name if line.analytic_account_id else '',
+            })
 
-        # Assemble bill data
-        invoice_data.append({
+        # Assemble AR invoice data
+        ar_invoice_data = {
             'id': invoice.id,
-            'invoice_number': invoice.id,
+            'invoice_number': invoice.name,
             'invoice_date': invoice.invoice_date,
-            'supplier_id': invoice.partner_id.name,
-            'amount': invoice.amount_total,
-            'state': invoice.payment_state,
-            'selected_account_id': selected_account_id,
-            # Add more bill details here as needed
-        })
+            'due_date': invoice.invoice_date_due,
+            'partner_id': invoice.partner_id.id,
+            'partner_name': invoice.partner_id.name,
+            'amount_total': invoice.amount_total,
+            'state': invoice.state,
+            'invoice_lines': invoice_line_data,
+        }
 
-        # Create a dictionary with a "bill_info" key
-        response = {'invoice_info': invoice_data}
+        # Create a dictionary with an "ar_invoice_info" key
+        response = {'ar_invoice_info': ar_invoice_data}
 
         return response
 
