@@ -532,6 +532,43 @@ class AccountBalance(models.Model):
         except Exception as e:
             return "Failed to delete bill: {}".format(e)
 
+    @api.model
+    def cancel_and_delete_ar_invoice_payment(self, payment_id):
+        """
+        Cancel and delete an AR invoice payment based on the provided payment ID.
+        :param payment_id: ID of the payment to cancel and delete.
+        :return: A success message or an error message.
+        """
+        Payment = self.env['account.move']
+        payment = Payment.browse(payment_id)
+
+        if not payment.exists():
+            return "Payment not found."
+
+        for pay in payment:
+            # Attempt to cancel the payment if it's not already in a cancellable state
+            if pay.state not in ['draft', 'cancelled']:
+                try:
+                    pay.button_draft()
+                except UserError as e:
+                    return "Failed to cancel payment: {}".format(e)
+                except ValidationError as e:
+                    return "Validation error occurred: {}".format(e)
+                except Exception as e:
+                    return "Unexpected error occurred: {}".format(e)
+
+            # Check again if the payment is in a cancellable state after attempting cancellation
+            if pay.state in ['draft', 'cancelled']:
+                try:
+                    pay.unlink()  # Delete the payment
+                    return "Payment deleted successfully."
+                except Exception as e:
+                    return "Failed to delete payment: {}".format(e)
+            else:
+                return "Payment cannot be deleted as it is not in draft or cancelled state."
+
+        return "Operation completed."  # Return a final message if multiple payments are processed
+
 
 
 
