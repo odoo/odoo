@@ -82,7 +82,7 @@ export class ActivityButton extends Component {
                 selectedIds.includes(resId) && selectedIds.length > 1 ? selectedIds : undefined;
             this.popover.open(this.buttonRef.el, {
                 activityIds: this.props.record.data.activity_ids.currentIds,
-                onActivityChanged: () => {
+                onActivityChanged: (thread) => {
                     const recordToLoad = resIds ? selectedRecords : [this.props.record];
                     recordToLoad.forEach((r) => r.load());
                     this.popover.close();
