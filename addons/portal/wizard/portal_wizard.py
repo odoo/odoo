@@ -209,7 +209,7 @@ class PortalWizardUser(models.TransientModel):
         """ create a new user for wizard_user.partner_id
             :returns record of res.users
         """
-        return self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template({
+        return self.env['res.users']._create_user_from_template({
             'email': email_normalize(self.email),
             'login': email_normalize(self.email),
             'partner_id': self.partner_id.id,

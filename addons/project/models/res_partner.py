@@ -52,7 +52,7 @@ class ResPartner(models.Model):
             return self.env['res.users']
         created_users = self.env['res.users']
         for partner in partners_without_user:
-            created_users += self.env['res.users'].with_context(no_reset_password=True).sudo()._create_user_from_template({
+            created_users += self.env['res.users'].sudo()._create_user_from_template({
                 'email': email_normalize(partner.email),
                 'login': email_normalize(partner.email),
                 'partner_id': partner.id,
