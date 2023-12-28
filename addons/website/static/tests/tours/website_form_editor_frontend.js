@@ -207,3 +207,13 @@ tour.register('website_form_contactus_submit', {
         trigger: '#wrap:has(h1:contains("Thank You!"))',
     },
 ]);
+tour.register('website_form_contactus_check_changed_email', {
+    test: true,
+    url: '/contactus',
+}, [
+    {
+        content: "Check that the recipient email is updated",
+        trigger: 'form:has(input[name="email_to"][value="after.change@mail.com"])',
+        run: () => null, // it's a check.
+    },
+]);

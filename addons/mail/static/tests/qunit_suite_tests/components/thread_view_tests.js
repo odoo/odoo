@@ -1509,9 +1509,7 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     await contains(".o_MessageList_loadMore", { count: 0 });
 });
 
-QUnit.test('Retry loading more messages on failed load more messages should load more messages', async function (assert) {
-    assert.expect(0);
-
+QUnit.test('Retry loading more messages on failed load more messages should load more messages', async function () {
     // first call needs to be successful as it is the initial loading of messages
     // second call comes from load more and needs to fail in order to show the error alert
     // any later call should work so that retry button and load more clicks would now work
@@ -1528,7 +1526,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
             res_id: mailChannelId1,
         };
     }));
-    const { afterEvent, click, openDiscuss } = await start({
+    const { openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -1541,22 +1539,13 @@ QUnit.test('Retry loading more messages on failed load more messages should load
         }
     });
     await openDiscuss();
+    await contains(".o_Message", { count: 30 });
     messageFetchShouldFail = true;
-    await click('.o_MessageList_loadMore');
-
+    await clickContains(".o_MessageList_loadMore");
+    await contains(".o_MessageList_alertLoadingFailedRetryButton");
     messageFetchShouldFail = false;
-    await afterEvent({
-        eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_MessageList_alertLoadingFailedRetryButton').click(),
-        message: "should wait until channel loaded more messages after clicked on load more",
-        predicate: ({ hint, threadViewer }) => {
-            return (
-                hint.type === 'more-messages-loaded' &&
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === mailChannelId1
-            );
-        },
-    });
+    await clickContains('.o_MessageList_alertLoadingFailedRetryButton');
+    await contains(".o_Message", { count: 60 });
 });
 
 QUnit.test("highlight the message mentioning the current user inside the channel", async function (assert) {
