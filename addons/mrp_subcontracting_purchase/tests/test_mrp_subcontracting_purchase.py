@@ -342,6 +342,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         product_category_all.property_stock_account_production_cost_id = production_cost_account
         product_category_all.property_stock_valuation_account_id = valu_account
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        self.comp1.standard_price = 8
         purchase = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
             'order_line': [Command.create({
@@ -367,6 +368,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         svl = aml.stock_valuation_layer_ids
         self.assertEqual(len(svl), 1)
         self.assertEqual(svl.value, 5)
+        self.assertEqual(self.finished.standard_price, 1.5 + 8, 'product cost should match vendor subcontracting cost + component cost')
         # check for the automated inventory valuation
         account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
         self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
