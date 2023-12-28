@@ -15,7 +15,6 @@ import { _t } from "@web/core/l10n/translation";
 export class ActivityMailTemplate extends Component {
     static defaultProps = {
         onClickButtons: () => {},
-        onUpdate: () => {},
     };
     static props = ["activity", "onClickButtons?", "onUpdate?"];
     static template = "mail.ActivityMailTemplate";
@@ -47,7 +46,7 @@ export class ActivityMailTemplate extends Component {
             },
         };
         this.env.services.action.doAction(action, {
-            onClose: () => this.props.onUpdate(),
+            onClose: () => this.props.onUpdate?.(),
         });
     }
 
@@ -59,14 +58,10 @@ export class ActivityMailTemplate extends Component {
         ev.stopPropagation();
         ev.preventDefault();
         this.props.onClickButtons();
-        const thread = this.store.Thread.get({
-            model: this.props.activity.res_model,
-            id: this.props.activity.res_id,
-        });
         await this.env.services.orm.call(this.props.activity.res_model, "activity_send_mail", [
             [this.props.activity.res_id],
             mailTemplate.id,
         ]);
-        this.props.onUpdate(thread);
+        this.props.onUpdate?.();
     }
 }

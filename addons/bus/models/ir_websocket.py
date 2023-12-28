@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.exceptions import AccessError
 from odoo.http import request, SessionExpiredException
 from odoo.service import security
 from ..models.bus import dispatch
@@ -31,7 +32,30 @@ class IrWebsocket(models.AbstractModel):
         channels.extend(self.env.user.groups_id)
         if req.session.uid:
             channels.append(self.env.user.partner_id)
+        for channel in list(channels):
+            if isinstance(channel, str) and channel.startswith("record:"):
+                channels.remove(channel)
+                record = self._check_record_channel(channel)
+                if record:
+                    channels.append(("record", record))
         return channels
+
+    def _check_record_channel(self, channel):
+        params = channel.split(":")
+        try:
+            res_id = int(params[2])
+        except ValueError:
+            return
+        model_name = params[1]
+        if model_name not in self.env:
+            return
+        record = self.env[model_name].browse(res_id)
+        try:
+            record.check_access_rights("read")
+            record.check_access_rule("read")
+        except AccessError:
+            return
+        return record
 
     def _subscribe(self, data):
         if not all(isinstance(c, str) for c in data['channels']):

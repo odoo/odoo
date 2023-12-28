@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { Record } from "@mail/core/common/record";
-import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef Data
@@ -44,36 +43,10 @@ export class Activity extends Record {
     }
     /**
      * @param {Data} data
-     * @param {Object} [param1]
-     * @param {boolean} param1.broadcast
      * @returns {import("models").Activity|import("models").Activity[]}
      */
-    static insert(data, { broadcast = true } = {}) {
+    static insert(data) {
         return super.insert(...arguments);
-    }
-    /**
-     * @param {Data} data
-     * @param {Object} [param1]
-     * @param {boolean} param1.broadcast
-     * @returns {import("models").Activity}
-     */
-    static _insert(data, { broadcast = true } = {}) {
-        /** @type {import("models").Activity} */
-        const activity = this.preinsert(data);
-        if (data.request_partner_id) {
-            data.request_partner_id = data.request_partner_id[0];
-        }
-        if (!data.icon) {
-            data.icon = "fa-tasks";
-        }
-        assignDefined(activity, data);
-        if (broadcast) {
-            this.env.services["mail.activity"].broadcastChannel?.postMessage({
-                type: "INSERT",
-                payload: this.env.services["mail.activity"]._serialize(activity),
-            });
-        }
-        return activity;
     }
 
     /** @type {boolean} */
@@ -105,7 +78,7 @@ export class Activity extends Record {
     /** @type {string} */
     feedback;
     /** @type {string} */
-    icon;
+    icon = Record.attr("fa-tasks");
     /** @type {number} */
     id;
     /** @type {Object[]} */

@@ -14,7 +14,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
 /**
  * @typedef {Object} Props
  * @property {import("models").Activity} activity
- * @property {function} onActivityChanged
+ * @property {function} [onActivityChanged]
  * @property {function} [onClickDoneAndScheduleNext]
  * @property {function} onClickEditActivityButton
  * @extends {Component<Props, Env>}

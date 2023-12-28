@@ -109,8 +109,8 @@ patch(MockServer.prototype, {
                   context: { active_test: false },
               })[0]
             : null;
-        const channels = this._mockIrWebsocket__buildBusChannelList().concat(
-            this.channelsByUser[authenticatedUser]
+        const channels = this._mockIrWebsocket__buildBusChannelList(
+            this.channelsByUser[authenticatedUser] ?? []
         );
         notifications = notifications.filter(([target]) =>
             channels.some((channel) => {

@@ -18,14 +18,12 @@ import { FileUploader } from "@web/views/fields/file_handler";
 /**
  * @typedef {Object} Props
  * @property {import("models").Activity} data
- * @property {function} [onUpdate]
  * @property {function} reloadParentView
  * @extends {Component<Props, Env>}
  */
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
-    static props = ["data", "onUpdate?", "reloadParentView"];
-    static defaultProps = { onUpdate: () => {} };
+    static props = ["data", "reloadParentView"];
     static template = "mail.Activity";
 
     /** @type {function} */
@@ -81,16 +79,12 @@ export class Activity extends Component {
         this.popover.open(ev.currentTarget, {
             activity: this.props.data,
             hasHeader: true,
-            reload: this.props.onUpdate,
         });
     }
 
     async onFileUploaded(data) {
-        const thread = this.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.activityService.markAsDone(this.props.data, [attachmentId]);
-        this.props.onUpdate(thread);
-        await this.threadService.fetchNewMessages(thread);
+        this.activityService.markAsDone(this.props.data, [attachmentId]);
     }
 
     onClickAvatar(ev) {
@@ -102,18 +96,14 @@ export class Activity extends Component {
         }
     }
 
-    async edit() {
-        const thread = this.thread;
+    edit() {
         const id = this.props.data.id;
-        await this.env.services["mail.activity"].edit(id);
-        this.props.onUpdate(thread);
+        this.env.services["mail.activity"].edit(id);
     }
 
-    async unlink() {
-        const thread = this.thread;
+    unlink() {
         this.activityService.delete(this.props.data);
-        await this.env.services.orm.unlink("mail.activity", [this.props.data.id]);
-        this.props.onUpdate(thread);
+        this.env.services.orm.unlink("mail.activity", [this.props.data.id]);
     }
 
     get thread() {

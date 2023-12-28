@@ -144,7 +144,12 @@ export class Chatter extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
                 }
-                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+                this.load(this.state.thread, [
+                    "activities",
+                    "attachments",
+                    "followers",
+                    "suggestedRecipients",
+                ]);
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -158,7 +163,12 @@ export class Chatter extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
                 }
-                this.load(this.state.thread, ["followers", "attachments", "suggestedRecipients"]);
+                this.load(this.state.thread, [
+                    "activities",
+                    "attachments",
+                    "followers",
+                    "suggestedRecipients",
+                ]);
             }
         });
         useEffect(
@@ -241,6 +251,8 @@ export class Chatter extends Component {
     }
 
     changeThread(threadModel, threadId, webRecord) {
+        // TODO unsubscribe somewhere?
+        this.env.services["bus_service"].addChannel(`record:${threadModel}:${threadId}`);
         this.state.thread = this.threadService.getThread(threadModel, threadId);
         this.state.thread.name = webRecord?.data?.display_name || undefined;
         this.attachmentUploader.thread = this.state.thread;
@@ -262,8 +274,8 @@ export class Chatter extends Component {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        if (this.props.hasActivities && !requestList.includes("activities")) {
-            requestList.push("activities");
+        if (!this.props.hasActivities) {
+            requestList = requestList.filter((request) => request !== "activities");
         }
         this.threadService.fetchData(thread, requestList);
     }
@@ -343,10 +355,7 @@ export class Chatter extends Component {
 
     async scheduleActivity() {
         this.closeSearch();
-        const schedule = async (thread) => {
-            await this.activityService.schedule(thread.model, [thread.id]);
-            this.load(thread, ["activities", "messages"]);
-        };
+        const schedule = (thread) => this.activityService.schedule(thread.model, [thread.id]);
         if (this.state.thread.id) {
             schedule(this.state.thread);
         } else {
