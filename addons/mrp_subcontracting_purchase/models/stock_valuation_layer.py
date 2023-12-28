@@ -16,5 +16,14 @@ class StockValuationLayer(models.Model):
             # each layer has a quantity and price for each move, to get the correct component price for each move
             # we need to get the components used for each quantity
             for move in production.move_raw_ids:
+<<<<<<< HEAD
                 components_price += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('value'))) / production.product_uom_qty
         return super()._get_layer_price_unit() - components_price
+||||||| parent of ce5509fd7453 (temp)
+                components_price += sum(move.sudo().stock_valuation_layer_ids.mapped('value')) / production.product_uom_qty
+        return super()._get_layer_price_unit() - components_price
+=======
+                components_price += sum(move.sudo().stock_valuation_layer_ids.mapped('value')) / production.product_uom_qty
+        # the move valuation is negative (out moves) therefore we we add the negative components_price instead of subtracting
+        return super()._get_layer_price_unit() + components_price
+>>>>>>> ce5509fd7453 (temp)
