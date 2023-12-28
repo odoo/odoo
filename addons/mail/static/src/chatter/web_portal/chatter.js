@@ -278,6 +278,10 @@ export class Chatter extends Component {
         this.onFollowerChanged(thread);
     }
 
+    onActivityChanged(thread) {
+        this.load(thread);
+    }
+
     async onClickFollow() {
         if (this.state.thread.id) {
             this._follow(this.state.thread);
