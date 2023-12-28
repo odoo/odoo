@@ -2091,13 +2091,17 @@ class MrpProduction(models.Model):
 
     def pre_button_mark_done(self):
         self._button_mark_done_sanity_checks()
+        productions_auto = set()
         for production in self:
-            if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
-                production._set_quantities()
+            if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+                continue
+            if production._auto_production_checks():
+                productions_auto.add(production.id)
+            else:
+                return production.action_mass_produce()
 
-        for production in self:
-            if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
-                raise UserError(_('The quantity to produce must be positive!'))
+        for production in self.env['mrp.production'].browse(productions_auto):
+            production._set_quantities()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
@@ -2112,6 +2116,11 @@ class MrpProduction(models.Model):
         self._check_company()
         for order in self:
             order._check_sn_uniqueness()
+
+    def _auto_production_checks(self):
+        self.ensure_one()
+        return all(p.tracking == 'none' for p in self.move_raw_ids.product_id | self.move_finished_ids.product_id)\
+            or self.product_uom_qty == 1 or (self.product_id.tracking != 'serial' and self.reservation_state == 'assigned')
 
     def do_unreserve(self):
         (self.move_finished_ids | self.move_raw_ids).filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
@@ -2228,15 +2237,13 @@ class MrpProduction(models.Model):
     def action_mass_produce(self):
         self.ensure_one()
         self._check_company()
-        if self.state not in ['draft', 'confirmed', 'progress', 'to_close']:
+        if self.state not in ['draft', 'confirmed', 'progress', 'to_close'] or\
+                self._auto_production_checks():
             return
 
-        action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_mrp_batch_produce")
         action['context'] = {
-            'default_production_ids': self.ids,
-            'default_move_raw_ids': self.move_raw_ids.ids,
-            'default_expected_qty': self.product_qty,
-            'production_ids_to_validate': self,
+            'default_production_id': self.id,
         }
         return action
 
@@ -2511,7 +2518,8 @@ class MrpProduction(models.Model):
             if move.has_tracking != 'serial' or not move.picked:
                 continue
             for move_line in move.move_line_ids:
-                if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding):
+                if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding) or\
+                        not move_line.lot_id:
                     continue
                 message = _('The serial number %(number)s used for component %(component)s has already been consumed',
                     number=move_line.lot_id.name,

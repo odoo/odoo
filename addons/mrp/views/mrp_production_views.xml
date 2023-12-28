@@ -683,18 +683,6 @@
             </field>
         </record>
 
-        <record id="mrp_production_action_mass_produce" model="ir.actions.act_window">
-            <field name="name">Mass Produce</field>
-            <field name="model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">form, list</field>
-            <field name="state">code</field>
-            <field name="code">
-            if records:
-                records.action_mass_produce()
-            </field>
-        </record>
-
         <menuitem action="mrp_production_action"
             id="menu_mrp_production_action"
             parent="menu_mrp_manufacturing"

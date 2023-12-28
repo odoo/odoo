@@ -21,7 +21,7 @@
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/mrp_production_backorder.xml',
         'wizard/mrp_consumption_warning_views.xml',
-        'wizard/stock_assign_serial_numbers.xml',
+        'wizard/mrp_batch_produce.xml',
         'wizard/mrp_production_split.xml',
         'views/mrp_views_menus.xml',
         'views/stock_move_views.xml',

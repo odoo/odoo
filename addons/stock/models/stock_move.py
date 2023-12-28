@@ -8,7 +8,7 @@ from operator import itemgetter
 from re import findall as regex_findall
 
 from odoo import _, api, Command, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import clean_context, OrderedSet, groupby
@@ -813,7 +813,10 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.ensure_one()
         if not location_id:
             location_id = self.location_dest_id
-        lot_names = self.env['stock.lot'].generate_lot_names(next_serial, next_serial_count or self.next_serial_count)
+        count = next_serial_count or self.next_serial_count
+        if not count:
+            raise ValidationError(_("The number of Serial Numbers to generate must be greater than zero."))
+        lot_names = self.env['stock.lot'].generate_lot_names(next_serial, count)
         field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
         move_lines_commands = self._generate_serial_move_line_commands(field_data)
         self.move_line_ids = move_lines_commands
