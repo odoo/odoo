@@ -56,14 +56,14 @@
                 <button name="action_open_journal_entry" groups="account.group_account_user" type="object" title="Journal Entry" icon="fa-book" invisible="not account_move_id"/>
                 <field name="product_id" />
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="quantity" string="Moved Quantity" optional="hide" sum="Total Moved Quantity"/>
+                <field name="quantity" string="Moved Quantity" optional="show" sum="Total Moved Quantity"/>
                 <field name="remaining_qty" type="measure" optional="hide" sum="Total Remaining Quantity"/>
                 <field name="unit_cost" optional="hide"/>
                 <field name="uom_id" groups="uom.group_uom" />
                 <field name="currency_id" column_invisible="True" />
-                <field name="value" sum="Total Value" optional="hide"/>
+                <field name="value" sum="Total Value" optional="show"/>
                 <field name="description" optional="hide"/>
-                <field name="remaining_value" type="measure" optional="show" sum="Total Remaining Value"/>
+                <field name="remaining_value" type="measure" optional="hide" sum="Total Remaining Value"/>
                 <groupby name="product_id">
                     <field name="cost_method" invisible="1"/>
                     <field name="quantity_svl" invisible="1"/>
@@ -80,15 +80,6 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='remaining_qty']" position="attributes">
-                <attribute name="optional">show</attribute>
-            </xpath>
-            <xpath expr="//field[@name='remaining_value']" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </xpath>
-            <xpath expr="//field[@name='quantity']" position="attributes">
-                <attribute name="optional">show</attribute>
-            </xpath>
-            <xpath expr="//field[@name='value']" position="attributes">
                 <attribute name="optional">show</attribute>
             </xpath>
         </field>
