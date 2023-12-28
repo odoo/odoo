@@ -403,3 +403,36 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 Command.create({'value_amount': 16.8, 'value': 'percent', 'nb_days': 0, }),
             ],
         })
+
+    def test_payment_term_labels(self):
+        # create a payment term with 40% now, 30% in 30 days and 30% in 60 days
+        multiple_installment_term = self.env['account.payment.term'].create({
+            'name': "test_payment_term_labels",
+            'line_ids': [
+                Command.create({'value_amount': 40, 'value': 'percent', 'nb_days': 0, }),
+                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 30, }),
+                Command.create({'value_amount': 30, 'value': 'percent', 'nb_days': 60, }),
+            ],
+        })
+        # create immediate payment term
+        immediate_term = self.env['account.payment.term'].create({
+            'name': 'Immediate',
+            'line_ids': [
+                Command.create({'value_amount': 100, 'value': 'percent', 'nb_days': 0, }),
+            ],
+        })
+        # create an invoice with immediate payment term
+        invoice = self.init_invoice('out_invoice', products=self.product_a)
+        invoice.invoice_payment_term_id = immediate_term
+        # check the payment term labels
+        invoice_terms = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        self.assertEqual(invoice_terms[0].name, '')
+        # change the payment term to the multiple installment term
+        invoice.invoice_payment_term_id = multiple_installment_term
+        invoice_terms = invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').sorted('date_maturity')
+        self.assertEqual(invoice_terms[0].name, 'installment #1')
+        self.assertEqual(invoice_terms[0].debit, invoice.amount_total * 0.4)
+        self.assertEqual(invoice_terms[1].name, 'installment #2')
+        self.assertEqual(invoice_terms[1].debit, invoice.amount_total * 0.3)
+        self.assertEqual(invoice_terms[2].name, 'installment #3')
+        self.assertEqual(invoice_terms[2].debit, invoice.amount_total * 0.3)
