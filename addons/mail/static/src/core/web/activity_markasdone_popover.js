@@ -6,7 +6,13 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
-    static props = ["activity", "close?", "hasHeader?", "onClickDoneAndScheduleNext?", "reload?"];
+    static props = [
+        "activity",
+        "close?",
+        "hasHeader?",
+        "onClickDoneAndScheduleNext?",
+        "onActivityChanged",
+    ];
     static defaultProps = {
         hasHeader: false,
     };
@@ -34,9 +40,7 @@ export class ActivityMarkAsDone extends Component {
         const { res_id, res_model } = this.props.activity;
         const thread = this.threadService.getThread(res_model, res_id);
         await this.env.services["mail.activity"].markAsDone(this.props.activity);
-        if (this.props.reload) {
-            this.props.reload(thread, ["activities"]);
-        }
+        this.props.onActivityChanged(thread);
         await this.threadService.fetchNewMessages(thread);
     }
 
@@ -53,9 +57,7 @@ export class ActivityMarkAsDone extends Component {
             this.props.activity
         );
         this.threadService.fetchNewMessages(thread);
-        if (this.props.reload) {
-            this.props.reload(thread, ["activities", "attachments"]);
-        }
+        this.props.onActivityChanged(thread);
         if (!action) {
             return;
         }
@@ -64,8 +66,6 @@ export class ActivityMarkAsDone extends Component {
                 onClose: resolve,
             });
         });
-        if (this.props.reload) {
-            this.props.reload(thread, ["activities"]);
-        }
+        this.props.onActivityChanged(thread);
     }
 }

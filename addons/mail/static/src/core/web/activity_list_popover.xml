@@ -34,7 +34,7 @@
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-secondary mx-3 align-self-center" t-esc="doneActivities.length"/>
                     </div>
-                    <ActivityListPopoverItem t-foreach="doneActivities" t-as="activity" t-key="activity.id" activity="activity"/>
+                    <ActivityListPopoverItem t-foreach="doneActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged"/>
                 </t>
             </div>
             <button class="btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
