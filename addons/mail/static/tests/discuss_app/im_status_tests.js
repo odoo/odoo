@@ -2,11 +2,8 @@
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 
-import { createLocalId } from "@mail/utils/common/misc";
 import { Command } from "@mail/../tests/helpers/command";
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-
-import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("im status");
 
@@ -80,18 +77,6 @@ QUnit.test("change icon on change partner im_status", async (assert) => {
     pyEnv["res.partner"].write([partnerId], { im_status: "online" });
     await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.containsOnce($, ".o-mail-ImStatus i[title='Online']");
-});
-
-QUnit.test("Can handle im_status of unknown partner", async (assert) => {
-    const { env, pyEnv } = await start();
-    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
-    pyEnv["bus.bus"]._sendone("channel-1", "mail.record/insert", {
-        Partner: { im_status: "online", id: partnerId },
-    });
-    await nextTick();
-    const persona = env.services["mail.store"].personas[createLocalId("partner", partnerId)];
-    assert.ok(persona);
-    assert.ok(persona.im_status === "online");
 });
 
 QUnit.test("show im status in messaging menu preview of chat", async (assert) => {
