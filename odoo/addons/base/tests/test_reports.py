@@ -3,6 +3,7 @@
 import io
 import logging
 from base64 import b64decode
+from unittest import skipIf
 
 import odoo
 import odoo.tests
@@ -171,6 +172,7 @@ class Box:
         return (self.y1, self.x1, self.y2, self.x2) < (other.y1, other.x1, other.y2, other.x2)
 
 
+@skipIf(pdfminer is False, "pdfminer not installed")
 class TestReportsRenderingCommon(odoo.tests.HttpCase):
 
     def setUp(self):
