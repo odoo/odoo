@@ -14,7 +14,6 @@ DISABLED_MAIL_CONTEXT = {
     'mail_create_nolog': True,
     'mail_create_nosubscribe': True,
     'mail_notrack': True,
-    'no_reset_password': True,
 }
 
 
@@ -268,7 +267,7 @@ class TransactionCaseWithUserPortal(TransactionCase):
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
             })
-            cls.user_portal = cls.env['res.users'].with_context(no_reset_password=True).create({
+            cls.user_portal = cls.env['res.users'].create({
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': cls.partner_portal.id,
@@ -290,7 +289,7 @@ class HttpCaseWithUserPortal(HttpCase):
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
             })
-            cls.user_portal = cls.env['res.users'].with_context(no_reset_password=True).create({
+            cls.user_portal = cls.env['res.users'].create({
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': cls.partner_portal.id,

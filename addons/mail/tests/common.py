@@ -27,8 +27,7 @@ from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
-                                                     'mail_notrack': True,
-                                                     'no_reset_password': True})
+                                                     'mail_notrack': True})
 
 
 class MockEmail(common.BaseCase, MockSmtplibCase):
@@ -765,7 +764,6 @@ class MailCase(MockEmail):
         'mail_create_nolog': True,
         'mail_create_nosubscribe': True,
         'mail_notrack': True,
-        'no_reset_password': True,
     }
 
     def setUp(self):

@@ -78,6 +78,10 @@ except ImportError:
 _logger = logging.getLogger(__name__)
 
 
+DEFAULT_TESTS_CONTEXT = {
+    'no_reset_password': True,
+}
+
 # backward compatibility: Form was defined in this file
 def __getattr__(name):
     # pylint: disable=import-outside-toplevel
@@ -764,8 +768,7 @@ class TransactionCase(BaseCase):
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
-
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, DEFAULT_TESTS_CONTEXT)
 
     def setUp(self):
         super().setUp()
@@ -821,7 +824,7 @@ class SingleTransactionCase(BaseCase):
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, DEFAULT_TESTS_CONTEXT)
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
