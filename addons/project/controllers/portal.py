@@ -159,8 +159,9 @@ class ProjectCustomerPortal(CustomerPortal):
 
         session_info.update(
             cache_hashes=cache_hashes,
-            action_name=project.action_project_sharing(),
+            action_name="project.project_sharing_project_task_action",
             project_id=project.id,
+            project_name=project.name,
             user_companies={
                 'current_company': project_company.id,
                 'allowed_companies': {
