@@ -72,14 +72,13 @@
                  class="order-3 order-md-1 flex-grow-1"
             >
                 <div class="card flex-grow-1">
-                    <div class="card-body">
+                    <div id="o_payment_status_message_details" class="card-body">
                         <t>$0</t>
                         <t t-if="tx._get_communication()">
                             <hr class="w-100"/>
                             <strong class="mt-auto">Communication: </strong>
                             <span t-out="tx._get_communication()"/>
                         </t>
-                        <t t-if="tx.reference"/>  <!-- Remove in master -->
                     </div>
                 </div>
             </div>
