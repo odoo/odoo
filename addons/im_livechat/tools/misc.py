@@ -11,15 +11,19 @@ def downgrade_to_public_user():
     request.httprequest.cookies = {}
 
 
-def force_guest_env(guest_token):
+def force_guest_env(guest_token, raise_if_not_found=True):
     """Retrieve the guest from the given token and add it to the context.
     The request user is then replaced by the public one.
 
     :param str guest_token:
-    :raise NotFound: if the guest cannot be found from the token
+    :param bool raise_if_not_found: whether to raise if the guest cannot be
+        found from the token
+    :raise NotFound: if the guest cannot be found from the token and the
+        ``raise_if_not_found`` parameter is set to ``True``
     """
-    guest = request.env["mail.guest"]._get_guest_from_token(guest_token)
-    if not guest:
-        raise NotFound()
-    request.update_context(guest=guest)
     downgrade_to_public_user()
+    guest = request.env["mail.guest"]._get_guest_from_token(guest_token)
+    if guest:
+        request.update_context(guest=guest)
+    elif raise_if_not_found:
+        raise NotFound()

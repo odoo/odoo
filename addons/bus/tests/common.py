@@ -112,8 +112,7 @@ class WebsocketCase(HttpCase):
         it during tests.
         """
         channels = [
-            hashable(channel_with_db(self.registry.db_name, c))
-            if isinstance(c, str) else c for c in channels
+            hashable(channel_with_db(self.registry.db_name, c)) for c in channels
         ]
         websockets = set()
         for channel in channels:
