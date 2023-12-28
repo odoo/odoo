@@ -332,7 +332,7 @@ class PosConfig(models.Model):
             "company": {
                 **self.company_id.read(["name", "color", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
                 "partner_id": [None, self.company_id.partner_id.contact_address],
-                "country": self.company_id.country_id.read(["vat_label"])[0],
+                "country": self.company_id.country_id.read(["vat_label"])[0] if self.company_id.country_id else False,
             },
             "base_url": self.get_base_url(),
             "custom_links": self._get_self_order_custom_links(),
