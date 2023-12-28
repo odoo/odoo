@@ -391,7 +391,7 @@ class AccountMoveLine(models.Model):
                     tax_line.tax_repartition_line_id,
 
                     tax_line.company_id,
-                    tax_line.is_rounding_line,
+                    COALESCE(tax_line.is_rounding_line, FALSE) AS is_rounding_line,
                     comp_curr.id AS company_currency_id,
                     comp_curr.decimal_places AS comp_curr_prec,
                     curr.id AS currency_id,
