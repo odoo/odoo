@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 
 class AccountBalance(models.Model):
@@ -583,6 +584,35 @@ class AccountBalance(models.Model):
                 return "Payment cannot be deleted as it is not in draft or cancelled state."
 
         return "Operation completed."  # Return a final message if multiple payments are processed
+
+    @api.model
+    def cancel_and_delete_bill_payment(self, payment_id):
+        Payment = self.env['account.move']
+        payment = Payment.browse(payment_id)
+
+        if not payment:
+            return "Payment not found."
+
+        # Attempt to cancel the payment if it's not already in a cancellable state
+        if payment.state not in ['draft', 'cancelled']:
+            try:
+
+            except UserError as e:
+                return "Failed to cancel payment: {}".format(e)
+            except ValidationError as e:
+                return "Validation error occurred: {}".format(e)
+            except Exception as e:
+                return "Unexpected error occurred: {}".format(e)
+
+        # Check again if the payment is in a cancellable state after attempting cancellation
+        if payment.state in ['draft', 'cancelled']:
+            try:
+                payment.unlink()
+                return "Payment deleted successfully."
+            except Exception as e:
+                return "Failed to delete payment: {}".format(e)
+        else:
+            return "Payment cannot be deleted as it is not in draft or cancelled state."
 
 
 
