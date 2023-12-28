@@ -41,4 +41,13 @@
         </field>
     </record>
 
+    <record id="project.project_sharing_project_task_action" model="ir.actions.act_window">
+        <field name="context">{
+            'default_project_id': active_id,
+            'active_id_chatter': active_id,
+            'delete': false,
+            'sale_show_partner_name': true,
+        }</field>
+    </record>
+
 </odoo>

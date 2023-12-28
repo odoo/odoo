@@ -5,7 +5,7 @@ import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
-import { Component, markup, useEffect, useExternalListener, useState } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
     static props = {};
@@ -34,12 +34,13 @@ export class ProjectSharingWebClient extends Component {
     }
 
     async _showView() {
-        const { action_name, project_id, open_task_action } = session;
-        if (action_name.help) {
-            action_name.help = markup(action_name.help);
-        }
+        const { action_name, project_id, project_name, open_task_action } = session;
+        const action = await this.actionService.loadAction(action_name, {
+            active_id: project_id,
+        });
+        action.display_name = project_name;
         await this.actionService.doAction(
-            action_name,
+            action,
             {
                 clearBreadcrumbs: true,
                 additionalContext: {
