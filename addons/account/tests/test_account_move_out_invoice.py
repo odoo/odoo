@@ -4024,8 +4024,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         payment_term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
 
         self.assertRecordValues(payment_term_lines, [
-            {'name': ''},
-            {'name': ''},
+            {'name': 'installment #1'},
+            {'name': 'installment #2'},
         ])
 
         move_form.payment_reference = "Super Reference"
