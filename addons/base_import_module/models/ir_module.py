@@ -25,6 +25,8 @@ _logger = logging.getLogger(__name__)
 APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
+def to_tuple(t):
+    return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
 
 class IrModule(models.Model):
     _inherit = "ir.module.module"
@@ -283,8 +285,9 @@ class IrModule(models.Model):
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         if _domain_asks_for_industries(domain):
-            fields_name = list(specification.keys())
-            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)
+            fields_name = tuple(specification.keys())
+            domain_tuple = to_tuple(domain or [])
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain_tuple, offset=offset, limit=limit)
             return {
                 'length': len(modules_list),
                 'records': modules_list,
@@ -303,7 +306,7 @@ class IrModule(models.Model):
         }
 
     def web_read(self, specification):
-        fields = list(specification.keys())
+        fields = tuple(specification.keys())
         module_type = self.env.context.get('module_type', 'official')
         if module_type != 'official':
             modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
