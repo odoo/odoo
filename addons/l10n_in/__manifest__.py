@@ -50,8 +50,8 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/uom_uom_views.xml',
     ],
     'demo': [
-        'demo/demo_company.xml',
         'demo/product_demo.xml',
+        'demo/demo_company.xml',
     ],
     'post_init_hook': 'post_init',
     'license': 'LGPL-3',
