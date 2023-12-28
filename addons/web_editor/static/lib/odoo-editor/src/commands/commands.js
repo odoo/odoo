@@ -237,30 +237,32 @@ function align(editor, mode) {
  * @param {string} mode 'color' or 'backgroundColor'
  */
 function colorElement(element, color, mode) {
-    const newClassName = element.className
+    let newClassName = element.className
         .replace(mode === 'color' ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, '')
         .replace(/\btext-gradient\b/g, '') // cannot be combined with setting a background
         .replace(/\s+/, ' ');
-    element.className !== newClassName && (element.className = newClassName);
     element.style['background-image'] = '';
     if (mode === 'backgroundColor') {
         element.style['background'] = '';
     }
     if (color.startsWith('text') || color.startsWith('bg-')) {
         element.style[mode] = '';
-        element.classList.add(color);
+        newClassName += (newClassName ? " " : "") + color;
     } else if (isColorGradient(color)) {
         element.style[mode] = '';
         if (mode === 'color') {
             element.style['background'] = '';
             element.style['background-image'] = color;
-            element.classList.add('text-gradient');
+            newClassName += (newClassName ? " " : "") + "text-gradient";
         } else {
             element.style['background-image'] = color;
         }
     } else {
         element.style[mode] = color;
     }
+    // Replacing the classes only once at the end to have only one class
+    // mutation in the current history step.
+    element.className = newClassName;
 }
 
 /**
