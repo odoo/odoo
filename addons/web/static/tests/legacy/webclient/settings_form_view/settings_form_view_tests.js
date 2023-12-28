@@ -1982,4 +1982,70 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelector("button[name='2']"));
         assert.verifySteps(["/web/action/run"]);
     });
+
+    QUnit.test("apply default setting to filter by default the settings view", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="Title of group Bar">
+                            <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                                <field name="bar"/>
+                            </setting>
+                            <setting>
+                                <label string="Big BAZ" for="baz"/>
+                                <div class="text-muted">this is a baz</div>
+                                <field name="baz"/>
+                                <label>label with content</label>
+                            </setting>
+                        </block>
+                    </app>
+                </form>`,
+            context: { setting_default_bar: true },
+        });
+        assert.strictEqual(
+            target.querySelector(".o_searchview input").value,
+            "Bar",
+            "input value should get the label of the Bar field"
+        );
+        assert.strictEqual(
+            target.querySelector(".highlighter").textContent,
+            "Bar",
+            "The label of the field found should be highlighted"
+        );
+    });
+
+    QUnit.test("don't apply default search value if no field is found with default setting set in the context", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="Title of group Bar">
+                            <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                                <field name="bar"/>
+                            </setting>
+                            <setting>
+                                <label string="Big BAZ" for="baz"/>
+                                <div class="text-muted">this is a baz</div>
+                                <field name="baz"/>
+                                <label>label with content</label>
+                            </setting>
+                        </block>
+                    </app>
+                </form>`,
+            context: { setting_default_test: true },
+        });
+        assert.strictEqual(
+            target.querySelector(".o_searchview input").value,
+            "",
+            "input value should get the label of the Bar field"
+        );
+        assert.containsNone(target, ".app_settings_block:not(.d-none) .app_settings_header");
+    });
 });
