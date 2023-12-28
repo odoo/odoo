@@ -7,8 +7,7 @@ import unittest
 from lxml import etree as ET
 from lxml.builder import E
 
-import odoo
-from odoo.tests import common
+from odoo.tests import common, DEFAULT_TESTS_CONTEXT
 from odoo.tools.convert import convert_file, xml_import, _eval_xml
 from odoo.tools.misc import file_path
 
@@ -159,7 +158,7 @@ class TestEvalXML(common.TransactionCase):
             name="model_method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
-        self.assertEqual(rec.env.context, {'foo': 2})
+        self.assertEqual(rec.env.context, dict(**DEFAULT_TESTS_CONTEXT, foo=2))
         self.assertEqual(rec.ids, [])
         self.assertEqual(args, (1,))
         self.assertEqual(kwargs, {})
@@ -170,7 +169,7 @@ class TestEvalXML(common.TransactionCase):
             name="method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
-        self.assertEqual(rec.env.context, {'foo': 2})
+        self.assertEqual(rec.env.context, dict(**DEFAULT_TESTS_CONTEXT, foo=2))
         self.assertEqual(rec.ids, [1])
         self.assertEqual(args, ())
         self.assertEqual(kwargs, {})
@@ -184,7 +183,7 @@ class TestEvalXML(common.TransactionCase):
             name="method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
-        self.assertEqual(rec.env.context, {})
+        self.assertEqual(rec.env.context, DEFAULT_TESTS_CONTEXT)
         self.assertEqual(rec.ids, [])
         self.assertEqual(args, ())
         self.assertEqual(kwargs, {})
