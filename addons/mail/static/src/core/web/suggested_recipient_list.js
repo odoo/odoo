@@ -6,6 +6,7 @@ import { Component, useState } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
+ * @property {function} onSuggestedRecipientAdded
  * @property {import("models").Thread} thread
  * @property {string} className
  * @property {string} styleString
@@ -14,7 +15,7 @@ import { Component, useState } from "@odoo/owl";
 export class SuggestedRecipientsList extends Component {
     static template = "mail.SuggestedRecipientsList";
     static components = { SuggestedRecipient };
-    static props = ["thread", "className", "styleString"];
+    static props = ["thread", "className", "styleString", "onSuggestedRecipientAdded"];
 
     setup() {
         this.state = useState({

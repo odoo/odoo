@@ -299,6 +299,10 @@ export class Chatter extends Component {
         this.load(thread, ["followers", "suggestedRecipients"]);
     }
 
+    onSuggestedRecipientAdded(thread) {
+        this.load(thread, ["suggestedRecipients"]);
+    }
+
     onPostCallback() {
         if (this.props.hasParentReloadOnMessagePosted) {
             this.reloadParentView();
