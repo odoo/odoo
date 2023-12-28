@@ -1068,6 +1068,19 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
     }
+    findAttribute(values) {
+        const listOfAttributes = Object.values(this.pos.attributes_by_ptal_id).filter(attribute => {
+            const attFound = attribute.values.filter(target => {
+                return Object.values(values).includes(target.id);
+            });
+            if (attFound.length > 0) {
+                attribute.valuesForOrderLine = attFound;
+                return true;
+            }
+            return false;
+        });
+        return listOfAttributes;
+    }
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
@@ -1085,6 +1098,7 @@ export class Orderline extends PosModel {
             comboParent: this.comboParent?.get_full_product_name(),
             pack_lot_lines: this.get_lot_lines(),
             price_without_discount: this.env.utils.formatCurrency(this.getUnitDisplayPriceBeforeDiscount()),
+            attributes: this.attribute_value_ids ? this.findAttribute(this.attribute_value_ids) : false
         };
     }
 }

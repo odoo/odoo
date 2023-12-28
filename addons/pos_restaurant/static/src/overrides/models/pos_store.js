@@ -45,7 +45,7 @@ patch(PosStore.prototype, {
     setIdleTimer() {
         clearTimeout(this.idleTimer);
         if (this.shouldResetIdleTimer()) {
-            this.idleTimer = setTimeout(() => this.actionAfterIdle(), 60000);
+            this.idleTimer = setTimeout(() => this.actionAfterIdle(), 180000);
         }
     },
     async actionAfterIdle() {
