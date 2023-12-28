@@ -24,7 +24,7 @@ QUnit.test('receive other member typing status "is typing"', async () => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-Typing");
+    await contains(".o-discuss-Typing", { text: "" });
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
     // simulate receive typing notification from demo
     pyEnv.withUser(userId, () =>
