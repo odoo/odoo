@@ -4,8 +4,8 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, mute_logger, date_utils
 
+from odoo.tools import frozendict, mute_logger, date_utils, get_fiscal_year
 import re
 from collections import defaultdict
 from psycopg2 import sql, DatabaseError
@@ -27,6 +27,8 @@ class SequenceMixin(models.AbstractModel):
     _sequences = [
         (r'^(?P<prefix1>.*?)(?P<year>({year}))(?P<prefix2>\D*?)(?P<month>{month})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'month'),
         (r'^(?P<prefix1>.*?)(?P<year2>({year2}))(?P<prefix2>\D*?)(?P<month>{month})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'month'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end}))(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start_2}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end_2}))(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
         (r'^(?P<prefix1>.*?)(?P<year>({year}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'year'),
         (r'^(?P<prefix1>.*?)(?P<year2>({year2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'year'),
         (r'^(?P<prefix1>.*?)(?P<seq>\d+)(?P<suffix>\D*?)$', 'never')
@@ -117,17 +119,25 @@ class SequenceMixin(models.AbstractModel):
     def _get_sequence_keys(self):
         self.ensure_one()
         date = self[self._sequence_date_field]
+        fyear_start = fyear_end = ''
+        if 'company_id' in self._fields:
+            company = self.company_id
+            fyear_start, fyear_end = get_fiscal_year(date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
         return {
             'year': date.strftime('%Y'),
             'year2': date.strftime('%Y')[-2:],
             'month': date.strftime('%m'),
+            'financial_year_start': fyear_start.strftime('%Y'),
+            'financial_year_start_2': fyear_start.strftime('%Y')[-2:],
+            'financial_year_end': fyear_end.strftime('%Y'),
+            'financial_year_end_2': fyear_end.strftime('%Y')[-2:],
         }
 
-    def _find_sequence(self):
+    def _find_sequence(self, sequence=None):
         self.ensure_one()
         data = self._get_sequence_keys()
         for regex, *others in self._sequences:
-            matching = re.match(regex.format(**data), self[self._sequence_field])
+            matching = re.match(regex.format(**data), sequence or self[self._sequence_field])
             if matching:
                 return matching, *others
         raise ValidationError(_('No number found in the sequence.'))
@@ -265,4 +275,25 @@ class SequenceMixin(models.AbstractModel):
                     raise e
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
+
+    def _get_new_sequence(self, matching, sequence):
+        """Get the new sequence.
+
+        This method is used to compute the new sequence when the user changes the sequence
+        manually. It is used in the onchange of the sequence field.
+
+        :param sequence: the new sequence.
+        :return: the new sequence.
+        """
+        self.ensure_one()
+        data = self._get_sequence_keys()
+        seq_fmt = ['', 5, '']   # prefix, seq #digits, suffix
+        seq_pos = 0
+        for key, val in matching.groupdict().items():
+            if key=='seq':
+                seq_fmt[1] = len(val)
+                seq_pos = 2
+                continue
+            seq_fmt[seq_pos] += data.get(key, val)
+        return seq_fmt[0] + str(sequence).zfill(seq_fmt[1]) + seq_fmt[2]
 
