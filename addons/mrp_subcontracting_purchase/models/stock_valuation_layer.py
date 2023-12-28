@@ -17,4 +17,5 @@ class StockValuationLayer(models.Model):
             # we need to get the components used for each quantity
             for move in production.move_raw_ids:
                 components_price += sum(move.sudo().stock_valuation_layer_ids.mapped('value')) / production.product_uom_qty
-        return super()._get_layer_price_unit() - components_price
+        # the move valuation is negative (out moves) therefore we we add the negative components_price instead of subtracting
+        return super()._get_layer_price_unit() + components_price
