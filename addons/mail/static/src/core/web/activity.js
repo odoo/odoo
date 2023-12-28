@@ -31,7 +31,7 @@ export class Activity extends Component {
         this.activityService = useService("mail.activity");
         this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });
-        this.popover = usePopover(ActivityMarkAsDone, { position: "right" });
+        this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
         onMounted(() => {
             this.updateDelayAtNight();
@@ -70,11 +70,11 @@ export class Activity extends Component {
     }
 
     async onClickMarkAsDone(ev) {
-        if (this.popover.isOpen) {
-            this.popover.close();
+        if (this.markDonePopover.isOpen) {
+            this.markDonePopover.close();
             return;
         }
-        this.popover.open(ev.currentTarget, {
+        this.markDonePopover.open(ev.currentTarget, {
             activity: this.props.data,
             hasHeader: true,
             reload: this.props.onActivityChanged,
