@@ -25,8 +25,7 @@ def add_guest_to_context(func):
     def wrapper(self, *args, **kwargs):
         req = request or wsrequest
         token = (
-            req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name)
-            or req.env.context.get("guest_token", "")
+            req.httprequest.cookies.get(req.env["mail.guest"]._cookie_name, "")
         )
         guest = req.env["mail.guest"]._get_guest_from_token(token)
         if guest and not guest.timezone:

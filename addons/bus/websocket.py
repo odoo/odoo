@@ -756,7 +756,6 @@ class WebsocketRequest:
                 f'Invalid JSON data, {exc.args[0]}'
             ) from exc
         data = jsonrequest.get('data')
-        context = jsonrequest.get('context')
         self.session = self._get_session()
 
         try:
@@ -771,11 +770,11 @@ class WebsocketRequest:
             self.env = api.Environment(cr, self.session.uid, self.session.context)
             threading.current_thread().uid = self.env.uid
             service_model.retrying(
-                functools.partial(self._serve_ir_websocket, event_name, data, context),
+                functools.partial(self._serve_ir_websocket, event_name, data),
                 self.env,
             )
 
-    def _serve_ir_websocket(self, event_name, data, context=None):
+    def _serve_ir_websocket(self, event_name, data):
         """
         Delegate most of the processing to the ir.websocket model
         which is extensible by applications. Directly call the
@@ -783,8 +782,6 @@ class WebsocketRequest:
         tolerated: `subscribe` and `update_presence`.
         """
         self.env['ir.websocket']._authenticate()
-        if context:
-            self.update_context(**context)
         if event_name == 'subscribe':
             self.env['ir.websocket']._subscribe(data)
         if event_name == 'update_presence':
