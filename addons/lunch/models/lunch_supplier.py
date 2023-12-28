@@ -245,7 +245,7 @@ class LunchSupplier(models.Model):
             return
 
         if self.send_by != 'mail':
-            raise ValueError("Cannot send an email to this supplier")
+            raise ValueError(_("Cannot send an email to this supplier"))
 
         orders = self._get_current_orders()
         if not orders:
