@@ -19,6 +19,7 @@ export class Orderline extends Component {
                 oldUnitPrice: { type: String, optional: true },
                 customerNote: { type: String, optional: true },
                 internalNote: { type: String, optional: true },
+                attributes: { type: Array, optional: true },
                 "*": true,
             },
         },

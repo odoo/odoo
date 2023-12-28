@@ -35,6 +35,19 @@
                     <i class="fa fa-tag me-1" role="img" aria-label="Note" title="Note"/>
                     <t t-esc="line.internalNote" />
                 </li>
+                <li t-if="line.attributes">
+                    <t t-foreach="line.attributes" t-as="attribute" t-key="attribute.id">
+                        <t t-esc="attribute.name"/>:
+                        <t t-foreach="attribute.valuesForOrderLine" t-as="value" t-key="value.id">
+                            <t t-if="value_index !== 0" t-esc="' | '"/>
+                            <t t-esc="value.name"/>
+                            <t t-if="value.price_extra">
+                                (<t t-esc='env.utils.formatCurrency(value.price_extra)'/>)
+                            </t>
+
+                        </t><br/>
+                    </t>
+                </li>
             </ul>
         </li>
     </t>
