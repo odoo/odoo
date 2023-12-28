@@ -13,10 +13,11 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { nextTick } from "@web/../tests/helpers/utils";
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("typing");
 
-QUnit.test('receive other member typing status "is typing"', async (assert) => {
+QUnit.test('receive other member typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -28,17 +29,16 @@ QUnit.test('receive other member typing status "is typing"', async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-discuss-Typing").text(), "");
-
+    await contains(".o-discuss-Typing", { text: "" });
     // simulate receive typing notification from demo
-    await afterNextRender(() =>
-        env.services.rpc("/discuss/channel/notify_typing", {
-            channel_id: channelId,
-            context: { mockedPartnerId: partnerId },
-            is_typing: true,
-        })
-    );
-    assert.strictEqual($(".o-discuss-Typing").text(), "Demo is typing...");
+    env.services.rpc("/discuss/channel/notify_typing", {
+        channel_id: channelId,
+        context: {
+            mockedPartnerId: partnerId,
+        },
+        is_typing: true,
+    });
+    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
 });
 
 QUnit.test(
