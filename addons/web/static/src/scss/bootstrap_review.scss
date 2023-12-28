@@ -45,6 +45,16 @@
         // TODO remove me in master.
         background-color: transparent !important;
     }
+
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        // As the 'card-body' colors are established using '$card-bg' and
+        // '$o-card-body-bg-opacity', we shouldn't let elements inside
+        // '.table-striped' take their color from the body as they currently do.
+        // This leads to even lines having a color that contrasts with
+        // '$card-bg', and odd lines contrasting with '$body-bg'. This becomes
+        // problematic when one is light and the other is dark.
+        color: inherit;
+    }
 }
 .accordion {
     .collapsing, .collapse.show {
@@ -194,4 +204,71 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
 
 .carousel-control-next .visually-hidden {
     left: 50%; // Avoid horizontal scrollbar in Chrome
+}
+
+// Modal
+.modal-content {
+    // If the text color of the body (used for the text color in modals) is not
+    // visible due to insufficient contrast with the modal background, we adjust
+    // the text color in the modal using the following code. For example, if the
+    // user sets a black background for its website and the text color of the
+    // body is white, the text will not be visible on modals with a white
+    // background.
+
+    // Check if the body text color is light.
+    $-is-body-text-light: color-contrast($body-color) == $color-contrast-dark;
+
+    @if $modal-content-color == null {
+        color: if(
+            $-is-body-text-light,
+            color-contrast($modal-content-bg, $body-color, $color-contrast-dark),
+            color-contrast($modal-content-bg, $color-contrast-light, $body-color)
+        );
+
+        .table-striped > tbody > tr:nth-of-type(odd) > * {
+            // When the website background is dark (resulting in light-colored
+            // body text), the text color of the odd rows of striped tables
+            // matches the body text color. Consequently, it becomes invisible
+            // on the light background of a modal. To address this, we inherit
+            // the text color from 'modal-content,' which is also tied to the
+            // body text color but adapts appropriately within modals (see
+            // above).
+            color: inherit;
+        }
+        // This prevents these elements from taking their colors from the body
+        // inside a modal.
+        // We need to exclude 'oe_structure' that are areas containing editable
+        // snippets. Indeed, this code was added in a stable version, and we are
+        // doing everything not to alter the content edited by users. For
+        // example in Website, without this 'not', the 's_website_form' snippets
+        // with a black background in modals and on websites with a black
+        // background would have their input background changing from black to
+        // white.
+        // TODO: In Master, find a more consistent way to define the background
+        // color of 's_website_form' snippet inputs inside a modal.
+        &:where(:not(.oe_structure)) {
+            @if ($input-bg == $body-bg) and ($input-color == $body-color) {
+                .form-control {
+                    background-color: $modal-content-bg;
+                    color: inherit;
+                }
+            }
+            @if ($form-select-bg == $body-bg) and ($form-select-color == $body-color) {
+                .form-select {
+                    background-color: $modal-content-bg;
+                    color: inherit;
+                }
+            }
+            @if $form-check-input-bg == $body-bg {
+                .form-check-input:not(:checked) {
+                    background-color: $modal-content-bg;
+                }
+            }
+        }
+    }
+    @if $-is-body-text-light {
+        .text-muted {
+            color: color-contrast($modal-content-bg, $text-muted, mute-color($color-contrast-dark)) !important;
+        }
+    }
 }
