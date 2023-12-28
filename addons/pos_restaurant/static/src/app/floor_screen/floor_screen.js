@@ -351,11 +351,49 @@ export class FloorScreen extends Component {
         if (this.pos.orderToTransfer) {
             await this.pos.transferTable(table);
         } else {
+<<<<<<< HEAD
             try {
                 await this.pos.setTable(table);
             } catch (e) {
                 if (!(e instanceof ConnectionLostError)) {
                     throw e;
+||||||| parent of 1bf547b5a737 (temp)
+            if (this.pos.orderToTransfer) {
+                await this.pos.transferTable(table);
+            } else {
+                try {
+                    await this.pos.setTable(table);
+                } catch (e) {
+                    if (!(e instanceof ConnectionLostError)) {
+                        throw e;
+                    }
+                    // Reject error in a separate stack to display the offline popup, but continue the flow
+                    Promise.reject(e);
+=======
+            if(this.pos.orderToTransfer && table.order_count > 0) {
+                const { confirmed } = await this.popup.add(ConfirmPopup, {
+                    title: _t("Table is not empty"),
+                    body: _t("The table already contains an order. Do you want to proceed and transfer the order here?"),
+                    confirmText: _t("Yes"),
+                });
+                if (!confirmed) {
+                    // We don't want to change the table if the transfer is not done.
+                    table = this.pos.tables_by_id[this.pos.orderToTransfer.tableId];
+                    this.pos.orderToTransfer = null;
+                }
+            }
+            if (this.pos.orderToTransfer) {
+                await this.pos.transferTable(table);
+            } else {
+                try {
+                    await this.pos.setTable(table);
+                } catch (e) {
+                    if (!(e instanceof ConnectionLostError)) {
+                        throw e;
+                    }
+                    // Reject error in a separate stack to display the offline popup, but continue the flow
+                    Promise.reject(e);
+>>>>>>> 1bf547b5a737 (temp)
                 }
                 // Reject error in a separate stack to display the offline popup, but continue the flow
                 Promise.reject(e);
