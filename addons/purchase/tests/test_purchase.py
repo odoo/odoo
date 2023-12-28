@@ -505,25 +505,13 @@ class TestPurchase(AccountTestInvoicingCommon):
     def test_purchase_product_search(self):
         """ This test ensures that the product can be found by its name, not only vendor name
         """
+        partner = ctx.env.ref('base.res_partner_1')
 
-        #create a contact of type contact
-        contact = self.env['res.partner'].create({
-            'name': 'Contact',
-            'type': 'contact',
-        })
-
-        #create a contact of type Delivery Address lnked to the contact
-        delivery_address = self.env['res.partner'].create({
-            'name': 'Delivery Address',
-            'type': 'delivery',
-            'parent_id': contact.id,
-        })
-
-        #create a product that use the delivery address as vendor
-        product = self.env['product.product'].create({
-            'name': 'Product A',
-            'seller_ids': [(0, 0, {
-                'partner_id': delivery_address.id,
+        # update sellers on product
+        product = ctx.env.ref('product.product_delivery_01')
+        product.update({
+            'seller_ids': [(4, 0, {
+                'partner_id': partner.id,
                 'min_qty': 1.0,
                 'price': 1.0,
                 'product_name':'vendor name',
@@ -531,6 +519,6 @@ class TestPurchase(AccountTestInvoicingCommon):
             })]
         })
 
-        self.assertIn('Product A',self.env['product.product'].name_search('Product A')[0])
-        self.assertIn('[vendor code] vendor name', self.env['product.product'].with_context(partner_id = delivery_address.id).name_search('Product A')[0])
-        self.assertNotIn('Product A', self.env['product.product'].with_context(partner_id = delivery_address.id).name_search('Product A')[0])
+        self.assertIn('Office Chair',self.env['product.product'].name_search('Office Chair')[0])
+        self.assertIn('[vendor code] vendor name', self.env['product.product'].with_context(partner_id = partner.id).name_search('Office Chair')[0])
+        self.assertNotIn('Office Chair', self.env['product.product'].with_context(partner_id = partner.id).name_search('Office Chair')[0])
