@@ -27,9 +27,6 @@ export class Activity extends Component {
     static props = ["data", "onActivityChanged", "reloadParentView"];
     static template = "mail.Activity";
 
-    /** @type {function} */
-    closePopover;
-
     setup() {
         this.activityService = useService("mail.activity");
         this.threadService = useService("mail.thread");
