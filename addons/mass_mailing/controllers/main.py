@@ -36,6 +36,9 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)):
                 raise exceptions.AccessDenied()
 
+            logged_in = not request.env.user._is_public()
+            lang = request.env.user.lang if logged_in else request.env.context.get('lang', 'en_US')
+            request.context = dict(request.context, lang=lang)
             if mailing.mailing_model_real == 'mailing.contact':
                 # Unsubscribe directly + Let the user choose his subscriptions
                 mailing.update_opt_out(email, mailing.contact_list_ids.ids, True)
