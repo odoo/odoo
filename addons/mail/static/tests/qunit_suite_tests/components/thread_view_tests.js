@@ -7,6 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
+import { click as clickContains, contains } from "@web/../tests/utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
@@ -105,9 +106,8 @@ QUnit.module("mail", {}, function () {
 
             // scroll to bottom
             await afterNextRender(() => {
-                document.querySelector(
-                    `.o_ThreadView_messageList`
-                ).scrollTop = document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
+                document.querySelector(`.o_ThreadView_messageList`).scrollTop =
+                    document.querySelector(`.o_ThreadView_messageList`).scrollHeight;
             });
             assert.strictEqual(
                 document.querySelectorAll(`.o_MessageView`).length,
@@ -1609,15 +1609,13 @@ QUnit.module("mail", {}, function () {
 
         QUnit.test(
             "failure on loading more messages should display error and prompt retry button",
-            async function (assert) {
-                assert.expect(3);
-
+            async function () {
                 // first call needs to be successful as it is the initial loading of messages
                 // second call comes from load more and needs to fail in order to show the error alert
                 // any later call should work so that retry button and load more clicks would now work
                 let messageFetchShouldFail = false;
                 const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({
+                const channelId = pyEnv["mail.channel"].create({
                     channel_type: "channel",
                     name: "General",
                 });
@@ -1626,41 +1624,27 @@ QUnit.module("mail", {}, function () {
                         return {
                             body: "coucou",
                             model: "mail.channel",
-                            res_id: mailChannelId1,
+                            res_id: channelId,
                         };
                     })
                 );
-                const { click, openDiscuss } = await start({
+                const { openDiscuss } = await start({
                     discuss: {
-                        context: { active_id: mailChannelId1 },
+                        context: { active_id: channelId },
                     },
                     async mockRPC(route, args) {
-                        if (route === "/mail/channel/messages") {
-                            if (messageFetchShouldFail) {
-                                throw new Error();
-                            }
+                        if (route === "/mail/channel/messages" && messageFetchShouldFail) {
+                            return Promise.reject();
                         }
                     },
                 });
                 await openDiscuss();
-
+                await contains(".o_MessageView", { count: 30 });
                 messageFetchShouldFail = true;
-                await click(".o_MessageListView_loadMore");
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessageListView_alertLoadingFailed",
-                    "should show loading error message"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessageListView_alertLoadingFailedRetryButton",
-                    "should show loading error message button"
-                );
-                assert.containsNone(
-                    document.body,
-                    ".o_MessageListView_loadMore",
-                    "should not show load more buttton"
-                );
+                await clickContains(".o_MessageListView_loadMore");
+                await contains(".o_MessageListView_alertLoadingFailed");
+                await contains(".o_MessageListView_alertLoadingFailedRetryButton");
+                await contains(".o_MessageListView_loadMore", { count: 0 });
             }
         );
 
