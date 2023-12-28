@@ -409,7 +409,7 @@
                                         readonly="has_tracking != 'none'"
                                         force_save="1" widget="mrp_consumed"/>
                                     <field name="product_uom" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                                    <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="hide"/>
+                                    <field name="picked" string="Consumed" column_invisible="parent.state == 'draft'" optional="show"/>
                                     <field name="manual_consumption" column_invisible="True" force_save="1"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
