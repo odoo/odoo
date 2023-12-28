@@ -101,7 +101,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
-        for move in posted.filtered(lambda m: m.country_code == 'IN'):
+        for move in posted.filtered(lambda m: m.country_code == 'IN' and m.is_sale_document()):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if not company_unit_partner.state_id:
