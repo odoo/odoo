@@ -295,6 +295,7 @@ class AccountMove(models.Model):
         comodel_name='account.payment.term',
         string='Payment Terms',
         compute='_compute_invoice_payment_term_id', store=True, readonly=False, precompute=True,
+        inverse='_inverse_invoice_payment_term_id',
         check_company=True,
     )
     needed_terms = fields.Binary(compute='_compute_needed_terms', exportable=False)
@@ -1706,9 +1707,16 @@ class AccountMove(models.Model):
             or m.journal_id.currency_id and m.currency_id != m.journal_id.currency_id
         ))
 
+    @api.onchange('payment_reference')
     def _inverse_payment_reference(self):
         self.line_ids._conditional_add_to_compute('name', lambda line: (
             line.display_type == 'payment_term'
+        ))
+
+    @api.onchange('invoice_payment_term_id')
+    def _inverse_invoice_payment_term_id(self):
+        self.line_ids._conditional_add_to_compute('name', lambda l: (
+            l.display_type == 'payment_term'
         ))
 
     def _inverse_name(self):
