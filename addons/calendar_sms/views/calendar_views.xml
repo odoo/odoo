@@ -10,9 +10,6 @@
                 <field name="sms_template_id" invisible="alarm_type != 'sms'" required="alarm_type == 'sms'"
                     context="{'default_model': 'calendar.event'}"/>
             </xpath>
-            <xpath expr="//group[@name='right_details']" position="inside">
-                <field name="sms_notify_responsible" invisible="alarm_type != 'sms'"/>
-            </xpath>
         </field>
     </record>
 

@@ -190,13 +190,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 notify_author=True,
             )
 
-        for event in events:
-            if event.recurrence_id:
-                next_date = event.get_next_alarm_date(events_by_alarm)
-                # In cron, setup alarm only when there is a next date on the target. Otherwise the 'now()'
-                # check in the call below can generate undeterministic behavior and setup random alarms.
-                if next_date:
-                    event.recurrence_id.with_context(date=next_date)._setup_alarms()
+        events._setup_event_recurrent_alarms(events_by_alarm)
 
     @api.model
     def get_next_notif(self):
