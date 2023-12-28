@@ -627,25 +627,9 @@ class Project(models.Model):
         action['context'] = context
         return action
 
-    # TODO to remove in master
-    def action_project_timesheets(self):
-        pass
-
     def project_update_all_action(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
         action['display_name'] = _("%(name)s's Updates", name=self.name)
-        return action
-
-    def action_project_sharing(self):
-        self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action')
-        action['context'] = {
-            'default_project_id': self.id,
-            'delete': False,
-            'search_default_open_tasks': True,
-            'active_id_chatter': self.id,
-        }
-        action['display_name'] = self.name
         return action
 
     def action_open_share_project_wizard(self):

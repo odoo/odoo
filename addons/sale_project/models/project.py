@@ -741,13 +741,6 @@ class Project(models.Model):
             action_window['res_id'] = vendor_bill_ids[0]
         return action_window
 
-    def action_project_sharing(self):
-        action = super().action_project_sharing()
-        action['context'].update({
-            'sale_show_partner_name': True,
-            'hide_partner': self._get_hide_partner(),
-        })
-        return action
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
