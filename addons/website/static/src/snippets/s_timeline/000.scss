@@ -1,4 +1,6 @@
 .s_timeline {
+    --spacing: #{$grid-gutter-width * .5};
+
     .s_timeline_line {
         position: relative;
         border-color: map-get($grays, '800'); // For inheritance, not actual border
@@ -17,39 +19,36 @@
     }
     .s_timeline_row {
         align-items: center;
+
         .s_timeline_content {
             align-items: center;
             justify-content: flex-end;
             width: 100%;
+
             ~ .s_timeline_content {
                 justify-content: flex-start;
             }
         }
-        &.flex-row-reverse {
-            .s_timeline_content {
-                flex-direction: row-reverse;
-            }
+        &.flex-row-reverse .s_timeline_content {
+            flex-direction: row-reverse;
         }
         @include media-breakpoint-up(md) {
-            &.flex-row-reverse {
-                .s_timeline_content {
-                    flex-direction: row-reverse;
-                    &:not(:last-child) {
-                        margin-left: 10%;
-                    }
-                }
-            }
-            &:not(.flex-row-reverse) {
-                .s_timeline_content:last-child {
+            &.flex-row-reverse .s_timeline_content {
+                flex-direction: row-reverse;
+
+                &:not(:last-child) {
                     margin-left: 10%;
                 }
+            }
+            &:not(.flex-row-reverse) .s_timeline_content:last-child {
+                margin-left: 10%;
             }
         }
     }
     .s_timeline_date {
         position: relative;
-        margin: 20px 0px;
-        padding: 5px;
+        margin: var(--spacing) 0;
+        padding: map-get($spacers, 1);
         background-color: var(--o-cc-bg, #{$body-bg});
         text-align: center;
 
@@ -58,14 +57,10 @@
             left: 50%;
             transform: translateX(-50%);
         }
-
-        .fa {
-            margin: 0 $grid-gutter-width/2;
-        }
     }
     .s_timeline_icon {
-        flex: 0 0 auto;
-        margin: $grid-gutter-width/2;
         z-index: 1;
+        flex: 0 0 auto;
+        margin: var(--spacing);
     }
 }
