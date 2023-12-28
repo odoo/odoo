@@ -1665,6 +1665,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
         mo.action_assign()
+        mo.action_generate_serial()
         action = mo.button_mark_done()
         self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
@@ -1682,6 +1683,7 @@ class TestMrpOrder(TestMrpCommon):
         mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=2, qty_base_1=1, qty_base_2=1)
         self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        mo.action_generate_serial()
         action = mo.button_mark_done()
         self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
@@ -3636,12 +3638,11 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sum(p03_raws.mapped('quantity')), 2)
 
     def test_validation_mo_with_tracked_component(self):
-        """
-        check that the verification of SN for tracked component is ignored when the quantity to consume is 0.
+        """ check that the verification of SN for tracked component is ignored when the quantity to consume is 0.
         """
         self.product_2.tracking = 'serial'
         bom = self.env["mrp.bom"].create({
-            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_tmpl_id': self.product_5.product_tmpl_id.id,
             'product_qty': 1.0,
             'bom_line_ids': [(0, 0, {
                 'product_id': self.product_2.id,
@@ -3653,9 +3654,9 @@ class TestMrpOrder(TestMrpCommon):
         })
         # create the MO and confirm it
         mo = self.env['mrp.production'].create({
-            'product_id': self.product_4.id,
+            'product_id': self.product_5.id,
             'bom_id': bom.id,
-            'product_qty': 1.0,
+            'product_uom_qty': 1.0,
         })
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
@@ -3826,3 +3827,146 @@ class TestMrpOrder(TestMrpCommon):
         production.button_mark_done()
 
         self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
+
+    def test_batch_production_01(self):
+        """ Test the wizard mrp.batch.produce without tracked components.
+        """
+        self.product_4.tracking = 'serial'
+        self.product_4.uom_id = self.uom_unit
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+
+        batch_produce_action = mo.button_mark_done()
+        batch_produce = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
+        batch_produce.lot_name = "00001"
+        batch_produce = batch_produce.save()
+        batch_produce.action_generate_production_text()
+        batch_produce.action_prepare()
+
+        productions = mo.procurement_group_id.mrp_production_ids
+        self.assertEqual(len(productions), 4)
+        self.assertRecordValues(productions.lot_producing_id, [
+            {'name': "00001"},
+            {'name': "00002"},
+            {'name': "00003"},
+            {'name': "00004"},
+        ])
+        self.assertEqual(productions.mapped('state'), ['to_close'] * 4)
+
+    def test_batch_production_02(self):
+        """ Test the wizard mrp.batch.produce with a single tracked serial.
+        """
+        self.product_1.tracking = 'serial'
+        self.product_4.tracking = 'serial'
+        self.product_4.uom_id = self.uom_unit
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+
+        batch_produce_action = mo.button_mark_done()
+        batch_produce = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
+        # The white space for PO3 is to test that it is correctly stripped
+        # Extra \n are also part of the test
+        batch_produce.production_text = """
+            00001,P01
+            00002,P02
+            00003,   P03
+            00004,P04
+        """
+        batch_produce = batch_produce.save()
+        batch_produce.action_done()
+
+        productions = mo.procurement_group_id.mrp_production_ids
+        self.assertEqual(len(productions), 4)
+        for i in range(1, 5):
+            production = productions[i-1]
+            self.assertEqual(production.lot_producing_id.name, f"0000{i}")
+            self.assertEqual(production.move_raw_ids.move_line_ids.lot_id.name, f"P0{i}")
+            move_product_2 = production.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
+            self.assertEqual(move_product_2.move_line_ids.quantity, 0.5)
+            self.assertEqual(move_product_2.state, 'done')
+            self.assertTrue(move_product_2.picked)
+
+        self.assertEqual(productions.mapped('state'), ['done'] * 4)
+
+    def test_batch_production_03(self):
+        """ Test the wizard mrp.batch.produce with a mix of lot and serial.
+        """
+        self.product_1.tracking = 'serial'
+        self.product_2.tracking = 'lot'
+        self.product_4.tracking = 'serial'
+        self.product_4.uom_id = self.uom_unit
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+
+        batch_produce_action = mo.button_mark_done()
+        batch_produce = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
+        batch_produce.production_text = """
+            00001,LOT01;2|LOT02;3,P01|P02
+            00002,LOT01;4,P03
+            00003,LOT01,P04|P05
+            00004
+        """
+        batch_produce = batch_produce.save()
+        self.assertEqual(batch_produce.production_text_help.split('\n')[1],
+                         self.product_4.display_name + ',' +
+                         self.product_2.display_name + ',' +
+                         self.product_1.display_name)
+        batch_produce.action_prepare()
+
+        productions = mo.procurement_group_id.mrp_production_ids
+        production_1, production_2, production_3, production_4 = productions
+        self.assertEqual(production_1.lot_producing_id.name, "00001")
+        move_1 = production_1.move_raw_ids.filtered(lambda m: m.product_id == self.product_1)
+        move_2 = production_1.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
+        self.assertRecordValues(move_2.move_line_ids, [
+            {'quantity': 2},
+            {'quantity': 3},
+        ])
+        self.assertRecordValues(move_2.move_line_ids.lot_id, [
+            {'name': 'LOT01'},
+            {'name': 'LOT02'},
+        ])
+        self.assertRecordValues(move_1.move_line_ids, [
+            {'quantity': 1},
+            {'quantity': 1},
+        ])
+        self.assertRecordValues(move_1.move_line_ids.lot_id, [
+            {'name': 'P01'},
+            {'name': 'P02'},
+        ])
+
+        move_1 = production_2.move_raw_ids.filtered(lambda m: m.product_id == self.product_1)
+        move_2 = production_2.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
+        self.assertRecordValues(move_2.move_line_ids, [{'quantity': 4}])
+        self.assertRecordValues(move_2.move_line_ids.lot_id, [{'name': 'LOT01'}])
+        self.assertRecordValues(move_1.move_line_ids, [{'quantity': 1}])
+        self.assertRecordValues(move_1.move_line_ids.lot_id, [{'name': 'P03'}])
+
+        move_1 = production_3.move_raw_ids.filtered(lambda m: m.product_id == self.product_1)
+        move_2 = production_3.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
+        self.assertRecordValues(move_2.move_line_ids, [{'quantity': 0.5}])
+        self.assertRecordValues(move_2.move_line_ids.lot_id, [{'name': 'LOT01'}])
+        self.assertRecordValues(move_1.move_line_ids, [
+            {'quantity': 1},
+            {'quantity': 1},
+        ])
+        self.assertRecordValues(move_1.move_line_ids.lot_id, [
+            {'name': 'P04'},
+            {'name': 'P05'},
+        ])
+
+        move_1 = production_4.move_raw_ids.filtered(lambda m: m.product_id == self.product_1)
+        move_2 = production_4.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
+        self.assertRecordValues(move_2.move_line_ids, [{'quantity': 0.5, 'lot_id': False}])
+        self.assertRecordValues(move_1.move_line_ids, [{'quantity': 1, 'lot_id': False}])

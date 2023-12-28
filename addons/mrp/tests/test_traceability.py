@@ -370,8 +370,7 @@ class TestTraceability(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
 
     def test_tracked_and_manufactured_component(self):
-        """
-        Suppose this structure:
+        """ Suppose this structure:
             productA --|- 1 x productB --|- 1 x productC
             with productB tracked by lot
         Ensure that, when we already have some qty of productB (with different lots),
