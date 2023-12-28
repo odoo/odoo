@@ -111,7 +111,7 @@ class AccountEdiFormat(models.Model):
         for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type in ('line_section', 'line_note', 'rounding') or line.product_id.type == "service")):
             goods_line_is_available = True
             if line.product_id:
-                hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
+                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
                 if not hsn_code:
                     error_message.append(_("HSN code is not set in product %s", line.product_id.name))
                 elif not re.match("^[0-9]+$", hsn_code):
@@ -472,7 +472,7 @@ class AccountEdiFormat(models.Model):
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         line_details = {
             "productName": line.product_id.name,
-            "hsnCode": extract_digits(line.product_id.l10n_in_hsn_code),
+            "hsnCode": extract_digits(line.l10n_in_hsn_code),
             "productDesc": line.name,
             "quantity": line.quantity,
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",

@@ -11,6 +11,9 @@
         'l10n_in',
         'point_of_sale'
     ],
+    'data': [
+        'views/pos_order_line_views.xml',
+    ],
     'demo': [
         'data/product_demo.xml',
     ],
