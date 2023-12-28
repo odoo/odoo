@@ -3,6 +3,7 @@
 import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click as clickContains, contains } from "@web/../tests/utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
@@ -86,8 +87,6 @@ QUnit.module("mail", {}, function () {
         });
 
         QUnit.test("mark as read", async function (assert) {
-            assert.expect(2);
-
             const pyEnv = await startServer();
             const mailChannelId1 = pyEnv["mail.channel"].create({});
             const mailMessageId1 = pyEnv["mail.message"].create({
@@ -102,22 +101,11 @@ QUnit.module("mail", {}, function () {
                 notification_status: "exception", // necessary value to have a failure
                 notification_type: "email",
             });
-            const { click } = await start();
-            await click(".o_MessagingMenu_toggler");
-            assert.containsOnce(
-                document.body,
-                ".o_NotificationGroupView_markAsRead",
-                "should have 1 mark as read button"
-            );
-
-            await afterNextRender(() => {
-                document.querySelector(".o_NotificationGroupView_markAsRead").click();
-            });
-            assert.containsNone(
-                document.body,
-                ".o_NotificationGroupView",
-                "should have no notification group"
-            );
+            await start();
+            await clickContains(".o_MessagingMenu_toggler");
+            await contains(".o_NotificationGroupView");
+            await clickContains(".o_NotificationGroupView_markAsRead");
+            await contains(".o_NotificationGroupView", { count: 0 });
         });
 
         QUnit.test("grouped notifications by document", async function (assert) {
