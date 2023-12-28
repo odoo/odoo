@@ -2,6 +2,7 @@
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click as clickContains, contains, triggerEvents } from "@web/../tests/utils";
 import { browser } from "@web/core/browser/browser";
 
 QUnit.module("notification");
@@ -56,20 +57,12 @@ QUnit.test("mark as read", async (assert) => {
         notification_type: "email",
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce(
-        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
-        ".o-mail-NotificationItem-markAsRead"
-    );
-
-    await click(
-        $(".o-mail-NotificationItem-name:contains(Channel)")
-            .closest(".o-mail-NotificationItem")
-            .find(".o-mail-NotificationItem-markAsRead")
-    );
-    assert.containsNone(
-        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem")
-    );
+    await clickContains(".o_menu_systray i[aria-label='Messages']");
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Channel" });
+    await clickContains(".o-mail-NotificationItem-markAsRead", {
+        parent: [".o-mail-NotificationItem", { text: "Channel" }],
+    });
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Channel" });
 });
 
 QUnit.test("open non-channel failure", async (assert) => {
