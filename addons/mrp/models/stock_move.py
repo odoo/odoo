@@ -292,8 +292,6 @@ class StockMove(models.Model):
     def write(self, vals):
         if self.env.context.get('force_manual_consumption'):
             vals['manual_consumption'] = True
-        if vals.get('manual_consumption'):
-            vals['picked'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
