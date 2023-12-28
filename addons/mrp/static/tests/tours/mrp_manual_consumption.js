@@ -87,6 +87,10 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
             run: 'text 16.0'
         },
         {
+            trigger: 'div[name="picked"] input',
+            run: 'click',
+        },
+        {
             content: "Click Pager",
             trigger: ".o_pager_value:first()",
         },
