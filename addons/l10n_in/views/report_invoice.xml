@@ -18,7 +18,7 @@
 
         <xpath expr="//t[@name='account_invoice_line_accountable']/td[1]" position="after">
             <td t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
-              <span t-if="line.product_id.l10n_in_hsn_code" t-field="line.product_id.l10n_in_hsn_code"></span>
+              <span t-if="line.l10n_in_hsn_code" t-field="line.l10n_in_hsn_code"></span>
             </td>
         </xpath>
 
