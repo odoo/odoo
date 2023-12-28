@@ -415,29 +415,30 @@ class AccountBalance(models.Model):
         return response
 
     @api.model
-    def delete_invoice_payment(self, payment_id):
-        invoice = self.env['account.move']
-        payment = invoice.search([('id', '=', payment_id), ('move_type', '=', 'out_invoice')])
+    def delete_ar_invoice(self, invoice_id):
+        """
+        Delete an AR invoice based on the provided invoice ID.
+        :param invoice_id: ID of the invoice to delete.
+        :return: A success message or an error message.
+        """
+        # Retrieve the AR invoice based on the ID
+        invoice = self.env['account.move'].search([
+            ('id', '=', invoice_id),
+            ('move_type', '=', 'out_invoice')  # AR invoices have the move_type 'out_invoice'
+        ], limit=1)
 
-        if not payment:
-            return "Payment not found."
+        if not invoice:
+            return "AR invoice not found."
 
-        # Check if the bill is posted (validated)
-        if payment.state == 'posted':
-            # Add logic to cancel related journal entries (if any)
-            # Example: bill.button_draft() or bill.button_cancel()
-            try:
-                payment.button_draft()  # Reset to draft
-            except Exception as e:
-                return "Failed to reset Payment to draft: {}".format(e)
-
-        # Additional logic to unreconcile payments if the Invoice is reconciled
+        # Check if the invoice is in the 'draft' or 'cancel' state
+        if invoice.state not in ['draft', 'cancel']:
+            return "Invoice must be in 'draft' or 'cancel' state to be deleted."
 
         try:
-            payment.unlink()  # Delete the bill
-            return "Payment deleted successfully."
+            invoice.unlink()  # Delete the invoice
+            return "AR invoice deleted successfully."
         except Exception as e:
-            return "Failed to delete Payment: {}".format(e)
+            return "Failed to delete AR invoice: {}".format(e)
 
     #####create/get/delete_invoice
 
