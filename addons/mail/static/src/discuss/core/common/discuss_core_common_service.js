@@ -34,13 +34,6 @@ export class DiscussCoreCommon {
                     );
                 }
             });
-            this.busService.subscribe("discuss.channel/last_interest_dt_changed", (payload) => {
-                const { id, last_interest_dt } = payload;
-                const channel = this.store.Thread.get({ model: "discuss.channel", id });
-                if (channel) {
-                    channel.last_interest_dt = last_interest_dt;
-                }
-            });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
                 const thread = this.store.Thread.insert(payload);
                 this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
@@ -203,14 +196,11 @@ export class DiscussCoreCommon {
     async _handleNotificationNewMessage(notif) {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.Thread.get({ model: "discuss.channel", id });
-        if (!channel || !channel.type) {
+        if (!channel || !channel.channel_type) {
             channel = await this.threadService.fetchChannel(id);
             if (!channel) {
                 return;
             }
-        }
-        if (!channel.is_pinned && this.store.self) {
-            this.threadService.pin(channel);
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
@@ -246,7 +236,7 @@ export class DiscussCoreCommon {
         }
         if (
             !channel.correspondent?.eq(this.store.odoobot) &&
-            channel.type !== "channel" &&
+            channel.channel_type !== "channel" &&
             this.store.self?.type === "partner"
         ) {
             // disabled on non-channel threads and

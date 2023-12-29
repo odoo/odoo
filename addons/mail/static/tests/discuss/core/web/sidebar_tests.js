@@ -55,3 +55,33 @@ QUnit.test(
         await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
     }
 );
+
+QUnit.test("unknown channel can be displayed and interacted with", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [[0, 0, { partner_id: partnerId }]],
+        channel_type: "channel",
+        name: "Not So Secret",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    await openDiscuss(channelId);
+    await contains(
+        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active",
+        {
+            text: "Not So Secret",
+        }
+    );
+    await insertText(".o-mail-Composer-input", "Hello", { replace: true });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "Hello" });
+    await click("button", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Not So Secret" });
+    await click("div[title='Leave this channel']", {
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Not So Secret" }],
+    });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+});
