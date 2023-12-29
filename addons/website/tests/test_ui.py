@@ -509,7 +509,7 @@ class TestUi(odoo.tests.HttpCase):
             'parent_id': website.menu_id.id,
         })
 
-        self.start_tour('/', 'website_no_dirty_page', login='admin')
+        self.start_tour('/', 'website_no_action_no_dirty_page', login='admin')
 
     def test_website_no_dirty_page(self):
         # Previous tests are testing the dirty behavior when the extra items
