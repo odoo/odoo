@@ -64,7 +64,10 @@ class RtcController(http.Controller):
         """Joins the RTC call of a channel if the user is a member of that channel
         :param int channel_id: id of the channel to join
         """
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise request.not_found()
+        member = channel._find_or_create_member_for_self()
         if not member:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - member of current user can join call
@@ -89,11 +92,11 @@ class RtcController(http.Controller):
         :param member_ids: members whose invitation is to cancel
         :type member_ids: list(int) or None
         """
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
-        if not member:
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
             raise NotFound()
-        # sudo: discuss.channel.rtc.session - member of current user can cancel invitations
-        return member.sudo().channel_id._rtc_cancel_invitations(member_ids=member_ids)
+        # sudo: discuss.channel.rtc.session - can cancel invitations in accessible channel
+        return channel.sudo()._rtc_cancel_invitations(member_ids=member_ids)
 
     @http.route("/mail/rtc/audio_worklet_processor", methods=["GET"], type="http", auth="public")
     def audio_worklet_processor(self):

@@ -61,11 +61,23 @@ export class ThreadService {
     }
 
     async fetchChannelMembers(thread) {
+        if (thread.fetchMembersState === "pending") {
+            return;
+        }
+        const previousState = thread.fetchMembersState;
+        thread.fetchMembersState = "pending";
         const known_member_ids = thread.channelMembers.map((channelMember) => channelMember.id);
-        const results = await this.rpc("/discuss/channel/members", {
-            channel_id: thread.id,
-            known_member_ids: known_member_ids,
-        });
+        let results;
+        try {
+            results = await this.rpc("/discuss/channel/members", {
+                channel_id: thread.id,
+                known_member_ids: known_member_ids,
+            });
+        } catch (e) {
+            thread.fetchMembersState = previousState;
+            throw e;
+        }
+        thread.fetchMembersState = "fetched";
         let channelMembers = [];
         if (
             results["channelMembers"] &&
@@ -438,8 +450,9 @@ export class ThreadService {
     /**
      * @param {import("models").Thread} thread
      * @param {boolean} replaceNewMessageChatWindow
+     * @param {Object} [options]
      */
-    open(thread, replaceNewMessageChatWindow) {
+    open(thread, replaceNewMessageChatWindow, options) {
         this.setDiscussThread(thread);
     }
 
