@@ -147,6 +147,7 @@ export class AttributeSelection extends Component {
 
     getfPriceExtra(value) {
         const priceExtra = this._getPriceExtra(value);
-        return this.selfOrder.formatMonetary(priceExtra);
+        const sign = priceExtra < 0 ? "- " : "+ ";
+        return sign + this.selfOrder.formatMonetary(Math.abs(priceExtra));
     }
 }
