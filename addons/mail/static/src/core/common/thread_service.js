@@ -798,10 +798,10 @@ export class ThreadService {
      * Mentions:Only mention sounds + need action counter
      * Nothing: No sound + need action counter
 
-     * @param {Thread} thread
      * @param {Message} message
      */
-    notifyMessageToUser(thread, message) {
+    notifyMessageToUser(message) {
+        const thread = message.originThread;
         if (
             thread.type === "channel" &&
             message.recipients?.includes(this.store.self) &&

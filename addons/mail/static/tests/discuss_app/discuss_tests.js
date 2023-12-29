@@ -963,13 +963,9 @@ QUnit.test(
         });
         const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
         // simulate receiving a new message with odoo out-of-focused
-        pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
-            id: channelId,
-            message: {
-                id: 126,
-                model: "discuss.channel",
-                res_id: channelId,
-            },
+        pyEnv["bus.bus"]._sendone(channel, "mail.thread/new_message", {
+            id: 126,
+            originThread: { id: channelId, model: "discuss.channel" },
         });
         await assertSteps(["set_title_part"]);
     }
@@ -994,13 +990,9 @@ QUnit.test("receive new chat message: out of odoo focus (notification, chat)", a
     });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receiving a new message with odoo out-of-focused
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
-        id: channelId,
-        message: {
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId,
-        },
+    pyEnv["bus.bus"]._sendone(channel, "mail.thread/new_message", {
+        id: 126,
+        originThread: { id: channelId, model: "discuss.channel" },
     });
     await assertSteps(["set_title_part"]);
 });
@@ -1023,16 +1015,12 @@ QUnit.test("no out-of-focus notification on receiving self messages in chat", as
     });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receiving a new message of self with odoo out-of-focused
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
-        id: channelId,
-        message: {
-            author: { id: pyEnv.currentPartnerId, type: "partner" },
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId,
-        },
+    pyEnv["bus.bus"]._sendone(channel, "mail.thread/new_message", {
+        author: { id: pyEnv.currentPartnerId, type: "partner" },
+        id: 126,
+        originThread: { id: channelId, model: "discuss.channel" },
     });
-    await waitNotifications([env, "discuss.channel/new_message"]);
+    await waitNotifications([env, "mail.thread/new_message"]);
     // weak test, no guarantee to wait long enough for the potential step to trigger
     await nextTick();
     assertSteps([]);
@@ -1071,36 +1059,24 @@ QUnit.test("receive new chat messages: out of odoo focus (tab title)", async (as
     });
     const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
     // simulate receiving a new message in chat 1 with odoo out-of-focused
-    pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
-        id: channelId_1,
-        message: {
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId_1,
-        },
+    pyEnv["bus.bus"]._sendone(channel_1, "mail.thread/new_message", {
+        id: 126,
+        originThread: { id: channelId_1, model: "discuss.channel" },
     });
     await assertSteps(["set_title_part"]);
 
     const channel_2 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_2]])[0];
     // simulate receiving a new message in chat 2 with odoo out-of-focused
-    pyEnv["bus.bus"]._sendone(channel_2, "discuss.channel/new_message", {
-        id: channelId_2,
-        message: {
-            id: 127,
-            model: "discuss.channel",
-            res_id: channelId_2,
-        },
+    pyEnv["bus.bus"]._sendone(channel_2, "mail.thread/new_message", {
+        id: 127,
+        originThread: { id: channelId_2, model: "discuss.channel" },
     });
     await assertSteps(["set_title_part"]);
 
     // simulate receiving another new message in chat 2 with odoo focused
-    pyEnv["bus.bus"]._sendone(channel_2, "discuss.channel/new_message", {
-        id: channelId_2,
-        message: {
-            id: 128,
-            model: "discuss.channel",
-            res_id: channelId_2,
-        },
+    pyEnv["bus.bus"]._sendone(channel_2, "mail.thread/new_message", {
+        id: 128,
+        originThread: { id: channelId_2, model: "discuss.channel" },
     });
     await assertSteps(["set_title_part"]);
 });
@@ -1120,8 +1096,6 @@ QUnit.test("should auto-pin chat when receiving a new DM", async () => {
     openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-
-    // simulate receiving the first message on channel 11
     pyEnv.withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },

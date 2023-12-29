@@ -2174,7 +2174,11 @@ class MailThread(models.AbstractModel):
                     real_author_id = author.id
             if real_author_id:
                 self._message_subscribe(partner_ids=[real_author_id])
-
+        message_format = new_message.message_format()[0]
+        if "temporary_id" in self.env.context:
+            message_format["temporary_id"] = self.env.context["temporary_id"]
+        # sudo: bus.bus - sending on safe channel (thread record)
+        self.env["bus.bus"].sudo()._sendone(("record", self), "mail.thread/new_message", message_format)
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
@@ -3037,7 +3041,6 @@ class MailThread(models.AbstractModel):
             set(kwargs.keys()),
             restricting_names=self._get_notify_valid_parameters()
         )
-
         msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
         if not recipients_data:
@@ -3060,7 +3063,6 @@ class MailThread(models.AbstractModel):
             # and send the <mail.mail> and the <bus.bus> notifications
             self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
-
         self._notify_thread_by_web_push(message, recipients_data, msg_vals, **kwargs)
         return recipients_data
 

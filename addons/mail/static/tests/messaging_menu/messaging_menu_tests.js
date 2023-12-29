@@ -973,15 +973,11 @@ QUnit.test("chat should show unread counter on receiving new messages", async ()
 
     // simulate receiving a new message
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
-        id: channelId,
-        message: {
-            author: pyEnv.mockServer._mockResPartnerMailPartnerFormat([partnerId]).get(partnerId),
-            body: "new message",
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId,
-        },
+    pyEnv["bus.bus"]._sendone(channel, "mail.thread/new_message", {
+        author: pyEnv.mockServer._mockResPartnerMailPartnerFormat([partnerId]).get(partnerId),
+        body: "new message",
+        id: 126,
+        originThread: { id: channelId, model: "discuss.channel" },
     });
     await contains(".o-mail-NotificationItem .badge", { text: "1" });
 });

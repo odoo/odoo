@@ -20,7 +20,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_THRESHOLD = 2500;
@@ -165,12 +165,6 @@ export class Thread extends Component {
              */
             () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
         );
-        useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
-            const { model, id } = this.props.thread;
-            if (detail.model === model && detail.id === id) {
-                this.threadService.fetchNewMessages(this.props.thread);
-            }
-        });
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread.notEq(this.props.thread)) {
                 this.lastJumpPresent = nextProps.jumpPresent;

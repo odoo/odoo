@@ -289,18 +289,14 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
     const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
-    pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
-        id: channelId_1,
-        message: {
-            author: { id: 7, name: "Demo User" },
-            body: "<p>New message !</p>",
-            date: "2020-03-23 10:00:00",
-            id: 44,
-            message_type: "comment",
-            model: "discuss.channel",
-            record_name: "Channel 2019",
-            res_id: channelId_1,
-        },
+    pyEnv["bus.bus"]._sendone(channel_1, "mail.thread/new_message", {
+        author: { id: 7, name: "Demo User" },
+        body: "<p>New message !</p>",
+        date: "2020-03-23 10:00:00",
+        id: 44,
+        message_type: "comment",
+        record_name: "Channel 2019",
+        originThread: { id: channelId_1, model: "discuss.channel" },
     });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Channel 2019" });
     await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Channel 2020" });

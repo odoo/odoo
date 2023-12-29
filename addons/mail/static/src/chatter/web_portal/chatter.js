@@ -270,7 +270,7 @@ export class Chatter extends Component {
      * @param {import("models").Thread} thread
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
      */
-    load(thread, requestList = ["followers", "attachments", "messages", "suggestedRecipients"]) {
+    load(thread, requestList = ["followers", "attachments", "suggestedRecipients"]) {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
@@ -315,7 +315,7 @@ export class Chatter extends Component {
         this.toggleComposer();
         this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.state.thread, ["followers", "messages", "suggestedRecipients"]);
+        this.load(this.state.thread, ["followers", "suggestedRecipients"]);
     }
 
     onAddFollowers() {

@@ -559,12 +559,8 @@ class Channel(models.Model):
                 "model": "discuss.channel",
             },
         }
-        bus_notifications = [
-            (self, "mail.record/insert", payload),
-            (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
-        ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)
-        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
+        self.env["bus.bus"].sudo()._sendone(self, "mail.record/insert", payload)
         if self.is_chat or self.channel_type == "group":
             self._notify_thread_by_web_push(message, rdata, msg_vals, **kwargs)
         return rdata

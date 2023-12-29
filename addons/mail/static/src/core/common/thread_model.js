@@ -535,6 +535,47 @@ export class Thread extends Record {
         }
         return this._store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
     }
+
+    addNewMessage(message, { afterInitBus }) {
+        if (message.notIn(message.originThread.messages)) {
+            if (!message.originThread.loadNewer) {
+                message.originThread.messages.push(message);
+            } else if (message.originThread.status === "loading") {
+                message.originThread.pendingNewMessages.push(message);
+            }
+            if (message.isSelfAuthored) {
+                message.originThread.seen_message_id = message.id;
+            } else {
+                if (afterInitBus) {
+                    message.originThread.message_unread_counter++;
+                }
+                if (message.isNeedaction) {
+                    const inbox = this.store.discuss.inbox;
+                    if (message.notIn(inbox.messages)) {
+                        inbox.messages.push(message);
+                        if (afterInitBus) {
+                            inbox.counter++;
+                        }
+                    }
+                    if (message.notIn(message.originThread.needactionMessages)) {
+                        message.originThread.needactionMessages.push(message);
+                        if (afterInitBus) {
+                            message.originThread.message_needaction_counter++;
+                        }
+                    }
+                }
+            }
+        }
+        if (
+            !message.originThread.loadNewer &&
+            !message.isSelfAuthored &&
+            message.originThread.composer.isFocused &&
+            this._store.self?.type === "partner" &&
+            message.originThread.newestPersistentMessage?.eq(message.originThread.newestMessage)
+        ) {
+            this._store.env.services["mail.thread"].markAsRead(message.originThread);
+        }
+    }
 }
 
 Thread.register();

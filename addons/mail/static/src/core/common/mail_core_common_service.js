@@ -84,6 +84,19 @@ export class MailCoreCommon {
                     }
                 }
             });
+            this.busService.addEventListener("notification", ({ detail: notifications }) => {
+                for (const notif of notifications.filter(
+                    ({ type }) => type === "mail.thread/new_message"
+                )) {
+                    const messageFormat = JSON.parse(JSON.stringify(notif.payload));
+                    this.store.Message.get(messageFormat.temporary_id)?.delete();
+                    delete messageFormat.temporary_id;
+                    const message = this.store.Message.insert(messageFormat, { html: true });
+                    message.originThread.addNewMessage(message, {
+                        afterInitBus: notif.id > this.store.initBusId,
+                    });
+                }
+            });
         });
     }
 }

@@ -17,14 +17,10 @@ QUnit.test("Spaces in notifications are not encoded", async () => {
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     await openDiscuss();
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
-        id: channelId,
-        message: {
-            body: "Hello world!",
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId,
-        },
+    pyEnv["bus.bus"]._sendone(channel, "mail.thread/new_message", {
+        body: "Hello world!",
+        id: 126,
+        originThread: { id: channelId, model: "discuss.channel" },
     });
     await contains(".o_notification.border-info", { text: "Hello world!" });
 });
