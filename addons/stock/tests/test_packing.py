@@ -560,7 +560,7 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
             'picking_type_id':  self.warehouse.int_type_id.id,
             })
-        internal_form = Form(picking.with_context(force_detailed_view=True))
+        internal_form = Form(picking)
         # The test specifically removes the ability to see the location fields
         # grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         # self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
@@ -704,7 +704,7 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
             'picking_type_id':  self.warehouse.int_type_id.id,
             })
-        internal_form = Form(picking.with_context(force_detailed_view=True))
+        internal_form = Form(picking)
         # The test specifically removes the ability to see the location fields
         # grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         # self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
@@ -904,7 +904,7 @@ class TestPacking(TestPackingCommon):
                 move.product_id = self.productA
                 move.product_uom_qty = 75
         picking.action_assign()
-        with Form(picking.with_context(force_detailed_view=True)) as picking_form:
+        with Form(picking) as picking_form:
             with picking_form.package_level_ids.new() as package_level:
                 package_level.package_id = package
         with Form(picking) as picking_form:
