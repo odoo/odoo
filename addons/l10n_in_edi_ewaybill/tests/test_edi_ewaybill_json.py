@@ -1,10 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.l10n_in_edi.tests.test_edi_json import TestEdiJson
+from odoo.exceptions import RedirectWarning
 from odoo.tests import tagged
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestEdiEwaybillJson(TestEdiJson):
+
+    def test_edi_empty_hsn(self):
+        invoice = self.init_invoice("out_invoice", products=self.product_a)
+        invoice.write({
+            "l10n_in_type_id": self.env.ref("l10n_in_edi_ewaybill.type_tax_invoice_sub_type_supply"),
+            "l10n_in_distance": 20,
+            "l10n_in_mode": "1",
+            "l10n_in_vehicle_no": "GJ11AA1234",
+            "l10n_in_vehicle_type": "R",
+        })
+        invoice.invoice_line_ids.l10n_in_hsn_code = False
+        invoice.action_post()
+        with self.assertRaises(RedirectWarning):
+            invoice.l10n_in_edi_ewaybill_send()
 
     def test_edi_json(self):
         (self.invoice + self.invoice_full_discount + self.invoice_zero_qty).write({

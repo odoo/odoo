@@ -24,6 +24,7 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
         "data/account_edi_data.xml",
         "data/ewaybill_type_data.xml",
         "views/account_move_views.xml",
+        "views/account_move_line_views.xml",
         "views/edi_pdf_report.xml",
         "views/res_config_settings_views.xml",
     ],
