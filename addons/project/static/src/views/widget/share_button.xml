@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+
+    <t t-name="share.Button">
+
+        <div class="o-dropdown dropdown o-dropdown--no-caret" t-if="props.record.resId and props.record.data.active">
+            <a t-ref="sharePanel_button" role="button" class="btn btn-secondary btn-share" id="dropdown_share_panel" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <t>Share</t>
+            </a>
+            <div role="menu" t-on-click.stop="" aria-labelledby="dropdown_share_panel" t-attf-class="o_project_share_panel dropdown-menu user-select-none">
+                <PermissionPanel record="props.record"/>
+            </div>
+        </div>
+
+    </t>
+
+</template>

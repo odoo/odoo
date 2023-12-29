@@ -1,0 +1,49 @@
+.o_project_permission_panel {
+    max-height: 400px;
+    .text-muted {
+        font-size: 0.85rem;
+    }
+    .o_permission {
+        cursor: pointer;
+        &:disabled {
+            cursor: not-allowed;
+            &.o_project_share_partner {
+                background-image: none;
+            }
+        }
+    }
+}
+.dropdown-menu.o_project_share_panel {
+    width: 420px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    right: 0;
+    .form-switch .form-check-input {
+        margin-left: 0;
+        cursor: pointer;
+    }
+    .o_project_share_panel_image,
+    .o_project_share_panel_icon {
+        width: 30px;
+        height: 30px;
+    }
+    .o_project_share_panel_image {
+        object-fit: cover;
+    }
+    .o_project_share_panel_invite .form-control {
+        color: $gray-400 !important;
+    }
+}
+
+@media (hover: hover) { // Devices supporting hover
+    .o_project_permission_panel {
+        .o_delete {
+            display: none;
+        }
+        div:hover {
+            .o_delete {
+                display: inline;
+            }
+        }
+    }
+}

@@ -20,6 +20,10 @@ class ProjectShareWizard(models.TransientModel):
             active_model = 'project.project'
             active_id = self._context.get('default_project_id', False)
         result = super(ProjectShareWizard, self.with_context(active_model=active_model, active_id=active_id)).default_get(fields)
+        if not result.get('res_model'):
+            result.update(
+                res_model='project.project',
+            )
         if not result.get('access_mode'):
             result.update(
                 access_mode='read',

@@ -559,6 +559,37 @@ class Project(models.Model):
             defaults['project_id'] = self.id
         return values
 
+    def get_project_permission_panel_data(self):
+        """
+        Returns a dictionary containing all values required to render the permission panel.
+        """
+        collaborators = self.collaborator_ids.mapped('partner_id.id')
+        members_values = [{
+            'id': follower.partner_id.id,
+            'partner_id': follower.partner_id.id,
+            'partner_name': follower.partner_id.name,
+            'partner_email': follower.partner_id.email,
+            'permission': 'edit' if follower.partner_id.id in collaborators else 'read',
+            'partner_share': follower.partner_id.partner_share,
+        } for follower in self.message_follower_ids.filtered(lambda follower: follower.partner_id.partner_share)]
+
+        return {
+            'members_options': [('edit', 'Can edit'), ('read', 'Can read')],
+            'members': members_values,
+            'user_is_admin': self.env.user._is_admin(),
+        }
+
+    def remove_collaborator_follower(self, partner_id):
+        self.collaborator_ids.search([('project_id', '=', self.id), ('partner_id', '=', partner_id)], limit=1).unlink()
+        self.message_follower_ids.search([('res_id', '=', self.id), ('partner_id', '=', partner_id), ('res_model', '=', 'project.project')], limit=1).unlink()
+
+    def set_portal_permission(self, permission, partner_id):
+        if permission == 'edit':
+            partner = self.env['res.partner'].browse(partner_id)
+            self._add_collaborators(partner)
+        else:
+            self.collaborator_ids.search([('project_id', '=', self.id), ('partner_id', '=', partner_id)], limit=1).unlink()
+
     @api.constrains('stage_id')
     def _ensure_stage_has_same_company(self):
         for project in self:

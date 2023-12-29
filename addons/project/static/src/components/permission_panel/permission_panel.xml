@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.PermissionPanel">
+
+        <t t-if="state.loading">
+            <div class="py-3 text-center">
+                <i class="fa fa-circle-o-notch fa-2x fa-spin" title="loader" role="img"/>
+            </div>
+        </t>
+
+        <div t-else="" class="o_project_permission_panel">
+            <div t-if="state.user_is_admin || (props.record.data.user_permission === 'write' and isInternalUser)" class="o_project_share_panel_invite d-flex align-items-center px-3 pt-1 pb-2">
+                <div class="o_project_share_panel_icon rounded-circle d-flex flex-shrink-0 justify-content-center align-items-center bg-light">
+                    <i class="fa fa-user-plus fs-3" title="Invite People"/>
+                </div>
+                <button t-on-click="_onInviteMembersClick" class="btn input-group o_cursor_pointer d-flex flex-grow-1 min-w-0 p-0 ms-3">
+                    <div class="form-control text-start text-truncate">Add people or email addresses...</div>
+                    <button class="btn btn-primary">Invite</button>
+                </button>
+            </div>
+
+            <t t-foreach="state.members" t-as="member" t-key="member_index">
+                <div class="d-flex align-items-center px-3 py-1">
+                    <div class="flex-shrink-0">
+                        <t t-if="isInternalUser">
+                            <img class="o_project_share_panel_image rounded" t-if="member.id"
+                                t-attf-src="/web/image?model=res.partner&amp;field=avatar_128&amp;id={{ member.id }}"/>
+                        </t>
+                        <t t-else="">
+                            <i class="ms-2 me-1 fa fa-2x fa-user"/>
+                        </t>
+                    </div>
+                    <div class="flex-grow-1 min-w-0 px-3">
+                        <div t-attf-class="text-truncate {{ this.isLoggedUser(member) ? 'd-sm-flex align-items-sm-center fw-bold text-primary' : '' }}">
+                            <t t-out="member.partner_name"/>
+                            <span t-if="this.isLoggedUser(member)" class="badge d-none d-sm-block ms-1 rounded-pill text-bg-primary">You</span>
+                        </div>
+                        <div class="text-truncate text-muted">
+                            <span t-if="member.partner_share">Guest</span>
+                            <span t-if="state.user_is_admin and this.isLoggedUser(member)"><i class="fa fa-cog pe-1" title="Administrator"/>Admin</span>
+                            <span t-if="(member.partner_share || (state.user_is_admin and this.isLoggedUser(member))) and member.partner_email" class="px-1">•</span>
+                            <span class="o_member_email" t-if="member.partner_email" t-out="member.partner_email"/>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <div class="input-group">
+                            <div t-if="!(member.based_on and member.permission === 'none')
+                                        and (state.user_is_admin || props.record.data.user_permission === 'write' || this.isLoggedUser(member))"
+                                class="d-flex align-items-center me-2 fs-4">
+                                
+                                <button t-if="isInternalUser and this.isLoggedUser(member) and ((state.category === 'shared' and !member.is_unique_writer) || state.category !== 'shared')"
+                                    class="o_delete btn btn-danger"
+                                    t-on-click="event => this._onRemoveMember(event, member)"
+                                    title="Leave Article">
+                                    <i class="fa fa-fw fa-sign-out"/>
+                                </button>
+                                <button t-elif="isInternalUser"
+                                    class="o_delete o_remove btn btn-danger"
+                                    title="Remove Member"
+                                    t-on-click="event => this._onRemoveMember(event, member, state.project)">
+                                    <i class="fa fa-fw fa-times"/>
+                                </button>
+                            </div>
+                            <select t-attf-class="o_permission form-select rounded {{ member.partner_share || !isInternalUser ? 'o_project_share_partner' : '' }}"
+                                t-att-value="member.permission"
+                                t-on-change="event => this._onChangeMemberPermission(event, member)"
+                                t-att-disabled="member.is_unique_writer
+                                    || (props.record.data.user_permission !== 'write' and !state.user_is_admin) || !isInternalUser ? 'disabled' : undefined"
+                                aria-label="User Permission">
+                                <t t-foreach="this.state.members_options" t-as="option" t-key="option_index">
+                                    <option t-att-value="option[0]" t-out="option[1]" t-att-selected="option[0] === member.permission ? 'selected' : undefined"/>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
