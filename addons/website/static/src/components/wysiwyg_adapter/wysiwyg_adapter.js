@@ -686,6 +686,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @returns {boolean} true if the page has been altered.
      */
     _isDirty() {
+        // TODO improve in master: the way we check if the page is dirty should
+        // match the fact the save will actually do something or not. Right now,
+        // this check checks the whole page, including the non editable parts,
+        // regardless of the fact something can be saved inside or not. It is
+        // also thus of course considering the page dirty too often by mistake
+        // since non editable parts can have their DOM changed without impacting
+        // the save (e.g. menus being folded into the "+" menu for example).
         return this.widget.isDirty() || Object.values(this.pageOptions).some(option => option.isDirty);
     }
 
