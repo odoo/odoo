@@ -233,6 +233,18 @@ class PosOrder(models.Model):
         self.ensure_one()
         return self.lines._prepare_tax_base_line_values(sign=sign)
 
+    @api.model
+    def _get_invoice_lines_values(self, line_values, pos_order_line):
+        return {
+            'product_id': line_values['product'].id,
+            'quantity': line_values['quantity'],
+            'discount': line_values['discount'],
+            'price_unit': line_values['price_unit'],
+            'name': line_values['name'],
+            'tax_ids': [(6, 0, line_values['taxes'].ids)],
+            'product_uom_id': line_values['uom'].id,
+        }
+
     def _prepare_invoice_lines(self):
         """ Prepare a list of orm commands containing the dictionaries to fill the
         'invoice_line_ids' field when creating an invoice.
@@ -244,15 +256,8 @@ class PosOrder(models.Model):
         invoice_lines = []
         for line_values in line_values_list:
             line = line_values['record']
-            invoice_lines.append((0, None, {
-                'product_id': line_values['product'].id,
-                'quantity': line_values['quantity'],
-                'discount': line_values['discount'],
-                'price_unit': line_values['price_unit'],
-                'name': line_values['name'],
-                'tax_ids': [(6, 0, line_values['taxes'].ids)],
-                'product_uom_id': line_values['uom'].id,
-            }))
+            invoice_lines_values = self._get_invoice_lines_values(line_values, line)
+            invoice_lines.append((0, None, invoice_lines_values))
             if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',

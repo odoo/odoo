@@ -170,3 +170,19 @@ registry
 
         ].flat(),
     });
+
+registry
+.category("web_tour.tours")
+.add('PosSettleAndInvoiceOrder', {
+    test: true,
+    url: '/pos/ui',
+    steps: () => [
+        ProductScreen.confirmOpeningPopup(),
+        ProductScreen.clickQuotationButton(),
+        ProductScreen.selectFirstOrder(),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickInvoiceButton(),
+        PaymentScreen.clickValidate(),
+    ].flat(),
+});
