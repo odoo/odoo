@@ -150,6 +150,11 @@ class IrUiView(models.Model):
         existing_translation_dictionary.update(extra_translation_dictionary)
         translation_dictionary = existing_translation_dictionary
 
+        # The `en_US` jsonb value should always be set, even if english is not
+        # installed. If we don't do this, the custom snippet `arch_db` will only
+        # have a `fr_BE` key but no `en_US` key.
+        langs.add('en_US')
+
         # 2. Set translations
         new_value = {
             lang: field_to.translate(lambda term: translation_dictionary.get(term, {}).get(lang), record_to[name_field_to])
