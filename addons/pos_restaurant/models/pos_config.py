@@ -11,7 +11,7 @@ class PosConfig(models.Model):
 
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
-    iface_orderline_notes = fields.Boolean(string='Internal Notes', help='Allow custom Internal notes on Orderlines.', default=True)
+    iface_orderline_notes = fields.Boolean(string='Internal Notes', help='Allow custom Internal notes on Orderlines.')
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
@@ -78,6 +78,7 @@ class PosConfig(models.Model):
                 vals['iface_splitbill'] = True
             if not is_restaurant or not vals.get('iface_tipproduct', False):
                 vals['set_tip_after_payment'] = False
+            vals["iface_orderline_notes"] = is_restaurant
         return super(PosConfig, self).create(vals_list)
 
     def write(self, vals):
