@@ -152,7 +152,7 @@ export class MessagingMenu extends Component {
     }
 
     openDiscussion(thread) {
-        this.threadService.open(thread);
+        this.threadService.open(thread, undefined, { openMessagingMenuOnClose: true });
         this.close();
     }
 
@@ -160,7 +160,7 @@ export class MessagingMenu extends Component {
         if (this.ui.isSmall || this.env.inDiscussApp) {
             this.state.addingChat = true;
         } else {
-            this.chatWindowService.openNewMessage();
+            this.chatWindowService.openNewMessage({ openMessagingMenuOnClose: true });
             this.close();
         }
     }
@@ -191,7 +191,7 @@ export class MessagingMenu extends Component {
             // and the chat window does not look good.
             this.store.discuss.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
         } else {
-            this.threadService.open(thread);
+            this.threadService.open(thread, undefined, { openMessagingMenuOnClose: true });
         }
         this.close();
     }
