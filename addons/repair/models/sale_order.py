@@ -70,7 +70,7 @@ class SaleOrderLine(models.Model):
         old_product_uom_qty = {line.id: line.product_uom_qty for line in self}
         res = super().write(vals_list)
         for line in self:
-            if line.state in ('sale', 'done'):
+            if line.state in ('sale', 'done') and line.product_id:
                 if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom.rounding) <= 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) > 0:
                     self._create_repair_order()
                 if float_compare(old_product_uom_qty[line.id], 0, precision_rounding=line.product_uom.rounding) > 0 and float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) <= 0:
