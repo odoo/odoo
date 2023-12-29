@@ -4,7 +4,7 @@ export function pickRadio(name) {
     return [
         {
             content: `picking radio attribute with name ${name}`,
-            trigger: `.attribute-name-cell label[name='${name}']`,
+            trigger: `.attribute-name-cell:contains('${name}') input`,
             in_modal: true,
         },
     ];
