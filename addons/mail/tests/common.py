@@ -4,6 +4,7 @@
 import base64
 import email
 import email.policy
+import json
 import time
 
 from ast import literal_eval
@@ -913,7 +914,12 @@ class MailCase(MockEmail):
                 yield
         finally:
             found_bus_notifs = self.assertBusNotifications(channels, message_items=message_items)
-            self.assertEqual(self._new_bus_notifs, found_bus_notifs)
+            self.assertEqual(
+                self._new_bus_notifs,
+                found_bus_notifs,
+                f"\n{self._new_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')))}"
+                f"\n{found_bus_notifs.mapped(lambda bus: (bus.channel, json.loads(bus.message).get('type')))}"
+            )
 
     @contextmanager
     def assertMsgWithoutNotifications(self, mail_unlink_sent=False):
