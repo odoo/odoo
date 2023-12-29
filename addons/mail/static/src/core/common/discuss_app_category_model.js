@@ -30,7 +30,10 @@ export class DiscussAppCategory extends Record {
     }
 
     get isVisible() {
-        return !this.hideWhenEmpty || this.threads.some(({ is_pinned }) => is_pinned);
+        return (
+            !this.hideWhenEmpty ||
+            this.threads.some((thread) => thread.displayToSelf || thread.isLocallyPinned)
+        );
     }
 
     /** @type {string} */

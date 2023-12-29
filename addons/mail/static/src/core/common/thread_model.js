@@ -222,7 +222,7 @@ export class Thread extends Record {
     type = Record.attr("", {
         /** @this {import("models").Thread} */
         compute() {
-            if (this.channel_type) {
+            if (this.model === "discuss.channel") {
                 return this.channel_type;
             }
             if (this.model === "mail.box") {
@@ -251,6 +251,8 @@ export class Thread extends Record {
     custom_notifications = false;
     /** @type {String} */
     mute_until_dt;
+    /** @type {Boolean} */
+    isLocallyPinned = false;
 
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.type)) {
