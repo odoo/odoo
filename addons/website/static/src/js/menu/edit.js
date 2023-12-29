@@ -161,6 +161,14 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     cancel: function (reload = true) {
         var self = this;
         var def = new Promise(function (resolve, reject) {
+            // TODO improve in master: the way we check if the page is dirty
+            // should match the fact the save will actually do something or not.
+            // Right now, this check checks the whole page, including the non
+            // editable parts, regardless of the fact something can be saved
+            // inside or not. It is also thus of course considering the page
+            // dirty too often by mistake since non editable parts can have
+            // their DOM changed without impacting the save (e.g. menus being
+            // folded into the "+" menu for example).
             if (!self.wysiwyg.isDirty()) {
                 resolve();
             } else {

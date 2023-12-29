@@ -52,7 +52,7 @@ Wysiwyg.include({
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
         // Dropdown menu initialization: handle dropdown openings by hand
-        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
+        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle:not(.o_extra_menu_items_toggle)');
         $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
             this.odooEditor.observerUnactive();
