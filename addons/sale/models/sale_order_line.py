@@ -1127,20 +1127,23 @@ class SaleOrderLine(models.Model):
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
         }
-        analytic_account_id = self.order_id.analytic_account_id.id
-        if self.analytic_distribution and not self.display_type:
-            res['analytic_distribution'] = self.analytic_distribution
-        if analytic_account_id and not self.display_type:
-            analytic_account_id = str(analytic_account_id)
-            if 'analytic_distribution' in res:
-                res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
-            else:
-                res['analytic_distribution'] = {analytic_account_id: 100}
+        self._set_analytic_distribution(res, **optional_values)
         if optional_values:
             res.update(optional_values)
         if self.display_type:
             res['account_id'] = False
         return res
+
+    def _set_analytic_distribution(self, inv_line_vals, **optional_values):
+        analytic_account_id = self.order_id.analytic_account_id.id
+        if self.analytic_distribution and not self.display_type:
+            inv_line_vals['analytic_distribution'] = self.analytic_distribution
+        if analytic_account_id and not self.display_type:
+            analytic_account_id = str(analytic_account_id)
+            if 'analytic_distribution' in inv_line_vals:
+                inv_line_vals['analytic_distribution'][analytic_account_id] = inv_line_vals['analytic_distribution'].get(analytic_account_id, 0) + 100
+            else:
+                inv_line_vals['analytic_distribution'] = {analytic_account_id: 100}
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
