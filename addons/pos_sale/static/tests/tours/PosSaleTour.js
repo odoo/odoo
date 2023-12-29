@@ -149,4 +149,20 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
         ].flat(),
+    });
+
+registry
+.category("web_tour.tours")
+.add('PosSettleAndInvoiceOrder', {
+    test: true,
+    url: '/pos/ui',
+    steps: () => [
+        Dialog.confirm("Open session"),
+        ProductScreen.controlButton("Quotation/Order"),
+        ProductScreen.selectFirstOrder(),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickInvoiceButton(),
+        PaymentScreen.clickValidate(),
+    ].flat(),
 });

@@ -113,6 +113,14 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
+    def _get_invoice_lines_values(self, line_values, pos_line):
+        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line)
+
+        if pos_line.sale_order_origin_id:
+            origin_line = pos_line.sale_order_line_id
+            origin_line._set_analytic_distribution(inv_line_vals)
+
+        return inv_line_vals
 
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
