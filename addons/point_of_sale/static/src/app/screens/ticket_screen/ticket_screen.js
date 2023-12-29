@@ -291,6 +291,7 @@ export class TicketScreen extends Component {
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
+        destinationOrder.takeaway = order.takeaway;
         // Add orderline for each toRefundDetail to the destinationOrder.
         for (const refundDetail of allToRefundDetails) {
             const product = this.pos.models["product.product"].get(

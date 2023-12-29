@@ -7,6 +7,7 @@ import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_
 import { OrderlineNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { _t } from "@web/core/l10n/translation";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export class ControlButtons extends Component {
     static template = "point_of_sale.ControlButtons";
@@ -34,8 +35,9 @@ export class ControlButtons extends Component {
         const fiscalPosList = [
             {
                 id: -1,
-                label: _t("None"),
-                isSelected: !currentFiscalPosition,
+                label: this.pos.config.module_pos_restaurant ? _t("Dine in") : _t("Original Tax"),
+                isSelected: false,
+                item: "none",
             },
         ];
         for (const fiscalPos of this.pos.models["account.fiscal.position"].getAll()) {
@@ -48,18 +50,27 @@ export class ControlButtons extends Component {
                 item: fiscalPos,
             });
         }
-        this.dialog.add(SelectionPopup, {
-            title: _t("Select Fiscal Position"),
+
+        const selectedFiscalPosition = await makeAwaitable(this.dialog, SelectionPopup, {
             list: fiscalPosList,
-            getPayload: (selectedFiscalPosition) => {
-                this.currentOrder.set_fiscal_position(selectedFiscalPosition);
-                // IMPROVEMENT: The following is the old implementation and I believe
-                // there could be a better way of doing it.
-                for (const line of this.currentOrder.orderlines) {
-                    line.set_quantity(line.quantity);
-                }
-            },
+            title: _t("Please register the voucher number"),
         });
+
+        if (!selectedFiscalPosition) {
+            return;
+        }
+
+        if (selectedFiscalPosition === "none") {
+            this.currentOrder.set_fiscal_position(false);
+            return;
+        }
+
+        this.currentOrder.set_fiscal_position(selectedFiscalPosition);
+        // IMPROVEMENT: The following is the old implementation and I believe
+        // there could be a better way of doing it.
+        for (const line of this.currentOrder.orderlines) {
+            line.set_quantity(line.quantity);
+        }
     }
     async clickPricelist() {
         // Create the list to be passed to the SelectionPopup.

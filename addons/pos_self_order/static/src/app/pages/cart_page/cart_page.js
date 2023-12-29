@@ -46,7 +46,7 @@ export class CartPage extends Component {
     async pay() {
         const orderingMode = this.selfOrder.config.self_ordering_service_mode;
         const type = this.selfOrder.config.self_ordering_mode;
-        const takeAway = this.selfOrder.currentOrder.take_away;
+        const takeAway = this.selfOrder.currentOrder.takeaway;
 
         if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
             return;

@@ -10,7 +10,7 @@ patch(OrderWidget.prototype, {
         const mode = this.selfOrder.config.self_ordering_pay_after;
         const isOnlinePayment = this.selfOrder.pos_payment_methods.find((p) => p.is_online_payment);
         const order = this.selfOrder.currentOrder;
-        const takeAway = order.take_away;
+        const takeAway = order.takeaway;
         const service = this.selfOrder.config.self_ordering_service_mode;
         const isNoLine = order.lines.length === 0;
 

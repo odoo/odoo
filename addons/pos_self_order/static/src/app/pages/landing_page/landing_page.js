@@ -102,7 +102,7 @@ export class LandingPage extends Component {
 
         if (
             this.selfOrder.config.self_ordering_takeaway &&
-            this.selfOrder.currentOrder.take_away === null &&
+            this.selfOrder.currentOrder.takeaway === null &&
             this.selfOrder.ordering
         ) {
             this.router.navigate("location");

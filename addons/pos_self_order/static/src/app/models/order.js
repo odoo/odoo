@@ -15,7 +15,7 @@ export class Order extends Reactive {
         amount_total,
         amount_tax,
         lastChangesSent,
-        take_away,
+        takeaway,
         tax_details,
     }) {
         super();
@@ -33,7 +33,7 @@ export class Order extends Reactive {
         this.amount_total = order.amount_total || 0;
         this.amount_tax = order.amount_tax || 0;
         this.lines = order.lines || [];
-        this.take_away = typeof order.take_away === "boolean" ? order.take_away : null;
+        this.takeaway = typeof order.takeaway === "boolean" ? order.takeaway : null;
         this.ticket_code = random5Chars(); // 5-digits alphanum code shown on the receipt
         this.tax_details = order.tax_details || [];
 

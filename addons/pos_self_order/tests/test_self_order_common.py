@@ -9,6 +9,7 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class TestSelfOrderCommon(SelfOrderCommonTest):
     def test_self_order_common(self):
         self.pos_config.write({
+            'takeaway': True,
             'self_ordering_takeaway': True,
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',

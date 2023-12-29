@@ -36,12 +36,7 @@ class PosConfig(models.Model):
         store=False,
     )
     self_ordering_url = fields.Char(compute="_compute_self_ordering_url")
-    self_ordering_takeaway = fields.Boolean("Takeaway")
-    self_ordering_alternative_fp_id = fields.Many2one(
-        'account.fiscal.position',
-        string='Alternative Fiscal Position',
-        help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.',
-    )
+    self_ordering_takeaway = fields.Boolean("Self Takeaway")
     self_ordering_mode = fields.Selection(
         [("nothing", "Disable"), ("consultation", "QR menu"), ("mobile", "QR menu + Ordering"), ("kiosk", "Kiosk")],
         string="Self Ordering Mode",
