@@ -4788,9 +4788,9 @@ registry.layout_column = SnippetOptionWidget.extend({
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
-            var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
-            $column.addClass(colClass);
+            let className = column.className.replace(/\b(col|offset)-lg(-\d+)?\b/g, "");
+            className += (className ? " " : "") + colClass;
+            column.className = className;
         });
         if (colOffset) {
             $columns.first().addClass('offset-lg-' + colOffset);
