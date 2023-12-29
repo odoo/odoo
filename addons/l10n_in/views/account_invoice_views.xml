@@ -36,7 +36,7 @@
                        readonly="state != 'draft'"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
-                <field name="l10n_in_hsn_code" widget="hsn_autocomplete" options="{'hsn_description_field': 'name'}"/>
+                <field name="l10n_in_hsn_code" widget="l10n_in_hsn_autocomplete" options="{'l10n_in_hsn_description': 'name'}"/>
             </xpath>
         </field>
     </record>

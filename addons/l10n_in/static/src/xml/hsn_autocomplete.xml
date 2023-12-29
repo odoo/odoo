@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <t t-name="hsn_autocomplete.HsnAutoComplete">
+    <t t-name="hsn_autocomplete.L10nInHsnAutoComplete">
         <AutoComplete
             value="props.record.data[props.name] || ''"
             sources="sources"
             onSelect.bind="onSelect"
-            placeholder="props.placeholder || ''"
         />
     </t>
 

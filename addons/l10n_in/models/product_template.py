@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
 import logging
 import requests
 from werkzeug.urls import url_encode
-from requests.exceptions import HTTPError, ConnectionError
+
+from requests.exceptions import HTTPError
 from odoo import api, models, fields, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
+
+l10n_in_hsn_service_url = 'https://services.gst.gov.in/commonservices/hsn/search/qsearch'
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -24,13 +27,14 @@ class ProductTemplate(models.Model):
             if check_hsn and len(record.l10n_in_hsn_code) < int(minimum_hsn_len):
                 error_message = _("As per your HSN/SAC code validation, minimum %s digits HSN/SAC code is required.", minimum_hsn_len)
                 raise ValidationError(error_message)
+
     @api.model
     def get_hsn_suggestions(self, value):
         response_json = {}
         all_url_and_params = [
-            ('https://services.gst.gov.in/commonservices/hsn/search/qsearch', {'inputText': value, 'selectedType': 'byCode', 'category': 'null'}),
-            ('https://services.gst.gov.in/commonservices/hsn/search/qsearch', {'inputText': value, 'selectedType': 'byDesc', 'category': 'P'}),
-            ('https://services.gst.gov.in/commonservices/hsn/search/qsearch', {'inputText': value, 'selectedType': 'byDesc', 'category': 'S'}),
+            (l10n_in_hsn_service_url, {'inputText': value, 'selectedType': 'byCode', 'category': 'null'}),
+            (l10n_in_hsn_service_url, {'inputText': value, 'selectedType': 'byDesc', 'category': 'P'}),
+            (l10n_in_hsn_service_url, {'inputText': value, 'selectedType': 'byDesc', 'category': 'S'}),
         ]
         for url, params in all_url_and_params:
             try:
@@ -38,6 +42,9 @@ class ProductTemplate(models.Model):
                 response.raise_for_status()
                 response_json = response.json()
                 if response_json.get('data'):
+                    hsn_code_digit = self.env.company.l10n_in_hsn_code_digit
+                    if hsn_code_digit:
+                        response_json['data'] = list(filter(lambda d: len(d.get('c')) >= int(hsn_code_digit), response_json.get('data')))
                     break
             except (ConnectionError, HTTPError, ValueError) as e:
                 _logger.warning('HSN Autocomplete API error: %s', str(e))
