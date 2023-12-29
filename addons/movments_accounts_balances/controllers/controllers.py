@@ -100,32 +100,49 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills
     @api.model
-    def create_bill(self, bill_vals):
-        # Extract invoice lines from bill_vals
-        invoice_lines = bill_vals.get('invoice_line_ids', [])
-
+    def create_bill(self, invoice_vals, partner_id, invoice_date, invoice_date_due, ref, narration):
+        """
+        Create an AR invoice and corresponding analytic lines based on the provided data.
+        """
         # Prepare the invoice lines
-        invoice_line_vals = []
-        for line in invoice_lines:
-            invoice_line_vals.append((0, 0, {
-                'name': line.get('name', ''),
-                'quantity': line.get('quantity', 1),
+        invoice_lines = []
+        for line in invoice_vals:
+            invoice_line_vals = {
+                'name': line.get('description', ''),
+                'quantity': line.get('quantity', 1.0),
                 'price_unit': line.get('price_unit', 0.0),
-                'account_id': line.get('account_id', False),
-            }))
+                'account_id': line.get('account_id'),
+                'product_id': line.get('product_id', False),
+            }
+            invoice_lines.append((0, 0, invoice_line_vals))
 
-        # Create a new bill record
-        bill = self.env['account.move'].create({
-            'move_type': bill_vals.get('move_type', ''),
-            'partner_id': bill_vals.get('partner_id', False),
-            'invoice_date': bill_vals.get('invoice_date', False),
-            'invoice_date_due': bill_vals.get('invoice_date_due', False),
-            'ref': bill_vals.get('ref', ''),
-            'narration': bill_vals.get('narration', ''),
-            'invoice_line_ids': invoice_line_vals,
+        # Create a new AR invoice record
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': partner_id,
+            'invoice_date': invoice_date,
+            'invoice_date_due': invoice_date_due,
+            'ref': ref,
+            'narration': narration,
+            'invoice_line_ids': invoice_lines,
         })
 
-        return bill
+        # Create analytic lines for each invoice line if analytic_account_id is provided
+        for line, line_vals in zip(invoice.invoice_line_ids, invoice_vals):
+            analytic_account_id = line_vals.get('analytic_account_id')
+            if analytic_account_id:
+                self.env['account.analytic.line'].create({
+                    'account_id': analytic_account_id,
+                    'name': line.name,
+                    'amount': line.price_subtotal,  # or any other relevant amount
+                    # 'move_id': line.id,
+                    # Add other necessary fields
+                })
+
+        return {
+            'id': invoice.id,
+            'message': 'Invoice created successfully with analytic lines'
+        }
 
     @api.model
     def get_bill(self, bill_id):
@@ -443,33 +460,51 @@ class AccountBalance(models.Model):
 
     #####create/get/delete_invoice
 
+
     @api.model
-    def create_invoice(self, invoice_vals):
-        # Extract invoice lines from bill_vals
-        invoice_lines = invoice_vals.get('invoice_line_ids', [])
-
+    def create_ar_invoice(self, invoice_vals, partner_id, invoice_date, invoice_date_due, ref, narration):
+        """
+        Create an AR invoice and corresponding analytic lines based on the provided data.
+        """
         # Prepare the invoice lines
-        invoice_line_vals = []
-        for line in invoice_lines:
-            invoice_line_vals.append((0, 0, {
-                'name': line.get('name', ''),
-                'quantity': line.get('quantity', 1),
+        invoice_lines = []
+        for line in invoice_vals:
+            invoice_line_vals = {
+                'name': line.get('description', ''),
+                'quantity': line.get('quantity', 1.0),
                 'price_unit': line.get('price_unit', 0.0),
-                'account_id': line.get('account_id', False),
-            }))
+                'account_id': line.get('account_id'),
+                'product_id': line.get('product_id', False),
+            }
+            invoice_lines.append((0, 0, invoice_line_vals))
 
-        # Create a new bill record
+        # Create a new AR invoice record
         invoice = self.env['account.move'].create({
-            'move_type': invoice_vals.get('move_type', ''),
-            'partner_id': invoice_vals.get('partner_id', False),
-            'invoice_date': invoice_vals.get('invoice_date', False),
-            'invoice_date_due': invoice_vals.get('invoice_date_due', False),
-            'ref': invoice_vals.get('ref', ''),
-            'narration': invoice_vals.get('narration', ''),
-            'invoice_line_ids': invoice_line_vals,
+            'move_type': 'out_invoice',
+            'partner_id': partner_id,
+            'invoice_date': invoice_date,
+            'invoice_date_due': invoice_date_due,
+            'ref': ref,
+            'narration': narration,
+            'invoice_line_ids': invoice_lines,
         })
 
-        return invoice
+        # Create analytic lines for each invoice line if analytic_account_id is provided
+        for line, line_vals in zip(invoice.invoice_line_ids, invoice_vals):
+            analytic_account_id = line_vals.get('analytic_account_id')
+            if analytic_account_id:
+                self.env['account.analytic.line'].create({
+                    'account_id': analytic_account_id,
+                    'name': line.name,
+                    'amount': line.price_subtotal,  # or any other relevant amount
+                    # 'move_id': line.id,
+                    # Add other necessary fields
+                })
+
+        return {
+            'id': invoice.id,
+            'message': 'Invoice created successfully with analytic lines'
+        }
 
     @api.model
     def get_ar_invoice(self, invoice_id):
