@@ -2,21 +2,21 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <!-- add company id to partner details-->
-        <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="after">
+        <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="before">
             <div t-if="o.partner_id.company_registry and o.company_id.country_code == 'CZ'">
-                ID: <span t-field="o.partner_id.company_registry"/>
+                Company ID: <span t-field="o.partner_id.company_registry"/>
             </div>
         </xpath>
 
-        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="after">
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="before">
             <div t-if="o.partner_id.company_registry and o.company_id.country_code == 'CZ'">
-                ID: <span t-field="o.partner_id.company_registry"/>
+                Company ID: <span t-field="o.partner_id.company_registry"/>
             </div>
         </xpath>
 
-        <xpath expr="//div[@id='partner_vat_no_shipping']" position="after">
+        <xpath expr="//div[@id='partner_vat_no_shipping']" position="before">
             <div t-if="o.partner_id.company_registry and o.company_id.country_code == 'CZ'">
-                ID: <span t-field="o.partner_id.company_registry"/>
+                Company ID: <span t-field="o.partner_id.company_registry"/>
             </div>
         </xpath>
 
