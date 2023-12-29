@@ -40,7 +40,7 @@
         <xpath expr="//t[@t-if='this.isSmall()']//div[@id='list']" position="inside">
             <div t-if="props.showAnimateText" title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text" data-text-selector=".o_animated_text"/>
         </xpath>
-        <xpath expr="//t[@t-else]//div[last()]" position="after">
+        <xpath expr="//t[@t-else]//div[@id='list']" position="after">
             <div t-if="props.showAnimateText" id="animate" class="btn-group">
                 <div title="Animate text" class="btn o_we_animate_text" data-text-selector=".o_animated_text">
                     <span class="fa fa-play fa-fw"></span>

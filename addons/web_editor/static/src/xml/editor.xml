@@ -61,36 +61,73 @@
                 </ul>
             </div>
 
-            <div id="decoration" class="btn-group">
-                <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
-                <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
-                <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
-                <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
-                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
-            </div>
-
-            <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">
-                <div class="colorpicker-group note-fore-color-preview" data-name="color"  t-ref="textColorpickerDropdown" data-color-type="text">
-                    <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
-                        data-bs-toggle="dropdown" tabindex="-1">
-                        <i class="fa fa-font color-indicator fore-color" title="Font Color"></i>
+            <t t-if="this.isSmall()">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" title="Decoration" tabindex="-1"
+                    data-bs-original-title="Decoration" data-bs-auto-close="outside" aria-expanded="false">
+                    <i class="fa fa-bold"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div id="decoration" class="btn-group">
+                        <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
+                        <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
+                        <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                        <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
                     </div>
-                    <ul class="dropdown-menu colorpicker-menu">
-                        <li><ColorPalette t-props="props.textColorPaletteProps" /></li>
-                    </ul>
-                </div>
-                <div class="colorpicker-group note-back-color-preview" data-name="color"  t-ref="backgroundColorpaletteDropdown" data-color-type="background">
-                    <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
-                        data-bs-toggle="dropdown" tabindex="-1">
-                        <i class="fa fa-paint-brush color-indicator hilite-color" title="Background Color"></i>
-                    </button>
-                    <ul class="dropdown-menu colorpicker-menu">
-                        <li><ColorPalette t-props="props.backgroundColorPaletteProps" /></li>
-                    </ul>
-                </div>
-            </div>
 
-            <t t-if="!this.isSmall()">
+                    <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">
+                        <div class="colorpicker-group note-fore-color-preview" data-name="color" t-ref="textColorpickerDropdown" data-color-type="text">
+                            <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
+                                data-bs-toggle="dropdown" tabindex="-1">
+                                <i class="fa fa-font color-indicator fore-color" title="Font Color"></i>
+                            </div>
+                            <ul class="dropdown-menu colorpicker-menu">
+                                <li><ColorPalette t-props="props.textColorPaletteProps" /></li>
+                            </ul>
+                        </div>
+                        <div class="colorpicker-group note-back-color-preview" data-name="color" t-ref="backgroundColorpaletteDropdown" data-color-type="background">
+                            <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
+                                data-bs-toggle="dropdown" tabindex="-1">
+                                <i class="fa fa-paint-brush color-indicator hilite-color" title="Background Color"></i>
+                            </button>
+                            <ul class="dropdown-menu colorpicker-menu">
+                                <li><ColorPalette t-props="props.backgroundColorPaletteProps" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
+            </t>
+            <t t-else="">
+                <div id="decoration" class="btn-group">
+                    <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
+                    <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
+                    <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                    <div id="strikethrough" data-call="strikeThrough" title="Toggle strikethrough" class="btn fa fa-strikethrough fa-fw"></div>
+                    <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
+                </div>
+
+                <div t-if="props.showColors" id="colorInputButtonGroup" class="btn-group">
+                    <div class="colorpicker-group note-fore-color-preview" data-name="color" t-ref="textColorpickerDropdown" data-color-type="text">
+                        <div id="oe-text-color" class="btn color-button dropdown-toggle editor-ignore"
+                            data-bs-toggle="dropdown" tabindex="-1">
+                            <i class="fa fa-font color-indicator fore-color" title="Font Color"></i>
+                        </div>
+                        <ul class="dropdown-menu colorpicker-menu">
+                            <li><ColorPalette t-props="props.textColorPaletteProps" /></li>
+                        </ul>
+                    </div>
+                    <div class="colorpicker-group note-back-color-preview" data-name="color" t-ref="backgroundColorpaletteDropdown" data-color-type="background">
+                        <button id="oe-fore-color" type="button" class="btn dropdown-toggle editor-ignore"
+                            data-bs-toggle="dropdown" tabindex="-1">
+                            <i class="fa fa-paint-brush color-indicator hilite-color" title="Background Color"></i>
+                        </button>
+                        <ul class="dropdown-menu colorpicker-menu">
+                            <li><ColorPalette t-props="props.backgroundColorPaletteProps" /></li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div t-if="props.useFontSizeInput or props.showFontSize" id="font-size" t-attf-class="btn-group {{ props.dropDirection }}">
                     <button type="button" class="btn dropdown-toggle"
                         data-bs-toggle="dropdown" tabindex="-1"
