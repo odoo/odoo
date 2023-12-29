@@ -17,9 +17,9 @@
                 Order
                 <div t-if="displayCategoryCount.length" class="break-line fw-normal fs-6 w-100  border-top mt-1 pt-1">
                     <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
-                        <div class="row g-0 my-1 w-100">
-                            <label class="col text-start text-truncate ps-0" ><t t-esc="categoryCountLine.name"/></label>
-                            <label class="col-3 text-center rounded p-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                        <div class="d-flex justify-content-start g-0 my-1 w-100">
+                            <label class="rounded px-2 py-0 me-1" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                            <label class="text-truncate ps-0" ><t t-esc="categoryCountLine.name"/></label>
                         </div>
                     </t>
                 </div>
