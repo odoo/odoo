@@ -30,7 +30,7 @@ msgstr ""
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
-msgid "%s number should be set and not more than 16 characters"
+msgid "%s number cannot be more than 16 characters"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -847,15 +847,15 @@ msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
-msgid "HSN code is not set in product %s"
+#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
+msgid ""
+"HSN code of at least one item should be of goods to generate e-Way Bill"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
-msgid ""
-"HSN code of at least one item should be of goods to generate e-Way Bill"
+#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
+msgid "HSN/SAC code is missing on Invoice Line"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -879,12 +879,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 msgid "IMEI does not belong to the user"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
-msgid "Impossible to send the Ewaybill."
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -1027,12 +1021,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 msgid "Invalid HSN Code"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
-msgid "Invalid HSN Code (%s) in product %s"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -1263,15 +1251,6 @@ msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
-msgid ""
-"Invalid invoice configuration:\n"
-"\n"
-"%s"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 msgid "Invalid json"
 msgstr ""
@@ -1462,6 +1441,17 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
+#: model:ir.model,name:l10n_in_edi_ewaybill.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
+msgid "Journal Items(s)"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_edi_ewaybill.field_l10n_in_ewaybill_type__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -1624,6 +1614,11 @@ msgstr ""
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid "Production Environment"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.view_move_line_tree_l10n_in
+msgid "Products"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -2131,6 +2126,15 @@ msgstr ""
 
 #. module: l10n_in_edi_ewaybill
 #. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
+msgid ""
+"Unable to send Ewaybill:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 msgid ""
 "Unit Code is not matching with any of the Unit Code from eway bill ItemList"
@@ -2271,6 +2275,12 @@ msgstr ""
 #. module: l10n_in_edi_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_edi_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid "Verify Username and Password"
+msgstr ""
+
+#. module: l10n_in_edi_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_edi_ewaybill/models/account_move.py:0
+msgid "View lines without HSN/SAC"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill
@@ -2467,12 +2477,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_edi_ewaybill/models/error_codes.py:0
 msgid "operating-system-type is mandatory in header"
-msgstr ""
-
-#. module: l10n_in_edi_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_edi_ewaybill/models/account_edi_format.py:0
-msgid "product is required to get HSN code"
 msgstr ""
 
 #. module: l10n_in_edi_ewaybill

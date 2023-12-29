@@ -98,8 +98,10 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("- Transport document number and date is required when Transportation Mode is Rail,Air or Ship"))
         if error_message:
             error_message.insert(0, _("The following information are missing on the invoice (see eWayBill tab):"))
-        goods_lines = move.invoice_line_ids.filtered(lambda line: not (line.display_type in ('line_section', 'line_note', 'rounding') or line.product_id.type == "service"))
-        if not goods_lines:
+        product_lines = move.line_ids.filtered(lambda line: line.display_type == 'product')
+        if any(not line.l10n_in_hsn_code for line in product_lines):
+            error_message.append(_("HSN/SAC code is missing on Invoice Line"))
+        if all(line.product_id.type == "service" for line in product_lines if line.product_id):
             error_message.append(_('You need at least one product having "Product Type" as stockable or consumable.'))
         if base == "irn":
             # already checked by E-invoice (l10n_in_edi) so no need to check
@@ -108,21 +110,8 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.partner_id)
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", is_purchase and move.ref or move.name):
-            error_message.append(_("%s number should be set and not more than 16 characters",
-                (is_purchase and "Bill Reference" or "Invoice")))
-        for line in goods_lines:
-            if line.product_id:
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
-                    error_message.append(_(
-                        "Invalid HSN Code (%(hsn_code)s) in product %(product)s", hsn_code=hsn_code, product=line.product_id.name,
-                    ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
-        if error_message:
-            error_message.insert(0, _("Impossible to send the Ewaybill."))
+            error_message.append(_("%s number cannot be more than 16 characters",
+                (is_purchase and _("Bill Reference") or _("Invoice"))))
         return error_message
 
     def _l10n_in_edi_ewaybill_cancel_invoice(self, invoices):

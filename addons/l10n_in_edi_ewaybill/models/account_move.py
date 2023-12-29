@@ -3,7 +3,7 @@
 
 import json
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 
 
 class AccountMove(models.Model):
@@ -107,7 +107,16 @@ class AccountMove(models.Model):
                 raise UserError(_("You can only create E-waybill from posted invoice"))
             errors = edi_format._check_move_configuration(move)
             if errors:
-                raise UserError(_("Invalid invoice configuration:\n\n%s", '\n'.join(errors)))
+                invoice_line = self.invoice_line_ids.filtered(lambda line: not line.l10n_in_hsn_code)
+                action_error = {
+                   'view_mode': 'tree',
+                    'name': _('Journal Items(s)'),
+                    'res_model': 'account.move.line',
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', invoice_line.ids)],
+                    'views': [[self.env.ref('l10n_in_edi_ewaybill.view_move_line_tree_l10n_in').id, 'list']]
+                }
+                raise RedirectWarning(_("Unable to send Ewaybill:\n\n%s", '\n'.join(errors)), action_error, _('View lines without HSN/SAC'))
             existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
             if existing_edi_document:
                 if existing_edi_document.state in ('sent', 'to_cancel'):
