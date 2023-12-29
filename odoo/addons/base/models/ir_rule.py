@@ -68,6 +68,17 @@ class IrRule(models.Model):
         if any(rule.model_id.model == self._name for rule in self):
             raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
 
+    @api.constrains('active', 'domain_force', 'model_id')
+    def _check_domain(self):
+        eval_context = self._eval_context()
+        for rule in self:
+            if rule.active and rule.domain_force:
+                try:
+                    domain = safe_eval(rule.domain_force, eval_context)
+                    expression.expression(domain, self.env[rule.model_id.model].sudo())
+                except Exception as e:
+                    raise ValidationError(_('Invalid domain: %s', e))
+
     def _compute_domain_keys(self):
         """ Return the list of context keys to use for caching ``_compute_domain``. """
         return ['allowed_company_ids']
