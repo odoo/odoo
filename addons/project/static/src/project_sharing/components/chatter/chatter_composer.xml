@@ -18,7 +18,7 @@
                     />
                     <div class="flex-grow-1">
                         <div class="o_portal_chatter_composer_input">
-                            <div class="o_portal_chatter_composer_body mb32">
+                            <div class="o_portal_chatter_composer_body pb-3">
                                 <textarea
                                     class="o_input"
                                     placeholder="Write a message..."
@@ -32,7 +32,7 @@
                                     canDelete="true"
                                     delete.bind="deleteAttachment"
                                 />
-                                <div class="mt8">
+                                <div class="pt-2">
                                     <button name="send_message" t-on-click="sendMessage" class="btn btn-primary me-1" type="submit" t-att-disabled="state.loading">
                                         Send
                                     </button>

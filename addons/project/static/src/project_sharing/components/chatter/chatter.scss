@@ -8,6 +8,10 @@
         .o_portal_chatter_header {
             text-align: center;
             vertical-align: middle;
+
+            .o_message_counter {
+                border-bottom: 1px solid $border-color;
+            }
         }
 
         div.o_portal_chatter_composer,
@@ -53,16 +57,11 @@
         flex-direction: column;
 
         .o_portal_chatter {
-            .o_portal_chatter_header {
-                padding-top: 1rem;
-                padding-bottom: 1px;
-            }
-
             .o_portal_chatter_composer, .o_portal_chatter_messages {
                 margin-left: 1rem;
                 margin-right: 1rem;
             }
+
         }
     }
 }
-

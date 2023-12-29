@@ -1,15 +1,14 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="project.ChatterContainer">
-        <div t-attf-class="o_portal_chatter p-0 container {{props.twoColumns ? 'row' : ''}}">
+        <div t-attf-class="o_portal_chatter {{props.twoColumns ? 'row' : ''}}">
             <div t-attf-class="{{props.twoColumns ? 'col-lg-5' : props.resId ? 'border-bottom' : ''}}">
-                <div class="o_portal_chatter_header">
+                <div class="o_portal_chatter_header pb-2">
                     <ChatterMessageCounter count="state.options.message_count"/>
                 </div>
-                <hr/>
                 <ChatterComposer t-props="composerProps"/>
             </div>
-            <div t-attf-class="{{props.twoColumns ? 'offset-lg-1 col-lg-6' : 'pt-4'}}">
+            <div t-attf-class="{{props.twoColumns ? 'offset-lg-1 col-lg-6' : 'pt-3'}}">
                 <ChatterMessages messages="props.resId ? state.messages : []" isUserEmployee="state.options.is_user_employee" update.bind="updateMessage" />
                 <div class="o_portal_chatter_footer">
                     <ChatterPager
