@@ -403,15 +403,15 @@ export class ThreadService {
     }
 
     async unpin(thread) {
+        thread.isLocallyPinned = false;
         if (thread.eq(this.store.discuss.thread)) {
             this.router.replaceState({ active_id: undefined });
         }
-        if (thread.model !== "discuss.channel") {
-            return;
+        if (thread.model === "discuss.channel" && thread.is_pinned) {
+            return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
+                pinned: false,
+            });
         }
-        return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
-            pinned: false,
-        });
     }
 
     pin(thread) {
@@ -641,6 +641,9 @@ export class ThreadService {
                 : "channel";
         if (pushState) {
             this.router.pushState({ active_id: activeId });
+        }
+        if (!thread.is_pinned) {
+            thread.isLocallyPinned = true;
         }
     }
 
