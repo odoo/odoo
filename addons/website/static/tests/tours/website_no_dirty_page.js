@@ -59,5 +59,15 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         // the column on image move" feature.
         content: "Click on default image",
         trigger: 'iframe .s_text_image img',
+    }, {
+        content: "Click on default paragraph",
+        trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
+    }, {
+        // TODO this should be done in a dedicated test which would be testing
+        // all default snippet texts behaviors. Will be done in master where a
+        // task will review this feature.
+        content: "Make sure the paragraph still acts as a default paragraph",
+        trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
+        run: () => null,
     },
 ]));
