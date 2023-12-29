@@ -17,7 +17,7 @@
                                         <div class="name position-relative d-flex flex-column justify-content-center align-items-center flex-grow-1 w-100 p-4 text-center">
                                             <span t-out="value.name"/>
                                             <span t-if="shouldShowPriceExtra(value)">
-                                                + <t t-out="getfPriceExtra(value)" />
+                                                <t t-esc="getfPriceExtra(value)"/>
                                             </span>
                                         </div>
                                     </label>
