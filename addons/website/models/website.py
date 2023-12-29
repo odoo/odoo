@@ -231,6 +231,19 @@ class Website(models.Model):
             if public_user_to_change_websites:
                 company = self.env['res.company'].browse(values['company_id'])
                 super(Website, public_user_to_change_websites).write(dict(values, user_id=company and company._get_public_user().id))
+        for website in self:
+            if 'default_lang_id' in values and website.homepage_url:
+                # If the website has a homepage url and the website default
+                # language is changing, update this homepage url with its
+                # corresponding translation.
+                page_domain = [('url', '=', website.homepage_url)] + website.website_domain()
+                homepage = self.env['website.page'].sudo().with_context(
+                    lang=website.default_lang_id.code).search(page_domain, order='website_id asc', limit=1)
+                if homepage:
+                    # If a page has been found, the homepage url should be
+                    # updated.
+                    new_default_lang_code = self.env['res.lang'].browse(values['default_lang_id']).code
+                    website.homepage_url = homepage.with_context(lang=new_default_lang_code).url
 
         result = super(Website, self - public_user_to_change_websites).write(values)
 

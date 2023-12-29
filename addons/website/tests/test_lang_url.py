@@ -235,3 +235,11 @@ class TestTranslateUrl(TestLangUrl):
         self.website.homepage_url = '/contactus'
         self.start_tour('/contactus', 'update_homepage_url', login='admin')
         self.assertEqual(self.website.homepage_url, '/contactus-en')
+
+    def test_update_default_lang_impact_homepage_url(self):
+        # If the website has a homepage url and the website default language is
+        # updated, this homepage url should be updated with its corresponding
+        # translation.
+        self.website.homepage_url = '/page-en'
+        self.website.default_lang_id = self.env['res.lang'].search([('code', '=', 'fr_FR')]).id
+        self.assertEqual(self.website.homepage_url, '/page-fr')
