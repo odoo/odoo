@@ -4,7 +4,7 @@ export function pickRadio(name) {
     return [
         {
             content: `picking radio attribute with name ${name}`,
-            trigger: `.product-configurator-popup .attribute-name-cell label[name='${name}']`,
+            trigger: `.product-configurator-popup div.attribute-name-cell:contains('${name}') input`,
         },
     ];
 }
