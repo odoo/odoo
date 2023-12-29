@@ -87,7 +87,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
-                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date"}' required="date_start or date" />
+                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "force_range": True}' required="date_start or date" />
                             <field name="date" invisible="1" />
                         </group>
                     </group>

@@ -28,6 +28,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
+ *  forceRange?: boolean;
  * }} DateTimeFieldProps
  *
  * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
@@ -45,6 +46,7 @@ export class DateTimeField extends Component {
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
+        forceRange: { type: Boolean, optional: true },
     };
 
     static template = "web.DateTimeField";
@@ -198,7 +200,7 @@ export class DateTimeField extends Component {
         if (!this.relatedField) {
             return false;
         }
-        return this.props.required || ensureArray(value).filter(Boolean).length === 2;
+        return this.props.forceRange || ensureArray(value).filter(Boolean).length === 2;
     }
 
     /**
@@ -217,7 +219,7 @@ export class DateTimeField extends Component {
     shouldShowSeparator() {
         return (
             this.state.range &&
-            (this.props.required ||
+            (this.props.forceRange ||
                 (!this.isEmpty(this.startDateField) && !this.isEmpty(this.endDateField)))
         );
     }
@@ -280,6 +282,7 @@ export const dateField = {
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: archParseBoolean(options.warn_future),
+        forceRange: options.force_range || dynamicInfo.required,
     }),
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
@@ -341,6 +344,11 @@ export const dateRangeField = {
             name: END_DATE_FIELD_OPTION,
             type: "field",
             availableTypes: ["date", "datetime"],
+        },
+        {
+            label: _t("Force range"),
+            name: "force_range",
+            type: "boolean",
         },
     ],
     supportedTypes: ["date", "datetime"],
