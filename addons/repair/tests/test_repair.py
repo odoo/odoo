@@ -336,8 +336,12 @@ class TestRepair(common.TransactionCase):
         with so_form.order_line.new() as line:
             line.product_id = self.product_consu_order_repair
             line.product_uom_qty = 2.0
+        with so_form.order_line.new() as line:
+            line.display_type = 'line_section'
+            line.name = 'Dummy Section'
         sale_order = so_form.save()
         order_line = sale_order.order_line[0]
+        line_section = sale_order.order_line[1]
         self.assertEqual(len(sale_order.repair_order_ids), 0)
         sale_order.action_confirm()
         # Quantity set on the "create repair" product doesn't affect the number of RO created
@@ -348,6 +352,7 @@ class TestRepair(common.TransactionCase):
         order_line.product_uom_qty = 0
         self.assertEqual(repair_order.state, 'cancel')
         order_line.product_uom_qty = 1
+        line_section.name = 'updated section'
         self.assertEqual(repair_order.state, 'confirmed')
         repair_order.action_repair_cancel()
         self.assertTrue(float_is_zero(order_line.product_uom_qty, 2))
