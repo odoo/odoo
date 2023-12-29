@@ -1322,22 +1322,26 @@ class TestReports(TestReportsCommon):
         shows corresponding potential allocations when receipts have differing states.
         """
         # Creates delivery for reception report to match against
+        outgoing_qty = 100
         delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.picking_type_out
         with delivery_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.product
-            move_line.product_uom_qty = 100
+            move_line.product_uom_qty = outgoing_qty
         delivery = delivery_form.save()
         delivery.action_confirm()
 
         # Create 2 receipts and check its reception report values
+        receipt1_qty = 5
+        receipt2_qty = 3
+        incoming_qty = receipt1_qty + receipt2_qty
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.product
-            move_line.product_uom_qty = 5
+            move_line.product_uom_qty = receipt1_qty
         receipt1 = receipt_form.save()
 
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
@@ -1345,10 +1349,10 @@ class TestReports(TestReportsCommon):
         receipt_form.picking_type_id = self.picking_type_in
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.product
-            move_line.product_uom_qty = 3
+            move_line.product_uom_qty = receipt2_qty
         receipt2 = receipt_form.save()
 
-        # check that report correctly merges not draft incoming quantities
+        # check that report correctly merges draft incoming quantities
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
         self.assertEqual(len(report_values['docs']), 2, "There should be 2 receipts to assign from in this report")
@@ -1370,15 +1374,72 @@ class TestReports(TestReportsCommon):
         all_lines = list(sources_to_lines.values())[0]
         # line quantities depends on done vs not done incoming quantities => should be 2 lines now
         self.assertEqual(len(all_lines), 2, "The report has wrong number of lines (1 assignable + 1 not).")
-        self.assertEqual(all_lines[0]['quantity'], 5, "The first move has wrong incoming qty to assign.")
-        self.assertTrue(all_lines[0]['is_qty_assignable'], "1 receipt is done => should have 1 reservable move.")
-        self.assertEqual(all_lines[1]['quantity'], 3, "The second move has wrong (expected) incoming qty.")
+        self.assertEqual(all_lines[0]['quantity'], receipt1_qty, "The first move has wrong incoming qty to assign.")
+        self.assertTrue(all_lines[0]['is_qty_assignable'], "1 receipt is confirmed => should have 1 reservable move.")
+        self.assertEqual(all_lines[1]['quantity'], receipt2_qty, "The second move has wrong (expected) incoming qty.")
         self.assertFalse(all_lines[1]['is_qty_assignable'], "1 receipt is draft => should have 1 non-assignable move.")
+
+        # check that we can assign incoming quantities from 2 different CONFIRMED receipts and then unassign just 1 of them afterwards
+        receipt2.action_confirm()
+        report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
+        sources_to_lines = report_values['sources_to_lines']
+        all_lines = list(sources_to_lines.values())[0]
+        self.assertEqual(len(all_lines), 1, "The report has wrong number of lines (1 outgoing move they are assignable to).")
+        self.assertEqual(all_lines[0]['quantity'], incoming_qty, "The total amount of incoming qty to assign should be receipt1 + receipt2's qties.")
+        self.assertTrue(all_lines[0]['is_qty_assignable'], "receipts are confirmed, incoming moves should be assignable.")
+        report.action_assign(delivery.move_ids_without_package.ids, [incoming_qty], (receipt1 | receipt2).move_ids_without_package.ids)
+        mto_move = delivery.move_ids_without_package.filtered(lambda m: m.procure_method == 'make_to_order')
+        non_mto_move = delivery.move_ids_without_package - mto_move
+        # check that assigned (MTO) move is correctly created
+        self.assertEqual(len(mto_move), 1, "Only 1 delivery move should be MTO")
+        self.assertEqual(len(non_mto_move), 1, "Remaining not-assigned outgoing qty should have split into separate move")
+        self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Incorrect quantity split for MTO move")
+        self.assertEqual(mto_move.state, 'waiting', "MTO move state not correctly set")
+        # unassign only 1 of the incoming moves
+        report.action_unassign([mto_move.id], receipt2_qty, receipt2.move_ids_without_package.ids)
+        mto_move = delivery.move_ids_without_package.filtered(lambda m: m.procure_method == 'make_to_order')
+        non_mto_moves = delivery.move_ids_without_package - mto_move
+        self.assertEqual(len(mto_move), 1, "Only 1 delivery move should be MTO")
+        self.assertEqual(len(non_mto_moves), 2, "Original split not-assigned outgoing qty should still exist + new move of unassigned qty")
+        self.assertEqual(mto_move.product_uom_qty, receipt1_qty, "Incorrect quantity split for remaining MTO move qty")
+        self.assertEqual(mto_move.state, 'waiting', "MTO move state shouldn't have changed")
 
         # check that report doesn't allow done and non-done moves at same time
         receipt1.button_validate()
         reason = report._get_report_values(docids=[receipt1.id, receipt2.id])['reason']
         self.assertEqual(reason, "This report cannot be used for done and not done %s at the same time" % report._get_doc_types(), "empty report reason not shown")
+
+        # check that we can assign incoming quantities from 2 different DONE receipts and then unassign just 1 of them afterwards when reserved amounts in delivery
+        receipt2.button_validate()
+        # create clean delivery since moves are split in original delivery + new delivery will auto merge the moves
+        delivery.action_cancel()
+        delivery2 = delivery.copy()
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': outgoing_qty
+        }).action_apply_inventory()
+        delivery2.action_confirm()
+        self.assertEqual(delivery2.move_ids_without_package.quantity, outgoing_qty, "Delivery move should already be reserved")
+        report.action_assign(delivery2.move_ids_without_package.ids, [incoming_qty], (receipt1 | receipt2).move_ids_without_package.ids)
+        mto_move = delivery2.move_ids_without_package.filtered(lambda m: m.procure_method == 'make_to_order')
+        non_mto_move = delivery2.move_ids_without_package - mto_move
+        # check that assigned (MTO) move is correctly created
+        self.assertEqual(len(mto_move), 1, "Only 1 delivery move should be MTO")
+        self.assertEqual(len(non_mto_move), 1, "Remaining not-assigned outgoing qty should have split into separate move")
+        self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Incorrect quantity split for MTO move")
+        self.assertEqual(mto_move.state, 'assigned', "MTO move should still be reserved")
+        # unassign only 1 of the incoming moves
+        report.action_unassign([mto_move.id], receipt2_qty, receipt2.move_ids_without_package.ids)
+        mto_move = delivery2.move_ids_without_package.filtered(lambda m: m.procure_method == 'make_to_order')
+        non_mto_moves = delivery2.move_ids_without_package - mto_move
+        self.assertEqual(len(mto_move), 1, "Only 1 delivery move should be MTO")
+        self.assertEqual(len(non_mto_moves), 2, "Original split not-assigned outgoing qty should still exist + new move of unassigned qty")
+        self.assertEqual(mto_move.product_uom_qty, receipt1_qty, "Incorrect quantity split for remaining MTO move qty")
+        self.assertEqual(mto_move.quantity, receipt1_qty, "Incorrect reserved amount split for remaining MTO move qty")
+        self.assertEqual(mto_move.state, 'assigned', "MTO move state shouldn't have changed")
+        for move in non_mto_moves:
+            self.assertEqual(move.quantity, move.product_uom_qty, "Incorrect reserved amount split for remaining MTO move qty")
 
     def test_report_reception_3_multiwarehouse(self):
         """ Check that reception report respects same warehouse for
@@ -1462,6 +1523,7 @@ class TestReports(TestReportsCommon):
         """ Check the complicated use cases of correct move splitting when assigning/unassigning when:
         1. Qty to assign is less than delivery qty demand
         2. Delivery already has some reserved quants
+        3. Receipt and delivery are not yet 'done' at time of assign/unassign
         """
         incoming_qty = 4
         outgoing_qty = 10
@@ -1596,3 +1658,71 @@ class TestReports(TestReportsCommon):
         backorder.button_validate()
         for move in delivery.move_ids_without_package:
             self.assertEqual(move.state, 'assigned', "All delivery moves should be fully reserved now")
+
+    def test_report_reception_7_done_receipt(self):
+        """ Check the complicated use cases of correct move splitting when assigning when:
+        1. Outgoing qty is greater than incoming qty + total outgoing qty is already reserved
+        2. Receipt is already done and then assigned
+        """
+
+        incoming_qty = 4
+        outgoing_qty = 10
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': outgoing_qty
+        }).action_apply_inventory()
+
+        # create delivery + receipt
+        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = outgoing_qty
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = incoming_qty
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+        receipt.button_validate()
+
+        self.assertEqual(len(delivery.move_ids_without_package), 1)
+        self.assertEqual(delivery.move_ids_without_package.quantity, outgoing_qty, "Delivery move should already be reserved")
+        report = self.env['report.stock.report_reception']
+
+        # -------------------
+        # check report assign
+        # -------------------
+        report.action_assign(delivery.move_ids_without_package.ids, [incoming_qty], receipt.move_ids_without_package.ids)
+        mto_move = delivery.move_ids_without_package.filtered(lambda m: m.procure_method == 'make_to_order')
+        non_mto_move = delivery.move_ids_without_package - mto_move
+
+        # check that delivery move splits correctly when receipt move is assigned to it, done receipt = can be assigned to reserved outs
+        self.assertEqual(len(delivery.move_ids_without_package), 2, "Delivery moves should have split into assigned + not assigned")
+        self.assertEqual(len(delivery.move_ids_without_package.move_orig_ids), 1, "Only 1 delivery + 1 receipt move should be assigned")
+        self.assertEqual(len(receipt.move_ids_without_package.move_dest_ids), 1, "Receipt move should remain unsplit")
+
+        # check that assigned (MTO) move is correctly created
+        self.assertEqual(len(mto_move), 1, "Only 1 delivery move should be MTO")
+        self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Incorrect quantity split for MTO move")
+        self.assertEqual(mto_move.quantity, incoming_qty, "Receipt IS done => assigned pre-reserved move reserved_qty = assigned receipt move qty")
+        self.assertEqual(mto_move.state, 'assigned', "MTO move state not correctly set")
+
+        # check that non-assigned move has correct values
+        self.assertEqual(non_mto_move.product_uom_qty, outgoing_qty - incoming_qty, "Incorrect quantity split for non-MTO move")
+        self.assertEqual(non_mto_move.quantity, outgoing_qty - incoming_qty, "Remaining reserved qty not correctly linked to non-MTO move")
+        self.assertEqual(non_mto_move.state, 'assigned', "Remaining non-MTO reserved move should stay reserved")
+
+        # ---------------------
+        # check report unassign
+        # ---------------------
+        report.action_unassign([mto_move.id], incoming_qty, receipt.move_ids_without_package.ids)
+        self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Move quantities should be unchanged")
+        self.assertEqual(mto_move.procure_method, 'make_to_stock', "Procure method not correctly reset")
+        self.assertEqual(mto_move.state, 'assigned', "Unassigning receipt move shouldn't affect the out move reservation")
