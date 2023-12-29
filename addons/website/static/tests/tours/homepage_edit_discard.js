@@ -2,6 +2,10 @@
 
 import wTourUtils from "website.tour_utils";
 
+// TODO remove this test; it is badly written: you just have to change the fact
+// that editor_enable is added on the body to silently make it useless +
+// useless extra_trigger + useless auto: true + ... A better duplicate of it has
+// been made with "website_no_dirty_page".
 wTourUtils.registerWebsitePreviewTour('homepage_edit_discard', {
     test: true,
     url: '/',
