@@ -2,11 +2,7 @@
 
 import wTourUtils from 'website.tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
-    test: true,
-    url: '/',
-    edition: true,
-}, [
+const makeSteps = (steps = []) => [
     wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
@@ -25,7 +21,9 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         content: "Confirm we are in edit mode",
         trigger: 'body.editor_has_snippets',
         run: () => null,
-    }, {
+    },
+    ...steps,
+    {
         // Makes sure the dirty flag does not happen after a setTimeout or
         // something like that.
         content: "Click elsewhere and wait for a few ms",
@@ -43,4 +41,28 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         trigger: 'body:not(.editor_has_snippets)',
         run: () => null,
     },
-]);
+];
+
+wTourUtils.registerWebsitePreviewTour('website_no_action_no_dirty_page', {
+    test: true,
+    url: '/',
+    edition: true,
+}, makeSteps());
+
+wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
+    test: true,
+    url: '/',
+    edition: true,
+}, makeSteps([
+    {
+        content: "Click on default paragraph",
+        trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
+    }, {
+        // TODO this should be done in a dedicated test which would be testing
+        // all default snippet texts behaviors. Will be done in master where a
+        // task will review this feature.
+        content: "Make sure the paragraph still acts as a default paragraph",
+        trigger: 'iframe .s_text_image h2 + p.o_default_snippet_text',
+        run: () => null,
+    },
+]));
