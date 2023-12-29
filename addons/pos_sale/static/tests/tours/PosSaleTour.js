@@ -169,3 +169,17 @@ registry.category("web_tour.tours").add('PosSettleOrderWithNote', {
 
         ].flat(),
     });
+
+registry.category("web_tour.tours").add('PosSettleAndInvoiceOrder', {
+    test: true,
+    url: '/pos/ui',
+    steps: () => [
+        Dialog.confirm("Open session"),
+        ProductScreen.controlButton("Quotation/Order"),
+        ProductScreen.selectFirstOrder(),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickInvoiceButton(),
+        PaymentScreen.clickValidate(),
+    ].flat(),
+});
