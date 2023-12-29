@@ -1136,6 +1136,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         // Make the form completely readonly
         const form = document.querySelector('form');
         form.querySelectorAll('input, textarea, label, td')?.forEach(node => {
+            node.blur();
             node.classList.add("pe-none");
         });
         // Replace the Submit button by a Next button
