@@ -202,7 +202,7 @@ export class SelfOrder extends Reactive {
         // Stand number page will recall this function after the stand number is set
         if (
             service === "table" &&
-            !order.take_away &&
+            !order.takeaway &&
             device === "kiosk" &&
             !order.table_stand_number
         ) {
@@ -706,7 +706,7 @@ export class SelfOrder extends Reactive {
     }
 
     getProductDisplayPrice(product) {
-        if (this.currentOrder.take_away) {
+        if (this.currentOrder.takeaway) {
             return product.price_info.display_price_alternative;
         } else {
             return product.price_info.display_price_default;

@@ -44,6 +44,28 @@ patch(ControlButtons.prototype, {
         this.pos.get_order().setBooked(true);
         this.pos.showScreen("FloorScreen");
     },
+    clickTakeAway() {
+        const isTakeAway = !this.currentOrder.takeaway;
+        const defaultFp = this.pos.config?.default_fiscal_position_id ?? false;
+        const takeawayFp = this.pos.config.takeaway_fp_id;
+
+        this.currentOrder.takeaway = isTakeAway;
+        this.currentOrder.set_fiscal_position(isTakeAway ? takeawayFp : defaultFp);
+    },
+    async clickFiscalPosition() {
+        await super.clickFiscalPosition(...arguments);
+        const takeawayFp = this.pos.config.takeaway_fp_id;
+
+        if (!takeawayFp || !this.pos.config.module_pos_restaurant) {
+            return;
+        }
+
+        if (takeawayFp.id !== this.currentOrder.fiscal_position?.id) {
+            this.currentOrder.takeaway = false;
+        } else {
+            this.currentOrder.takeaway = true;
+        }
+    },
 });
 patch(ControlButtons, {
     components: {

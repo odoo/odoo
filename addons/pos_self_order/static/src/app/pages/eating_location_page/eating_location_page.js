@@ -18,7 +18,7 @@ export class EatingLocationPage extends Component {
     }
 
     selectLocation(loc) {
-        this.selfOrder.currentOrder.take_away = loc === "out";
+        this.selfOrder.currentOrder.takeaway = loc === "out";
         this.router.navigate("product_list");
     }
 }

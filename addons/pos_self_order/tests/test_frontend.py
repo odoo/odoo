@@ -33,8 +33,9 @@ class TestFrontendMobile(SelfOrderCommonTest):
 
         self.pos_config.write({
             'self_ordering_mode': 'kiosk',
+            'takeaway': True,
             'self_ordering_takeaway': True,
-            'self_ordering_alternative_fp_id': alternative_fp.id,
+            'takeaway_fp_id': alternative_fp.id,
         })
 
         self.pos_config.open_ui()
@@ -58,7 +59,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
                         "amount_tax": 0,
                         "lines": [],
                         "tracking_number": None,
-                        "take_away": True,
+                        "takeaway": True,
                         "lastChangesSent": {},
                     },
                     "table_identifier": None,
