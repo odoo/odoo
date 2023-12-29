@@ -2296,9 +2296,7 @@ class TestSinglePicking(TestStockCommon):
         picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
         picking_type.show_reserved = True
 
-        receipt_form = Form(self.env['stock.picking'].with_context(
-            force_detailed_view=True
-        ), view='stock.view_picking_form')
+        receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = partner
         receipt_form.picking_type_id = picking_type
         # <field name="location_id" invisible="picking_type_code' == 'incoming'"
