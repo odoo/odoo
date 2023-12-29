@@ -3,6 +3,7 @@
 
 from odoo import models, Command, api
 from odoo.tools import convert
+from odoo.osv.expression import OR
 import json
 
 class PosSession(models.Model):
@@ -25,6 +26,7 @@ class PosSession(models.Model):
                     ],
                 }
             })
+            params['account.fiscal.position']['domain'] = OR([params['account.fiscal.position']['domain'], [('id', '=', self.config_id.takeaway_fp_id.id)]])
 
         return params
 

@@ -25,6 +25,9 @@
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTransferOrder">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
+                <button t-if="pos.config.takeaway" t-attf-class="{{ currentOrder.takeaway ? 'btn-primary' : 'btn-light'}} btn rounded-0 fw-bolder" t-on-click="clickTakeAway">
+                    <i class="fa fa-car me-1" />Take-away
+                </button>
                 <SelectPartnerButton partner="partner" t-if="pos.config.module_pos_restaurant" />
             </t>
         </xpath>

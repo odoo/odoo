@@ -12,6 +12,8 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_set_tip_after_payment = fields.Boolean(compute='_compute_pos_set_tip_after_payment', store=True, readonly=False)
     pos_module_pos_restaurant_appointment = fields.Boolean(related="pos_config_id.module_pos_restaurant_appointment", readonly=False)
+    pos_takeaway = fields.Boolean(related="pos_config_id.takeaway", readonly=False)
+    pos_takeaway_fp_id = fields.Many2one(related="pos_config_id.takeaway_fp_id", readonly=False)
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
     def _compute_pos_module_pos_restaurant(self):

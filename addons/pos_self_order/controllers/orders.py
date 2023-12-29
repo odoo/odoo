@@ -11,8 +11,8 @@ class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-new-order/<device_type>/", auth="public", type="json", website=True)
     def process_new_order(self, order, access_token, table_identifier, device_type):
         lines = order.get('lines')
-        is_take_away = order.get('take_away')
-        pos_config, table = self._verify_authorization(access_token, table_identifier, is_take_away)
+        is_takeaway = order.get('takeaway')
+        pos_config, table = self._verify_authorization(access_token, table_identifier, is_takeaway)
         pos_session = pos_config.current_session_id
         ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
 
@@ -20,8 +20,8 @@ class PosSelfOrderController(http.Controller):
         order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
 
         fiscal_position = (
-            pos_config.self_ordering_alternative_fp_id
-            if is_take_away
+            pos_config.takeaway_fp_id
+            if is_takeaway
             else pos_config.default_fiscal_position_id
         )
 
@@ -32,7 +32,7 @@ class PosSelfOrderController(http.Controller):
                 'name': order_reference,
                 'sequence_number': sequence_number,
                 'uuid': order.get('uuid'),
-                'take_away': order.get('take_away'),
+                'takeaway': order.get('takeaway'),
                 'user_id': request.session.uid,
                 'access_token': uuid.uuid4().hex,
                 'pos_session_id': pos_session.id,
@@ -57,7 +57,7 @@ class PosSelfOrderController(http.Controller):
         posted_order_id = pos_config.env['pos.order'].with_context(from_self=True).create_from_ui([order], draft=True)[0].get('id')
 
         # Process the lines and get their prices computed
-        lines = self._process_lines(lines, pos_config, posted_order_id, is_take_away)
+        lines = self._process_lines(lines, pos_config, posted_order_id, is_takeaway)
 
         # Compute the order prices
         amount_total, amount_untaxed = self._get_order_prices(lines)
@@ -91,7 +91,7 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/get-orders-taxes', auth='public', type='json', website=True)
     def get_order_taxes(self, order, access_token):
         pos_config = self._verify_pos_config(access_token)
-        lines = self._process_lines(order.get('lines'), pos_config, 0, order.get('take_away'))
+        lines = self._process_lines(order.get('lines'), pos_config, 0, order.get('takeaway'))
         amount_total, amount_untaxed = self._get_order_prices(lines)
 
         return {
@@ -110,7 +110,7 @@ class PosSelfOrderController(http.Controller):
     def update_existing_order(self, order, access_token, table_identifier):
         order_id = order.get('id')
         order_access_token = order.get('access_token')
-        pos_config, table = self._verify_authorization(access_token, table_identifier, order.get('take_away'))
+        pos_config, table = self._verify_authorization(access_token, table_identifier, order.get('takeaway'))
         session = pos_config.current_session_id
 
         pos_order = session.order_ids.filtered_domain([
@@ -123,7 +123,7 @@ class PosSelfOrderController(http.Controller):
         elif pos_order.state != 'draft':
             raise Unauthorized("Order is not in draft state")
 
-        lines = self._process_lines(order.get('lines'), pos_config, pos_order.id, order.get('take_away'))
+        lines = self._process_lines(order.get('lines'), pos_config, pos_order.id, order.get('takeaway'))
         for line in lines:
             if line.get('id'):
                 # we need to find by uuid because each time we update the order, id of orderlines changed.
@@ -200,7 +200,7 @@ class PosSelfOrderController(http.Controller):
 
         return {'order': order_sudo._export_for_self_order(), 'payment_status': status}
 
-    def _process_lines(self, lines, pos_config, pos_order_id, take_away=False):
+    def _process_lines(self, lines, pos_config, pos_order_id, takeaway=False):
         appended_uuid = []
         newLines = []
         pricelist = pos_config.pricelist_id
@@ -213,8 +213,8 @@ class PosSelfOrderController(http.Controller):
 
         fiscal_pos = pos_config.default_fiscal_position_id
 
-        if take_away and pos_config.self_ordering_alternative_fp_id:
-            fiscal_pos = pos_config.self_ordering_alternative_fp_id
+        if takeaway and pos_config.takeaway_fp_id:
+            fiscal_pos = pos_config.takeaway_fp_id
 
         for line in lines:
             if line.get('uuid') in appended_uuid or not line.get('product_id'):
@@ -325,7 +325,7 @@ class PosSelfOrderController(http.Controller):
         user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user)
 
-    def _verify_authorization(self, access_token, table_identifier, take_away):
+    def _verify_authorization(self, access_token, table_identifier, takeaway):
         """
         Similar to _verify_pos_config but also looks for the restaurant.table of the given identifier.
         The restaurant.table record is also returned with reduced privileges.
@@ -333,7 +333,7 @@ class PosSelfOrderController(http.Controller):
         pos_config = self._verify_pos_config(access_token)
         table_sudo = request.env["restaurant.table"].sudo().search([('identifier', '=', table_identifier)], limit=1)
 
-        if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not take_away:
+        if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not takeaway:
             raise Unauthorized("Table not found")
 
         company = pos_config.company_id
