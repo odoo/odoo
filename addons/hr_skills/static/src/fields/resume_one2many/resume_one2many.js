@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 import { formatDate } from "@web/core/l10n/dates";
@@ -34,6 +35,9 @@ export class ResumeX2ManyField extends SkillsX2ManyField {
         ...SkillsX2ManyField.components,
         ListRenderer: ResumeListRenderer,
     };
+    getWizardTitleName() {
+        return _t("Create a resume line");
+    }
 }
 
 export const resumeX2ManyField = {
