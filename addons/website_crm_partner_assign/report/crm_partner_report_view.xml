@@ -47,7 +47,7 @@
        <record id="action_report_crm_partner_assign" model="ir.actions.act_window">
             <field name="name">Partnership Analysis</field>
             <field name="res_model">crm.partner.report.assign</field>
-            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'group_by':[]}</field>
             <field name="view_mode">graph</field>
             <field name="domain">[('grade_id', '!=', False)]</field>
             <field name="help" type="html">
