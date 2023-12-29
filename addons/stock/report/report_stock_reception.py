@@ -247,13 +247,13 @@ class ReceptionReport(models.AbstractModel):
                     out.move_line_ids.move_id = new_out
                     assigned_amount = 0
                     for move_line_id in new_out.move_line_ids:
-                        if assigned_amount + move_line_id.reserved_qty > qty_to_link:
-                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'quantity': 0})
-                            new_move_line.reserved_uom_qty = move_line_id.reserved_uom_qty
-                            move_line_id.reserved_uom_qty = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
-                            new_move_line.reserved_uom_qty -= out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty, out.product_uom, rounding_method='HALF-UP')
+                        if assigned_amount + move_line_id.quantity_product_uom > qty_to_link:
+                            new_move_line = move_line_id.copy({'quantity': 0})
+                            new_move_line.quantity = move_line_id.quantity
+                            move_line_id.quantity = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
+                            new_move_line.quantity -= out.product_id.uom_id._compute_quantity(move_line_id.quantity_product_uom, out.product_uom, rounding_method='HALF-UP')
                         move_line_id.move_id = out
-                        assigned_amount += move_line_id.reserved_qty
+                        assigned_amount += move_line_id.quantity_product_uom
                         if float_compare(assigned_amount, qty_to_link, precision_rounding=out.product_id.uom_id.rounding) == 0:
                             break
 
@@ -301,7 +301,7 @@ class ReceptionReport(models.AbstractModel):
             # 1. batch reserved + individual picking unreserved
             # 2. moves linked from backorder generation
             total_still_linked = sum(out.move_orig_ids.mapped('product_qty'))
-            new_move_vals = out._split(out.product_qty - total_still_linked)
+            new_move_vals = out._split(total_still_linked)
             if new_move_vals:
                 new_move_vals[0]['procure_method'] = 'make_to_order'
                 new_move_vals[0]['reservation_date'] = out.reservation_date
@@ -316,15 +316,15 @@ class ReceptionReport(models.AbstractModel):
                     for move_line_id in new_out.move_line_ids:
                         if reserved_amount_to_remain <= 0:
                             break
-                        if move_line_id.reserved_qty > reserved_amount_to_remain:
-                            new_move_line = move_line_id.copy({'reserved_uom_qty': 0, 'quantity': 0})
-                            new_move_line.reserved_uom_qty = out.product_id.uom_id._compute_quantity(move_line_id.reserved_qty - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
-                            move_line_id.reserved_uom_qty -= new_move_line.reserved_uom_qty
-                            new_move_line.move_id = out
+                        if move_line_id.quantity_product_uom > reserved_amount_to_remain:
+                            new_move_line = move_line_id.copy({'quantity': 0})
+                            new_move_line.quantity = out.product_id.uom_id._compute_quantity(move_line_id.quantity_product_uom - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
+                            move_line_id.quantity -= new_move_line.quantity
+                            move_line_id.move_id = out
                             break
                         else:
                             move_line_id.move_id = out
-                            reserved_amount_to_remain -= move_line_id.reserved_qty
+                            reserved_amount_to_remain -= move_line_id.quantity_product_uom
                     (out | new_out)._compute_quantity()
                 out.move_orig_ids = False
                 new_out._recompute_state()
