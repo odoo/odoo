@@ -9,7 +9,7 @@ class PosConfig(models.Model):
 
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
-    iface_orderline_notes = fields.Boolean(string='Kitchen Notes', help='Allow custom kitchen notes on Orderlines.', default=True)
+    iface_orderline_notes = fields.Boolean(string='Kitchen Notes', help='Allow custom kitchen notes on Orderlines.')
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
     printer_ids = fields.Many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_table_management = fields.Boolean('Floors & Tables')
@@ -43,6 +43,12 @@ class PosConfig(models.Model):
         forbidden_keys.append('is_table_management')
         forbidden_keys.append('floor_ids')
         return forbidden_keys
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["iface_orderline_notes"] = vals.get('module_pos_restaurant')
+        return super().create(vals_list)
 
     def write(self, vals):
         if ('is_table_management' in vals and vals['is_table_management'] == False):
