@@ -354,7 +354,12 @@ class IrUiView(models.Model):
             ``bundles=True`` returns also the asset bundles
         """
         user_groups = set(self.env.user.groups_id)
-        View = self.with_context(active_test=False, lang=None)
+        new_context = {
+            **self._context,
+            'active_test': False,
+        }
+        new_context.pop('lang', None)
+        View = self.with_context(new_context)
         views = View._views_get(key, bundles=bundles)
         return views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))
 
