@@ -53,18 +53,12 @@ export class DiscussClientAction extends Component {
             // legacy format (sent in old emails, shared links, ...)
             model = "discuss.channel";
         }
-        const activeThread = this.store.Thread.get({ model, id });
-        if (!activeThread || activeThread.notEq(this.store.discuss.thread)) {
-            const thread =
-                this.store.Thread.get({ model, id }) ??
-                (await this.threadService.fetchChannel(parseInt(id)));
-            if (!thread) {
-                return;
-            }
-            if (!thread.is_pinned) {
-                await this.threadService.pin(thread);
-            }
-            this.threadService.setDiscussThread(thread);
+        let activeThread = this.store.Thread.get({ model, id });
+        if (!activeThread?.type && model === "discuss.channel") {
+            activeThread = await this.threadService.fetchChannel(parseInt(id));
+        }
+        if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
+            this.threadService.setDiscussThread(activeThread);
         }
     }
 }

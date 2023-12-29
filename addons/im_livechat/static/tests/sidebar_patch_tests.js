@@ -7,7 +7,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { url } from "@web/core/utils/urls";
 import { nextTick } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("discuss sidebar (patch)");
 
@@ -471,4 +471,36 @@ QUnit.test("Message unread counter", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
+});
+
+QUnit.test("unknown livechat can be displayed and interacted with", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [[0, 0, { partner_id: partnerId }]],
+        channel_type: "livechat",
+        livechat_operator_id: partnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await contains("button.o-active", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    await openDiscuss(channelId);
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel.o-active",
+        {
+            text: "Jane",
+        }
+    );
+    await insertText(".o-mail-Composer-input", "Hello", { replace: true });
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "Hello" });
+    await click("button", { text: "Inbox" });
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
+    await click("div[title='Unpin Conversation']", {
+        parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
+    });
+    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });

@@ -286,34 +286,18 @@ patch(MockServer.prototype, {
         const messageFormat = this._mockMailMessageMessageFormat([messageId])[0];
         const notifications = [];
         if (model === "discuss.channel") {
-            // members
             const channels = this.getRecords("discuss.channel", [["id", "=", message.res_id]]);
             for (const channel of channels) {
-                // notify update of last_interest_dt
                 const now = serializeDateTime(today());
-                const members = this.getRecords("discuss.channel.member", [
-                    ["id", "in", channel.channel_member_ids],
+                notifications.push([
+                    channel,
+                    "discuss.channel/last_interest_dt_changed",
+                    {
+                        id: channel.id,
+                        is_pinned: true,
+                        last_interest_dt: now,
+                    },
                 ]);
-                this.pyEnv["discuss.channel.member"].write(
-                    members.map((member) => member.id),
-                    { last_interest_dt: now }
-                );
-                for (const member of members) {
-                    const target = member.guest_id
-                        ? this.pyEnv["mail.guest"].searchRead([["id", "=", member.guest_id]])[0]
-                        : this.pyEnv["res.partner"].searchRead([["id", "=", member.partner_id]], {
-                              context: { active_test: false },
-                          })[0];
-                    notifications.push([
-                        target,
-                        "discuss.channel/last_interest_dt_changed",
-                        {
-                            id: channel.id,
-                            isServerPinned: member.is_pinned,
-                            last_interest_dt: member.last_interest_dt,
-                        },
-                    ]);
-                }
                 notifications.push([
                     channel,
                     "discuss.channel/new_message",

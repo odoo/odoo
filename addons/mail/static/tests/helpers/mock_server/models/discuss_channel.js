@@ -204,18 +204,13 @@ patch(MockServer.prototype, {
     _mockDiscussChannelMessagePost(id, kwargs, context) {
         const message_type = kwargs.message_type || "notification";
         const channel = this.getRecords("discuss.channel", [["id", "=", id]])[0];
-        if (channel.channel_type !== "channel") {
-            const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
-                channel.id
-            );
-            if (memberOfCurrentUser) {
-                this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
-                    last_interest_dt: serializeDateTime(today()),
-
-                    is_pinned: true,
-                });
-            }
-        }
+        const members = this.pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channel.id],
+        ]);
+        this.pyEnv["discuss.channel.member"].write(members, {
+            last_interest_dt: serializeDateTime(today()),
+            is_pinned: true,
+        });
         const messageData = this._mockMailThreadMessagePost(
             "discuss.channel",
             [id],

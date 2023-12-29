@@ -51,11 +51,7 @@ export class DiscussCoreCommon {
                 }
             });
             this.busService.subscribe("discuss.channel/last_interest_dt_changed", (payload) => {
-                const { id, last_interest_dt } = payload;
-                const channel = this.store.Thread.get({ model: "discuss.channel", id });
-                if (channel) {
-                    channel.last_interest_dt = last_interest_dt;
-                }
+                this.store.Thread.insert({ model: "discuss.channel", ...payload });
             });
             this.busService.subscribe("discuss.channel/leave", (payload) => {
                 const thread = this.store.Thread.insert({
@@ -251,9 +247,6 @@ export class DiscussCoreCommon {
             if (!channel) {
                 return;
             }
-        }
-        if (!channel.is_pinned) {
-            this.threadService.pin(channel);
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
