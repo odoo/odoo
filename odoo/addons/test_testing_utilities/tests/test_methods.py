@@ -100,3 +100,44 @@ class TestBasic(common.TransactionCase):
         # check that the transaction has been rolled back and we can perform
         # queries again
         self.env.cr.execute('select 1')
+
+    def test_ignore_dict_keys(self):
+        ### Basic case
+        # It does not raise if there are missing keys
+        expected_vals = {'a': 'A', '__ignore_missing_keys__': True}
+        self.assertEqual(
+            {'a': 'A', 'b': 'B'},
+            expected_vals,
+        )
+        # The values provided are not mutated
+        self.assertIn('__ignore_missing_keys__', expected_vals)
+        with self.assertRaises(AssertionError):
+            # a is different
+            self.assertEqual(
+                {'a': 'A', 'b': 'B'},
+                {'a': 'Error', '__ignore_missing_keys__': True}
+            )
+        with self.assertRaises(AssertionError):
+            # c is missing
+            self.assertEqual(
+                {'a': 'A', 'b': 'B'},
+                {'a': 'A', 'c': 'C', '__ignore_missing_keys__': True}
+            )
+
+        ### Recursive case
+        expected_vals = {'a': {'c': 'C', '__ignore_missing_keys__': True}}
+        self.assertEqual(
+            {'a': {'c': 'C', 'b': 'B'}},
+            expected_vals,
+        )
+        self.assertIn('__ignore_missing_keys__', expected_vals['a'])
+        with self.assertRaises(AssertionError):
+            self.assertEqual(
+                {'a': {'c': 'C', 'b': 'B'}},
+                {'a': {'c': 'Error', '__ignore_missing_keys__': True}},
+            )
+        with self.assertRaises(AssertionError):
+            self.assertEqual(
+                {'a': {'c': 'C', 'b': 'B'}},
+                {'a': {'c': 'C', 'd': 'D', '__ignore_missing_keys__': True}},
+            )
