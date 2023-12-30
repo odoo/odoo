@@ -15,7 +15,7 @@ class TestResetPassword(HttpCase):
         cls.test_user = cls.env['res.users'].create({
             'login': 'test',
             'name': 'The King',
-            'email': 'noop@example.com',
+            'email': 'reset-password@example.com',
         })
 
     def test_reset_password(self):

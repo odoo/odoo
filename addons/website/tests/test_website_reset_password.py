@@ -30,7 +30,7 @@ class TestWebsiteResetPassword(HttpCase):
             user = self.env['res.users'].create({
                 'login': 'test',
                 'name': 'The King',
-                'email': 'noop@example.com',
+                'email': 'reset-password@example.com',
             })
             websites = self.env['website'].search([])
             website_1 = websites[0]
@@ -92,7 +92,7 @@ class TestWebsiteResetPassword(HttpCase):
             {'name': 'Website 2', 'specific_user_account': True},
         ])
 
-        login = 'user@example.com'  # same login for both users
+        login = 'reset-password@example.com'  # same login for both users
         user_website_1, user_website_2 = self.env['res.users'].create([
             {'website_id': website_1.id, 'login': login, 'email': login, 'name': login},
             {'website_id': website_2.id, 'login': login, 'email': login, 'name': login},
