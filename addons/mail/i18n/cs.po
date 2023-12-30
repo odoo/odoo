@@ -2559,7 +2559,7 @@ msgstr "Uzávěrka:"
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "Uzávěrka: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -3315,7 +3315,7 @@ msgstr "Emaily"
 #: code:addons/mail/static/src/discuss/gif_picker/common/picker_content_patch.xml:0
 #, python-format
 msgid "Emoji"
-msgstr ""
+msgstr "Emoji"
 
 #. module: mail
 #. odoo-javascript
@@ -8766,7 +8766,7 @@ msgstr "DIČ"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Technical Settings"
-msgstr ""
+msgstr "Technická nastavení"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model
@@ -8918,6 +8918,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Daňové identifikační číslo. Hodnoty zde budou ověřeny na základě formátu "
+"země. Pomocí '/' můžete označit, že partner nepodléhá dani."
 
 #. module: mail
 #. odoo-python
@@ -9101,7 +9103,7 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "Server \"%s\" nelze použít, protože byl archivován."
 
 #. module: mail
 #. odoo-javascript
@@ -9317,7 +9319,7 @@ msgstr ""
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To-Do"
-msgstr ""
+msgstr "Úkolníček"
 
 #. module: mail
 #. odoo-javascript
@@ -9535,6 +9537,16 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Typ serverové akce. Jsou k dispozici následující hodnoty:\n"
+"- 'Aktualizovat záznam': aktualizuje hodnoty záznamu\n"
+"- 'Vytvořit aktivitu': vytvoří aktivitu (Diskuze)\n"
+"- 'Poslat e-mail': zapíše zprávu, poznámku nebo pošle e-mail (Diskuze)\n"
+"- 'Odeslat SMS': odešle SMS, zapíše je k dokumentům (SMS)\n"
+"- 'Přidat/Odebrat sledující': přidá nebo odebere ze záznamu sledující (Diskuze)\n"
+"- 'Vytvořit záznam': vytvoří nový záznam s novými hodnotami\n"
+"- 'Provést kód': blok Python kódu, který bude spuštěn\n"
+"- 'Poslat Webhook notifikaci': odešle POST požadavek na externí systém, známý také jako Webhook\n"
+"- 'Provést existující akce': definuje akci, která spustí řadu dalších serverových akcí\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration

@@ -28,41 +28,44 @@ msgid ""
 "default work location for each day of the week. This schedule will repeat "
 "itself each week.</span>"
 msgstr ""
+"<span class=\"text-muted fst-italic oe_inline\" "
+"colspan=\"2\">ระบุสถานที่ทำงานเริ่มต้นของคุณในแต่ละวันในสัปดาห์ "
+"ตารางนี้จะเกิดซ้ำในแต่ละสัปดาห์</span>"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
 #, python-format
 msgid "Add Location"
-msgstr ""
+msgstr "เพิ่มสถานที่"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this exception?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบข้อยกเว้นนี้"
 
 #. module: hr_homeworking
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee__hr_icon_display__presence_home
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_home
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_home
 msgid "At Home"
-msgstr ""
+msgstr "ที่บ้าน"
 
 #. module: hr_homeworking
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee__hr_icon_display__presence_office
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_office
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_office
 msgid "At Office"
-msgstr ""
+msgstr "ที่สำนักงาน"
 
 #. module: hr_homeworking
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee__hr_icon_display__presence_other
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_other
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_other
 msgid "At Other"
-msgstr ""
+msgstr "ที่อื่น"
 
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_hr_employee_base
@@ -123,7 +126,7 @@ msgstr "วันที่"
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__day_week_string
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__day_week_string
 msgid "Day Week String"
-msgstr ""
+msgstr "สตริงวันและสัปดาห์"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__display_name
@@ -136,7 +139,7 @@ msgstr "แสดงชื่อ"
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Edit Record"
-msgstr ""
+msgstr "แก้ไขบันทึก"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__employee_id
@@ -147,7 +150,7 @@ msgstr "พนักงาน"
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_hr_employee_location
 msgid "Employee Location"
-msgstr ""
+msgstr "สถานที่ตั้งของพนักงาน"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__employee_name
@@ -199,7 +202,7 @@ msgstr "สถานที่"
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__work_location_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__work_location_name
 msgid "Location name"
-msgstr ""
+msgstr "ชื่อสถานที่"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__monday_location_id
@@ -214,7 +217,7 @@ msgstr "วันจันทร์"
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__name_work_location_display
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_public__name_work_location_display
 msgid "Name Work Location Display"
-msgstr ""
+msgstr "การแสดงชื่อสถานที่ทำงาน"
 
 #. module: hr_homeworking
 #. odoo-python
@@ -225,6 +228,7 @@ msgid ""
 "Only one default work location and one exceptional work location per day per"
 " employee."
 msgstr ""
+"สถานที่ทำงานเริ่มต้นเพียงแห่งเดียวและสถานที่ทำงานพิเศษหนึ่งแห่งต่อวันต่อพนักงานหนึ่งคน"
 
 #. module: hr_homeworking
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.res_useurs_view_form_profile
@@ -248,13 +252,13 @@ msgstr "วันเสาร์"
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_homework_location_wizard
 msgid "Set Homework Location Wizard"
-msgstr ""
+msgstr "ตั้งค่าตัวช่วยสร้างตำแหน่งการทำงานที่บ้าน"
 
 #. module: hr_homeworking
 #: model:ir.actions.act_window,name:hr_homeworking.set_location_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.homework_location_wizard_view_form
 msgid "Set Location"
-msgstr ""
+msgstr "ตั้งค่าสถานที่"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__sunday_location_id
@@ -269,7 +273,7 @@ msgstr "วันอาทิตย์"
 #: model:ir.model.fields,help:hr_homeworking.field_hr_employee_base__exceptional_location_id
 #: model:ir.model.fields,help:hr_homeworking.field_hr_employee_public__exceptional_location_id
 msgid "This is the exceptional, non-weekly, location set for today."
-msgstr ""
+msgstr "นี่เป็นสถานที่พิเศษที่ไม่ใช่รายสัปดาห์ที่กำหนดไว้สำหรับวันนี้"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__thursday_location_id
@@ -284,7 +288,7 @@ msgstr "วันพฤหัสบดี"
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__today_location_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_public__today_location_name
 msgid "Today Location Name"
-msgstr ""
+msgstr "ชื่อสถานที่วันนี้"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__tuesday_location_id
@@ -301,7 +305,7 @@ msgstr "วันอังคาร"
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_form
 #, python-format
 msgid "Unspecified"
-msgstr ""
+msgstr "ไม่ระบุ"
 
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_res_users
@@ -330,11 +334,11 @@ msgstr "ที่อยู่ที่ทำงาน"
 #. module: hr_homeworking
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_filter
 msgid "Work location"
-msgstr ""
+msgstr "สถานที่ทำงาน"
 
 #. module: hr_homeworking
 #. odoo-python
 #: code:addons/hr_homeworking/models/hr_work_location.py:0
 #, python-format
 msgid "You cannot delete locations that are being used by your employees"
-msgstr ""
+msgstr "คุณไม่สามารถลบสถานที่ที่พนักงานของคุณใช้อยู่ได้"

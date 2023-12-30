@@ -205,6 +205,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Precios adicionales\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Precio adicional\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -366,7 +372,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad  de Excepción"
+msgstr "Decoración de Actividad de Excepción"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
@@ -380,7 +386,7 @@ msgstr "Estado de la actividad"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícono de tipo de actvidad"
+msgstr "Icono de tipo de actvidad"
 
 #. module: product
 #. odoo-javascript
@@ -792,7 +798,7 @@ msgstr "Mesa de la sala de conferencias"
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -1016,7 +1022,7 @@ msgstr "Lista de precios %s por defecto"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "Precio adicional por defecto"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1445,7 +1451,7 @@ msgstr "Agrupar por"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr "Índice de color HTML"
+msgstr "Índice de Colores HTML"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__has_message
@@ -1668,7 +1674,7 @@ msgstr "Es un seguidor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 msgid "Is Product Variant"
-msgstr "Es una variante del producto"
+msgstr "Es una variante de producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
@@ -1998,7 +2004,7 @@ msgstr "Número de acciones"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__message_needaction_counter
@@ -2498,7 +2504,7 @@ msgstr "Exclusión de Atributos del Modelo de Producto"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Linea de atributo de la plantilla de producto"
+msgstr "Línea de atributo de la plantilla de producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -2550,7 +2556,7 @@ msgstr "Unidad de medida del producto"
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
-msgstr "Variantes de producto"
+msgstr "Variante de producto"
 
 #. module: product
 #. odoo-python
@@ -3263,7 +3269,7 @@ msgstr "Tipo"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -3405,6 +3411,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"El valor del producto (calculado automáticamente con AVCO).\n"
+"        Se utiliza para valorar el producto cuando se desconoce el coste de compra (por ejemplo, en un ajuste de inventario).\n"
+"        Se utiliza para calcular los márgenes de las órdenes de venta."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids

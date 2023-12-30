@@ -119,7 +119,7 @@ msgstr "Actividades"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad  de Excepción"
+msgstr "Decoración de Actividad de Excepción"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -129,7 +129,7 @@ msgstr "Estado de la actividad"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícono de tipo de actvidad"
+msgstr "Icono de tipo de actvidad"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -265,12 +265,12 @@ msgstr "Elegir un proveedor para orden de compra alternativa"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Clear"
-msgstr "Limpiar"
+msgstr "Autorizar"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Clear Selected"
-msgstr "Borrar seleccionadas"
+msgstr "Autorizar seleccionadas"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -346,6 +346,9 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"Cree una licitación agregando solicitudes de presupuesto alternativas para diferentes proveedores.\n"
+"                            Para decidir, seleccione la mejor combinación de plazos de entrega, entregas cumplidas a tiempo y/o el importe total.\n"
+"                            Al comparar las líneas de producto también puede decidir ordenar productos de diferentes proveedores."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -463,6 +466,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
+"Para un acuerdo marco puede registrar un contrato para un período específico\n"
+"            (por ejemplo, un año)y solicita productos dentro de este contrato para beneficiarse\n"
+"            de los precios negociados."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -649,7 +655,7 @@ msgstr "Siguiente tipo de actividad"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
-msgstr "Nada que borrar"
+msgstr "Nada que autorizar"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -659,12 +665,12 @@ msgstr "Número de acciones"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
-msgstr "Numero de ordenes"
+msgstr "Número de ordenes"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -743,7 +749,7 @@ msgstr "Unidad de medida del producto"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 msgid "Product Variant"
-msgstr "Variantes de producto"
+msgstr "Variante de producto"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -964,7 +970,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
-msgstr ""
+msgstr "Algunas no están autorizadas"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -973,6 +979,8 @@ msgstr ""
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
+"Algunas cantidades no están autorizadas porque su estado no es un estado de "
+"solicitud de presupuesto."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -1021,7 +1029,7 @@ msgstr "Tarifa de proveedor"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
-msgstr ""
+msgstr "Modelo técnico para agrupar órdenes de compra para una licitación"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -1061,7 +1069,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
-msgstr ""
+msgstr "No hay cantidades que autorizar."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1113,7 +1121,7 @@ msgstr "Tipo de demostración"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -1214,7 +1222,7 @@ msgstr "Mensajes del sitio web"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: purchase_requisition
 #. odoo-python

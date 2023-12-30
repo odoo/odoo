@@ -201,7 +201,7 @@ msgstr "'Paquetes - %s' % (object.name)"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Operaciones de picking - %s - %s' % (object.partner_id.name or '', "
+"'Operaciones de recolección - %s - %s' % (object.partner_id.name or '', "
 "object.name)"
 
 #. module: stock
@@ -231,7 +231,7 @@ msgstr "(código de barras del producto)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr "(código de barras en serie)"
+msgstr "(código de barras de la serie)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -499,7 +499,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Periodo\" role=\"img\" title=\"Periodo\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -598,19 +598,19 @@ msgstr "<span class=\"o_stat_text\">Trazabilidad</span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>Dirección del Cliente:</strong></span>"
+msgstr "<span><strong>Dirección del cliente:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr "<span><strong>Dirección de Envío:</strong></span>"
+msgstr "<span><strong>Dirección de entrega:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr "<span><strong>Dirección de Proveedor:</strong></span>"
+msgstr "<span><strong>Dirección del proveedor:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -698,7 +698,7 @@ msgstr "<strong>Desde</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr "<strong>Localización</strong>"
+msgstr "<strong>Ubicación</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -892,7 +892,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de Actividad  de Excepción"
+msgstr "Decoración de Actividad de Excepción"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -904,7 +904,7 @@ msgstr "Estado de la actividad"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícono de tipo de actvidad"
+msgstr "Icono de tipo de actvidad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
@@ -1067,7 +1067,7 @@ msgstr "Permitir un nuevo producto"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr "Permitir productos mezlcados "
+msgstr "Permitir productos mezclados"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1108,7 +1108,7 @@ msgid ""
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
 "Mes del inventario anual para productos que no están en una ubicación con "
-"una fecha de inventario cíclica. Establecer como \"sin mes\" si no hay "
+"una fecha de inventario cíclico. Establecer como \"sin mes\" si no hay "
 "inventario anual automático."
 
 #. module: stock
@@ -1145,7 +1145,7 @@ msgstr "Aplicable en el producto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "Aplicable en la categoria de productos"
+msgstr "Aplicable en la categoría de productos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_selectable
@@ -1295,7 +1295,7 @@ msgstr "Imprimir automáticamente los paquetes"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
 msgid "Auto Print Product Labels"
-msgstr "Imprimir automáticamente las etiquetas"
+msgstr "Imprimir automáticamente las etiquetas del producto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
@@ -1844,7 +1844,7 @@ msgstr "Calcula cuándo se debe reservar un movimiento"
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
@@ -2976,7 +2976,7 @@ msgstr "Nombre mostrado"
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
 msgid "Display Serial & Lot Number in Delivery Slips"
-msgstr "Mostrar Numero de Lote/Serie en los Albaranes"
+msgstr "Mostrar Número de Lote/Serie en los Albaranes"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -4886,7 +4886,7 @@ msgstr "Lote/Nº de serie"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
 msgid "Lot/Serial Number (PDF)"
-msgstr "Numero de Lote/Serie (PDF)"
+msgstr "Número de Lote/Serie (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_lot_template
@@ -4896,7 +4896,7 @@ msgstr "Número de lote / serie (ZPL)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
 msgid "Lot/Serial Number Name"
-msgstr "Nombre del Numero de Lote/Serie"
+msgstr "Nombre del Número de Lote/Serie"
 
 #. module: stock
 #. odoo-python
@@ -5570,14 +5570,14 @@ msgstr "Número de acciones"
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 #, python-format
 msgid "Number of SN"
-msgstr "Numero de Serie"
+msgstr "Número de Serie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
@@ -6685,7 +6685,7 @@ msgstr "Unidad de medida del producto"
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
 msgid "Product Variant"
-msgstr "Variantes de producto"
+msgstr "Variante de producto"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_product_normal_action
@@ -9756,7 +9756,7 @@ msgstr "Tipo de operación"
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -10273,7 +10273,7 @@ msgstr "Mensajes del sitio web"
 #: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
 #: model:ir.model.fields,help:stock.field_stock_scrap__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight

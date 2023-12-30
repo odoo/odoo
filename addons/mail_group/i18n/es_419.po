@@ -249,8 +249,8 @@ msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
 msgstr ""
-"Agregue esta dirección de correo para poner gente en la lista blanca y "
-"aceptar todos los mensajes pendientes del mismo autor."
+"Agregue esta dirección de correo a la lista de aprobación y acepte todos los"
+" mensajes pendientes del mismo autor."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
@@ -358,7 +358,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Autor del mensaje. Si no se establece, email_from puede contener una "
-"dirección de correo que no coincida con la de ningún partner."
+"dirección de correo que no coincida con la de ningún contacto."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
@@ -536,7 +536,7 @@ msgid ""
 "found and replaces the author_id field in the chatter."
 msgstr ""
 "Dirección de correo del remitente. Este campo se establece cuando no se "
-"encuentra ningún partner coincidente y reemplaza el campo author_id en el "
+"encuentra ningún contacto que coincida y reemplaza el campo author_id en el "
 "chatter."
 
 #. module: mail_group
@@ -661,7 +661,7 @@ msgstr "Acción no válida para la generación de URL (%s)"
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr "Dirección de correo electrónico inválida %r"
+msgstr "Dirección de correo electrónico no válida %r"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
@@ -722,8 +722,8 @@ msgstr "Abandonar"
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
-"Deje que la gente se suscriba a su lista en línea o agrégelos aquí "
-"manualmente."
+"Permita que la gente se suscriba a su lista en línea, también puede "
+"agregarles aquí de forma manual."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
@@ -799,8 +799,8 @@ msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
 msgstr ""
-"Los grupos de correo son comunidades a las que les gusta discutir asuntos en"
-" específico juntos."
+"Los grupos de correo son comunidades a las que les gusta conversar sobre "
+"temas específicos con otras personas."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -824,7 +824,7 @@ msgstr "Miembros"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
 msgid "Members Count"
-msgstr "Conteo de miembros"
+msgstr "Número de miembros"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -844,7 +844,7 @@ msgstr "Mensaje"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
 msgid "Message Rejection Explanation"
-msgstr "Explicación de por qué se rechazó el mensaje"
+msgstr "Motivo de rechazo del mensaje"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
@@ -854,7 +854,7 @@ msgstr "Mensajes"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
 msgid "Messages Count"
-msgstr "Conteo de mensajes"
+msgstr "Número de mensajes"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
@@ -1044,7 +1044,7 @@ msgid ""
 msgstr ""
 "ID opcional de un hilo (registro) al que se adjuntarán todos los mensajes "
 "entrantes, incluso si no fueron respuestas del mismo. Si se establece, se "
-"deshabilitará completamente la creación de nuevos registros."
+"deshabilitará por completo la creación de nuevos registros."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1150,7 +1150,7 @@ msgstr "Lista de correo pública"
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
 #, python-format
 msgid "Re: %s"
-msgstr "Re: %s"
+msgstr "Asunto: %s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
@@ -1398,7 +1398,7 @@ msgstr "Falta la notificación del mensaje."
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The partner can not be found."
-msgstr "No se puede encontrar el partner."
+msgstr "No se puede encontrar el contacto."
 
 #. module: mail_group
 #. odoo-python
