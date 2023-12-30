@@ -250,6 +250,24 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     arch_string = etree.fromstring(arch_string, parser=parser)
     return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
 
+
+def ignore_missing_keys(first, second):
+    new_second = second
+    if second.get('__ignore_missing_keys__'):
+        new_second = {**first, **{
+            k: v
+            for k, v in second.items()
+            if k != '__ignore_missing_keys__'
+        }}
+    for k, v in second.items():
+        if isinstance(v, dict):
+            new_v = ignore_missing_keys(first[k], v)
+            if new_second is second:  # avoid mutating the parent if a child changes
+                new_second = dict(second)
+            new_second[k] = new_v
+    return new_second
+
+
 class BlockedRequest(requests.exceptions.ConnectionError):
     pass
 _super_send = requests.Session.send
@@ -447,6 +465,13 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 func(*args, **kwargs)
         else:
             return self._assertRaises(exception, **kwargs)
+
+    def assertDictEqual(self, first, second, msg=None):
+        # If __ignore_missing_keys__ is used in second, we only compare the values that are present
+        # in second and don't check other keys present in first.
+        # It is implemented by copying the values in order to have a pretty message if the assertion fails
+        second = ignore_missing_keys(first, second)
+        return super().assertDictEqual(first, second, msg)
 
     @contextmanager
     def assertQueries(self, expected, flush=True):
