@@ -278,6 +278,29 @@ class AccountBalance(models.Model):
         return response
 
     @api.model
+    def get_bill_payment_by_journal_entry_id(self, journal_entry_id):
+        Payment = self.env['account.payment']
+        # Search for payment associated with the given journal entry
+        payment = Payment.search([('move_id', '=', journal_entry_id)], limit=1)
+
+        if payment:
+            # Prepare a dictionary of relevant payment details
+            payment_data = {
+                'id': payment.id,
+                'name': payment.name,
+                'amount': payment.amount,
+                # 'payment_date': payment.payment_date,
+                'partner_id': payment.partner_id.id,
+                'partner_name': payment.partner_id.name,
+                'state': payment.state,
+                # Include other fields as necessary
+            }
+            return payment_data
+        else:
+            return {'error': "No payment found for the provided journal entry ID."}
+
+
+    @api.model
     def delete_bill_payment(self, payment_id):
         invoice = self.env['account.move']
         payment = invoice.search([('id', '=', payment_id), ('move_type', '=', 'in_invoice')])
