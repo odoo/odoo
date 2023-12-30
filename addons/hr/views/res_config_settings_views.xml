@@ -46,7 +46,9 @@
                     </block>
                     <block title="Work Organization" name="work_organization_setting_container">
                         <setting company_dependent="1" help="Set default company schedule to manage your employees working time" id="default_company_schedule_setting">
-                            <field name="resource_calendar_id" required="1" class="o_light_label" domain="[('company_id', '=', company_id)]" context="{'default_company_id': company_id}"/>
+                            <field name="resource_calendar_id" required="1" class="o_light_label"
+                                domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+                                context="{'default_company_id': company_id}"/>
                         </setting>
                     </block>
                     <block title="Employee Update Rights" name="employee_rights_setting_container">
