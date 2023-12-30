@@ -11,7 +11,7 @@ class TestSubcontractingPortalUi(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         # 1. Create portal user
-        user = cls.env['res.users'].with_context({'mail_create_nolog': True}).create({
+        user = cls.env['res.users'].with_context(mail_create_nolog=True).create({
             'name': 'Georges',
             'login': 'georges1',
             'password': 'georges1',

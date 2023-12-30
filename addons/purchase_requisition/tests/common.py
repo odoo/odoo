@@ -14,7 +14,7 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
         user_group_purchase_user = cls.env.ref('purchase.group_purchase_user')
 
         # User Data: purchase requisition Manager and User
-        Users = cls.env['res.users'].with_context({'tracking_disable': True})
+        Users = cls.env['res.users'].with_context(tracking_disable=True)
 
         cls.user_purchase_requisition_manager = Users.create({
             'name': 'Purchase requisition Manager',

@@ -193,7 +193,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
     def test_lead_access_right(self):
         """ Test another portal user can not write on every leads """
         # portal user having no right
-        poor_portal_user = self.env['res.users'].with_context({'mail_notrack': True}).create({
+        poor_portal_user = self.env['res.users'].with_context(mail_notrack=True).create({
             'name': 'Poor Partner (not integrating one)',
             'email': 'poor.partner@ododo.com',
             'login': 'poorpartner',
