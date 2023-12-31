@@ -12567,6 +12567,17 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"The mapping uses regular expressions.\n"
+"- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
+"- To Match the text anywhere (in label or notes), put your text between .*\n"
+"  e.g: .*N°48748 abc123.*"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -13563,7 +13574,7 @@ msgstr "Sisestamata"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "Postitamata kirjed"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
