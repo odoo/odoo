@@ -1741,7 +1741,7 @@ msgstr "อีเวนต์องค์กร"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "ผู้จัดงาน"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1754,7 +1754,7 @@ msgstr "การลงทะเบียนอีเวนต์"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "รับผิดชอบงานอีเวนต์"
 
 #. module: event
 #. odoo-python
@@ -1854,6 +1854,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"เทมเพลตกิจกรรมรวมการกำหนดค่าที่คุณใช้บ่อยและมักจะขึ้นอยู่กับ\n"
+"                ประเภทของกิจกรรมที่คุณจัด (เช่น \"เวิร์กชอป\", \n"
+"               \"โรดโชว์\", \"สัมมนาผ่านเว็บออนไลน์\" เป็นต้น)"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1903,7 +1906,7 @@ msgstr "อีเวนต์: ป้ายการลงทะเบียน"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "กิจกรรม: ยืนยันการลงทะเบียน"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -1959,6 +1962,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"ทุกปีเราเชิญชวนคอมมูนิตี้ พาร์ทเนอร์และผู้ใช้งานของเราทั้งหมดมาร่วมพบปะกับเรา! เป็นงานที่เหมาะสำหรับการรวมตัวกันและนำเสนอฟีเจอร์ใหม่ๆ แผนกลยุทธ์ของเวอร์ชันในอนาคต ผลงานของซอฟต์แวร์ การฝึกอบรม และอื่นๆ ...\n"
+"          กิจกรรมนี้ยังเป็นโอกาสในการนำเสนอกรณีศึกษา วิธีการหรือการพัฒนาของพาร์ทเนอร์ของเรา มาเป็นผู้เข้าชมและค้นพบฟีเจอร์เวอร์ชันใหม่ๆ โดยตรงจากเรา!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2070,7 +2075,7 @@ msgstr "ฟรี"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food!"
-msgstr ""
+msgstr "เข้าฟรี ไม่มีอาหาร!"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -2136,17 +2141,17 @@ msgstr "Google Maps"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr ""
+msgstr "คีย์ Google Maps API"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
 msgid "Google Maps API secret"
-msgstr ""
+msgstr "ข้อมูลลับของ Google Maps API"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr ""
+msgstr "API คงที่ของ Google Maps"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -2198,7 +2203,7 @@ msgstr "เมื่อเข้าร่วมการประชุมนี
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival!"
-msgstr ""
+msgstr "มาแล้ว เทศกาลดนตรีสดครั้งที่ 12 ของเรา!"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -2257,7 +2262,7 @@ msgstr "ไอคอน"
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
-msgstr ""
+msgstr "การเลือกไอคอน"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -2296,6 +2301,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over!"
 msgstr ""
+"หากคุณไม่รู้อะไรเกี่ยวกับฮ็อกกี้ นี่เป็นการแนะนำที่ยอดเยี่ยมสำหรับกีฬาที่ยอดเยี่ยมนี้ เพราะคุณจะได้ชมกระบวนการฝึกซ้อมและยังมีเวลา\n"
+"              พูดคุยกับผู้เล่นและผู้ฝึกสอนที่มีประสบการณ์เมื่อทัวร์นาเมนต์จบลง!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -2324,7 +2331,7 @@ msgstr "กำลังดำเนินการ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "แทรก Google Maps แบบไดนามิกในเทมเพลตอีเมลของคุณ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -2388,7 +2395,7 @@ msgstr "John DOE"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "เข้าร่วมการแข่งขันบอลลูนครั้งยิ่งใหญ่ตลอดกาลกับเรา!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -2485,7 +2492,7 @@ msgstr "มาสร้าง <b>อีเวนต์</b>แรกกันเ�
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "จำกัดผู้เข้าร่วม"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2553,7 +2560,7 @@ msgstr "ส่งเมลแล้ว"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "จัดการและเผยแพร่กำหนดการด้วยแทร็ก"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -2724,7 +2731,7 @@ msgstr "จํานวนการดําเนินการ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "จำนวนผู้เข้าร่วม"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2734,7 +2741,7 @@ msgstr "จำนวนผู้เข้าร่วมที่คาดหว
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "จำนวนการลงทะเบียน"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2789,7 +2796,7 @@ msgstr "จองทิกเก็ตออนไลน์"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Open date range picker. Pick a Start date for your event"
-msgstr ""
+msgstr "เปิดเครื่องมือเลือกช่วงวันที่ เลือกวันที่เริ่มต้นสำหรับกิจกรรมของคุณ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2886,12 +2893,12 @@ msgstr "โปรดมา<b>อย่างน้อย</b> 30 นาทีก�
 #: code:addons/event/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a valid base64 secret"
-msgstr ""
+msgstr "โปรดป้อนรหัสลับ base64 ที่ถูกต้อง"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Previous state"
-msgstr ""
+msgstr "สถานะก่อนหน้า"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3020,7 +3027,7 @@ msgstr "เปิดการลงทะเบียน"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "สถิติการลงทะเบียน"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -3117,6 +3124,7 @@ msgstr "วันที่ตามกำหนดการ"
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
 msgstr ""
+"แฟนฮอกกี้ผู้ช่ำชองและผู้คนที่อยากรู้อยากเห็น ทัวร์นาเมนต์นี้เหมาะสำหรับคุณ!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3155,17 +3163,17 @@ msgstr "ส่งแล้ว"
 #: model:mail.template,description:event.event_reminder
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
-msgstr ""
+msgstr "ส่งไปยังผู้เข้าร่วมโดยอัตโนมัติหากมีการกำหนดการแจ้งเตือนไว้ในกิจกรรม"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
-msgstr ""
+msgstr "ส่งถึงใครบางคนโดยอัตโนมัติหลังจากที่พวกเขาลงทะเบียนเข้าร่วมกิจกรรม"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "ส่งไปยังผู้เข้าร่วมหลังจากลงทะเบียนเข้าร่วมกิจกรรม"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sequence
@@ -3270,13 +3278,13 @@ msgstr "วันที่เริ่มต้นการขาย"
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url
 msgid "Static Map Url"
-msgstr ""
+msgstr "URL แผนที่แบบคงที่"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url_is_valid
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url_is_valid
 msgid "Static Map Url Is Valid"
-msgstr ""
+msgstr "URL แผนที่แบบคงที่ถูกต้อง"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -3415,7 +3423,7 @@ msgstr "ได้จองที่แล้ว"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
-msgstr ""
+msgstr "ความปลอดภัยของผู้เข้าร่วมและนักบินอวกาศของเราต้องมาก่อน!"
 
 #. module: event
 #. odoo-python
@@ -3425,6 +3433,7 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
 msgstr ""
+"วันที่หยุดต้องไม่เร็วกว่าวันที่เริ่มต้น โปรดตรวจสอบตั๋ว %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -3432,7 +3441,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The template which is referenced should be coming from %(model_name)s model."
-msgstr ""
+msgstr "เทมเพลตที่อ้างอิงควรมาจากโมเดล %(model_name)s"
 
 #. module: event
 #. odoo-python
@@ -3440,7 +3449,7 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "There are not enough seats available for:"
-msgstr ""
+msgstr "มีที่นั่งไม่เพียงพอสำหรับ:"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3480,6 +3489,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
 msgstr ""
+"ที่นี่เป็นสถานที่ที่เหมาะสำหรับการใช้เวลาวันดีๆ กับครอบครัวของคุณ "
+"เรารับประกันว่าคุณจะจากไปพร้อมกับความทรงจำที่สวยงามชั่วนิรันดร์!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3703,7 +3714,7 @@ msgstr "สถานที่"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr ""
+msgstr "สถานที่ (จัดรูปแบบสำหรับการใช้งานหนึ่งรายการ)"
 
 #. module: event
 #. odoo-python
@@ -3769,12 +3780,12 @@ msgstr "อีเวนต์ได้เริ่มต้นขึ้นแล
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "ไม่ว่าจะสามารถขายทิกเก็ตเหล่านี้ได้หรือไม่"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "ไม่ว่าจะไม่มีที่นั่งว่างสำหรับทิกเก็ตนี้หรือไม่"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -3811,22 +3822,22 @@ msgstr "การลงทะเบียนของคุณที่ {{ objec
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"12-16 years old\""
-msgstr ""
+msgstr "เช่น. \"อายุ 12-16 ปี\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"Age Category\""
-msgstr ""
+msgstr "เช่น \"ประเภทอายุ\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "e.g. \"Azure Interior\""
-msgstr ""
+msgstr "เช่น \"Azure Interior\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr ""
+msgstr "เช่น “การโปรโมต”"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -3838,7 +3849,7 @@ msgstr "เช่น การประชุมสถาปนิก"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "เช่น วิธีเดินทางไปยังงาน เวลาปิดประตูเข้างาน ..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form

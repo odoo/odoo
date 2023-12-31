@@ -60,6 +60,8 @@ msgstr "<b class=\"tip_title\">เคล็ดลับ: บันทึกใ�
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"รูปภาพ\" aria-label=\"วันที่\" "
+"title=\"วันที่\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -126,7 +128,7 @@ msgstr "<span>คำอธิบาย</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Employee</span>"
-msgstr ""
+msgstr "<span>พนักงาน</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -244,6 +246,8 @@ msgid ""
 "Analyze the projects and tasks on which your employees spend their time.<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
+"วิเคราะห์โปรเจ็กต์และงานที่พนักงานของคุณได้ใช้เวลาไป<br>\n"
+"                ประเมินว่าส่วนใดที่สามารถเรียกเก็บเงินได้และมีค่าใช้จ่ายเท่าไร"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
@@ -253,7 +257,7 @@ msgstr "การแจ้งเตือนกับผู้อนุมัต
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr ""
+msgstr "เก็บถาวรพนักงาน"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
@@ -336,7 +340,7 @@ msgstr "วันที่"
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__days
 msgid "Days / Half-Days"
-msgstr ""
+msgstr "วัน / ครึ่งวัน"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -372,7 +376,7 @@ msgstr "ลบ"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Delete Employee"
-msgstr ""
+msgstr "ลบพนักงาน"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -442,7 +446,7 @@ msgstr "พนักงาน"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
 msgid "Employee Delete Wizard"
-msgstr ""
+msgstr "ตัวช่วยลบพนักงาน"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
@@ -466,7 +470,7 @@ msgstr "พนักงาน"
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 #, python-format
 msgid "Employees' Timesheets"
-msgstr ""
+msgstr "ใบบันทึกเวลาของพนักงาน"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
@@ -477,7 +481,7 @@ msgstr "เข้ารหัสหน่วยวัดเป็นวัน"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
 msgid "Encoding Method"
-msgstr ""
+msgstr "วิธีการเข้ารหัส"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
@@ -489,6 +493,7 @@ msgstr "การเข้ารหัส Uom"
 msgid ""
 "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
+"สร้างใบบันทึกเวลาสำหรับคำขอลาหยุดและวันหยุดนักขัตฤกษ์ที่ผ่านการตรวจสอบแล้ว"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
@@ -503,13 +508,13 @@ msgstr "การกำหนด HTTP"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_active_employee
 msgid "Has Active Employee"
-msgstr ""
+msgstr "มีพนักงานประจำ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__has_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_timesheet
 msgid "Has Timesheet"
-msgstr ""
+msgstr "มีใบบันทึกเวลา"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -521,7 +526,7 @@ msgstr "ชั่วโมง"
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
-msgstr ""
+msgstr "ชั่วโมง / นาที"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
@@ -665,7 +670,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
-msgstr ""
+msgstr "การปรับปรุงของแผนกของฉัน"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
@@ -675,7 +680,7 @@ msgstr "การให้คะแนนของทีมของฉัน"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Team's Updates"
-msgstr ""
+msgstr "การอัปเดตของทีมของฉัน"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
@@ -715,7 +720,7 @@ msgstr "ไม่มี"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
 msgid "Number of allocated hours minus the number of hours spent."
-msgstr ""
+msgstr "จำนวนชั่วโมงที่จัดสรร ลบจำนวนชั่วโมงที่ใช้"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -783,7 +788,7 @@ msgstr "หน่วยเวลาของโปรเจกต์"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
 msgid "Project in Overtime"
-msgstr ""
+msgstr "โปรเจ็กต์ในช่วงล่วงเวลา"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
@@ -793,7 +798,7 @@ msgstr "ใบบันทึกเวลาของโปรเจกต์"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
 msgid "Readonly Timesheet"
-msgstr ""
+msgstr "ใบบันทึกเวลาแบบอ่านอย่างเดียว"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -888,7 +893,7 @@ msgstr "ค้นหางาน"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "See Timesheets"
-msgstr ""
+msgstr "ดูใบบันทึกเวลา"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -904,6 +909,7 @@ msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
 msgstr ""
+"ส่งการแจ้งเตือนทางอีเมลเป็นระยะไปยังผู้อนุมัติใบบันทึกเวลาที่ยังมีใบบันทึกเวลาที่ต้องตรวจสอบ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -911,6 +917,7 @@ msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
 msgstr ""
+"ส่งการแจ้งเตือนทางอีเมลเป็นระยะไปยังผู้ใช้ระบบบันทึกเวลาที่ยังมีใบบันทึกเวลาให้เข้ารหัส"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -999,7 +1006,7 @@ msgstr "เดือนนี้"
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
 msgid "This operator %s is not supported in this search method."
-msgstr ""
+msgstr "ไม่รองรับโอเปอเรเตอร์ %s ในวิธีการค้นหานี้"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1076,7 +1083,7 @@ msgstr "เวลาที่ใช้ในงานย่อย (และง�
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
-msgstr ""
+msgstr "เวลาที่ใช้ในงานนี้และงานย่อย (และงานย่อยของตนเอง)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_report_project_task_user__total_hours_spent
@@ -1177,18 +1184,18 @@ msgstr "ใบบันทึกเวลา"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets - %s"
-msgstr ""
+msgstr "ระบบบันทึกเวลา - %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Timesheets 80%"
-msgstr ""
+msgstr "ใบบันทึกเวลา 80%"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
 msgid "Timesheets >100%"
-msgstr ""
+msgstr "ใบบันทึกเวลา >100%"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
@@ -1232,7 +1239,7 @@ msgstr "สามารถบันทึกใบบันทึกเวลา
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets cannot be created on a private task."
-msgstr ""
+msgstr "ไม่สามารถสร้างใบบันทึกเวลาในงานส่วนตัวได้"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1242,6 +1249,7 @@ msgid ""
 "Timesheets must be created on a project or a task with an active analytic "
 "account."
 msgstr ""
+"ต้องสร้างใบบันทึกเวลาในโปรเจ็กต์หรืองานด้วยบัญชีการวิเคราะห์ที่ใช้งานอยู่"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1250,14 +1258,14 @@ msgstr ""
 msgid ""
 "Timesheets must be created with an active employee in the selected "
 "companies."
-msgstr ""
+msgstr "ต้องสร้างใบบันทึกเวลาโดยมีพนักงานที่ใช้งานอยู่ในบริษัทที่เลือก"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 #, python-format
 msgid "Timesheets of %(name)s"
-msgstr ""
+msgstr "ใบบันทึกเวลาของ %(name)s"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1280,7 +1288,7 @@ msgstr "รวม"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Allocated Time"
-msgstr ""
+msgstr "เวลาที่จัดสรรทั้งหมด"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1386,7 +1394,7 @@ msgstr "คุณไม่สามารถเข้าถึงใบบัน
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 #, python-format
 msgid "You cannot delete employees who have timesheets."
-msgstr ""
+msgstr "คุณไม่สามารถลบพนักงานที่มีใบบันทึกเวลาได้"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1406,6 +1414,7 @@ msgstr ""
 #, python-format
 msgid "You cannot set an archived employee to the existing timesheets."
 msgstr ""
+"คุณไม่สามารถตั้งค่าพนักงานที่ถูกเก็บถาวรแล้วเป็นใบบันทึกเวลาที่มีอยู่ได้"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1445,6 +1454,8 @@ msgid ""
 "on\n"
 "                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
+"บน\n"
+"                            <span class=\"fw-bold text-dark\"> งานย่อย</span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1452,3 +1463,5 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
+"บน\n"
+"                        <span class=\"fw-bold text-dark\"> งานย่อย</span>)"

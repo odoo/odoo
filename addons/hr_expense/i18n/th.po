@@ -38,21 +38,21 @@ msgstr "%(user)s ยืนยันว่าค่าใช้จ่ายนี
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is not from your department"
-msgstr ""
+msgstr "%s: ไม่ได้มาจากแผนกของคุณ"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is your own expense"
-msgstr ""
+msgstr "%s: เป็นค่าใช้จ่ายของคุณเอง"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: Your are not a Manager or HR Officer"
-msgstr ""
+msgstr "%s: คุณไม่ใช่ผู้จัดการหรือเจ้าหน้าที่ฝ่ายบุคคล"
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -81,7 +81,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense Report</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">รายงานค่าใช้จ่าย</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -205,12 +205,12 @@ msgstr "การรายงานทั้งหมด"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "All expenses in an expense report must have the same \"paid by\" criteria."
-msgstr ""
+msgstr "ค่าใช้จ่ายทั้งหมดในรายงานค่าใช้จ่ายต้องมีเกณฑ์ \"ชำระโดย\" เหมือนกัน"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "All payment methods allowed"
-msgstr ""
+msgstr "อนุญาตวิธีการชำระเงินทั้งหมด"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
@@ -284,7 +284,7 @@ msgstr "วันที่อนุมัติ"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_state
 msgid "Approval State"
-msgstr ""
+msgstr "สถานะการอนุมัติ"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -338,7 +338,7 @@ msgstr "แนบใบเสร็จ"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Attach a receipt - usually an image or a PDF file."
-msgstr ""
+msgstr "แนบใบเสร็จ - โดยปกติจะเป็นรูปภาพหรือไฟล์ PDF"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -357,6 +357,7 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
+"ทั้งภาษีที่รวมราคาและไม่รวมราคาจะทำหน้าที่เป็นภาษีที่รวมราคาสำหรับค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
@@ -385,7 +386,7 @@ msgstr "ยกเลิก"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "ไม่สามารถอนุมัติเหตุผลได้"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -478,6 +479,7 @@ msgstr "สร้างการรายงานรายจ่าย"
 #, python-format
 msgid "Create a report to submit one or more expenses to your manager."
 msgstr ""
+"สร้างรายงานเพื่อส่งค่าใช้จ่ายอย่างน้อยหนึ่งรายการให้กับผู้จัดการของคุณ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -542,7 +544,7 @@ msgstr "ชื่อนามแฝงเริ่มต้นสำหรับ
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
 msgid "Default Expense Journal"
-msgstr ""
+msgstr "สมุดรายวันค่าใช้จ่ายเริ่มต้น"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -552,7 +554,7 @@ msgstr "สมุดรายวันเริ่มต้น"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr ""
+msgstr "สมุดรายวันการบัญชีเริ่มต้นสำหรับค่าใช้จ่ายที่จ่ายโดยพนักงาน"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -623,7 +625,7 @@ msgstr "ร่าง"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Drag and drop files to create expenses"
-msgstr ""
+msgstr "ลากและวางไฟล์เพื่อสร้างค่าใช้จ่าย"
 
 #. module: hr_expense
 #. odoo-python
@@ -651,7 +653,7 @@ msgstr "พนักงาน (การชดเชย)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "สมุดรายวันค่าใช้จ่ายพนักงาน"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -671,7 +673,7 @@ msgstr "ที่อยู่บ้านพนักงาน"
 msgid ""
 "Enter a name then choose a category and configure the amount of your "
 "expense."
-msgstr ""
+msgstr "ให้ป้อนชื่อและจากนั้นเลือกหมวดหมู่และกำหนดจำนวนค่าใช้จ่ายของคุณ"
 
 #. module: hr_expense
 #: model:account.journal,name:hr_expense.hr_expense_account_journal
@@ -709,7 +711,7 @@ msgstr "การอนุมัติรายจ่าย"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Categories"
-msgstr ""
+msgstr "หมวดหมู่ค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -735,7 +737,7 @@ msgstr "ไลน์รายจ่าย"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "บรรทัดค่าใช้จ่ายสามารถแก้ไขได้โดยผู้ใช้ปัจจุบัน"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -783,7 +785,7 @@ msgstr "รายงานรายจ่ายที่จะอนุมัต
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__expense_sheet_id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__expense_sheet_id
 msgid "Expense Sheet"
-msgstr ""
+msgstr "เอกสารค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split
@@ -793,12 +795,12 @@ msgstr "การแบ่งค่าใช้จ่าย"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_split_line_ids
 msgid "Expense Split Line"
-msgstr ""
+msgstr "บรรทัดแยกค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split_wizard
 msgid "Expense Split Wizard"
-msgstr ""
+msgstr "ตัวช่วยแยกค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -808,14 +810,14 @@ msgstr "ตรวจสอบรายจ่ายซ้ำ"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense categories can be reinvoiced to your customers."
-msgstr ""
+msgstr "ประเภทค่าใช้จ่ายสามารถออกใบแจ้งหนี้ใหม่ให้กับลูกค้าของคุณได้"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Expense entry created from: %s"
-msgstr ""
+msgstr "รายการค่าใช้จ่ายที่สร้างจาก: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -840,7 +842,7 @@ msgstr "รายงานค่าใช้จ่ายถูกปฏิเส
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "รายงานค่าใช้จ่ายรีเซ็ตเป็นฉบับร่าง"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -854,7 +856,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expense split"
-msgstr ""
+msgstr "แยกค่าใช้จ่าย"
 
 #. module: hr_expense
 #. odoo-python
@@ -905,6 +907,7 @@ msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
 msgstr ""
+"ค่าใช้จ่ายที่ได้ส่งรายงานไปยังผู้อนุมัติแล้วและอยู่ระหว่างรอการอนุมัติ"
 
 #. module: hr_expense
 #. odoo-python
@@ -926,7 +929,7 @@ msgstr "รายจ่ายของสมาชิกในทีมของ
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses that need to be submitted to the approver."
-msgstr ""
+msgstr "ค่าใช้จ่ายที่ต้องส่งไปยังผู้อนุมัติ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
@@ -973,7 +976,7 @@ msgstr "ข้อมูลทั่วไป"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generate Expenses"
-msgstr ""
+msgstr "สร้างค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_gift_product_template
@@ -983,7 +986,7 @@ msgstr "ของขวัญ"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
 msgid "Gifts to customers or vendors"
-msgstr ""
+msgstr "ของขวัญให้กับลูกค้าหรือผู้ขาย"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1010,7 +1013,7 @@ msgstr "มีข้อความ"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
-msgstr ""
+msgstr "โรงแรม ตั๋วเครื่องบิน แท็กซี่ ฯลฯ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -1056,7 +1059,7 @@ msgstr "ชำระเงิน"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr ""
+msgstr "รวมภาษีแล้ว"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1109,7 +1112,7 @@ msgstr "เป็นสินค้าที่มีต้นทุนไม่
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
-msgstr ""
+msgstr "ทุกอย่างเริ่มต้นที่นี่ - ไปกันเลย!"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1127,7 +1130,7 @@ msgstr "รายการบันทึกประจำวัน"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "สมุดรายวันถูกลบแล้ว"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1137,7 +1140,7 @@ msgstr "รายการบันทึก"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "สมุดรายวันถูกลบแล้ว"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
@@ -1180,21 +1183,21 @@ msgstr "ให้พนักงานของคุณบันทึกรา
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Let's check out where you can manage all your employees expenses"
-msgstr ""
+msgstr "มาดูกันว่าคุณสามารถจัดการค่าใช้จ่ายพนักงานทั้งหมดของคุณได้ที่ไหน"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Let's go back to your expenses."
-msgstr ""
+msgstr "กลับไปที่ค่าใช้จ่ายของคุณกันดีกว่า"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Lunch with customer $12.32"
-msgstr ""
+msgstr "รับประทานอาหารกลางวันกับลูกค้า $12.32"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1215,6 +1218,8 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
+"ผู้จัดการสามารถอนุมัติรายงานได้ที่นี่ "
+"จากนั้นนักบัญชีสามารถผ่านรายการทางบัญชีได้"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1222,12 +1227,12 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
-msgstr ""
+msgstr "ผู้จัดการสามารถตรวจสอบค่าใช้จ่ายทั้งหมดได้จากที่นี่"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_meal_product_template
 msgid "Meals"
-msgstr ""
+msgstr "มื้ออาหาร"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
@@ -1290,7 +1295,7 @@ msgstr "รายงานรายจ่ายใหม่"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Reports"
-msgstr ""
+msgstr "รายงานค่าใช้จ่ายใหม่"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1339,7 +1344,7 @@ msgstr "ยังไม่มีข้อมูล!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense categories found. Let's create one!"
-msgstr ""
+msgstr "ไม่พบหมวดหมู่ค่าใช้จ่าย มาสร้างกันเถอะ!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
@@ -1354,7 +1359,7 @@ msgstr "ไม่พบรายงานรายจ่าย มาสร้�
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "Not Refused"
-msgstr ""
+msgstr "ไม่ปฏิเสธ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1375,7 +1380,7 @@ msgstr "จำนวนสิ่งที่แนบมา"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_number
 msgid "Number of Expenses"
-msgstr ""
+msgstr "จำนวนค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1417,6 +1422,8 @@ msgid ""
 "Once your <b>Expense Report</b> is ready, you can submit it to your manager "
 "and wait for approval."
 msgstr ""
+"เมื่อ<b>รายงานค่าใช้จ่าย</b>ของคุณพร้อมแล้ว "
+"คุณสามารถส่งไปยังผู้จัดการของคุณและรอการอนุมัติได้"
 
 #. module: hr_expense
 #. odoo-python
@@ -1436,12 +1443,12 @@ msgstr "หรือ"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Or send your receipts at"
-msgstr ""
+msgstr "หรือส่งใบเสร็จมาที่"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "Original Amount"
-msgstr ""
+msgstr "จำนวนเงินเดิม"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_no_cost_product_template
@@ -1485,18 +1492,18 @@ msgstr "สถานะการชำระเงิน"
 #: code:addons/hr_expense/models/account_payment.py:0
 #, python-format
 msgid "Payment created for: %s"
-msgstr ""
+msgstr "การชำระเงินที่สร้างขึ้นสำหรับ: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr ""
+msgstr "วิธีการชำระเงินที่อนุญาตสำหรับค่าใช้จ่ายที่บริษัทชำระ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr ""
+msgstr "มีวิธีการชำระเงินสำหรับค่าใช้จ่ายที่บริษัทชำระ"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1506,7 +1513,7 @@ msgstr "การชำระเงิน"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
-msgstr ""
+msgstr "ค่าโทรศัพท์ ค่าไปรษณีย์ ฯลฯ"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1554,7 +1561,7 @@ msgstr "สินค้า"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
 msgid "Product Description"
-msgstr ""
+msgstr "รายละเอียดสินค้า"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1596,6 +1603,8 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
+"พร้อมหรือยัง? คุณสามารถบันทึกด้วยตนเองหรือยกเลิกการแก้ไขได้จากที่นี่ "
+"คุณไม่จำเป็นต้อง<em>บันทึกเอง</em> Odoo จะบันทึกทุกอย่างให้คุณเมื่อคุณนำทาง"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1696,7 +1705,7 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #. module: hr_expense
 #: model_terms:product.template,description:hr_expense.expense_product_meal_product_template
 msgid "Restaurants, business lunches, etc."
-msgstr ""
+msgstr "ร้านอาหาร อาหารกลางวันเพื่อการติดต่อธุรกิจ ฯลฯ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
@@ -1742,7 +1751,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
 msgid "Selectable Payment Method Line"
-msgstr ""
+msgstr "รายการวิธีการชำระเงินที่เลือกได้"
 
 #. module: hr_expense
 #. odoo-python
@@ -1814,7 +1823,7 @@ msgstr "ถ่ายภาพใบเสร็จของคุณและใ
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "ระบุสมุดรายวันค่าใช้จ่ายเพื่อสร้างรายการทางบัญชี"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1826,19 +1835,19 @@ msgstr "ระบุว่าสามารถเลือกสินค้า
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split Expense"
-msgstr ""
+msgstr "แบ่งค่าใช้จ่าย"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_split_wizard.py:0
 #, python-format
 msgid "Split Expenses"
-msgstr ""
+msgstr "แบ่งค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
-msgstr ""
+msgstr "แบ่งได้"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1892,7 +1901,7 @@ msgstr "ยอดรวมย่อย"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Subtotal In Currency"
-msgstr ""
+msgstr "ผลรวมย่อยในสกุลเงิน"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
@@ -1902,23 +1911,23 @@ msgstr "ภาษี"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
 msgid "Tax amount"
-msgstr ""
+msgstr "จำนวนภาษี"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__amount_tax
 msgid "Tax amount in Currency"
-msgstr ""
+msgstr "จำนวนภาษีในสกุลเงิน"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
 msgid "Tax amount in company currency"
-msgstr ""
+msgstr "จำนวนภาษีในสกุลเงินของบริษัท"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
 msgid "Tax amount in currency"
-msgstr ""
+msgstr "จำนวนภาษีในสกุลเงิน"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
@@ -1939,7 +1948,7 @@ msgstr "ผู้อนุมัติทีม"
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
-msgstr ""
+msgstr "สมุดรายวันเริ่มต้นของบริษัทที่ใช้เมื่อมีการสร้างค่าใช้จ่ายของพนักงาน"
 
 #. module: hr_expense
 #. odoo-python
@@ -1976,7 +1985,7 @@ msgstr "สมุดรายวันจะต้องตั้งค่าเ
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr ""
+msgstr "สมุดรายวันที่ใช้เมื่อมีการชำระค่าใช้จ่ายโดยพนักงาน"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
@@ -1988,25 +1997,25 @@ msgstr "วิธีการชำระเงินที่ใช้เมื
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "The status of all your current expenses is visible from here."
-msgstr ""
+msgstr "สถานะค่าใช้จ่ายปัจจุบันทั้งหมดของคุณสามารถดูได้จากที่นี่"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "The sum of after split shut remain the same"
-msgstr ""
+msgstr "ผลรวมของหลังจากปิดการแยกยังคงเท่าเดิม"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "There you go - expense management in a nutshell!"
-msgstr ""
+msgstr "และนี่คือการจัดการค่าใช้จ่ายโดยสรุป!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "This note will be shown to users when they select this expense product."
-msgstr ""
+msgstr "หมายเหตุนี้จะแสดงต่อผู้ใช้เมื่อพวกเขาเลือกผลิตภัณฑ์ค่าใช้จ่ายนี้"
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2050,7 +2059,7 @@ msgstr "ยอดรวม"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "รวมเป็นสกุลเงิน"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
@@ -2060,22 +2069,22 @@ msgstr "ภาษีทั้งหมด"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount In Currency"
-msgstr ""
+msgstr "จำนวนเงินที่ไม่ต้องเสียภาษีทั้งหมดเป็นสกุลเงิน"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr ""
+msgstr "ยอดรวมของค่าใช้จ่ายเดิมที่เราแบ่งออก"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_original
 msgid "Total amount original"
-msgstr ""
+msgstr "รวมจำนวนเงินเดิม"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Travel & Accommodation"
-msgstr ""
+msgstr "การเดินทางและที่พัก"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -2122,7 +2131,7 @@ msgstr "อัปโหลด"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Use the breadcrumbs to go back to the list of expenses."
-msgstr ""
+msgstr "ใช้เบรดครัมบ์เพื่อกลับไปยังรายการค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users
@@ -2183,7 +2192,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_tax
 msgid "Whether tax is defined on a selected product"
-msgstr ""
+msgstr "มีการกำหนดภาษีสำหรับผลิตภัณฑ์ที่เลือกหรือไม่"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
@@ -2238,6 +2247,8 @@ msgid ""
 "You cannot approve:\n"
 " %s"
 msgstr ""
+"คุณไม่สามารถอนุมัติ:\n"
+" %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2258,7 +2269,7 @@ msgstr "คุณไม่สามารถลบค่าใช้จ่าย
 #: code:addons/hr_expense/models/analytic.py:0
 #, python-format
 msgid "You cannot delete an analytic account that is used in an expense."
-msgstr ""
+msgstr "คุณไม่สามารถลบบัญชีการวิเคราะห์ที่ใช้ในค่าใช้จ่ายได้"
 
 #. module: hr_expense
 #. odoo-python
@@ -2268,6 +2279,7 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
+"คุณไม่สามารถทำการแก้ไขนี้ได้เนื่องจากการชำระเงินเชื่อมโยงกับรายงานค่าใช้จ่าย"
 
 #. module: hr_expense
 #. odoo-python
@@ -2277,13 +2289,15 @@ msgid ""
 "You cannot refuse:\n"
 " %s"
 msgstr ""
+"คุณไม่สามารถปฏิเสธได้:\n"
+" %s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
-msgstr ""
+msgstr "คุณไม่สามารถรายงานค่าใช้จ่ายของบริษัทต่างๆ ในรายงานเดียวกันได้"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -2297,7 +2311,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report the expenses without amount!"
-msgstr ""
+msgstr "คุณไม่สามารถรายงานค่าใช้จ่ายโดยไม่มีจำนวนเงินได้!"
 
 #. module: hr_expense
 #. odoo-python
@@ -2311,7 +2325,7 @@ msgstr "คุณไม่สามารถรายงานสองครั
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
-msgstr ""
+msgstr "คุณไม่มีค่าใช้จ่ายในการรายงาน"
 
 #. module: hr_expense
 #. odoo-python
@@ -2326,7 +2340,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr ""
+msgstr "รายงานค่าใช้จ่ายของคุณ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2365,7 +2379,7 @@ msgstr "ที่จะคืนเงิน"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to submit"
-msgstr ""
+msgstr "เพื่อส่ง"
 
 #. module: hr_expense
 #. odoo-python
