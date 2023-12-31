@@ -400,6 +400,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Meil on hea meel teatada, et teie tellimus on teele pandud.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            Tellimuse jälgmiseks kasutage viidet\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Lisainformatsiooni leiate manuses olevalt saatelehelt.<br><br>\n"
+"        Täname,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -8571,6 +8604,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Tootega seotud ettevõtet ei saa muuta, kuna osad laosiirded kuuluvad teisele"
+" ettevõttele."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9462,7 +9497,7 @@ msgstr "Pakenditüübi kaal"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Kaalu ühik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -9922,7 +9957,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
-msgstr ""
+msgstr "\"Tehtud\" või \"Tühistatud\" staatuses siirdeid ei saa poolitada."
 
 #. module: stock
 #. odoo-python

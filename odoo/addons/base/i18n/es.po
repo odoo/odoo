@@ -20,6 +20,7 @@
 # Wil Odoo, 2023
 # kikopeiro <francisco.peiro@factorlibre.com>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# César J. Santacruz, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -3660,6 +3661,41 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"Gestión de cheques propios\n"
+"---------------------\n"
+"\n"
+"Extiende el módulo \"Impresión de cheques\" para gestionar cheques propios con más funciones:\n"
+"\n"
+"* Permitir el uso de cheques propios que no se imprimen pero se llenan de forma manual por el usuario\n"
+"* Permitir el uso de cheques electrónicos o diferidos\n"
+"  * Deshabilitar la impresión\n"
+"  * Establecer el número del cheque de forma manual por parte del usuario \n"
+"* Agregar una \"fecha de cobro del cheque\" opcional para cheques con fecha posterior (pagos diferidos)\n"
+"* Agregar un menú para realizar un seguimiento de sus propios cheques\n"
+"\n"
+"Gestión de cheques de externos\n"
+"-----------------------------\n"
+"\n"
+"Agregamos la nueva función \"Gestión de cheques de externos\".\n"
+"\n"
+"Se agregaron dos métodos de pago principales:\n"
+"\n"
+"* Cheques de un externo nuevo:\n"
+"\n"
+"  * Los pagos de este método de pago representan el cheque que recibe de un cliente cuando le pagan (de una factura o un pago manual)\n"
+"\n"
+"* Cheque de un externo existente.\n"
+"\n"
+"  * Los pagos de este método de pago son para rastrear los movimientos del cheque, por ejemplo:\n"
+"\n"
+"    * Usar un cheque para pagarle a un proveedor\n"
+"    * Depositar el cheque en el banco\n"
+"    * Obtener una devolución del cheque del banco (rechazo)\n"
+"    * Obtener una devolución del cheque de un proveedor (un rechazo o devolución)\n"
+"    * Transferir el cheque de un diario de cheques de externos a otro (de una tienda a otra)\n"
+"\n"
+"  * Esas operaciones se pueden realizar con múltiples cheques a la vez \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -24156,6 +24192,10 @@ msgid ""
 "install the new \"UPS Shipping\" module and uninstall this one as soon as "
 "possible. This integration will stop working in 2024."
 msgstr ""
+"Esta es la integración de sistemas heredados con UPS que ya no es "
+"compatible. Instale el nuevo modulo de \"UPS Shipping\" y desinstale este "
+"tan pronto como le sea posible. Esta integración dejará de funcionar en el "
+"2024. "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -27052,7 +27092,7 @@ msgstr "U - ACTIVIDADES DE ORGANIZACIONES Y CUERPOS EXTRATERRITORIALES"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping (Legacy)"
-msgstr ""
+msgstr "Métodos de envío de UPS (Antiguo)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
