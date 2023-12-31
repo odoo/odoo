@@ -24,8 +24,8 @@
 # Triine Aavik <triine@avalah.ee>, 2021
 # Oliver Ernest, 2021
 # JanaAvalah, 2023
-# Anna, 2023
 # Leaanika Randmets, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11818,6 +11818,12 @@ msgid "Compute"
 msgstr "Arvuta"
 
 #. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
 msgid "Compute scores and assign leads automatically"
 msgstr "Arvuta skoore ja määra vihjeid automaatselt"
@@ -12978,7 +12984,7 @@ msgstr "Päevad"
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
-msgstr ""
+msgstr "Deebet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -14184,6 +14190,15 @@ msgstr "Viga"
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
 msgid "Error message returned when the constraint is violated."
 msgstr "Veateade ilmub piirangu rikkumisel. "
+
+#. module: base
+#: code:addons/translate.py:0
+#, python-format
+msgid ""
+"Error while parsing view:\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -17159,6 +17174,18 @@ msgid "Invalid 'group by' parameter"
 msgstr "Kehtetu rühmitamise parameeter"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid JSON format in Default Value field."
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "Invalid aggregation function %r."
@@ -19164,7 +19191,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
 msgid "Mining"
-msgstr ""
+msgstr "Genereerija"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__minutes
@@ -24373,6 +24400,14 @@ msgstr "Saada oma pakid Fedex-i kaudu ja jälgi neid veebis"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Saada oma pakid UPS-i kaudu ja jälgi neid veebis"
 
@@ -27079,6 +27114,11 @@ msgstr "UNSPSC tootekoodid"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "UPS transport"
 
@@ -28648,6 +28688,12 @@ msgstr ""
 "Te ei saa desaktiveerida kasutajat, millesse te olete hetkel sisse logitud."
 
 #. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -28668,6 +28714,12 @@ msgstr "Te ei saa kustutada keelt, mis on kasutaja eelistatud keel"
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
 msgstr "Sa ei sa kontakti selle ülemkontaktiga sobitada."
+
+#. module: base
+#: code:addons/base/models/ir_config_parameter.py:0
+#, python-format
+msgid "You cannot rename config parameters with keys %s"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0

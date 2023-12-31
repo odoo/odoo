@@ -12,13 +12,13 @@
 # matjaz k <matjaz@mentis.si>, 2021
 # Simon Hohler <simon.hohler@gmail.com>, 2021
 # Boris Kodelja <boris@hbs.si>, 2021
-# Grega Vavtar <grega@hbs.si>, 2021
 # Tadej Lupšina <tadej@hbs.si>, 2021
 # Nejc G <nejc@luxim.si>, 2021
 # Jasmina Macur <jasmina@hbs.si>, 2021
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Neun Pro, 2023
 # Katja Deržič, 2023
+# Grega Vavtar <grega@hbs.si>, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Katja Deržič, 2023\n"
+"Last-Translator: Grega Vavtar <grega@hbs.si>, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -410,12 +410,12 @@ msgstr "<span>Nov</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "<span>Package Type: </span>"
-msgstr ""
+msgstr "<span>Tip paketa: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr ""
+msgstr "<span>Proizvodi brez dodeljenega paketa</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -475,7 +475,7 @@ msgstr "<strong>Ponudba:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr ""
+msgstr "<strong>Tip paketa:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -1136,7 +1136,7 @@ msgstr "Preveri razpoložljivost"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
 msgid "Check the existence of destination packages on move lines"
-msgstr ""
+msgstr "Preverite obstoj ciljnih paketov na premikih zaloge"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
@@ -1762,7 +1762,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__delay_alert_date
 msgid "Delay Alert Date"
-msgstr ""
+msgstr "Datum opozorila za zamudo"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -1948,7 +1948,7 @@ msgstr "Ciljno pakiranje"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package :"
-msgstr ""
+msgstr "Ciljni paket:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
@@ -2002,7 +2002,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete
 msgid "Display Complete"
-msgstr ""
+msgstr "Končni prikaz"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
@@ -2071,7 +2071,7 @@ msgstr "Prikaži serijsko številko in številko lota na dobavnicah"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
 msgid "Display package content"
-msgstr ""
+msgstr "Prikaži vsebino paketa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -2474,7 +2474,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr ""
+msgstr "Brezplačna količina za uporabo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -2590,7 +2590,7 @@ msgstr "Vsebuje operacije pakiranja"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_packages
 msgid "Has Packages"
-msgstr ""
+msgstr "Ima pakete"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
@@ -2606,7 +2606,7 @@ msgstr "Je sledljivo"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
-msgstr ""
+msgstr "Ima različice ?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
@@ -2815,7 +2815,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr ""
+msgstr "Če je označeno, boste lahko izbrali celotne pakete za premikanje."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -3144,7 +3144,7 @@ msgstr "Je sledilec"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__is_fresh_package
 msgid "Is Fresh Package"
-msgstr ""
+msgstr "Je svež paket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_locked
@@ -4360,17 +4360,17 @@ msgstr "Programski paket"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr ""
+msgstr "Črtna koda paketa (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_template
 msgid "Package Barcode (ZPL)"
-msgstr ""
+msgstr "Črtna koda paketa (ZPL)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr ""
+msgstr "Paketna črtna koda s vsebino"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_level.py:0
@@ -4388,7 +4388,7 @@ msgstr "Nivo paketa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
 msgid "Package Level Ids Details"
-msgstr ""
+msgstr "Podrobnosti nivoja paketov"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4427,6 +4427,8 @@ msgid ""
 "Packages are usually created via transfers (during pack operation) and can contain different products.\n"
 "                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
 msgstr ""
+"Paketi se običajno ustvarijo prek prenosov (med postopkom pakiranja) in lahko vsebujejo različne izdelke.\n"
+"Ko so ustvarjeni, se celoten paket lahko premakne naenkrat ali pa se izdelki razpakirajo in ponovno premaknejo kot posamezne enote."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4813,7 +4815,7 @@ msgstr "Predloga izdelka"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "Sledenje izdelkom"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -5562,7 +5564,7 @@ msgstr "Proge"
 #: model:ir.model.fields,field_description:stock.field_product_product__has_available_route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
-msgstr ""
+msgstr "Na tem izdelku lahko izberete proge"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -6090,7 +6092,7 @@ msgstr "Izvorno pakiranje"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package :"
-msgstr ""
+msgstr "Izvorni paket:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__product_ids
@@ -6205,12 +6207,12 @@ msgstr "Operacije zalog"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "Ciljna lokacija paketa"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr ""
+msgstr "Nivo paketa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -6269,7 +6271,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock moves not in package"
-msgstr ""
+msgstr "Premiki zalog niso v paketu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7288,7 +7290,7 @@ msgstr "Potrjeno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Število različic"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -7638,7 +7640,7 @@ msgstr ""
 msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
-msgstr ""
+msgstr "V isti paket želite dodati produkte, ki gredo na različne lokacije."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7795,6 +7797,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
+"Ne morete premakniti iste vsebine paketa več kot enkrat v istem prenosu ali "
+"razdeliti istega paketa na dve lokaciji."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
