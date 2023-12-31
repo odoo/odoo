@@ -100,7 +100,7 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills
     @api.model
-    def create_bill(self, invoice_vals, partner_id, invoice_date, invoice_date_due, ref, narration):
+    def create_bill(self, invoice_vals, partner_id, invoice_date, invoice_date_due, reference, narration):
         """
         Create an AR invoice and corresponding analytic lines based on the provided data.
         """
@@ -122,10 +122,11 @@ class AccountBalance(models.Model):
             'partner_id': partner_id,
             'invoice_date': invoice_date,
             'invoice_date_due': invoice_date_due,
-            'ref': ref,
+            'ref': self.name,
             'narration': narration,
             'invoice_line_ids': invoice_lines,
         })
+        invoice.action_post()
 
         # Create analytic lines for each invoice line if analytic_account_id is provided
         for line, line_vals in zip(invoice.invoice_line_ids, invoice_vals):
@@ -139,10 +140,7 @@ class AccountBalance(models.Model):
                     # Add other necessary fields
                 })
 
-        return {
-            'id': invoice.id,
-            'message': 'Invoice created successfully with analytic lines'
-        }
+        return f"ID: {invoice.id}, Name: {invoice.name}, Amount: {invoice.amount_total}, Date: {invoice.invoice_date}, Due Date: {invoice.invoice_date_due}"
 
     @api.model
     def get_bill(self, bill_id):
