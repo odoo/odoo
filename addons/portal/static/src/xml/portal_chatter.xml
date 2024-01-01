@@ -58,7 +58,7 @@
 
     <t t-name="portal.Chatter.Attachments">
         <div t-if="attachments.length" class="row">
-            <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
+            <div t-foreach="attachments" t-as="attachment" class="col-12 col-md-4 col-sm-6">
                 <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
                     <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
                         <i class="fa fa-times"/>
