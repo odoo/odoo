@@ -483,6 +483,9 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', self.refunded_order_ids.ids)],
         }
 
+    def button_dummy(self):
+        return True
+
     def _is_pos_order_paid(self):
         return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
