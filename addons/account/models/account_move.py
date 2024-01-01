@@ -31,6 +31,7 @@ from odoo.tools import (
     groupby,
     index_exists,
     is_html_empty,
+    get_fiscal_year
 )
 
 _logger = logging.getLogger(__name__)
@@ -1783,6 +1784,8 @@ class AccountMove(models.Model):
                     detected = _("The sequence will restart at 1 at the start of every month.")
                 elif reset == 'year':
                     detected = _("The sequence will restart at 1 at the start of every year.")
+                elif reset == 'fyear':
+                    detected = _("The sequence will restart at 1 at the start of every fiscal year.")
                 else:
                     detected = _("The sequence will never restart.")
                 return {'warning': {
@@ -2634,6 +2637,12 @@ class AccountMove(models.Model):
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
+            elif sequence_number_reset == 'fyear':
+                company = self.company_id
+                fyear_start, fyear_end = get_fiscal_year(self.date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
+                where_string += "AND date >= %(fyear_start)s AND date <= %(fyear_end)s"
+                param['fyear_start'] = fyear_start
+                param['fyear_end'] = fyear_end
             elif sequence_number_reset == 'month':
                 where_string += " AND date_trunc('month', date::timestamp without time zone) = date_trunc('month', %(date)s) "
                 param['date'] = self.date

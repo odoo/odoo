@@ -27,8 +27,8 @@ class SequenceMixin(models.AbstractModel):
     _sequences = [
         (r'^(?P<prefix1>.*?)(?P<year>({year}))(?P<prefix2>\D*?)(?P<month>{month})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'month'),
         (r'^(?P<prefix1>.*?)(?P<year2>({year2}))(?P<prefix2>\D*?)(?P<month>{month})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'month'),
-        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end}))(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
-        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start_2}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end_2}))(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start_2}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end_2}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
         (r'^(?P<prefix1>.*?)(?P<year>({year}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'year'),
         (r'^(?P<prefix1>.*?)(?P<year2>({year2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'year'),
         (r'^(?P<prefix1>.*?)(?P<seq>\d+)(?P<suffix>\D*?)$', 'never')
