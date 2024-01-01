@@ -10,9 +10,9 @@
                 <field name="paytm_tid" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
                 <field name="paytm_merchant_key" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
                 <field name="channel_id" groups="base.group_no_one" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
-                <field name="paytm_test_mode" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
                 <field name="accept_payment" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
                 <field name="allowed_payment_modes" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
+                <field name="paytm_test_mode" invisible="use_payment_terminal != 'paytm'" required="use_payment_terminal == 'paytm'"/>
             </xpath>
         </field>
     </record>
