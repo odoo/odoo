@@ -2176,7 +2176,22 @@ class MailThread(models.AbstractModel):
             model = False
             res_id = False
 
-        msg_values = {
+        msg_values = self._prepare_message_values(parent_id, model, res_id, subject, body, author_id, email_from, partner_ids)
+        msg_values.update(msg_kwargs)
+        # add default-like values afterwards, to avoid useless queries
+        if 'subtype_id' not in msg_values:
+            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        if 'reply_to' not in msg_values:
+            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
+        if 'email_add_signature' not in msg_values:
+            msg_values['email_add_signature'] = True
+
+        new_message = self._message_create(msg_values)
+        self._notify_thread(new_message, msg_values, **notif_kwargs)
+        return new_message
+
+    def _prepare_message_values(self, parent_id, model, res_id, subject, body, author_id, email_from, partner_ids):
+        return {
             'parent_id': parent_id,
             'model': self._name if self else model,
             'res_id': self.id if self else res_id,
@@ -2190,18 +2205,6 @@ class MailThread(models.AbstractModel):
             'record_name': False,
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
-        msg_values.update(msg_kwargs)
-        # add default-like values afterwards, to avoid useless queries
-        if 'subtype_id' not in msg_values:
-            msg_values['subtype_id'] = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        if 'reply_to' not in msg_values:
-            msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
-        if 'email_add_signature' not in msg_values:
-            msg_values['email_add_signature'] = True
-
-        new_message = self._message_create(msg_values)
-        self._notify_thread(new_message, msg_values, **notif_kwargs)
-        return new_message
 
     def _message_log_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to log a note using a view_id without notifying followers. """
