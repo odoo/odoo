@@ -22,8 +22,8 @@ class AccountMove(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True)
-    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", inverse="_set_fiscal_position", store=True, readonly=False, copy=True)
+    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", inverse="_set_fiscal_position", store=True, readonly=False)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
@@ -61,6 +61,33 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
+
+    @api.onchange('l10n_in_state_id', 'l10n_in_gst_treatment')
+    def _set_fiscal_position(self):
+        self._conditional_add_to_compute('fiscal_position_id', lambda move: (
+            move.move_type != 'entry'
+        ))
+        for move in self:
+            if not move._origin and move.move_type != 'entry':
+                move._compute_fiscal_position_id()
+
+    def _compute_fiscal_position_id(self):
+        def get_fiscal_position_by_id(position):
+            position = self.env.ref('account.%s_%s'%((self.env.company.id), (position)))
+            return position.id
+
+        for move in self:
+            if self.env.company.country_id.code == "IN":
+                state_id = move.l10n_in_state_id.id
+                company_state_id = self.env.company.state_id.id
+                if move.l10n_in_gst_treatment == 'overseas':
+                    move.fiscal_position_id = self.env['account.fiscal.position'].search([('id', '=', get_fiscal_position_by_id('fiscal_position_in_export'))])
+                elif (company_state_id and state_id and company_state_id != state_id) or move.l10n_in_gst_treatment == 'special_economic_zone':
+                    move.fiscal_position_id = self.env['account.fiscal.position'].search([('id', '=', get_fiscal_position_by_id('fiscal_position_in_inter_state'))])
+                else:
+                    move.fiscal_position_id = False
+            else:
+                return super()._compute_fiscal_position_id()
 
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
