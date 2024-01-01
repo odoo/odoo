@@ -3,10 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { makeContext } from "@web/core/context";
 import { SearchModel } from "@web/search/search_model";
-import {
-    serializeDate,
-    serializeDateTime,
-} from "@web/core/l10n/dates";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /**
  * This is the conversion of ForecastModelExtension. See there for more
