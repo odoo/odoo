@@ -64,7 +64,7 @@ smtplib.stderr = WriteToLogger()
 def is_ascii(s):
     return all(ord(cp) < 128 for cp in s)
 
-address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
+address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
 
 def extract_rfc2822_addresses(text):
     """Returns a list of valid RFC2822 addresses

@@ -2054,6 +2054,7 @@ class PosSession(models.Model):
         :param custom_search_params: a dictionary containing params of a search_read()
         """
         params = self._loader_params_product_product()
+        self = self.with_context(**params['context'])
         # custom_search_params will take priority
         params['search_params'] = {**params['search_params'], **custom_search_params}
         products = self.env['product.product'].with_context(active_test=False).search_read(**params['search_params'])

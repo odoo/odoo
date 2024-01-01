@@ -380,9 +380,10 @@ class PaymentProvider(models.Model):
         for provider in self:
             external_id = external_ids[provider.id]
             if external_id and not external_id.startswith('__export__'):
-                raise UserError(
-                    _("You cannot delete the payment provider %s; archive it instead.", provider.name)
-                )
+                raise UserError(_(
+                    "You cannot delete the payment provider %s; disable it or uninstall it"
+                    " instead.", provider.name
+                ))
 
     #=== ACTION METHODS ===#
 

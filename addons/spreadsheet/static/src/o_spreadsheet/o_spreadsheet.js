@@ -622,13 +622,6 @@
 
     //------------------------------------------------------------------------------
     /**
-     * Stringify an object, like JSON.stringify, except that the first level of keys
-     * is ordered.
-     */
-    function stringify(obj) {
-        return JSON.stringify(obj, Object.keys(obj).sort());
-    }
-    /**
      * Remove quotes from a quoted string
      * ```js
      * removeStringQuotes('"Hello"')
@@ -929,7 +922,7 @@
      */
     function getItemId(item, itemsDic) {
         for (let [key, value] of Object.entries(itemsDic)) {
-            if (stringify(value) === stringify(item)) {
+            if (deepEquals(value, item)) {
                 return parseInt(key, 10);
             }
         }
@@ -1065,6 +1058,22 @@
         if (!matrix.length)
             return matrix;
         return matrix[0].map((_, i) => matrix.map((row) => row[i]));
+    }
+    /**
+     * Creates a version of the function that's memoized on the value of its first
+     * argument, if any.
+     */
+    function memoize(func) {
+        const cache = new Map();
+        const funcName = func.name ? func.name + " (memoized)" : "memoized";
+        return {
+            [funcName](...args) {
+                if (!cache.has(args[0])) {
+                    cache.set(args[0], func(...args));
+                }
+                return cache.get(args[0]);
+            },
+        }[funcName];
     }
 
     const RBA_REGEX = /rgba?\(|\s+|\)/gi;
@@ -1344,8 +1353,10 @@
     const cellReference = new RegExp(/\$?([A-Z]{1,3})\$?([0-9]{1,7})/, "i");
     // Same as above, but matches the exact string (nothing before or after)
     const singleCellReference = new RegExp(/^\$?([A-Z]{1,3})\$?([0-9]{1,7})$/, "i");
-    /** Reference of a column header (eg. A, AB) */
-    const colHeader = new RegExp(/^([A-Z]{1,3})+$/, "i");
+    /** Reference of a column header (eg. A, AB, $A) */
+    const colHeader = new RegExp(/^\$?([A-Z]{1,3})+$/, "i");
+    /** Reference of a row header (eg. 1, $1) */
+    const rowHeader = new RegExp(/^\$?([0-9]{1,7})+$/, "i");
     /** Reference of a column (eg. A, $CA, Sheet1!B) */
     const colReference = new RegExp(/^\s*('.+'!|[^']+!)?\$?([A-Z]{1,3})$/, "i");
     /** Reference of a row (eg. 1, 59, Sheet1!9) */
@@ -1374,6 +1385,9 @@
     }
     function isColHeader(str) {
         return colHeader.test(str);
+    }
+    function isRowHeader(str) {
+        return rowHeader.test(str);
     }
     /**
      * Return true if the given xc is the reference of a single cell,
@@ -2075,18 +2089,10 @@
             if (isFullCol) {
                 parts[0].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
                 parts[1].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
-                if (zone.left === zone.right) {
-                    parts[0].colFixed = parts[0].colFixed || parts[1].colFixed;
-                    parts[1].colFixed = parts[0].colFixed || parts[1].colFixed;
-                }
             }
             if (isFullRow) {
                 parts[0].colFixed = parts[0].colFixed || parts[1].colFixed;
                 parts[1].colFixed = parts[0].colFixed || parts[1].colFixed;
-                if (zone.top === zone.bottom) {
-                    parts[0].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
-                    parts[1].rowFixed = parts[0].rowFixed || parts[1].rowFixed;
-                }
             }
             return parts;
         }
@@ -3302,6 +3308,7 @@
         CommandResult[CommandResult["ChartDoesNotExist"] = 84] = "ChartDoesNotExist";
         CommandResult[CommandResult["InvalidHeaderIndex"] = 85] = "InvalidHeaderIndex";
         CommandResult[CommandResult["InvalidQuantity"] = 86] = "InvalidQuantity";
+        CommandResult[CommandResult["NoChanges"] = 87] = "NoChanges";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     function isMatrix(x) {
@@ -3894,6 +3901,9 @@
     }
     function getOpenedMenus() {
         return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
+    }
+    function isMacOS() {
+        return navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
     }
 
     /**
@@ -10010,7 +10020,7 @@
       }
       .o-input-count {
         width: fit-content;
-        padding: 4 0 4 4;
+        padding: 4px 0 4px 4px;
       }
     }
   }
@@ -10977,12 +10987,12 @@
         }
     }
     /** Normalize string by setting it to lowercase and replacing accent letters with plain letters */
-    function normalizeString(str) {
+    const normalizeString = memoize(function normalizeString(str) {
         return str
             .toLowerCase()
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "");
-    }
+    });
     /**
      * Normalize a value.
      * If the cell value is a string, this will set it to lowercase and replacing accent letters with plain letters
@@ -18557,7 +18567,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             SPACE: goTo(State.RightRef),
             NUMBER: goTo(State.Found),
             REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value) || isRowHeader(token.value)),
         },
         [State.RightColumnRef]: {
             SPACE: goTo(State.RightColumnRef),
@@ -18568,6 +18578,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             SPACE: goTo(State.RightRowRef),
             NUMBER: goTo(State.Found),
             REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isRowHeader(token.value)),
         },
         [State.Found]: {},
     };
@@ -19077,6 +19088,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
             case "colrow":
                 indexOfNumber = xc.search(/[0-9]/);
+                if (indexOfNumber === -1 || indexOfNumber === 0) {
+                    // no row number (eg. A) or no column (eg. 1)
+                    return "$" + xc;
+                }
                 xc = xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
                 return "$" + xc;
             case "none":
@@ -21530,6 +21545,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 draggerShadowThickness: 0,
                 delta: 0,
                 base: 0,
+                position: "before",
             });
         }
         _computeHandleDisplay(ev) {
@@ -21655,11 +21671,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         this.state.draggerLinePosition = dimensions.start;
                         this.state.draggerShadowPosition = dimensions.start;
                         this.state.base = elementIndex;
+                        this.state.position = "before";
                     }
                     else if (this._getSelectedZoneEnd() < elementIndex) {
                         this.state.draggerLinePosition = dimensions.end;
                         this.state.draggerShadowPosition = dimensions.end - this.state.draggerShadowThickness;
-                        this.state.base = elementIndex + 1;
+                        this.state.base = elementIndex;
+                        this.state.position = "after";
                     }
                     else {
                         this.state.draggerLinePosition = startDimensions.start;
@@ -21837,6 +21855,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 dimension: "COL",
                 base: this.state.base,
                 elements,
+                position: this.state.position,
             });
             if (!result.isSuccessful && result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 this.env.raiseError(MergeErrorMessage);
@@ -22006,6 +22025,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 dimension: "ROW",
                 base: this.state.base,
                 elements,
+                position: this.state.position,
             });
             if (!result.isSuccessful && result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 this.env.raiseError(MergeErrorMessage);
@@ -22108,8 +22128,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return val * (deltaMode === 0 ? 1 : DEFAULT_CELL_HEIGHT);
         }
         const onMouseWheel = (ev) => {
-            const deltaX = normalize(ev.shiftKey ? ev.deltaY : ev.deltaX, ev.deltaMode);
-            const deltaY = normalize(ev.shiftKey ? ev.deltaX : ev.deltaY, ev.deltaMode);
+            const deltaX = normalize(ev.shiftKey && !isMacOS() ? ev.deltaY : ev.deltaX, ev.deltaMode);
+            const deltaY = normalize(ev.shiftKey && !isMacOS() ? ev.deltaX : ev.deltaY, ev.deltaMode);
             handler(deltaX, deltaY);
         };
         return onMouseWheel;
@@ -27102,6 +27122,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Command Handling
         // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "SET_BORDER":
+                    return this.checkBordersUnchanged(cmd);
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
         handle(cmd) {
             switch (cmd.type) {
                 case "ADD_MERGE":
@@ -27497,6 +27525,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.setBorders(sheetId, [{ ...zone, left: right }], "right");
             }
         }
+        checkBordersUnchanged(cmd) {
+            var _a, _b, _c, _d;
+            const currentBorder = this.getCellBorder(cmd.sheetId, cmd.col, cmd.row);
+            const areAllNewBordersUndefined = !((_a = cmd.border) === null || _a === void 0 ? void 0 : _a.bottom) && !((_b = cmd.border) === null || _b === void 0 ? void 0 : _b.left) && !((_c = cmd.border) === null || _c === void 0 ? void 0 : _c.right) && !((_d = cmd.border) === null || _d === void 0 ? void 0 : _d.top);
+            if ((!currentBorder && areAllNewBordersUndefined) || deepEquals(currentBorder, cmd.border)) {
+                return 87 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
         // ---------------------------------------------------------------------------
         // Import/Export
         // ---------------------------------------------------------------------------
@@ -27532,7 +27569,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              */
             function getBorderId(border) {
                 for (let [key, value] of Object.entries(borders)) {
-                    if (stringify(value) === stringify(border)) {
+                    if (deepEquals(value, border)) {
                         return parseInt(key, 10);
                     }
                 }
@@ -27575,6 +27612,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     class CellPlugin extends CorePlugin {
         constructor() {
             super(...arguments);
+            this.nextId = 1;
             this.cells = {};
             this.createCell = cellFactory(this.getters);
         }
@@ -27600,8 +27638,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
+                    return this.checkCellOutOfSheet(cmd);
                 case "CLEAR_CELL":
-                    return this.checkCellOutOfSheet(cmd.sheetId, cmd.col, cmd.row);
+                    return this.checkValidations(cmd, this.chainValidations(this.checkCellOutOfSheet, this.checkUselessClearCell));
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -27742,7 +27781,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         importCell(sheetId, cellData, normalizedStyles, normalizedFormats) {
             const style = (cellData.style && normalizedStyles[cellData.style]) || undefined;
             const format = (cellData.format && normalizedFormats[cellData.format]) || undefined;
-            const cellId = this.uuidGenerator.uuidv4();
+            const cellId = this.getNextUid();
             const properties = { format, style };
             return this.createCell(cellId, (cellData === null || cellData === void 0 ? void 0 : cellData.content) || "", properties, sheetId);
         }
@@ -27773,14 +27812,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         getCellById(cellId) {
             // this must be as fast as possible
-            for (const sheetId in this.cells) {
-                const sheet = this.cells[sheetId];
-                const cell = sheet[cellId];
-                if (cell) {
-                    return cell;
-                }
-            }
-            return undefined;
+            const position = this.getters.getCellPosition(cellId);
+            const sheet = this.cells[position.sheetId];
+            return sheet[cellId];
         }
         /*
          * Reconstructs the original formula string based on a normalized form and its dependencies
@@ -27888,6 +27922,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return format;
         }
+        getNextUid() {
+            const id = this.nextId.toString();
+            this.history.update("nextId", this.nextId + 1);
+            return id;
+        }
         updateCell(sheetId, col, row, after) {
             var _a;
             const before = this.getters.getCell(sheetId, col, row);
@@ -27926,7 +27965,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 return;
             }
-            const cellId = (before === null || before === void 0 ? void 0 : before.id) || this.uuidGenerator.uuidv4();
+            const cellId = (before === null || before === void 0 ? void 0 : before.id) || this.getNextUid();
             const didContentChange = hasContent;
             const properties = { format, style };
             const cell = this.createCell(cellId, afterContent, properties, sheetId);
@@ -27940,12 +27979,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.history.update("cells", sheetId, cell.id, cell);
             this.dispatch("UPDATE_CELL_POSITION", { cellId: cell.id, col, row, sheetId });
         }
-        checkCellOutOfSheet(sheetId, col, row) {
+        checkCellOutOfSheet(cmd) {
+            const { sheetId, col, row } = cmd;
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
                 return 27 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
             return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
+        }
+        checkUselessClearCell(cmd) {
+            const cell = this.getters.getCell(cmd.sheetId, cmd.col, cmd.row);
+            if (!cell)
+                return 87 /* CommandResult.NoChanges */;
+            if (!cell.content && !cell.style && !cell.format) {
+                return 87 /* CommandResult.NoChanges */;
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
     CellPlugin.getters = [
@@ -29898,7 +29947,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const elements = cmd.dimension === "COL"
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
-                    if (cmd.base < 0 || cmd.base > elements) {
+                    if (cmd.base < 0 || cmd.base >= elements) {
                         return 85 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (cmd.quantity <= 0) {
@@ -30511,10 +30560,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             // begin with the end.
             rows.sort((a, b) => b - a);
             for (let group of groupConsecutive(rows)) {
+                // indexes are sorted in the descending order
+                const from = group[group.length - 1];
+                const to = group[0];
                 // Move the cells.
-                this.moveCellOnRowsDeletion(sheet, group[group.length - 1], group[0]);
-                // Effectively delete the element and recompute the left-right/top-bottom.
-                group.map((row) => this.updateRowsStructureOnDeletion(row, sheet));
+                this.moveCellOnRowsDeletion(sheet, from, to);
+                // Effectively delete the rows
+                this.updateRowsStructureOnDeletion(sheet, from, to);
             }
             const count = rows.filter((row) => row < sheet.panes.ySplit).length;
             if (count) {
@@ -30536,8 +30588,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.addEmptyRows(sheet, quantity);
             // Move the cells.
             this.moveCellsOnAddition(sheet, index, quantity, "rows");
-            // Recompute the left-right/top-bottom.
-            this.updateRowsStructureOnAddition(sheet, row, quantity);
             if (index < sheet.panes.ySplit) {
                 this.setPaneDivisions(sheet.id, sheet.panes.ySplit + quantity, "ROW");
             }
@@ -30638,33 +30688,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
             }
         }
-        updateRowsStructureOnDeletion(index, sheet) {
+        updateRowsStructureOnDeletion(sheet, deleteFromRow, deleteToRow) {
             const rows = [];
-            const cellsQueue = sheet.rows.map((row) => row.cells);
+            const cellsQueue = sheet.rows.map((row) => row.cells).reverse();
             for (let i in sheet.rows) {
-                if (Number(i) === index) {
+                const row = Number(i);
+                if (row >= deleteFromRow && row <= deleteToRow) {
                     continue;
                 }
                 rows.push({
-                    cells: cellsQueue.shift(),
+                    cells: cellsQueue.pop(),
                 });
             }
-            this.history.update("sheets", sheet.id, "rows", rows);
-        }
-        /**
-         * Update the rows of the sheet after an addition:
-         * - Rename the rows
-         *
-         * @param sheet Sheet on which the deletion occurs
-         * @param addedRow Index of the added row
-         * @param rowsToAdd Number of the rows to add
-         */
-        updateRowsStructureOnAddition(sheet, addedRow, rowsToAdd) {
-            const rows = [];
-            const cellsQueue = sheet.rows.map((row) => row.cells);
-            sheet.rows.forEach(() => rows.push({
-                cells: cellsQueue.shift(),
-            }));
             this.history.update("sheets", sheet.id, "rows", rows);
         }
         /**
@@ -32655,6 +32690,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 return cell.evaluated;
             }
+            const rangeCache = {};
             /**
              * Return the values of the cell(s) used in reference, but always in the format of a range even
              * if a single cell is referenced. It is a list of col values. This is useful for the formulas that describe parameters as
@@ -32671,21 +32707,26 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 // Performance issue: Avoid fetching data on positions that are out of the spreadsheet
                 // e.g. A1:ZZZ9999 in a sheet with 10 cols and 10 rows should ignore everything past J10 and return a 10x10 array
                 const sheetZone = getters.getSheetZone(sheetId);
-                const result = [];
                 const zone = intersection(range.zone, sheetZone);
                 if (!zone) {
-                    result.push([]);
-                    return result;
+                    return [[]];
                 }
+                const { top, left, bottom, right } = zone;
+                const cacheKey = `${sheetId}-${top}-${left}-${bottom}-${right}`;
+                if (cacheKey in rangeCache) {
+                    return rangeCache[cacheKey];
+                }
+                const result = new Array(right - left + 1);
                 // Performance issue: nested loop is faster than a map here
-                for (let col = zone.left; col <= zone.right; col++) {
-                    const rowValues = [];
-                    for (let row = zone.top; row <= zone.bottom; row++) {
+                for (let col = left; col <= right; col++) {
+                    const rowValues = new Array(bottom - top + 1);
+                    for (let row = top; row <= bottom; row++) {
                         const cell = evalContext.getters.getCell(range.sheetId, col, row);
-                        rowValues.push(cell ? getEvaluatedCell(cell) : undefined);
+                        rowValues[row - top] = cell ? getEvaluatedCell(cell) : undefined;
                     }
-                    result.push(rowValues);
+                    result[col - left] = rowValues;
                 }
+                rangeCache[cacheKey] = result;
                 return result;
             }
             /**
@@ -34939,7 +34980,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 sheetId: cmd.sheetId,
                 base: cmd.base,
                 quantity: thickness,
-                position: "before",
+                position: cmd.position,
             });
             const isCol = cmd.dimension === "COL";
             const start = cmd.elements[0];
@@ -34956,12 +34997,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 },
             ];
             const state = new ClipboardCellsState(target, "CUT", this.getters, this.dispatch, this.selection);
+            const base = isBasedBefore ? cmd.base : cmd.base + 1;
             const pasteTarget = [
                 {
-                    left: isCol ? cmd.base : 0,
-                    right: isCol ? cmd.base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
-                    top: !isCol ? cmd.base : 0,
-                    bottom: !isCol ? cmd.base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
+                    left: isCol ? base : 0,
+                    right: isCol ? base + thickness - 1 : this.getters.getNumberCols(cmd.sheetId) - 1,
+                    top: !isCol ? base : 0,
+                    bottom: !isCol ? base + thickness - 1 : this.getters.getNumberRows(cmd.sheetId) - 1,
                 },
             ];
             state.paste(pasteTarget, { selectTarget: true });
@@ -34997,6 +35039,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 doesElementsHaveCommonMerges(id, end, end + 1) ||
                 doesElementsHaveCommonMerges(id, cmd.base - 1, cmd.base)) {
                 return 2 /* CommandResult.WillRemoveExistingMerge */;
+            }
+            const headers = [cmd.base, ...cmd.elements];
+            const maxHeaderValue = isCol ? this.getters.getNumberCols(id) : this.getters.getNumberRows(id);
+            if (headers.some((h) => h < 0 || h >= maxHeaderValue)) {
+                return 85 /* CommandResult.InvalidHeaderIndex */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -39908,9 +39955,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * Apply the changes of the given HistoryChange to the state
      */
     function applyChange(change, target) {
-        let val = change.root;
-        let key = change.path[change.path.length - 1];
-        for (let pathIndex = 0; pathIndex < change.path.slice(0, -1).length; pathIndex++) {
+        let val = change.path[0];
+        const key = change.path[change.path.length - 1];
+        for (let pathIndex = 1; pathIndex < change.path.slice(0, -1).length; pathIndex++) {
             const p = change.path[pathIndex];
             if (val[p] === undefined) {
                 const nextPath = change.path[pathIndex + 1];
@@ -41040,13 +41087,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         addChange(...args) {
             const val = args.pop();
-            const [root, ...path] = args;
+            const root = args[0];
             let value = root;
-            let key = path[path.length - 1];
-            for (let pathIndex = 0; pathIndex <= path.length - 2; pathIndex++) {
-                const p = path[pathIndex];
+            let key = args[args.length - 1];
+            const pathLength = args.length - 2;
+            for (let pathIndex = 1; pathIndex <= pathLength; pathIndex++) {
+                const p = args[pathIndex];
                 if (value[p] === undefined) {
-                    const nextPath = path[pathIndex + 1];
+                    const nextPath = args[pathIndex + 1];
                     value[p] = createEmptyStructure(nextPath);
                 }
                 value = value[p];
@@ -41055,8 +41103,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             this.changes.push({
-                root,
-                path,
+                path: args,
                 before: value[key],
                 after: val,
             });
@@ -42790,7 +42837,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         checkDispatchAllowed(command) {
             const results = this.handlers.map((handler) => handler.allowDispatch(command));
-            return new DispatchResult(results.flat());
+            if (results.some((r) => r !== 0 /* CommandResult.Success */)) {
+                return new DispatchResult(results.flat());
+            }
+            return DispatchResult.Success;
         }
         finalize() {
             this.status = 3 /* Status.Finalizing */;
@@ -43010,9 +43060,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.23';
-    __info__.date = '2023-11-02T09:44:15.595Z';
-    __info__.hash = '06ef793';
+    __info__.version = '16.0.26';
+    __info__.date = '2023-12-05T10:10:01.055Z';
+    __info__.hash = '10de093';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

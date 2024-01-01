@@ -13,6 +13,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
     def setUpClass(cls):
         super(TestWebsiteEventSaleCommon, cls).setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.currency_test = cls.env['res.currency'].create({
             'name': 'eventX',
             'rounding': 0.01,

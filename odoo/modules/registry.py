@@ -249,6 +249,7 @@ class Registry(Mapping):
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
+    @locked
     def setup_models(self, cr):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
@@ -306,6 +307,9 @@ class Registry(Mapping):
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
                 self.field_depends_context[field] = tuple(depends_context)
+
+        # clean the lazy_property again in case they are cached by another ongoing registry readonly request
+        lazy_property.reset_all(self)
 
         # Reinstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.

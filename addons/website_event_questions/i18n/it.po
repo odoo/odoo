@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,7 +202,7 @@ msgstr "Tipo di pasto"
 #. module: website_event_questions
 #: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_0
 msgid "Mixed"
-msgstr "Mischiato"
+msgstr "Misto"
 
 #. module: website_event_questions
 #: model:event.question.answer,name:website_event_questions.event_type_data_conference_question_0_answer_1
@@ -237,6 +237,13 @@ msgstr "Domanda"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_type
 msgid "Question Type"
 msgstr "Tipo di domanda"
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid "Question cannot be linked to both an Event and an Event Type."
+msgstr ""
+"La domanda non può essere collegata sia all'evento che al tipo di evento."
 
 #. module: website_event_questions
 #: code:addons/website_event_questions/models/event_question.py:0

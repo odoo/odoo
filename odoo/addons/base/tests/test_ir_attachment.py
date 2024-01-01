@@ -9,13 +9,13 @@ from PIL import Image
 
 import odoo
 from odoo.exceptions import AccessError
-from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import image_to_base64
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
 
-class TestIrAttachment(TransactionCase):
+class TestIrAttachment(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestIrAttachment, self).setUp()
         self.Attachment = self.env['ir.attachment']
@@ -91,7 +91,7 @@ class TestIrAttachment(TransactionCase):
         Tests the consistency of documents' mimetypes
         """
 
-        Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
+        Attachment = self.Attachment.with_user(self.user_demo.id)
         a2 = Attachment.create({'name': 'a2', 'datas': self.blob1_b64, 'mimetype': 'image/png'})
         self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
         a3 = Attachment.create({'name': 'a3', 'datas': self.blob1_b64, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
@@ -101,7 +101,7 @@ class TestIrAttachment(TransactionCase):
         """
         Tests that potentially harmful mimetypes (XML mimetypes that can lead to XSS attacks) are converted to text
         """
-        Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
+        Attachment = self.Attachment.with_user(self.user_demo.id)
         document = Attachment.create({'name': 'document', 'datas': self.blob1_b64})
         document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
         self.assertEqual(document.mimetype, 'text/plain', "XML mimetype should be forced to text")
@@ -261,11 +261,11 @@ class TestIrAttachment(TransactionCase):
         self.assertFalse(os.path.isfile(store_path), 'file removed')
 
 
-class TestPermissions(TransactionCase):
+class TestPermissions(TransactionCaseWithUserDemo):
     def setUp(self):
         super().setUp()
         # replace self.env(uid=1) with an actual user environment so rules apply
-        self.env = self.env(user=self.env.ref('base.user_demo'))
+        self.env = self.env(user=self.user_demo)
         self.Attachments = self.env['ir.attachment']
 
         # create a record with an attachment and a rule allowing Read access

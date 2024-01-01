@@ -4,7 +4,7 @@ import { nextAnimationFrame, start, startServer } from '@mail/../tests/helpers/t
 import { ROUTES_TO_IGNORE } from '@mail/../tests/helpers/webclient_setup';
 
 import testUtils from 'web.test_utils';
-import { patchWithCleanup, selectDropdownItem, editInput } from '@web/../tests/helpers/utils';
+import { patchDate, patchWithCleanup, selectDropdownItem, editInput } from '@web/../tests/helpers/utils';
 import { ListController } from "@web/views/list/list_controller";
 
 QUnit.module('mail', {}, function () {
@@ -91,6 +91,58 @@ QUnit.test('list activity widget with activities', async function (assert) {
     assert.strictEqual(secondRow.querySelector('.o_ListFieldActivityView_summary').innerText, 'Type 2');
 
     assert.verifySteps(['/web/dataset/call_kw/res.users/web_search_read']);
+});
+
+QUnit.test('list activity widget with activities, two pages, mark done', async function (assert) {
+    patchDate(2023, 0, 11, 12, 0, 0);
+    const pyEnv = await startServer();
+    const mailActivityTypeId = pyEnv['mail.activity.type'].create({});
+    const mailActivityId = pyEnv['mail.activity'].create({
+        display_name: "Meet FP",
+        date_deadline: moment().add(1, 'day').format("YYYY-MM-DD"), // tomorrow
+        can_write: true,
+        state: "planned",
+        user_id: pyEnv.currentUserId,
+        create_uid: pyEnv.currentUserId,
+        activity_type_id: mailActivityTypeId,
+    });
+
+    pyEnv['res.users'].create({ display_name: "User 1"});
+    pyEnv['res.users'].create({ display_name: "User 2"});
+    pyEnv['res.users'].create({
+        display_name: "User 3",
+        activity_ids: [mailActivityId],
+        activity_state: 'planned',
+        activity_summary: "Something to do",
+        activity_type_id: mailActivityTypeId,
+    });
+    const views = {
+        'res.users,false,list': `
+            <list limit="2">
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`,
+    };
+
+    const { click, openView } = await start({
+        serverData: { views },
+    });
+    await openView({
+        res_model: 'res.users',
+        views: [[false, 'list']],
+    });
+
+    assert.containsOnce(document.body, ".o_list_view");
+    assert.strictEqual(document.querySelector(".o_cp_pager").innerText, "1-2 / 4");
+
+    await click(document.querySelector(".o_pager_next"));
+    assert.strictEqual(document.querySelector(".o_cp_pager").innerText, "3-4 / 4");
+    assert.strictEqual(document.querySelectorAll(".o_data_row")[1].querySelector("[name=activity_ids]").innerText, "Something to do");
+
+    await click(document.querySelectorAll(".o_ActivityButtonView")[1]);
+    await click(document.querySelector(".o_ActivityListViewItem_markAsDone"));
+    await click(document.querySelector(".o_ActivityMarkDonePopoverContent_doneButton"));
+    assert.strictEqual(document.querySelector(".o_cp_pager").innerText, "3-4 / 4");
+    assert.strictEqual(document.querySelectorAll(".o_data_row")[1].querySelector("[name=activity_ids]").innerText, "");
 });
 
 QUnit.test('list activity widget with exception', async function (assert) {

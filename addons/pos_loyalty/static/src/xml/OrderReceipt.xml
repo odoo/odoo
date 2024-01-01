@@ -6,12 +6,12 @@
             <t t-if='receipt.loyaltyStats'>
                 <t t-foreach="receipt.loyaltyStats" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                     <!-- Show only if portal_visible. -->
-                    <div t-if="_loyaltyStat.program.portal_visible" class='loyalty'>
+                    <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='loyalty'>
                         <span class="pos-receipt-center-align">
                             <div>--------------------------------</div>
                             <br/>
                             <div t-esc='_loyaltyStat.program.name' class="pos-receipt-title" />
-                            <div t-esc='receipt.partner.name' />
+                            
                             <br />
                         </span>
                         <t t-if='_loyaltyStat.points.won'>
@@ -28,6 +28,8 @@
                         <br />
                     </div>
                 </t>
+                <br/>
+                <div>Customer <span t-esc='receipt.partner.name' class='pos-receipt-right-align'/></div>
             </t>
             <t t-if="receipt.new_coupon_info and receipt.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards">

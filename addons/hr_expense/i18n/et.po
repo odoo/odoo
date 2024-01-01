@@ -14,11 +14,12 @@
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
-# Leaanika Randmets, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2023
-# Anna, 2023
 # JanaAvalah, 2023
 # Martin Trigaux, 2023
+# Mihkel avalah, 2023
+# Leaanika Randmets, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-26 14:21+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,7 +273,7 @@ msgstr "Analüütiline konto"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution_search
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Analüütiline jaotusotsing"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
@@ -370,6 +371,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
+"Mõlemad hinnas sisalduvad ja hinnast välja jäetud maksud käituvad kulude "
+"puhul nagu hinnas sisalduvad maksud."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
@@ -1094,7 +1097,7 @@ msgstr "Sissetulevad emailid"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Internal Note"
-msgstr "Sisemised märkused"
+msgstr "Sisemised märkmed"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
@@ -1406,7 +1409,7 @@ msgstr "Vigade arv"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Tegevust nõudvate sõnumite arv"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
@@ -1498,7 +1501,7 @@ msgstr "Maksestaatus"
 #: code:addons/hr_expense/models/account_payment.py:0
 #, python-format
 msgid "Payment created for: %s"
-msgstr ""
+msgstr "Makse loodud: %s"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1581,7 +1584,7 @@ msgstr "Kogus"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
-msgstr "Tehtud kogused"
+msgstr "Kogus"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2006,6 +2009,15 @@ msgid "There are no expense reports to approve."
 msgstr "Kinnitatavad kuluaruanded puuduvad."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -2301,7 +2313,7 @@ msgstr "Te ei saa kustutada kuludes kasutatavat analüütilist kontot."
 msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
-msgstr ""
+msgstr "Sa ei saa seda muuta, kuna makse on seotud kuluaruandega."
 
 #. module: hr_expense
 #. odoo-python
@@ -2312,6 +2324,12 @@ msgstr "Te ei saa keelduda oma kuludest"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr "Sa ei saa erinevate ettevõtete kulutusi esitada samas kuluaruandes. "
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2343,7 +2361,7 @@ msgstr "Teil ei ole aruande esitamiseks mingeid kulusid"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You need to add a manual payment method on the journal (%s)"
-msgstr ""
+msgstr "Pead käsitsi lisama maksemeetodi järgmisele andmikule (%s)."
 
 #. module: hr_expense
 #. odoo-python
@@ -2420,4 +2438,3 @@ msgid ""
 "The private address of the employee is required to post the expense report. "
 "Please add it on the employee form."
 msgstr ""
-"Kuluaruande postitamiseks on vajalik töötaja eraaadress. Palun lisage see töötaja vormile."

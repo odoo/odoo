@@ -341,6 +341,33 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 2760.0,
         })
 
+        # Check rounding.
+        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
+        decimal_precision.digits = 4
+
+        product.lst_price = 90.0034
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'fiscal_position_id': fiscal_position.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'product_id': product.id,
+                }),
+            ],
+        })
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 163.6425, # 90.0034 / 1.10 * 2
+            'tax_ids': tax_price_exclude.ids,
+            'price_subtotal': 163.643,
+            'price_total': 188.189,
+        }])
+
     def test_out_invoice_line_onchange_product_2_with_fiscal_pos_2(self):
         ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
         The price_unit should be 120.0 after applying the fiscal position.
@@ -1161,6 +1188,41 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': -446.919,
             'amount_total': -2627.014,
         })
+
+    def test_payment_term_line_fiscal_position(self):
+        """Test the mapping of payment term line accounts with fiscal position."""
+        account_revenue_copy = self.company_data['default_account_revenue'].copy()
+        account_receivable_copy = self.company_data['default_account_receivable'].copy()
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'Test FP',
+            'account_ids': [
+                Command.create({
+                    'account_src_id': self.company_data['default_account_revenue'].id,
+                    'account_dest_id': account_revenue_copy.id,
+                }),
+                Command.create({
+                    'account_src_id': self.company_data['default_account_receivable'].id,
+                    'account_dest_id': account_receivable_copy.id,
+                }),
+            ],
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'fiscal_position_id': fp.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 295.0,
+                    'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        self.assertIn(account_receivable_copy, invoice.line_ids.account_id)
+        self.assertIn(account_revenue_copy, invoice.line_ids.account_id)
 
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')

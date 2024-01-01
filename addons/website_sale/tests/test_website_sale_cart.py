@@ -1,14 +1,18 @@
 # coding: utf-8
 
+from unittest.mock import patch
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.models.product_template import ProductTemplate
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import tagged
 from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class WebsiteSaleCart(TransactionCase):
+class WebsiteSaleCart(TransactionCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
@@ -62,6 +66,40 @@ class WebsiteSaleCart(TransactionCase):
             with MockRequest(product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
                 self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
 
+    def test_zero_price_product_rule(self):
+        """
+        With the `prevent_zero_price_sale` that we have on website, we can't add free products
+        to our cart.
+        There is an exception for certain product types specified by the
+        `_get_product_types_allow_zero_price` method, so this test ensures that it works
+        by mocking that function to return the "service" product type.
+        """
+        website_prevent_zero_price = self.env['website'].create({
+            'name': 'Prevent zero price sale',
+            'prevent_zero_price_sale': True,
+        })
+        product_consu = self.env['product.product'].create({
+            'name': 'Cannot be zero price',
+            'detailed_type': 'consu',
+            'list_price': 0,
+            'website_published': True,
+        })
+        product_service = self.env['product.product'].create({
+            'name': 'Can be zero price',
+            'detailed_type': 'service',
+            'list_price': 0,
+            'website_published': True,
+        })
+
+        with patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['service']):
+            with self.assertRaises(UserError, msg="'consu' product type is not allowed to have a 0 price sale"), \
+                 MockRequest(self.env, website=website_prevent_zero_price):
+                self.WebsiteSaleController.cart_update_json(product_id=product_consu.id, add_qty=1)
+
+            # service types should not raise a UserError
+            with MockRequest(self.env, website=website_prevent_zero_price):
+                self.WebsiteSaleController.cart_update_json(product_id=product_service.id, add_qty=1)
+
     def test_update_cart_before_payment(self):
         product = self.env['product.product'].create({
             'name': 'Test Product',
@@ -90,7 +128,7 @@ class WebsiteSaleCart(TransactionCase):
             'lst_price': 1000.0,
             'standard_price': 800.0,
         })
-        portal_user = self.env.ref('base.demo_user0')
+        portal_user = self.user_portal
         website = self.website.with_user(portal_user)
 
         SaleOrderLine = self.env['sale.order.line']

@@ -98,7 +98,7 @@
                             <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
                         </div>
                         <h1 t-field="job.name"/>
-                        <h5 class="fw-light" t-field="job.address_id" t-options='{
+                        <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["city"],
                             "no_tag_br": True

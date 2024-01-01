@@ -460,10 +460,7 @@ class AccountMoveLine(models.Model):
     def _compute_name(self):
         for line in self:
             if line.display_type == 'payment_term':
-                if line.move_id.payment_reference:
-                    line.name = line.move_id.payment_reference
-                elif not line.name:
-                    line.name = ''
+                line.name = line.move_id.payment_reference or ''
                 continue
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
@@ -804,7 +801,10 @@ class AccountMoveLine(models.Model):
     @api.depends('display_type')
     def _compute_quantity(self):
         for line in self:
-            line.quantity = 1 if line.display_type == 'product' else False
+            if line.display_type == 'product':
+                line.quantity = line.quantity if line.quantity else 1
+            else:
+                line.quantity = False
 
     @api.depends('display_type')
     def _compute_sequence(self):
@@ -954,7 +954,7 @@ class AccountMoveLine(models.Model):
                     'group_tax_id': tax['group'] and tax['group'].id or False,
                     'account_id': tax['account_id'] or line.account_id.id,
                     'currency_id': line.currency_id.id,
-                    'analytic_distribution': (tax['analytic'] or not tax['use_in_tax_closing']) and line.analytic_distribution,
+                    'analytic_distribution': ((tax['analytic'] or not tax['use_in_tax_closing']) and line.move_id.state == 'draft') and line.analytic_distribution,
                     'tax_ids': [(6, 0, tax['tax_ids'])],
                     'tax_tag_ids': [(6, 0, tax['tag_ids'])],
                     'partner_id': line.move_id.partner_id.id or line.partner_id.id,
@@ -2024,7 +2024,7 @@ class AccountMoveLine(models.Model):
 
         return partials
 
-    def _prepare_exchange_difference_move_vals(self, amounts_list, company=None, exchange_date=None):
+    def _prepare_exchange_difference_move_vals(self, amounts_list, company=None, exchange_date=None, **kwargs):
         """ Prepare values to create later the exchange difference journal entry.
         The exchange difference journal entry is there to fix the debit/credit of lines when the journal items are
         fully reconciled in foreign currency.
@@ -2079,8 +2079,8 @@ class AccountMoveLine(models.Model):
                 exchange_line_account = income_exchange_account
 
             sequence = len(move_vals['line_ids'])
-            move_vals['line_ids'] += [
-                Command.create({
+            line_vals = [
+                {
                     'name': _('Currency exchange rate difference'),
                     'debit': -amount_residual if amount_residual < 0.0 else 0.0,
                     'credit': amount_residual if amount_residual > 0.0 else 0.0,
@@ -2089,8 +2089,8 @@ class AccountMoveLine(models.Model):
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence,
-                }),
-                Command.create({
+                },
+                {
                     'name': _('Currency exchange rate difference'),
                     'debit': amount_residual if amount_residual > 0.0 else 0.0,
                     'credit': -amount_residual if amount_residual < 0.0 else 0.0,
@@ -2099,8 +2099,13 @@ class AccountMoveLine(models.Model):
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence + 1,
-                }),
+                },
             ]
+
+            if kwargs.get('exchange_analytic_distribution'):
+                line_vals[1].update({'analytic_distribution': kwargs['exchange_analytic_distribution']})
+
+            move_vals['line_ids'] += [Command.create(vals) for vals in line_vals]
             to_reconcile.append((line, sequence))
 
         return {'move_vals': move_vals, 'to_reconcile': to_reconcile}

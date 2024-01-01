@@ -9,7 +9,7 @@
 
 {
     'name': 'China - Accounting',
-    'version': '1.8',
+    'version': '1.9',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',

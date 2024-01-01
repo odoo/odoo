@@ -588,7 +588,10 @@ This module provides the core of the Odoo Web Client.
         'web.assets_tests': [
             # No tours are defined in web, but the bundle "assets_tests" is
             # first called in web.
-            'web/static/tests/legacy/helpers/test_utils_file.js'
+            'web/static/tests/legacy/helpers/test_utils_file.js',
+            'web/static/tests/helpers/cleanup.js',
+            'web/static/tests/helpers/utils.js',
+            'web/static/tests/utils.js',
         ],
         # remove this bundle alongside the owl2 compatibility layer
         'web.tests_assets_common': [

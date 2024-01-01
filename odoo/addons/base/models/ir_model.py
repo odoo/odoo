@@ -300,10 +300,9 @@ class IrModel(models.Model):
 
     def unlink(self):
         # prevent screwing up fields that depend on these models' fields
-        if self.state == 'manual':
-            self.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
-        else:
-            self.field_id._prepare_update()
+        manual_models = self.filtered(lambda model: model.state == 'manual')
+        manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
+        (self - manual_models).field_id._prepare_update()
 
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
@@ -1002,7 +1001,7 @@ class IrModelFields(models.Model):
                             sql.Identifier(f'{table}_{newname}_index'),
                         ))
 
-        if column_rename or patched_models:
+        if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             self.pool.setup_models(self._cr)
@@ -1011,9 +1010,6 @@ class IrModelFields(models.Model):
             # update the database schema of the models to patch
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-
-        if translate_only:
-            self.clear_caches()
 
         return res
 

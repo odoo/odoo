@@ -14,7 +14,7 @@
             <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
-                        <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
+                        <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
                             <CheckBox disabled="!canSelectRecord" value="selectAll" className="'d-flex'" onChange.bind="toggleSelection"/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
@@ -25,7 +25,7 @@
                                 t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
                                 t-on-mouseup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
-                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
+                                t-on-keydown="(ev) => this.onCellKeydown(ev)"
                                 t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
                                 t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
                                 data-tooltip-delay="1000"
@@ -42,9 +42,9 @@
                                           t-on-mousedown.stop.prevent="onStartResize"/>
                                 </t>
                             </th>
-                            <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
+                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
+                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header position-sticky end-0" style="width: 32px; min-width: 32px">
                             <Dropdown t-if="displayOptionalFields"
                                 class="'o_optional_columns_dropdown text-center border-top-0'"
                                 togglerClass="'btn p-0'"
@@ -100,7 +100,7 @@
                 <td t-if="withHandleColumn"/>
                 <td t-att-colspan="withHandleColumn ? nbCols - 1 : nbCols"
                     class="o_field_x2many_list_row_add"
-                    t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, null)"
+                    t-on-keydown="(ev) => this.onCellKeydown(ev, null)"
                 >
                     <t t-foreach="creates" t-as="create" t-key="create_index">
                         <a
@@ -148,7 +148,7 @@
                             <a href="#"
                                 role="button"
                                 t-on-click.stop.prevent="() => group.createRecord({}, props.editable === 'top')"
-                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
+                                t-on-keydown="(ev) => this.onCellKeydown(ev)"
                             >
                                 Add a line
                             </a>
@@ -163,7 +163,7 @@
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer"
             t-on-click="() => this.toggleGroup(group)"
         >
-            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)"
+            <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)"
                 tabindex="-1"
                 t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
@@ -198,11 +198,11 @@
                     </div>
                 </div>
             </th>
-            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
                 <t t-if="column.type === 'field'" t-esc="formatAggregateValue(group, column)"/>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
-            <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
+            <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
         </tr>
     </t>
 
@@ -218,13 +218,13 @@
             t-on-touchend="() => this.onRowTouchEnd(record)"
             t-on-touchmove="() => this.onRowTouchMove(record)"
         >
-            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
+            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
                 <CheckBox disabled="!canSelectRecord" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)"/>
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
                     <t t-set="isInvisible" t-value="evalModifier(column.modifiers.invisible, record)"/>
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="getCellClass(column, record)"
                         t-att-name="column.name"
@@ -239,7 +239,7 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
                                 className="button.className"
@@ -268,7 +268,7 @@
             <t t-if="displayOptionalFields or hasX2ManyAction">
                 <t t-if="hasX2ManyAction">
                     <td class="o_list_record_remove text-center"
-                        t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                        t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         t-on-click.stop="() => this.onDeleteRecord(record)"
                         tabindex="-1"
                     >

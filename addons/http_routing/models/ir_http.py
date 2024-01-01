@@ -516,6 +516,11 @@ class IrHttp(models.AbstractModel):
         string. This act as a light redirection, it does not return a
         3xx responses to the browser but still change the current URL.
         """
+        # WSGI encoding dance https://peps.python.org/pep-3333/#unicode-issues
+        if isinstance(path, str):
+            path = path.encode('utf-8')
+        path = path.decode('latin1', 'replace')
+
         if query_string is None:
             query_string = request.httprequest.environ['QUERY_STRING']
 

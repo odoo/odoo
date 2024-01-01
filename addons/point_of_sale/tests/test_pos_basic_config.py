@@ -926,5 +926,11 @@ class TestPoSBasicConfig(TestPoSCommon):
             order_to_invoice.write({'partner_id': test_customer.id})
             order_to_invoice.action_pos_order_invoice()
             # check invoice
-            self.assertTrue(order_to_invoice.account_move, 'Invoice should be created.')
-            self.assertTrue(order_to_invoice.account_move.invoice_date != order_to_invoice.date_order.date(), 'Invoice date should not be the same as order date since the session was closed.')
+            invoice = order_to_invoice.account_move
+            self.assertTrue(invoice, 'Invoice should be created.')
+            self.assertNotEqual(invoice.invoice_date, order_to_invoice.date_order.date(), 'Invoice date should not be the same as order date since the session was closed.')
+
+            # check that the payment date is set to the order date which
+            # is the real payment date and not to the invoice_date
+            payment = invoice.line_ids.full_reconcile_id.reconciled_line_ids.move_id - invoice
+            self.assertEqual(payment.date, order_to_invoice.date_order.date())

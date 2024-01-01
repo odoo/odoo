@@ -10,6 +10,7 @@
 # Chris Egal <sodaswed@web.de>, 2023
 # Stephanie Speiser, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
+# Wil Odoo, 2023
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
@@ -7069,7 +7070,7 @@ msgstr "2.  %a ,%A         ==&gt; Fr, Freitag"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
 msgid "2FA Invite mail"
-msgstr "2FA-Einladungs-E-Mail"
+msgstr "2FA-Einladungsmail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail_enforce
@@ -16395,6 +16396,17 @@ msgstr "Ungültiger Wert für %s.%s: %s"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr ""
+"Ungültiger Wert für %s.%s: %s ist außerhalb des Bereichs (Ganzzahlen sollten"
+" zwischen -2.147.483.648 und 2.147.483.647 liegen)"
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid view %(name)s definition in %(file)s"
@@ -24572,6 +24584,23 @@ msgstr ""
 "Textnachrichten versenden, wenn ein Projekt/eine Aufgabe die Phase wechselt"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+"Dies ist die alte Integration mit UPS, die nicht mehr unterstützt wird. "
+"Bitte installieren Sie das neue Modul „UPS-Versand“ und deinstallieren Sie "
+"dieses Modul so schnell wie möglich. Diese Integration wird im Jahr 2024 "
+"nicht mehr funktionieren."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "Versenden Sie Ihre Lieferungen über UPS und verfolgen Sie sie online."
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "Ihre Umfragen versenden oder live teilen"
@@ -27477,6 +27506,16 @@ msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - EXTRATERRITORIALE ORGANISATIONEN UND KÖRPERSCHAFTEN"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr "UPS-Versand (veraltet)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS-Versand"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url
 #: model:ir.model.fields.selection,name:base.selection__ir_attachment__type__url
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -28209,7 +28248,7 @@ msgstr "Usbekistan"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "MwSt."
+msgstr "USt-IdNr."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat

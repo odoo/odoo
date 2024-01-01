@@ -5,7 +5,7 @@
         <span t-if="props.readonly" t-esc="formattedValue" />
         <div class="text-nowrap d-inline-flex w-100 align-items-baseline" t-else="">
             <span t-if="!props.hideSymbol and currency" t-out="currencySymbol" />
-            <input t-ref="numpadDecimal" t-att-id="props.id" t-att-type="props.inputType" t-att-placeholder="props.placeholder" class="o_input flex-grow-1 flex-shrink-1"/>
+            <input t-ref="numpadDecimal" t-att-id="props.id" t-att-type="props.inputType" t-att-placeholder="props.placeholder" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
         </div>
     </t>
 

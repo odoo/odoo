@@ -64,6 +64,7 @@ class StockPickingBatch(models.Model):
     is_wave = fields.Boolean('This batch is a wave')
     show_set_qty_button = fields.Boolean(compute='_compute_show_qty_button')
     show_clear_qty_button = fields.Boolean(compute='_compute_show_qty_button')
+    show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
 
     @api.depends('state', 'show_validate',
                  'picking_ids.show_set_qty_button',
@@ -78,6 +79,11 @@ class StockPickingBatch(models.Model):
                 batch.show_set_qty_button = True
             elif any(p.show_clear_qty_button for p in self.picking_ids):
                 batch.show_clear_qty_button = True
+
+    @api.depends('picking_type_id')
+    def _compute_show_lots_text(self):
+        for batch in self:
+            batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):

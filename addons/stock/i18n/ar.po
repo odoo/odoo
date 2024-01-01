@@ -3791,6 +3791,7 @@ msgstr "مشغّل النطاق غير صالح %s "
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
+"العنصر العائد للمجال غير صحيح '%s'. يجب أن يكون من نوع عدد صحيح/فاصلة "
 
 #. module: stock
 #. odoo-python
@@ -5580,7 +5581,7 @@ msgstr "محتوى الطرد"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_level_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids
 msgid "Package Level"
-msgstr "مستوى الطرق "
+msgstr "مستوى الطرد "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
@@ -7386,13 +7387,6 @@ msgid "Sequence return"
 msgstr "تسلسل الإرجاع "
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "التسلسلات %s موجودة بالفعل. "
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "الأرقام التسلسلية "
@@ -8603,6 +8597,17 @@ msgstr "هذا السجل موجود بالفعل. "
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "لا يمكن استخدام هذا التقرير للـ%s المنتهية وغير المنتهية في الوقت ذاته. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9987,6 +9992,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "لقد قمت بمعالجة كمية منتجات أقل من الطلب المبدئي."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"توجد منتجات في المخزون تم تمكين تتبع رقم المجموعة/الرقم التسلسلي لها.\n"
+"قم بإيقاف تشغيل التتبع لكافة المنتجات قبل إيقاف تشغيل هذا الإعداد. "
 
 #. module: stock
 #. odoo-python

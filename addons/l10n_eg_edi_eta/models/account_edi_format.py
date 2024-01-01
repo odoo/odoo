@@ -249,7 +249,7 @@ class AccountEdiFormat(models.Model):
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
             line_tax_details = tax_data.get(line, {})
             price_unit = self._l10n_eg_edi_round(abs((line.balance / line.quantity) / (1 - (line.discount / 100.0)))) if line.quantity and line.discount != 100.0 else line.price_unit
-            price_subtotal_before_discount = self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100)))) if line.discount != 100.0 else price_unit * line.quantity
+            price_subtotal_before_discount = self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100)))) if line.discount != 100.0 else self._l10n_eg_edi_round(price_unit * line.quantity)
             discount_amount = self._l10n_eg_edi_round(price_subtotal_before_discount - abs(line.balance))
             item_code = line.product_id.l10n_eg_eta_code or line.product_id.barcode
             lines.append({

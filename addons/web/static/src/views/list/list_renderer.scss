@@ -59,7 +59,11 @@
 
         tbody > tr > td:not(.o_list_record_selector) {
             &:not(.o_handle_cell):not(.o_list_button):not(.o_list_record_remove) {
-                @include o-text-overflow(table-cell);
+                --fieldWidget-display: block; // Will affect inner components (see fields.scss)
+
+                display: table-cell;
+                @include text-truncate();
+
                 &.o_list_text {
                     white-space: pre-wrap;
                 }
@@ -72,7 +76,7 @@
                 direction : ltr;
             }
             &.o_list_text {
-                word-break: break-word;
+                word-wrap: break-word;
                 .o_field_widget textarea.o_input {
                     vertical-align: top;
                 }
@@ -251,6 +255,7 @@
 
         .o_list_actions_header {
             width: 32px;
+            background-color: var(--ListRenderer-thead-bg-color);
         }
 
         .o_data_row.o_list_no_open {

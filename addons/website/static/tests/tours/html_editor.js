@@ -7,6 +7,48 @@ const wTourUtils = require('website.tour_utils');
 const adminCssModif = '#wrap {display: none;}';
 const demoCssModif = '// demo_edition';
 
+wTourUtils.registerWebsitePreviewTour('html_editor_language', {
+    url: '/test_page',
+    test: true,
+},
+    [
+        {
+            content: "open site menu",
+            extra_trigger: "iframe body:not(.editor_enable)",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "open html editor",
+            trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+        },
+        {
+            content: "add something in the page's English version",
+            trigger: 'div.ace_line .ace_xml:contains("rumbler")',
+            run: () => {
+                ace.edit('ace-view-editor').getSession().insert({
+                    row: 1,
+                    column: 1,
+                }, '<br/>\n');
+            },
+        },
+        {
+            content: "save the html editor",
+            extra_trigger: 'div.ace_line .ace_xml:contains("br")',
+            trigger: ".o_ace_view_editor button[data-action=save]",
+        },
+        {
+            content: "check that the page has the modification",
+            trigger: 'iframe #wrapwrap:has(br)',
+            run: () => {}, // it's a check
+        },
+        {
+            content: "check that the page has not lost the original text",
+            trigger: 'iframe #wrapwrap:contains("rommelpot")',
+            run: () => {}, // it's a check
+        },
+    ]
+);
+
 wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
     url: '/generic',
     edition: true,

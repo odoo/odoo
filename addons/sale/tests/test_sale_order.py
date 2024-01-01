@@ -10,6 +10,7 @@ from odoo.tests import tagged, Form
 from odoo.tools import float_compare
 
 from odoo.addons.sale.tests.common import SaleCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install', '-at_install')
@@ -107,20 +108,6 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(mail_message.author_id, sale_order.partner_id, 'Sale: author should be same as customer')
         self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Sale: author should be in composer recipients thanks to "partner_to" field set on template')
         self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Sale: author should receive mail due to presence in composer recipients')
-
-    def test_invoice_state_when_ordered_quantity_is_negative(self):
-        """When you invoice a SO line with a product that is invoiced on ordered quantities and has negative ordered quantity,
-        this test ensures that the  invoicing status of the SO line is 'invoiced' (and not 'upselling')."""
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [(0, 0, {
-                'product_id': self.product.id,
-                'product_uom_qty': -1,
-            })]
-        })
-        sale_order.action_confirm()
-        sale_order._create_invoices(final=True)
-        self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
 
     def test_sale_sequence(self):
         self.env['ir.sequence'].search([
@@ -446,6 +433,23 @@ class TestSaleOrder(SaleCommon):
 
 
 @tagged('post_install', '-at_install')
+class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
+    def test_invoice_state_when_ordered_quantity_is_negative(self):
+        """When you invoice a SO line with a product that is invoiced on ordered quantities and has negative ordered quantity,
+        this test ensures that the  invoicing status of the SO line is 'invoiced' (and not 'upselling')."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom_qty': -1,
+            })]
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices(final=True)
+        self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
+
+
+@tagged('post_install', '-at_install')
 class TestSalesTeam(SaleCommon):
 
     @classmethod
@@ -530,8 +534,9 @@ class TestSalesTeam(SaleCommon):
                 'product_id': great_product.id,
             },
         ])
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': partner.id,
         })
         sol = self.env['sale.order.line'].create({
             'name': super_product.name,
@@ -544,7 +549,7 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(sol.analytic_distribution, {str(analytic_account_great.id): 100}, "The analytic distribution should be set to Great Account")
 
         so_no_analytic_account = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_id': partner.id,
         })
         sol_no_analytic_account = self.env['sale.order.line'].create({
             'name': super_product.name,
@@ -601,3 +606,32 @@ class TestSalesTeam(SaleCommon):
 
         with self.assertRaises(UserError):
             sol.tax_id = tax_b
+
+    def test_sales_team_defined_on_partner_user_no_team(self):
+        """ Test that sale order picks up a team from res.partner on change if user has no team specified """
+
+        crm_team0 = self.env['crm.team'].create({
+            'name':"Test Team A"
+        })
+
+        crm_team1 = self.env['crm.team'].create({
+            'name':"Test Team B"
+        })
+
+        partner_a = self.env['res.partner'].create({
+            'name': 'Partner A',
+            'team_id': crm_team0.id,
+        })
+
+        partner_b = self.env['res.partner'].create({
+            'name': 'Partner B',
+            'team_id': crm_team1.id,
+        })
+
+        sale_order = self.env['sale.order'].with_user(self.user_not_in_team).create({
+            'partner_id': partner_a.id,
+        })
+
+        self.assertEqual(sale_order.team_id, crm_team0, "Sales team should change to partner's")
+        sale_order.with_user(self.user_not_in_team).write({'partner_id': partner_b.id})
+        self.assertEqual(sale_order.team_id, crm_team1, "Sales team should change to partner's")

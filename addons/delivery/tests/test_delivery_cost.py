@@ -8,7 +8,10 @@ from odoo.tools import float_compare
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
-        super(TestDeliveryCost, self).setUp()
+        super().setUp()
+        self.env.company.write({
+            'country_id': self.env.ref('base.us').id,
+        })
         self.SaleOrder = self.env['sale.order']
         self.SaleOrderLine = self.env['sale.order.line']
         self.AccountAccount = self.env['account.account']
@@ -240,8 +243,9 @@ class TestDeliveryCost(common.TransactionCase):
         self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
 
     def test_01_taxes_on_delivery_cost(self):
-
         # Creating taxes and fiscal position
+
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
 
         tax_price_include = self.env['account.tax'].create({
             'name': '10% inc',

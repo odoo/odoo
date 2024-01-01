@@ -7,7 +7,6 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # 深圳 JM <3440895@qq.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 徐 文郁 (info@ro-cd.com), 2023
 # Martin Trigaux, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
@@ -15,6 +14,8 @@
 # Chloe Wang, 2023
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Wil Odoo, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5668,7 +5669,7 @@ msgstr ""
 "该模块提供了用于短信息发送的框架\n"
 "----------------------------------------------------\n"
 "\n"
-"这一服务是由应用内购买 Odoo 平台提供的.\n"
+"这一服务是由应用内采购 Odoo 平台提供的.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -5878,7 +5879,7 @@ msgid ""
 msgstr ""
 "\n"
 "该模块提供标准工具 (帐户模型、上下文管理器和助手)\n"
-"支持 Odoo 内的程序内购买. "
+"支持 Odoo 内的程序内采购. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website_slides_full
@@ -9676,7 +9677,7 @@ msgstr "基础:自动清理内部数据"
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr "支持应用内购买的基本模型和助手."
+msgstr "支持应用内采购的基本模型和助手."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
@@ -11081,7 +11082,7 @@ msgstr "联系人必须有姓名"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr "包含应用内购买"
+msgstr "包含应用内采购"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -11318,7 +11319,7 @@ msgstr "创建菜单"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_state
 msgid "Create a State"
-msgstr "创建状态"
+msgstr "创建省/州"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_title_contact
@@ -13133,12 +13134,12 @@ msgstr "活动展位，自动创建赞助商."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm
 msgid "Event CRM"
-msgstr "活动客户关系管理"
+msgstr "活动 CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm_sale
 msgid "Event CRM Sale"
-msgstr "活动 客户关系管理 销售"
+msgstr "活动 CRM 销售"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_exhibitor
@@ -15448,7 +15449,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr "应用程序内购买"
+msgstr "应用程序内采购"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -15795,7 +15796,7 @@ msgstr "内部说明..."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_number
 msgid "Interval Number"
-msgstr "间隔号"
+msgstr "间隔数"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_type
@@ -15989,6 +15990,15 @@ msgstr "%s.%s: %s 的无效值"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr "%s.%s的值无效：%s超出了界限（整数应该在-2,147,483,648至2,147,483,647之间）。"
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid view %(name)s definition in %(file)s"
@@ -16055,7 +16065,7 @@ msgstr "物联网盒子(IoT Box)主页"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_ir_profile
 msgid "Ir profile"
-msgstr "IR简介"
+msgstr "Ir profile"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -16228,7 +16238,7 @@ msgstr "Json"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
 msgid "Just done"
-msgstr "完成"
+msgstr "刚刚完成"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -21301,7 +21311,7 @@ msgstr ""
 "- 活动日历\n"
 "- 发布相关文件\n"
 "- 资源配置\n"
-"- 自动购买(餐饮...)\n"
+"- 自动采购(餐饮...)\n"
 "- 多个地点和组织者\n"
 "- 移动界面\n"
 "\n"
@@ -24219,6 +24229,19 @@ msgid "Send text messages when project/task stage move"
 msgstr "Send text messages when project/task stage move"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "通过UPS运输货物并线上跟踪物流信息"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
 msgstr "发送或实时共享您的调查。"
@@ -24850,7 +24873,7 @@ msgstr "用于销售点的电子表格仪表板"
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_purchase
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_purchase_stock
 msgid "Spreadsheet dashboard for purchases"
-msgstr "用于购买的电子表格仪表板"
+msgstr "用于采购的电子表格仪表板"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_sale
@@ -24902,12 +24925,12 @@ msgstr "开始设置"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "状态"
+msgstr "省/州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "县市代码"
+msgstr "省/州代码"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
@@ -24927,12 +24950,12 @@ msgstr "巴勒斯坦国"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
 msgid "State of the onboarding company step"
-msgstr "公司状态"
+msgstr "入门步骤的状态"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "状态"
+msgstr "省/州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__state
@@ -25620,7 +25643,7 @@ msgstr "语言代码必须唯一!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_state_name_code_uniq
 msgid "The code of the state must be unique by country !"
-msgstr "国家代码须唯一!"
+msgstr "省/州代码须唯一!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
@@ -26154,7 +26177,7 @@ msgstr "服务器拒绝测试收件人 (%(email_to)s)，错误 (%(repl)s)"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__code
 msgid "The state code."
-msgstr "县市代码."
+msgstr "省/州代码。"
 
 #. module: base
 #. odoo-python
@@ -26984,6 +27007,16 @@ msgstr "类型："
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U - 域外组织和机构的活动"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS 发货"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

@@ -914,6 +914,12 @@ section, .oe_img_bg, [data-oe-shape-data] {
         -webkit-background-clip: inherit;
         -webkit-text-fill-color: inherit;
     }
+
+    // On Iphone (Safari & Chrome) and Mac (only Safari), the font awesome icons
+    // are not rendered (invisible) when inside a gradient.
+    .fa {
+        display: inherit;
+    }
 }
 
 /* QWEB */

@@ -55,7 +55,7 @@
                                     <label for="expected_revenue" class="oe_edit_only pb-1" />
                                     <div class="d-flex align-items-end">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" class="oe_inline o_input_8ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="oe_inline o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
                                         <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
                                     </div>
@@ -251,7 +251,7 @@
                             <group attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <field name="user_id"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
-                                <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="team_id" options="{'no_open': True, 'no_create': True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                             </group>
                             <group name="lead_priority" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <field name="priority" widget="priority"/>
@@ -464,6 +464,7 @@
                             'default_name': contact_name or partner_name,
                             'default_is_company': type == 'opportunity' and contact_name == False,
                             'default_company_name': type == 'opportunity' and partner_name,
+                            'default_type': 'contact',
                             'default_phone': phone,
                             'default_email': email_from,
                             'default_user_id': user_id,

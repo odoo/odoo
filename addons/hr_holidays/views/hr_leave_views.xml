@@ -127,7 +127,7 @@
                                     <div>
                                         <span class="text-muted">from </span>
                                         <field name="date_from" widget="date"/>
-                                        <span class="text-muted">to </span>
+                                        <span class="text-muted"> to </span>
                                         <field name="date_to" widget="date"/>
                                     </div>
                                     <div class="o_leave_kanban_name p-2">
@@ -136,20 +136,27 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <div class="me-2 d-flex align-items-center" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
+                                <div class="me-2 d-flex align-items-center" t-if="!['draft'].includes(record.state.raw_value)">
                                     <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted me-1" aria-label="validated"/>
-                                    <span t-else="" class="fa fa-ban text-muted me-1" aria-label="refused"/>
-                                    <t t-set="classname" t-value="{'validate': 'text-bg-success', 'refuse': 'text-bg-danger'}[record.state.raw_value] || 'text-bg-light'"/>
-                                    <span t-attf-class="badge rounded-pill {{ classname }}"><t t-esc="record.state.value"/></span>
+                                    <span t-if="record.state.raw_value === 'refuse'" class="fa fa-ban text-muted me-1" aria-label="refused"/>
+                                    <span t-if="['confirm', 'validate1'].includes(record.state.raw_value)" class="me-1" aria-label="to refuse"/>
+                                    <t t-set="classname"
+                                        t-value="{'validate': 'text-bg-success', 'refuse': 'text-bg-danger', 'confirm': 'text-bg-warning', 'validate1': 'text-bg-warning'}[record.state.raw_value] || 'text-bg-light'"/>
+                                    <span t-attf-class="badge rounded-pill {{ classname }}">
+                                        <t t-out="record.state.value"/>
+                                    </span>
                                 </div>
                                 <div class="me-2 align-items-center" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
-                                    <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0">
+                                    <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0"
+                                        groups="hr_holidays.group_hr_holidays_user">
                                         <i class="fa fa-thumbs-up"/> Approve
                                     </button>
-                                    <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm ps-0" groups="hr_holidays.group_hr_holidays_manager">
+                                    <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm ps-0"
+                                        groups="hr_holidays.group_hr_holidays_manager">
                                         <i class="fa fa-check"/> Validate
                                     </button>
-                                    <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0">
+                                    <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0"
+                                        groups="hr_holidays.group_hr_holidays_user">
                                         <i class="fa fa-times"/> Refuse
                                     </button>
                                 </div>
@@ -689,8 +696,7 @@
             'search_default_active_employee': 3,
             'search_default_active_time_off': 4,
             'hide_employee_name': 1,
-            'holiday_status_name_get': False}
-        </field>
+            'holiday_status_name_get': False}</field>
         <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
                                     '&amp;', ('multi_employee', '=', True),
                                     '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
@@ -801,8 +807,8 @@
         <field name="view_mode">graph,pivot,calendar,form</field>
         <field name="context">{'search_default_year': 1, 'search_default_active_employee': 2, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No data yet!
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
             </p>
         </field>
     </record>

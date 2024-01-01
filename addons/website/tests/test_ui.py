@@ -7,6 +7,7 @@ from werkzeug.urls import url_encode
 
 import odoo
 import odoo.tests
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -61,7 +62,46 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
-class TestUiHtmlEditor(odoo.tests.HttpCase):
+class TestUiHtmlEditor(HttpCaseWithUserDemo):
+
+    def test_html_editor_language(self):
+        Page = self.env['website.page']
+
+        default_website = self.env.ref('website.default_website')
+        parseltongue = self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        self.env['res.lang']._activate_lang(parseltongue.code)
+        default_website.language_ids += parseltongue
+        default_website.default_lang_id = parseltongue.id
+
+        page = Page.create({
+            'name': 'Test page',
+            'type': 'qweb',
+            'arch': '''
+                <t t-call="website.layout">
+                    <div>rumbler</div>
+                </t>
+            ''',
+            'key': 'test.generic_view',
+            'website_id': default_website.id,
+            'is_published': True,
+            'url': '/test_page',
+        })
+
+        page.view_id.update_field_translations('arch_db', {
+            parseltongue.code: {
+                'rumbler': 'rommelpot',
+            }
+        })
+        self.env.ref('base.user_admin').lang = parseltongue.code
+        self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
+        self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='pa_GB').arch)
+
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
         View = self.env['ir.ui.view']
@@ -101,7 +141,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         self.assertEqual(len(specific_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
     def test_html_editor_scss(self):
-        self.env.ref('base.user_demo').write({
+        self.user_demo.write({
             'groups_id': [(6, 0, [
                 self.env.ref('base.group_user').id,
                 self.env.ref('website.group_website_designer').id
@@ -389,6 +429,12 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
+        if self.env['website'].search_count([]) == 1:
+            self.env['website'].create({
+                'name': 'My Website 2',
+                'domain': '',
+                'sequence': 20,
+            })
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""

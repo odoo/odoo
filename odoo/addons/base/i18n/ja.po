@@ -11,6 +11,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Tatsuki Kanda, 2023
 # Junko Augias, 2023
+# Wil Odoo, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7336,7 +7337,7 @@ msgid ""
 "A non-profit international educational and scientific organisation, hosting "
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
-msgstr ""
+msgstr "航空・宇宙、環境・応用流体力学、ターボ機械・推進の3部門を擁する非営利の国際教育科学団体。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -7392,6 +7393,7 @@ msgid ""
 "create his own holidays and manage the requests of the users he's manager "
 "of."
 msgstr ""
+"タイムオフの権限を持たないユーザは、アプリケーションを見ることができ、自分の休日を作成し、マネジャーであるユーザのリクエストを管理することができます。"
 
 #. module: base
 #. odoo-python
@@ -9895,6 +9897,9 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
+"一部の国では、国内法に従い、請求書の金額に対して源泉徴収が適用されます。源泉徴収は、クライアントが税務当局に支払うことになります。いかなる場合においても、My"
+" Company（San Francisco）は、その国の法律に関連する費用に関与することはできません。従って、請求書の金額は、その全額がMy "
+"Company (San Francisco)に対するものであり、顧客が所在する国の法律に関連する費用は含まれません。"
 
 #. module: base
 #: model:res.country,name:base.td
@@ -11689,6 +11694,7 @@ msgid ""
 "processes in order to make our customers more productive, responsive and "
 "profitable."
 msgstr ""
+"Deco Addictは、お客様の生産性、応答性、収益性を高めるために、人事およびサプライチェーンプロセスを設計、開発、統合、およびサポートします。"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -12584,7 +12590,7 @@ msgstr "プロファイリング期限"
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
 msgid ""
 "Enable the user to see and manage the contracts from Employee application."
-msgstr ""
+msgstr "従業員アプリケーションから契約を確認および管理できるようにします。"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -14774,6 +14780,8 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
+"支払期日から 60日以上経過しても支払いが未納の場合、My Company (San Francisco) "
+"は債権回収会社に依頼する権利を有します。弁護士費用は全てお客様のご負担となります。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -15065,6 +15073,8 @@ msgid ""
 "registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
+"クレームが認められるためには、商品の引渡しまたはサービスの提供から8日以内に、配達記録郵便でMy Company (San "
+"Francisco)の登録事務所に送付された書簡により、クレームを通知する必要があります。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -15607,6 +15617,15 @@ msgstr "無効な型"
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "%s。%sの値が無効です:%s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value for %s.%s: %s is out of bounds (integers should be between "
+"-2,147,483,648 and 2,147,483,647)"
+msgstr "%s用の無効な値。%s: %sは範囲外です（整数は-2,147,483,648から2,147,483,647の間である必要があります）"
 
 #. module: base
 #. odoo-python
@@ -17759,6 +17778,10 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
+"当社 (San Francisco) "
+"は、合意された時間枠に従い、履行可能なサービスを期限内に提供するよう最善を尽くすことを約束します。しかし、その義務はいずれも、結果を出す義務とはみなされません。当社"
+" (San Francisco) "
+"は、いかなる状況においても、最終消費者が顧客に対して行う損害賠償請求において、顧客が第三者として出廷することを要求されることはありません。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -20749,6 +20772,9 @@ msgid ""
 "due. My Company (San Francisco) will be authorized to suspend any provision "
 "of services without prior warning in the event of late payment."
 msgstr ""
+"当社の請求書は、請求書または注文書のいずれかに別の支払期限が記載されていない限り、21営業日以内に支払われるものとします。支払期日までにお支払いがない場合、当社"
+" (San Francisco) は、残額の10%に相当する固定金利の支払いを要求する権利を留保します。当社 (San Francisco) "
+"は、支払いが遅延した場合、事前の警告なしにサービスの提供を停止する権限を有します。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -23387,6 +23413,19 @@ msgstr "最終在庫移動時にテキストメッセージを送信する"
 #: model:ir.module.module,summary:base.module_project_sms
 msgid "Send text messages when project/task stage move"
 msgstr "プロジェクト/タスク移動時にテキストメッセージを送る"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
+msgid "Send your shippings through UPS and track them online"
+msgstr "UPSを通して発送し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -26156,6 +26195,16 @@ msgstr "タイプ:"
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
 msgid "U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES"
 msgstr "U -域外組織および団体の活動"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
+msgid "UPS Shipping"
+msgstr "UPS配送"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__url

@@ -36,7 +36,7 @@ _logger = logging.getLogger(__name__)
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = []
-MIN_ROUNDS = 350000
+MIN_ROUNDS = 600_000
 concat = chain.from_iterable
 
 #
@@ -756,6 +756,10 @@ class Users(models.Model):
     @api.model
     def _get_login_domain(self, login):
         return [('login', '=', login)]
+
+    @api.model
+    def _get_email_domain(self, email):
+        return [('email', '=', email)]
 
     @api.model
     def _get_login_order(self):

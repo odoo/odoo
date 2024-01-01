@@ -51,7 +51,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
-        domain="[('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
+        domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
     ancestor_task_id = fields.Many2one('project.task', related='task_id.ancestor_id', store=True, index='btree_not_null')
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,
@@ -369,3 +369,21 @@ class AccountAnalyticLine(models.Model):
 
     def _default_user(self):
         return self.env.context.get('user_id', self.env.user.id)
+
+    @api.model
+    def _ensure_uom_hours(self):
+        uom_hours = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        if not uom_hours:
+            uom_hours = self.env['uom.uom'].create({
+                'name': "Hours",
+                'category_id': self.env.ref('uom.uom_categ_wtime').id,
+                'factor': 8,
+                'uom_type': "smaller",
+            })
+            self.env['ir.model.data'].create({
+                'name': 'product_uom_hour',
+                'model': 'uom.uom',
+                'module': 'uom',
+                'res_id': uom_hours.id,
+                'noupdate': True,
+            })

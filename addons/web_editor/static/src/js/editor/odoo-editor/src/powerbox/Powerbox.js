@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { patienceDiff } from './patienceDiff.js';
-import { getRangePosition } from '../utils/utils.js';
+import { closestBlock, getRangePosition } from '../utils/utils.js';
 
 const REGEX_RESERVED_CHARS = /[\\^$.*+?()[\]{}|]/g;
 /**
@@ -114,9 +114,11 @@ export class Powerbox {
         commands = commands.filter(command => !command.isDisabled || !command.isDisabled()).sort(order);
         commands = this._groupCommands(commands, categories).flatMap(group => group[1]);
 
+        const selection = this.document.getSelection();
+        const currentBlock = (selection && closestBlock(selection.anchorNode)) || this.editable;
         this._context = {
             commands, categories, filteredCommands: commands, selectedCommand: undefined,
-            initialTarget: this.editable, initialValue: this.editable.textContent,
+            initialTarget: currentBlock, initialValue: currentBlock.textContent,
             lastText: undefined,
         }
         this.isOpen = true;
@@ -331,7 +333,12 @@ export class Powerbox {
                 true,
             );
             this._context.lastText = diff.bMove.join('');
-            if (this._context.lastText.match(/\s/)) {
+            const selection = this.document.getSelection();
+            if (
+                this._context.lastText.match(/\s/) ||
+                !selection ||
+                this._context.initialTarget !== closestBlock(selection.anchorNode)
+            ) {
                 this.close();
             } else {
                 const term = this._context.lastText.toLowerCase()

@@ -85,6 +85,13 @@ class SaleOrder(models.Model):
             else:
                 order.is_abandoned_cart = False
 
+    @api.depends('partner_id')
+    def _compute_payment_term_id(self):
+        super()._compute_payment_term_id()
+        for order in self:
+            if order.website_id:
+                order.payment_term_id = order.website_id.with_company(order.company_id).sale_get_payment_term(order.partner_id)
+
     def _search_abandoned_cart(self, operator, value):
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
         deadlines = [[
@@ -190,7 +197,12 @@ class SaleOrder(models.Model):
 
         order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
 
-        if order_line and order_line.price_unit == 0 and self.website_id.prevent_zero_price_sale:
+        if (
+            order_line
+            and order_line.price_unit == 0
+            and self.website_id.prevent_zero_price_sale
+            and product.detailed_type not in self.env['product.template']._get_product_types_allow_zero_price()
+        ):
             raise UserError(_(
                 "The given product does not have a price therefore it cannot be added to cart.",
             ))
@@ -334,6 +346,10 @@ class SaleOrder(models.Model):
                         product not in products and
                         (not product.company_id or product.company_id == line.company_id) and
                         product._is_variant_possible(parent_combination=combination)
+                        and (
+                            not self.website_id.prevent_zero_price_sale
+                            or product._get_contextual_price()
+                        )
                 )
 
         return random.sample(all_accessory_products, len(all_accessory_products))
@@ -479,3 +495,12 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return {}
+
+    def _get_lang(self):
+        res = super()._get_lang()
+
+        if self.website_id and request and request.is_frontend:
+            # Use request lang as cart lang if request comes from frontend
+            return request.env.lang
+
+        return res

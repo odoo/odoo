@@ -180,6 +180,9 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                  * So this example will become: ["this is an", "example of", "a label"] if we have a lot of labels to put in the chart.
                  * Which will be displayed as "this is an<br/>example of<br/>a label"
                  * Obviously, the more labels you have, the more columns, and less screen space is available.
+                 * When the screen space is too small for long words, those long words are split over multiple rows.
+                 * At 6 chars per row, the above example becomes ["this", "is an", "examp-", "le of", "a label"]
+                 * Which is displayed as "this<br/>is an<br/>examp-<br/>le of<br/>a label"
                  * 
                  * We also adapt the font size based on the width available in the chart.
                  * 
@@ -229,8 +232,13 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                         let resultLines = [];
                         let currentLine = [];
                         for (let i = 0; i < words.length; i++) {
-                            // If the word we are adding exceed already the number of characters for the line, we add it anyway before passing to a new line
-                            currentLine.push(words[i]);
+                            // Chop down words that do not fit on a single line, add each part on its own line.
+                            let word = words[i];
+                            while (word.length > charPerLine) {
+                                resultLines.push(word.slice(0, charPerLine - 1) + '-');
+                                word = word.slice(charPerLine - 1);
+                            }
+                            currentLine.push(word);
 
                             // Continue to add words in the line if there is enough space and if there is at least one more word to add
                             const nextWord = i+1 < words.length ? words[i+1] : null;

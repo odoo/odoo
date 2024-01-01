@@ -5,14 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Larissa Manderfeld, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +50,13 @@ msgstr "<span class=\"o_form_label\">Equipo de Ventas</span>"
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
 msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "A new order has been created."
+msgstr "Se creó una nueva orden."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -134,7 +143,7 @@ msgstr "¿Quiere cargar el SN/lotes vinculados a la orden de compra?"
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr "Pago adelantado (POS)"
+msgstr "Anticipo (TPV)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
@@ -183,7 +192,7 @@ msgstr ""
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
-msgstr "Órdenes del PdV vinculadas"
+msgstr "Pedidos del TPV vinculados"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
@@ -243,7 +252,7 @@ msgstr "No hay producto de pago anticipado"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr "Sesiones abiertas de punto de venta"
+msgstr "Sesiones abiertas del TPV"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
@@ -324,7 +333,7 @@ msgstr "Anterior lista de pedidos"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Products not available in POS"
-msgstr "Productos no disponibles en el PdV"
+msgstr "Productos no disponibles en el TPV"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -401,7 +410,7 @@ msgstr "Equipo de ventas"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr "Equipo de ventas (PoS)"
+msgstr "Equipo de ventas (TPV)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -460,8 +469,8 @@ msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
 msgstr ""
-"Algunos de los productos de su orden de venta no están disponibles en el "
-"PdV, ¿quiere importarlos?"
+"Algunos de los productos de su pedido de venta no están disponibles en el "
+"TPV. ¿Quiere importarlos?"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
@@ -546,7 +555,7 @@ msgid ""
 "                                to POS"
 msgstr ""
 "Transferido<br/>\n"
-"                                a POS"
+"                                a TPV"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -583,3 +592,5 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
+"Ha intentado cargar un anticipo de %s pero sólo %s queda por pagar, se "
+"aplicará %s a la línea del orden de compra-"

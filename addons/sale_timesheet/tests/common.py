@@ -10,6 +10,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
 
         cls.user_employee_company_B = mail_new_test_user(
             cls.env,

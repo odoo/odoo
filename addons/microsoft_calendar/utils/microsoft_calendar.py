@@ -45,6 +45,14 @@ class MicrosoftCalendarService():
         self.microsoft_service = microsoft_service
 
     @requires_auth_token
+    def _get_single_event(self, iCalUId, token, timeout=TIMEOUT):
+        """ Fetch a single event from Graph API filtered by its iCalUId. """
+        url = "/v1.0/me/events?$filter=iCalUId eq '%s'" % iCalUId
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        status, event, _dummy = self.microsoft_service._do_request(url, {}, headers, method='GET', timeout=timeout)
+        return status not in RESOURCE_NOT_FOUND_STATUSES, event
+
+    @requires_auth_token
     def _get_events_from_paginated_url(self, url, token=None, params=None, timeout=TIMEOUT):
         """
         Get a list of events from a paginated URL.
@@ -56,20 +64,10 @@ class MicrosoftCalendarService():
             'Prefer': 'outlook.body-content-type="html", odata.maxpagesize=50'
         }
         if not params:
-            # Get context keys limiting query range for reducing requests and then increase performance.
-            start_date = self.microsoft_service._context.get('range_start_date')
-            end_date = self.microsoft_service._context.get('range_end_date')
-            if start_date and end_date:
-                start_date = start_date.strftime("%Y-%m-%dT00:00:00Z")
-                end_date = end_date.strftime("%Y-%m-%dT00:00:00Z")
-            else:
-                ICP = self.microsoft_service.env['ir.config_parameter'].sudo()
-                day_range = int(ICP.get_param('microsoft_calendar.sync.range_days', default=365))
-                start_date = fields.Datetime.subtract(fields.Datetime.now(), days=day_range).strftime("%Y-%m-%dT00:00:00Z")
-                end_date = fields.Datetime.add(fields.Datetime.now(), days=day_range).strftime("%Y-%m-%dT00:00:00Z")
+            # By default, fetch events from at most one year in the past and two years in the future.
             params = {
-                'startDateTime': start_date,
-                'endDateTime': end_date,
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=1).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
             }
 
         # get the first page of events
@@ -92,6 +90,12 @@ class MicrosoftCalendarService():
 
         return events, next_sync_token
 
+    def _check_full_sync_required(self, response):
+        """ Checks if full sync is required according to the error code received. """
+        response_json = response.json()
+        response_code = response_json.get('error', {}).get('code', '')
+        return any(error_code in response_code for error_code in ['fullSyncRequired', 'SyncStateNotFound'])
+
     @requires_auth_token
     def _get_events_delta(self, sync_token=None, token=None, timeout=TIMEOUT):
         """
@@ -105,7 +109,8 @@ class MicrosoftCalendarService():
             events, next_sync_token = self._get_events_from_paginated_url(
                 url, params=params, token=token, timeout=timeout)
         except requests.HTTPError as e:
-            if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content) and sync_token:
+            full_sync_needed = self._check_full_sync_required(e.response)
+            if e.response.status_code == 410 and full_sync_needed and sync_token:
                 # retry with a full sync
                 return self._get_events_delta(token=token, timeout=timeout)
             raise e

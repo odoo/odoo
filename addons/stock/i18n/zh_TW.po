@@ -1815,7 +1815,7 @@ msgstr "盤點表"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Counted Quantity"
-msgstr "盤點數量"
+msgstr "盤點實數"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7044,7 +7044,7 @@ msgstr "銷售紀錄"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "調度日期"
+msgstr "預定日期"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -7253,13 +7253,6 @@ msgstr "揀貨序列"
 #, python-format
 msgid "Sequence return"
 msgstr "序列返回"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "序列 %s 已存在。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8134,7 +8127,7 @@ msgstr "該產品的數量不足"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_quantity
 msgid "The product's counted quantity."
-msgstr "產品的計數數量."
+msgstr "產品盤點得出的實際數量。"
 
 #. module: stock
 #. odoo-python
@@ -8420,6 +8413,17 @@ msgstr "此記錄已存在."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "此報表不能同時用於 %s 已完成和未完成"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

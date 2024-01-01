@@ -157,8 +157,6 @@ class StockPicking(models.Model):
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
-            self.env['stock.move'].create(mo._get_moves_raw_values())
-            self.env['stock.move'].create(mo._get_moves_finished_values())
             mo.date_planned_finished = move.date  # Avoid to have the picking late depending of the MO
             mo.action_confirm()
 

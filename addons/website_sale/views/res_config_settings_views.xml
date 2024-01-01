@@ -392,19 +392,18 @@
             </div>
 
             <div id="cart_redirect_setting" position="after">
-                <div id="website_login_documents" position="move"/>
-            </div>
-            <xpath expr="//div[@id='website_login_documents']/div[hasclass('o_setting_right_pane')]" position="replace">
-                <div class="o_setting_right_pane">
-                    <label for="account_on_checkout" string="Sign in/up at checkout"/>
-                    <div class="text-muted">
-                        "Optional" allows guests to register from the order confirmation email to track their order.
-                    </div>
-                    <div class="mt8 ms-4">
-                        <field name="account_on_checkout" class="w-75" widget="radio"/>
+                <div class="col-12 col-lg-6 o_setting_box" id="website_checkout_registration">
+                    <div class="o_setting_right_pane">
+                        <label for="account_on_checkout" string="Sign in/up at checkout"/>
+                        <div class="text-muted">
+                            "Optional" allows guests to register from the order confirmation email to track their order.
+                        </div>
+                        <div class="mt8 ms-4">
+                            <field name="account_on_checkout" class="w-75" widget="radio"/>
+                        </div>
                     </div>
                 </div>
-            </xpath>
+            </div>
 
             <div id="website_marketing_automation" position="after">
                 <div class="col-xs-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Customer needs to be signed in otherwise the mail address is not known.

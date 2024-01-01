@@ -75,6 +75,8 @@ class AccountMove(models.Model):
         for move in posted.filtered(lambda m: m.country_code == 'IN'):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
+            if move.l10n_in_state_id and not move.l10n_in_state_id.l10n_in_tin:
+                raise UserError(_("Please set a valid TIN Number on the Place of Supply %s", move.l10n_in_state_id.name))
             if not company_unit_partner.state_id:
                 msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
                 "Set the address of your company (Don't forget the State field)") % (company_unit_partner.name)

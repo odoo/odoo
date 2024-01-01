@@ -83,7 +83,7 @@ class SlideChannelInvite(models.TransientModel):
             'subject': subject,
             'body_html': body,
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'auto_delete': True,
+            'auto_delete': self.template_id.auto_delete if self.template_id else True,
             'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 

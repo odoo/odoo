@@ -134,6 +134,7 @@ class PosGlobalState extends PosModel {
             },
         };
 
+        this.tempScreenIsShown = false;
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
             'synch':            { status:'connected', pending:0 },
@@ -787,6 +788,40 @@ class PosGlobalState extends PosModel {
                 productImages
             });
         });
+    }
+
+    // To be used in the context of closing the POS
+    // Saves the order locally and try to send it to the backend.
+    // If there is an error show a popup and ask to continue the closing or not
+    // return a successful promise on sync or if user decides to contine else reject
+    async push_orders_with_closing_popup (order, opts) {
+        try {
+            return await this.push_orders(order, opts);
+        } catch (error) {
+            console.warn(error);
+            const reason = this.env.pos.failed
+                ? this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to configuration errors. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  )
+                : this.env._t(
+                      'Some orders could not be submitted to ' +
+                          'the server due to internet connection issues. ' +
+                          'You can exit the Point of Sale, but do ' +
+                          'not close the session before the issue ' +
+                          'has been resolved.'
+                  );
+            const { confirmed } =  await Gui.showPopup('ConfirmPopup', {
+                title: this.env._t('Offline Orders'),
+                body: reason,
+                confirmText: this.env._t('Close anyway'),
+                cancelText: this.env._t('Do not close'),
+            });
+            return confirmed ? Promise.resolve(true) : Promise.reject();
+        }
     }
 
     // saves the order locally and try to send it to the backend.
@@ -1675,7 +1710,7 @@ class Orderline extends PosModel {
      *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
      *    @param {Array} newPackLotLines array of { lot_name: String }
      */
-    setPackLotLines({ modifiedPackLotLines, newPackLotLines }) {
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines , setQuantity = true }) {
         // Set the new values for modified lot lines.
         let lotLinesToRemove = [];
         for (let lotLine of this.pack_lot_lines) {
@@ -1703,7 +1738,7 @@ class Orderline extends PosModel {
         }
 
         // Set the quantity of the line based on number of pack lots.
-        if(!this.product.to_weight){
+        if(!this.product.to_weight && setQuantity){
             this.set_quantity_by_lot();
         }
     }
@@ -2173,7 +2208,7 @@ class Orderline extends PosModel {
         };
     }
     display_discount_policy(){
-        return this.order.pricelist.discount_policy;
+        return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
     }
     compute_fixed_price (price) {
         return this.pos.computePriceAfterFp(price, this.get_taxes());
@@ -2893,7 +2928,7 @@ class Order extends PosModel {
         }
 
         if (options.draftPackLotLines) {
-            this.selected_orderline.setPackLotLines(options.draftPackLotLines);
+            this.selected_orderline.setPackLotLines({ ...options.draftPackLotLines, setQuantity: options.quantity === undefined });
         }
     }
     set_orderline_options(orderline, options) {

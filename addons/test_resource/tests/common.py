@@ -45,6 +45,7 @@ class TestResourceCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestResourceCommon, cls).setUpClass()
+        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
 
         # UTC+1 winter, UTC+2 summer
         cls.calendar_jean = cls._define_calendar('40 Hours', [(8, 16, i) for i in range(5)], 'Europe/Brussels')

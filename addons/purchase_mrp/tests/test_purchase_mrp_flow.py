@@ -3,24 +3,25 @@
 
 from datetime import timedelta
 
-from odoo.tests.common import Form, TransactionCase
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
 from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class TestPurchaseMrpFlow(TransactionCase):
+class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         # Useful models
         cls.UoM = cls.env['uom.uom']
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)])
+        cls.stock_location = cls.warehouse.lot_stock_id
 
         grp_uom = cls.env.ref('uom.group_uom')
         group_user = cls.env.ref('base.group_user')
@@ -501,7 +502,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         replenish more that needed if others procurements have the same products
         than the production component. """
 
-        warehouse = self.env.ref('stock.warehouse0')
+        warehouse = self.warehouse
         buy_route = warehouse.buy_pull_id.route_id
         manufacture_route = warehouse.manufacture_pull_id.route_id
 
@@ -572,7 +573,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         self.assertEqual(purchase.order_line.product_qty, 5)
 
     def test_01_purchase_mrp_kit_qty_change(self):
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
         # Create a PO with one unit of the kit product
         self.po = self.env['purchase.order'].create({
@@ -778,7 +779,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
             'qty_to_order': 5,
-            'warehouse_id': self.env.ref('stock.warehouse0').id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('mrp.route_warehouse0_manufacture').id,
         })
         # lead_days_date should be today + manufacturing security lead time + product manufacturing lead time
@@ -793,7 +794,7 @@ class TestPurchaseMrpFlow(TransactionCase):
             With enough stock for the first line and two incoming
             POs for the second line and third line.
         """
-        location = self.env.ref('stock.stock_location_stock')
+        location = self.stock_location
         uom_unit = self.env.ref('uom.product_uom_unit')
         final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'type': 'product'})
         component_product = self.env['product.product'].create({'name': 'Compo 1', 'type': 'product'})

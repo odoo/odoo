@@ -79,14 +79,14 @@ msgstr "%(pos_name)s (хэрэглэгдээгүй)"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s POS payment of %s in %s"
-msgstr ""
+msgstr "%s %s -ын төлбөр төлөлт %s"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
 #, python-format
 msgid "%s customer(s) found for \"%s\"."
-msgstr ""
+msgstr "%s үйлчлүүлэгч(д)ийн бүртгэл \"%s\" хайлтанд олдлоо."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -101,21 +101,21 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
-msgstr ""
+msgstr "%s бараа(ууд) \"%s\" хайлтанд олдлоо."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "& invoice"
-msgstr ""
+msgstr "& нэхэмжлэл"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "(Both will be sent by email)"
-msgstr ""
+msgstr "(Нэхэмжлэл болон төлбөрийн баримт бүгд имэйлээр илгээгдсэн)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -139,7 +139,7 @@ msgstr "(шинэчлэх)"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
-msgstr ""
+msgstr "+ Шинэ цэг бүртгэх"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -472,7 +472,7 @@ msgstr "Нэмэх"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js:0
 #, python-format
 msgid "Add Customer Note"
-msgstr ""
+msgstr "Тэмдэглэл нэмэх"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -674,6 +674,8 @@ msgid ""
 "An error has occurred when trying to close the session.\n"
 "You will be redirected to the back-end to manually close the session."
 msgstr ""
+"Сэшн хаах үед алдаа үүслээ. Та back-end руу шилжиж ороод сешн хаах үйлдлийг "
+"үргэлжлүүлэн гүйцэтгэх боломжтой."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1746,7 +1748,7 @@ msgstr "Захиалагчийн нэхэмжлэл"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #, python-format
 msgid "Customer Note"
-msgstr ""
+msgstr "Тэмдэглэл"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
@@ -1805,7 +1807,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Customer tips, cannot be modified directly"
-msgstr ""
+msgstr "Үйлчлүүлэгчийн цайны мөнгө, засаж өөрчлөх боломжгүй"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2598,7 +2600,7 @@ msgstr "Нүүр хуудас"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "How would you like to receive your receipt"
-msgstr ""
+msgstr "Та худалдан авалтын баримтаа хэрхэн авах вэ?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
@@ -4051,7 +4053,7 @@ msgstr "POS захиалгуудын мөр"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
 msgid "POS Payment Method"
-msgstr ""
+msgstr "ПОС төлбөрийн арга"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
@@ -4205,7 +4207,7 @@ msgstr "Төлбөрийн гүйлгээнүүдийн ID"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Payment method"
-msgstr ""
+msgstr "Төлбөрийн хэлбэр"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4275,7 +4277,7 @@ msgstr "Төлбөрүүд:"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Pending Electronic Payments"
-msgstr ""
+msgstr "Цахим төлбөр явагдаж байна"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__user_id
@@ -5569,7 +5571,7 @@ msgstr "Санхүүгийн харгалзаа"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Select a payment method to validate the order."
-msgstr ""
+msgstr "Захиалгыг батлахын тулд төлбөрийн аргаа сонгоно уу."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5609,7 +5611,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Send"
-msgstr "Илгээх"
+msgstr "Төлөх"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5625,7 +5627,7 @@ msgstr "Төлбөрийн хүсэлт илгээх"
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorTracebackPopup.xml:0
 #, python-format
 msgid "Send by email"
-msgstr "Имэйл илгээх"
+msgstr "Төлбөрийн баримт имэйлээр авах"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6212,6 +6214,8 @@ msgid ""
 "The Point of Sale could not find any product, customer, employee or action "
 "associated with the scanned barcode."
 msgstr ""
+"Таны уншуулсан баркодоор тохирох ямар нэг бараа, үйлчлүүлэгч, ажилтны "
+"бүртгэл олдсонгүй."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_rounding_form_view_inherited
@@ -6611,6 +6615,9 @@ msgid ""
 "There is at least one pending electronic payment.\n"
 "Please finish the payment with the terminal or cancel it then remove the payment line."
 msgstr ""
+"Одоогоор ямар нэг цахим төлбөрийн бүртгэл явагдаж байна. Төлбөр бүртгэх "
+"ажиллагаа хийгдэж дуусах эсвэл төлбөрийн мөрийг устгаж ажиллагааг цуцлана "
+"уу."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6756,6 +6763,9 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
+"Энэ баримтанд %s бараанаас аль хэдийнээ буцаалт хийгдсэн байна. Тиймээс "
+"үйлчлүүлэгчийг сольж өөрчлөх боломжгүй. Өөр үйлчлүүлэгч сонгохыг хүсвэл Шинэ"
+" захиалга үүсгэж ашиглана уу."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7373,6 +7383,8 @@ msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
 msgstr ""
+"Та зөвхөн ноорог эсвэл цуцлагдсан төлөвтэй ПОС захиалгаас мөр устгах "
+"боломжтой."
 
 #. module: point_of_sale
 #. odoo-python

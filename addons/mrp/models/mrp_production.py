@@ -695,7 +695,7 @@ class MrpProduction(models.Model):
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
             production.date_planned_finished = date_planned_finished
 
-    @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'date_planned_start')
+    @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id')
     def _compute_move_raw_ids(self):
         for production in self:
             if production.state != 'draft':
@@ -703,7 +703,8 @@ class MrpProduction(models.Model):
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
                 production.move_raw_ids = list_move_raw
-            if any(move.bom_line_id.bom_id != production.bom_id for move in production.move_raw_ids if move.bom_line_id):
+            if any(move.bom_line_id.bom_id != production.bom_id or move.bom_line_id._skip_bom_line(production.product_id)\
+                for move in production.move_raw_ids if move.bom_line_id):
                 production.move_raw_ids = [Command.clear()]
             if production.bom_id and production.product_id and production.product_qty > 0:
                 # keep manual entries
@@ -858,7 +859,23 @@ class MrpProduction(models.Model):
             if not vals.get('procurement_group_id'):
                 procurement_group_vals = self._prepare_procurement_group_vals(vals)
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
-        return super().create(vals_list)
+        res = super().create(vals_list)
+        # Make sure that the date passed in vals_list are taken into account and not modified by a compute
+        for rec, vals in zip(res, vals_list):
+            if (rec.move_raw_ids
+                and rec.move_raw_ids[0].date
+                and vals.get('date_planned_start')
+                and rec.move_raw_ids[0].date != vals['date_planned_start']):
+                rec.move_raw_ids.write({
+                    'date': vals['date_planned_start'],
+                    'date_deadline': vals['date_planned_start']
+                })
+            if (rec.move_finished_ids
+                and rec.move_finished_ids[0].date
+                and vals.get('date_planned_finished')
+                and rec.move_finished_ids[0].date != vals['date_planned_finished']):
+                rec.move_finished_ids.write({'date': vals['date_planned_finished']})
+        return res
 
     def unlink(self):
         self.action_cancel()
@@ -1550,7 +1567,7 @@ class MrpProduction(models.Model):
                 if move.quantity_done:
                     continue
                 move._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
-                move.move_line_ids.lot_id = order.lot_producing_id
+                move.move_line_ids.write(order._prepare_finished_extra_vals())
             # workorder duration need to be set to calculate the price of the product
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
@@ -1725,8 +1742,8 @@ class MrpProduction(models.Model):
             ml_by_move = []
             product_uom = initial_move.product_id.uom_id
             for move_line in initial_move.move_line_ids:
-                available_qty = move_line.product_uom_id._compute_quantity(move_line.reserved_uom_qty, product_uom)
-                if float_compare(available_qty, 0, precision_rounding=move_line.product_uom_id.rounding) <= 0:
+                available_qty = move_line.product_uom_id._compute_quantity(move_line.reserved_uom_qty, product_uom, rounding_method="HALF-UP")
+                if float_compare(available_qty, 0, precision_rounding=product_uom.rounding) <= 0:
                     continue
                 ml_by_move.append((available_qty, move_line, move_line.copy_data()[0]))
 
@@ -1734,11 +1751,11 @@ class MrpProduction(models.Model):
             moves = list(initial_move | backorder_moves)
 
             move = moves and moves.pop(0)
-            move_qty_to_reserve = move.product_qty
+            move_qty_to_reserve = move.product_qty  # Product UoM
 
             for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
-                taken_qty = min(quantity, move_qty_to_reserve, move_line.product_uom_id._compute_quantity(move_line.qty_done, product_uom))
-                taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
+                taken_qty = min(quantity, move_qty_to_reserve, move_line.qty_done)
+                taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id, rounding_method="HALF-UP")
                 if float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
                     continue
                 move_line.with_context(bypass_reservation_update=True).reserved_uom_qty = taken_qty_uom
@@ -1754,7 +1771,7 @@ class MrpProduction(models.Model):
                 while float_compare(quantity, 0, precision_rounding=product_uom.rounding) > 0 and move:
                     # Do not create `stock.move.line` if there is no initial demand on `stock.move`
                     taken_qty = min(move_qty_to_reserve, quantity)
-                    taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id)
+                    taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id, rounding_method="HALF-UP")
                     if move == initial_move:
                         move_line.with_context(bypass_reservation_update=True).reserved_uom_qty += taken_qty_uom
                         if set_consumed_qty and not move.production_id:
@@ -1779,7 +1796,7 @@ class MrpProduction(models.Model):
                 # Unreserve the quantity removed from initial `stock.move.line` and
                 # not assigned to a move anymore. In case of a split smaller than initial
                 # quantity and fully reserved
-                if quantity:
+                if quantity and move_line.product_id.type == 'product':
                     self.env['stock.quant']._update_reserved_quantity(
                         move_line.product_id, move_line.location_id, -quantity,
                         lot_id=move_line.lot_id, package_id=move_line.package_id,
@@ -2131,8 +2148,7 @@ class MrpProduction(models.Model):
         if 'confirmed' in self.mapped('state'):
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids).write({'state': 'confirmed'})
-            production.workorder_ids._action_confirm()
-            production.state = 'confirmed'
+            production.action_confirm()
 
         self.with_context(skip_activity=True)._action_cancel()
         for p in self:
@@ -2195,6 +2211,7 @@ class MrpProduction(models.Model):
                     removed = self.env['stock.move.line'].search_count([
                         ('lot_id', '=', move_line.lot_id.id),
                         ('state', '=', 'done'),
+                        ('location_id.usage', '=', 'internal'),
                         ('location_dest_id.scrap_location', '=', True)
                     ])
                     unremoved = self.env['stock.move.line'].search_count([
@@ -2236,10 +2253,17 @@ class MrpProduction(models.Model):
             removed = self.env['stock.move.line'].search_count([
                 ('lot_id', '=', lot.id),
                 ('state', '=', 'done'),
-                ('location_dest_id.scrap_location', '=', True)
+                ('location_id.scrap_location', '=', False),
+                ('location_dest_id.scrap_location', '=', True),
+            ])
+            unremoved = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done'),
+                ('location_id.scrap_location', '=', True),
+                ('location_dest_id.scrap_location', '=', False),
             ])
             # Either removed or unbuild
-            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed == 0):
+            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed + unremoved == 0):
                 return True
         # Check presence of same sn in current production
         duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == lot)
@@ -2295,3 +2319,7 @@ class MrpProduction(models.Model):
                 continue
             vals['move_orig_ids'] = [Command.set(vals['move_orig_ids'])]
         return origs
+
+    def _prepare_finished_extra_vals(self):
+        self.ensure_one()
+        return {'lot_id' : self.lot_producing_id}

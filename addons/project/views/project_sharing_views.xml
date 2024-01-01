@@ -64,11 +64,11 @@
                                     </span>
                                     <br />
                                     <t t-if="record.partner_id.value">
-                                        <span t-if="!record.partner_is_company.raw_value">
-                                            <field name="commercial_partner_id"/>
+                                        <span t-if="!record.partner_is_company.raw_value" t-attf-title="#{record.commercial_partner_id.value}">
+                                            <field name="commercial_partner_id" class="text-truncate d-block"/>
                                         </span>
-                                        <span t-else="">
-                                            <field name="partner_id"/>
+                                        <span t-else="" t-attf-title="#{record.partner_id.value}">
+                                            <field name="partner_id" class="text-truncate d-block"/>
                                         </span>
                                     </t>
                                     <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>

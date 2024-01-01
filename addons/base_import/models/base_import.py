@@ -566,6 +566,9 @@ class Import(models.TransientModel):
                 val = self._remove_currency_symbol(val)
                 if val:
                     if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                        if options['float_decimal_separator'] == '.' and val.count('.') > 1:
+                            # This is not a float so exit this try
+                            float('a')
                         val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
                     # We are now sure that this is a float, but we still need to find the
                     # thousand and decimal separator
@@ -1277,7 +1280,7 @@ class Import(models.TransientModel):
             return base64.b64encode(content)
         except Exception as e:
             _logger.warning(e, exc_info=True)
-            raise ValueError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
+            raise ImportValidationError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
                 'url': url,
                 'field_name': field,
                 'line_number': line_number + 1,
@@ -1532,7 +1535,7 @@ class Import(models.TransientModel):
 
         return input_file_data
 
-_SEPARATORS = [' ', '/', '-', '']
+_SEPARATORS = [' ', '/', '-', '.', '']
 _PATTERN_BASELINE = [
     ('%m', '%d', '%Y'),
     ('%d', '%m', '%Y'),

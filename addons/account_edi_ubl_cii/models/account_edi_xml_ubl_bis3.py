@@ -62,9 +62,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             if partner.country_id.code == "AU" and partner.vat and not partner.vat.upper().startswith("AU"):
                 vals['company_id'] = "AU" + partner.vat
 
-            if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
-                vals['company_id'] = partner.l10n_lu_peppol_identifier
-
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
         #  https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (NO-R-002 (warning))
@@ -355,7 +352,18 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
+        for line_vals in vals['vals']['invoice_line_vals']:
+            if not line_vals['item_vals'].get('name'):
+                # [BR-25]-Each Invoice line (BG-25) shall contain the Item name (BT-153).
+                constraints.update({'cen_en16931_item_name': _("Each invoice line should have a product or a label.")})
+                break
+
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
+            if invoice.currency_id.compare_amounts(line.price_unit, 0) == -1:
+                # [BR-27]-The Item net price (BT-146) shall NOT be negative.
+                constraints.update({'cen_en16931_positive_item_net_price': _(
+                    "The invoice contains line(s) with a negative unit price, which is not allowed."
+                    " You might need to set a negative quantity instead.")})
             if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax

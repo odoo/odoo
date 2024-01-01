@@ -178,6 +178,12 @@ class Page(models.Model):
                             'url_to': url,
                             'website_id': website_id,
                         })
+                    # Sync website's homepage URL
+                    website = self.env['website'].get_current_website()
+                    page_url_normalized = {'homepage_url': page.url}
+                    website._handle_homepage_url(page_url_normalized)
+                    if website.homepage_url == page_url_normalized['homepage_url']:
+                        website.homepage_url = url
                 vals['url'] = url
 
             # If name has changed, check for key uniqueness

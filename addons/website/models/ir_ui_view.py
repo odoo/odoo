@@ -4,11 +4,10 @@
 import logging
 import uuid
 import werkzeug
-from odoo.tools.misc import hmac
-from lxml import etree
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -473,30 +472,8 @@ class View(models.Model):
         ]
 
     def _get_combined_arch(self):
-        root = super(View, self)._get_combined_arch()
-        if not root.findall('.//form'):  # Most efficient way to discard the function if there is no form in the view
-            return root
-        nodes = root.xpath('.//form[contains(@action, "/website/form/")]')
-        for form in nodes:
-            existing_hash_node = form.find('.//input[@type="hidden"][@name="website_form_signature"]')
-            if existing_hash_node is not None:
-                existing_hash_node.getparent().remove(existing_hash_node)
-            input_nodes = form.xpath('.//input[contains(@name, "email_")]')
-            form_values = {input_node.attrib['name']: input_node for input_node in input_nodes}
-            # if this form does not send an email, ignore. But at this stage,
-            # the value of email_to can still be None in case of default value
-            if 'email_to' not in form_values.keys():
-                continue
-            elif not form_values['email_to'].attrib.get('value'):
-                form_values['email_to'].attrib['value'] = self.env.company.email or ''
-            has_cc = {'email_cc', 'email_bcc'} & form_values.keys()
-            value = form_values['email_to'].attrib['value'] + (':email_cc' if has_cc else '')
-            hash_value = hmac(self.sudo().env, 'website_form_signature', value)
-            hash_node = '<input type="hidden" class="form-control s_website_form_input s_website_form_custom" name="website_form_signature" value=""/>'
-            if has_cc:
-                hash_value += ':email_cc'
-            form_values['email_to'].addnext(etree.fromstring(hash_node))
-            form_values['email_to'].getnext().attrib['value'] = hash_value
+        root = super()._get_combined_arch()
+        add_form_signature(root, self.sudo().env)
         return root
 
     # --------------------------------------------------------------------------

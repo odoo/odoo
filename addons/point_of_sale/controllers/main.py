@@ -205,7 +205,7 @@ class PosController(PortalAccount):
             partner = request.env['res.partner'].sudo().create(partner_values)  # In this case, partner_values contains the whole partner info form.
         # If the user is connected, then we can update if needed its fields with the additional localized fields if any, then proceed.
         else:
-            partner = (not request.env.user._is_public() and request.env.user.partner_id) or pos_order.partner_id
+            partner = pos_order.partner_id or (not request.env.user._is_public() and request.env.user.partner_id)
             partner.write(partner_values)  # In this case, partner_values only contains the additional fields that can be updated.
 
         pos_order.partner_id = partner

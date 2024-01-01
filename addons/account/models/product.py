@@ -158,7 +158,7 @@ class ProductProduct(models.Model):
             taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
-                taxes_res = flattened_taxes_before_fp.compute_all(
+                taxes_res = flattened_taxes_before_fp.with_context(round=False, round_base=False).compute_all(
                     product_price_unit,
                     quantity=1.0,
                     currency=currency,
@@ -168,7 +168,7 @@ class ProductProduct(models.Model):
                 product_price_unit = taxes_res['total_excluded']
 
                 if any(tax.price_include for tax in flattened_taxes_after_fp):
-                    taxes_res = flattened_taxes_after_fp.compute_all(
+                    taxes_res = flattened_taxes_after_fp.with_context(round=False, round_base=False).compute_all(
                         product_price_unit,
                         quantity=1.0,
                         currency=currency,
@@ -183,7 +183,7 @@ class ProductProduct(models.Model):
 
         # Apply currency rate.
         if currency != product_currency:
-            product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date)
+            product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date, round=False)
 
         return product_price_unit
 

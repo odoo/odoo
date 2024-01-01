@@ -3,6 +3,7 @@
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo import Command
+from odoo.exceptions import UserError
 
 
 @tagged('post_install', '-at_install')
@@ -189,3 +190,33 @@ class TestAnalyticAccount(TransactionCase):
         plans_json = self.env['account.analytic.plan'].get_relevant_plans()
         self.assertEqual(2, len(plans_json),
                          "The parent plan should be available even if the analytic account is set on child of third generation")
+
+    def test_analytic_plan_account_parent(self):
+        """
+        Check that when assigning an analytic plan as the parent to a child analytic plan,
+        both plans must belong to the same company.
+        """
+        company_1, company_2 = self.env['res.company'].create([
+            {'name': 'company_1'},
+            {'name': 'company_2'}
+        ])
+        self.env.user.company_ids |= company_1 + company_2
+        parent_analytic_plan_1, parent_analytic_plan_2 = self.env['account.analytic.plan'].create([{
+            'name': 'Parent Plan 1',
+            'company_id': company_1.id,
+        }, {
+            'name': 'Parent Plan 2',
+            'company_id': company_1.id,
+        }])
+        child_analytic_plan_1 = self.env['account.analytic.plan'].create({
+            'name': 'Child Plan 1',
+            'company_id': company_1.id,
+            'parent_id': parent_analytic_plan_1.id,
+        })
+        self.assertEqual(child_analytic_plan_1.parent_id.id, parent_analytic_plan_1.id)
+        with self.assertRaises(UserError):
+            self.env['account.analytic.plan'].create({
+                'name': 'Chils Plan 2',
+                'company_id': company_2.id,
+                'parent_id': parent_analytic_plan_2.id,
+            })

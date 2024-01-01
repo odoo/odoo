@@ -25,7 +25,7 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference(self):
         self.ensure_one()
-        vendor_refs = [ref for ref in set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
+        vendor_refs = [ref for ref in set(self.invoice_line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
         if self.ref:
             return [ref for ref in self.ref.split(', ') if ref and ref not in vendor_refs] + vendor_refs
         return vendor_refs
@@ -53,7 +53,7 @@ class AccountMove(models.Model):
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
         new_currency_id = self.invoice_line_ids and self.currency_id or invoice_vals.get('currency_id')
-        del invoice_vals['ref']
+        del invoice_vals['ref'], invoice_vals['payment_reference']
         del invoice_vals['company_id']  # avoid recomputing the currency
         if self.move_type == invoice_vals['move_type']:
             del invoice_vals['move_type'] # no need to be updated if it's same value, to avoid recomputes
@@ -76,8 +76,11 @@ class AccountMove(models.Model):
         self.ref = ', '.join(refs)
 
         # Compute payment_reference.
-        if len(refs) == 1:
-            self.payment_reference = refs[0]
+        if not self.payment_reference:
+            if len(refs) == 1:
+                self.payment_reference = refs[0]
+            elif len(refs) > 1:
+                self.payment_reference = refs[-1]
 
         self.purchase_id = False
 

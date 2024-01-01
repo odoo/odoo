@@ -12,6 +12,11 @@ from freezegun import freeze_time
 @freeze_time(fields.Date.today())
 class TestBoM(TestMrpCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('product.group_product_variant').id)]})
+
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
         self.assertEqual(set([bom[0].id for bom in boms]), set(self.bom_1.ids))
@@ -1159,12 +1164,14 @@ class TestBoM(TestMrpCommon):
 
         uom_kg = self.env.ref('uom.product_uom_kgm')
         uom_gram = self.env.ref('uom.product_uom_gram')
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
 
         product_gram = self.env['product.product'].create({
             'name': 'Product sold in grams',
             'type': 'product',
             'uom_id': uom_gram.id,
             'uom_po_id': uom_gram.id,
+            'route_ids': [(4, manufacturing_route_id)],
         })
         # We create a BoM that manufactures 2kg of product
         self.env['mrp.bom'].create({
@@ -1187,7 +1194,6 @@ class TestBoM(TestMrpCommon):
         self.env.flush_all()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
-        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
         self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_multiple, 2000.0)
         self.assertEqual(orderpoint.qty_to_order, 4000.0)

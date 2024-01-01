@@ -23,6 +23,59 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         untax = res['total_excluded']
         return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
+    def _create_pos_order_for_postponed_invoicing(self):
+        # Create the order on the first of january.
+        with freeze_time('2020-01-01'):
+            product = self.env['product.product'].create({
+                'name': 'Dummy product',
+                'type': 'product',
+                'categ_id': self.env.ref('product.product_category_all').id,
+                'taxes_id': self.tax_sale_a.ids,
+            })
+            self.pos_config.open_ui()
+            pos_session = self.pos_config.current_session_id
+            untax, atax = self.compute_tax(product, 500, 1)
+            pos_order_data = {
+                'data': {
+                    'amount_paid': untax + atax,
+                    'amount_return': 0,
+                    'amount_tax': atax,
+                    'amount_total': untax + atax,
+                    'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+                    'fiscal_position_id': False,
+                    'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+                    'lines': [(0, 0, {
+                        'discount': 0,
+                        'id': 42,
+                        'pack_lot_ids': [],
+                        'price_unit': 500.0,
+                        'product_id': product.id,
+                        'price_subtotal': 500.0,
+                        'price_subtotal_incl': 575.0,
+                        'qty': 1,
+                        'tax_ids': [(6, 0, product.taxes_id.ids)]
+                    })],
+                    'name': 'Order 12345-123-1234',
+                    'partner_id': False,
+                    'pos_session_id': pos_session.id,
+                    'sequence_number': 2,
+                    'statement_ids': [(0, 0, {
+                        'amount': untax + atax,
+                        'name': fields.Datetime.now(),
+                        'payment_method_id': self.cash_payment_method.id
+                    })],
+                    'uid': '12345-123-1234',
+                    'user_id': self.env.uid
+                },
+                'id': '12345-123-1234',
+                'to_invoice': False
+            }
+            pos_order_id = self.PosOrder.create_from_ui([pos_order_data])[0]['id']
+            pos_order = self.env['pos.order'].browse(pos_order_id)
+            # End the session. The order has been created without any invoice.
+            self.pos_config.current_session_id.action_pos_session_closing_control()
+        return pos_order
+
     def test_order_refund(self):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
@@ -1169,56 +1222,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            - Reconcile the receivable lines from the created misc entry with the ones from the created payment(s)
         """
         # Create the order on the first of january.
-        with freeze_time('2020-01-01'):
-            product = self.env['product.product'].create({
-                'name': 'Dummy product',
-                'type': 'product',
-                'categ_id': self.env.ref('product.product_category_all').id,
-                'taxes_id': self.tax_sale_a.ids,
-            })
-            self.pos_config.open_ui()
-            pos_session = self.pos_config.current_session_id
-            untax, atax = self.compute_tax(product, 500, 1)
-            pos_order_data = {
-                'data': {
-                    'amount_paid': untax + atax,
-                    'amount_return': 0,
-                    'amount_tax': atax,
-                    'amount_total': untax + atax,
-                    'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
-                    'fiscal_position_id': False,
-                    'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
-                    'lines': [(0, 0, {
-                        'discount': 0,
-                        'id': 42,
-                        'pack_lot_ids': [],
-                        'price_unit': 500.0,
-                        'product_id': product.id,
-                        'price_subtotal': 500.0,
-                        'price_subtotal_incl': 575.0,
-                        'qty': 1,
-                        'tax_ids': [(6, 0, product.taxes_id.ids)]
-                    })],
-                    'name': 'Order 12345-123-1234',
-                    'partner_id': False,
-                    'pos_session_id': pos_session.id,
-                    'sequence_number': 2,
-                    'statement_ids': [(0, 0, {
-                        'amount': untax + atax,
-                        'name': fields.Datetime.now(),
-                        'payment_method_id': self.cash_payment_method.id
-                    })],
-                    'uid': '12345-123-1234',
-                    'user_id': self.env.uid
-                },
-                'id': '12345-123-1234',
-                'to_invoice': False
-            }
-            pos_order_id = self.PosOrder.create_from_ui([pos_order_data])[0]['id']
-            pos_order = self.env['pos.order'].browse(pos_order_id)
-            # End the session. The order has been created without any invoice.
-            self.pos_config.current_session_id.action_pos_session_closing_control()
-            self.assertFalse(pos_order.account_move.exists())
+        pos_order = self._create_pos_order_for_postponed_invoicing()
+        self.assertFalse(pos_order.account_move.exists())
+
         # Client is back on the 3rd, asks for an invoice.
         with freeze_time('2020-01-03'):
             # We set the partner on the order
@@ -1253,6 +1259,23 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             closing_entry_receivable_line = closing_entry.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'])  # Because the payment method use the default receivable
             statement_receivable_line = statement.line_ids.filtered(lambda line: line.account_id == self.company_data['default_account_receivable'] and line.name == pos_order.session_id.name)  # Because the payment method use the default receivable
             self.assertEqual(closing_entry_receivable_line.matching_number, statement_receivable_line.matching_number)
+
+    def test_sale_order_postponed_invoicing_anglosaxon(self):
+        """ Test the flow of creating an invoice later, after the POS session has been closed and everything has been processed
+        in the case of anglo-saxon accounting.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        pos_order = self._create_pos_order_for_postponed_invoicing()
+
+        with freeze_time('2020-01-03'):
+            # We set the partner on the order
+            pos_order.partner_id = self.partner1.id
+            pos_order.action_pos_order_invoice()
+
+        picking_ids = pos_order.session_id.picking_ids
+        # only one product is leaving stock
+        self.assertEqual(sum(picking_ids.move_line_ids.mapped('qty_done')), 1)
 
     def test_order_pos_tax_same_as_company(self):
         """Test that when the default_pos_receivable_account and the partner account_receivable are the same,

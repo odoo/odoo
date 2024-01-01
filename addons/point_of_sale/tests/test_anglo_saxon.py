@@ -1,62 +1,63 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 import time
-from odoo import fields
-from odoo.tests import common
+from odoo.tests import tagged
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
-class TestAngloSaxonCommon(common.TransactionCase):
 
-    def setUp(self):
-        super(TestAngloSaxonCommon, self).setUp()
-        self.PosMakePayment = self.env['pos.make.payment']
-        self.PosOrder = self.env['pos.order']
-        self.Statement = self.env['account.bank.statement']
-        self.company = self.env.ref('base.main_company')
-        self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        self.partner = self.env['res.partner'].create({'name': 'Partner 1'})
-        self.category = self.env.ref('product.product_category_all')
-        self.category = self.category.copy({'name': 'New category','property_valuation': 'real_time'})
-        self.account = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'expense', 'reconcile': True})
-        account_income = self.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'income', 'reconcile': True})
-        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00', 'account_type': 'expense', 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'account_type': 'expense', 'reconcile': True})
-        self.partner.property_account_receivable_id = self.account
-        self.category.property_account_income_categ_id = account_income
-        self.category.property_account_expense_categ_id = account_expense
-        self.category.property_stock_account_input_categ_id = self.account
-        self.category.property_stock_account_output_categ_id = account_output
-        self.category.property_stock_valuation_account_id = account_valuation
-        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
-        self.pos_config = self.env.ref('point_of_sale.pos_config_main')
-        self.pos_config = self.pos_config.copy({'name': 'New POS config'})
-        self.product = self.env['product.product'].create({
+class TestAngloSaxonCommon(AccountTestInvoicingCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.PosMakePayment = cls.env['pos.make.payment']
+        cls.PosOrder = cls.env['pos.order']
+        cls.Statement = cls.env['account.bank.statement']
+        cls.company = cls.env.company
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
+        cls.partner = cls.env['res.partner'].create({'name': 'Partner 1'})
+        cls.category = cls.env.ref('product.product_category_all')
+        cls.category = cls.category.copy({'name': 'New category', 'property_valuation': 'real_time'})
+        cls.account = cls.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
+        account_expense = cls.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'expense', 'reconcile': True})
+        account_income = cls.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'income', 'reconcile': True})
+        account_output = cls.env['account.account'].create({'name': 'Output', 'code': 'OUT00', 'account_type': 'expense', 'reconcile': True})
+        account_valuation = cls.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'account_type': 'expense', 'reconcile': True})
+        cls.partner.property_account_receivable_id = cls.account
+        cls.category.property_account_income_categ_id = account_income
+        cls.category.property_account_expense_categ_id = account_expense
+        cls.category.property_stock_account_input_categ_id = cls.account
+        cls.category.property_stock_account_output_categ_id = account_output
+        cls.category.property_stock_valuation_account_id = account_valuation
+        cls.category.property_stock_journal = cls.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+        cls.pos_config = cls.env['pos.config'].create({
+            'name': 'New POS config',
+        })
+        cls.product = cls.env['product.product'].create({
             'name': 'New product',
             'standard_price': 100,
             'available_in_pos': True,
             'type': 'product',
         })
-        self.company.anglo_saxon_accounting = True
-        self.company.point_of_sale_update_stock_quantities = 'real'
-        self.product.categ_id = self.category
-        self.product.property_account_expense_id = account_expense
-        self.product.property_account_income_id = account_income
-        sale_journal = self.env['account.journal'].create({'name': 'POS journal', 'type': 'sale', 'code': 'POS00'})
-        self.pos_config.journal_id = sale_journal
-        self.cash_journal = self.env['account.journal'].create({'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
-        self.sale_journal = self.env['account.journal'].create({'name': 'SALE journal', 'type': 'sale', 'code': 'INV00'})
-        self.pos_config.invoice_journal_id = self.sale_journal
-        self.cash_payment_method = self.env['pos.payment.method'].create({
+        cls.company.anglo_saxon_accounting = True
+        cls.company.point_of_sale_update_stock_quantities = 'real'
+        cls.product.categ_id = cls.category
+        cls.product.property_account_expense_id = account_expense
+        cls.product.property_account_income_id = account_income
+        sale_journal = cls.env['account.journal'].create({'name': 'POS journal', 'type': 'sale', 'code': 'POS00'})
+        cls.pos_config.journal_id = sale_journal
+        cls.cash_journal = cls.env['account.journal'].create({'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
+        cls.sale_journal = cls.env['account.journal'].create({'name': 'SALE journal', 'type': 'sale', 'code': 'INV00'})
+        cls.pos_config.invoice_journal_id = cls.sale_journal
+        cls.cash_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Cash Test',
-            'journal_id': self.cash_journal.id,
-            'receivable_account_id': self.account.id,
+            'journal_id': cls.cash_journal.id,
+            'receivable_account_id': cls.account.id,
         })
-        self.pos_config.write({'payment_method_ids': [(6, 0, self.cash_payment_method.ids)]})
+        cls.pos_config.write({'payment_method_ids': [(6, 0, cls.cash_payment_method.ids)]})
 
-
-@odoo.tests.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
     def test_create_account_move_line(self):

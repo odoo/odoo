@@ -255,11 +255,11 @@ class AccountEdiXmlCII(models.AbstractModel):
         # ==== partner_id ====
 
         role = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-        name = _find_value(f"//ram:{role}/ram:Name")
-        mail = _find_value(f"//ram:{role}//ram:URIID[@schemeID='SMTP']")
-        vat = _find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID")
-        phone = _find_value(f"//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber")
-        country_code = _find_value(f'//ram:{role}/ram:PostalTradeAddress//ram:CountryID')
+        name = self._find_value(f"//ram:{role}/ram:Name", tree)
+        mail = self._find_value(f"//ram:{role}//ram:URIID[@schemeID='SMTP']", tree)
+        vat = self._find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID", tree)
+        phone = self._find_value(f"//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree)
+        country_code = self._find_value(f'//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree)
         self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
 
         # ==== currency_id ====
@@ -348,15 +348,12 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _import_fill_invoice_line_form(self, journal, tree, invoice_form, invoice_line, qty_factor):
         logs = []
 
-        def _find_value(xpath, element=tree):
-            return self.env['account.edi.format']._find_value(xpath, element, tree.nsmap)
-
         # Product.
-        name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree)
+        name = self._find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree)
         invoice_line.product_id = self.env['account.edi.format']._retrieve_product(
-            default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', tree),
-            name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree),
-            barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', tree)
+            default_code=self._find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', tree),
+            name=self._find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree),
+            barcode=self._find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', tree)
         )
         # force original line description instead of the one copied from product's Sales Description
         if name:

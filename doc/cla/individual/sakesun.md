@@ -1,4 +1,4 @@
-India, 2023-10-09
+Thailand, 2023-11-01
 
 I hereby agree to the terms of the Odoo Individual Contributor License Agreement v1.0.
 
@@ -6,5 +6,4 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Pallavi Srivastava pallavisri0077@gmail.com https://github.com/PallaviSrivastavaa
-
+Sakesun Roykiattisak sakesun@gmail.com https://github.com/sakesun

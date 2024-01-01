@@ -33,12 +33,33 @@ class TestSnippets(HttpCase):
         path = url_encode({
             'path': '/?' + snippets_names_encoded
         })
+        if 'mail.group' in self.env and not self.env['mail.group'].search_count([]):
+            self.env['mail.group'].create({
+                'name': 'My Mail Group',
+                'alias_name': 'my_mail_group',
+            })
         self.start_tour("/web#action=website.website_preview&%s" % path, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_countdown', login='admin')
 
     def test_05_social_media(self):
+        self.env.ref('website.default_website').write({
+            'social_facebook': "https://www.facebook.com/Odoo",
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+        })
+        IrAttachment = self.env['ir.attachment']
+        base = "http://%s:%s" % (HOST, config['http_port'])
+        IrAttachment.create({
+            'public': True,
+            'name': 's_banner_default_image.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image',
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
         self.assertEqual(
             self.env['website'].browse(1).social_instagram,
@@ -83,3 +104,6 @@ class TestSnippets(HttpCase):
         website.cookies_bar = True
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_and_scrollbar', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_and_animations', login='admin')
+
+    def test_drag_and_drop_on_non_editable(self):
+        self.start_tour('/', 'test_drag_and_drop_on_non_editable', login='admin')

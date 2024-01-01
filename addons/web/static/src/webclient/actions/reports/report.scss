@@ -60,13 +60,11 @@ span.o_force_ltr {
     border-top: 1px solid black !important;
 }
 
-/* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
 .table-sm {
     > thead > tr > th {
         border-bottom: none !important;
     }
     > tbody > tr {
-        page-break-inside: avoid !important;
         border-top: none !important;
     }
 }
@@ -139,7 +137,7 @@ ol {
 
 /* Checklist */
 ul {
-    .o_checklist {
+    &.o_checklist {
         > li {
             list-style: none;
             position: relative;
@@ -165,6 +163,13 @@ ul {
             opacity: 1;
         }
     }
+}
+
+blockquote {
+    padding: $spacer/2 $spacer;
+    border-left: 5px solid;
+    border-color: map-get($grays, '300');
+    font-style: italic;
 }
 
 // Wkhtmltopdf doesn't handle flexbox properly, both the content

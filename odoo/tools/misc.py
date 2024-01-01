@@ -130,11 +130,10 @@ def exec_pg_command(name, *args):
     warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
     prog = find_pg_tool(name)
     env = exec_pg_environ()
-    with open(os.devnull) as dn:
-        args2 = (prog,) + args
-        rc = subprocess.call(args2, env=env, stdout=dn, stderr=subprocess.STDOUT)
-        if rc:
-            raise Exception('Postgres subprocess %s error %s' % (args2, rc))
+    args2 = (prog,) + args
+    rc = subprocess.call(args2, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    if rc:
+        raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
 def exec_pg_command_pipe(name, *args):
     warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)

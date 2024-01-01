@@ -175,6 +175,8 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
     return env['res.users'].with_context(**context).create(create_values)
 
+def loaded_demo_data(env):
+    return bool(env.ref('base.user_demo', raise_if_not_found=False))
 
 class RecordCapturer:
     def __init__(self, model, domain):
@@ -432,6 +434,9 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 if flush:
                     self.env.flush_all()
                     self.env.cr.flush()
+
+        if not self.warm:
+            return
 
         self.assertEqual(
             len(actual_queries), len(expected),
@@ -862,6 +867,7 @@ class ChromeBrowser:
         self._request_id = itertools.count()
         self._result = Future()
         self.error_checker = None
+        self.had_failure = False
         # maps request_id to Futures
         self._responses = {}
         # maps frame ids to callbacks
@@ -885,12 +891,6 @@ class ChromeBrowser:
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
             signal.signal(signal.SIGXCPU, self.signal_handler)
-
-    @property
-    def had_failure(self):
-        with contextlib.suppress(concurrent.futures.TimeoutError, CancelledError):
-            return self._result.exception(timeout=0) is not None
-        return False
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1100,6 +1100,8 @@ class ChromeBrowser:
         while True: # or maybe until `self._result` is `done()`?
             try:
                 msg = self.ws.recv()
+                if not msg:
+                    continue
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
@@ -1181,13 +1183,17 @@ class ChromeBrowser:
             message += '\n' + stack
 
         log_type = type
-        self._logger.getChild('browser').log(
+        _logger = self._logger.getChild('browser')
+        _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
-            "%s", message # might still have %<x> characters
+            "%s%s",
+            "Error received after termination: " if self._result.done() else "",
+            message # might still have %<x> characters
         )
 
         if log_type == 'error':
-            if self.had_failure:
+            self.had_failure = True
+            if self._result.done():
                 return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
@@ -1221,23 +1227,23 @@ class ChromeBrowser:
 
                 if node_id:
                     self.take_screenshot("unsaved_form_")
-                    self._result.set_exception(ChromeBrowserException("""\
+                    msg = """\
 Tour finished with an open form view in edition mode.
 
 Form views in edition mode are automatically saved when the page is closed, \
-which leads to stray network requests and inconsistencies."""))
+which leads to stray network requests and inconsistencies."""
+                    if self._result.done():
+                        _logger.error("%s", msg)
+                    else:
+                        self._result.set_exception(ChromeBrowserException(msg))
                     return
 
-                try:
+                if not self._result.done():
                     self._result.set_result(True)
-                except Exception:
+                elif self._result.exception() is None:
                     # if the future was already failed, we're happy,
                     # otherwise swap for a new failed
-                    if self._result.exception() is None:
-                        self._result = Future()
-                        self._result.set_exception(ChromeBrowserException(
-                            "Tried to make the tour successful twice."
-                        ))
+                    _logger.error("Tried to make the tour successful twice.")
 
 
     def _handle_exception(self, exceptionDetails, timestamp):
@@ -1250,8 +1256,9 @@ which leads to stray network requests and inconsistencies."""))
         if stack:
             message += '\n' + stack
 
-        if self.had_failure:
-            self._logger.getChild('browser').error("%s", message)
+        if self._result.done():
+            self._logger.getChild('browser').error(
+                "Exception received after termination: %s", message)
             return
 
         self.take_screenshot()
@@ -1462,6 +1469,7 @@ which leads to stray network requests and inconsistencies."""))
         self._responses.clear()
         self._result.cancel()
         self._result = Future()
+        self.had_failure = False
 
     def _from_remoteobject(self, arg):
         """ attempts to make a CDT RemoteObject comprehensible

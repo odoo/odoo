@@ -323,3 +323,27 @@ class TestCreateEvents(TestCommon):
         mock_insert.assert_called_once()
         self.assertEqual(event.user_id, self.attendee_user, "Event organizer must be user B (self.attendee_user) after event creation by user A (self.organizer_user).")
         self.assertTrue(self.attendee_user.partner_id.id in event.partner_ids.ids, "User B (self.attendee_user) should be listed as attendee after event creation.")
+
+        # Try creating an event with portal user (with no access rights) as organizer from Microsoft.
+        # In Odoo, this event will be created (behind the screens) by a synced Odoo user as attendee (self.attendee_user).
+        portal_group = self.env.ref('base.group_portal')
+        portal_user = self.env['res.users'].create({
+            'login': 'portal@user',
+            'email': 'portal@user',
+            'name': 'PortalUser',
+            'groups_id': [Command.set([portal_group.id])],
+            })
+
+        # Mock event from Microsoft and sync event with Odoo through self.attendee_user (synced user).
+        self.simple_event_from_outlook_organizer.update({
+            'id': 'portalUserEventID',
+            'iCalUId': 'portalUserEventICalUId',
+            'organizer': {'emailAddress': {'address': portal_user.login, 'name': portal_user.name}},
+        })
+        mock_get_events.return_value = (MicrosoftEvent([self.simple_event_from_outlook_organizer]), None)
+        self.assertTrue(self.env['calendar.event'].with_user(self.attendee_user)._check_microsoft_sync_status())
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+
+        # Ensure that event was successfully created in Odoo (no ACL error was triggered blocking creation).
+        portal_user_events = self.env['calendar.event'].search([('user_id', '=', portal_user.id)])
+        self.assertEqual(len(portal_user_events), 1)

@@ -38,14 +38,13 @@ export class KanbanArchParser extends XMLParser {
         const countLimit = xmlDoc.getAttribute("count_limit");
         const recordsDraggable = archParseBoolean(xmlDoc.getAttribute("records_draggable"), true);
         const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
-        const activeActions = {
-            ...getActiveActions(xmlDoc),
-            archiveGroup: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
-            createGroup: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
-            deleteGroup: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
-            editGroup: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
-            quickCreate: archParseBoolean(xmlDoc.getAttribute("quick_create"), true),
-        };
+        const activeActions = getActiveActions(xmlDoc);
+        activeActions.archiveGroup = archParseBoolean(xmlDoc.getAttribute("archivable"), true);
+        activeActions.createGroup = archParseBoolean(xmlDoc.getAttribute("group_create"), true);
+        activeActions.deleteGroup = archParseBoolean(xmlDoc.getAttribute("group_delete"), true);
+        activeActions.editGroup = archParseBoolean(xmlDoc.getAttribute("group_edit"), true);
+        activeActions.quickCreate =
+            activeActions.create && archParseBoolean(xmlDoc.getAttribute("quick_create"), true);
         const onCreate = xmlDoc.getAttribute("on_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltipInfo = {};
