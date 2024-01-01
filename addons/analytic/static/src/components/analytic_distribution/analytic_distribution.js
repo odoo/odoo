@@ -563,7 +563,8 @@ export class AnalyticDistribution extends Component {
                 if (this.isDropdownOpen) {
                     const closestCell = ev.target.closest("td, th");
                     const row = closestCell.parentElement;
-                    if (this.adjacentElementToFocus("next") == this.addLineButton.el && this.lineIsValid(this.state.formattedData[parseInt(row.id)])) {
+                    const line = this.state.formattedData[parseInt(row.id)];
+                    if (this.adjacentElementToFocus("next") == this.addLineButton.el && line && this.lineIsValid(line)) {
                         this.addLine();
                         break;
                     }
