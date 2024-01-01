@@ -329,10 +329,10 @@ class TestBurndownChart(TestBurndownChartCommon):
         date_and_user_domain = [('date', '>=', date_from_is_closed), ('date', '<', date_to_is_closed), ('user_ids', 'ilike', 'ProjectUser')]
         complex_domain = AND([burndown_chart_domain, all_projects_domain_with_ilike, date_and_user_domain])
         complex_domain_expected_dict = {
-            ('October 2022', 'closed'): 2.0,
-            ('October 2022', 'open'): 1.0,
-            ('November 2022', 'closed'): 2.0,
-            ('November 2022', 'open'): 1.0
+            ('October %s' % (self.current_year - 1), 'closed'): 2.0,
+            ('October %s' % (self.current_year - 1), 'open'): 1.0,
+            ('November %s' % (self.current_year - 1), 'closed'): 2.0,
+            ('November %s' % (self.current_year - 1), 'open'): 1.0
         }
         self.check_read_group_is_closed_results(complex_domain, complex_domain_expected_dict)
 
@@ -349,8 +349,8 @@ class TestBurndownChart(TestBurndownChartCommon):
         milestone_domain = [('milestone_id', 'ilike', 'Test')]
         complex_domain = AND([burndown_chart_domain, all_projects_domain_with_ilike, date_and_user_domain, milestone_domain])
         complex_domain_expected_dict = {
-            ('October 2022', 'open'): 1.0,
-            ('November 2022', 'closed'): 1.0
+            ('October %s' % (self.current_year - 1), 'open'): 1.0,
+            ('November %s' % (self.current_year - 1), 'closed'): 1.0
         }
         self.check_read_group_is_closed_results(complex_domain, complex_domain_expected_dict)
 
