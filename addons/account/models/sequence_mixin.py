@@ -27,8 +27,12 @@ class SequenceMixin(models.AbstractModel):
     _sequences = [
         (r'^(?P<prefix1>.*?)(?P<year>({year}))(?P<prefix2>\D*?)(?P<month>{month})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'month'),
         (r'^(?P<prefix1>.*?)(?P<year2>({year2}))(?P<prefix2>\D*?)(?P<month>{month})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'month'),
-        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
-        (r'^(?P<prefix1>.*?)(?P<fyear_start>({financial_year_start_2}))(?P<prefix2>\D+?)(?P<fyear_end>({financial_year_end_2}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        # Detecting fiscal year based on current date so use 4 format for fiscal year
+        (r'^(?P<prefix1>.*?)(?P<fyear_start>\d{{4}})(?P<prefix2>\D+?)(?P<fyear_end>({fyear_end}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start>({fyear_start}))(?P<prefix2>\D+?)(?P<fyear_end>(\d{{4}}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start2>\d{{2}})(?P<prefix2>\D+?)(?P<fyear_end2>({fyear_end2}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        (r'^(?P<prefix1>.*?)(?P<fyear_start2>({fyear_start2}))(?P<prefix2>\D+?)(?P<fyear_end2>(\d{{2}}))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'fyear'),
+        # Year at last so not conflict with fiscal year
         (r'^(?P<prefix1>.*?)(?P<year>({year}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'year'),
         (r'^(?P<prefix1>.*?)(?P<year2>({year2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$', 'year'),
         (r'^(?P<prefix1>.*?)(?P<seq>\d+)(?P<suffix>\D*?)$', 'never')
@@ -127,17 +131,18 @@ class SequenceMixin(models.AbstractModel):
             'year': date.strftime('%Y'),
             'year2': date.strftime('%Y')[-2:],
             'month': date.strftime('%m'),
-            'financial_year_start': fyear_start.strftime('%Y'),
-            'financial_year_start_2': fyear_start.strftime('%Y')[-2:],
-            'financial_year_end': fyear_end.strftime('%Y'),
-            'financial_year_end_2': fyear_end.strftime('%Y')[-2:],
+            'fyear_start': fyear_start.strftime('%Y'),
+            'fyear_start2': fyear_start.strftime('%Y')[-2:],
+            'fyear_end': fyear_end.strftime('%Y'),
+            'fyear_end2': fyear_end.strftime('%Y')[-2:],
         }
 
     def _find_sequence(self, sequence=None):
         self.ensure_one()
         data = self._get_sequence_keys()
         for regex, *others in self._sequences:
-            matching = re.match(regex.format(**data), sequence or self[self._sequence_field])
+            rex = regex.format(**data)
+            matching = re.match(rex, sequence or self[self._sequence_field])
             if matching:
                 return matching, *others
         raise ValidationError(_('No number found in the sequence.'))
@@ -243,6 +248,8 @@ class SequenceMixin(models.AbstractModel):
                     seq_fmt[1] = len(val)
                     seq_pos = 2
                     continue
+                if sequence == 0 and key in ('year', 'year2', 'fyear_start', 'fyear_end'):
+                    val = str(int(val) + 1).zfill(len(val))
                 seq_fmt[seq_pos] += data.get(key, val)
 
         # before flushing inside the savepoint (which may be rolled back!), make sure everything

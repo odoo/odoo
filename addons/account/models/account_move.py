@@ -1758,7 +1758,7 @@ class AccountMove(models.Model):
         else:
             self.show_name_warning = False
 
-        origin = self._get_last_sequence(relaxed=True)
+        origin = self._get_last_sequence()
         if not origin:
             return {}
         if (
@@ -1769,10 +1769,9 @@ class AccountMove(models.Model):
             smatch = smatch.groupdict()
             omatch, operiod = origin._find_sequence()
             omatch = omatch.groupdict()
-            for key in self._get_sequence_keys().keys():    # check all prefixes & suffix
+            for key in list(self._get_sequence_keys().keys()) + ['seq']:    # check all prefixes & suffix
                 smatch.pop(key, None)
                 omatch.pop(key, None)
-
             if (speriod != operiod) or (omatch != smatch):
                 changed = _(
                     "It was previously '%(previous)s' and it is now '%(current)s'.",
