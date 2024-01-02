@@ -17,9 +17,13 @@ export class ChannelMemberList extends Component {
         this.store = useState(useService("mail.store"));
         this.channelMemberService = useService("discuss.channel.member");
         this.threadService = useState(useService("mail.thread"));
-        onWillStart(() => this.threadService.fetchChannelMembers(this.props.thread));
+        onWillStart(() => {
+            if (this.props.thread.fetchMembersState === "not_fetched") {
+                this.threadService.fetchChannelMembers(this.props.thread);
+            }
+        });
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.channelMembers.length === 0) {
+            if (nextProps.thread.fetchMembersState === "not_fetched") {
                 this.threadService.fetchChannelMembers(nextProps.thread);
             }
         });
