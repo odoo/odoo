@@ -61,9 +61,31 @@
             </TaxIdentification>
         </template>
 
+        <!-- Sub-template used for every instance of AdministrativeCentresType -->
+        <template id="administrative_centers_type">
+            <AdministrativeCentres>
+                <AdministrativeCentre t-foreach="administrative_centers" t-as="ac">
+                    <CentreCode t-out="(ac.get('center_code') or '')[:10]"/>
+                    <RoleTypeCode t-out="ac.get('role_type_code')"/>
+                    <Name t-out="(ac.get('name') or '')[:40]"/>
+                    <t t-call="l10n_es_edi_facturae.address_type">
+                        <t t-set="partner" t-value="ac.get('partner')"/>
+                        <t t-set="partner_country_code" t-value="ac.get('partner_country_code')"/>
+                    </t>
+                    <t t-call="l10n_es_edi_facturae.contact_details_type">
+                        <t t-set="partner" t-value="ac.get('partner')"/>
+                        <t t-set="partner_phone" t-value="ac.get('partner_phone')"/>
+                    </t>
+                    <PhysicalGLN t-out="(ac.get('physical_gln') or '')[:14]"/>
+                    <LogicalOperationalPoint t-out="(ac.get('logical_operational_point') or '')[:14]"/>
+                </AdministrativeCentre>
+            </AdministrativeCentres>
+        </template>
+
         <!-- Sub-template used for every instance of BusinessType -->
         <template id="business_type">
             <t t-call="l10n_es_edi_facturae.tax_identification_type"/>
+            <t t-call="l10n_es_edi_facturae.administrative_centers_type"/>
             <t t-if="partner.is_company">
                 <t t-call="l10n_es_edi_facturae.legal_entity_type"/>
             </t>
@@ -275,6 +297,7 @@
                             <t t-set="partner_country_code" t-value="self_party_country_code if is_outstanding else other_party_country_code"/>
                             <t t-set="partner_phone" t-value="False if is_outstanding else other_party_phone"/>
                             <t t-set="partner_name" t-value="{} if is_outstanding else other_party_name"/>
+                            <t t-set="administrative_centers" t-value="self_party_administrative_centers if is_outstanding else other_party_administrative_centers"/>
                         </t>
                     </SellerParty>
                     <BuyerParty>
@@ -283,6 +306,7 @@
                             <t t-set="partner_country_code" t-value="other_party_country_code if is_outstanding else self_party_country_code"/>
                             <t t-set="partner_phone" t-value="other_party_phone if is_outstanding else False"/>
                             <t t-set="partner_name" t-value="other_party_name if is_outstanding else {}"/>
+                            <t t-set="administrative_centers" t-value="other_party_administrative_centers if is_outstanding else self_party_administrative_centers"/>
                         </t>
                     </BuyerParty>
                 </Parties>

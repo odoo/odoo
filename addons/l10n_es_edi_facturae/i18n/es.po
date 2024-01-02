@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-07 09:50+0000\n"
-"PO-Revision-Date: 2023-12-07 10:52+0100\n"
+"POT-Creation-Date: 2024-01-02 13:00+0000\n"
+"PO-Revision-Date: 2024-01-02 14:07+0100\n"
 "Last-Translator: Dylan Kiss <dyki@odoo.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -15,22 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
-
-#. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.corrective_type
-msgid "01"
-msgstr ""
-
-#. module: l10n_es_edi_facturae
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.account_invoice_facturae_export
-msgid "3.2.2"
-msgstr ""
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__27
 msgid "6-Packs"
 msgstr "6-Packs"
+
+#. module: l10n_es_edi_facturae
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_partner_form_inherit_l10n_es_edi_facturae
+msgid "<span>Administrative Center for Spain Public Administrations. Used in Spanish electronic invoices.</span>"
+msgstr "<span>Centro Administrativo de Administraciones Públicas de España. Utilizado en facturas electrónicas españolas.</span>"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_account_move_reversal
@@ -40,6 +35,17 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_account_move_send
 msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__type
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_users__type
+msgid "Address Type"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model,name:l10n_es_edi_facturae.model_l10n_es_edi_facturae_ac_role_type
+msgid "Administrative Center Role Type"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -86,6 +92,11 @@ msgstr "Cajas"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__24
 msgid "Bunches"
 msgstr "Manojos"
+
+#. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_04
+msgid "Buyer"
+msgstr "Comprador"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__81
@@ -138,6 +149,35 @@ msgid "Certificates for Facturae EDI invoices on Spain"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__code
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_center_code
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_center_code
+msgid "Code"
+msgstr "Código"
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_logical_operational_point
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_logical_operational_point
+msgid "Code identifying the company. Barcode of 13 standard positions. Codes are registered in Spain by AECOC. The code is made up of the country code (2 positions) Spain is '84' + Company code (5 positions) + the remaining positions. The last one is the product + check digit."
+msgstr "Punto Lógico Operacional. Código identificativo de la Empresa. Código de barras de 13 posiciones estándar. Valores registrados por AECOC. Recoge el código de País (2p) España es ’84’ + Empresa (5p) + los restantes - el último es el producto + dígito de control."
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_center_code
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_center_code
+msgid "Code of the issuing department."
+msgstr "Número del Departamento Emisor."
+
+#. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_08
+msgid "Collection Receiver"
+msgstr "Receptor del cobro"
+
+#. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_05
+msgid "Collector"
+msgstr "Cobrador"
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_res_company
 msgid "Companies"
 msgstr ""
@@ -155,16 +195,12 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
-msgid ""
-"Could not retrieve currency: %s. Did you enable the multicurrency option and "
-"activate the currency?"
+msgid "Could not retrieve currency: %s. Did you enable the multicurrency option and activate the currency?"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
 msgstr ""
 
@@ -174,6 +210,7 @@ msgid "Create the first certificate"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__create_uid
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__create_uid
 msgid "Created by"
 msgstr ""
@@ -181,11 +218,11 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "Created from attachment in %s"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__create_date
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__create_date
 msgid "Created on"
 msgstr ""
@@ -198,10 +235,7 @@ msgstr "Metro cúbico"
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
-msgid ""
-"Customer/Vendor could not be found and could not be created due to missing "
-"data in the XML."
+msgid "Customer/Vendor could not be found and could not be created due to missing data in the XML."
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -220,6 +254,7 @@ msgid "Demijohns, non-protected"
 msgstr "Garrafas"
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__display_name
 msgid "Display Name"
 msgstr ""
@@ -236,10 +271,14 @@ msgstr "Sobres"
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
-#: code:addons/l10n_es_edi_facturae/models/account_move_send.py:0
-#, python-format
-msgid "Errors occured while creating the EDI document (format: %s):"
+#: code:addons/l10n_es_edi_facturae/wizard/account_move_send.py:0
+msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__res_partner__type__facturae_ac
+msgid "FACe Center"
+msgstr "Centro FACe"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_edi_facturae_xml_id
@@ -278,6 +317,11 @@ msgid "Facturae signature certificate"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_01
+msgid "Fiscal"
+msgstr "Fiscal"
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_send__l10n_es_edi_facturae_checkbox_xml
 msgid "Generate Facturae edi file"
 msgstr ""
@@ -293,9 +337,16 @@ msgid "Hours"
 msgstr "Horas"
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__id
 msgid "ID"
 msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_physical_gln
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_physical_gln
+msgid "Identification of the connection point to the VAN EDI (Global Location Number). Barcode of 13 standard positions. Codes are registered in Spain by AECOC. The code is made up of the country code (2 positions) Spain is '84' + Company code (5 positions) + the remaining positions. The last one is the product + check digit."
+msgstr "GLN Físico. Identificación del punto de conexión a la VAN EDI (Global Location Number). Código de barras de 13 posiciones estándar. Valores registrados por AECOC. Recoge el código de País (2p) España es ’84’ + Empresa (5p) + los restantes - el último es el producto + dígito de control."
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__14
@@ -305,7 +356,6 @@ msgstr "Clase de factura"
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "Invoice imported from Factura-E XML file."
 msgstr ""
 
@@ -325,6 +375,11 @@ msgid "Issue date"
 msgstr "Fecha expedición"
 
 #. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_09
+msgid "Issuer"
+msgstr "Emisor"
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__06
 msgid "Issuer's Tax Identification Number"
 msgstr "Identificación fiscal Emisor/Obligado"
@@ -333,6 +388,26 @@ msgstr "Identificación fiscal Emisor/Obligado"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__08
 msgid "Issuer's address"
 msgstr "Domicilio Emisor/Obligado"
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_role_type_ids
+#: model:ir.model.fields,help:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_role_type_ids
+msgid ""
+"It indicates the role played by the Operational Point defined as a Workplace/Department.\n"
+"These functions are:\n"
+"- Receiver: Workplace associated to the recipient's tax identification number where the invoice will be received.\n"
+"- Payer: Workplace associated to the recipient's tax identification number responsible for paying the invoice.\n"
+"- Buyer: Workplace associated to the recipient's tax identification number who issued the purchase order.\n"
+"- Collector: Workplace associated to  the issuer's tax identification number responsible for handling the collection.\n"
+"- Fiscal: Workplace associated to the recipient's tax identification number, where an Operational Point mailbox is shared by different client companies with different tax identification numbers and it is necessary to differentiate between where the message is received (shared letterbox) and the workplace where it must be stored (recipient company)."
+msgstr ""
+"Indica la función de un Punto Operacional (P.O.) definido como Centro/Departamento.\n"
+"Estas funciones son:\n"
+"- Receptor: Centro del NIF receptor destinatario de la factura..\n"
+"- Pagador: Centro del NIF receptor responsable de pagar la factura.\n"
+"- Comprador: Centro del NIF receptor que emitió el pedido.\n"
+"- Cobrador: Centro del NIF emisor responsable de gestionar el cobro.\n"
+"- Fiscal: Centro del NIF receptor de las facturas, cuando un P.O. buzón es compartido por varias empresas clientes con diferentes NIF.s y es necesario diferenciar el receptor del mensaje (buzón común) del lugar donde debe depositarse (empresa destinataria)."
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__10
@@ -370,11 +445,13 @@ msgid "L10N Es Edi Facturae Enable Xml"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__write_uid
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__write_date
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__write_date
 msgid "Last Updated on"
 msgstr ""
@@ -390,6 +467,12 @@ msgid "Liters"
 msgstr "Litros"
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_logical_operational_point
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_logical_operational_point
+msgid "Logical Operational Point"
+msgstr "Punto Lógico Operacional"
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__25
 msgid "Meters"
 msgstr "Metros"
@@ -398,6 +481,11 @@ msgstr "Metros"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__26
 msgid "Millimeters"
 msgstr "Milímetros"
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__name
+msgid "Name"
+msgstr "Nombre"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__04
@@ -412,10 +500,7 @@ msgstr "Nombre y apellidos/Razón social - Receptor"
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
-msgid ""
-"No valid certificate found for this company, Facturae EDI file will not be "
-"signed.\n"
+msgid "No valid certificate found for this company, Facturae EDI file will not be signed.\n"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -445,6 +530,22 @@ msgid "Password"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_03
+msgid "Payer"
+msgstr "Pagador"
+
+#. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_07
+msgid "Payment Receiver"
+msgstr "Receptor del pago"
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_physical_gln
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_physical_gln
+msgid "Physical GLN"
+msgstr "GLN Físico"
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__29
 msgid "Portions"
 msgstr "Raciones"
@@ -458,6 +559,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_account_move_reversal_inherit_l10n_es_edi_facturae
 msgid "Reason"
 msgstr "Motivo"
+
+#. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_02
+msgid "Receiver"
+msgstr "Receptor"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__07
@@ -475,6 +581,12 @@ msgid "Rectificación modelo íntegro."
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_role_type_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_ac_role_type_ids
+msgid "Roles"
+msgstr "Roles"
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__30
 msgid "Rolls"
 msgstr "Rollos"
@@ -483,6 +595,11 @@ msgstr "Rollos"
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__34
 msgid "Second"
 msgstr "Segundo"
+
+#. module: l10n_es_edi_facturae
+#: model:l10n_es_edi_facturae.ac_role_type,name:l10n_es_edi_facturae.ac_role_type_06
+msgid "Seller"
+msgstr "Vendedor"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_certificate__serial_number
@@ -541,10 +658,8 @@ msgstr "Base imponible modificada por descuentos y bonificaciones"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__84
-msgid ""
-"Taxable Base modified due to firm court ruling or administrative decision"
-msgstr ""
-"Base imponible modificada por resolución firme, judicial o administrativa"
+msgid "Taxable Base modified due to firm court ruling or administrative decision"
+msgstr "Base imponible modificada por resolución firme, judicial o administrativa"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__82
@@ -553,12 +668,8 @@ msgstr "Base imponible modificada por devolución de envases/embalajes"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_edi_facturae_reason_code__85
-msgid ""
-"Taxable Base modified due to unpaid outputs where there is a judgement "
-"opening insolvency proceedings"
-msgstr ""
-"Base imponible modificada cuotas repercutidas no satisfechas. Auto de "
-"declaración de concurso"
+msgid "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"
+msgstr "Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__14
@@ -567,15 +678,25 @@ msgstr "Tetra Briks"
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_partner.py:0
+msgid "The Logical Operational Point entered is not valid."
+msgstr "El Punto Lógico Operacional ingresado no es válido."
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_partner.py:0
+msgid "The Physical GLN entered is not valid."
+msgstr "El GLN Físico ingresado no es válido."
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/l10n_es_edi_facturae_certificate.py:0
-#, python-format
 msgid "The certificate is expired since %s"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "The company needs a set tax identification number or VAT number"
 msgstr ""
 
@@ -592,21 +713,18 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "The partner needs a set country"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "The partner needs a set tax identification number or VAT number"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-#, python-format
 msgid "The product '%s' could not be found."
 msgstr ""
 
@@ -618,7 +736,6 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/l10n_es_edi_facturae_certificate.py:0
-#, python-format
 msgid ""
 "There has been a problem with the certificate, some usual problems can be:\n"
 "\t- The password given or the certificate are not valid.\n"
