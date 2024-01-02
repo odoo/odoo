@@ -972,3 +972,11 @@ class AccountJournal(models.Model):
         if self.type not in journal_types:
             return False
         return True
+
+    def _process_reference_for_sale_order(self, order_reference):
+        '''
+        returns the order reference to be used for the payment.
+        Hook to be overriden: see l10n_ch for an example.
+        '''
+        self.ensure_one()
+        return order_reference
