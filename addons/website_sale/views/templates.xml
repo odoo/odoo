@@ -543,71 +543,72 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="is_view_active('website_sale.sort')" class="accordion-item">
-                    <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
-                    <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
-                    <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#o_wsale_offcanvas_orderby"
-                                aria-expanded="false"
-                                aria-controls="o_wsale_offcanvas_orderby">
-                                <b>Sort By</b>
-                        </button>
-                    </h2>
-                    <div id="o_wsale_offcanvas_orderby"
-                         class="accordion-collapse collapse"
-                         aria-labelledby="o_wsale_offcanvas_orderby_header">
-                        <div class="accordion-body pt-0">
-                            <div class="list-group list-group-flush">
-                                <a t-foreach="website_sale_sortable" t-as="sortby"
-                                   role="menuitem"
-                                   rel="noindex,nofollow"
-                                   t-att-href="keep('/shop', order=sortby[0])"
-                                   class="list-group-item border-0 ps-0 pb-0">
-                                    <div class="form-check d-inline-block">
-                                        <input type="radio"
-                                               t-attf-onclick="location.href='#{keep('/shop', order=sortby[0])}';"
-                                               class="form-check-input o_not_editable"
-                                               name="wsale_sortby_radios_offcanvas"
-                                               t-att-checked="isSortingBy and isSortingBy == sortby[1]">
-                                            <label class="form-check-label fw-normal" t-out="sortby[1]"/>
-                                        </input>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div t-if="opt_wsale_categories"
-                     class="accordion-item">
-                    <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#o_wsale_offcanvas_categories"
-                                aria-expanded="false"
-                                aria-controls="o_wsale_offcanvas_categories">
-                                <b>Categories</b>
-                        </button>
-                    </h2>
-                    <div id="o_wsale_offcanvas_categories"
-                         class="accordion-collapse collapse"
-                         aria-labelledby="o_wsale_offcanvas_categories_header">
-                        <div class="accordion-body pt-0">
-                            <t t-call="website_sale.products_categories_list">
-                                <t t-set="isOffcanvas" t-value="true"/>
-                                <t t-set="_titleClasses" t-valuef="d-none"/>
-                                <t t-set="_radioGroup" t-valuef="_offcanvas"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
 
                 <form t-if="opt_wsale_attributes or opt_wsale_attributes_top"
                       t-attf-class="js_attributes d-flex flex-column"
                       method="get">
+                    <div t-if="is_view_active('website_sale.sort')" class="accordion-item">
+                        <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
+                        <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
+                        <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
+                            <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#o_wsale_offcanvas_orderby"
+                                    aria-expanded="false"
+                                    aria-controls="o_wsale_offcanvas_orderby">
+                                    <b>Sort By</b>
+                            </button>
+                        </h2>
+                        <div id="o_wsale_offcanvas_orderby"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="o_wsale_offcanvas_orderby_header">
+                            <div class="accordion-body pt-0">
+                                <div class="list-group list-group-flush">
+                                    <a t-foreach="website_sale_sortable" t-as="sortby"
+                                    role="menuitem"
+                                    rel="noindex,nofollow"
+                                    t-att-href="keep('/shop', order=sortby[0])"
+                                    class="list-group-item border-0 ps-0 pb-0">
+                                        <div class="form-check d-inline-block">
+                                            <input type="radio"
+                                                class="form-check-input o_not_editable"
+                                                name="order"
+                                                t-att-value="sortby[0]"
+                                                t-att-checked="isSortingBy and isSortingBy == sortby[1]">
+                                                <label class="form-check-label fw-normal" t-out="sortby[1]"/>
+                                            </input>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="opt_wsale_categories"
+                        class="accordion-item">
+                        <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
+                            <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#o_wsale_offcanvas_categories"
+                                    aria-expanded="false"
+                                    aria-controls="o_wsale_offcanvas_categories">
+                                    <b>Categories</b>
+                            </button>
+                        </h2>
+                        <div id="o_wsale_offcanvas_categories"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="o_wsale_offcanvas_categories_header">
+                            <div class="accordion-body pt-0">
+                                <t t-call="website_sale.products_categories_list">
+                                    <t t-set="isOffcanvas" t-value="true"/>
+                                    <t t-set="_titleClasses" t-valuef="d-none"/>
+                                    <t t-set="_radioGroup" t-valuef="_offcanvas"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id"/>
                     <input type="hidden" name="search" t-att-value="search"/>
 
