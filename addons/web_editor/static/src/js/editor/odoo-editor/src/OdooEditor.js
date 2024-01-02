@@ -75,7 +75,6 @@ import {
     getDeepestPosition,
     leftPos,
     isNotAllowedContent,
-    childNodeIndex,
     EMAIL_REGEX,
     prepareUpdate,
     boundariesOut,
@@ -4711,19 +4710,19 @@ export class OdooEditor extends EventTarget {
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
-            const match = potentialUrl.match(URL_REGEX);
+            // In case of multiple matches, only the last one will be converted.
+            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX, 'g'))].pop();
 
-            if (match && match[0] === potentialUrl && !EMAIL_REGEX.test(potentialUrl)) {
+            if (match && !EMAIL_REGEX.test(match[0])) {
+                const nodeForSelectionRestore = selection.anchorNode.splitText(selection.anchorOffset);
                 const url = match[2] ? match[0] : 'http://' + match[0];
                 const range = this.document.createRange();
-                range.setStart(selection.anchorNode, selection.anchorOffset - match[0].length);
-                range.setEnd(selection.anchorNode, selection.anchorOffset);
+                const startOffset = selection.anchorOffset - potentialUrl.length + match.index;
+                range.setStart(selection.anchorNode, startOffset);
+                range.setEnd(selection.anchorNode, startOffset + match[0].length);
                 const link = this._createLink(range.extractContents().textContent, url);
                 range.insertNode(link);
-                const container = link.parentElement;
-                const offset = childNodeIndex(link) + 1;
-                setSelection(container, offset, container, offset, false);
-                selection.collapseToEnd();
+                setCursorStart(nodeForSelectionRestore, false);
             }
         }
     }
