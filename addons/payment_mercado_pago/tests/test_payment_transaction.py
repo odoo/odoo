@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from urllib.parse import quote as url_quote
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -19,6 +20,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         self.maxDiff = 10000  # Allow comparing large dicts.
         return_url = self._build_url('/payment/mercado_pago/return')
         webhook_url = self._build_url('/payment/mercado_pago/webhook')
+        sanitized_reference = url_quote(tx.reference)
         self.assertDictEqual(request_payload, {
             'auto_return': 'all',
             'back_urls': {
@@ -33,7 +35,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
                 'title': tx.reference,
                 'unit_price': tx.amount,
             }],
-            'notification_url': f'{webhook_url}/{tx.reference}',
+            'notification_url': f'{webhook_url}/{sanitized_reference}',
             'payer': {
                 'address': {'street_name': tx.partner_address, 'zip_code': tx.partner_zip},
                 'email': tx.partner_email,
