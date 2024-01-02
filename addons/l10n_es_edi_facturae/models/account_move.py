@@ -154,6 +154,27 @@ class AccountMove(models.Model):
             }
         return {}
 
+    def _l10n_es_edi_facturae_get_administrative_centers(self, partner):
+        self.ensure_one()
+        administrative_centers = []
+        for ac in partner.child_ids.filtered(lambda p: p.type == 'facturae_ac'):
+            ac_template = {
+                'center_code': ac.l10n_es_edi_facturae_ac_center_code,
+                'name': ac.name,
+                'partner': ac,
+                'partner_country_code': COUNTRY_CODE_MAP[ac.country_code],
+                'partner_phone': ac.phone.translate(PHONE_CLEAN_TABLE) if ac.phone else False,
+                'physical_gln': ac.l10n_es_edi_facturae_ac_physical_gln,
+                'logical_operational_point': ac.l10n_es_edi_facturae_ac_logical_operational_point,
+            }
+            # An administrative center can have multiple roles, each of which should be reported separately.
+            for role in ac.l10n_es_edi_facturae_ac_role_type_ids or [self.env['l10n_es_edi_facturae.ac_role_type']]:
+                administrative_centers.append({
+                    **ac_template,
+                    'role_type_code': role.code,
+                })
+        return administrative_centers
+
     @api.model
     def _l10n_es_edi_facturae_convert_computed_tax_to_template(self, computed_tax_dict):
         """ Helper to convert the tax dict from a _compute_taxes() into a dict usable in the template """
@@ -296,10 +317,12 @@ class AccountMove(models.Model):
         template_values = {
             'self_party': company.partner_id,
             'self_party_country_code': COUNTRY_CODE_MAP[company.country_id.code],
+            'self_party_administrative_centers': self._l10n_es_edi_facturae_get_administrative_centers(company.partner_id),
             'other_party': partner,
             'other_party_country_code': COUNTRY_CODE_MAP[partner.country_id.code],
             'other_party_phone': partner.phone.translate(PHONE_CLEAN_TABLE) if partner.phone else False,
             'other_party_name': partner_name,
+            'other_party_administrative_centers': self._l10n_es_edi_facturae_get_administrative_centers(partner),
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
