@@ -8,6 +8,7 @@ import { createSpreadsheetWithPivot } from "../utils/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
+import { patchDate } from "@web/../tests/helpers/utils";
 
 QUnit.module("freezing spreadsheet", {}, function () {
     QUnit.test("odoo pivot functions are replaced with their value", async function (assert) {
@@ -99,6 +100,7 @@ QUnit.module("freezing spreadsheet", {}, function () {
     });
 
     QUnit.test("global filters and their display value are exported", async function (assert) {
+        patchDate(2023, 2, 22, 1, 0, 0);
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
         const data = await freezeOdooData(model);
