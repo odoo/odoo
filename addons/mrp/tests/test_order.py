@@ -2702,6 +2702,9 @@ class TestMrpOrder(TestMrpCommon):
                 child_action = mo.action_view_mrp_production_childs()
                 self.assertEqual(source_action.get('res_id', False), source_mo.id, '[%s] Incorrect value for product %s' % (case_description, product.display_name))
                 self.assertEqual(child_action.get('res_id', False), child_mo.id, '[%s] Incorrect value for product %s' % (case_description, product.display_name))
+            duplicate = grandparent_production.copy()
+            self.assertEqual(duplicate.mrp_production_child_count, 0, 'the duplicate MO should not have any child MO')
+            self.assertEqual(duplicate.mrp_production_source_count, 0, 'the duplicate MO should not have any source MO')
 
     @freeze_time('2022-06-28 08:00')
     def test_replan_workorders01(self):
