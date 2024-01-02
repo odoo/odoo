@@ -59,7 +59,7 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
         self.assertRecordValues(ewaybill, [{
             'state': 'pending',
             'display_name': _('Pending'),
-            'fiscal_position_id': self.env['account.fiscal.position'],
+            'fiscal_position_id': self.env['account.chart.template'].ref('fiscal_position_in_inter_state').id,
         }])
         ewaybill.fiscal_position_id = self.env['account.chart.template'].ref('fiscal_position_in_inter_state')
         self.assertEqual(ewaybill.move_ids[0].ewaybill_tax_ids, self.env['account.chart.template'].ref('igst_sale_5'))
@@ -152,14 +152,13 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
               'quantity': 5.0,
               'qtyUnit': 'UNT',
               'taxableAmount': 2500.0,
-              'sgstRate': 2.5,
-              'cgstRate': 2.5
+              'igstRate': 5.0
             }
           ],
           'totalValue': 2500.0,
-          'cgstValue': 62.5,
-          'sgstValue': 62.5,
-          'igstValue': 0.0,
+          'cgstValue': 0.0,
+          'sgstValue': 0.0,
+          'igstValue': 125.0,
           'cessValue': 0.0,
           'cessNonAdvolValue': 0.0,
           'otherValue': 0.0,
