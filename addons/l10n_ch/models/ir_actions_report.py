@@ -44,7 +44,7 @@ class IrActionsReport(models.Model):
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
             # Render the additional reports.
-            streams_to_append = {}
+            streams_to_append = []
             if qr_inv_ids:
                 qr_res = self._render_qweb_pdf_prepare_streams(
                     'l10n_ch.l10n_ch_qr_report',
@@ -67,9 +67,10 @@ class IrActionsReport(models.Model):
                         res_ids=qr_inv_ids,
                     )
 
-                    for invoice_id, stream in qr_res.items():
+                    for invoice_id, stream in qr_res:
                         qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
-                        header_pdf = OdooPdfFileReader(header_res[invoice_id]['stream'], strict=False)
+                        header_res_stream = next(stream_info.data['stream'] for stream_info in header_res if stream_info.id == invoice_id)
+                        header_pdf = OdooPdfFileReader(header_res_stream, strict=False)
 
                         page = header_pdf.getPage(0)
                         page.mergePage(qr_pdf.getPage(0))
@@ -78,20 +79,21 @@ class IrActionsReport(models.Model):
                         output_pdf.addPage(page)
                         new_pdf_stream = io.BytesIO()
                         output_pdf.write(new_pdf_stream)
-                        streams_to_append[invoice_id] = {'stream': new_pdf_stream}
+                        streams_to_append.append(self.StreamInfo(invoice_id, {'stream': new_pdf_stream}))
                 else:
-                    for invoice_id, stream in qr_res.items():
-                        streams_to_append[invoice_id] = stream
+                    for invoice_id, stream in qr_res:
+                        streams_to_append.append(self.StreamInfo(invoice_id, stream))
 
             # Add to results
-            for invoice_id, additional_stream in streams_to_append.items():
-                invoice_stream = res[invoice_id]['stream']
+            for invoice_id, additional_stream in streams_to_append:
+                invoice_stream = next(stream_info.data['stream'] for stream_info in header_res if stream_info.id == invoice_id)
                 writer = OdooPdfFileWriter()
                 writer.appendPagesFromReader(OdooPdfFileReader(invoice_stream, strict=False))
                 writer.appendPagesFromReader(OdooPdfFileReader(additional_stream['stream'], strict=False))
                 new_pdf_stream = io.BytesIO()
                 writer.write(new_pdf_stream)
-                res[invoice_id]['stream'] = new_pdf_stream
+                idx = next(i for i, stream_info in enumerate(res) if stream_info.id == invoice_id)
+                res[idx].data['stream'] = new_pdf_stream
                 invoice_stream.close()
                 additional_stream['stream'].close()
         return res

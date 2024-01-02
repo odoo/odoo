@@ -18,7 +18,8 @@ class IrActionsReport(models.Model):
             for expense_sheet in expense_sheets:
                 # Will contains the expense report
                 stream_list = []
-                stream = res[expense_sheet.id]['stream']
+                res_stream_idx = next(i for i, stream_info in enumerate(res) if stream_info.id == expense_sheet.id)
+                stream = res[res_stream_idx].data['stream']
                 stream_list.append(stream)
                 attachments = self.env['ir.attachment'].search([('res_id', 'in', expense_sheet.expense_line_ids.ids), ('res_model', '=', 'hr.expense')])
                 expense_report = OdooPdfFileReader(stream, strict=False)
@@ -33,14 +34,14 @@ class IrActionsReport(models.Model):
                         # associated to the attachment
                         data['attachment'] = attachment
                         attachment_prep_stream = self._render_qweb_pdf_prepare_streams('hr_expense.report_expense_sheet_img', data, res_ids=res_ids)
-                        attachment_stream = attachment_prep_stream[expense_sheet.id]['stream']
+                        attachment_stream = next(stream_info.data['stream'] for stream_info in attachment_prep_stream if stream_info.id == expense_sheet.id)
                     attachment_reader = OdooPdfFileReader(attachment_stream, strict=False)
                     output_pdf.appendPagesFromReader(attachment_reader)
                     stream_list.append(attachment_stream)
 
                 new_pdf_stream = io.BytesIO()
                 output_pdf.write(new_pdf_stream)
-                res[expense_sheet.id]['stream'] = new_pdf_stream
+                res[res_stream_idx].data['stream'] = new_pdf_stream
 
                 for stream in stream_list:
                     stream.close()

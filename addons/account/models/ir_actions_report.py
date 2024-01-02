@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from collections import OrderedDict
 from zlib import error as zlib_error
 try:
     from PyPDF2.errors import PdfStreamError, PdfReadError
@@ -24,7 +23,7 @@ class IrActionsReport(models.Model):
         if not original_attachments:
             raise UserError(_("No original purchase document could be found for any of the selected purchase documents."))
 
-        collected_streams = OrderedDict()
+        collected_streams = []
         for invoice in invoices:
             attachment = invoice.message_main_attachment_id
             if attachment:
@@ -38,10 +37,10 @@ class IrActionsReport(models.Model):
                             "There was an error when trying to add the banner to the original PDF.\n"
                             "Please make sure the source file is valid."
                         ))
-                collected_streams[invoice.id] = {
+                collected_streams.append(self.StreamInfo(invoice.id, {
                     'stream': stream,
                     'attachment': attachment,
-                }
+                }))
         return collected_streams
 
     def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
