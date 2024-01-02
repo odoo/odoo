@@ -8,7 +8,7 @@
 </t>
 
 <t t-name="hr_attendance.KioskPinConfirm">
-        <button class="o_hr_attendance_back_button btn btn-block btn-secondary btn-lg d-block d-md-none py-5">
+        <button t-on-click="() => this.props.onClickBack()" class="o_hr_attendance_back_button btn btn-block btn-secondary btn-lg d-block d-md-none py-5">
             <i class="oi oi-chevron-left me-2"/> Go back
         </button>
         <t t-call="hr_attendance.EmployeeBadge">
