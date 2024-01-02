@@ -27,7 +27,7 @@ export class StateSelectionField extends Component {
                 () => this.props.update(value),
                 {
                     category: "smart_action",
-                    hotkey: "alt+" + hotkeys[index],
+                    hotkey: hotkeys[index] && "alt+" + hotkeys[index],
                     isAvailable: () => this.props.value !== value,
                 }
             );
