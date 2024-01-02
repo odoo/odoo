@@ -64,15 +64,21 @@
 }
 
 .o_grid_item_image {
-    > img, > .media_iframe_video {
+    img, .media_iframe_video {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
     }
 
-    &.o_grid_item_image_contain > img,
-    > img[data-shape] {
+    &.o_grid_item_image_contain img,
+    img[data-shape] {
         object-fit: contain !important;
+    }
+
+    // Needed when "a" is "display: block".
+    > a {
+        width: 100% !important;
+        height: 100% !important;
     }
 }
 
