@@ -42,7 +42,7 @@ export class StateSelectionField extends Component {
                     },
                     {
                         category: "smart_action",
-                        hotkey: "alt+" + hotkeys[index],
+                        hotkey: hotkeys[index] && "alt+" + hotkeys[index],
                         isAvailable: () => this.props.record.data[this.props.name] !== value,
                     }
                 );
