@@ -642,7 +642,7 @@ var SnippetEditor = Widget.extend({
         // Hide the snippetEditor if none of its options are visible
         // This cannot be done using the visibility of the options' UI
         // because some options can be located in the overlay.
-        const $visibleOptions = this.$optionsSection.find('we-top-button-group, we-customizeblock-option')
+        const $visibleOptions = this.$optionsSection.find('we-customizeblock-option')
                 .children(':not(.d-none)');
         this.$optionsSection.toggleClass('d-none', !$visibleOptions.length);
     },
@@ -2702,7 +2702,9 @@ var SnippetsMenu = Widget.extend({
                     // that the overlay is activated even though there are no
                     // options. That's why we disable the overlay if there are
                     // no options to enable.
-                    if (editorToEnable && !customize$Elements) {
+                    const {isTargetMovable, isTargetRemovable, displayOverlayOptions} = editorToEnable || {};
+                    const overlayHasNoVisibleOption = (!isTargetRemovable && !isTargetMovable) || !displayOverlayOptions;
+                    if (editorToEnable?.$optionsSection[0].classList.contains("d-none") && overlayHasNoVisibleOption) {
                         editorToEnable.toggleOverlay(false);
                     }
                     this._updateRightPanelContent({
