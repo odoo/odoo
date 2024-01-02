@@ -155,3 +155,10 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
             link,
             {**expected_utm_params, 'a': 'example.com'}
         )
+
+    def test_no_loop(self):
+        """ Ensure that we cannot register a link that would loop on itself """
+        self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '?'})
+        self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '?debug=1'})
+        self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#'})
+        self.assertRaises(UserError, self.env['link.tracker'].create, {'url': '#model=project.task&id=3603607'})

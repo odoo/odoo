@@ -156,6 +156,8 @@ class LinkTracker(models.Model):
             if 'url' not in vals:
                 raise ValueError(_('Creating a Link Tracker without URL is not possible'))
 
+            if vals['url'].startswith(('?', '#')):
+                raise UserError(_("%r is not a valid link, links cannot redirect to the current page.", vals['url']))
             vals['url'] = tools.validate_url(vals['url'])
 
             if not vals.get('title'):
@@ -183,6 +185,8 @@ class LinkTracker(models.Model):
     def search_or_create(self, vals):
         if 'url' not in vals:
             raise ValueError(_('Creating a Link Tracker without URL is not possible'))
+        if vals['url'].startswith(('?', '#')):
+            raise UserError(_("%r is not a valid link, links cannot redirect to the current page.", vals['url']))
         vals['url'] = tools.validate_url(vals['url'])
 
         search_domain = [
