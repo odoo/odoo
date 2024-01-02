@@ -1443,17 +1443,26 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
+                    <field name="name" string="Bill"
+                        invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')"
+                        filter_domain="[
+                            '|', '|' , '|', '|',
+                            ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
+                            ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
+                            ('partner_id', 'child_of', self)]" />
                     <field name="name" string="Invoice"
-                           filter_domain="[
-                                '|', '|' , '|', '|',
-                                ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
-                                ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
-                                ('partner_id', 'child_of', self)]"/>
+                        invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"
+                        filter_domain="[
+                            '|', '|' , '|', '|',
+                            ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
+                            ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
+                            ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
                     <field name="date" string="Period"/>
-                    <field name="line_ids" string="Invoice Line"/>
+                    <field name="line_ids" string="Bill Line" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')"/>
+                    <field name="line_ids" string="Invoice Line" invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"/>
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
