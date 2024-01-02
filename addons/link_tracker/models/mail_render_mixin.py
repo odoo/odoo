@@ -38,6 +38,9 @@ class MailRenderMixin(models.AbstractModel):
         short_schema = base_url + '/r/'
         for match in set(re.findall(tools.HTML_TAG_URL_REGEX, html)):
             long_url = match[1]
+            # Make relative links absolute
+            if long_url.startswith(('/', '?', '#')):
+                long_url = base_url + long_url
             # Don't shorten already-shortened links
             if long_url.startswith(short_schema):
                 continue
@@ -50,7 +53,7 @@ class MailRenderMixin(models.AbstractModel):
             link = self.env['link.tracker'].search_or_create(create_vals)
             if link.short_url:
                 # `str` manipulation required to support replacing "&" characters, common in urls
-                new_href = match[0].replace(long_url, link.short_url)
+                new_href = match[0].replace(match[1], link.short_url)
                 html = html.replace(markupsafe.Markup(match[0]), markupsafe.Markup(new_href))
 
         return html
