@@ -15,7 +15,7 @@ patch(Persona.prototype, {
                 unique: this.write_date,
             }
         );
-        if (this.type === "partner") {
+        if (this.partnerId) {
             return url("/im_livechat/cors/web/image", {
                 field: "avatar_128",
                 id: this.id,
@@ -23,7 +23,7 @@ patch(Persona.prototype, {
                 ...params,
             });
         }
-        if (this.type === "guest") {
+        if (this.guestId) {
             return url("/im_livechat/cors/web/image", {
                 field: "avatar_128",
                 id: this.id,

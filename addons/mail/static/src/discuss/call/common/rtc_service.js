@@ -1791,7 +1791,7 @@ export class Rtc {
     }
 
     updateRtcSessions(channelId, sessionsData) {
-        const channel = this.store.Thread.get({ model: "discuss.channel", id: channelId });
+        const channel = this.store.Thread.get({ channelId });
         if (!channel) {
             return;
         }

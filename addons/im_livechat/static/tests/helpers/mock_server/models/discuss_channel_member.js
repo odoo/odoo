@@ -17,9 +17,8 @@ patch(MockServer.prototype, {
         });
         if (channel.channel_type === "livechat") {
             const data = {
-                id: partner.id,
+                partnerId: partner.id,
                 is_public: partner.is_public,
-                type: "partner",
             };
             if (partner.user_livechat_username) {
                 data["user_livechat_username"] = partner.user_livechat_username;

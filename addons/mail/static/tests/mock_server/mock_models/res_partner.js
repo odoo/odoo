@@ -246,11 +246,10 @@ export class ResPartner extends webModels.ResPartner {
                     {
                         active: partner.active,
                         email: partner.email,
-                        id: partner.id,
+                        partnerId: partner.id,
                         im_status: partner.im_status,
                         is_company: partner.is_company,
                         name: partner.name,
-                        type: "partner",
                         user: mainUser
                             ? {
                                   id: mainUser.id,

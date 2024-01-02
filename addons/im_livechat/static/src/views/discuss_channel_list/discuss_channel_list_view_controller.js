@@ -21,10 +21,7 @@ export class DiscussChannelListController extends ListController {
                 additionalContext: { active_id: record.resId },
             });
         }
-        let thread = this.store.Thread.get({
-            model: "discuss.channel",
-            id: record.resId,
-        });
+        let thread = this.store.Thread.get({ channelId: record.resId });
         if (!thread?.type) {
             thread = await this.threadService.fetchChannel(record.resId);
         }

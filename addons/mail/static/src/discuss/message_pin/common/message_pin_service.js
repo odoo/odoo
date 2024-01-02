@@ -33,10 +33,7 @@ patch(MessageModel.prototype, {
     update(data) {
         super.update(data);
         const { pinned_at: pinnedAt } = data;
-        if (
-            this.originThread?.model === "discuss.channel" &&
-            (pinnedAt !== undefined || this.isEmpty)
-        ) {
+        if (this.originThread?.channelId && (pinnedAt !== undefined || this.isEmpty)) {
             if (pinnedAt && !this.isEmpty) {
                 this.originThread.pinnedMessages.add(this);
                 this.pinnedAt = pinnedAt;
@@ -69,10 +66,7 @@ export class MessagePin {
      * @param {import("models").Thread} channel
      */
     async fetchPinnedMessages(channel) {
-        if (
-            channel.model !== "discuss.channel" ||
-            ["loaded", "loading"].includes(channel.pinnedMessagesState)
-        ) {
+        if (!channel.channelId || ["loaded", "loading"].includes(channel.pinnedMessagesState)) {
             return;
         }
         channel.pinnedMessagesState = "loading";
@@ -93,7 +87,7 @@ export class MessagePin {
      * @returns {string|null}
      */
     getPinnedAt(messageId) {
-        const pinnedAt = this.store.Message.get(messageId)?.pinnedAt;
+        const pinnedAt = this.store.Message.get({ id: messageId })?.pinnedAt;
         return pinnedAt ? luxon.DateTime.fromISO(new Date(pinnedAt).toISOString()) : null;
     }
 

@@ -14,7 +14,9 @@ patch(MockServer.prototype, {
     _mockDiscussChannelChannelInfo(ids) {
         const channelInfos = super._mockDiscussChannelChannelInfo(...arguments);
         for (const channelInfo of channelInfos) {
-            const channel = this.getRecords("discuss.channel", [["id", "=", channelInfo.id]])[0];
+            const channel = this.getRecords("discuss.channel", [
+                ["id", "=", channelInfo.channelId],
+            ])[0];
             if (channel.channel_type === "livechat" && channel.livechat_visitor_id) {
                 const visitor = this.getRecords("website.visitor", [
                     ["id", "=", channel.livechat_visitor_id],

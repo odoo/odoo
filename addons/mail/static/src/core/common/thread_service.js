@@ -71,11 +71,7 @@ export class ThreadService {
                 .then(() => this.markAsRead(thread));
         }
         thread.seen_message_id = newestPersistentMessage?.id ?? false;
-        if (
-            thread.message_unread_counter > 0 &&
-            thread.model === "discuss.channel" &&
-            newestPersistentMessage
-        ) {
+        if (thread.message_unread_counter > 0 && thread.channelId && newestPersistentMessage) {
             rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
@@ -138,7 +134,7 @@ export class ThreadService {
     }
 
     getFetchRoute(thread) {
-        if (thread.model === "discuss.channel") {
+        if (thread.channelId) {
             return "/discuss/channel/messages";
         }
         switch (thread.type) {
@@ -152,7 +148,7 @@ export class ThreadService {
     }
 
     getFetchParams(thread) {
-        if (thread.model === "discuss.channel") {
+        if (thread.channelId) {
             return { channel_id: thread.id };
         }
         if (thread.type === "chatter") {
@@ -360,7 +356,7 @@ export class ThreadService {
         if (thread.eq(this.store.discuss.thread)) {
             router.replaceState({ active_id: undefined });
         }
-        if (thread.model === "discuss.channel" && thread.is_pinned) {
+        if (thread.channelId && thread.is_pinned) {
             return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
                 pinned: false,
             });
@@ -368,7 +364,7 @@ export class ThreadService {
     }
 
     pin(thread) {
-        if (thread.model !== "discuss.channel" || this.store.self.type !== "partner") {
+        if (!thread.channelId || !this.store.self.partnerId) {
             return;
         }
         thread.is_pinned = true;
@@ -386,55 +382,47 @@ export class ThreadService {
         this.setDiscussThread(thread);
     }
 
-    async openChat(person) {
-        const chat = await this.getChat(person);
+    /** @param {import("models").Persona} persona */
+    async openChat(persona) {
+        const chat = await this.getChat(persona);
         if (chat) {
             this.open(chat);
         }
     }
 
     /**
-     * Search and fetch for a partner with a given user or partner id.
-     * @param {Object} param0
-     * @param {number} param0.userId
-     * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Persona> | undefined}
+     * Make checks on whether the persona is a user, as this is a condition to chat with him/her.
+     *
+     * @param {import("models").Persona} persona
+     * @returns {Promise<import("models").Persona> | undefined} the persona again if this is a user
      */
-    async getPartner({ userId, partnerId }) {
-        if (userId) {
-            let user = this.store.users[userId];
-            if (!user) {
-                this.store.users[userId] = { id: userId };
-                user = this.store.users[userId];
-            }
-            if (!user.partner_id) {
+    async checkCanChat(persona) {
+        if (persona.userId) {
+            if (!persona.partnerId) {
                 const [userData] = await this.orm.silent.read(
                     "res.users",
-                    [user.id],
+                    [persona.userId],
                     ["partner_id"],
                     {
                         context: { active_test: false },
                     }
                 );
                 if (userData) {
-                    user.partner_id = userData.partner_id[0];
+                    persona.partnerId = userData.partner_id[0];
                 }
             }
-            if (!user.partner_id) {
+            if (!persona.partnerId) {
                 this.notificationService.add(_t("You can only chat with existing users."), {
                     type: "warning",
                 });
                 return;
             }
-            partnerId = user.partner_id;
         }
-
-        if (partnerId) {
-            const partner = this.store.Persona.insert({ id: partnerId, type: "partner" });
-            if (!partner.user) {
+        if (persona.partnerId) {
+            if (!persona.userId) {
                 const [userId] = await this.orm.silent.search(
                     "res.users",
-                    [["partner_id", "=", partnerId]],
+                    [["partner_id", "=", persona.partnerId]],
                     { context: { active_test: false } }
                 );
                 if (!userId) {
@@ -444,9 +432,9 @@ export class ThreadService {
                     );
                     return;
                 }
-                partner.userId = userId;
+                persona.userId = userId;
             }
-            return partner;
+            return persona;
         }
     }
 
@@ -464,17 +452,14 @@ export class ThreadService {
     }
 
     /**
-     * Search and fetch for a partner with a given user or partner id.
-     * @param {Object} param0
-     * @param {number} param0.userId
-     * @param {number} param0.partnerId
+     * @param {import("models").Persona} persona
      * @returns {Promise<import("models").Thread | undefined>}
      */
-    async getChat({ userId, partnerId }) {
-        const partner = await this.getPartner({ userId, partnerId });
+    async getChat(persona) {
+        const partner = await this.checkCanChat(persona);
         let chat = this.searchChat(partner);
         if (!chat || !chat.is_pinned) {
-            chat = await this.joinChat(partnerId || partner?.id);
+            chat = await this.joinChat(persona.partnerId);
         }
         if (!chat) {
             this.notificationService.add(
@@ -491,8 +476,7 @@ export class ThreadService {
             partner_ids: [this.store.self.id],
         });
         const thread = this.store.Thread.insert({
-            id,
-            model: "discuss.channel",
+            channelId: id,
             name,
             channel_type: "channel",
             channel: { avatarCacheKey: "hello" },
@@ -621,14 +605,13 @@ export class ThreadService {
             params.thread_model = thread.model;
         } else {
             const tmpData = {
-                id: tmpId,
                 attachments: attachments,
                 res_id: thread.id,
                 model: "discuss.channel",
             };
             tmpData.author = this.store.self;
             if (parentId) {
-                tmpData.parentMessage = this.store.Message.get(parentId);
+                tmpData.parentMessage = this.store.Message.get({ id: parentId });
             }
             const prettyContent = await prettifyMessageContent(
                 body,
@@ -663,13 +646,11 @@ export class ThreadService {
             thread.seen_message_id = tmpMsg.id;
         }
         const data = await rpc("/mail/message/post", params);
-        tmpMsg?.delete();
         if (!data) {
+            tmpMsg?.delete();
             return;
         }
-        if (data.id in this.store.Message.records) {
-            data.temporary_id = null;
-        }
+        data.temporary_id = tmpId;
         const message = this.store.Message.insert(data, { html: true });
         thread.messages.add(message);
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
@@ -691,19 +672,18 @@ export class ThreadService {
         thread,
     }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
-        const validMentions =
-            this.store.self.type === "partner"
-                ? this.messageService.getMentionsFromText(body, {
-                      mentionedChannels,
-                      mentionedPartners,
-                  })
-                : undefined;
+        const validMentions = this.store.self.partnerId
+            ? this.messageService.getMentionsFromText(body, {
+                  mentionedChannels,
+                  mentionedPartners,
+              })
+            : undefined;
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
         let recipientEmails = [];
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
                 .filter((recipient) => recipient.persona && recipient.checked)
-                .map((recipient) => recipient.persona.id);
+                .map((recipient) => recipient.persona.partnerId);
             recipientEmails = thread.suggestedRecipients
                 .filter((recipient) => recipient.checked && !recipient.persona)
                 .map((recipient) => recipient.email);
@@ -726,16 +706,6 @@ export class ThreadService {
             thread_id: thread.id,
             thread_model: thread.model,
         };
-    }
-
-    getDiscussSidebarCategoryCounter(categoryId) {
-        return this.store.discuss[categoryId].threads.reduce((acc, channel) => {
-            if (categoryId === "channels") {
-                return channel.message_needaction_counter > 0 ? acc + 1 : acc;
-            } else {
-                return channel.message_unread_counter > 0 ? acc + 1 : acc;
-            }
-        }, 0);
     }
 
     /**

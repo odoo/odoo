@@ -11,7 +11,7 @@ QUnit.test("Message model properties", async (assert) => {
     const pyEnv = await startServer();
     const { env } = await start();
     env.services["mail.store"].Store.insert({
-        self: { id: pyEnv.currentPartnerId, type: "partner" },
+        self: { partnerId: pyEnv.currentPartnerId },
     });
     env.services["mail.store"].Thread.insert({
         id: pyEnv.currentPartnerId,
@@ -33,7 +33,7 @@ QUnit.test("Message model properties", async (assert) => {
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
         needaction_partner_ids: [pyEnv.currentPartnerId],
-        starredPersonas: { id: pyEnv.currentPartnerId, type: "partner" },
+        starredPersonas: [{ partnerId: pyEnv.currentPartnerId }],
         model: "res.partner",
         originThread: { id: pyEnv.currentPartnerId, model: "res.partner" },
         res_id: pyEnv.currentPartnerId,

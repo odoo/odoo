@@ -189,14 +189,14 @@ export class LivechatService {
         browser.localStorage.setItem(
             SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
-                threadData: persisted ? { id: threadData.id, model: threadData.model } : threadData,
+                threadData: persisted ? { channelId: threadData.channelId } : threadData,
                 persisted,
                 livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
                 expirationDate: luxon.DateTime.now().plus({ days: 1 }),
             })
         );
         if (threadData.operator) {
-            cookie.set(OPERATOR_COOKIE, threadData.operator.id, 7 * 24 * 60 * 60);
+            cookie.set(OPERATOR_COOKIE, threadData.operator.partnerId, 7 * 24 * 60 * 60);
         }
     }
 

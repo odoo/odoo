@@ -184,7 +184,7 @@ QUnit.test("remove a follower in a dirty form view", async (assert) => {
             </form>`,
     };
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.partner", threadId);
+    await openFormView("res.partner", threadId);
     await click(".o_field_many2many_tags[name='channel_ids'] input");
     await click(".dropdown-item", { text: "General" });
     await contains(".o_tag", { text: "General" });
@@ -213,7 +213,7 @@ QUnit.test("removing a follower should reload form view", async function (assert
             }
         },
     });
-    openFormView("res.partner", threadId);
+    await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-button");
     assert.verifySteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");

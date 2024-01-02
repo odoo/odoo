@@ -11,7 +11,7 @@ const commandRegistry = registry.category("discuss.channel_commands");
 patch(SuggestionService.prototype, {
     getSupportedDelimiters(thread) {
         const res = super.getSupportedDelimiters(thread);
-        return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
+        return thread?.channelId ? [...res, ["/", 0]] : res;
     },
     /**
      * @override
@@ -23,7 +23,7 @@ patch(SuggestionService.prototype, {
         return super.searchSuggestions(...arguments);
     },
     searchChannelCommand(cleanedSearchTerm, thread, sort) {
-        if (!thread.model === "discuss.channel") {
+        if (!thread.channelId) {
             // channel commands are channel specific
             return;
         }

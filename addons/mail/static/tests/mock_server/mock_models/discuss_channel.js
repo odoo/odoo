@@ -57,12 +57,11 @@ export class DiscussChannel extends models.ServerModel {
         });
         this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
             Thread: {
-                id: channel.id,
+                channelId: channel.id,
                 channelMembers: [["DELETE", { id: channelMember.id }]],
                 memberCount: this.env["discuss.channel.member"].search_count([
                     ["channel_id", "=", channel.id],
                 ]),
-                model: "discuss.channel",
             },
         });
 
@@ -131,7 +130,7 @@ export class DiscussChannel extends models.ServerModel {
         if (isSelfMember) {
             this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
                 Thread: {
-                    id: channel.id,
+                    channelId: channel.id,
                     channelMembers: [
                         [
                             "ADD",
@@ -143,7 +142,6 @@ export class DiscussChannel extends models.ServerModel {
                     memberCount: this.env["discuss.channel.member"].search_count([
                         ["channel_id", "=", channel.id],
                     ]),
-                    model: "discuss.channel",
                 },
             });
         }
@@ -318,7 +316,6 @@ export class DiscussChannel extends models.ServerModel {
                 ["mail_message_id", "in", messages.map((message) => message.id)],
             ]).length;
             const res = assignDefined({}, channel, [
-                "id",
                 "name",
                 "defaultDisplayMode",
                 "description",
@@ -328,13 +325,13 @@ export class DiscussChannel extends models.ServerModel {
                 "avatarCacheKey",
             ]);
             Object.assign(res, {
+                channelId: channel.id,
                 channel_type: channel.channel_type,
                 memberCount: this.env["discuss.channel.member"].search_count([
                     ["channel_id", "=", channel.id],
                 ]),
                 message_needaction_counter: messageNeedactionCounter,
                 authorizedGroupFullName: group_public_id ? group_public_id.name : false,
-                model: "discuss.channel",
             });
             const memberOfCurrentUser = this.env["discuss.channel.member"]._getAsSudoFromContext(
                 channel.id
@@ -475,8 +472,7 @@ export class DiscussChannel extends models.ServerModel {
         this.env["bus.bus"]._sendone(this.env.partner, "mail.record/insert", {
             Thread: {
                 custom_channel_name: name,
-                id: channelId,
-                model: "discuss.channel",
+                channelId,
             },
         });
     }
@@ -532,7 +528,7 @@ export class DiscussChannel extends models.ServerModel {
         `;
         this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/transient_message", {
             body: notifBody,
-            originThread: { model: "discuss.channel", id: channel.id },
+            originThread: { channelId: channel.id },
         });
         return true;
     }
@@ -575,7 +571,7 @@ export class DiscussChannel extends models.ServerModel {
             }
             this.env["bus.bus"]._sendone(this.env.partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
-                originThread: { model: "discuss.channel", id: channel.id },
+                originThread: { channelId: channel.id },
             });
         }
     }
@@ -643,8 +639,7 @@ export class DiscussChannel extends models.ServerModel {
                             ? channel.group_public_id.name
                             : false,
                         channel_type: channel.channel_type,
-                        id: channel.id,
-                        model: "discuss.channel",
+                        channelId: channel.id,
                         name: channel.name,
                     };
                 });
@@ -778,8 +773,7 @@ export class DiscussChannel extends models.ServerModel {
             return this.env["bus.bus"]._sendone(channel, "mail.record/insert", {
                 Thread: {
                     avatarCacheKey: channel.avatarCacheKey,
-                    firstId,
-                    model: "discuss.channel",
+                    channelId: firstId,
                 },
             });
         }
@@ -798,8 +792,7 @@ export class DiscussChannel extends models.ServerModel {
                 "mail.record/insert",
                 {
                     Thread: {
-                        id: channel.id,
-                        model: "discuss.channel",
+                        channelId: channel.id,
                         ...diff,
                     },
                 },

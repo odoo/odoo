@@ -18,7 +18,7 @@ QUnit.test("Pin message", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel p", {
         text: "This channel doesn't have any pinned messages.",
@@ -39,7 +39,7 @@ QUnit.test("Unpin message", async () => {
         pinned_at: "2023-03-30 11:27:11",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
@@ -59,7 +59,7 @@ QUnit.test("Deleted messages are not pinned", async () => {
         pinned_at: "2023-03-30 11:27:11",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
@@ -77,7 +77,7 @@ QUnit.test("Open pinned panel from notification", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
@@ -110,7 +110,7 @@ QUnit.test("Jump to message", async () => {
         });
     }
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel button", { text: "Jump" });
     await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
@@ -133,7 +133,7 @@ QUnit.test("Jump to message from notification", async () => {
         });
     }
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 21 });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item", { text: "Pin" });

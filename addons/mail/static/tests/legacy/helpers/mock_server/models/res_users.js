@@ -23,12 +23,11 @@ patch(MockServer.prototype, {
             );
             Object.assign(res.Store, {
                 self: {
-                    id: this.pyEnv.currentUser.partner_id,
+                    partnerId: this.pyEnv.currentUser.partner_id,
                     isAdmin: true, // mock server simplification
                     isInternalUser: !this.pyEnv.currentUser.share,
                     name: this.pyEnv.currentUser.name,
                     notification_preference: this.pyEnv.currentUser.notification_type,
-                    type: "partner",
                     userId: this.pyEnv.currentUser.id,
                     write_date: this.pyEnv.currentUser.write_date,
                 },
@@ -37,9 +36,8 @@ patch(MockServer.prototype, {
         } else if (this.pyEnv.currentGuest) {
             Object.assign(res.Store, {
                 self: {
-                    id: this.pyEnv.currentGuest.id,
+                    guestId: this.pyEnv.currentGuest.id,
                     name: this.pyEnv.currentGuest.name,
-                    type: "guest",
                     write_date: this.pyEnv.currentGuest.write_date,
                 },
             });

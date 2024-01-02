@@ -218,7 +218,7 @@ class Partner(models.Model):
         for partner in self:
             data = {}
             if 'id' in fields:
-                data['id'] = partner.id
+                data['partnerId'] = partner.id
             if 'name' in fields:
                 data['name'] = partner.name
             if 'email' in fields:
@@ -238,7 +238,6 @@ class Partner(models.Model):
                 data["isInternalUser"] = not main_user.share if main_user else False
             if not self.env.user._is_internal():
                 data.pop('email', None)
-            data['type'] = "partner"
             partners_format[partner] = data
         return partners_format
 

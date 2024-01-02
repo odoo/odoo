@@ -58,7 +58,7 @@ export class MailCoreWeb {
                     // Furthermore, server should not send back all messageIds marked as read
                     // but something like last read messageId or something like that.
                     // (just imagine you mark 1000 messages as read ... )
-                    const message = this.store.Message.get(messageId);
+                    const message = this.store.Message.get({ id: messageId });
                     if (!message) {
                         continue;
                     }

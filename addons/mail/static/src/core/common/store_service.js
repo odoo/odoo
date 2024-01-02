@@ -1,11 +1,9 @@
 /* @odoo-module */
 
-import { BaseStore, makeStore, Record } from "@mail/core/common/record";
+import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 
 import { router } from "@web/core/browser/router";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
@@ -26,6 +24,8 @@ export class Store extends BaseStore {
     CannedResponse;
     /** @type {typeof import("@mail/core/common/channel_member_model").ChannelMember} */
     ChannelMember;
+    /** @type {typeof import("@im_livechat/embed/common/chatbot/chatbot_step_model").ChatbotStep} */
+    ChatbotStep;
     /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
     ChatWindow;
     /** @type {typeof import("@mail/core/common/composer_model").Composer} */
@@ -82,7 +82,6 @@ export class Store extends BaseStore {
     odoobot = Record.one("Persona");
     /** @type {boolean} */
     odoobotOnboarding;
-    users = {};
     /** @type {number} */
     internalUserGroupId;
     /** @type {number} */
@@ -197,11 +196,6 @@ export class Store extends BaseStore {
     settings = Record.one("Settings");
     openInviteThread = Record.one("Thread");
 
-    fetchDeferred = new Deferred();
-    fetchParams = {};
-    fetchReadonly = true;
-    fetchSilent = true;
-
     async fetchCannedResponses() {
         if (["fetching", "fetched"].includes(this.fetchCannedResponseState)) {
             return this.fetchCannedResponseDeferred;
@@ -219,53 +213,6 @@ export class Store extends BaseStore {
             }
         );
         return this.fetchCannedResponseDeferred;
-    }
-
-    async fetchData(params, { readonly = true, silent = true } = {}) {
-        Object.assign(this.fetchParams, params);
-        this.fetchReadonly = this.fetchReadonly && readonly;
-        this.fetchSilent = this.fetchSilent && silent;
-        const fetchDeferred = this.fetchDeferred;
-        this._fetchDataDebounced();
-        return fetchDeferred;
-    }
-
-    async _fetchDataDebounced() {
-        const fetchDeferred = this.fetchDeferred;
-        this.fetchParams.context = {
-            ...user.context,
-            ...this.fetchParams.context,
-        };
-        rpc(this.fetchReadonly ? "/mail/data" : "/mail/action", this.fetchParams, {
-            silent: this.fetchSilent,
-        }).then(
-            (data) => {
-                const recordsByModel = this.insert(data, { html: true });
-                fetchDeferred.resolve(recordsByModel);
-            },
-            (error) => fetchDeferred.reject(error)
-        );
-        this.fetchDeferred = new Deferred();
-        this.fetchParams = {};
-        this.fetchReadonly = true;
-        this.fetchSilent = true;
-    }
-
-    /**
-     * @template T
-     * @param {T} [dataByModelName={}]
-     * @param {Object} [options={}]
-     * @returns {{ [K in keyof T]: T[K] extends Array ? import("models").Models[K][] : import("models").Models[K] }}
-     */
-    insert(dataByModelName = {}, options = {}) {
-        const store = this;
-        return Record.MAKE_UPDATE(function storeInsert() {
-            const res = {};
-            for (const [modelName, data] of Object.entries(dataByModelName)) {
-                res[modelName] = store[modelName].insert(data, options);
-            }
-            return res;
-        });
     }
 
     async startMeeting() {
@@ -303,7 +250,7 @@ export class Store extends BaseStore {
         const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
             const thread = this.Thread.records[id];
-            if (thread.model === "discuss.channel") {
+            if (thread.channelId) {
                 channelIds.push(id);
                 if (!thread.hasSelfAsMember) {
                     this.env.services["bus_service"].addChannel(`discuss.channel_${thread.id}`);
@@ -335,7 +282,7 @@ export const storeService = {
          * these values will still be executed immediately. Providing a dummy default is enough to
          * avoid crashes, the actual values being filled at livechat init when they are necessary.
          */
-        store.self ??= { id: -1, type: "guest" };
+        store.self ??= { guestId: -1 };
         store.settings ??= {};
         const discussActionIds = ["mail.action_discuss"];
         if (store.action_discuss_id) {

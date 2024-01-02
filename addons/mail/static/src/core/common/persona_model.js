@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { AND, Record } from "@mail/core/common/record";
+import { Record } from "@mail/core/common/record";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { imageUrl } from "@web/core/utils/urls";
 
@@ -15,7 +15,7 @@ import { imageUrl } from "@web/core/utils/urls";
  */
 
 export class Persona extends Record {
-    static id = AND("type", "id");
+    static id = [["type!", "id!"], ["userId!"], ["partnerId!"], ["guestId!"]];
     /** @type {Object.<number, import("models").Persona>} */
     static records = {};
     /** @returns {import("models").Persona} */
@@ -25,6 +25,32 @@ export class Persona extends Record {
     /** @returns {import("models").Persona|import("models").Persona[]} */
     static insert(data) {
         return super.insert(...arguments);
+    }
+    set partnerId(newPartnerId) {
+        if (!newPartnerId) {
+            return;
+        }
+        this.id = newPartnerId;
+        this.type = "partner";
+    }
+    get partnerId() {
+        if (this.type !== "partner") {
+            return undefined;
+        }
+        return this.id;
+    }
+    set guestId(newGuestId) {
+        if (!newGuestId) {
+            return;
+        }
+        this.id = newGuestId;
+        this.type = "guest";
+    }
+    get guestId() {
+        if (this.type !== "guest") {
+            return undefined;
+        }
+        return this.id;
     }
 
     channelMembers = Record.many("ChannelMember");
@@ -72,10 +98,10 @@ export class Persona extends Record {
     }
 
     get avatarUrl() {
-        if (this.type === "partner") {
+        if (this.partnerId) {
             return imageUrl("res.partner", this.id, "avatar_128", { unique: this.write_date });
         }
-        if (this.type === "guest") {
+        if (this.guestId) {
             return imageUrl("mail.guest", this.id, "avatar_128", { unique: this.write_date });
         }
         if (this.userId) {

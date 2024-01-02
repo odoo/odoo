@@ -48,7 +48,7 @@ patch(Composer.prototype, {
      * @param {InputEvent} ev
      */
     onInput(ev) {
-        if (this.thread?.model === "discuss.channel" && ev.target.value.startsWith("/")) {
+        if (this.thread?.channelId && ev.target.value.startsWith("/")) {
             const [firstWord] = ev.target.value.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (

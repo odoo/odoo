@@ -35,7 +35,7 @@ export class MailGuest extends models.ServerModel {
                 odoobot: this.env["res.partner"].mail_partner_format(session.odoobot_id)[
                     session.odoobot_id
                 ],
-                self: { id: guest.id, name: guest.name, type: "guest" },
+                self: { guestId: guest.id, name: guest.name },
                 settings: {},
             },
             Thread: this.env["discuss.channel"].channel_info(

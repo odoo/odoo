@@ -117,7 +117,7 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
+        this.suggestion = this.store.self.partnerId ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         if (this.props.dropzoneRef) {
@@ -284,7 +284,7 @@ export class Composer extends Component {
         return (
             !this.state.active ||
             (!this.props.composer.textInputContent && attachments.length === 0) ||
-            attachments.some(({ uploading }) => Boolean(uploading))
+            attachments.some(({ uploadId }) => Boolean(uploadId))
         );
     }
 
@@ -459,13 +459,12 @@ export class Composer extends Component {
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const body = this.props.composer.textInputContent;
-        const validMentions =
-            this.store.self.type === "partner"
-                ? this.messageService.getMentionsFromText(body, {
-                      mentionedChannels: this.props.composer.mentionedChannels,
-                      mentionedPartners: this.props.composer.mentionedPartners,
-                  })
-                : undefined;
+        const validMentions = this.store.self.partnerId
+            ? this.messageService.getMentionsFromText(body, {
+                  mentionedChannels: this.props.composer.mentionedChannels,
+                  mentionedPartners: this.props.composer.mentionedPartners,
+              })
+            : undefined;
         const context = {
             default_attachment_ids: attachmentIds,
             default_body: await prettifyMessageContent(body, validMentions),
@@ -475,7 +474,7 @@ export class Composer extends Component {
                     ? []
                     : this.thread.suggestedRecipients
                           .filter((recipient) => recipient.checked)
-                          .map((recipient) => recipient.persona.id),
+                          .map((recipient) => recipient.persona.partnerId),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             mail_post_autofollow: this.thread.hasWriteAccess,
@@ -532,7 +531,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         if (
             this.props.composer.textInputContent.trim() ||
-            (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
+            (attachments.length > 0 && attachments.every(({ uploadId }) => !uploadId)) ||
             (this.message && this.message.attachments.length > 0)
         ) {
             if (!this.state.active) {
@@ -546,7 +545,7 @@ export class Composer extends Component {
             this.clear();
             this.state.active = true;
             el.focus();
-        } else if (attachments.some(({ uploading }) => Boolean(uploading))) {
+        } else if (attachments.some(({ uploadId }) => Boolean(uploadId))) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });

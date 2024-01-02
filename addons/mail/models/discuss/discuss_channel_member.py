@@ -170,8 +170,7 @@ class ChannelMember(models.Model):
         notifications = []
         for member in members:
             channel_data = {
-                "id": member.channel_id.id,
-                "model": "discuss.channel",
+                "channelId": member.channel_id.id,
                 "mute_until_dt": False,
             }
             notifications.append((member.partner_id, "mail.record/insert", {"Thread": channel_data}))
@@ -222,8 +221,7 @@ class ChannelMember(models.Model):
         self.fold_state = state
         self.env['bus.bus']._sendone(self.partner_id or self.guest_id, 'discuss.Thread/fold_state', {
             'foldStateCount': state_count,
-            'id': self.channel_id.id,
-            'model': 'discuss.channel',
+            'channelId': self.channel_id.id,
             'fold_state': self.fold_state,
         })
     # --------------------------------------------------------------------------
@@ -356,14 +354,13 @@ class ChannelMember(models.Model):
                 target = member.guest_id
             invitation_notifications.append((target, 'mail.record/insert', {
                 'Thread': {
-                    'id': self.channel_id.id,
-                    'model': 'discuss.channel',
+                    'channelId': self.channel_id.id,
                     'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
                 }
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
-            channel_data = {'id': self.channel_id.id, 'model': 'discuss.channel'}
+            channel_data = {'channelId': self.channel_id.id}
             channel_data['invitedMembers'] = [('ADD', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
             self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members

@@ -275,8 +275,7 @@ class Channel(models.Model):
             if diff:
                 notifications.append([channel, "mail.record/insert", {
                     "Thread": {
-                        "id": current_val["id"],
-                        "model": "discuss.channel",
+                        "channelId": current_val["id"],
                         **diff
                     }
                 }])
@@ -288,8 +287,7 @@ class Channel(models.Model):
                 notifications.append([channel, 'mail.record/insert', {
                     'Thread': {
                         'avatarCacheKey': channel.avatar_cache_key,
-                        'id': channel.id,
-                        'model': "discuss.channel",
+                        'channelId': channel.id,
                     }
                 }])
         self.env['bus.bus']._sendmany(notifications)
@@ -352,9 +350,8 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
             'Thread': {
                 'channelMembers': [('DELETE', {'id': member.id})],
-                'id': self.id,
+                'channelId': self.id,
                 'memberCount': self.member_count,
-                'model': "discuss.channel",
             }
         })
 
@@ -415,9 +412,8 @@ class Channel(models.Model):
             notifications.append((channel, 'mail.record/insert', {
                 'Thread': {
                     'channelMembers': [('ADD', list(new_members._discuss_channel_member_format().values()))],
-                    'id': channel.id,
+                    'channelId': channel.id,
                     'memberCount': channel.member_count,
-                    'model': "discuss.channel",
                 }
             }))
             if existing_members and (current_partner or current_guest):
@@ -427,9 +423,8 @@ class Channel(models.Model):
                 notifications.append((current_partner or current_guest, 'mail.record/insert', {
                     'Thread': {
                         'channelMembers': [('ADD', list(existing_members._discuss_channel_member_format().values()))],
-                        'id': channel.id,
+                        'channelId': channel.id,
                         'memberCount': channel.member_count,
-                        'model': "discuss.channel",
                     }
                 }))
         if invite_to_rtc_call:
@@ -469,13 +464,12 @@ class Channel(models.Model):
                 target = member.guest_id
             invitation_notifications.append((target, 'mail.record/insert', {
                 'Thread': {
-                    'id': self.id,
-                    'model': 'discuss.channel',
+                    'channelId': self.id,
                     'rtcInvitingSession': False,
                 }
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
-        channel_data = {'id': self.id, 'model': 'discuss.channel'}
+        channel_data = {'channelId': self.id}
         if members:
             channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
             self.env['bus.bus']._sendone(self, 'mail.record/insert', {'Thread': channel_data})
@@ -590,10 +584,9 @@ class Channel(models.Model):
         # notification of the message itself to ensure the channel automatically opens.
         payload = {
             "Thread": {
-                "id": self.id,
+                "channelId": self.id,
                 "is_pinned": True,
                 "last_interest_dt": fields.Datetime.now(),
-                "model": "discuss.channel",
             },
         }
         bus_notifications = [
@@ -821,7 +814,7 @@ class Channel(models.Model):
             'avatarCacheKey': self.avatar_cache_key,
             'channel_type': self.channel_type,
             'memberCount': self.member_count,
-            'id': self.id,
+            'channelId': self.id,
             'name': self.name,
             'defaultDisplayMode': self.default_display_mode,
             'description': self.description,
@@ -831,7 +824,6 @@ class Channel(models.Model):
             'create_uid': self.create_uid.id,
             'authorizedGroupFullName': self.group_public_id.full_name,
             'allow_public_upload': self.allow_public_upload,
-            'model': "discuss.channel",
         }
 
     def _channel_info(self):
@@ -1107,8 +1099,7 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(member.partner_id, 'mail.record/insert', {
             'Thread': {
                 'custom_channel_name': name,
-                'id': self.id,
-                'model': "discuss.channel",
+                'channelId': self.id,
             }
         })
 
@@ -1184,8 +1175,7 @@ class Channel(models.Model):
         return [{
             'authorizedGroupFullName': channel.group_public_id.full_name,
             'channel_type': channel.channel_type,
-            'model': "discuss.channel",
-            'id': channel.id,
+            'channelId': channel.id,
             'name': channel.name,
         } for channel in channels]
 

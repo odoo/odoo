@@ -370,8 +370,7 @@ export class Chatter extends Component {
         return _t("Unfollow");
     }
 
-    async unlinkAttachment(attachment) {
-        await this.attachmentUploader.unlink(attachment);
+    async onAttachmentUnlinked() {
         if (this.props.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }

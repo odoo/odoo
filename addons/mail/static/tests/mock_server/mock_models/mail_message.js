@@ -171,9 +171,8 @@ export class MailMessage extends models.ServerModel {
                         .map((guest) => ({ id: guest.id, name: guest.name, type: "guests" }))
                         .concat(
                             partners.map((partner) => ({
-                                id: partner.id,
+                                partnerId: partner.id,
                                 name: partner.name,
-                                type: "partner",
                             }))
                         ),
                 });
@@ -196,10 +195,10 @@ export class MailMessage extends models.ServerModel {
                 parentMessage: message.parent_id
                     ? this.message_format([message.parent_id])[0]
                     : false,
-                recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
+                recipients: partners.map((p) => ({ partnerId: p.id, name: p.name })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                starredPersonas: message.starred_partner_ids.map((id) => ({ id, type: "partner" })),
+                starredPersonas: message.starred_partner_ids.map((id) => ({ parterId: id })),
                 trackingValues: formattedTrackingValues,
                 pinned_at: message.pinned_at,
             };
@@ -215,7 +214,7 @@ export class MailMessage extends models.ServerModel {
                 const [guest] = this.env["mail.guest"].search_read([
                     ["id", "=", message.author_guest_id],
                 ]);
-                guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
+                guestAuthor = { guestId: guest.id, name: guest.name };
             }
             response.author = author || guestAuthor;
             if (response.model && response.res_id) {
@@ -368,9 +367,8 @@ export class MailMessage extends models.ServerModel {
                             [
                                 action === "add" ? "ADD" : "DELETE",
                                 {
-                                    id: guest ? guest.id : this.env.partner_id,
+                                    guestId: guest ? guest.id : this.env.partner_id,
                                     name: guest ? guest.name : this.env.partner.name,
-                                    type: guest ? "guest" : "partner",
                                 },
                             ],
                         ],
@@ -445,7 +443,7 @@ export class MailMessage extends models.ServerModel {
                     message.originThread.selfFollower = {
                         id: follower[0].id,
                         is_active: true,
-                        partner: { id: this.env.partner_id, type: "partner" },
+                        partner: { partnerId: this.env.partner_id },
                     };
                 }
             }
@@ -471,7 +469,7 @@ export class MailMessage extends models.ServerModel {
                 notifications.map((notification) => notification.id)
             );
             return {
-                author: message.author_id ? { id: message.author_id, type: "partner" } : false,
+                author: message.author_id ? { partnerId: message.author_id } : false,
                 body: message.body,
                 date: message.date,
                 id: message.id,

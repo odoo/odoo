@@ -270,8 +270,7 @@ patch(MockServer.prototype, {
         }
         this.pyEnv["discuss.channel.member"].write([member.id], { mute_until_dt });
         const channel_data = {
-            id: member.channel_id[0],
-            model: "discuss.channel",
+            channelId: member.channel_id[0],
             mute_until_dt,
         };
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {

@@ -32,7 +32,6 @@ declare module "services" {
         "discuss.rtc": ReturnType<typeof rtcService.start>;
         "discuss.typing": ReturnType<typeof discussTypingService.start>;
         "mail.activity": ReturnType<typeof activityService.start>;
-        "mail.attachment": ReturnType<typeof attachmentService.start>;
         "mail.attachment_upload": ReturnType<typeof attachmentUploadService.start>;
         "mail.chat_window": ReturnType<typeof chatWindowService.start>;
         "mail.core.common": ReturnType<typeof mailCoreCommon.start>;

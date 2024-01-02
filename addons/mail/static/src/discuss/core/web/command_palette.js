@@ -60,7 +60,7 @@ commandProviderRegistry.add("mail.partner", {
                     async action() {
                         switch (channel.type) {
                             case "chat":
-                                threadService.openChat({ partnerId: channel.correspondent.id });
+                                threadService.openChat(channel.correspondent);
                                 break;
                             case "group":
                                 threadService.open(channel);
@@ -90,7 +90,7 @@ commandProviderRegistry.add("mail.partner", {
                 commands.push({
                     Component: DiscussCommand,
                     action() {
-                        threadService.openChat({ partnerId: partner.id });
+                        threadService.openChat(partner);
                     },
                     name: partner.name,
                     props: {

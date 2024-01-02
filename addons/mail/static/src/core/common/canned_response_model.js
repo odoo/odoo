@@ -3,7 +3,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class CannedResponse extends Record {
-    static id = "id";
+    static id = [["id"]];
     /** @type {Object.<number, import("models").CannedResponse>} */
     static records = {};
     /** @returns {import("models").CannedResponse} */

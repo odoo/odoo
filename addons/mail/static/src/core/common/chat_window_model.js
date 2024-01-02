@@ -8,7 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 /** @typedef {{ thread?: import("models").Thread, folded?: boolean, replaceNewMessageChatWindow?: boolean }} ChatWindowData */
 
 export class ChatWindow extends Record {
-    static id = "thread";
+    static id = [["thread"]];
     /** @type {Object<number, import("models").ChatWindow} */
     static records = {};
     /** @returns {import("models").ChatWindow} */

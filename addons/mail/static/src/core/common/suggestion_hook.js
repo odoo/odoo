@@ -97,16 +97,10 @@ export function useSuggestion() {
             }
             const recordReplacement = option.label;
             if (option.partner) {
-                comp.props.composer.mentionedPartners.add({
-                    id: option.partner.id,
-                    type: "partner",
-                });
+                comp.props.composer.mentionedPartners.add({ partnerId: option.partner.id });
             }
             if (option.thread) {
-                comp.props.composer.mentionedChannels.add({
-                    model: "discuss.channel",
-                    id: option.thread.id,
-                });
+                comp.props.composer.mentionedChannels.add({ channelId: option.thread.id });
             }
             if (option.cannedResponse) {
                 comp.props.composer.cannedResponses.push(option.cannedResponse);

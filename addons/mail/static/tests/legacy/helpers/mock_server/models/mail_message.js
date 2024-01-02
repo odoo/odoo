@@ -78,9 +78,9 @@ patch(MockServer.prototype, {
                             [
                                 action === "add" ? "ADD" : "DELETE",
                                 {
-                                    id: guest ? guest.id : this.pyEnv.currentPartnerId,
+                                    partnerId: !guest && this.pyEnv.currentPartnerId,
+                                    guestId: guest && guest.id,
                                     name: guest ? guest.name : this.pyEnv.currentPartner.name,
-                                    type: guest ? "guest" : "partner",
                                 },
                             ],
                         ],
@@ -277,12 +277,11 @@ patch(MockServer.prototype, {
                     count: reactionsPerContent[content].length,
                     message: { id: message.id },
                     personas: guests
-                        .map((guest) => ({ id: guest.id, name: guest.name, type: "guests" }))
+                        .map((guest) => ({ guestId: guest.id, name: guest.name }))
                         .concat(
                             partners.map((partner) => ({
-                                id: partner.id,
+                                partnerId: partner.id,
                                 name: partner.name,
-                                type: "partner",
                             }))
                         ),
                 });
@@ -304,10 +303,10 @@ patch(MockServer.prototype, {
                 parentMessage: message.parent_id
                     ? this._mockMailMessageMessageFormat([message.parent_id])[0]
                     : false,
-                recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
+                recipients: partners.map((p) => ({ partnerId: p.id, name: p.name })),
                 record_name:
                     thread && (thread.name !== undefined ? thread.name : thread.display_name),
-                starredPersonas: message.starred_partner_ids.map((id) => ({ id, type: "partner" })),
+                starredPersonas: message.starred_partner_ids.map((id) => ({ partnerId: id })),
                 trackingValues: formattedTrackingValues,
                 pinned_at: message.pinned_at,
             });
@@ -323,7 +322,7 @@ patch(MockServer.prototype, {
                 const [guest] = this.pyEnv["mail.guest"].searchRead([
                     ["id", "=", message.author_guest_id],
                 ]);
-                guestAuthor = { id: guest.id, name: guest.name, type: "guest" };
+                guestAuthor = { guestId: guest.id, name: guest.name };
             }
             response.author = author || guestAuthor;
             if (response["model"] && response["res_id"]) {
@@ -361,7 +360,7 @@ patch(MockServer.prototype, {
                     message.originThread.selfFollower = {
                         id: follower_id,
                         is_active: true,
-                        partner: { id: this.pyEnv.currentPartnerId, type: "partner" },
+                        partner: { partnerId: this.pyEnv.currentPartnerId },
                     };
                 }
             }
@@ -388,7 +387,7 @@ patch(MockServer.prototype, {
                 notifications.map((notification) => notification.id)
             );
             return {
-                author: message.author_id ? { id: message.author_id, type: "partner" } : false,
+                author: message.author_id ? { partnerId: message.author_id } : false,
                 body: message.body,
                 date: message.date,
                 id: message.id,

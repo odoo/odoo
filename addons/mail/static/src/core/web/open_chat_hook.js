@@ -12,6 +12,7 @@ export const helpers = {
 };
 
 export function useOpenChat(resModel) {
+    const store = useService("mail.store");
     const threadService = useService("mail.thread");
     if (!helpers.SUPPORTED_M2X_AVATAR_MODELS.includes(resModel)) {
         throw new Error(
@@ -21,6 +22,7 @@ export function useOpenChat(resModel) {
         );
     }
     return async (id) => {
-        threadService.openChat(helpers.buildOpenChatParams(resModel, id));
+        const persona = store.Persona.insert(helpers.buildOpenChatParams(resModel, id));
+        threadService.openChat(persona);
     };
 }

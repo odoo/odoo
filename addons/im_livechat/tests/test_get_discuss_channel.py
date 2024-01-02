@@ -45,18 +45,16 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         # ensure member info are hidden (in particular email and real name when livechat username is present)
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         self.assertEqual(sorted((m['persona'] for m in channel_info['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
-            'id': self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.id,
+            'guestId': self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.id,
             'name': 'Visitor',
             'im_status': 'offline',
-            'type': "guest",
             'write_date': fields.Datetime.to_string(self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.write_date),
         }, {
             'active': True,
             'country': False,
-            'id': operator.partner_id.id,
+            'partnerId': operator.partner_id.id,
             'is_bot': False,
             'is_public': False,
-            'type': "partner",
             'user_livechat_username': 'Michel Operator',
         }], key=lambda m: m['id']))
 
@@ -72,22 +70,21 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
         self.assertEqual(channel_info['channelMembers'], [['ADD', [
             {
-                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
+                'thread': {'channelId': channel_info['channelId']},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
                 'persona': {
                     'active': True,
                     'country': False,
-                    'id': operator.partner_id.id,
+                    'partnerId': operator.partner_id.id,
                     'is_bot': False,
                     'is_public': False,
-                    'type': "partner",
                     'user_livechat_username': 'Michel Operator',
                 },
                 'fetched_message_id': False,
                 'seen_message_id': False,
             },
             {
-                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
+                'thread': {'channelId': channel_info['channelId']},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', test_user.partner_id.id)]).id,
                 'persona': {
                     'active': True,
@@ -96,11 +93,10 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                         'id': belgium.id,
                         'name': 'Belgium',
                     },
-                    'id': test_user.partner_id.id,
+                    'partnerId': test_user.partner_id.id,
                     'is_bot': False,
                     'is_public': False,
                     'name': 'Roger',
-                    'type': "partner",
                 },
                 'fetched_message_id': False,
                 'seen_message_id': False,
@@ -117,24 +113,22 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             'channel_id': self.livechat_channel.id,
         })["Thread"]
         self.assertEqual(channel_info['operator'], {
-            "id": operator.partner_id.id,
+            "partnerId": operator.partner_id.id,
             "user_livechat_username": "Michel Operator",
-            "type": "partner",
             "write_date": fields.Datetime.to_string(operator.partner_id.write_date)
         })
         self.assertFalse(channel_info['anonymous_name'])
         self.assertEqual(channel_info['anonymous_country'], False)
         self.assertEqual(channel_info['channelMembers'], [['ADD', [
             {
-                'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
+                'thread': {'channelId': channel_info['channelId']},
                 'id': self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', '=', operator.partner_id.id)]).id,
                 'persona': {
                     'active': True,
                     'country': False,
-                    'id': operator.partner_id.id,
+                    'partnerId': operator.partner_id.id,
                     'is_bot': False,
                     'is_public': False,
-                    'type': "partner",
                     'user_livechat_username': 'Michel Operator',
                 },
                 'fetched_message_id': False,
@@ -235,8 +229,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                             "<br>Type <b>:shortcut</b> to insert a canned response in your message."
                             "</span>",
                             "originThread": {
-                                "model": "discuss.channel",
-                                "id": channel.id,
+                                "channelId": channel.id,
                             },
                     },
                 },

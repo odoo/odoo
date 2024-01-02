@@ -73,16 +73,13 @@ QUnit.test("can post a message on a record thread", async (assert) => {
             }
         },
     });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await contains("button", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
-
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
-
     await click(".o-mail-Composer button:enabled", { text: "Send" });
     await contains(".o-mail-Message");
     await assertSteps(["/mail/message/post"]);
@@ -114,16 +111,13 @@ QUnit.test("can post a note on a record thread", async (assert) => {
             }
         },
     });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await contains("button", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Log note" });
     await contains(".o-mail-Composer");
-
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
-
     await click(".o-mail-Composer button:enabled", { text: "Log" });
     await contains(".o-mail-Message");
     await assertSteps(["/mail/message/post"]);
@@ -131,7 +125,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
 
 QUnit.test("No attachment loading spinner when creating records", async () => {
     const { openFormView } = await start();
-    openFormView("res.partner");
+    await openFormView("res.partner");
     await contains("button[aria-label='Attach files']");
     await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
 });
@@ -148,7 +142,7 @@ QUnit.test(
             },
         });
         const partnerId = pyEnv["res.partner"].create({ name: "John" });
-        openFormView("res.partner", partnerId);
+        await openFormView("res.partner", partnerId);
         await contains("button[aria-label='Attach files']");
         await advanceTime(DELAY_FOR_SPINNER);
         await contains("button[aria-label='Attach files'] .fa-spin");
@@ -161,7 +155,7 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     patchUiSize({ size: SIZES.LG });
@@ -173,7 +167,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-Form-chatter.o-aside .o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "Hello world !");
@@ -187,7 +181,7 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async ()
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Log note" });
     patchUiSize({ size: SIZES.LG });
     window.dispatchEvent(new Event("resize"));
@@ -200,7 +194,7 @@ QUnit.test("chatter: drop attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -244,7 +238,7 @@ QUnit.test("should display subject when subject isn't infered from the record", 
         subject: "Salutations, voyageur",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -261,7 +255,7 @@ QUnit.test("should not display user notification messages in chatter", async () 
         res_id: partnerId,
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -274,7 +268,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -297,7 +291,7 @@ QUnit.test("base rendering when chatter has no attachment", async (assert) => {
         });
     }
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -311,7 +305,7 @@ QUnit.test("base rendering when chatter has no attachment", async (assert) => {
 
 QUnit.test("base rendering when chatter has no record", async () => {
     const { openView } = await start();
-    openView({
+    await openView({
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -344,7 +338,7 @@ QUnit.test("base rendering when chatter has attachments", async () => {
         },
     ]);
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -372,7 +366,7 @@ QUnit.test("show attachment box", async () => {
         },
     ]);
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -382,7 +376,6 @@ QUnit.test("show attachment box", async () => {
     await contains("button[aria-label='Attach files']");
     await contains("button[aria-label='Attach files']", { text: "2" });
     await contains(".o-mail-AttachmentBox", { count: 0 });
-
     await click("button[aria-label='Attach files']");
     await contains(".o-mail-AttachmentBox");
 });
@@ -391,7 +384,7 @@ QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -399,21 +392,16 @@ QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async 
     await contains("button", { text: "Send message" });
     await contains("button", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
-
     await click("button", { text: "Log note" });
     await contains(".o-mail-Composer");
     assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
-
     await click("button", { text: "Log note" });
     await contains(".o-mail-Composer", { count: 0 });
-
     await click("button", { text: "Send message" });
     await contains(".o-mail-Composer");
-
     await click("button", { text: "Send message" });
     await contains(".o-mail-Composer", { count: 0 });
 });
@@ -422,7 +410,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -447,7 +435,7 @@ QUnit.test("should not display subject when subject is the same as the thread na
         subject: "Salutations, voyageur",
     });
     const { openView } = await start();
-    openView({
+    await openView({
         res_id: partnerId,
         res_model: "res.partner",
         views: [[false, "form"]],
@@ -476,19 +464,19 @@ QUnit.test("scroll position is kept when navigating from one record to another",
             }))
     );
     const { openFormView } = await start();
-    openFormView("res.partner", partnerId_1);
+    await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
-    openFormView("res.partner", partnerId_2);
+    await openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
     const scrollValue2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
     await scroll(".o-mail-Chatter", scrollValue2);
-    openFormView("res.partner", partnerId_1);
+    await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Chatter", { scroll: scrollValue1 });
-    openFormView("res.partner", partnerId_2);
+    await openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Chatter", { scroll: scrollValue2 });
 });
@@ -506,7 +494,7 @@ QUnit.test("basic chatter rendering", async () => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -530,7 +518,7 @@ QUnit.test("basic chatter rendering without activities", async () => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -539,7 +527,6 @@ QUnit.test("basic chatter rendering without activities", async () => {
     await contains(".o-mail-Chatter-topbar");
     await contains("button[aria-label='Attach files']");
     await contains("button", { count: 0, text: "Activities" });
-
     await contains(".o-mail-Followers");
     await contains(".o-mail-Thread");
 });
@@ -561,7 +548,7 @@ QUnit.test(
                 </form>`,
         };
         const { openView } = await start({ serverData: { views } });
-        openView({
+        await openView({
             res_model: "res.partner",
             res_id: partnerId,
             views: [[false, "form"]],
@@ -584,7 +571,7 @@ QUnit.test(
             subject: "Another Subject",
         });
         const { openFormView } = await start();
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await contains(".o-mail-Message", { text: "Subject: Another Subjectnot empty" });
     }
 );
@@ -601,7 +588,7 @@ QUnit.test(
             subject: "Custom Default Subject",
         });
         const { openFormView } = await start();
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await contains(".o-mail-Message", { text: "not empty" });
         await contains(".o-mail-Message", {
             count: 0,
@@ -622,7 +609,7 @@ QUnit.test(
             subject: "Salutations, voyageur",
         });
         const { openFormView } = await start();
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await contains(".o-mail-Message", { text: "not empty" });
         await contains(".o-mail-Message", {
             count: 0,
@@ -648,7 +635,7 @@ QUnit.test("basic chatter rendering without followers", async () => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -678,7 +665,7 @@ QUnit.test("basic chatter rendering without messages", async () => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    openView({
+    await openView({
         res_model: "res.partner",
         res_id: partnerId,
         views: [[false, "form"]],
@@ -714,7 +701,7 @@ QUnit.test("chatter updating", async () => {
             </form>`,
     };
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.partner", partnerId_1, {
+    await openFormView("res.partner", partnerId_1, {
         props: { resIds: [partnerId_1, partnerId_2] },
     });
     await click(".o_pager_next");
@@ -734,7 +721,7 @@ QUnit.test("post message on draft record", async () => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    openView({
+    await openView({
         res_model: "res.partner",
         views: [[false, "form"]],
     });
@@ -796,7 +783,7 @@ QUnit.test("upload attachment on draft record", async () => {
             </form>`,
     };
     const { openView } = await start({ serverData: { views } });
-    openView({
+    await openView({
         res_model: "res.partner",
         views: [[false, "form"]],
     });

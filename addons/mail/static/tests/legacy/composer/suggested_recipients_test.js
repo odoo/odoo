@@ -39,7 +39,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async (
         partner_ids: [partnerId],
     });
     const { openFormView } = await start();
-    openFormView("res.fake", fakeId);
+    await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient", { count: 2 });
     await contains("button", { count: 0, text: "Show more" });
@@ -58,7 +58,7 @@ QUnit.test(
             partner_ids: [partnerId],
         });
         const { env, openFormView } = await start();
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         const def = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action) {
@@ -105,7 +105,7 @@ QUnit.test(
             partner_ids: [partnerId],
         });
         const { env, openFormView } = await start();
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         const def = makeDeferred();
         patchWithCleanup(env.services.action, {
             doAction(action) {
@@ -145,7 +145,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
         partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
     });
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.fake", fakeId);
+    await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains("button", { text: "Show more" });
 });
@@ -164,7 +164,7 @@ QUnit.test(
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
         const { openFormView } = await start({ serverData: { views } });
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
         await contains(".o-mail-SuggestedRecipient", { count: 4 });
@@ -185,7 +185,7 @@ QUnit.test(
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
         const { openFormView } = await start({ serverData: { views } });
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
         await contains("button", { text: "Show less" });
@@ -206,7 +206,7 @@ QUnit.test(
             partner_ids: [partnerId_1, partnerId_2, partnerId_3, partnerId_4],
         });
         const { openFormView } = await start({ serverData: { views } });
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click("button", { text: "Show more" });
         await click("button", { text: "Show less" });
@@ -228,7 +228,7 @@ QUnit.test(
             partner_ids: [partnerId],
         });
         const { openFormView } = await start({ serverData: { views } });
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
         assert.ok(
@@ -249,7 +249,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async () => {
     });
     const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.fake", fakeId);
+    await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await contains(
         `.o-mail-SuggestedRecipient[data-partner-id="${partnerId}"][title="Add as recipient and follower (reason: Email partner)"]`
@@ -273,7 +273,7 @@ QUnit.test(
                 }
             },
         });
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await click("button", { text: "Log note" });
         await insertText(".o-mail-Composer-input", "Dummy Message");
         await click(".o-mail-Composer-send:enabled");
@@ -291,7 +291,7 @@ QUnit.test("suggested recipients should be added as follower when posting a mess
     const { openFormView } = await start({
         serverData: { views },
     });
-    openFormView("res.fake", fakeId);
+    await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
@@ -324,7 +324,7 @@ QUnit.test(
                 }
             },
         });
-        openFormView("res.fake", fakeId);
+        await openFormView("res.fake", fakeId);
         await click("button", { text: "Send message" });
         await click(".o-mail-SuggestedRecipient input");
         await click(".o-mail-SuggestedRecipient input");

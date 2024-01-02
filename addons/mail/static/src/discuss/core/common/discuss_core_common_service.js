@@ -42,10 +42,7 @@ export class DiscussCoreCommon {
                 thread.delete();
             });
             this.busService.subscribe("discuss.channel/delete", (payload) => {
-                const thread = this.store.Thread.insert({
-                    id: payload.id,
-                    model: "discuss.channel",
-                });
+                const thread = this.store.Thread.insert({ channelId: payload.id });
                 const filteredStarredMessages = [];
                 let starredCounter = 0;
                 for (const msg of this.store.discuss.starred.messages) {
@@ -92,7 +89,7 @@ export class DiscussCoreCommon {
                 message.originThread.transientMessages.push(message);
             });
             this.busService.subscribe("discuss.channel/unpin", (payload) => {
-                const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
+                const thread = this.store.Thread.get({ channelId: payload.id });
                 if (thread) {
                     thread.is_pinned = false;
                     this.notificationService.add(
@@ -106,8 +103,8 @@ export class DiscussCoreCommon {
                 this.store.ChannelMember.insert({
                     id,
                     fetched_message_id: { id: last_message_id },
-                    persona: { type: "partner", id: partner_id },
-                    thread: { id: channel_id, model: "discuss.channel" },
+                    persona: { partnerId: partner_id },
+                    thread: { channelId: channel_id },
                 });
             });
             this.busService.subscribe("discuss.channel.member/seen", (payload) => {
@@ -115,8 +112,8 @@ export class DiscussCoreCommon {
                 const member = this.store.ChannelMember.insert({
                     id,
                     seen_message_id: { id: last_message_id },
-                    persona: { type: partner_id ? "partner" : "guest", id: partner_id ?? guest_id },
-                    thread: { id: channel_id, model: "discuss.channel" },
+                    persona: { partnerId: partner_id || undefined, guestId: guest_id || undefined },
+                    thread: { channelId: channel_id },
                 });
                 if (member?.persona.eq(this.store.self)) {
                     this.threadService.updateSeen(member.thread, last_message_id);
@@ -140,7 +137,6 @@ export class DiscussCoreCommon {
     createChannelThread(serverData) {
         const thread = this.store.Thread.insert({
             ...serverData,
-            model: "discuss.channel",
             type: serverData.channel_type,
             isAdmin:
                 serverData.channel_type !== "group" &&
@@ -181,15 +177,10 @@ export class DiscussCoreCommon {
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
         const { id: channelId, message: messageData } = payload;
-        const channel = await this.store.Thread.getOrFetch({
-            model: "discuss.channel",
-            id: channelId,
-        });
+        const channel = await this.store.Thread.getOrFetch({ channelId });
         if (!channel) {
             return;
         }
-        this.store.Message.get(messageData.temporary_id)?.delete();
-        messageData.temporary_id = null;
         const message = this.store.Message.insert(messageData, { html: true });
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
@@ -223,7 +214,7 @@ export class DiscussCoreCommon {
         if (
             !channel.correspondent?.eq(this.store.odoobot) &&
             channel.channel_type !== "channel" &&
-            this.store.self.type === "partner"
+            this.store.self.partnerId
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
@@ -233,7 +224,7 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            this.store.self.type === "partner" &&
+            this.store.self.partnerId &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
             this.threadService.markAsRead(channel);

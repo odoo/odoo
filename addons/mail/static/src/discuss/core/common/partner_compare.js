@@ -5,7 +5,8 @@ import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 partnerCompareRegistry.add(
     "discuss.recent-chats",
     (p1, p2, { env, context }) => {
-        const recentChatPartnerIds = context.recentChatPartnerIds || env.services["mail.persona"].getRecentChatPartnerIds();
+        const recentChatPartnerIds =
+            context.recentChatPartnerIds || env.services["mail.persona"].getRecentChatPartnerIds();
         const recentChatIndex_p1 = recentChatPartnerIds.findIndex(
             (partnerId) => partnerId === p1.id
         );
@@ -28,7 +29,7 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "discuss.members",
     (p1, p2, { thread }) => {
-        if (thread?.model === "discuss.channel") {
+        if (thread?.channelId) {
             const isMember1 = thread.channelMembers.some((member) => p1.eq(member.persona));
             const isMember2 = thread.channelMembers.some((member) => p2.eq(member.persona));
             if (isMember1 && !isMember2) {

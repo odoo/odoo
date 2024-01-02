@@ -47,14 +47,12 @@ export class SuggestionService {
      */
     async fetchPartners(term, thread) {
         const kwargs = { search: term };
-        if (thread?.model === "discuss.channel") {
+        if (thread?.channelId) {
             kwargs.channel_id = thread.id;
         }
         const suggestedPartners = await this.orm.silent.call(
             "res.partner",
-            thread?.model === "discuss.channel"
-                ? "get_mention_suggestions_from_channel"
-                : "get_mention_suggestions",
+            thread?.channelId ? "get_mention_suggestions_from_channel" : "get_mention_suggestions",
             [],
             kwargs
         );
@@ -153,10 +151,10 @@ export class SuggestionService {
             // mentioned partner.
             partners = thread.channelMembers
                 .map((member) => member.persona)
-                .filter((persona) => persona.type === "partner");
+                .filter((persona) => persona.partnerId);
         } else {
             partners = Object.values(this.store.Persona.records).filter(
-                (persona) => persona.type === "partner"
+                (persona) => persona.partnerId
             );
         }
         const mainSuggestionList = [];

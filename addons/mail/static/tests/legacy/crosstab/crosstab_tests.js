@@ -19,8 +19,8 @@ QUnit.test("Messages are received cross-tab", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello World!", { target: tab1.target });
     await click("button:enabled", { target: tab1.target, text: "Send" });
     await contains(".o-mail-Message-content", { target: tab1.target, text: "Hello World!" });
@@ -40,9 +40,10 @@ QUnit.test("Delete starred message updates counter", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     await contains("button", { target: tab2.target, text: "Starred1" });
+    await contains(".o-mail-Message", { target: tab2.target });
 
     rpc("/mail/message/update_content", {
         message_id: messageId,
@@ -60,8 +61,8 @@ QUnit.test("Thread rename", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     await insertText(".o-mail-Discuss-threadName:enabled", "Sales", {
         replace: true,
         target: tab1.target,
@@ -79,8 +80,8 @@ QUnit.test("Thread description update", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     await insertText(".o-mail-Discuss-threadDescription", "The very best channel", {
         replace: true,
         target: tab1.target,
@@ -136,8 +137,8 @@ QUnit.test("Adding attachments", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
@@ -166,8 +167,8 @@ QUnit.test("Remove attachment from message", async () => {
     });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
-    tab1.openDiscuss(channelId);
-    tab2.openDiscuss(channelId);
+    await tab1.openDiscuss(channelId);
+    await tab2.openDiscuss(channelId);
     await contains(".o-mail-AttachmentCard", { target: tab1.target, text: "test.txt" });
 
     await click(".o-mail-AttachmentCard-unlink", { target: tab2.target });
@@ -191,7 +192,7 @@ QUnit.test("Message delete notification", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click("[title='Expand']");
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });

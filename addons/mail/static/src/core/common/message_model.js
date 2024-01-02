@@ -13,7 +13,7 @@ import { url } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 export class Message extends Record {
-    static id = "id";
+    static id = [["id!"], ["temporary_id!"]];
     /** @type {Object.<number, import("models").Message>} */
     static records = {};
     /** @returns {import("models").Message} */
@@ -128,7 +128,7 @@ export class Message extends Record {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.originThread?.model === "discuss.channel";
+        return this.isSelfMentioned && this.originThread?.channelId;
     }
 
     get isSelfAuthored() {
@@ -144,8 +144,7 @@ export class Message extends Record {
 
     get isNeedaction() {
         return (
-            this._store.self.type === "partner" &&
-            this.needaction_partner_ids.includes(this._store.self.id)
+            this._store.self.partnerId && this.needaction_partner_ids.includes(this._store.self.id)
         );
     }
 
@@ -154,16 +153,11 @@ export class Message extends Record {
     }
 
     get isHistory() {
-        return (
-            this._store.self.type === "partner" &&
-            this.history_partner_ids.includes(this._store.self.id)
-        );
+        return this._store.self.partnerId && this.history_partner_ids.includes(this._store.self.id);
     }
 
     get isNotification() {
-        return (
-            this.message_type === "notification" && this.originThread?.model === "discuss.channel"
-        );
+        return this.message_type === "notification" && this.originThread?.channelId;
     }
 
     get isSubjectSimilarToOriginThreadName() {

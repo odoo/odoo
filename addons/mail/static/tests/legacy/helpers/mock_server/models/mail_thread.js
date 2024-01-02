@@ -301,10 +301,9 @@ patch(MockServer.prototype, {
                     "mail.record/insert",
                     {
                         Thread: {
-                            id: channel.id,
+                            channelId: channel.id,
                             is_pinned: true,
                             last_interest_dt: now,
-                            model: "discuss.channel",
                         },
                     },
                 ]);

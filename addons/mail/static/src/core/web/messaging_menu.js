@@ -62,7 +62,7 @@ export class MessagingMenu extends Component {
         if (thread.needactionMessages.length > 0) {
             this.threadService.markAllMessagesAsRead(thread);
         }
-        if (thread.model === "discuss.channel") {
+        if (thread.channelId) {
             this.threadService.markAsRead(thread);
         }
     }

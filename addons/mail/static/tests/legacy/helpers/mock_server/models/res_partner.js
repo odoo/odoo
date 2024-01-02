@@ -86,7 +86,7 @@ patch(MockServer.prototype, {
         const remainingLimit = limit - mainMatchingPartners.length;
         if (mainMatchingPartners.length < limit) {
             const partners = this.getRecords("res.partner", [
-                ["id", "not in", mainMatchingPartners.map((partner) => partner.id)],
+                ["id", "not in", mainMatchingPartners.map((partner) => partner.partnerId)],
             ]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
@@ -144,7 +144,7 @@ patch(MockServer.prototype, {
             ].map((partnerFormat) => {
                 const [member] = this.getRecords("discuss.channel.member", [
                     ["channel_id", "=", channel_id],
-                    ["partner_id", "=", partnerFormat.id],
+                    ["partner_id", "=", partnerFormat.partnerId],
                 ]);
                 partnerFormat["channelMembers"] = [
                     [
@@ -170,7 +170,7 @@ patch(MockServer.prototype, {
         const remainingLimit = limit - mainMatchingPartners.length;
         if (mainMatchingPartners.length < limit) {
             const partners = this.getRecords("res.partner", [
-                ["id", "not in", mainMatchingPartners.map((partner) => partner.id)],
+                ["id", "not in", mainMatchingPartners.map((partner) => partner.partnerId)],
             ]);
             extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
@@ -267,11 +267,10 @@ patch(MockServer.prototype, {
                     {
                         active: partner.active,
                         email: partner.email,
-                        id: partner.id,
+                        partnerId: partner.id,
                         im_status: partner.im_status,
                         is_company: partner.is_company,
                         name: partner.name,
-                        type: "partner",
                         userId: mainUser ? mainUser.id : false,
                         isInternalUser: mainUser ? !mainUser.share : false,
                         write_date: partner.write_date,

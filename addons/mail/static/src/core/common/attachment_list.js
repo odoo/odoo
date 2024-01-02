@@ -11,13 +11,13 @@ import { url } from "@web/core/utils/urls";
 /**
  * @typedef {Object} Props
  * @property {import("models").Attachment[]} attachments
- * @property {function} unlinkAttachment
+ * @property {function} [onAttachmentUnlinked]
  * @property {number} imagesHeight
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+    static props = ["attachments", "onAttachmentUnlinked?", "imagesHeight", "messageSearch?"];
     static template = "mail.AttachmentList";
 
     setup() {
@@ -46,7 +46,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     getImageUrl(attachment) {
-        if (attachment.uploading && attachment.tmpUrl) {
+        if (attachment.uploadId && attachment.tmpUrl) {
             return attachment.tmpUrl;
         }
         return url(attachment.urlRoute, {
@@ -60,7 +60,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     canDownload(attachment) {
-        return !attachment.uploading && !this.env.inComposer;
+        return !attachment.uploadId && !this.env.inComposer;
     }
 
     /**
@@ -76,12 +76,11 @@ export class AttachmentList extends Component {
         downloadLink.click();
     }
 
-    /**
-     * @param {import("models").Attachment} attachment
-     */
+    /** @param {import("models").Attachment} attachment */
     onClickUnlink(attachment) {
         if (this.env.inComposer) {
-            return this.props.unlinkAttachment(attachment);
+            attachment.unlink();
+            return;
         }
         this.dialog.add(ConfirmationDialog, {
             body: _t('Do you really want to delete "%s"?', attachment.filename),
@@ -90,11 +89,10 @@ export class AttachmentList extends Component {
         });
     }
 
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    onConfirmUnlink(attachment) {
-        this.props.unlinkAttachment(attachment);
+    /** @param {import("models").Attachment} attachment */
+    async onConfirmUnlink(attachment) {
+        await attachment.unlink();
+        this.props.onAttachmentUnlinked?.();
     }
 
     onImageLoaded() {
