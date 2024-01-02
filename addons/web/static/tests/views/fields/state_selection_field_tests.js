@@ -598,4 +598,58 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps([]);
         }
     );
+
+    QUnit.test(
+        "StateSelectionField - hotkey handling when there are more than 3 options available",
+        async function (assert) {
+            serverData.models.partner.fields.selection.selection.push(
+                ["martin", "Martin"],
+                ["martine", "Martine"]
+            );
+            serverData.models.partner.records[0].selection = null;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="selection" widget="state_selection" options="{'autosave': False}"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 1,
+            });
+
+            await click(target, ".o_field_widget.o_field_state_selection .o_status");
+            assert.containsN(
+                target,
+                ".dropdown-menu .dropdown-item",
+                4,
+                "Four choices are displayed"
+            );
+            triggerHotkey("control+k");
+
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_command#o_command_2").textContent,
+                "Set kanban state as DoneALT + G",
+                "hotkey and command are present"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_command#o_command_4").textContent,
+                "Set kanban state as Martine",
+                "no hotkey is present, but the command exists"
+            );
+
+            await click(target.querySelector(".o_command#o_command_2"));
+            assert.hasClass(
+                target.querySelector(".o_status"),
+                "o_status_green",
+                "green color and Done state have been set"
+            );
+        }
+    );
 });
