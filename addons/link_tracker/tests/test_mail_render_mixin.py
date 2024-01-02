@@ -34,6 +34,7 @@ class TestMailRenderMixin(common.TransactionCase):
             """,
             '<a href="https://test_escaped.com" title="title" fake="fake"> test_escaped &lt; &gt; </a>',
             '<a href="https://url_with_params.com?a=b&c=d">label</a>',
+            '<a href="#"></a>',
         ]
 
         self.env["mail.render.mixin"]._shorten_links("".join(test_links), {})
@@ -53,6 +54,7 @@ class TestMailRenderMixin(common.TransactionCase):
                 ("url", "=", "https://url_with_params.com?a=b&c=d"),
                 ("label", "=", "label"),
             ],
+            [("url", "=", self.base_url + '#')],
         ]
         trackers_to_fail = [
             [("url", "=", "https://test_542152qsdqsd.com"), ("label", "ilike", "_")]
@@ -90,6 +92,7 @@ class TestMailRenderMixin(common.TransactionCase):
             'And a third: <a href="{base_url}">Here</a>\n'
             'And a forth: <a href="{base_url}">Here</a>\n'
             'And a fifth: <a href="{base_url}">Here too</a>\n'
+            'And a 6th: <a href="/web">Here</a><br>\n'
             'And a last, more complex: <a href="https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833">There!</a>'
             .format(base_url=self.base_url)
         )
@@ -99,6 +102,7 @@ class TestMailRenderMixin(common.TransactionCase):
             'And a third: <a href="{base_url}/r/([\\w]+)">Here</a>\n'
             'And a forth: <a href="{base_url}/r/([\\w]+)">Here</a>\n'
             'And a fifth: <a href="{base_url}/r/([\\w]+)">Here too</a>\n'
+            'And a 6th: <a href="{base_url}/r/([\\w]+)">Here</a><br>\n'
             'And a last, more complex: <a href="{base_url}/r/([\\w]+)">There!</a>'
             .format(base_url=self.base_url)
         )
