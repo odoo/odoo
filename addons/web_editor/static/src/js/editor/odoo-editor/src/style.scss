@@ -301,7 +301,9 @@
 
 @include media-breakpoint-down(md) {
     .oe-toolbar {
-        position: relative;
+        position: sticky;
+        z-index: 1;
+        top: 0;
         overflow-x: auto;
         visibility: visible;
         width: auto;
@@ -310,7 +312,7 @@
         border-radius: 0;
         background-color: white;
         box-shadow: none;
-        
+
         .btn {
             color: black;
             padding: 3px 4px !important;
