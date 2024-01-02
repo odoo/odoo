@@ -2443,6 +2443,7 @@ export class Order extends PosModel {
                     details[id] = {
                         amount: (details[id]?.amount || 0) + ldetails[id].amount,
                         base: (details[id]?.base || 0) + ldetails[id].base,
+                        name: (details[id]?.name || 0) + ldetails[id].name,
                     };
                 }
             }
