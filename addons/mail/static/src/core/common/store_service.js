@@ -216,6 +216,9 @@ export class Store extends BaseStore {
             const thread = this.Thread.records[id];
             if (thread.model === "discuss.channel") {
                 channelIds.push(id);
+                if (!thread.hasSelfAsMember) {
+                    this.env.services["bus_service"].addChannel(`discuss.channel_${thread.id}`);
+                }
             }
         }
         const channels = JSON.stringify(channelIds);

@@ -20,7 +20,7 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json")
     def discuss_channel_avatar_update(self, channel_id, data):
-        channel = request.env["discuss.channel"].browse(int(channel_id)).exists()
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel or not data:
             raise NotFound()
         channel.write({"image_128": data})
@@ -64,7 +64,10 @@ class ChannelController(http.Controller):
         """Mute notifications for the given number of minutes.
         :param minutes: (integer) number of minutes to mute notifications, -1 means mute until the user unmutes
         """
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise request.not_found()
+        member = channel._find_or_create_member_for_self()
         if not member:
             raise request.not_found()
         if minutes == -1:
@@ -83,7 +86,10 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/update_custom_notifications", methods=["POST"], type="json", auth="user")
     def discuss_channel_update_custom_notifications(self, channel_id, custom_notifications):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise request.not_found()
+        member = channel._find_or_create_member_for_self()
         if not member:
             raise request.not_found()
         member.custom_notifications = custom_notifications
@@ -105,7 +111,10 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/notify_typing", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_notify_typing(self, channel_id, is_typing):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            raise request.not_found()
+        member = channel._find_or_create_member_for_self()
         if not member:
             raise NotFound()
         member._notify_typing(is_typing)

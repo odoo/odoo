@@ -354,6 +354,7 @@ class Channel(models.Model):
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
         guests = self.env['mail.guest'].browse(guest_ids or []).exists()
         notifications = []
+        all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
             existing_members = self.env['discuss.channel.member'].search(expression.AND([
@@ -372,6 +373,7 @@ class Channel(models.Model):
                 'channel_id': channel.id,
             } for guest in guests - existing_members.guest_id]
             new_members = self.env['discuss.channel.member'].create(members_to_create)
+            all_new_members += new_members
             for member in new_members.filtered(lambda member: member.partner_id):
                 # notify invited members through the bus
                 user = member.partner_id.user_ids[0] if member.partner_id.user_ids else self.env['res.users']
@@ -428,6 +430,7 @@ class Channel(models.Model):
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
                     current_channel_member.sudo()._rtc_invite_members(member_ids=new_members.ids)
         self.env['bus.bus']._sendmany(notifications)
+        return all_new_members
 
     # ------------------------------------------------------------
     # RTC
@@ -708,6 +711,19 @@ class Channel(models.Model):
                 'see_all_pins': _('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+
+    def _find_or_create_member_for_self(self):
+        self.ensure_one()
+        domain = [("channel_id", "=", self.id), ("is_self", "=", True)]
+        member = self.env["discuss.channel.member"].search(domain)
+        if member:
+            return member
+        if not self.env.user._is_public():
+            return self.add_members(partner_ids=self.env.user.partner_id.ids)
+        guest = self.env["mail.guest"]._get_guest_from_context()
+        if guest:
+            return self.add_members(guest_ids=guest.ids)
+        return self.env["discuss.channel.member"]
 
     def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, post_joined_message=True):
         """

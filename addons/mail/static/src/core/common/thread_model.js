@@ -253,6 +253,8 @@ export class Thread extends Record {
     mute_until_dt;
     /** @type {Boolean} */
     isLocallyPinned = false;
+    /** @type {"not_fetched"|"pending"|"fetched"} */
+    fetchMembersState = "not_fetched";
 
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.type)) {

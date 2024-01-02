@@ -25,7 +25,7 @@ QUnit.test("notifications received from the channel", async () => {
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
     env.services["bus_service"].addChannel("lambda");
-    await waitForChannels(["lambda"]);
+    await waitUntilSubscribe("lambda");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "epsilon");
     await waitNotifications([env, "notifType", "beta"], [env, "notifType", "epsilon"]);
@@ -39,7 +39,7 @@ QUnit.test("notifications not received after stoping the service", async () => {
     firstTabEnv.services["bus_service"].start();
     secondTabEnv.services["bus_service"].start();
     firstTabEnv.services["bus_service"].addChannel("lambda");
-    await waitForChannels(["lambda"]);
+    await waitUntilSubscribe("lambda");
     // both tabs should receive the notification
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications(
@@ -76,7 +76,7 @@ QUnit.test("tabs share message from a channel", async () => {
     mainEnv.services["bus_service"].addChannel("lambda");
     const slaveEnv = await makeTestEnv();
     slaveEnv.services["bus_service"].addChannel("lambda");
-    await waitForChannels(["lambda"]);
+    await waitUntilSubscribe("lambda");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications([mainEnv, "notifType", "beta"], [slaveEnv, "notifType", "beta"]);
 });
@@ -97,7 +97,7 @@ QUnit.test("second tab still receives notifications after main pagehide", async 
     });
     const secondEnv = await makeTestEnv({ activateMockServer: true });
     secondEnv.services["bus_service"].addChannel("lambda");
-    await waitForChannels(["lambda"]);
+    await waitUntilSubscribe("lambda");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications([mainEnv, "notifType", "beta"], [secondEnv, "notifType", "beta"]);
     // simulate unloading main
@@ -117,7 +117,7 @@ QUnit.test("two tabs adding a different channel", async () => {
     const secondTabEnv = await makeTestEnv({ activateMockServer: true });
     firstTabEnv.services["bus_service"].addChannel("alpha");
     secondTabEnv.services["bus_service"].addChannel("beta");
-    await waitForChannels(["alpha", "beta"]);
+    await waitUntilSubscribe("alpha", "beta");
     pyEnv["bus.bus"]._sendmany([
         ["alpha", "notifType", "alpha"],
         ["beta", "notifType", "beta"],
@@ -138,8 +138,8 @@ QUnit.test("channel management from multiple tabs", async (assert) => {
             super._sendToServer(...arguments);
         },
     });
-    const firstTabEnv = await makeTestEnv();
-    const secTabEnv = await makeTestEnv();
+    const firstTabEnv = await makeTestEnv({ activateMockServer: true });
+    const secTabEnv = await makeTestEnv({ activateMockServer: true });
     firstTabEnv.services["bus_service"].addChannel("channel1");
     await waitForChannels(["channel1"]);
     // this should not trigger a subscription since the channel1 was
@@ -154,7 +154,7 @@ QUnit.test("channel management from multiple tabs", async (assert) => {
     // this should trigger a subscription since the channel2 was not
     // known.
     secTabEnv.services["bus_service"].addChannel("channel2");
-    await waitForChannels(["channel2"]);
+    await waitUntilSubscribe("channel2");
     assert.verifySteps(["subscribe - [channel1]", "subscribe - [channel1,channel2]"]);
 });
 
@@ -188,7 +188,7 @@ QUnit.test("Last notification id is passed to the worker on service start", asyn
     const env1 = await makeTestEnv();
     env1.services["bus_service"].start();
     env1.services["bus_service"].addChannel("lambda");
-    await waitForChannels(["lambda"]);
+    await waitUntilSubscribe("lambda");
     await updateLastNotificationDeferred;
     // First bus service has never received notifications thus the
     // default is 0.
