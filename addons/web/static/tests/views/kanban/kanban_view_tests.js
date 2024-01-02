@@ -9442,6 +9442,57 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("filter on progressbar in new groups", async (assert) => {
+        serverData.views = {
+            "partner,some_view_ref,form": `<form><field name="foo"/></form>`,
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+
+        await createColumn(target);
+        await editColumnName(target, "new column 1");
+        await validateColumn(target);
+        await editColumnName(target, "new column 2");
+        await validateColumn(target);
+        assert.containsN(target, ".o_kanban_group", 4);
+        assert.containsNone(target.querySelectorAll(".o_kanban_group")[2], ".o_kanban_record");
+        assert.containsNone(target.querySelectorAll(".o_kanban_group")[3], ".o_kanban_record");
+
+        await quickCreateRecord(target, 2);
+        await editInput(target, ".o_field_widget[name=foo] input", "new record 1");
+        await validateRecord(target);
+        await quickCreateRecord(target, 3);
+        await editInput(target, ".o_field_widget[name=foo] input", "new record 2");
+        await validateRecord(target);
+        assert.containsOnce(target.querySelectorAll(".o_kanban_group")[2], ".o_kanban_record");
+        assert.containsOnce(target.querySelectorAll(".o_kanban_group")[3], ".o_kanban_record");
+
+        assert.containsNone(target, ".o_kanban_group_show_200");
+
+        await click(
+            target.querySelectorAll(".o_kanban_group")[2],
+            ".o_column_progress .progress-bar"
+        );
+        assert.containsOnce(target, ".o_kanban_group_show_200");
+        assert.hasClass(target.querySelectorAll(".o_kanban_group")[2], "o_kanban_group_show_200");
+    });
+
     QUnit.test('column progressbars: "false" bar is clickable', async (assert) => {
         serverData.models.partner.records.push({
             id: 5,
@@ -11153,8 +11204,7 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                `<kanban>
+            arch: `<kanban>
                     <templates>
                         <t t-name="kanban-menu">
                             <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
@@ -14380,13 +14430,14 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("can quick create a column when pressing enter when input is focused", async (assert) => {
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                `<kanban>
+    QUnit.test(
+        "can quick create a column when pressing enter when input is focused",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
                     <field name="product_id"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -14394,23 +14445,24 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            groupBy: ["product_id"],
-        });
+                groupBy: ["product_id"],
+            });
 
-        assert.containsN(target, ".o_kanban_group", 2);
+            assert.containsN(target, ".o_kanban_group", 2);
 
-        await createColumn(target);
-        
-        // We don't use the editInput helper as it would trigger a change event automatically.
-        // We need to wait for the enter key to trigger the event.
-        const input = target.querySelector(".o_column_quick_create input");
-        input.value = "New Column";
-        await triggerEvent(input, null, "input");
+            await createColumn(target);
 
-        await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
-            key: "Enter",
-        });
+            // We don't use the editInput helper as it would trigger a change event automatically.
+            // We need to wait for the enter key to trigger the event.
+            const input = target.querySelector(".o_column_quick_create input");
+            input.value = "New Column";
+            await triggerEvent(input, null, "input");
 
-        assert.containsN(target, ".o_kanban_group", 3);
-    });
+            await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
+                key: "Enter",
+            });
+
+            assert.containsN(target, ".o_kanban_group", 3);
+        }
+    );
 });
