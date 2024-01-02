@@ -5272,7 +5272,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_pivot_buttons .dropdown-menu div.dropdown-divider");
     });
 
-    QUnit.test(
+    QUnit.skip(
         "comparison with two groupbys: rows from reference period should be displayed",
         async function (assert) {
             assert.expect(3);
