@@ -95,6 +95,17 @@ msgid "%(name)s: %(message)s)"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
+msgid ""
+"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
+"someone, and grab their attention.%(new_line)sType "
+"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
+"%(bold_start)s/command%(bold_end)s to execute a command."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 #, python-format
@@ -319,17 +330,6 @@ msgstr ""
 msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid ""
-"<br><br>\n"
-"            Type <b>@username</b> to mention someone, and grab their attention.<br>\n"
-"            Type <b>#channel</b> to mention a channel.<br>\n"
-"            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 
 #. module: mail
@@ -1082,13 +1082,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #, python-format
 msgid "And 1 other member."
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid "Anonymous"
 msgstr ""
 
 #. module: mail
@@ -9968,6 +9961,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
+msgid "You are alone in a private conversation."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
 msgid "You are alone in this channel."
 msgstr ""
 
@@ -9975,14 +9975,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
-msgid "You are in a private conversation with <b>@%s</b>."
+msgid "You are in a private conversation with %(member_names)s."
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
-msgid "You are in channel <b>#%s</b>."
+msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr ""
 
 #. module: mail
