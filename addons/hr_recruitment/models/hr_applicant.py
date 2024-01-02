@@ -1,15 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
+import re
+
 from markupsafe import Markup
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools.translate import _
-
-from dateutil.relativedelta import relativedelta
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -455,10 +455,21 @@ class Applicant(models.Model):
 
         nocontent_body = Markup("""
 <p class="o_view_nocontent_smiling_face">%(help_title)s</p>
-<p>%(para_1)s<br/>%(para_2)s</p>""") % {
+<p class="mb-0">%(para_1)s<br/>%(para_2)s</p>""") % {
             'help_title': _("No application found. Let's create one !"),
             'para_1': _('People can also apply by email to save time.'),
             'para_2': _("You can search into attachment's content, like resumes, with the searchbar."),
+        }
+
+        if hr_job:
+            pattern = r'(.*)<a>(.*?)<\/a>(.*)'
+            match = re.fullmatch(pattern, _('Have you tried to <a>add skills to your job position</a> and search into the Reserve ?'))
+            nocontent_body += Markup("""
+<p>%(para_1)s<a href="%(link)s">%(para_2)s</a>%(para_3)s</p>""") % {
+            'para_1': match[1],
+            'para_2': match[2],
+            'para_3': match[3],
+            'link': f'/odoo/recruitement/{hr_job.id}',
         }
 
         if hr_job.alias_email:
@@ -563,7 +574,10 @@ class Applicant(models.Model):
         applicant = self[0]
         # When applcant is unarchived, they are put back to the default stage automatically. In this case,
         # don't post automated message related to the stage change.
-        if 'stage_id' in changes and applicant.exists() and applicant.stage_id.template_id and not applicant._context.get('just_unarchived'):
+        if 'stage_id' in changes and applicant.exists()\
+            and applicant.stage_id.template_id\
+            and not applicant._context.get('just_moved')\
+            and not applicant._context.get('just_unarchived'):
             res['stage_id'] = (applicant.stage_id.template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
