@@ -62,7 +62,7 @@
                         </ul>
                     </section>
                 </div>
-                <div class="o_kanban_renderer o_renderer d-flex o_kanban_ungrouped align-content-start flex-wrap justify-content-start" style="width:1050px;height:500px;overflow-y:scroll;">
+                <div class="o_kanban_renderer o_renderer d-flex o_kanban_ungrouped align-content-start flex-wrap justify-content-start" style="max-width:1050px;max-height:500px;overflow-y:scroll;">
                 <t t-foreach="this.state.displayedEmployees" t-as="employee" t-key="employee.id">
                 <div t-on-click="() => this.props.onSelectEmployee(employee.id)" role="article" class="o_kanban_record d-flex oe_kanban_global_click flex-md-shrink-1 flex-shrink-0">
                     <div class="oe_kanban_global_click">
