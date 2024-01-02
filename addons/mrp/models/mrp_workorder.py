@@ -261,12 +261,15 @@ class MrpWorkorder(models.Model):
             workorder.date_planned_finished = workorder.leave_id.date_to
 
     def _set_dates_planned(self):
-        if not self[0].date_planned_start or not self[0].date_planned_finished:
+        if not self[0].date_planned_start:
             if not self.leave_id:
                 return
             raise UserError(_("It is not possible to unplan one single Work Order. "
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
         date_from = self[0].date_planned_start
+        for wo in self:
+            if not wo.date_planned_finished:
+                wo.date_planned_finished = wo._calculate_date_planned_finished()
         date_to = self[0].date_planned_finished
         to_write = self.env['mrp.workorder']
         for wo in self.sudo():
@@ -434,6 +437,10 @@ class MrpWorkorder(models.Model):
     def _onchange_date_planned_finished(self):
         if self.date_planned_start and self.date_planned_finished and self.workcenter_id:
             self.duration_expected = self._calculate_duration_expected()
+
+        if not self.date_planned_finished and self.date_planned_start:
+            raise UserError(_("It is not possible to unplan one single Work Order. "
+                              "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
 
     def _calculate_duration_expected(self, date_planned_start=False, date_planned_finished=False):
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
