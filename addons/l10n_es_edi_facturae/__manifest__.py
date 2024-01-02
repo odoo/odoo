@@ -18,6 +18,7 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     'data': [
         'data/uom.uom.csv',
         'data/facturae_templates.xml',
+        'data/l10n_es_edi_facturae.ac_role_type.csv',
         'data/signature_templates.xml',
 
         'security/ir.model.access.csv',
@@ -25,6 +26,7 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
 
         'views/l10n_es_edi_facturae_views.xml',
         'views/res_company_views.xml',
+        'views/res_partner_views.xml',
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
         'views/account_menuitem.xml',
