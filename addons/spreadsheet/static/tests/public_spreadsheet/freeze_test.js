@@ -104,6 +104,6 @@ QUnit.module("freezing spreadsheet", {}, function () {
         const data = await freezeOdooData(model);
         assert.strictEqual(data.globalFilters.length, 1);
         assert.strictEqual(data.globalFilters[0].label, "This Year");
-        assert.strictEqual(data.globalFilters[0].value, "2023");
+        assert.strictEqual(data.globalFilters[0].value, new Date().getFullYear().toString());
     });
 });
