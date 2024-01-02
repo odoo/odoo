@@ -884,7 +884,12 @@ class Module(models.Model):
     def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
             enable_counters = kwargs.get('enable_counters', False)
-            domain = [('parent_id', '=', False), ('child_ids.module_ids', '!=', False)]
+            domain = [
+                ('parent_id', '=', False),
+                '|',
+                ('module_ids.application', '!=', False),
+                ('child_ids.module_ids', '!=', False),
+            ]
 
             excluded_xmlids = [
                 'base.module_category_website_theme',
