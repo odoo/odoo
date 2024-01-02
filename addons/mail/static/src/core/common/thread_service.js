@@ -87,11 +87,13 @@ export class ThreadService {
             channelMembers = results["channelMembers"][0][1];
         }
         thread.memberCount = results["memberCount"];
-        for (const channelMember of channelMembers) {
-            if (channelMember.persona || channelMember.partner) {
-                thread.channelMembers.add({ ...channelMember, thread });
+        Record.MAKE_UPDATE(() => {
+            for (const channelMember of channelMembers) {
+                if (channelMember.persona || channelMember.partner) {
+                    thread.channelMembers.add({ ...channelMember, thread });
+                }
             }
-        }
+        });
     }
 
     /**
