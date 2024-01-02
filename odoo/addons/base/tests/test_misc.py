@@ -6,7 +6,16 @@ from dateutil.relativedelta import relativedelta
 import os.path
 import pytz
 
-from odoo.tools import config, misc, date_utils, file_open, file_path, merge_sequences, remove_accents
+from odoo.tools import (
+    config,
+    date_utils,
+    file_open,
+    file_path,
+    merge_sequences,
+    misc,
+    remove_accents,
+    validate_url,
+)
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -484,3 +493,27 @@ class TestDictTools(BaseCase):
             d.update({'baz': 'xyz'})
         with self.assertRaises(TypeError):
             dict.update(d, {'baz': 'xyz'})
+
+
+class TestUrlValidate(BaseCase):
+    def test_url_validate(self):
+        for case, truth in [
+            # full URLs should be preserved
+            ('http://example.com', 'http://example.com'),
+            ('http://example.com/index.html', 'http://example.com/index.html'),
+            ('http://example.com?debug=1', 'http://example.com?debug=1'),
+            ('http://example.com#h3', 'http://example.com#h3'),
+
+            # URLs with a domain should get a http scheme
+            ('example.com', 'http://example.com'),
+            ('example.com/index.html', 'http://example.com/index.html'),
+            ('example.com?debug=1', 'http://example.com?debug=1'),
+            ('example.com#h3', 'http://example.com#h3'),
+        ]:
+            with self.subTest(case=case):
+                self.assertEqual(validate_url(case), truth)
+
+        # broken cases, do we really want that?
+        self.assertEqual(validate_url('/index.html'), 'http:///index.html')
+        self.assertEqual(validate_url('?debug=1'), 'http://?debug=1')
+        self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')
