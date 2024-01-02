@@ -629,7 +629,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
 
         // Add Action related options
         const formKey = this.activeForm.website_form_key;
-        const formInfo = FormEditorRegistry.get(formKey);
+        const formInfo = FormEditorRegistry.get(formKey, null);
         if (!formInfo || !formInfo.fields) {
             return;
         }
