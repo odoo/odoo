@@ -71,9 +71,17 @@
             </div>
         </xpath>
 
-        <xpath expr="//div[hasclass('pos-receipt-taxes')]/span[text()='Total']" position="replace">
-            <span t-if="props.data.is_gcc_country" t-translation="off">Total Taxes / إجمالي الضرائب</span>
-            <span t-else="">Total</span>
+        <xpath expr="//div[hasclass('pos-receipt-taxes')]/span[text()='Total']" position="after">
+            <t t-if="props.data.is_gcc_country">
+                <span/>
+                <span t-translation="off">النسبة</span>
+                <span t-translation="off">مبلغ الضريبة</span>
+                <span t-translation="off">قبل الضريبة</span>
+                <span t-translation="off">الإجمالي</span>
+            </t>
+        </xpath>
+        <xpath expr="//Orderline">
+            <div t-if="props.data.is_gcc_country" style="display: inline-flex;" t-translation="off">Taxes / الضرائب</div>:<span t-esc="line.tax " style="margin-left: 5px"/>
         </xpath>
     </t>
 </templates>
