@@ -201,7 +201,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     _disablePayButtonNoPickupPoint : function (ev){
         const selectedCarrierEl = ev.currentTarget.closest('.o_delivery_carrier_select');
         const address = selectedCarrierEl.querySelector('.o_order_location_address').innerText
-        const isPickUp = selectedCarrierEl.lastChild.previousSibling.children;
+        const isPickUp = selectedCarrierEl.querySelector('.o_order_location').parentNode.parentNode.children;
 
         document.querySelectorAll('.error_no_pick_up_point').forEach(el => el.remove());
 
