@@ -60,3 +60,26 @@ class PurchaseTestTaxTotals(TestTaxTotals):
         })
         tax_purchase.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_purchase.is_used)
+
+    def test_archived_tax_totals(self):
+        tax_10 = self.env['account.tax'].create({
+            'name': "tax_10",
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'tax_group_id': self.tax_group1.id,
+        })
+
+        po = self._create_document_for_tax_totals_test([
+            (100.0, tax_10),
+        ])
+        po.button_confirm()
+        po.order_line.qty_received = 1
+        po.action_create_invoice()
+
+        invoice = po.invoice_ids
+        invoice.invoice_date = '2020-01-01'
+        invoice.action_post()
+
+        old_ammount = po.amount_total
+        tax_10.active = False
+        self.assertEqual(po.amount_total, old_ammount)
