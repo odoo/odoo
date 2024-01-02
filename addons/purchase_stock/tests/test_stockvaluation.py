@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 import odoo
-from odoo import fields, exceptions
+from odoo import fields, exceptions, Command
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -2806,3 +2806,99 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill = self.env["account.move"].browse(action["res_id"])
         with self.assertRaises(exceptions.UserError):
             bill.action_post()
+
+    def test_bill_date_exchange_rate_for_price_diff_amls(self):
+        """Ensure sure that the amls for price difference uses the bill date exchange rate. They originally used today's rate
+        which meant that their value depended on the day the bill was posted (as it is when the price diff amls are created).
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        po_date = '2023-10-01'
+        bill_date = '2023-11-01'
+        today = fields.Date.today()
+
+        po_rate = 2.0
+        bill_rate = 3.0
+        today_rate = 4.0
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create([
+            {
+                'name': po_date,
+                'rate': po_rate,
+                'currency_id': self.eur_currency.id,
+                'company_id': company.id,
+            },
+            {
+                'name': bill_date,
+                'rate': bill_rate,
+                'currency_id': self.eur_currency.id,
+                'company_id': company.id,
+            },
+            {
+                'name': today,
+                'rate': today_rate,
+                'currency_id': self.eur_currency.id,
+                'company_id': company.id,
+            },
+        ])
+
+        with freeze_time(po_date):
+            purchase_price = 90
+            po = self.env['purchase.order'].create({
+                'partner_id': self.partner_id.id,
+                'currency_id': self.eur_currency.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product1.id,
+                        'product_qty': 1.0,
+                        'price_unit': purchase_price,
+                        'taxes_id': False,
+                    }),
+                ]
+            })
+            po.button_confirm()
+
+            receipt = po.picking_ids
+            receipt.move_line_ids.qty_done = 1
+            receipt.button_validate()
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_uom_qty': 1.0,
+                    'location_id': stock_location.id,
+                    'location_dest_id': customer_location.id,
+                })
+            ]
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity_done = 1.0
+        delivery.button_validate()
+
+        po.action_create_invoice()
+        bill = po.invoice_ids
+        bill.invoice_date = bill_date
+        bill.action_post()
+
+        # Check that we have price difference amls
+        self.assertEqual(len(bill.line_ids), 4)
+
+        # Check that all the amls use the bill date exchange rate
+        self.assertEqual(
+            [self.eur_currency._convert(line.amount_currency, company.currency_id, company, bill_date) for line in bill.line_ids],
+            [line.balance for line in bill.line_ids]
+        )

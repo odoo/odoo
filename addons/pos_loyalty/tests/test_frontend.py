@@ -1332,3 +1332,32 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour9",
             login="accountman",
         )
+
+    def test_ewallet_expiration_date(self):
+        """
+        Test for ewallet program.
+        - Collect points in EWalletProgramTour1.
+        - Use points in EWalletProgramTour2.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the ewallet_product_50 because it's shared among new ewallet programs.
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        # Create ewallet program
+        ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
+        # Create test partners
+        partner_aaa = self.env['res.partner'].create({'name': 'AAAA'})
+        #Create an eWallet for partner_aaa
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': ewallet_program.id,
+            'points': 50,
+            'expiration_date': '2020-01-01',
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "ExpiredEWalletProgramTour",
+            login="accountman",
+        )
