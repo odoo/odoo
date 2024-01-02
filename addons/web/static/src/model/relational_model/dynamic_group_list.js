@@ -2,6 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { DynamicList } from "./dynamic_list";
+import { getGroupServerValue } from "./utils";
 
 export class DynamicGroupList extends DynamicList {
     static type = "DynamicGroupList";
@@ -225,6 +226,7 @@ export class DynamicGroupList extends DynamicList {
             __domain: domain,
             [this.groupByField.name]: [id, groupName],
             value: id,
+            serverValue: getGroupServerValue(this.groupByField, id),
             displayName: groupName,
             rawValue: [id, groupName],
         };

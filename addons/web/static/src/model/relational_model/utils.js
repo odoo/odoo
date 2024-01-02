@@ -481,7 +481,7 @@ export function extractInfoFromGroupData(groupData, groupBy, fields) {
     info.rawValue = groupData[groupBy[0]];
     info.value = getValueFromGroupData(groupByField, info.rawValue, info.range);
     info.displayName = getDisplayNameFromGroupData(groupByField, info.rawValue);
-    info.serverValue = getServerValueFromGroupData(groupByField, info.value);
+    info.serverValue = getGroupServerValue(groupByField, info.value);
     info.aggregates = getAggregatesFromGroupData(groupData, fields);
     return info;
 }
@@ -520,7 +520,7 @@ function getDisplayNameFromGroupData(field, rawValue) {
  * @param {any} value
  * @returns {any}
  */
-function getServerValueFromGroupData(field, value) {
+export function getGroupServerValue(field, value) {
     switch (field.type) {
         case "many2many": {
             return value ? [value] : false;
