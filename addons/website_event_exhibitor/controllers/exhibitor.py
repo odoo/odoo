@@ -73,7 +73,7 @@ class ExhibitorController(WebsiteEventController):
 
         # fetch data to display; use sudo to allow reading partner info, be sure domain is correct
         event = event.with_context(tz=event.date_tz or 'UTC')
-        sponsors = request.env['event.sponsor'].sudo().search(
+        sorted_sponsors = request.env['event.sponsor'].sudo().search(
             search_domain
         ).sorted(lambda sponsor: (sponsor.sponsor_type_id.sequence, sponsor.sequence))
         sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
@@ -83,7 +83,7 @@ class ExhibitorController(WebsiteEventController):
         sponsor_categories_dict = OrderedDict()
         sponsor_categories = []
         is_event_user = request.env.user.has_group('event.group_event_registration_desk')
-        for sponsor in sponsors:
+        for sponsor in sorted_sponsors:
             if not sponsor_categories_dict.get(sponsor.sponsor_type_id):
                 sponsor_categories_dict[sponsor.sponsor_type_id] = request.env['event.sponsor'].sudo()
             sponsor_categories_dict[sponsor.sponsor_type_id] |= sponsor
@@ -110,6 +110,7 @@ class ExhibitorController(WebsiteEventController):
             'hide_sponsors': True,
             # search information
             'searches': searches,
+            'search_count': len(sorted_sponsors),
             'search_key': searches['search'],
             'search_countries': search_countries,
             'search_sponsorships': search_sponsorships,
