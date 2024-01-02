@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { assignDefined } from "@mail/utils/common/misc";
+
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -61,12 +63,12 @@ export class ChatWindowService {
         return chatWindow;
     }
 
-    openNewMessage() {
+    openNewMessage({ openMessagingMenuOnClose } = {}) {
         if (this.store.discuss.chatWindows.some(({ thread }) => !thread)) {
             // New message chat window is already opened.
             return;
         }
-        this.store.ChatWindow.insert();
+        this.store.ChatWindow.insert(assignDefined({}, { openMessagingMenuOnClose }));
     }
 
     closeNewMessage() {
