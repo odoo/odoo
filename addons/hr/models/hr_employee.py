@@ -518,7 +518,10 @@ class HrEmployeePrivate(models.Model):
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None
-        return self.resource_calendar_id.with_context(employee_timezone=employee_timezone).get_work_duration_data(date_from, date_to)
+        return self.resource_calendar_id.with_context(employee_timezone=employee_timezone).get_work_duration_data(
+            date_from,
+            date_to,
+            domain=[('company_id', 'in', [False, self.company_id.id])])
 
     def _get_marital_status_selection(self):
         return [
