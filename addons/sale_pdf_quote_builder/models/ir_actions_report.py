@@ -13,14 +13,14 @@ class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
-        result = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
+        collected_streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
         if self._get_report(report_ref).report_name != 'sale.report_saleorder':
-            return result
+            return collected_streams
 
         orders = self.env['sale.order'].browse(res_ids)
 
-        for order in orders:
-            initial_stream = result[order.id]['stream']
+        for i, (order, stream_info) in enumerate(zip(orders, collected_streams)):
+            initial_stream = stream_info.data['stream']
             if initial_stream:
                 order_template = order.sale_order_template_id
                 header_record = order_template if order_template.sale_header else order.company_id
@@ -62,9 +62,8 @@ class IrActionsReport(models.Model):
                 with io.BytesIO() as _buffer:
                     writer.write(_buffer)
                     stream = io.BytesIO(_buffer.getvalue())
-                result[order.id].update({'stream': stream})
-
-        return result
+                collected_streams[i].data.update({'stream': stream})
+        return collected_streams
 
     def _add_pages_to_writer(self, writer, document, sol_id=None):
         prefix = f'{sol_id}_' if sol_id else ''

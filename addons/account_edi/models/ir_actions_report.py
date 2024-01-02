@@ -22,7 +22,8 @@ class IrActionsReport(models.Model):
                 to_embed = invoice.edi_document_ids
                 # Add the attachments to the pdf file
                 if to_embed:
-                    pdf_stream = collected_streams[invoice.id]['stream']
+                    stream_idx = next(i for i, stream_info in enumerate(collected_streams) if stream_info.id == invoice.id)
+                    pdf_stream = collected_streams[stream_idx].data['stream']
 
                     # Read pdf content.
                     pdf_content = pdf_stream.getvalue()
@@ -42,6 +43,6 @@ class IrActionsReport(models.Model):
                     pdf_stream.close()
                     new_pdf_stream = io.BytesIO()
                     writer.write(new_pdf_stream)
-                    collected_streams[invoice.id]['stream'] = new_pdf_stream
+                    collected_streams[stream_idx].data['stream'] = new_pdf_stream
 
         return collected_streams
