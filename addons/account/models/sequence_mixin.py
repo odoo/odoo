@@ -208,7 +208,7 @@ class SequenceMixin(models.AbstractModel):
         query = f"""
                 SELECT id FROM {self._table}
                 {where_string}
-                ORDER BY sequence_number DESC
+                ORDER BY date DESC, sequence_number DESC
                 LIMIT 1
         """
         self.flush_model([self._sequence_field, 'sequence_number', 'sequence_prefix'])

@@ -102,7 +102,7 @@ class ReSequenceWizard(models.TransientModel):
                 return (move_id.date.year, move_id.date.month)
             elif self.sequence_number_reset == 'fyear':
                 company = move_id.company_id
-                fyear_start, fyear_end = get_fiscal_year(date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
+                fyear_start, fyear_end = get_fiscal_year(move_id.date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
                 return (fyear_start.year, fyear_end.year)
             return 'default'
 
@@ -124,7 +124,6 @@ class ReSequenceWizard(models.TransientModel):
                         'state': move.state,
                         'date': format_date(self.env, move.date),
                         'server-date': str(move.date),
-                        'server-year-start-date': str(year_start),
                     }
                 new_name_list = [
                     period_recs[i]._get_new_sequence(matching, sequence + i)
