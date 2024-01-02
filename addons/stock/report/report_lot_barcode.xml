@@ -3,7 +3,7 @@
 <data>
 <template id="report_lot_label">
     <t t-call="web.basic_layout">
-        <t t-set='nRows' t-value='12'/>
+        <t t-set='nRows' t-value='7'/>
         <t t-set='nCols' t-value='4'/>
         <div class="oe_structure"></div>
         <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
