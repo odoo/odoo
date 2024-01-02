@@ -3436,6 +3436,7 @@ QUnit.module('Views', {
 
     QUnit.test('comparison with two groupbys: rows from reference period should be displayed', async function (assert) {
         assert.expect(3);
+        const unpatchDate = patchDate(2023, 2, 22, 1, 0, 0);
 
         this.data.partner.records = [
             { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
@@ -3495,6 +3496,7 @@ QUnit.module('Views', {
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
+        unpatchDate();
         pivot.destroy();
     });
 
