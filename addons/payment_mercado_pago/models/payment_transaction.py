@@ -2,6 +2,7 @@
 
 import logging
 import pprint
+from urllib.parse import quote as url_quote
 
 from werkzeug import urls
 
@@ -55,8 +56,9 @@ class PaymentTransaction(models.Model):
         """
         base_url = self.provider_id.get_base_url()
         return_url = urls.url_join(base_url, MercadoPagoController._return_url)
+        sanitized_reference = url_quote(self.reference)
         webhook_url = urls.url_join(
-            base_url, f'{MercadoPagoController._webhook_url}/{self.reference}'
+            base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
         )  # Append the reference to identify the transaction from the webhook notification data.
 
         # In the case where we are issuing a preference request in CLP or COP, we must ensure that
