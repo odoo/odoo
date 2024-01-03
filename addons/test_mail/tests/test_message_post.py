@@ -45,10 +45,11 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         )
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
-            'name': 'Test',
-            'email_from': 'ignasse@example.com'
-        })
+        cls.test_records, cls.test_partners = cls._create_records_for_batch(
+            'mail.test.simple', 10,
+        )
+        cls._reset_mail_context(cls.test_records)
+        cls.test_record = cls.test_records[0]
         cls._reset_mail_context(cls.test_record)
         cls.test_message = cls.env['mail.message'].create({
             'author_id': cls.partner_employee.id,
@@ -441,7 +442,7 @@ class TestMessageNotify(TestMessagePostCommon):
     @users('employee')
     def test_notify_batch(self):
         """ Test notify in batch. Currently not supported. """
-        test_records, _partners = self._create_records_for_batch('mail.test.simple', 10)
+        test_records = self.test_records.with_env(self.env)
 
         with self.assertRaises(ValueError):
             test_records.message_notify(
@@ -576,11 +577,6 @@ class TestMessageLog(TestMessagePostCommon):
         cls.user_employee.write({
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
-
-        cls.test_records, cls.test_partners = cls._create_records_for_batch(
-            'mail.test.ticket',
-            10,
-        )
 
     @users('employee')
     def test_message_log(self):
@@ -797,6 +793,23 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=self.partner_portal.ids,
             )
+
+    @users('employee')
+    def test_message_post_batch(self):
+        """ Simply test posting in batch, to be sure it is effectively batch
+        enabled as expected since Odoo 18.0+ """
+        self.user_employee_2.write({'notification_type': 'inbox'})
+        test_records = self.test_records.with_env(self.env)
+
+        # not supported currently
+        with self.assertRaises(ValueError):
+            _new_messages = test_records.message_post(
+                    body='Body',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                    partner_ids=[self.partner_employee_2.id],
+                )
+        # self.assertEqual(len(new_messages), 10)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')

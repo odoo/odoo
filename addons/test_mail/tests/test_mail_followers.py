@@ -569,13 +569,20 @@ class RecipientsNotificationTest(MailCommon):
                     if not user:
                         user = next((user for user in partner.user_ids), self.env['res.users'])
                 self.assertEqual(partner_data['active'], partner.active)
+                self.assertEqual(partner_data['id'], partner.id)
+                self.assertEqual(partner_data['lang'], partner.lang)
                 if user:
                     self.assertEqual(partner_data['groups'], set(user.groups_id.ids))
                     self.assertEqual(partner_data['notif'], user.notification_type)
+                    if user.share:
+                        self.assertEqual(partner_data['type'], 'portal')
+                    else:
+                        self.assertEqual(partner_data['type'], 'user')
                     self.assertEqual(partner_data['uid'], user.id)
                 else:
                     self.assertEqual(partner_data['groups'], set())
                     self.assertEqual(partner_data['notif'], 'email')
+                    self.assertEqual(partner_data['type'], 'customer')
                     self.assertFalse(partner_data['uid'])
                 if record:
                     self.assertEqual(partner_data['is_follower'], partner in record.message_partner_ids)
