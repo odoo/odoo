@@ -1817,6 +1817,7 @@ export class OdooEditor extends EventTarget {
 
     multiselectionRefresh() {
         for (const { selection } of this._collabSelectionInfos.values()) {
+            console.log(`selection:`, selection);
             this._drawClientSelection(selection);
             this._drawClientAvatar(selection);
         }
