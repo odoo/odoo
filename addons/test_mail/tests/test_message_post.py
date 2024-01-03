@@ -794,6 +794,21 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 partner_ids=self.partner_portal.ids,
             )
 
+    @users('employee')
+    def test_message_post_batch(self):
+        """ Simply test posting in batch, to be sure it is effectively batch
+        enabled as expected since Odoo 18.0+ """
+        self.user_employee_2.write({'notification_type': 'inbox'})
+        test_records = self.test_records.with_env(self.env)
+
+        new_messages = test_records.message_post(
+                body='Body',
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+                partner_ids=[self.partner_employee_2.id],
+            )
+        self.assertEqual(len(new_messages), 10)
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
     def test_message_post_author(self):
