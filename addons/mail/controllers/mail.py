@@ -63,6 +63,7 @@ class MailController(http.Controller):
             # record does not seem to exist -> redirect to login
             return cls._redirect_to_messaging()
 
+        suggested_company = record_sudo._get_mail_redirect_suggested_company()
         # the record has a window redirection: check access rights
         if uid is not None:
             if not RecordModel.with_user(uid).check_access_rights('read', raise_exception=False):
@@ -85,7 +86,6 @@ class MailController(http.Controller):
                     #   - Merge the suggested company with the companies on the cookie
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
                     #   redirect to the messaging.
-                    suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
                         raise AccessError('')
                     cids = cids + [suggested_company.id]
@@ -96,6 +96,8 @@ class MailController(http.Controller):
                 record_action = record_sudo._get_access_action(access_uid=uid)
         else:
             record_action = record_sudo._get_access_action()
+            if suggested_company:
+                cids = [suggested_company.id]
             if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
                 url_params = {
                     'model': model,
@@ -103,6 +105,8 @@ class MailController(http.Controller):
                     'active_id': res_id,
                     'action': record_action.get('id'),
                 }
+                if cids:
+                    url_params['cids'] = cids[0]
                 view_id = record_sudo.get_formview_id()
                 if view_id:
                     url_params['view_id'] = view_id

@@ -335,6 +335,9 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                 if not login:
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
+                    decoded_fragment = url_decode(url_parse(response.url).fragment)
+                    self.assertTrue("cids" in decoded_fragment)
+                    self.assertEqual(decoded_fragment['cids'], str(mc_record.company_id.id))
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
