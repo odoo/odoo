@@ -28,28 +28,44 @@ patch(PosStore.prototype, {
             this.hasLoggedIn = !this.config.module_pos_hr;
         }
     },
+    createNewOrder() {
+        const order = super.createNewOrder(...arguments);
+
+        if (this.config.module_pos_hr) {
+            order.update({ employee_id: this.get_cashier() });
+        }
+
+        return order;
+    },
     reset_cashier() {
-        this.cashier = {
-            name: null,
-            id: null,
-            barcode: null,
-            user_id: null,
-            pin: null,
-            role: null,
-        };
+        this.cashier = false;
     },
     set_cashier(employee) {
         this.cashier = employee;
         this.cashier.role = this.employee_security[employee.id].role;
-        const selectedOrder = this.get_order();
-        if (selectedOrder && !selectedOrder.get_orderlines().length) {
+        const o = this.get_order();
+        if (o && !o.get_orderlines().length) {
             // Order without lines can be considered to be un-owned by any employee.
             // We set the cashier on that order to the currently set employee.
-            selectedOrder.cashier = employee;
+            o.update({ employee_id: employee });
         }
         if (!this.cashierHasPriceControlRights() && this.numpadMode === "price") {
             this.numpadMode = "quantity";
         }
+    },
+    addLineToCurrentOrder(vals, opt = {}, configure = true) {
+        vals.employee_id = false;
+
+        if (this.config.module_pos_hr) {
+            const cashier = this.get_cashier();
+
+            if (cashier && cashier.model.modelName === "hr.employee") {
+                const order = this.get_order();
+                order.update({ employee_id: this.get_cashier() });
+            }
+        }
+
+        return super.addLineToCurrentOrder(vals, opt, configure);
     },
     /**{name: null, id: null, barcode: null, user_id:null, pin:null}
      * If pos_hr is activated, return {name: string, id: int, barcode: string, pin: string, user_id: int}

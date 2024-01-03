@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -42,7 +41,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
 
             // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Red, Metal, Other: Custom Fabric)",
+                "Configurable Chair (Red, Metal, Fabrics: Custom Fabric)",
                 "1.0",
                 "11.0"
             ),
@@ -55,7 +54,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Red, Metal, Other: Custom Fabric)",
+                "Configurable Chair (Red, Metal, Fabrics: Custom Fabric)",
                 "2.0",
                 "22.0"
             ),

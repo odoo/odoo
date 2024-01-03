@@ -3,11 +3,8 @@
 import json
 import logging
 import pprint
-import random
 import requests
-import string
 from urllib.parse import parse_qs
-from werkzeug.exceptions import Forbidden
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessDenied

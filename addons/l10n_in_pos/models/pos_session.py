@@ -9,7 +9,9 @@ class PosSession(models.Model):
 
     def _load_data_params(self, config_id):
         params = super()._load_data_params(config_id)
-        params['product.product']['fields'] += ['l10n_in_hsn_code']
+        if config_id.company_id.country_code == 'IN':
+            params['product.product']['fields'] += ['l10n_in_hsn_code']
+            params['pos.order.line']['fields'] += ['l10n_in_hsn_code']
         return params
 
     @api.model

@@ -29,7 +29,7 @@ patch(ControlButtons.prototype, {
             title: _t("Guests?"),
             getPayload: (inputNumber) => {
                 const guestCount = parseInt(inputNumber, 10) || 0;
-                if (guestCount == 0 && this.currentOrder.orderlines.length === 0) {
+                if (guestCount == 0 && this.currentOrder.lines.length === 0) {
                     this.pos.removeOrder(this.currentOrder);
                     this.pos.showScreen("FloorScreen");
                 }
@@ -38,7 +38,7 @@ patch(ControlButtons.prototype, {
         });
     },
     clickTransferOrder() {
-        this.pos.orderToTransfer = this.pos.selectedOrder;
+        this.pos.orderToTransferUuid = this.pos.get_order().uuid;
         this.pos.get_order().setBooked(true);
         this.pos.showScreen("FloorScreen");
     },

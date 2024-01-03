@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             // The following step is to make sure that the Chrome widget initialization ends
@@ -39,7 +38,6 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
 
 registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -61,7 +59,6 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
 
 registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

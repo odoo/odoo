@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { PosStore } from "@point_of_sale/app/store/pos_store";
-import { Order, Payment } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
@@ -82,64 +81,5 @@ patch(PosStore.prototype, {
             purchase: parseFloat(tran_response.find("Purchase").text()),
             authorize: parseFloat(tran_response.find("Authorize").text()),
         };
-    },
-});
-
-patch(Payment.prototype, {
-    init_from_JSON(json) {
-        super.init_from_JSON(...arguments);
-
-        this.paid = json.paid;
-        this.mercury_card_number = json.mercury_card_number;
-        this.mercury_card_brand = json.mercury_card_brand;
-        this.mercury_card_owner_name = json.mercury_card_owner_name;
-        this.mercury_ref_no = json.mercury_ref_no;
-        this.mercury_record_no = json.mercury_record_no;
-        this.mercury_invoice_no = json.mercury_invoice_no;
-        this.mercury_auth_code = json.mercury_auth_code;
-        this.mercury_data = json.mercury_data;
-        this.mercury_swipe_pending = json.mercury_swipe_pending;
-
-        this.set_credit_card_name();
-    },
-    export_as_JSON() {
-        const result = super.export_as_JSON(...arguments);
-        if (!result) {
-            return result;
-        }
-        return Object.assign(result, {
-            paid: this.paid,
-            mercury_card_number: this.mercury_card_number,
-            mercury_card_brand: this.mercury_card_brand,
-            mercury_card_owner_name: this.mercury_card_owner_name,
-            mercury_ref_no: this.mercury_ref_no,
-            mercury_record_no: this.mercury_record_no,
-            mercury_invoice_no: this.mercury_invoice_no,
-            mercury_auth_code: this.mercury_auth_code,
-            mercury_data: this.mercury_data,
-            mercury_swipe_pending: this.mercury_swipe_pending,
-        });
-    },
-    set_credit_card_name() {
-        if (this.mercury_card_number) {
-            this.name = this.mercury_card_brand + " (****" + this.mercury_card_number + ")";
-        }
-    },
-    is_done() {
-        var res = super.is_done(...arguments);
-        return res && !this.mercury_swipe_pending;
-    },
-    export_for_printing() {
-        const result = super.export_for_printing(...arguments);
-        result.mercury_data = this.mercury_data;
-        result.mercury_auth_code = this.mercury_auth_code;
-        return result;
-    },
-});
-
-patch(Order.prototype, {
-    electronic_payment_in_progress() {
-        var res = super.electronic_payment_in_progress(...arguments);
-        return res || this.get_paymentlines().some((line) => line.mercury_swipe_pending);
     },
 });

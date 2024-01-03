@@ -68,6 +68,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_user').id),
                 (4, self.env.ref('sales_team.group_sale_salesman_all_leads').id),
+                (4, self.env.ref('account.group_account_user').id),
+                (4, self.env.ref('base.group_system').id), # FIXME refacto
             ]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -156,6 +158,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrder2', login="accountman")
 
+        sale_order = self.env['sale.order'].browse(sale_order.id)
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.order_line[1].qty_delivered, 0)
         orderline_product_a = sale_order.order_line.filtered(lambda l: l.product_id.id == product_a.id)

@@ -165,7 +165,7 @@ export class ProductScreen extends Component {
         return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
     }
     get items() {
-        return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
+        return this.currentOrder.lines?.reduce((items, line) => items + line.qty, 0) ?? 0;
     }
     async _getProductByBarcode(code) {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
@@ -186,6 +186,7 @@ export class ProductScreen extends Component {
     }
     async _barcodeProductAction(code) {
         const product = await this._getProductByBarcode(code);
+
         if (!product) {
             return this.dialog.add(AlertDialog, {
                 title: `Unknown Barcode: ${this.barcodeReader.codeRepr(code)}`,
@@ -194,33 +195,8 @@ export class ProductScreen extends Component {
                 ),
             });
         }
-        const options = await this.pos.getAddProductOptions(product, code);
-        // Do not proceed on adding the product when no options is returned.
-        // This is consistent with clickProduct.
-        if (!options) {
-            return;
-        }
 
-        // update the options depending on the type of the scanned code
-        if (code.type === "price") {
-            Object.assign(options, {
-                price: code.value,
-                extras: {
-                    price_type: "manual",
-                },
-            });
-        } else if (code.type === "weight" || code.type === "quantity") {
-            Object.assign(options, {
-                quantity: code.value,
-                merge: false,
-            });
-        } else if (code.type === "discount") {
-            Object.assign(options, {
-                discount: code.value,
-                merge: false,
-            });
-        }
-        this.currentOrder.add_product(product, options);
+        await this.pos.addLineToCurrentOrder({ product_id: product }, { code });
         this.numberBuffer.reset();
     }
     async _getPartnerByBarcode(code) {
@@ -251,21 +227,16 @@ export class ProductScreen extends Component {
             last_orderline.set_discount(code.value);
         }
     }
-    async _parseElementsFromGS1(parsed_results) {
-        const productBarcode = parsed_results.find((element) => element.type === "product");
-        const lotBarcode = parsed_results.find((element) => element.type === "lot");
-        const product = await this._getProductByBarcode(productBarcode);
-        return { product, lotBarcode, customProductOptions: {} };
-    }
     /**
      * Add a product to the current order using the product identifier and lot number from parsed results.
      * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
      * It then uses these values to retrieve the product and add it to the current order.
      */
     async _barcodeGS1Action(parsed_results) {
-        const { product, lotBarcode, customProductOptions } = await this._parseElementsFromGS1(
-            parsed_results
-        );
+        const productBarcode = parsed_results.find((element) => element.type === "product");
+        const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const product = await this._getProductByBarcode(productBarcode);
+
         if (!product) {
             const productBarcode = parsed_results.find((element) => element.type === "product");
             return this.dialog.add(AlertDialog, {
@@ -275,8 +246,8 @@ export class ProductScreen extends Component {
                 ),
             });
         }
-        const options = await this.pos.getAddProductOptions(product, lotBarcode);
-        await this.currentOrder.add_product(product, { ...options, ...customProductOptions });
+
+        await this.pos.addLineToCurrentOrder({ product_id: product }, { code: lotBarcode });
         this.numberBuffer.reset();
     }
     displayAllControlPopup() {
@@ -330,6 +301,10 @@ export class ProductScreen extends Component {
             list = this.pos.models["product.product"].getAll();
         }
 
+        if (!list) {
+            return [];
+        }
+
         list = list
             .filter((product) => !this.getProductListToNotDisplay().includes(product.id))
             .slice(0, 100);
@@ -376,11 +351,15 @@ export class ProductScreen extends Component {
     async loadDemoDataProducts() {
         this.state.loadingDemo = true;
         try {
-            const result = await this.pos.data.loadServerMethodTemp(
+            const result = await this.pos.data.callRelated(
                 "pos.session",
                 "load_product_frontend",
-                [odoo.pos_session_id]
+                [odoo.pos_session_id],
+                {},
+                false
             );
+
+            // FIXME handle correct response pattern
             const models = result.related;
             const posOrder = result.posOrder;
 
@@ -473,8 +452,8 @@ export class ProductScreen extends Component {
         window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
     }
 
-    addProductToOrder(product) {
-        reactive(this.pos).addProductToCurrentOrder(product);
+    async addProductToOrder(product) {
+        await reactive(this.pos).addLineToCurrentOrder({ product_id: product }, {});
     }
 
     async onProductInfoClick(product) {

@@ -63,14 +63,14 @@ export class PartnerList extends Component {
         const partnerHasActiveOrders = this.pos
             .get_order_list()
             .some((order) => order.partner?.id === partner.id);
-        const ui = {
-            searchDetails: {
+        const stateOverride = {
+            search: {
                 fieldName: "PARTNER",
                 searchTerm: partner.name,
             },
             filter: partnerHasActiveOrders ? "" : "SYNCED",
         };
-        this.pos.showScreen("TicketScreen", { ui });
+        this.pos.showScreen("TicketScreen", { stateOverride });
     }
 
     confirm() {

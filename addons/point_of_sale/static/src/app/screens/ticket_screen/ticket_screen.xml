@@ -31,7 +31,7 @@
                             placeholder="constructor.searchPlaceholder"
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
-                        <div t-if="shouldShowPageControls()" class="item">
+                        <div t-if="getNbrPages()" class="item">
                             <div class="page-controls">
                                 <div class="previous" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
@@ -59,9 +59,9 @@
                                 <div class="col narrow p-2">Status</div>
                                 <div class="col very-narrow p-2" name="delete"></div>
                             </div>
-                            <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
+                            <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>
                                     </div>
@@ -72,7 +72,8 @@
                                         <div><t t-esc="order.trackingNumber"></t></div>
                                     </div>
                                     <div class="col p-2">
-                                        <div><t t-esc="getPartner(order)"></t></div>
+                                    <!-- <t t-debug="order" /> -->
+                                        <div><t t-esc="order.partner_id?.name"></t></div>
                                     </div>
                                     <div t-if="showCardholderName()" class="col p-2">
                                         <div><t t-esc="getCardholderName(order)"></t></div>
@@ -92,9 +93,9 @@
                                     <div t-else="" class="col very-narrow p-2"></div>
                                 </div>
                             </t>
-                            <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
+                            <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="mobileOrderList order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col p-2 d-flex justify-content-between align-items-center">
                                         <div><t t-esc="order.name"></t> / <t t-esc="order.trackingNumber"></t></div>
                                         <div><t t-esc="getTotal(order)"></t></div>
@@ -111,7 +112,10 @@
                                 </div>
                             </t>
                         </t>
-                        <CenteredIcon t-else="" icon="'fa-shopping-cart fa-4x'" text="'No orders found'"/>
+                        <CenteredIcon
+                            t-else=""
+                            icon="this.pos.data.network.loading ? 'fa-spinner fa-spin' : 'fa-shopping-cart fa-4x'"
+                            text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"/>
                     </div>
                     <div class="switchpane d-flex w-100" t-if="ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
@@ -127,28 +131,28 @@
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
-                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': _state.ui.highlightHeaderNote }" class="text-bg-view py-2 px-3 border-bottom" >
+                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': state.highlightHeaderNote }" class="text-bg-view py-2 px-3 border-bottom" >
                             Select the product(s) to refund and set the quantity
                         </div>
-                        <OrderWidget lines="_selectedSyncedOrder.orderlines" t-slot-scope="scope"
+                        <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
                             total="env.utils.formatCurrency(_selectedSyncedOrder.get_total_with_tax())"
                             tax="!env.utils.floatIsZero(_selectedSyncedOrder.get_total_tax()) and env.utils.formatCurrency(_selectedSyncedOrder.get_total_tax()) or ''">
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="line.getDisplayData()"
                                 class="{'selected': line.id === getSelectedOrderlineId()}"
                                 t-on-click="() => this.onClickOrderline(line)">
-                                <t t-set="toRefundDetail" t-value="line.pos.toRefundLines[line.id]" />
+                                <t t-set="toRefundDetail" t-value="line.pos.lineToRefund[line.uuid]" />
                                 <li t-if="!line.pos.isProductQtyZero(line.refunded_qty)"
                                     class="info refund-note mt-1">
                                     <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />
                                     <span> Refunded</span>
                                 </li>
                                 <li t-if="!line.pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
-                                    <t t-set="_destinationOrderUid" t-value="toRefundDetail.destinationOrderUid"/>
+                                    <t t-set="_destinationOrderUid" t-value="toRefundDetail.destination_order_uuid"/>
                                     <t t-set="refundQty" t-value="env.utils.formatProductQty(toRefundDetail.qty)"/>
                                     <t t-if="_destinationOrderUid">
                                         Refunding <t t-esc="refundQty" /> in 
-                                        <span t-esc="_destinationOrderUid" 
+                                        <span t-esc="_destinationOrderUid"
                                             class="order-link ms-1 text-decoration-underline cursor-pointer" 
                                             t-on-click.stop="() => this.onClickRefundOrderUid(_destinationOrderUid)" />
                                     </t>

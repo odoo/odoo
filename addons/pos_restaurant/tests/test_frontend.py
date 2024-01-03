@@ -224,8 +224,11 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
     def test_02_others(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('SplitBillScreenTour', login="pos_admin")
-        self.start_pos_tour('ControlButtonsTour', login="pos_admin")
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
+
+    def test_02_others_bis(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('ControlButtonsTour', login="pos_admin")
 
     def test_04_ticket_screen(self):
         self.pos_config.with_user(self.pos_admin).open_ui()

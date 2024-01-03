@@ -8,16 +8,16 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(() => {
-            const pendingPaymentLine = this.currentOrder.paymentlines.find(
+            const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method.use_payment_terminal === "adyen" &&
+                    paymentLine.payment_method_id.use_payment_terminal === "adyen" &&
                     !paymentLine.is_done() &&
                     paymentLine.get_payment_status() !== "pending"
             );
             if (!pendingPaymentLine) {
                 return;
             }
-            pendingPaymentLine.payment_method.payment_terminal.set_most_recent_service_id(
+            pendingPaymentLine.payment_method_id.payment_terminal.set_most_recent_service_id(
                 pendingPaymentLine.terminalServiceId
             );
         });

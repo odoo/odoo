@@ -14,12 +14,4 @@ patch(PosStore.prototype, {
         }
         return result;
     },
-    async afterProcessServerData() {
-        await super.afterProcessServerData(...arguments);
-
-        // We need to update the partner list after the pos config is loaded
-        if (this.config.is_spanish && !this.config.simplified_partner_id) {
-            await this._loadPartners([this.config.raw.simplified_partner_id]);
-        }
-    },
 });

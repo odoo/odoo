@@ -2,20 +2,28 @@
 
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { patch } from "@web/core/utils/patch";
+import { onMounted } from "@odoo/owl";
 
 patch(ProductScreen.prototype, {
     /**
      * @override
      */
+    setup() {
+        super.setup(...arguments);
+
+        onMounted(() => {
+            this.pos.addPendingOrder([this.pos.get_order().id]);
+        });
+    },
     get selectedOrderlineQuantity() {
         const order = this.pos.get_order();
         const orderline = order.get_selected_orderline();
         if (this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size) {
-            let orderline_name = orderline.product.display_name;
+            let orderline_name = orderline.product_id.display_name;
             if (orderline.description) {
                 orderline_name += " (" + orderline.description + ")";
             }
-            const changes = Object.values(order.getOrderChanges().orderlines).find(
+            const changes = Object.values(this.pos.getOrderChanges().orderlines).find(
                 (change) => change.name == orderline_name
             );
             return changes ? changes.quantity : false;
@@ -28,7 +36,7 @@ patch(ProductScreen.prototype, {
         );
     },
     get nbrOfChanges() {
-        return this.currentOrder.getOrderChanges().nbrOfChanges;
+        return this.pos.getOrderChanges().nbrOfChanges;
     },
     get swapButton() {
         return this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size;
@@ -45,8 +53,7 @@ patch(ProductScreen.prototype, {
     },
     get primaryOrderButton() {
         return (
-            this.pos.get_order().getOrderChanges().nbrOfChanges !== 0 &&
-            this.pos.config.module_pos_restaurant
+            this.pos.getOrderChanges().nbrOfChanges !== 0 && this.pos.config.module_pos_restaurant
         );
     },
 });

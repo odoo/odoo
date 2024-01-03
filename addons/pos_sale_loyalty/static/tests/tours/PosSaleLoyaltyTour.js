@@ -10,7 +10,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSaleLoyaltyTour1", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

@@ -28,6 +28,8 @@ class PosSession(models.Model):
             })
             params['account.fiscal.position']['domain'] = OR([params['account.fiscal.position']['domain'], [('id', '=', self.config_id.takeaway_fp_id.id)]])
 
+        params['pos.order.line']['fields'] += ['note']
+
         return params
 
     def get_onboarding_data(self):

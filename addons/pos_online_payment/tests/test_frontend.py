@@ -196,38 +196,36 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
         untax, atax = self.compute_tax(product, product.list_price)
         order_data = {
-            'data': {
-                'uid': order_uid,
-                'name': order_pos_reference,
-                'pos_session_id': current_session.id,
-                'sequence_number': 1,
-                'user_id': self.pos_user.id,
-                'partner_id': False,
-                'access_token': str(uuid.uuid4()),
-                'amount_paid': 0,
-                'amount_return': 0,
-                'amount_tax': atax,
-                'amount_total': untax + atax,
-                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-                'fiscal_position_id': False,
-                'lines': [[0, 0, {
-                    'product_id': product.id,
-                    'qty': 1,
-                    'discount': 0,
-                    'tax_ids': [(6, 0, product.taxes_id.ids)],
-                    'price_unit': product.list_price,
-                    'price_subtotal': untax,
-                    'price_subtotal_incl': untax + atax,
-                    'pack_lot_ids': [],
-                }]],
-                'statement_ids': [],
-            },
-            'to_invoice': False,
+            'uuid': order_uid,
+            'name': order_pos_reference,
+            'session_id': current_session.id,
+            'sequence_number': 1,
+            'user_id': self.pos_user.id,
+            'partner_id': False,
+            'access_token': str(uuid.uuid4()),
+            'amount_paid': 0,
+            'amount_return': 0,
+            'state': 'draft',
+            'amount_tax': atax,
+            'amount_total': untax + atax,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'lines': [[0, 0, {
+                'product_id': product.id,
+                'qty': 1,
+                'discount': 0,
+                'tax_ids': [(6, 0, product.taxes_id.ids)],
+                'price_unit': product.list_price,
+                'price_subtotal': untax,
+                'price_subtotal_incl': untax + atax,
+                'pack_lot_ids': [],
+            }]],
+            'payment_ids': [],
         }
 
-        create_result = self.env['pos.order'].with_user(self.pos_user).create_from_ui([order_data], draft=True)
+        create_result = self.env['pos.order'].with_user(self.pos_user).sync_from_ui([order_data])
         self.assertEqual(len(current_session.order_ids), 1)
-        order_id = next(result_order_data for result_order_data in create_result if result_order_data['pos_reference'] == order_pos_reference)['id']
+        order_id = next(result_order_data for result_order_data in create_result['pos.order'] if result_order_data['name'] == order_pos_reference)['id']
 
         order = self.env['pos.order'].search([('id', '=', order_id)])
         self.assertEqual(order.state, 'draft')

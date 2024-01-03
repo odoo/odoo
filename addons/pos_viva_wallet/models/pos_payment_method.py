@@ -48,7 +48,7 @@ class PosPaymentMethod(models.Model):
     def _is_write_forbidden(self, fields):
         # Allow the modification of these fields even if a pos_session is open
         whitelisted_fields = {'viva_wallet_bearer_token', 'viva_wallet_webhook_verification_key', 'viva_wallet_latest_response'}
-        return bool(fields - whitelisted_fields and self.open_session_ids)
+        return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
 
     def _get_payment_terminal_selection(self):
         return super()._get_payment_terminal_selection() + [('viva_wallet', 'Viva Wallet')]

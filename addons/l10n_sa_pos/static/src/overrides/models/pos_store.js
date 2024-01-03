@@ -14,7 +14,7 @@ patch(PosStore.prototype, {
                 const qr_values = order.compute_sa_qr_code(
                     company.name,
                     company.vat,
-                    order.date_order.toISO(),
+                    order.date_order,
                     order.get_total_with_tax(),
                     order.get_total_tax()
                 );

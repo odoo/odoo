@@ -15,7 +15,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSettleOrder", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -35,7 +34,6 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
 
 registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -57,7 +55,6 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
 
 registry.category("web_tour.tours").add("PosSettleOrder2", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -78,7 +75,6 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
 
 registry.category("web_tour.tours").add("PosRefundDownpayment", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -108,7 +104,6 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
 
 registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -124,7 +119,6 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
 
 registry.category("web_tour.tours").add("PosSettleOrder3", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -141,7 +135,6 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
 
 registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -155,7 +148,6 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
 
 registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -172,7 +164,6 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
 
 registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

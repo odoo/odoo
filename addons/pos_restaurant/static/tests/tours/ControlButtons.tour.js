@@ -13,10 +13,10 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             // Test TransferOrderButton
+            Dialog.confirm("Open session"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.controlButtonMore(),

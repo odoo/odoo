@@ -40,7 +40,7 @@ class PosOrder(models.Model):
         if is_paid:
             return {
                 'id': self.id,
-                'paid_order': self._export_for_ui(self)
+                'paid_order': self.read([], load=False)
             }
 
         online_payments = self.sudo().env['pos.payment'].search_read(domain=['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '!=', False)], fields=['payment_method_id', 'amount'], load=False)
@@ -52,7 +52,6 @@ class PosOrder(models.Model):
         if not isinstance(next_online_payment_amount, bool):
             if tools.float_is_zero(next_online_payment_amount, precision_rounding=self.currency_id.rounding) and len(online_payments) == 0 and self.state == 'draft' and not self.config_id.module_pos_restaurant and len(self.config_id.trusted_config_ids) == 0:
                 self.sudo()._clean_payment_lines() # Needed to delete the order
-                self.sudo().unlink()
                 return_data['deleted'] = True
             elif self._check_next_online_payment_amount(next_online_payment_amount):
                 self.next_online_payment_amount = next_online_payment_amount

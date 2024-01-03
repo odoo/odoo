@@ -97,6 +97,11 @@ export function settleTips() {
         {
             trigger: ".ticket-screen .buttons .settle-tips",
         },
+        {
+            content: "verify that the order has been successfully sent to the backend",
+            trigger: ".js_connected:visible",
+            run: function () {},
+        },
     ];
 }
 export function clickControlButton(name) {

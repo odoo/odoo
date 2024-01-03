@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderSummary">
-      <OrderWidget lines="currentOrder.orderlines" t-slot-scope="scope"
+      <OrderWidget lines="currentOrder.lines" t-slot-scope="scope"
           total="env.utils.formatCurrency(currentOrder.get_total_with_tax())"
           tax="!env.utils.floatIsZero(currentOrder.get_total_tax()) and env.utils.formatCurrency(currentOrder.get_total_tax()) or ''">
           <t t-set="line" t-value="scope.line" />
           <Orderline line="line.getDisplayData()"
               t-on-click="() => this.selectLine(line)"
-              class="{ ...line.getDisplayClasses(), 'selected' : line.selected }">
+              class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }">
               <t t-set-slot="product-name">
                   <i  t-if="line.get_product().isTracked()"
-                      t-on-click.stop="() => line.editPackLotLines()" role="img"
+                      t-on-click.stop="() => this.editPackLotLines(line)" role="img"
                       t-attf-class="{{ line.has_valid_product_lot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
                       t-attf-title="{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product lot'}}" />
               </t>
-              <ul t-if="line.pack_lot_lines">
-                  <li t-foreach="line.get_lot_lines()" t-as="lot" t-key="lot.cid">
+              <ul t-if="line.pack_lot_ids">
+                  <li t-foreach="line.pack_lot_ids" t-as="lot" t-key="lot.cid">
                       SN <t t-esc="lot.lot_name"/>
                   </li>
               </ul>

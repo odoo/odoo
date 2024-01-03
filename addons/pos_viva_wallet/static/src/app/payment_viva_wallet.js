@@ -16,12 +16,12 @@ export class PaymentVivaWallet extends PaymentInterface {
         super.setup(...arguments);
         this.paymentLineResolvers = {};
     }
-    send_payment_request(cid) {
-        super.send_payment_request(cid);
-        return this._viva_wallet_pay(cid);
+    send_payment_request(uuid) {
+        super.send_payment_request(uuid);
+        return this._viva_wallet_pay(uuid);
     }
-    send_payment_cancel(order, cid) {
-        super.send_payment_cancel(order, cid);
+    send_payment_cancel(order, uuid) {
+        super.send_payment_cancel(order, uuid);
         return this._viva_wallet_cancel();
     }
     pending_viva_wallet_line() {
@@ -30,7 +30,7 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     _call_viva_wallet(data, action) {
         return this.env.services.orm.silent
-            .call("pos.payment.method", action, [[this.payment_method.id], data])
+            .call("pos.payment.method", action, [[this.payment_method_id.id], data])
             .catch(this._handle_odoo_connection_failure.bind(this));
     }
 
@@ -64,7 +64,7 @@ export class PaymentVivaWallet extends PaymentInterface {
          */
         super.send_payment_request(...arguments);
         var order = this.pos.get_order();
-        var line = order.selected_paymentline;
+        var line = order.get_selected_paymentline();
         let customerTrns = " ";
         line.set_payment_status("waitingCard");
 
@@ -77,10 +77,10 @@ export class PaymentVivaWallet extends PaymentInterface {
             customerTrns = order.partner.name + " - " + order.partner.email;
         }
 
-        line.sessionId = order.uid + " - " + uuidv4();
+        line.sessionId = order.uuid + " - " + uuidv4();
         var data = {
             sessionId: line.sessionId,
-            terminalId: line.payment_method.viva_wallet_terminal_id,
+            terminalId: line.payment_method_id.viva_wallet_terminal_id,
             cashRegisterId: this.pos.get_cashier().name,
             amount: line.amount * 100,
             currencyCode: 978, // Viva wallet only uses EUR 978 need add a new field numeric_code in res.currency
@@ -95,12 +95,12 @@ export class PaymentVivaWallet extends PaymentInterface {
         });
     }
 
-    async _viva_wallet_cancel(order, cid) {
+    async _viva_wallet_cancel(order, uuid) {
         /**
          * Override
          */
         super.send_payment_cancel(...arguments);
-        const line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.get_order().get_selected_paymentline();
 
         var data = {
             sessionId: line.sessionId,
@@ -121,7 +121,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         const notification = await this.env.services.orm.silent.call(
             "pos.payment.method",
             "get_latest_viva_wallet_status",
-            [[this.payment_method.id]]
+            [[this.payment_method_id.id]]
         );
 
         if (!notification) {
@@ -140,7 +140,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         // that will be resolved when the payment response is received.
         // In case this resolver is lost ( for example on a refresh ) we
         // we use the handle_payment_response method on the payment line
-        const resolver = this.paymentLineResolvers?.[line.cid];
+        const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
             resolver(isPaymentSuccessful);
         } else {
@@ -158,7 +158,7 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pending_viva_wallet_line().cid] = resolve;
+            this.paymentLineResolvers[this.pending_viva_wallet_line().uuid] = resolve;
         });
     }
 

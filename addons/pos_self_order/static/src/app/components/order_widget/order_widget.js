@@ -75,7 +75,7 @@ export class OrderWidget extends Component {
                 const subtotal = this.selfOrder.config.iface_tax_included
                     ? line.price_subtotal_incl
                     : line.price_subtotal;
-                acc.price += (subtotal / currentQty) * qty;
+                acc.price_unit += (subtotal / currentQty) * qty;
 
                 return acc;
             },

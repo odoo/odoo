@@ -196,50 +196,47 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.final_bom = bom_product_form.save()
 
         self.pos_config.open_ui()
-        order_data = {'data':
-        {'to_invoice': True,
-        'amount_paid': 2.0,
-        'amount_return': 0,
-        'amount_tax': 0,
-        'amount_total': 2.0,
-        'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
-        'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-        'fiscal_position_id': False,
-        'pricelist_id': self.pos_config.pricelist_id.id,
-        'lines': [[0,
-                    0,
-                    {'discount': 0,
-                    'pack_lot_ids': [],
-                    'price_unit': 2,
-                    'product_id': self.kit.id,
-                    'price_subtotal': 2,
-                    'price_subtotal_incl': 2,
-                    'qty': 1,
-                    'tax_ids': [(6, 0, self.kit.taxes_id.ids)]}],
-                  [0,
-                    0,
-                    {'discount': 0,
+        order_data = {
+            'to_invoice': True,
+            'amount_paid': 2.0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 2.0,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'lines': [[0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 2,
+                'product_id': self.kit.id,
+                'price_subtotal': 2,
+                'price_subtotal_incl': 2,
+                'qty': 1,
+                'tax_ids': [(6, 0, self.kit.taxes_id.ids)]}], [0, 0, {
+                    'discount': 0,
                     'pack_lot_ids': [],
                     'price_unit': 2,
                     'product_id': self.kit_2.id,
                     'price_subtotal': 2,
                     'price_subtotal_incl': 2,
                     'qty': 1,
-                    'tax_ids': [(6, 0, self.kit_2.taxes_id.ids)]}]],
+                    'tax_ids': [(6, 0, self.kit_2.taxes_id.ids)]}
+            ]],
             'name': 'Order 00042-003-0014',
             'partner_id': self.partner1.id,
-            'pos_session_id': self.pos_config.current_session_id.id,
+            'session_id': self.pos_config.current_session_id.id,
             'sequence_number': 2,
-            'statement_ids': [[0,
-                                0,
-                                {'amount': 2.0,
-                                'name': fields.Datetime.now(),
-                                'payment_method_id': self.cash_payment_method.id}]],
-            'uid': '00042-003-0014',
-            'user_id': self.env.uid},
+            'payment_ids': [[0, 0, {
+                'amount': 2.0,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id}
+            ]],
+            'uuid': '00042-003-0014',
+            'user_id': self.env.uid
         }
-        order = self.env['pos.order'].create_from_ui([order_data])
-        order = self.env['pos.order'].browse(order[0]['id'])
+        order = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
         self.assertEqual(order.lines.filtered(lambda l: l.product_id == self.kit).total_cost, 15.0)
         accounts = self.kit.product_tmpl_id.get_product_accounts()
         debit_interim_account = accounts['stock_output']

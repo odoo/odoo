@@ -10,7 +10,7 @@ patch(PaymentScreen.prototype, {
             return super.nextScreen;
         }
         // Take the first payment method as the main payment.
-        const mainPayment = order.get_paymentlines()[0];
+        const mainPayment = order.payment_ids[0];
         if (mainPayment && mainPayment.canBeAdjusted()) {
             return "TipScreen";
         }
@@ -18,8 +18,8 @@ patch(PaymentScreen.prototype, {
     },
     async afterOrderValidation(suggestToSync = true) {
         // After the order has been validated the tables have no reason to be merged anymore.
-        const changedTables = this.pos.data["restaurant.table"]?.filter(
-            (t) => t.parent_id && t.parent_id.id === this.currentOrder.tableId
+        const changedTables = this.pos.models["restaurant.table"]?.filter(
+            (t) => t.parent_id && t.parent_id.id === this.currentOrder.table_id.id
         );
         if (changedTables?.length) {
             for (const table of changedTables) {

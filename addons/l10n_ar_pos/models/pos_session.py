@@ -18,3 +18,11 @@ class PosSession(models.Model):
             }
 
         return params
+
+    def load_data(self, models_to_load, only_data=False):
+        response = super().load_data(models_to_load, only_data)
+
+        if not only_data:
+            response['custom']['consumidor_final_anonimo_id'] = self.env.ref('l10n_ar.par_cfa').id
+
+        return response

@@ -158,11 +158,7 @@ export class ComboPage extends Component {
                 combo_id: combo.id,
                 combo_line_id: combo.combo_line_id,
             });
-            child_line.full_product_name = constructFullProductName(
-                child_line,
-                this.selfOrder.attributeValueById,
-                combo.product.name
-            );
+            child_line.full_product_name = constructFullProductName(child_line);
             lines.push(child_line);
             parent_line.child_lines.push(child_line);
         }

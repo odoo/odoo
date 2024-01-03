@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import secrets
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -103,20 +102,28 @@ class PosSession(models.Model):
     # We need to pass config_id because sometime params are needed without opened session (eg: closed self order).
     # If we don't have a session, we can't get the config_id from the session.
     def _load_data_params(self, config_id):
-        params = {
+        return {
             'pos.config': {
                 'domain': [('id', '=', config_id.id)],
                 'fields': []
             },
             'pos.order': {
                 'fields': [],
-                'domain': [("id", "=", False)], # Temp fix to avoid loading orders
+                'domain': [('state', '=', 'draft'), ('session_id', '=', self.id)],
+            },
+            'pos.payment': {
+                'fields': [],
+                'domain': lambda data: [('pos_order_id', 'in', [order['id'] for order in data['pos.order']])],
             },
             'pos.order.line': {
                 'domain': lambda data: [('order_id', 'in', [order['id'] for order in data['pos.order']])],
                 'fields': [
-                    'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id',
-                    'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id'],
+                    'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note',
+                    'product_id', 'discount', 'tax_ids', 'combo_line_id', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id'],
+            },
+            'pos.pack.operation.lot': {
+                'domain': lambda data: [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])],
+                'fields': ['lot_name', 'pos_order_line_id'],
             },
             'pos.session': {
                 'domain': [('id', '=', self.id)],
@@ -156,6 +163,10 @@ class PosSession(models.Model):
             'product.attribute': {
                 'domain': [('create_variant', '=', 'no_variant')],
                 'fields': ['name', 'display_type', 'template_value_ids', 'attribute_line_ids'],
+            },
+            'product.attribute.custom.value': {
+                'domain':  lambda data: [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])],
+                'fields': ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id'],
             },
             'product.template.attribute.line': {
                 'domain': [],
@@ -238,7 +249,10 @@ class PosSession(models.Model):
             },
             'account.tax': {
                 'domain': [('company_id', '=', config_id.company_id.id)],
-                'fields': [],
+                'fields': [
+                    'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
+                    'amount_type', 'children_tax_ids', 'amount', 'repartition_line_ids', 'id'
+                ],
             },
             'account.cash.rounding': {
                 'domain': [('id', '=', config_id.rounding_method.id)],
@@ -246,6 +260,10 @@ class PosSession(models.Model):
             },
             'account.fiscal.position': {
                 'domain': [('id', 'in', config_id.fiscal_position_ids.ids)],
+                'fields': ['id', 'name', 'display_name'],
+            },
+            'account.fiscal.position.tax': {
+                'domain': lambda data: [('position_id', 'in', [fpos['id'] for fpos in data['account.fiscal.position']])],
                 'fields': [],
             },
             'stock.picking.type': {
@@ -262,17 +280,15 @@ class PosSession(models.Model):
             },
         }
 
-        return params
-
     def load_data(self, models_to_load, only_data=False):
         params = self._load_data_params(self.config_id)
         response = {}
         response['data'] = {}
         response['relations'] = {}
         response['custom'] = {}
+        response['errors'] = {}
 
         if not only_data:
-
             response['custom'] = {
                 'partner_commercial_fields': self.env['res.partner']._commercial_fields(),
                 'server_version': exp_version(),
@@ -280,44 +296,21 @@ class PosSession(models.Model):
                 'has_cash_move_perm': self.env.user.has_group('account.group_account_invoice'),
                 'has_available_products': self._pos_has_valid_product(),
                 'pos_special_products_ids': self.env['pos.config']._get_special_products().ids,
-                'open_orders': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
             }
 
-            # Taxes.
-            taxes = self.env['account.tax'].search(params['account.tax']['domain'])
-            self._load_account_tax(response, taxes)
-
-            # Fiscal positions.
-            fiscal_positions = self.env['account.fiscal.position'].search(params['account.fiscal.position']['domain'])
-            self._load_account_fiscal_position(response, fiscal_positions)
-
         if len(models_to_load) > 0:
-            fields_to_load = [(name, params[name]) for name in models_to_load]
+            response['fields'] = {name: params[name]['fields'] for name in models_to_load}
         else:
-            fields_to_load = [(name, data) for name, data in params.items()]
-
-        # Custom loading.
-        for key, value in fields_to_load:
-            if 'custom_loading' in value:
-                records = self.env[key].with_context(value.get('context', [])).search(value['domain'])
-                response['data'][key] = value['custom_loading'](records)
-                if records:
-                    value['fields'] = [
-                        field_name
-                        for field_name in response['data'][key][0].keys()
-                        if field_name in records._fields
-                    ]
-
-        response['fields'] = {name: data['fields'] for name, data in fields_to_load}
+            response['fields'] = {name: data['fields'] for name, data in params.items()}
 
         # Load data from search_read
         if len(params) > 0:
             for key, value in params.items():
 
-                if not key in models_to_load and len(models_to_load) > 0:
+                if key not in models_to_load and len(models_to_load) > 0:
                     continue
 
-                if key not in response['data']:
+                try:
                     if isinstance(value['domain'], list):
                         response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
                             value['domain'],
@@ -332,6 +325,9 @@ class PosSession(models.Model):
                             order=value.get('order', []),
                             limit=value.get('limit', None),
                             load=False)
+                except AccessError as e:
+                    response['errors'][key] = e.args[0]
+                    response['data'][key] = []
 
                 if not only_data:
                     model_fields = self.env[key].fields_get(allfields=value['fields'] or None)
@@ -377,24 +373,58 @@ class PosSession(models.Model):
         if len(models_to_load) == 0 or 'product.product' in models_to_load:
             self._process_pos_ui_product_product(response['data']['product.product'])
 
+        # account_tax adaptation
+        if len(models_to_load) == 0 or 'account.tax' in models_to_load:
+            self._process_pos_ui_account_tax(
+                response['data']['account.tax'],
+                response['fields']['account.tax'],
+                response['relations']['account.tax']
+            )
+
+        # account_fiscal_position adaptation
+        if len(models_to_load) == 0 or 'account.fiscal.position' in models_to_load:
+            self._process_pos_ui_account_fiscal_position(
+                response['data']['account.fiscal.position'],
+                response['fields']['account.fiscal.position'],
+                response['relations']['account.fiscal.position']
+            )
+
         return response
 
-    def _load_account_fiscal_position(self, response, fiscal_positions):
-        results = {}
-        for fiscal_position in fiscal_positions:
-            data = results[fiscal_position.id] = {
-                'id': fiscal_position.id,
-                'name': fiscal_position.name,
-                'display_name': fiscal_position.display_name,
-                'tax_mapping_by_id': {},
-            }
-            for fiscal_position_tax in fiscal_position.tax_ids:
-                fiscal_position_tax_data = data['tax_mapping_by_id'].setdefault(fiscal_position_tax.tax_src_id.id, [])
-                fiscal_position_tax_data.append(fiscal_position_tax.tax_dest_id.id)
-        response['custom']['account.fiscal.position'] = results
+    def _process_pos_ui_account_tax(self, account_tax, account_fields, account_relations):
+        tax_ids = self.env['account.tax'].browse([tax['id'] for tax in account_tax])
 
-    def _load_account_tax(self, response, taxes):
-        response['custom']['account.tax'] = {values['id']: values for values in taxes._convert_to_dict_for_taxes_computation()}
+        for tax in account_tax:
+            record = tax_ids.filtered(lambda t: t.id == tax['id'])
+            tax_dict = record._prepare_dict_for_taxes_computation()
+
+            for key, value in tax_dict.items():
+                if key not in account_fields:
+                    account_fields.append(key)
+                    account_relations[key] = {
+                        'name': key,
+                        'type': 'string',
+                    }
+                if key not in tax:
+                    tax[key] = value
+
+    def _process_pos_ui_account_fiscal_position(self, account_fiscal_position, account_fields, account_relations):
+        fiscal_position_ids = self.env['account.fiscal.position'].browse([f['id'] for f in account_fiscal_position])
+
+        account_fields.append('tax_mapping_by_ids')
+        account_relations['tax_mapping_by_ids'] = {
+            'name': 'tax_mapping_by_ids',
+            'type': 'selection',
+        }
+
+        for fiscal_position in account_fiscal_position:
+            record = fiscal_position_ids.filtered(lambda f: f.id == fiscal_position['id'])
+            fiscal_position['tax_mapping_by_ids'] = {}
+
+            for fiscal_position_tax in record.tax_ids:
+                if not fiscal_position['tax_mapping_by_ids'].get(fiscal_position_tax.tax_src_id.id):
+                    fiscal_position['tax_mapping_by_ids'][fiscal_position_tax.tax_src_id.id] = []
+                fiscal_position['tax_mapping_by_ids'][fiscal_position_tax.tax_src_id.id].append(fiscal_position_tax.tax_dest_id.id)
 
     def _prepare_pricelist_domain(self, data):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]

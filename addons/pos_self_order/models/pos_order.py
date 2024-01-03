@@ -33,12 +33,6 @@ class PosOrderLine(models.Model):
             del vals['combo_parent_uuid']
         return super().write(vals)
 
-    def _export_for_ui(self, orderline):
-        return {
-            'note': orderline.note,
-            **super()._export_for_ui(orderline),
-        }
-
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
@@ -66,6 +60,19 @@ class PosOrder(models.Model):
             merged_tax_details[tax_id]['base'] += tax_obj['base']
         return list(merged_tax_details.values())
 
+    @api.model
+    def sync_from_ui(self, orders):
+        for order in orders:
+            if order.get('id'):
+                order_id = order['id']
+
+                if isinstance(order_id, int):
+                    old_order = self.env['pos.order'].browse(order_id)
+                    if old_order.takeaway:
+                        order['takeaway'] = old_order.takeaway
+
+        return super().sync_from_ui(orders)
+
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)
 
@@ -81,14 +88,6 @@ class PosOrder(models.Model):
         self._send_notification(order_ids)
 
         return super().remove_from_ui(server_ids)
-
-    def _order_fields(self, ui_order):
-        fields = super()._order_fields(ui_order)
-        fields.update({
-            'takeaway': ui_order.get('takeaway'),
-            'table_stand_number': ui_order.get('table_stand_number'),
-        })
-        return fields
 
     def _send_notification(self, order_ids):
         for order in order_ids:
@@ -138,24 +137,13 @@ class PosOrder(models.Model):
             "tax_details": self._compute_tax_details(),
         }
 
+    @api.model
     def get_standalone_self_order(self):
-        orders = self.env['pos.order'].search([
+        orders = self.env['pos.order'].search_read([
             *self.env["pos.order"]._check_company_domain(self.env.company),
             ('state', '=', 'draft'),
             '|', ('pos_reference', 'ilike', 'Kiosk'),
             ('pos_reference', 'ilike', 'Self-Order'),
             ('table_id', '=', False),
-        ])
-        return orders
-
-    @api.model
-    def _get_shared_orders(self, config_id):
-        orders = super()._get_shared_orders(config_id)
-        self_orders = self.get_standalone_self_order()
-        return orders | self_orders
-
-    @api.model
-    def export_for_ui_table_draft(self, table_ids):
-        orders = super().export_for_ui_table_draft(table_ids)
-        self_orders = self.get_standalone_self_order().export_for_ui()
-        return orders + self_orders
+        ], [], load=False)
+        return {'pos.order': orders}

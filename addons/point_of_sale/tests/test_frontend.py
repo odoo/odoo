@@ -21,11 +21,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
     def _get_main_company(cls):
         return cls.company_data['company']
 
-    def _get_url(self):
-        return f"/pos/ui?config_id={self.main_pos_config.id}"
+    def _get_url(self, pos_config=None):
+        pos_config = pos_config or self.main_pos_config
+        return f"/pos/ui?config_id={pos_config.id}"
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
-        self.start_tour(self._get_url(), tour_name, login=login, **kwargs)
+        self.start_tour(self._get_url(kwargs.get('pos_config')), tour_name, login=login, **kwargs)
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -226,7 +227,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Wood',
             'attribute_id': chair_legs_attribute.id,
         })
-        chair_legs_line = env['product.template.attribute.line'].create({
+        env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_legs_attribute.id,
             'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
@@ -246,7 +247,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'attribute_id': chair_fabrics_attribute.id,
             'is_custom': True,
         })
-        chair_fabrics_line = env['product.template.attribute.line'].create({
+        env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_fabrics_attribute.id,
             'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
@@ -377,7 +378,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             })],
         })
 
-        p = env['product.pricelist'].create({
+        env['product.pricelist'].create({
             'name': 'Category',
             'item_ids': [(0, 0, {
                 'compute_price': 'fixed',

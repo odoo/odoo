@@ -7,13 +7,18 @@ import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { Domain, InvalidDomainError } from "@web/core/domain";
-import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
-import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { PartnerList } from "@point_of_sale/app/screens/partner_list/partner_list";
 
-const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
+let nextId = -1;
+
+export function loyaltyIdsGenerator() {
+    return nextId--;
+}
 
 patch(PosStore.prototype, {
-    async addProductFromUi(product, options) {
+    async addLineToCurrentOrder(vals, opt = {}, configure = true) {
+        const product = vals.product_id;
         const order = this.get_order();
         const linkedPrograms =
             this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
@@ -33,21 +38,22 @@ patch(PosStore.prototype, {
         } else if (linkedPrograms.length === 1) {
             selectedProgram = linkedPrograms[0];
         }
+
         const orderTotal = this.get_order().get_total_with_tax();
         if (
             selectedProgram &&
             ["gift_card", "ewallet"].includes(selectedProgram.program_type) &&
             orderTotal < 0
         ) {
-            options.price = -orderTotal;
+            opt.price_unit = -orderTotal;
         }
         if (selectedProgram && selectedProgram.program_type == "gift_card") {
-            const shouldProceed = await this._setupGiftCardOptions(selectedProgram, options);
+            const shouldProceed = await this._setupGiftCardOptions(selectedProgram, opt);
             if (!shouldProceed) {
                 return;
             }
         } else if (selectedProgram && selectedProgram.program_type == "ewallet") {
-            const shouldProceed = await this.setupEWalletOptions(selectedProgram, options);
+            const shouldProceed = await this.setupEWalletOptions(selectedProgram, opt);
             if (!shouldProceed) {
                 return;
             }
@@ -61,15 +67,23 @@ patch(PosStore.prototype, {
                 }
             }
         }
-        await super.addProductFromUi(product, options);
+
+        // move price_unit from opt to vals
+        if (opt.price_unit) {
+            vals.price_unit = opt.price_unit;
+            delete opt.price_unit;
+        }
+
+        const result = await super.addLineToCurrentOrder(vals, opt, configure);
+
         await order._updatePrograms();
         if (rewardsToApply.length == 1) {
             const reward = rewardsToApply[0];
-            order._applyReward(reward.reward, reward.coupon_id, { product: product.id });
+            order._applyReward(reward.reward, reward.coupon_id, { product });
         }
-
         order._updateRewards();
-        return options;
+
+        return result;
     },
     /**
      * Sets up the options for the gift card product.
@@ -101,7 +115,7 @@ patch(PosStore.prototype, {
                         ["code", "=", trimmedCode],
                         ["program_id", "=", program.id],
                     ],
-                    ["points", "source_pos_order_id"]
+                    ["points", "source_pos_order_id", "code", "program_id"]
                 );
 
                 // There should be maximum one gift card for a given code.
@@ -118,7 +132,7 @@ patch(PosStore.prototype, {
                     // Use the balance of the gift card as the price of the orderline.
                     // NOTE: No need to convert the points to price because when opening a session,
                     // the gift card programs are made sure to have 1 point = 1 currency unit.
-                    options.price = giftCard.points;
+                    options.price_unit = giftCard.points;
                     options.giftCardId = giftCard.id;
                 }
             } else {
@@ -139,9 +153,29 @@ patch(PosStore.prototype, {
      * in the order, it will be added as free. That is, when added,
      * it comes with the corresponding reward product line.
      */
+    async pay() {
+        const currentOrder = this.get_order();
+        const eWalletLine = currentOrder
+            .get_orderlines()
+            .find((line) => line.getEWalletGiftCardProgramType() === "ewallet");
+
+        if (eWalletLine && !currentOrder.get_partner()) {
+            const confirmed = await ask(this.env.services.dialog, {
+                title: _t("Customer needed"),
+                body: _t("eWallet requires a customer to be selected"),
+            });
+            if (confirmed) {
+                this.dialog.add(PartnerList, {
+                    getPayload: (newPartner) => currentOrder.set_partner(newPartner),
+                });
+            }
+        } else {
+            return super.pay(...arguments);
+        }
+    },
     getPotentialFreeProductRewards() {
         const order = this.get_order();
-        const allCouponPrograms = Object.values(order.couponPointChanges)
+        const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
             .map((pe) => {
                 return {
                     program_id: pe.program_id,
@@ -149,9 +183,9 @@ patch(PosStore.prototype, {
                 };
             })
             .concat(
-                order.codeActivatedCoupons.map((coupon) => {
+                order.code_activated_coupon_ids.map((coupon) => {
                     return {
-                        program_id: coupon.program_id,
+                        program_id: coupon.program_id.id,
                         coupon_id: coupon.id,
                     };
                 })
@@ -161,13 +195,13 @@ patch(PosStore.prototype, {
             const program = this.models["loyalty.program"].get(couponProgram.program_id);
             if (
                 program.pricelist_ids.length > 0 &&
-                (!order.pricelist || !program.pricelist_ids.includes(order.pricelist.id))
+                (!order.pricelist_id || !program.pricelist_ids.includes(order.pricelist_id.id))
             ) {
                 continue;
             }
 
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
-            const hasLine = order.orderlines.filter((line) => !line.is_reward_line).length > 0;
+            const hasLine = order.lines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.reward_ids.filter(
                 (reward) => reward.reward_type == "product"
             )) {
@@ -208,12 +242,7 @@ patch(PosStore.prototype, {
     async processServerData(loadedData) {
         await super.processServerData(loadedData);
 
-        this.couponCache = {};
         this.partnerId2CouponIds = {};
-
-        for (const reward of this.models["loyalty.reward"].getAll()) {
-            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
-        }
 
         for (const reward of this.models["loyalty.reward"].getAll()) {
             this.compute_discount_product_ids(reward, this.models["product.product"].getAll());
@@ -238,13 +267,11 @@ patch(PosStore.prototype, {
         const domain = new Domain(reward_product_domain);
 
         try {
-            for (const p of products) {
-                const serializedProduct = p.serialize();
-
-                if (domain.contains(serializedProduct)) {
-                    reward.all_discount_product_ids.add(p.id);
-                }
-            }
+            reward.update({
+                all_discount_product_ids: [
+                    ["link", ...products.filter((p) => domain.contains(p.serialize()))],
+                ],
+            });
         } catch (error) {
             if (!(error instanceof InvalidDomainError)) {
                 throw error;
@@ -265,8 +292,8 @@ patch(PosStore.prototype, {
     },
     async initServerData() {
         await super.initServerData(...arguments);
-        if (this.selectedOrder) {
-            this.selectedOrder._updateRewards();
+        if (this.selectedOrderUuid) {
+            this.get_order()._updateRewards();
         }
     },
     set_order(order) {
@@ -293,25 +320,8 @@ patch(PosStore.prototype, {
             ["id", "points", "code", "partner_id", "program_id", "expiration_date"],
             { limit }
         );
-        if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
-            this.couponCache = {};
-            this.partnerId2CouponIds = {};
-            // Make sure that the current order has no invalid data.
-            if (this.selectedOrder) {
-                this.selectedOrder.invalidCoupons = true;
-            }
-        }
         const couponList = [];
-        for (const dbCoupon of result) {
-            const coupon = new PosLoyaltyCard(
-                dbCoupon.code,
-                dbCoupon.id,
-                dbCoupon.program_id?.id,
-                dbCoupon.partner_id?.id,
-                dbCoupon.points,
-                dbCoupon.expiration_date
-            );
-            this.couponCache[coupon.id] = coupon;
+        for (const coupon of result) {
             this.partnerId2CouponIds[coupon.partner_id] =
                 this.partnerId2CouponIds[coupon.partner_id] || new Set();
             this.partnerId2CouponIds[coupon.partner_id].add(coupon.id);
@@ -328,25 +338,81 @@ patch(PosStore.prototype, {
      * @param {int} partnerId
      */
     async fetchLoyaltyCard(programId, partnerId) {
-        for (const coupon of Object.values(this.couponCache)) {
-            if (coupon.partner_id === partnerId && coupon.program_id === programId) {
-                return coupon;
-            }
+        const coupon = this.models["loyalty.card"].find(
+            (c) => c.partner_id?.id === partnerId && c.program_id?.id === programId
+        );
+        if (coupon) {
+            return coupon;
         }
         const fetchedCoupons = await this.fetchCoupons([
             ["partner_id", "=", partnerId],
             ["program_id", "=", programId],
         ]);
         const dbCoupon = fetchedCoupons.length > 0 ? fetchedCoupons[0] : null;
-        return dbCoupon || new PosLoyaltyCard(null, null, programId, partnerId, 0);
+        return (
+            dbCoupon ||
+            this.models["loyalty.card"].create({
+                id: loyaltyIdsGenerator(),
+                code: null,
+                program_id: this.models["loyalty.program"].get(programId),
+                partner_id: this.models["res.partner"].get(partnerId),
+                points: 0,
+                expiration_date: null,
+            })
+        );
     },
     getLoyaltyCards(partner) {
         const loyaltyCards = [];
         if (this.partnerId2CouponIds[partner.id]) {
             this.partnerId2CouponIds[partner.id].forEach((couponId) =>
-                loyaltyCards.push(this.couponCache[couponId])
+                loyaltyCards.push(this.models["loyalty.card"].get(couponId))
             );
         }
         return loyaltyCards;
+    },
+    /**
+     * IMPROVEMENT: It would be better to update the local order object instead of creating a new one.
+     *   - This way, we don't need to remember the lines linked to negative coupon ids and relink them after pushing the order.
+     */
+    async push_single_order(...args) {
+        const [orderToPush] = args;
+
+        // Keep some linked records to relink them after pushing the order to the server.
+        const lineCouponMap = orderToPush.lines.reduce((agg, line) => {
+            if (line.coupon_id && line.coupon_id.id < 0) {
+                return { ...agg, [line.uuid]: line.coupon_id.id };
+            } else {
+                return agg;
+            }
+        }, {});
+        const lineRewardProductMap = orderToPush.lines.reduce((agg, line) => {
+            if (line.reward_product_id) {
+                return { ...agg, [line.uuid]: line.reward_product_id.id };
+            } else {
+                return agg;
+            }
+        }, {});
+
+        const [updatedOrder] = await super.push_single_order(...args);
+
+        // Relink the records.
+        for (const line of updatedOrder.lines) {
+            if (line.uuid in lineCouponMap) {
+                line.update({
+                    coupon_id: this.models["loyalty.card"].get(lineCouponMap[line.uuid]),
+                });
+            }
+        }
+        for (const line of updatedOrder.lines) {
+            if (line.uuid in lineRewardProductMap) {
+                line.update({
+                    reward_product_id: this.models["product.product"].get(
+                        lineRewardProductMap[line.uuid]
+                    ),
+                });
+            }
+        }
+
+        return [updatedOrder];
     },
 });

@@ -42,6 +42,10 @@ export class ProductProduct extends Base {
         return this.attribute_line_ids.some((line) => line.attribute_id);
     }
 
+    isCombo() {
+        return this.combo_ids.length;
+    }
+
     get isScaleAvailable() {
         return true;
     }
