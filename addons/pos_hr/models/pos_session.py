@@ -8,6 +8,7 @@ class PosSession(models.Model):
     _inherit = 'pos.session'
 
 
+<<<<<<< HEAD
     def _domain_hr_employee(self):
         if len(self.config_id.basic_employee_ids) > 0:
             domain = [
@@ -15,6 +16,36 @@ class PosSession(models.Model):
                 '|', ('user_id', '=', self.user_id.id), ('id', 'in', self.config_id.basic_employee_ids.ids + self.config_id.advanced_employee_ids.ids)]
         else:
             domain = [('company_id', '=', self.config_id.company_id.id)]
+||||||| parent of 79351a23bdf8 (temp)
+    def _pos_ui_models_to_load(self):
+        result = super()._pos_ui_models_to_load()
+        if self.config_id.module_pos_hr:
+            new_model = 'hr.employee'
+            if new_model not in result:
+                result.append(new_model)
+        return result
+
+    def _loader_params_hr_employee(self):
+        if len(self.config_id.basic_employee_ids) > 0:
+            domain = [
+                '&', ('company_id', '=', self.config_id.company_id.id),
+                '|', ('user_id', '=', self.user_id.id), ('id', 'in', self.config_id.basic_employee_ids.ids + self.config_id.advanced_employee_ids.ids)]
+        else:
+            domain = [('company_id', '=', self.config_id.company_id.id)]
+        return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id', 'work_contact_id'], 'load': False}}
+=======
+    def _pos_ui_models_to_load(self):
+        result = super()._pos_ui_models_to_load()
+        if self.config_id.module_pos_hr:
+            new_model = 'hr.employee'
+            if new_model not in result:
+                result.append(new_model)
+        return result
+
+    def _loader_params_hr_employee(self):
+        domain = self.config_id._employee_domain(self.user_id.id)
+        return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id', 'work_contact_id'], 'load': False}}
+>>>>>>> 79351a23bdf8 (temp)
 
         return domain
 

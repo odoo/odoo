@@ -441,6 +441,11 @@ export class PosStore extends Reactive {
             searchTerm: "",
         };
     }
+
+    async setDiscountFromUI(line, val) {
+        line.set_discount(val);
+    }
+
     getDefaultPricelist() {
         const current_order = this.get_order();
         if (current_order) {
@@ -1773,6 +1778,10 @@ export class PosStore extends Reactive {
     }
 
     disallowLineQuantityChange() {
+        return false;
+    }
+
+    disallowLineDiscountChange() {
         return false;
     }
 

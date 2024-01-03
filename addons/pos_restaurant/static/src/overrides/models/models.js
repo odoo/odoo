@@ -63,8 +63,16 @@ patch(Order.prototype, {
             this.pos.ordersToUpdateSet.add(this);
         }
     },
+<<<<<<< HEAD
     add_product(product, options) {
         const result = super.add_product(...arguments);
+||||||| parent of 79351a23bdf8 (temp)
+    async add_product(product, options) {
+        const result = super.add_product(...arguments);
+=======
+    async add_product(product, options) {
+        const result = await super.add_product(...arguments);
+>>>>>>> 79351a23bdf8 (temp)
         if (this.pos.config.module_pos_restaurant) {
             this.setBooked(true);
         }

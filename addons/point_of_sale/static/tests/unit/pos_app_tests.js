@@ -50,7 +50,16 @@ QUnit.module("Chrome", {
             })
             .add("printer", {
                 start() {
+<<<<<<< HEAD
                     return { print: () => {} };
+||||||| parent of 79351a23bdf8 (temp)
+=======
+                    return {
+                        printWeb: () => {},
+                        printHtml: () => {},
+                        printHtmlAlternative: () => {},
+                    };
+>>>>>>> 79351a23bdf8 (temp)
                 },
             });
 

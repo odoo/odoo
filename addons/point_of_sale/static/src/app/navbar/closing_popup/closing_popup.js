@@ -106,9 +106,17 @@ export class ClosePosPopup extends Component {
         });
     }
     async downloadSalesReport() {
+<<<<<<< HEAD
         return this.report.doAction("point_of_sale.sale_details_report", [
             this.pos.session.id,
         ]);
+||||||| parent of 79351a23bdf8 (temp)
+        return this.report.doAction("point_of_sale.sale_details_report", [
+            this.pos.pos_session.id,
+        ]);
+=======
+        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.pos_session.id]);
+>>>>>>> 79351a23bdf8 (temp)
     }
     setManualCashInput(amount) {
         if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {

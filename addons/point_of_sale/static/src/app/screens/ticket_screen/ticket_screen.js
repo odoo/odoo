@@ -167,7 +167,7 @@ export class TicketScreen extends Component {
             }
         }
         if (this.pos.isOpenOrderShareable()) {
-            this.pos._removeOrdersFromServer();
+            await this.pos._removeOrdersFromServer();
         }
         return true;
     }
@@ -234,8 +234,16 @@ export class TicketScreen extends Component {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
                     this.numberBuffer.reset();
+<<<<<<< HEAD
                     if(!toRefundDetail.orderline.combo_parent_id){
                         this.dialog.add(AlertDialog, {
+||||||| parent of 79351a23bdf8 (temp)
+                    if(!toRefundDetail.orderline.comboParent){
+                        this.popup.add(ErrorPopup, {
+=======
+                    if (!toRefundDetail.orderline.comboParent) {
+                        this.popup.add(ErrorPopup, {
+>>>>>>> 79351a23bdf8 (temp)
                             title: _t("Maximum Exceeded"),
                             body: _t(
                                 "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
@@ -266,6 +274,56 @@ export class TicketScreen extends Component {
 
         const partner = order.get_partner();
 
+<<<<<<< HEAD
+||||||| parent of 79351a23bdf8 (temp)
+        const allToRefundDetails = this._getRefundableDetails(partner);
+        if (allToRefundDetails.length == 0) {
+            this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
+            return;
+        }
+
+        const invoicedOrderIds = new Set(
+            allToRefundDetails
+                .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId]?.state === "invoiced")
+                .map(detail => detail.orderline.orderBackendId)
+        );
+
+        if (invoicedOrderIds.size > 1) {
+            this.popup.add(ErrorPopup, {
+                title: _t('Multiple Invoiced Orders Selected'),
+                body: _t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+            });
+            return;
+        }
+
+=======
+        const allToRefundDetails = this._getRefundableDetails(partner);
+        if (allToRefundDetails.length == 0) {
+            this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
+            return;
+        }
+
+        const invoicedOrderIds = new Set(
+            allToRefundDetails
+                .filter(
+                    (detail) =>
+                        this._state.syncedOrders.cache[detail.orderline.orderBackendId]?.state ===
+                        "invoiced"
+                )
+                .map((detail) => detail.orderline.orderBackendId)
+        );
+
+        if (invoicedOrderIds.size > 1) {
+            this.popup.add(ErrorPopup, {
+                title: _t("Multiple Invoiced Orders Selected"),
+                body: _t(
+                    "You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order."
+                ),
+            });
+            return;
+        }
+
+>>>>>>> 79351a23bdf8 (temp)
         // The order that will contain the refund orderlines.
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
@@ -299,14 +357,32 @@ export class TicketScreen extends Component {
         for (const refundDetail of allToRefundableDetails) {
             const originalOrderline = refundDetail.orderline;
             const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
+<<<<<<< HEAD
             if (originalOrderline.combo_parent_id) {
                 const comboParentLine = originalToDestinationLineMap.get(originalOrderline.combo_parent_id.id);
+||||||| parent of 79351a23bdf8 (temp)
+            if (originalOrderline.comboParent) {
+                const comboParentLine = originalToDestinationLineMap.get(originalOrderline.comboParent.id);
+=======
+            if (originalOrderline.comboParent) {
+                const comboParentLine = originalToDestinationLineMap.get(
+                    originalOrderline.comboParent.id
+                );
+>>>>>>> 79351a23bdf8 (temp)
                 if (comboParentLine) {
                     destinationOrderline.combo_parent_id = comboParentLine;
                 }
             }
+<<<<<<< HEAD
             if (originalOrderline.combo_line_ids && originalOrderline.combo_line_ids.length > 0) {
                 destinationOrderline.combo_line_ids = originalOrderline.combo_line_ids.map(comboLine => {
+||||||| parent of 79351a23bdf8 (temp)
+            if (originalOrderline.comboLines && originalOrderline.comboLines.length > 0) {
+                destinationOrderline.comboLines = originalOrderline.comboLines.map(comboLine => {
+=======
+            if (originalOrderline.comboLines && originalOrderline.comboLines.length > 0) {
+                destinationOrderline.comboLines = originalOrderline.comboLines.map((comboLine) => {
+>>>>>>> 79351a23bdf8 (temp)
                     return originalToDestinationLineMap.get(comboLine.id);
                 });
             }
@@ -410,7 +486,13 @@ export class TicketScreen extends Component {
     }
     getStatus(order) {
         if (order.locked) {
+<<<<<<< HEAD
             return _t("Paid");
+||||||| parent of 79351a23bdf8 (temp)
+            return order.state === 'invoiced' ? _t('Invoiced') : _t("Paid");
+=======
+            return order.state === "invoiced" ? _t("Invoiced") : _t("Paid");
+>>>>>>> 79351a23bdf8 (temp)
         } else {
             const screen = order.get_screen_data();
             return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name]).text;
