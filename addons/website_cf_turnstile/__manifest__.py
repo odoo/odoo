@@ -15,6 +15,7 @@
     'assets': {
         'web.assets_frontend': [
             'website_cf_turnstile/static/src/js/turnstile.js',
+            'website_cf_turnstile/static/src/js/error_handler.js',
         ],
     },
     'license': 'LGPL-3',
