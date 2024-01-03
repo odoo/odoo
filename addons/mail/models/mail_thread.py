@@ -2932,6 +2932,7 @@ class MailThread(models.AbstractModel):
             'mail_auto_delete',
             'model_description',
             'notify_author',
+            'notify_skip',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -2940,21 +2941,26 @@ class MailThread(models.AbstractModel):
         }
 
     @api.model
-    def _is_notification_scheduled(self, notify_scheduled_date):
+    def _is_notification_scheduled(self, scheduled_date=None, **kwargs):
         """ Helper to check if notification are about to be scheduled. Eases
         overrides.
 
-        :param notify_scheduled_date: value of 'scheduled_date' given in
+        :param scheduled_date: value of 'scheduled_date' given in
           notification parameters: arbitrary datetime (as a date, datetime or
           a string), may be void. See 'MailMail._parse_scheduled_datetime()';
+        :param dict kwargs: other notification parameters;
 
-        :return bool: True if a valid datetime has been found and is in the
-          future; False otherwise.
+        :return tuple(bool, datetime): first element tells if notification
+          process has to be called or scheduled (aka not skipped); second
+          element is the scheduled datetime for sending notifications (False
+          if notifications should be sent now);
         """
-        if notify_scheduled_date:
-            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(notify_scheduled_date)
-            notify_scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
-        return notify_scheduled_date if notify_scheduled_date and notify_scheduled_date > self.env.cr.now() else False
+        if kwargs.get('notify_skip'):
+            return False, False
+        if scheduled_date:
+            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+            scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+        return True, scheduled_date if scheduled_date and scheduled_date > self.env.cr.now() else False
 
     def _raise_for_invalid_parameters(self, parameter_names, forbidden_names=None, restricting_names=None):
         """ Helper to warn about invalid parameters (or fields).
@@ -3041,6 +3047,11 @@ class MailThread(models.AbstractModel):
 
           * ``scheduled_date``: delay notification sending if set in the future.
             This is done using the ``mail.message.schedule`` intermediate model;
+          * ``notify_skip``: skip notification process, when one wants to post
+            a message but does not want to trigger the notification process
+            e.g. if it will be handled separately, manually or just should be
+            skipped. It is managed here as some models handle business code in
+            overrides even if the notification process itself is skipped;
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
@@ -3056,14 +3067,22 @@ class MailThread(models.AbstractModel):
         if not recipients_data:
             return recipients_data
 
+        # explicitly asked to skip notification
+        should_notif, scheduled_date = self._is_notification_scheduled(**kwargs)
+        if not should_notif:
+            return recipients_data
+
         # if scheduled for later: add in queue instead of generating notifications
-        scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
+            # remove scheduled_date from stored parameters, already included in
+            # scheduled_datetime field and avoid to define a (de)serialize method
+            parameters = dict(kwargs)
+            parameters.pop('scheduled_date')
             # send the message notifications at the scheduled date
             self.env['mail.message.schedule'].sudo().create({
                 'scheduled_datetime': scheduled_date,
                 'mail_message_id': message.id,
-                'notification_parameters': json.dumps(kwargs),
+                'notification_parameters': json.dumps(parameters),
             })
         else:
             # generate immediately the <mail.notification>
