@@ -2179,6 +2179,14 @@ class MailThread(models.AbstractModel):
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
+    def message_post_batch(self, bodies):
+        for record in self:
+            record.message_post(
+                body=bodies,
+                notify_skip=True,
+            )
+        return False
+
     def _message_post_after_hook(self, message, msg_values):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
