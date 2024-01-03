@@ -4,11 +4,11 @@
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
             <t t-if="props.data.partner and props.data.company?.country_id?.code == 'IN'">
                 <div class="pos-receipt-center-align">
-                    <div><t t-esc="props.data.partner.name" /></div>
+                    <div><t t-out="props.data.partner.name" /></div>
                     <t t-if="props.data.partner.phone">
                         <div>
                             <span>Phone: </span>
-                            <t t-esc="props.data.partner.phone" />
+                            <t t-out="props.data.partner.phone" />
                         </div>
                     </t>
                     <br />
@@ -22,7 +22,7 @@
             <t t-if="line.l10n_in_hsn_code and props.data.headerData.company.country_id?.code === 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>
-                    <t t-esc="line.l10n_in_hsn_code"/>
+                    <t t-out="line.l10n_in_hsn_code"/>
                 </div>
             </t>
         </xpath>
