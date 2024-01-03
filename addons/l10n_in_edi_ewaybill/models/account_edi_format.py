@@ -22,16 +22,13 @@ _logger = logging.getLogger(__name__)
 class AccountEdiFormat(models.Model):
     _inherit = "account.edi.format"
 
-    def _l10n_in_edi_ewaybill_base_irn_or_direct(self, move):
+    def _l10n_in_edi_ewaybill_base(self, move):
         """
             There is two type of api call to create E-waybill
-            1. base on IRN, IRN is number created when we do E-invoice
-            2. direct call, when E-invoice not aplicable or it"s credit not
+            1. base on IRN, IRN is number created when we do E-invoice (l10n_in_edi_irn_ewaybill)
+            2. direct call, when E-invoice not aplicable or it"s credit note
         """
-        if move.move_type == "out_refund":
-            return "direct"
-        einvoice_in_edi_format = move.journal_id.edi_format_ids.filtered(lambda f: f.code == "in_einvoice_1_03")
-        return einvoice_in_edi_format and einvoice_in_edi_format._get_move_applicability(move) and "irn" or "direct"
+        return "direct"
 
     def _is_compatible_with_journal(self, journal):
         if self.code == "in_ewaybill_1_03":
@@ -59,20 +56,11 @@ class AccountEdiFormat(models.Model):
                 'cancel': self._l10n_in_edi_ewaybill_cancel_invoice,
                 'edi_content': self._l10n_in_edi_ewaybill_json_invoice_content,
             }
-            base = self._l10n_in_edi_ewaybill_base_irn_or_direct(invoice)
-            if base == 'irn':
-                res.update({
-                    'post': self._l10n_in_edi_ewaybill_irn_post_invoice_edi,
-                    'edi_content': self._l10n_in_edi_ewaybill_irn_json_invoice_content,
-                    })
             return res
 
     def _needs_web_services(self):
         self.ensure_one()
         return self.code == "in_ewaybill_1_03" or super()._needs_web_services()
-
-    def _l10n_in_edi_ewaybill_irn_json_invoice_content(self, move):
-        return json.dumps(self._l10n_in_edi_irn_ewaybill_generate_json(move)).encode()
 
     def _l10n_in_edi_ewaybill_json_invoice_content(self, move):
         return json.dumps(self._l10n_in_edi_ewaybill_generate_json(move)).encode()
@@ -81,7 +69,8 @@ class AccountEdiFormat(models.Model):
         if self.code != "in_ewaybill_1_03":
             return super()._check_move_configuration(move)
         error_message = []
-        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
+        base = self._l10n_in_edi_ewaybill_base(move)
+        # Check for required values
         if not move.l10n_in_type_id and base == "direct":
             error_message.append(_("- Document Type"))
         if not move.l10n_in_mode:
@@ -98,32 +87,31 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("- Transport document number and date is required when Transportation Mode is Rail,Air or Ship"))
         if error_message:
             error_message.insert(0, _("The following information are missing on the invoice (see eWayBill tab):"))
-        if base == "irn":
-            # already checked by E-invoice (l10n_in_edi) so no need to check
-            return error_message
-        is_purchase = move.is_purchase_document(include_receipts=True)
-        error_message += self._l10n_in_validate_partner(move.partner_id)
-        error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
-        if not re.match("^.{1,16}$", is_purchase and move.ref or move.name):
-            error_message.append(_("%s number should be set and not more than 16 characters",
-                (is_purchase and "Bill Reference" or "Invoice")))
-        goods_line_is_available = False
-        for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type in ('line_section', 'line_note', 'rounding') or line.product_id.type == "service")):
-            goods_line_is_available = True
-            if line.product_id:
-                hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product %s", line.product_id.name))
-                elif not re.match("^[0-9]+$", hsn_code):
-                    error_message.append(_(
-                        "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
-                    ))
-            else:
-                error_message.append(_("product is required to get HSN code"))
-        if not goods_line_is_available:
-            error_message.append(_('You need at least one product having "Product Type" as stockable or consumable.'))
-        if error_message:
-            error_message.insert(0, _("Impossible to send the Ewaybill."))
+        if base == "direct":
+            # Check lines value and number
+            is_purchase = move.is_purchase_document(include_receipts=True)
+            error_message += self._l10n_in_validate_partner(move.partner_id)
+            error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
+            if not re.match("^.{1,16}$", is_purchase and move.ref or move.name):
+                error_message.append(_("%s number should be set and not more than 16 characters",
+                    (is_purchase and "Bill Reference" or "Invoice")))
+            goods_line_is_available = False
+            for line in move.invoice_line_ids.filtered(lambda line: not (line.display_type in ('line_section', 'line_note', 'rounding') or line.product_id.type == "service")):
+                goods_line_is_available = True
+                if line.product_id:
+                    hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
+                    if not hsn_code:
+                        error_message.append(_("HSN code is not set in product %s", line.product_id.name))
+                    elif not re.match("^[0-9]+$", hsn_code):
+                        error_message.append(_(
+                            "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
+                        ))
+                else:
+                    error_message.append(_("product is required to get HSN code"))
+            if not goods_line_is_available:
+                error_message.append(_('You need at least one product having "Product Type" as stockable or consumable.'))
+            if error_message:
+                error_message.insert(0, _("Impossible to send the Ewaybill."))
         return error_message
 
     def _l10n_in_edi_ewaybill_cancel_invoice(self, invoices):
@@ -194,90 +182,6 @@ class AccountEdiFormat(models.Model):
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
         return res
-
-    def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):
-        response = {}
-        res = {}
-        generate_json = self._l10n_in_edi_irn_ewaybill_generate_json(invoices)
-        response = self._l10n_in_edi_irn_ewaybill_generate(invoices.company_id, generate_json)
-        if response.get("error"):
-            error = response["error"]
-            error_codes = [e.get("code") for e in error]
-            if "1005" in error_codes:
-                # Invalid token eror then create new token and send generate request again.
-                # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = self._l10n_in_edi_authenticate(invoices.company_id)
-                if not authenticate_response.get("error"):
-                    error = []
-                    response = self._l10n_in_edi_irn_ewaybill_generate(invoices.company_id, generate_json)
-                    if response.get("error"):
-                        error = response["error"]
-                        error_codes = [e.get("code") for e in error]
-            if "4002" in error_codes or "4026" in error_codes:
-                # Get E-waybill by details in case of IRN is already generated
-                # this happens when timeout from the Government portal but E-waybill is generated
-                response = self._l10n_in_edi_irn_ewaybill_get(invoices.company_id, generate_json.get("Irn"))
-                if not response.get("error"):
-                    error = []
-                    odoobot = self.env.ref("base.partner_root")
-                    invoices.message_post(author_id=odoobot.id, body=
-                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)")
-                    )
-
-            if "no-credit" in error_codes:
-                res[invoices] = {
-                    "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoices.company_id),
-                    "blocking_level": "error",
-                }
-            elif error:
-                error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message") or self._l10n_in_edi_ewaybill_get_error_message(e.get('code')))) for e in error])
-                blocking_level = "error"
-                if "404" in error_codes or "waiting" in error_codes:
-                    blocking_level = "warning"
-                res[invoices] = {
-                    "success": False,
-                    "error": error_message,
-                    "blocking_level": blocking_level,
-                }
-        if not response.get("error"):
-            json_dump = json.dumps(response.get("data"))
-            json_name = "%s_irn_ewaybill.json" % (invoices.name.replace("/", "_"))
-            attachment = self.env["ir.attachment"].create({
-                "name": json_name,
-                "raw": json_dump.encode(),
-                "res_model": "account.move",
-                "res_id": invoices.id,
-                "mimetype": "application/json",
-            })
-            inv_res = {"success": True, "attachment": attachment}
-            res[invoices] = inv_res
-        return res
-
-    def _l10n_in_edi_irn_ewaybill_generate_json(self, invoice):
-        json_payload = {
-            "Irn": invoice._get_l10n_in_edi_response_json().get("Irn"),
-            "Distance": invoice.l10n_in_distance,
-        }
-        if invoice.l10n_in_mode == "0":
-            json_payload.update({
-                "TransId": invoice.l10n_in_transporter_id.vat,
-                "TransName": invoice.l10n_in_transporter_id.name,
-            })
-        elif invoice.l10n_in_mode == "1":
-            json_payload.update({
-                "TransMode": invoice.l10n_in_mode,
-                "VehNo": invoice.l10n_in_vehicle_no,
-                "VehType": invoice.l10n_in_vehicle_type,
-            })
-        elif invoice.l10n_in_mode in ("2", "3", "4"):
-            doc_date = invoice.l10n_in_transportation_doc_date
-            json_payload.update({
-                "TransMode": invoice.l10n_in_mode,
-                "TransDocDt": doc_date and doc_date.strftime("%d/%m/%Y") or False,
-                "TransDocNo": invoice.l10n_in_transportation_doc_no,
-            })
-        return json_payload
 
     def _l10n_in_edi_ewaybill_post_invoice_edi(self, invoices):
         response = {}
@@ -488,36 +392,6 @@ class AccountEdiFormat(models.Model):
         if tax_details_by_code.get("cess_rate"):
             line_details.update({"cessRate": self._l10n_in_round_value(tax_details_by_code.get("cess_rate"))})
         return line_details
-
-    #================================ E-invoice API methods ===========================
-
-    @api.model
-    def _l10n_in_edi_irn_ewaybill_generate(self, company, json_payload):
-        # IRN is created by E-invoice API call so waiting for it.
-        if not json_payload.get("Irn"):
-            return {"error": [{
-                "code": "waiting",
-                "message": _("waiting For IRN generation To create E-waybill")}
-            ]}
-        token = self._l10n_in_edi_get_token(company)
-        if not token:
-            return self._l10n_in_edi_no_config_response()
-        params = {
-            "auth_token": token,
-            "json_payload": json_payload,
-        }
-        return self._l10n_in_edi_connect_to_server(company, url_path="/iap/l10n_in_edi/1/generate_ewaybill_by_irn", params=params)
-
-    @api.model
-    def _l10n_in_edi_irn_ewaybill_get(self, company, irn):
-        token = self._l10n_in_edi_get_token(company)
-        if not token:
-            return self._l10n_in_edi_no_config_response()
-        params = {
-            "auth_token": token,
-            "irn": irn,
-        }
-        return self._l10n_in_edi_connect_to_server(company, url_path="/iap/l10n_in_edi/1/get_ewaybill_by_irn", params=params)
 
     #=============================== E-waybill API methods ===================================
 

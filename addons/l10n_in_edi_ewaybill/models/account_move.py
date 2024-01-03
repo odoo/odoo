@@ -64,7 +64,7 @@ class AccountMove(models.Model):
     @api.depends("l10n_in_gst_treatment")
     def _compute_l10n_in_edi_ewaybill_direct(self):
         for move in self:
-            base = self.env["account.edi.format"]._l10n_in_edi_ewaybill_base_irn_or_direct(move)
+            base = self.env["account.edi.format"]._l10n_in_edi_ewaybill_base(move)
             move.l10n_in_edi_ewaybill_direct_api = base == "direct"
 
     @api.depends("edi_document_ids")
