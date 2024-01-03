@@ -309,6 +309,10 @@ class TestMultiCompany(HttpCase):
         path = url_parse(response.url).path
         self.assertEqual(path, '/web/login')
 
+        decoded_fragment = url_decode(url_parse(response.url).fragment)
+        self.assertTrue("cids" in decoded_fragment)
+        self.assertEqual(decoded_fragment['cids'], str(self.multi_company_record.company_id.id))
+
         self.authenticate('admin', 'admin')
 
         # Test Case 1
