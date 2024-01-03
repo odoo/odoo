@@ -19,7 +19,17 @@ odoo.define('website_cf_turnstile.s_website_form', function (require) {
                          data-appearance="${mode}"
                          data-response-field-name="turnstile_captcha"
                          data-sitekey="${session.turnstile_site_key}"
+                         data-error-callback="throwTurnstileError"
                     ></div>
+                    <script>
+                        // Rethrow the error, or we only will catch a "Script error" without any info 
+                        // because of the script api.js originating from a different domain.
+                        function throwTurnstileError(code) {
+                            const error = new Error("Turnstile Error");
+                            error.code = code;
+                            throw error;
+                        }
+                    </script>
                     <script class="s_turnstile" src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
                 `).insertAfter('.s_website_form_send, .o_website_form_send');
             }
