@@ -7,6 +7,8 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_crm_partner_assign.controllers.main import WebsiteCrmPartnerAssign
 
 
 class TestPartnerAssign(TransactionCase):
@@ -218,3 +220,37 @@ class TestPartnerLeadPortal(TestCrmCommon):
         record_action = self.lead_portal._get_access_action(access_uid=self.user_portal.id)
         self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead_portal.id)
         self.assertEqual(record_action['type'], 'ir.actions.act_url')
+
+    @patch('odoo.http.GeoIP')
+    def test_03_crm_partner_assign_geolocalization(self, GeoIpMock):
+        """
+            This test checks situation when "{OdooURL}/partners" is visited from foreign country without resellers.
+            It uses Mexico as an example.
+
+            Why patching of GeoIP is used?
+            Tested function (WebsiteCrmPartnerAssign.partners) uses GeoIp.country_code which is read_only, because
+            of the property decorator https://docs.python.org/3/library/functions.html#property
+            Patching is allowing to modify normally read_only value.
+        """
+        # Patch GeoIp so it acts, as if Odoo client is located in Mexico
+        GeoIpMock.return_value.country_code = 'MX'
+
+        # Create a partner outside of Mexico
+        non_mexican_partner = self.env['res.partner'].create({
+            'name': 'Non_Mexican_Partner',
+            'is_company': True,
+            'grade_id': self.env['res.partner.grade'].search([], limit=1).id,
+            'website_published': True,
+            'country_id': self.env['res.country'].search([('code', '!=', 'mx')], limit=1).id
+        })
+
+        def render_function(_, values, *args, **kwargs):
+            """ Tests values at the end of WebsiteCrmPartnerAssign.partners method."""
+            self.assertIn("partners", values, "Partner key is not present in the values, can't perform subsequent checks.")
+            self.assertIn(non_mexican_partner, values['partners'], "Non-Mexican Partner is not present when rendering partners from Mexico; fallback protection (protecting from no results) didn't work.")
+            return 'rendered'
+
+        with MockRequest(self.env, website=self.env['website'].browse(1)) as mock_request:
+            mock_request.render = render_function
+            res = WebsiteCrmPartnerAssign().partners()
+            self.assertEqual([b'rendered'], res.response, "render_function wasn't called")
