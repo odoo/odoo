@@ -88,7 +88,6 @@ class MrpProduction(models.Model):
         domain="[('code', '=', 'mrp_operation')]",
         required=True, check_company=True, index=True)
     use_create_components_lots = fields.Boolean(related='picking_type_id.use_create_components_lots')
-    use_auto_consume_components_lots = fields.Boolean(related='picking_type_id.use_auto_consume_components_lots')
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
         compute='_compute_locations', store=True, check_company=True,
@@ -795,7 +794,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
-        self._set_qty_producing()
+        self._set_qty_producing(False)
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
@@ -1191,7 +1190,7 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.warehouse_id.id,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
-            'manual_consumption': self.env['stock.move']._determine_is_manual_consumption(product_id, self, bom_line),
+            'manual_consumption': self.env['stock.move']._determine_is_manual_consumption(bom_line),
         }
         return data
 
@@ -1203,7 +1202,7 @@ class MrpProduction(models.Model):
             origin = '%s,%s' % (origin, self.name)
         return origin
 
-    def _set_qty_producing(self):
+    def _set_qty_producing(self, pick_manual_consumption_moves=True):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
             if qty_producing_uom != 1:
@@ -1219,7 +1218,7 @@ class MrpProduction(models.Model):
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
-            if not move.manual_consumption:
+            if not move.manual_consumption or pick_manual_consumption_moves:
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -2093,6 +2092,7 @@ class MrpProduction(models.Model):
         productions_auto = set()
         for production in self:
             if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+                production.move_raw_ids.filtered('manual_consumption').picked = True
                 continue
             if production._auto_production_checks():
                 productions_auto.add(production.id)

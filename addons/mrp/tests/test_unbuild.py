@@ -444,7 +444,7 @@ class TestUnbuild(TestMrpCommon):
         mo_form.lot_producing_id = lot_finished_2
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
-        with details_operation_form.move_line_ids.new() as ml:
+        with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 2
             ml.lot_id = lot_2
         details_operation_form.save()
