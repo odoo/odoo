@@ -154,7 +154,7 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
-    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
+    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_hours_qty', compute_sudo=True, store=True)
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
     timesheet_ids = fields.One2many('account.analytic.line', 'so_line', domain=[('project_id', '!=', False)], string='Timesheets')
 
@@ -215,11 +215,13 @@ class SaleOrderLine(models.Model):
             line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
     @api.depends('qty_delivered', 'product_uom_qty', 'analytic_line_ids')
-    def _compute_remaining_hours(self):
-        uom_hour = self.env.ref('uom.product_uom_hour')
+    def _compute_hours_qty(self):
+        uom_hour = None
         for line in self:
             remaining_hours = None
             if line.remaining_hours_available:
+                if not uom_hour:
+                    uom_hour = self.env.ref('uom.product_uom_hour')
                 qty_left = line.product_uom_qty - line.qty_delivered
                 remaining_hours = line.product_uom._compute_quantity(qty_left, uom_hour)
             line.remaining_hours = remaining_hours
