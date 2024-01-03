@@ -383,9 +383,10 @@ export class OptimizeSEODialog extends Component {
                 'res_model': this.object.model,
             });
 
-            this.canEditDescription = 'website_meta_description' in this.data;
-            this.canEditTitle = 'website_meta_title' in this.data;
-            this.canEditUrl = 'seo_name' in this.data;
+            this.canEditSeo = this.data.can_edit_seo;
+            this.canEditDescription = this.canEditSeo && 'website_meta_description' in this.data;
+            this.canEditTitle = this.canEditSeo && 'website_meta_title' in this.data;
+            this.canEditUrl = this.canEditSeo && 'seo_name' in this.data;
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
