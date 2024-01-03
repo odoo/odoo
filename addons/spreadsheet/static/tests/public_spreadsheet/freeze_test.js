@@ -98,7 +98,7 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(data.sheets[1].cells.A2.content, "This Year");
     });
 
-    QUnit.skip("global filters and their display value are exported", async function (assert) {
+    QUnit.test("global filters and their display value are exported", async function (assert) {
         const model = await createModelWithDataSource();
         await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
         const data = await freezeOdooData(model);
