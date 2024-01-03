@@ -2,6 +2,8 @@
 
 import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
 import { attr, clear, one, Model } from "@mail/model";
+import { _t } from "@web/core/l10n/translation";
+import { sprintf } from "@web/core/utils/strings";
 
 const getNextGuestNameInputId = (function () {
     let id = 0;
@@ -15,6 +17,9 @@ Model({
         useUpdateToModel({ methodName: "onComponentUpdate", modelName: "WelcomeView" });
     },
     recordMethods: {
+        getLoggedInAsText() {
+            return sprintf(_t("Logged in as %s"), this.messaging.currentUser.nameOrDisplayName);
+        },
         /**
          * Updates guest if needed then displays the thread view instead of the
          * welcome view.
