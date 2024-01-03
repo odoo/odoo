@@ -2689,19 +2689,33 @@ export class OdooEditor extends EventTarget {
      */
     _positionTableUi(element) {
         const tableUiContainerRect = this._tableUiContainer.getBoundingClientRect();
+        const isRtl = this.options.direction === 'rtl';
         const isRow = element.nodeName === 'TR';
         const ui = isRow ? this._rowUi : this._columnUi;
         const elementRect = element.getBoundingClientRect();
         const wrappedUi = ui.firstElementChild;
-        const table = getInSelection(this.document, 'table');
+        const table = closestElement(element, 'table');
+        const tableRect = table && table.getBoundingClientRect();
         const resetTableSize = ui.querySelector('.o_reset_table_size');
         if (table && !table.hasAttribute('style')) {
             resetTableSize.classList.add('d-none');
         } else {
             resetTableSize.classList.remove('d-none');
         }
-        ui.style.left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0) + 'px';
-        ui.style.top = elementRect.top - tableUiContainerRect.top - (isRow ? 0 : wrappedUi.clientHeight) + 'px';
+
+        let left;
+        let top;
+        if (isRow && isRtl) {
+            left = tableRect.right - tableUiContainerRect.x;
+        } else if (isRow && !isRtl) {
+            left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0);
+        } else {
+            left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0);
+        }
+        top = elementRect.top - tableUiContainerRect.top - (isRow ? 0 : wrappedUi.clientHeight);
+
+        ui.style.left = left + 'px';
+        ui.style.top = top + 'px';
         wrappedUi.style[isRow ? 'height' : 'width'] = elementRect[isRow ? 'height' : 'width'] + 'px';
 
     }
