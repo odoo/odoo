@@ -15,7 +15,7 @@
                         <label class="o_WelcomeView_guestNameInputLabel text-center fs-4" t-att-for="guestNameInputUniqueId">What's your name?</label>
                         <input class="form-control mb-3" type="text" placeholder="Your name" t-att-name="guestNameInputUniqueId" t-att-id="guestNameInputUniqueId" t-att-value="pendingGuestName" t-ref="guestNameInput" t-on-input="onInputGuestNameInput" t-on-keydown="onKeydownGuestNameInput"/>
                     </t>
-                    <p t-if="messaging.currentUser" class="o_WelcomeView_loggedAsStatus fs-4">Logged as <span t-esc="messaging.currentUser.nameOrDisplayName"/></p>
+                    <p t-if="messaging.currentUser" class="o_WelcomeView_loggedAsStatus fs-4" t-esc="getLoggedInAsText()"/>
                     <button class="o_WelcomeView_joinButton btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="isJoinButtonDisabled" t-on-click="onClickJoinButton">
                         <i class="fa fa-phone fa-stack"/>
                     </button>
