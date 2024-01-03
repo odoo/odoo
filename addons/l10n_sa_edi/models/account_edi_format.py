@@ -319,6 +319,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'error',
                 'response': None,
             }}
+
         xml_content = None
         if not invoice.l10n_sa_chain_index:
             # If the Invoice doesn't have a chain index, it means it either has not been submitted before,
