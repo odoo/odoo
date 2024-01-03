@@ -132,26 +132,28 @@ class BaseDocumentLayout(models.TransientModel):
 
         for wizard in self:
             if wizard.report_layout_id:
-                preview_css, wizard_with_logo = wizard._get_render_information(styles)
-
-                wizard.preview = wizard_with_logo.env['ir.ui.view']._render_template('web.report_invoice_wizard_preview', {
-                    'company': wizard_with_logo,
-                    'preview_css': preview_css,
-                    'is_html_empty': is_html_empty,
-                })
+                if wizard.env.context.get('bin_size'):
+                    # guarantees that bin_size is always set to False,
+                    # so the logo always contains the bin data instead of the binary size
+                    wizard = wizard.with_context(bin_size=False)
+                wizard.preview = wizard.env['ir.ui.view']._render_template(
+                    wizard._get_preview_template(),
+                    wizard._get_render_information(styles),
+                )
             else:
                 wizard.preview = False
 
+    def _get_preview_template(self):
+        return 'web.report_invoice_wizard_preview'
+
     def _get_render_information(self, styles):
         self.ensure_one()
-        # guarantees that bin_size is always set to False,
-        # so the logo always contains the bin data instead of the binary size
-        if self.env.context.get('bin_size'):
-            wizard_with_logo = self.with_context(bin_size=False)
-        else:
-            wizard_with_logo = self
-        preview_css = self._get_css_for_preview(styles, wizard_with_logo.id)
-        return preview_css, wizard_with_logo
+        preview_css = self._get_css_for_preview(styles, self.id)
+        return {
+            'company': self,
+            'preview_css': preview_css,
+            'is_html_empty': is_html_empty,
+        }
 
     @api.onchange('company_id')
     def _onchange_company_id(self):

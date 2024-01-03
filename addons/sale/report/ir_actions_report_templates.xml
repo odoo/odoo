@@ -211,4 +211,10 @@
  <!-- Allow edits (e.g. studio) without changing the often inherited base template -->
 <template id="document_tax_totals" inherit_id="account.document_tax_totals_template" primary="True"></template>
 
+<template id="quote_document_layout_preview">
+    <t t-call="web.html_preview_container">
+        <t t-call="sale.report_saleorder_document"/>
+    </t>
+</template>
+
 </odoo>
