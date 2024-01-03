@@ -3,9 +3,8 @@
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 
 export class AvatarCardEmployeePopover extends AvatarCardResourcePopover {
-    async onWillStart() {
-        await super.onWillStart();
-        this.record.employee_id = [this.props.id];
+    get employeeId() {
+        return this.props.id; //TODO: change that to not get an array ????
     }
 
     get fieldNames() {
