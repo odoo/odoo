@@ -1,13 +1,19 @@
 /** @odoo-module */
 
 import { FormController } from '@web/views/form/form_controller';
-import { DeleteSubtasksConfirmationDialog } from "@project/components/delete_subtasks_confirmation_dialog/delete_subtasks_confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import HistoryDialog from '@web_editor/components/history_dialog/history_dialog';
 import { useService } from '@web/core/utils/hooks';
 import { markup } from '@odoo/owl';
 import { escape } from '@web/core/utils/strings';
+
+export const subTaskDeleteConfirmationMessage = _t(
+    `Deleting a task will also delete its associated sub-tasks. \
+If you wish to preserve the sub-tasks, make sure to unlink them from their parent task beforehand.
+
+Are you sure you want to proceed?`
+);
 
 export class ProjectTaskFormController extends FormController {
     setup() {
@@ -30,18 +36,15 @@ export class ProjectTaskFormController extends FormController {
         };
     }
 
-    deleteRecord() {
+    get deleteConfirmationDialogProps() {
+        const deleteConfirmationDialogProps = super.deleteConfirmationDialogProps;
         if (!this.model.root.data.subtask_count) {
-            return super.deleteRecord();
+            return deleteConfirmationDialogProps;
         }
-        this.dialogService.add(DeleteSubtasksConfirmationDialog, {
-            confirm: async () => {
-                await this.model.root.delete();
-                if (!this.model.root.resId) {
-                    this.env.config.historyBack();
-                }
-            },
-        });
+        return {
+            ...deleteConfirmationDialogProps,
+            body: subTaskDeleteConfirmationMessage,
+        }
     }
 
     async openHistoryDialog() {
