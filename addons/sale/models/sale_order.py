@@ -882,7 +882,7 @@ class SaleOrder(models.Model):
             'force_email': True,
             'model_description': self.with_context(lang=lang).type_name,
         }
-        return {
+        action = {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
@@ -891,6 +891,20 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
+        if (
+            self.env.context.get('check_document_layout')
+            and not self.env.context.get('discard_logo_check')
+            and self.env.is_admin()
+            and not self.env.company.external_report_layout_id
+        ):
+            layout_action = self.env['ir.actions.report']._action_configure_external_report_layout(
+                action,
+            )
+            # Need to remove this context for windows action
+            action.pop('close_on_report_download', None)
+            layout_action['context']['dialog_size'] = 'extra-large'
+            return layout_action
+        return action
 
     def _find_mail_template(self):
         """ Get the appropriate mail template for the current sales order based on its state.

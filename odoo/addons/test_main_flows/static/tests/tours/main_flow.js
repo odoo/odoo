@@ -616,6 +616,12 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 },
 ...stepUtils.statusbarButtonsSteps('Send by Email', _t("Try to send it to email"), ".o_statusbar_status .dropdown-toggle:contains('Quotation')"),
 {
+    trigger: ".modal-footer button[name='document_layout_save']",
+    extra_trigger: ".modal-footer button[name='document_layout_save']",
+    content: _t("let's continue"),
+    position: "bottom",
+    skip_trigger: ".modal-footer button[name='action_send_mail']",
+}, {
     trigger: ".o_field_widget[name=email] input",
     content: _t("Enter an email address"),
     position: "right",

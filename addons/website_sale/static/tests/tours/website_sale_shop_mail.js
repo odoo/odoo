@@ -27,6 +27,13 @@ registry.category("web_tour.tours").add('shop_mail', {
         extra_trigger: '.o_statusbar_status .o_arrow_button_current:contains("Sales Order")',
     },
     {
+        trigger: ".modal-footer button[name='document_layout_save']",
+        extra_trigger: ".modal-footer button[name='document_layout_save']",
+        content: "let's continue",
+        position: "bottom",
+        skip_trigger: ".modal-footer button[name='action_send_mail']",
+    },
+    {
         content: "Open recipients dropdown",
         trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
         run: 'click',
