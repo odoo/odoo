@@ -1006,6 +1006,19 @@ class Meeting(models.Model):
             self.env['calendar.alarm_manager']._notify_next_alarm(events_to_notify.partner_ids.ids)
         return triggers_by_events
 
+    def get_next_alarm_date(self, events_by_alarm):
+        self.ensure_one()
+        now = fields.datetime.now()
+        sorted_alarms = self.alarm_ids.sorted("duration_minutes")
+        triggered_alarms = sorted_alarms.filtered(lambda alarm: alarm.id in events_by_alarm)[0]
+        event_has_future_alarms = sorted_alarms[0] != triggered_alarms
+        next_date = None
+        if self.recurrence_id.trigger_id and self.recurrence_id.trigger_id.call_at <= now:
+            next_date = self.start - timedelta(minutes=sorted_alarms[0].duration_minutes) \
+                if event_has_future_alarms \
+                else self.start
+        return next_date
+
     # ------------------------------------------------------------
     # RECURRENCY
     # ------------------------------------------------------------

@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 from dateutil.relativedelta import relativedelta
+from pytz import UTC
 
 from odoo import api, fields, models
 from odoo.tools import plaintext2html
@@ -152,6 +153,7 @@ class AlarmManager(models.AbstractModel):
         already.
         """
         lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
+        now = datetime.now(tz=UTC)
         self.env.cr.execute('''
             SELECT "alarm"."id", "event"."id"
               FROM "calendar_event" AS "event"
@@ -163,8 +165,8 @@ class AlarmManager(models.AbstractModel):
                    "alarm"."alarm_type" = %s
                AND "event"."active"
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
-               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
-             )''', [alarm_type, lastcall])
+               AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < %s
+             )''', [alarm_type, lastcall, now])
 
         events_by_alarm = {}
         for alarm_id, event_id in self.env.cr.fetchall():
@@ -190,8 +192,11 @@ class AlarmManager(models.AbstractModel):
                 alarm.mail_template_id,
                 force_send=True
             )
-        # Create cron trigger for next recurring events
-        events.recurrence_id._setup_alarms(recurrence_update=True)
+
+        for event in events:
+            if event.recurrence_id:
+                next_date = event.get_next_alarm_date(events_by_alarm)
+                event.recurrence_id.with_context(date=next_date)._setup_alarms()
 
     @api.model
     def get_next_notif(self):

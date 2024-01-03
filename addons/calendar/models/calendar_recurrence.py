@@ -254,14 +254,10 @@ class RecurrenceRule(models.Model):
         :param recurrence_update: boolean: if true, update all recurrences in self, else only the recurrences
                without trigger
         """
-        now = fields.Datetime.now()
+        now = self.env.context.get('date') or fields.Datetime.now()
         # get next events
         self.env['calendar.event'].flush_model(fnames=['recurrence_id', 'start'])
-        if recurrence_update:
-            recurrence = self
-        else:
-            recurrence = self.filtered(lambda rec: not rec.trigger_id)
-        if not recurrence.calendar_event_ids.ids:
+        if not self.calendar_event_ids.ids:
             return
 
         self.env.cr.execute("""
@@ -270,7 +266,7 @@ class RecurrenceRule(models.Model):
                    WHERE start > %s
                      AND id IN %s
                 ORDER BY recurrence_id,start ASC;
-        """, (now, tuple(recurrence.calendar_event_ids.ids)))
+        """, (now, tuple(self.calendar_event_ids.ids)))
         result = self.env.cr.dictfetchall()
         if not result:
             return
