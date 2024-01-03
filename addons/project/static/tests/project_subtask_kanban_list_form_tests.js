@@ -51,7 +51,7 @@ QUnit.module('Subtask Kanban List tests', {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="name"/>
+                                <field name="name" widget="name_with_subtask_count"/>
                                 <field name="user_ids" invisible="1" widget="many2many_avatar_user"/>
                                 <field name="state" invisible="1" widget="project_task_state_selection"/>
                                 <a t-if="record.closed_subtask_count.raw_value">
@@ -79,7 +79,7 @@ QUnit.module('Subtask Kanban List tests', {
     }
 }, function () {
     QUnit.test("Check whether subtask list functionality works as intended", async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         const views = this.views;
         const { openView } = await start({ serverData: { views } });
@@ -88,6 +88,7 @@ QUnit.module('Subtask Kanban List tests', {
             views: [[false, "kanban"]],
         });
 
+        assert.containsOnce(target, '.o_field_name_with_subtask_count:contains("(1/4 sub-tasks)")', "Task title should also display the number of (closed) sub-tasks linked to the task");
         assert.containsOnce(target, '.subtask_list_button', "Only kanban boxes of parent tasks having open subtasks should have the drawdown button, in this case this is 1");
         assert.containsNone(target, '.subtask_list', "If the drawdown button is not clicked, the subtasks list should be hidden");
 
