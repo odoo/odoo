@@ -208,8 +208,9 @@ class MailThread(models.AbstractModel):
         )
 
     def _notify_thread(self, message, msg_vals=False, **kwargs):
-        recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        recipients_data = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        if not kwargs.get('notify_skip'):
+            self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
         return recipients_data
 
     def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,

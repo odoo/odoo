@@ -2936,6 +2936,7 @@ class MailThread(models.AbstractModel):
             'mail_auto_delete',
             'model_description',
             'notify_author',
+            'notify_skip',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -3028,6 +3029,11 @@ class MailThread(models.AbstractModel):
 
           * ``scheduled_date``: delay notification sending if set in the future.
             This is done using the ``mail.message.schedule`` intermediate model;
+          * ``notify_skip``: skip notification process, when one wants to post
+            a message but does not want to trigger the notification process
+            e.g. if it will be handled separately, manually or just should be
+            skipped. It is managed here as some models handle business code in
+            overrides even if the notification process itself is skipped;
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
@@ -3041,6 +3047,10 @@ class MailThread(models.AbstractModel):
         msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
         if not recipients_data:
+            return recipients_data
+
+        # explicitly asked to skip notification
+        if kwargs.get('notify_skip'):
             return recipients_data
 
         # if scheduled for later: add in queue instead of generating notifications
