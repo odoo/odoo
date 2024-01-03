@@ -230,11 +230,26 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
 
-        # group by grade
-        grade_domain = list(base_partner_domain)
+        # Infer Country
         if not country and not country_all:
             if request.geoip.country_code:
                 country = country_obj.search([('code', '=', request.geoip.country_code)], limit=1)
+
+        # Group by country
+        country_domain = list(base_partner_domain)
+        if grade:
+            country_domain += [('grade_id', '=', grade.id)]
+        countries = partner_obj.sudo().read_group(
+            country_domain, ["id", "country_id"],
+            groupby="country_id", orderby="country_id")
+
+        # Fallback: Show all partners when country has no associates.
+        country_ids = [c['country_id'][0] for c in countries]
+        if country and country.id not in country_ids:
+            country = None
+
+        # Group by grade
+        grade_domain = list(base_partner_domain)
         if country:
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
@@ -250,13 +265,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'active': bool(grade is None),
         })
 
-        # group by country
-        country_domain = list(base_partner_domain)
-        if grade:
-            country_domain += [('grade_id', '=', grade.id)]
-        countries = partner_obj.sudo().read_group(
-            country_domain, ["id", "country_id"],
-            groupby="country_id", orderby="country_id")
         countries_partners = partner_obj.sudo().search_count(country_domain)
         # flag active country
         for country_dict in countries:
