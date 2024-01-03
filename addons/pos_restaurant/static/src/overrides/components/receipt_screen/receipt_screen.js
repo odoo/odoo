@@ -21,9 +21,31 @@ patch(ReceiptScreen.prototype, {
             super._addNewOrder(...arguments);
         }
     },
-    isResumeVisible() {
+    continueSplitting() {
+        const originalOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
+        this.currentOrder.uiState.screen_data.value = "";
+        this.currentOrder.uiState.locked = true;
+        this.pos.selectedOrderUuid = originalOrderUuid;
+        this.pos.showScreen("ProductScreen");
+    },
+    isContinueSplitting() {
         if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
-            return this.pos.getTableOrders(this.pos.selectedTable.id).length > 1;
+            const originalOrderUuid = this.currentOrder.uiState.splittedOrderUuid;
+
+            if (!originalOrderUuid) {
+                return false;
+            }
+
+            return this.pos.models["pos.order"].find(
+                (o) => o.uuid === originalOrderUuid && !o.finalized && o.lines.length
+            );
+        } else {
+            return false;
+        }
+    },
+    isResumeVisible() {
+        if (this.isContinueSplitting()) {
+            return false;
         }
         return super.isResumeVisible(...arguments);
     },

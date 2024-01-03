@@ -8,10 +8,8 @@ import { registry } from "@web/core/registry";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 
-//#region GiftCardProgramCreateSetTour1
 registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -20,12 +18,9 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour1", {
             PosLoyalty.finalizeOrder("Cash", "50"),
         ].flat(),
 });
-//#endregion
 
-//#region GiftCardProgramCreateSetTour2
 registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour2", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
@@ -34,12 +29,9 @@ registry.category("web_tour.tours").add("GiftCardProgramCreateSetTour2", {
             PosLoyalty.finalizeOrder("Cash", "0"),
         ].flat(),
 });
-//#endregion
 
-//#region GiftCardProgramScanUseTour
 registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -61,11 +53,9 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
             PosLoyalty.finalizeOrder("Cash", "35"),
         ].flat(),
 });
-//#endregion
 
 registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),

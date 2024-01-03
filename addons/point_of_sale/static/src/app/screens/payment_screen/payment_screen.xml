@@ -116,7 +116,15 @@
                     </div>
                 </t>
             </div>
-            <PaymentScreenPaymentLines paymentLines="paymentLines" deleteLine.bind="deletePaymentLine" sendForceDone.bind="sendForceDone" sendPaymentReverse.bind="sendPaymentReverse" sendPaymentCancel.bind="sendPaymentCancel" sendPaymentRequest.bind="sendPaymentRequest" selectLine.bind="selectPaymentLine" updateSelectedPaymentline.bind="updateSelectedPaymentline" />
+            <PaymentScreenPaymentLines
+                paymentLines="paymentLines"
+                deleteLine.bind="deletePaymentLine"
+                sendForceDone.bind="sendForceDone"
+                sendPaymentReverse.bind="sendPaymentReverse"
+                sendPaymentCancel.bind="sendPaymentCancel"
+                sendPaymentRequest.bind="sendPaymentRequest"
+                selectLine.bind="selectPaymentLine"
+                updateSelectedPaymentline.bind="updateSelectedPaymentline" />
         </div>
     </t>
 </templates>

@@ -7,7 +7,7 @@
             <button t-if="pos.models['account.fiscal.position'].length" class="control-button o_fiscal_position_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickFiscalPosition()">
                 <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
                 title="Set fiscal position" />
-                <t t-if="currentOrder?.fiscal_position" t-esc="currentOrder.fiscal_position.display_name" />
+                <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
                 <t t-else="">Tax</t>
             </button>
             <OrderlineNoteButton
@@ -27,7 +27,7 @@
                 <OrderlineNoteButton t-if="pos.config.module_pos_restaurant" />
                 <button class="o_pricelist_button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
-                    <t t-if="currentOrder?.pricelist" t-esc="currentOrder.pricelist.display_name" />
+                    <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
                     <t t-else="">Pricelist</t>
                 </button>
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="() => this.clickRefund()">

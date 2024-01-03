@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

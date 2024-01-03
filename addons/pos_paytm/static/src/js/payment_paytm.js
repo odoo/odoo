@@ -9,14 +9,14 @@ const REQUEST_TIMEOUT = 5000;
 export class PaymentPaytm extends PaymentInterface {
     /**
      * @Override
-     * @param { string } cid
+     * @param { string } uuid
      * @returns Promise
      */
-    async send_payment_request(cid) {
+    async send_payment_request(uuid) {
         await super.send_payment_request(...arguments);
-        const paymentLine = this.pos.get_order()?.selected_paymentline;
-        const order = this.pos?.selectedOrder;
-        const retry = this._retryCountUtility(order.uid);
+        const paymentLine = this.pos.get_order()?.get_selected_paymentline();
+        const order = this.pos?.get_order();
+        const retry = this._retryCountUtility(order.uuid);
         let transactionId = order.name.replace(" ", "").replaceAll("-", "").toUpperCase();
         if (retry > 0) {
             transactionId = transactionId.concat("retry", retry);
@@ -35,17 +35,17 @@ export class PaymentPaytm extends PaymentInterface {
         );
         if (!response) {
             paymentLine.set_payment_status("force_done");
-            this._incrementRetry(order.uid);
+            this._incrementRetry(order.uuid);
             return false;
         }
         paymentLine.set_payment_status("waitingCard");
         const pollResponse = await this.pollPayment(transactionId, referenceId, timeStamp);
         if (pollResponse) {
             const retry_remove = true;
-            this._retryCountUtility(order.uid, retry_remove);
+            this._retryCountUtility(order.uuid, retry_remove);
             return true;
         } else {
-            this._incrementRetry(order.uid);
+            this._incrementRetry(order.uuid);
             return false;
         }
     }
@@ -53,14 +53,14 @@ export class PaymentPaytm extends PaymentInterface {
     /**
      * @Override
      * @param {} order
-     * @param { string } cid
+     * @param { string } uuid
      * @returns Promise
      */
-    async send_payment_cancel(order, cid) {
+    async send_payment_cancel(order, uuid) {
         await super.send_payment_cancel(...arguments);
-        const paymentLine = this.pos.get_order()?.selected_paymentline;
+        const paymentLine = this.pos.get_order()?.get_selected_paymentline();
         paymentLine.set_payment_status("retry");
-        this._incrementRetry(order.uid);
+        this._incrementRetry(order.uuid);
         clearTimeout(this.pollTimeout);
         return true;
     }
@@ -73,7 +73,7 @@ export class PaymentPaytm extends PaymentInterface {
      */
     async pollPayment(transactionId, referenceId, timestamp) {
         const fetchPaymentStatus = async (resolve, reject) => {
-            const paymentLine = this.pos.get_order()?.selected_paymentline;
+            const paymentLine = this.pos.get_order()?.get_selected_paymentline();
             if (!paymentLine || paymentLine.payment_status == "retry") {
                 return false;
             }
@@ -81,7 +81,7 @@ export class PaymentPaytm extends PaymentInterface {
                 const data = await this.pos.data.silentCall(
                     "pos.payment.method",
                     "paytm_fetch_payment_status",
-                    [[this.payment_method.id], transactionId, referenceId, timestamp]
+                    [[this.payment_method_id.id], transactionId, referenceId, timestamp]
                 );
                 if (data?.error) {
                     throw data?.error;
@@ -109,8 +109,8 @@ export class PaymentPaytm extends PaymentInterface {
                     );
                 }
             } catch (error) {
-                const order = this.pos.selectedOrder;
-                this._incrementRetry(order.uid);
+                const order = this.pos.get_order();
+                this._incrementRetry(order.uuid);
                 paymentLine.set_payment_status("force_done");
                 this._showError(error, "paytmFetchPaymentStatus");
                 return resolve(false);
@@ -130,7 +130,7 @@ export class PaymentPaytm extends PaymentInterface {
             const data = await this.pos.data.silentCall(
                 "pos.payment.method",
                 "paytm_make_payment_request",
-                [[this.payment_method.id], amount, transactionId, referenceId, timestamp]
+                [[this.payment_method_id.id], amount, transactionId, referenceId, timestamp]
             );
             if (data?.error) {
                 throw data.error;
@@ -146,17 +146,17 @@ export class PaymentPaytm extends PaymentInterface {
     // Private methods
     // ---------------------------------------------------------------------------
 
-    _retryCountUtility(uid, remove = false) {
+    _retryCountUtility(uuid, remove = false) {
         if (remove) {
-            localStorage.removeItem(uid);
+            localStorage.removeItem(uuid);
         } else {
-            return localStorage.getItem(uid) || (localStorage.setItem(uid, 0) && 0);
+            return localStorage.getItem(uuid) || (localStorage.setItem(uuid, 0) && 0);
         }
     }
 
-    _incrementRetry(uid) {
-        let retry = localStorage.getItem(uid);
-        localStorage.setItem(uid, ++retry);
+    _incrementRetry(uuid) {
+        let retry = localStorage.getItem(uuid);
+        localStorage.setItem(uuid, ++retry);
     }
     _showError(error_msg, title) {
         this.env.services.dialog.add(AlertDialog, {

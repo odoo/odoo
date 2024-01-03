@@ -28,9 +28,7 @@ export class SaleOrderRow extends Component {
     }
     get highlighted() {
         const highlightedOrder = this.props.highlightedOrder;
-        return !highlightedOrder
-            ? false
-            : highlightedOrder.backendId === this.props.order.backendId;
+        return !highlightedOrder ? false : highlightedOrder.id === this.props.order.id;
     }
 
     // Column getters //
@@ -42,8 +40,7 @@ export class SaleOrderRow extends Component {
         return deserializeDateTime(this.order.date_order).toFormat("yyyy-MM-dd HH:mm a");
     }
     get partner() {
-        const partner = this.pos.models["res.partner"].get(this.order.partner_id);
-        return partner?.name || null;
+        return this.order.partner_id?.name;
     }
     get total() {
         return this.env.utils.formatCurrency(this.order.amount_total);
@@ -71,7 +68,6 @@ export class SaleOrderRow extends Component {
         return state_mapping[this.order.state];
     }
     get salesman() {
-        const salesman = this.pos.models["res.users"].get(this.order.user_id);
-        return salesman?.name || null;
+        return this.order.user_id?.name;
     }
 }

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from functools import partial
-
 from odoo import api, fields, models
 
 class PosOrder(models.Model):
@@ -18,6 +16,26 @@ class PosOrder(models.Model):
         self.send_table_count_notification(tables)
         return order_ids
 
+    def sync_from_ui(self, orders):
+        result = super().sync_from_ui(orders)
+
+        if self.env.context.get('table_id'):
+            table_orders = self.search([
+                "&",
+                ('table_id', '=', self.env.context['table_id']),
+                ('finalized', '=', False)
+            ])
+
+            if len(table_orders) > 0:
+                params = self.env["pos.session"]._load_data_params(table_orders[0].config_id)
+                result['pos.order'].extend(table_orders.read(params["pos.order"]["fields"], load=False))
+                result['pos.payment'].extend(table_orders.payment_ids.read(params["pos.payment"]["fields"], load=False))
+                result['pos.order.line'].extend(table_orders.lines.read(params["pos.order.line"]["fields"], load=False))
+                result['pos.pack.operation.lot'].extend(table_orders.lines.pack_lot_ids.read(params["pos.pack.operation.lot"]["fields"], load=False))
+                result["product.attribute.custom.value"].extend(table_orders.lines.custom_attribute_value_ids.read(params["product.attribute.custom.value"]["fields"], load=False))
+
+        return result
+
     def _process_saved_order(self, draft):
         order_id = super()._process_saved_order(draft)
         self.send_table_count_notification(self.table_id)
@@ -33,62 +51,3 @@ class PosOrder(models.Model):
                 messages.append(('TABLE_ORDER_COUNT', order_count))
         if messages:
             a_config._notify(*messages, private=False)
-
-
-    def set_tip(self, tip_line_vals):
-        """Set tip to `self` based on values in `tip_line_vals`."""
-
-        self.ensure_one()
-        PosOrderLine = self.env['pos.order.line']
-        process_line = partial(PosOrderLine._order_line_fields, session_id=self.session_id.id)
-
-        # 1. add/modify tip orderline
-        processed_tip_line_vals = process_line([0, 0, tip_line_vals])[2]
-        processed_tip_line_vals.update({ "order_id": self.id })
-        tip_line = self.lines.filtered(lambda line: line.product_id == self.session_id.config_id.tip_product_id)
-        if not tip_line:
-            tip_line = PosOrderLine.create(processed_tip_line_vals)
-        else:
-            tip_line.write(processed_tip_line_vals)
-
-        # 2. modify payment
-        payment_line = self.payment_ids.filtered(lambda line: not line.is_change)[0]
-        # TODO it would be better to throw error if there are multiple payment lines
-        # then ask the user to select which payment to update, no?
-        payment_line._update_payment_line_for_tip(tip_line.price_subtotal_incl)
-
-        # 3. flag order as tipped and update order fields
-        self.write({
-            "is_tipped": True,
-            "tip_amount": tip_line.price_subtotal_incl,
-            "amount_total": self.amount_total + tip_line.price_subtotal_incl,
-            "amount_paid": self.amount_paid + tip_line.price_subtotal_incl,
-        })
-
-    def set_no_tip(self):
-        """Override this method to introduce action when setting no tip."""
-        self.ensure_one()
-        self.write({
-            "is_tipped": True,
-            "tip_amount": 0,
-        })
-
-    @api.model
-    def _order_fields(self, ui_order):
-        order_fields = super(PosOrder, self)._order_fields(ui_order)
-        order_fields['table_id'] = ui_order.get('table_id', False)
-        order_fields['customer_count'] = ui_order.get('customer_count', 0)
-        order_fields['takeaway'] = ui_order.get('takeaway', False)
-        return order_fields
-
-    def _export_for_ui(self, order):
-        result = super(PosOrder, self)._export_for_ui(order)
-        result['table_id'] = order.table_id.id
-        result['customer_count'] = order.customer_count
-        result['takeaway'] = order.takeaway
-        return result
-
-    @api.model
-    def export_for_ui_table_draft(self, table_ids):
-        orders = self.env['pos.order'].search([('state', '=', 'draft'), ('table_id', 'in', table_ids)])
-        return orders.export_for_ui()

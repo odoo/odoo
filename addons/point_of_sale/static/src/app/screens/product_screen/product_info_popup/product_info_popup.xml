@@ -10,8 +10,8 @@
                 <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
                     <span t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)" class="global-info-title fs-2 fw-bolder" />
                     <span class="fs-3">
-                        <t t-foreach="props.info.productInfo.all_prices.tax_details" t-as="taxValues" t-key="taxValues.id">
-                            <div><t t-esc="taxValues.name"/>: <t t-esc="env.utils.formatCurrency(taxValues.amount)"/></div>
+                        <t t-foreach="props.info.productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
+                            <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
                         </t>
                     </span>
                 </div>

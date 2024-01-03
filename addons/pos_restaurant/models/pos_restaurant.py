@@ -46,7 +46,7 @@ class RestaurantFloor(models.Model):
             floor.name = new_name
 
     @api.model
-    def create_from_ui(self, name, background_color, config_id):
+    def sync_from_ui(self, name, background_color, config_id):
         floor_fields = {
             "name": name,
             "background_color": background_color,

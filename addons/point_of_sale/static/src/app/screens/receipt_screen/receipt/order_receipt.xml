@@ -11,8 +11,8 @@
                         <t t-esc="line.customerNote" />
                     </li>
                     <ul t-if="line.pack_lot_lines">
-                        <li t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.cid">
-                            <t t-if="lot.order_line.product.tracking == 'lot'">
+                        <li t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.uuid"> <!-- FIXME add uuid to pos.pack.operation.lot -->
+                            <t t-if="lot.pos_order_line_id.product_id.tracking == 'lot'">
                                 Lot Number <t t-esc="lot.lot_name"/>
                             </t>
                             <t t-else="">
@@ -51,7 +51,7 @@
             <div  t-if="props.data.change != 0" class="pos-receipt-amount receipt-change mt-2">
                 CHANGE
                 <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
-            </div> 
+            </div>
 
             <!-- Extra Payment Info -->
 

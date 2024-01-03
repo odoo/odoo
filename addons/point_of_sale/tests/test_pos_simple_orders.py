@@ -22,7 +22,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -48,7 +48,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -74,7 +74,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.pay_later_pm, 100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.pay_later_pm, 100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -93,7 +93,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_split_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -119,7 +119,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_split_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -145,7 +145,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [], 'payments': [(self.cash_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [], 'payments': [(self.cash_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -171,7 +171,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [], 'payments': [(self.bank_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [], 'payments': [(self.bank_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -197,7 +197,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_split_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [], 'payments': [(self.bank_split_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [], 'payments': [(self.bank_split_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -223,7 +223,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_split_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [], 'payments': [(self.cash_split_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [], 'payments': [(self.cash_split_pm1, 100), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -249,7 +249,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -276,7 +276,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -303,7 +303,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_split_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -330,7 +330,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_split_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 200), (self.pay_later_pm, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -357,7 +357,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 200), (self.cash_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 200), (self.cash_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -383,7 +383,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 200), (self.cash_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 200), (self.cash_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -417,7 +417,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_split_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 200), (self.cash_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 200), (self.cash_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -451,7 +451,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_split_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 200), (self.cash_split_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 200), (self.cash_split_pm1, -100)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -484,7 +484,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -511,7 +511,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -538,7 +538,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_split_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.bank_split_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {
@@ -565,7 +565,7 @@ class TestPosSimpleOrders(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_split_pm1 | self.pay_later_pm,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product100, 1)], 'payments': [(self.cash_split_pm1, 50), (self.pay_later_pm, 50)], 'customer': self.customer, 'is_invoiced': False, 'uuid': '00100-010-0001'},
             ],
             'journal_entries_before_closing': {},
             'journal_entries_after_closing': {

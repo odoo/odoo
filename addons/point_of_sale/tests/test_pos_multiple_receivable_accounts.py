@@ -95,9 +95,9 @@ class TestPoSMultipleReceivableAccounts(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'uid': '00100-010-0001'},
-                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'payments': [(self.bank_pm1, 158.75)], 'uid': '00100-010-0002'},
-                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm1, 264.76)], 'is_invoiced': True, 'customer': self.other_customer, 'uid': '09876-098-0987'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'uuid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'payments': [(self.bank_pm1, 158.75)], 'uuid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm1, 264.76)], 'is_invoiced': True, 'customer': self.other_customer, 'uuid': '09876-098-0987'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
@@ -197,9 +197,9 @@ class TestPoSMultipleReceivableAccounts(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'is_invoiced': True, 'customer': self.other_customer, 'uid': '09876-098-0987'},
-                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'payments': [(self.bank_pm1, 158.75)], 'is_invoiced': True, 'customer': self.customer, 'uid': '09876-098-0988'},
-                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm1, 264.76)], 'is_invoiced': True, 'customer': self.other_customer, 'uid': '09876-098-0989'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10), (self.product3, 10)], 'is_invoiced': True, 'customer': self.other_customer, 'uuid': '09876-098-0987'},
+                {'pos_order_lines_ui_args': [(self.product1, 5), (self.product2, 5)], 'payments': [(self.bank_pm1, 158.75)], 'is_invoiced': True, 'customer': self.customer, 'uuid': '09876-098-0988'},
+                {'pos_order_lines_ui_args': [(self.product2, 5), (self.product3, 5)], 'payments': [(self.bank_pm1, 264.76)], 'is_invoiced': True, 'customer': self.other_customer, 'uuid': '09876-098-0989'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {

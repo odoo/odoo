@@ -15,7 +15,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTipScreenTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             // Create order that is synced when draft.

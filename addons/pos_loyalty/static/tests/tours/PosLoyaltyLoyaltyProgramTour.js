@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -71,7 +70,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             // Order1: Immediately set the customer to Test Partner AAA which has 4 points.
@@ -146,7 +144,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -160,7 +157,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
             // The reward button should be highlighted.
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0.0", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-1.00", "1.00"),
 
             PosLoyalty.orderTotalIs("10.2"),
             PosLoyalty.finalizeOrder("Cash", "10.2"),
@@ -169,7 +166,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
 
 registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),

@@ -49,7 +49,7 @@ export class ScaleScreen extends Component {
         const current_order = this.pos.get_order();
         let current_pricelist = this.pos.config.pricelist_id;
         if (current_order) {
-            current_pricelist = current_order.pricelist;
+            current_pricelist = current_order.pricelist_id;
         }
         return current_pricelist;
     }

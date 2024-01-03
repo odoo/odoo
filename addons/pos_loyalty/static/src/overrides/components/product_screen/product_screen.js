@@ -13,9 +13,12 @@ patch(ProductScreen.prototype, {
             coupon: this._onCouponScan,
         });
     },
-    _onCouponScan(code) {
+    async _onCouponScan(code) {
         // IMPROVEMENT: Ability to understand if the scanned code is to be paid or to be redeemed.
-        this.currentOrder.activateCode(code.base_code);
+        const res = await this.currentOrder.activateCode(code.base_code);
+        if (res !== true) {
+            this.notification.add(res, { type: "danger" });
+        }
     },
     async _barcodeProductAction(code) {
         await super._barcodeProductAction(code);

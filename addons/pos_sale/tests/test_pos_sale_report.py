@@ -25,7 +25,7 @@ class TestPoSSaleReport(TestPoSCommon):
         # Process two orders
         orders.append(self.create_ui_order_data([(self.product0, 3)]))
         orders.append(self.create_ui_order_data([(self.product0, 1)]))
-        self.env['pos.order'].create_from_ui(orders)
+        self.env['pos.order'].sync_from_ui(orders)
         # Duplicate the first line of the first order
         session.order_ids[0].lines.copy()
 
@@ -70,7 +70,7 @@ class TestPoSSaleReport(TestPoSCommon):
         session = self.pos_session
 
         order = self.create_ui_order_data([(product_1, 3), (product_2, 3)])
-        self.env['pos.order'].create_from_ui([order])
+        self.env['pos.order'].sync_from_ui([order])
 
         session.action_pos_session_closing_control()
 
@@ -93,11 +93,11 @@ class TestPoSSaleReport(TestPoSCommon):
         self.open_new_session()
 
         data = self.create_ui_order_data([(product_0, 1)], self.customer, True)
-        data['data']['lines'][0][2]['sale_order_origin_id'] = sale_order.read()[0]
-        data['data']['lines'][0][2]['sale_order_line_id'] = sale_order.order_line[0].read()[0]
-        order_ids = self.env['pos.order'].create_from_ui([data])
+        data['lines'][0][2]['sale_order_origin_id'] = sale_order.id
+        data['lines'][0][2]['sale_order_line_id'] = sale_order.order_line[0].id
+        order_ids = self.env['pos.order'].sync_from_ui([data])
 
-        move_id = self.env['account.move'].browse(order_ids[0]['account_move'])
+        move_id = self.env['account.move'].browse(order_ids['pos.order'][0]['account_move'])
         self.assertEqual(move_id.partner_id.id, self.customer.id)
         self.assertEqual(move_id.partner_shipping_id.id, self.other_customer.id)
 
@@ -109,7 +109,7 @@ class TestPoSSaleReport(TestPoSCommon):
 
         # Process two orders
         orders.append(self.create_ui_order_data([(self.product0, 3)]))
-        self.env['pos.order'].create_from_ui(orders)
+        self.env['pos.order'].sync_from_ui(orders)
 
         session.action_pos_session_closing_control()
 

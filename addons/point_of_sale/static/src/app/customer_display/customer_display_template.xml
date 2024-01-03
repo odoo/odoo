@@ -147,7 +147,7 @@
                     <tbody>
                         <tr t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.get_selected_orderline().id }">
                             <td class="product_img">
-                                <img t-attf-src="#{productImages[orderline.product.id]}" />
+                                <img t-attf-src="#{productImages[orderline.product_id.id]}" />
                             </td>
                             <td class="product_text_info">
                                 <ul>
@@ -195,7 +195,7 @@
     <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines">
         <div class="pos-paymentlines">
             <t t-if="order">
-                <t t-foreach="order.get_paymentlines()" t-as="paymentline"  t-key="paymentline_index">
+                <t t-foreach="order.payment_ids" t-as="paymentline"  t-key="paymentline_index">
                     <div class="pos-amount-container pos-spaced-line-container">
                         <span class="name"><t t-esc="paymentline.name" />:</span>
                         <div class="spacer" />

@@ -31,7 +31,7 @@ class PosSession(models.Model):
                 'domain': [('program_id', 'in', self.config_id._get_program_ids().ids)],
                 'fields': ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
                     'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
-                    'discount_max_amount', 'discount_line_product_id',
+                    'discount_max_amount', 'discount_line_product_id', 'reward_product_id',
                     'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain'],
             },
             'loyalty.card': {
@@ -39,7 +39,7 @@ class PosSession(models.Model):
                 'fields': ['partner_id', 'code', 'points', 'program_id', 'expiration_date'],
             },
         })
-
+        params['pos.order.line']['fields'] += ['is_reward_line', 'reward_id', 'reward_identifier_code', 'points_cost', 'coupon_id']
         return params
 
     def _replace_ilike_with_in(self, domain_str):

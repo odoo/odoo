@@ -10,7 +10,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
     static props = {
-        paymentLines: Array,
+        paymentLines: { type: Array, optional: true },
         deleteLine: Function,
         selectLine: Function,
         sendForceDone: Function,
@@ -36,7 +36,7 @@ export class PaymentScreenPaymentLines extends Component {
         return {};
     }
     async selectLine(paymentline) {
-        this.props.selectLine(paymentline.cid);
+        this.props.selectLine(paymentline.uuid);
         if (this.ui.isSmall) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),

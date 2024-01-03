@@ -12,11 +12,14 @@ patch(ActionpadWidget.prototype, {
     get currentOrder() {
         return this.pos.get_order();
     },
+    get hasChangesToPrint() {
+        const hasChange = this.pos.getOrderChanges();
+        return hasChange.count;
+    },
     get swapButtonClasses() {
         return {
-            "highlight btn-primary": this.currentOrder?.hasChangesToPrint(),
-            altlight:
-                !this.currentOrder?.hasChangesToPrint() && this.currentOrder?.hasSkippedChanges(),
+            "highlight btn-primary": this.hasChangesToPrint,
+            altlight: !this.hasChangesToPrint && this.currentOrder?.hasSkippedChanges(),
         };
     },
     async submitOrder() {
@@ -33,20 +36,14 @@ patch(ActionpadWidget.prototype, {
         if (!order) {
             return false;
         } else {
-            return (
-                order.orderlines.reduce((totalQty, line) => totalQty + line.get_quantity(), 0) > 0
-            );
+            return order.lines.reduce((totalQty, line) => totalQty + line.get_quantity(), 0) > 0;
         }
     },
     get highlightPay() {
-        return (
-            super.highlightPay &&
-            !this.currentOrder.hasChangesToPrint() &&
-            this.hasQuantity(this.currentOrder)
-        );
+        return super.highlightPay && !this.hasChangesToPrint && this.hasQuantity(this.currentOrder);
     },
     get categoryCount() {
-        const orderChange = this.currentOrder.getOrderChanges().orderlines;
+        const orderChange = this.pos.getOrderChanges().orderlines;
 
         const categories = Object.values(orderChange).reduce((acc, curr) => {
             const categories =

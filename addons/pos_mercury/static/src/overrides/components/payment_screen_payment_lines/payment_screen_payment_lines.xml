@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_mercury.PaymentScreenPaymentLines" t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('paymentline')]//t[@t-esc='line.payment_method.name']" position="replace">
-            <t t-if="!line.payment_method.is_cash_count and line.mercury_swipe_pending">
+        <xpath expr="//div[hasclass('paymentline')]//t[@t-esc='line.payment_method_id.name']" position="replace">
+            <t t-if="!line.payment_method_id.is_cash_count and line.mercury_swipe_pending">
                 <span>WAITING FOR SWIPE</span>
             </t>
             <t t-else="">
-                <t t-esc="line.payment_method.name" />
+                <t t-esc="line.payment_method_id.name" />
             </t>
         </xpath>
     </t>

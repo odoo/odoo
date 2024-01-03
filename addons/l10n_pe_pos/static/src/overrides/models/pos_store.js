@@ -19,4 +19,13 @@ patch(PosStore.prototype, {
     isPeruvianCompany() {
         return this.company.country_id?.code == "PE";
     },
+    createNewOrder() {
+        const order = super.createNewOrder(...arguments);
+
+        if (this.isPeruvianCompany() && !order.partner_id) {
+            this.update({ partner_id: this.consumidorFinalAnonimoId });
+        }
+
+        return order;
+    },
 });

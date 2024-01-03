@@ -99,7 +99,7 @@ export class DebugWidget extends Component {
                 "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
             ),
             confirm: () => {
-                this.pos.db.remove_all_orders();
+                // this.pos.db.remove_all_orders();
                 this.data.resetUnsyncQueue();
             },
         });
@@ -111,7 +111,7 @@ export class DebugWidget extends Component {
                 "This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone."
             ),
             confirm: () => {
-                this.pos.db.remove_all_unpaid_orders();
+                // this.pos.db.remove_all_unpaid_orders();
                 window.location = "/";
             },
         });

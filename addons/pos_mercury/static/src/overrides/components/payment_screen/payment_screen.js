@@ -124,7 +124,7 @@ patch(PaymentScreen.prototype, {
     },
     _get_swipe_pending_line() {
         var i = 0;
-        var lines = this.pos.get_order().get_paymentlines();
+        var lines = this.pos.get_order().payment_ids;
 
         for (i = 0; i < lines.length; i++) {
             if (lines[i].mercury_swipe_pending) {
@@ -136,7 +136,7 @@ patch(PaymentScreen.prototype, {
     },
     _does_credit_payment_line_exist(amount, card_number, card_brand, card_owner_name) {
         var i = 0;
-        var lines = this.pos.get_order().get_paymentlines();
+        var lines = this.pos.get_order().payment_ids;
 
         for (i = 0; i < lines.length; i++) {
             if (
@@ -193,7 +193,7 @@ patch(PaymentScreen.prototype, {
     // Handler to manage the card reader string
     credit_code_transaction(parsed_result, old_deferred, retry_nr) {
         const order = this.pos.get_order();
-        if (order.get_due(order.selected_paymentline) < 0) {
+        if (order.get_due(order.get_selected_paymentline()) < 0) {
             this.dialog.add(AlertDialog, {
                 title: _t("Refunds not supported"),
                 body: _t(
@@ -233,7 +233,7 @@ patch(PaymentScreen.prototype, {
             encrypted_block: decodedMagtek["encrypted_block"],
             transaction_type: "Credit",
             transaction_code: "Sale",
-            invoice_no: this.pos.get_order().uid.replace(/-/g, ""),
+            invoice_no: this.pos.get_order().uuid.replace(/-/g, ""),
             purchase: purchase_amount,
             payment_method_id: parsed_result.payment_method_id,
         };
@@ -315,19 +315,21 @@ patch(PaymentScreen.prototype, {
                             );
                         }
 
-                        order.selected_paymentline.paid = true;
-                        order.selected_paymentline.mercury_swipe_pending = false;
-                        order.selected_paymentline.mercury_amount = response.authorize;
-                        order.selected_paymentline.set_amount(response.authorize);
-                        order.selected_paymentline.mercury_card_number = decodedMagtek["number"];
-                        order.selected_paymentline.mercury_card_brand = response.card_type;
-                        order.selected_paymentline.mercury_card_owner_name = decodedMagtek["name"];
-                        order.selected_paymentline.mercury_ref_no = response.ref_no;
-                        order.selected_paymentline.mercury_record_no = response.record_no;
-                        order.selected_paymentline.mercury_invoice_no = response.invoice_no;
-                        order.selected_paymentline.mercury_auth_code = response.auth_code;
-                        order.selected_paymentline.mercury_data = response; // used to reverse transactions
-                        order.selected_paymentline.set_credit_card_name();
+                        order.get_selected_paymentline().paid = true;
+                        order.get_selected_paymentline().mercury_swipe_pending = false;
+                        order.get_selected_paymentline().mercury_amount = response.authorize;
+                        order.get_selected_paymentline().set_amount(response.authorize);
+                        order.get_selected_paymentline().mercury_card_number =
+                            decodedMagtek["number"];
+                        order.get_selected_paymentline().mercury_card_brand = response.card_type;
+                        order.get_selected_paymentline().mercury_card_owner_name =
+                            decodedMagtek["name"];
+                        order.get_selected_paymentline().mercury_ref_no = response.ref_no;
+                        order.get_selected_paymentline().mercury_record_no = response.record_no;
+                        order.get_selected_paymentline().mercury_invoice_no = response.invoice_no;
+                        order.get_selected_paymentline().mercury_auth_code = response.auth_code;
+                        order.get_selected_paymentline().mercury_data = response; // used to reverse transactions
+                        order.get_selected_paymentline().set_credit_card_name();
 
                         this.numberBuffer.reset();
 
@@ -508,22 +510,22 @@ patch(PaymentScreen.prototype, {
     /**
      * @override
      */
-    deletePaymentLine(cid) {
-        const line = this.paymentLines.find((line) => line.cid === cid);
+    deletePaymentLine(uuid) {
+        const line = this.paymentLines.find((line) => line.uuid === uuid);
         if (line.mercury_data) {
             this.do_reversal(line, false);
         } else {
-            super.deletePaymentLine(cid);
+            super.deletePaymentLine(uuid);
         }
     },
     /**
      * @override
      */
-    addNewPaymentLine(paymentMethod) {
+    async addNewPaymentLine(paymentMethod) {
         const order = this.pos.get_order();
         const res = super.addNewPaymentLine(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {
-            order.selected_paymentline.mercury_swipe_pending = true;
+            order.get_selected_paymentline().mercury_swipe_pending = true;
         }
     },
 });

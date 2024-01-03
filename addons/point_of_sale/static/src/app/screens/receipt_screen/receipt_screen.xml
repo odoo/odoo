@@ -35,18 +35,14 @@
                             </div>
                         </div>
                         <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
-                        <div t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-1 sticky-bottom">
+                        <div id="action_btn_desktop" t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-1 sticky-bottom">
                             <button class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                                 New Order
                             </button>
-                            <button t-if="isResumeVisible() and !splittedOrder" class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
+                            <button t-if="isResumeVisible()" class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
                                 <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                                 Resume Order
-                            </button>
-                            <button t-if="splittedOrder" class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-on-click="continueSplitting" name="resume">
-                                <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
-                                Continue
                             </button>
                         </div>
                     </div>
@@ -56,15 +52,12 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="ui.isSmall" class="switchpane d-flex h-12">
+                <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex h-12">
                     <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 New Order
                     </div>
                     <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
                                 Resume Order
-                    </div>
-                    <div t-if="splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="continueSplitting" name="resume">
-                                Continue
                     </div>
                 </div>
             </div>

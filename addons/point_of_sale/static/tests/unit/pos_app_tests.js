@@ -144,6 +144,10 @@ export class MockPosData {
                 },
                 "account.fiscal.position": { fields: {}, records: [] },
                 "pos.category": { fields: {}, records: [] },
+                "pos.order": { fields: {}, records: [] },
+                "pos.order.line": { fields: {}, records: [] },
+                "pos.payment": { fields: {}, records: [] },
+                "pos.pack.operation.lot": { fields: {}, records: [] },
                 "product.pricelist.item": { fields: {}, records: [] },
             },
         };

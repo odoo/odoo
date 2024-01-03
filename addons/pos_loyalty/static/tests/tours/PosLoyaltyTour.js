@@ -9,7 +9,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             // --- PoS Loyalty Tour Basic Part 1 ---
@@ -81,7 +80,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour2", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             // --- PoS Loyalty Tour Basic Part 2 ---
@@ -168,7 +166,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour3", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             // --- PoS Loyalty Tour Basic Part 3 ---
@@ -191,7 +188,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour3", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour4", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -208,7 +204,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour4", {
 
 registry.category("web_tour.tours").add("PosCouponTour5", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -222,7 +217,6 @@ registry.category("web_tour.tours").add("PosCouponTour5", {
 //transform the last tour to match the new format
 registry.category("web_tour.tours").add("PosLoyaltyTour6", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -238,7 +232,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour7", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -252,7 +245,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour7", {
 
 registry.category("web_tour.tours").add("PosLoyaltyTour8", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -265,7 +257,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour8", {
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountCategoryTour", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -282,7 +273,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountCategoryTour"
 
 registry.category("web_tour.tours").add("PosLoyaltyTour9", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),

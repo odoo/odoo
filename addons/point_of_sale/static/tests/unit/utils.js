@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("mock_server").add("pos.session/load_data", async function (route, args) {
     return {
+        errors: [],
         custom: {
             server_version: "0.0.0",
             base_url: "http://localhost:8069",

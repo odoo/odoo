@@ -18,8 +18,6 @@ export class Orderline extends Component {
                 combo_parent_id: { type: String, optional: true },
                 combo_line_id: { type: String, optional: true },
                 oldUnitPrice: { type: String, optional: true },
-                customerNote: { type: String, optional: true },
-                internalNote: { type: String, optional: true },
                 "*": true,
             },
         },

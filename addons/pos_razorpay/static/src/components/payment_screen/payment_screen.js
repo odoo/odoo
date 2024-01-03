@@ -8,15 +8,15 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(async () => {
-            const pendingPaymentLine = this.currentOrder.paymentlines.find(
+            const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method.use_payment_terminal === "razorpay" &&
+                    paymentLine.payment_method_id.use_payment_terminal === "razorpay" &&
                     !paymentLine.is_done() &&
                     paymentLine.get_payment_status() !== "pending"
             );
             if (pendingPaymentLine) {
                 const payment_status =
-                    await pendingPaymentLine.payment_method.payment_terminal._waitForPaymentConfirmation();
+                    await pendingPaymentLine.payment_method_id.payment_terminal._waitForPaymentConfirmation();
                 if (payment_status?.status === "AUTHORIZED") {
                     pendingPaymentLine.set_payment_status("done");
                 } else {

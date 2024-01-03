@@ -76,14 +76,14 @@ export class PartnerEditor extends Component {
         const partnerHasActiveOrders = this.pos
             .get_order_list()
             .some((order) => order.partner?.id === this.props.partner.id);
-        const ui = {
-            searchDetails: {
+        const stateOverride = {
+            search: {
                 fieldName: "PARTNER",
                 searchTerm: this.props.partner.name,
             },
             filter: partnerHasActiveOrders ? "" : "SYNCED",
         };
-        this.pos.showScreen("TicketScreen", { ui });
+        this.pos.showScreen("TicketScreen", { stateOverride });
     }
     async confirm() {
         const processedChanges = {};
@@ -113,12 +113,12 @@ export class PartnerEditor extends Component {
         if (processedChanges.image_1920) {
             processedChanges.image_1920 = processedChanges.image_1920.split(",")[1];
         }
-
         if (processedChanges.id) {
             this.pos.data.write("res.partner", [processedChanges.id], processedChanges);
         } else {
             await this.pos.data.create("res.partner", [processedChanges]);
         }
+
         this.props.close();
     }
     async uploadImage(event) {
