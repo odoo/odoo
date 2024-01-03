@@ -1605,3 +1605,51 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             {'product_id': self.product_a.id, 'product_uom_qty': 0, 'quantity': 0, 'state': 'cancel'},
             {'product_id': self.product_b.id, 'product_uom_qty': 1, 'quantity': 0, 'state': 'waiting'},
         ])
+
+    def test_create_so_return_with_tracked_product(self):
+        """
+        Creates a sale order with a tracked product, validates it and its delivery, then creates a
+        return validates it and finally creates a second return.
+        """
+        self.product_a.tracking = 'serial'
+        self.product_a.type = 'product'
+        sn1 = self.env['stock.lot'].create({
+            'name': 'SN0001',
+            'product_id': self.product_a.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.company_data['default_warehouse'].lot_stock_id, 1, lot_id=sn1)
+        # Creates a sale order for 1 tracked product.
+        sale_order = self._get_new_sale_order(amount=1, product=self.product_a)
+        # validates the sale order, then validates the delivery.
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.picking_ids)
+        picking = sale_order.picking_ids
+        picking.button_validate()
+
+        # Checks the delivery amount (must be 1).
+        self.assertEqual(sale_order.order_line.qty_delivered, 1)
+        # Creates a return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        self.assertEqual(return_wizard.product_return_moves.quantity, 1)
+
+        # validates the return picking.
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.button_validate()
+        # Checks the delivery amount (must be 0).
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=return_picking.ids, active_id=return_picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        self.assertEqual(return_wizard.product_return_moves.quantity, 1)
+
+        # validates the return picking.
+        res = return_wizard.create_returns()
+        return_picking_2 = self.env['stock.picking'].browse(res['res_id'])
+        return_picking_2.button_validate()
+        self.assertEqual(return_wizard.product_return_moves.quantity, 1)
