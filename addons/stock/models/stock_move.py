@@ -2137,6 +2137,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_reserve._action_assign()
 
     def _rollup_move_dests(self, seen=False):
+        self.ensure_one()
         if not seen:
             seen = OrderedSet()
         if self.id in seen:
@@ -2147,6 +2148,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         return seen
 
     def _rollup_move_origs(self, seen=False):
+        self.ensure_one()
         if not seen:
             seen = OrderedSet()
         if self.id in seen:
