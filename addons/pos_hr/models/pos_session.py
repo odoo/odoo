@@ -21,13 +21,15 @@ class PosSession(models.Model):
 
     def _load_data_params(self, config_id):
         params = super()._load_data_params(config_id)
-        params['product.product']['fields'].append('all_product_tag_ids')
-        params.update({
-            'hr.employee': {
-                'domain': self._domain_hr_employee(),
-                'fields': ['name', 'id', 'user_id', 'work_contact_id'],
-            },
-        })
+
+        if config_id.module_pos_hr:
+            params['product.product']['fields'].append('all_product_tag_ids')
+            params.update({
+                'hr.employee': {
+                    'domain': self._domain_hr_employee(),
+                    'fields': ['name', 'id', 'user_id', 'work_contact_id'],
+                },
+            })
 
         return params
 
@@ -35,7 +37,7 @@ class PosSession(models.Model):
         response = super().load_data(models_to_load, only_data)
 
         if len(models_to_load) == 0 or 'hr.employee' in models_to_load:
-            employees = response['data']['hr.employee']
+            employees = response['data'].get('hr.employee') or []
             employee_ids = [employee['id'] for employee in employees]
             user_ids = [employee['user_id'] for employee in employees if employee['user_id']]
             manager_ids = self.env['res.users'].browse(user_ids).filtered(lambda user: self.config_id.group_pos_manager_id in user.groups_id).mapped('id')

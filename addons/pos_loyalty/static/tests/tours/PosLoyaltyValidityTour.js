@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             // First tour should not get any automatic rewards
@@ -24,7 +23,6 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
 
 registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             // Second tour

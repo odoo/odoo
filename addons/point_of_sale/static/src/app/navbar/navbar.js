@@ -63,8 +63,12 @@ export class Navbar extends Component {
             if (this._shouldLoadOrders()) {
                 try {
                     this.pos.setLoadingOrderState(true);
-                    const message = await this.pos._syncAllOrdersFromServer();
-                    if (message) {
+                    const orders = await this.pos.getServerOrders();
+                    if (orders && orders.length > 0) {
+                        const message = _t(
+                            "%s orders have been loaded from the server. ",
+                            orders.length
+                        );
                         this.notification.add(message);
                     }
                 } finally {
@@ -78,7 +82,7 @@ export class Navbar extends Component {
     }
 
     _shouldLoadOrders() {
-        return this.pos.config.trusted_config_ids.length > 0;
+        return this.pos.config.raw.trusted_config_ids.length > 0;
     }
 
     get isTicketScreenShown() {
@@ -103,6 +107,7 @@ export class Navbar extends Component {
 
     async closeSession() {
         const info = await this.pos.getClosePosInfo();
+        await this.pos.data.resetIndexedDB();
 
         if (info) {
             this.dialog.add(ClosePosPopup, info);

@@ -5,7 +5,7 @@ import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { useRef, useState, onWillStart, Component } from "@odoo/owl";
+import { useRef, useState, Component, onMounted } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
@@ -29,16 +29,9 @@ export class ReceiptScreen extends Component {
         this.orderUiState.inputEmail =
             this.orderUiState.inputEmail || (partner && partner.email) || "";
 
-        onWillStart(async () => {
-            // When the order is paid, if there is still a part of the order
-            // to send in preparation it is automatically sent
-            if (this.pos.orderPreparationCategories.size) {
-                try {
-                    await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-                } catch (error) {
-                    Promise.reject(error);
-                }
-            }
+        onMounted(() => {
+            const order = this.pos.get_order();
+            this.pos.sendOrderInPreparation(order);
         });
     }
     _addNewOrder() {
@@ -83,7 +76,7 @@ export class ReceiptScreen extends Component {
         const tip_product_id = this.pos.config.tip_product_id?.id;
         const tipLine = order
             .get_orderlines()
-            .find((line) => tip_product_id && line.product.id === tip_product_id);
+            .find((line) => tip_product_id && line.product_id.id === tip_product_id);
         const tipAmount = tipLine ? tipLine.get_all_prices().priceWithTax : 0;
         const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
         if (!tipAmount) {
@@ -99,21 +92,18 @@ export class ReceiptScreen extends Component {
         return { name: "TicketScreen" };
     }
     orderDone() {
-        this.pos.removeOrder(this.currentOrder);
+        this.currentOrder.uiState.screen_data.value = "";
+        this.currentOrder.uiState.locked = true;
         this._addNewOrder();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
     resumeOrder() {
-        this.pos.removeOrder(this.currentOrder);
+        this.currentOrder.uiState.screen_data.value = "";
+        this.currentOrder.uiState.locked = true;
         this.pos.selectNextOrder();
         const { name, props } = this.ticketScreen;
         this.pos.showScreen(name, props);
-    }
-    continueSplitting() {
-        this.pos.selectedOrder = this.currentOrder.originalSplittedOrder;
-        this.pos.removeOrder(this.currentOrder);
-        this.pos.showScreen("ProductScreen");
     }
     isResumeVisible() {
         return this.pos.get_order_list().length > 1;
@@ -136,9 +126,9 @@ export class ReceiptScreen extends Component {
             { addClass: "pos-receipt-print" }
         );
         const order = this.currentOrder;
-        const orderName = order.get_name();
-        const order_server_id = this.pos.validated_orders_name_server_id_map[orderName];
-        if (!order_server_id) {
+        const orderName = order.display_name;
+        const order_id = order.id;
+        if (typeof order_id !== "number") {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Unsynced order"),
                 body: _t(
@@ -148,7 +138,7 @@ export class ReceiptScreen extends Component {
             return Promise.reject();
         }
         await this.pos.data.call("pos.order", methodName, [
-            [order_server_id],
+            [order_id],
             orderName,
             orderPartner,
             ticketImage,

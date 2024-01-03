@@ -8,12 +8,6 @@ class PosOrder(models.Model):
     employee_id = fields.Many2one('hr.employee', help="Person who uses the cash register. It can be a reliever, a student or an interim employee.")
     cashier = fields.Char(string="Cashier", compute="_compute_cashier", store=True)
 
-    @api.model
-    def _order_fields(self, ui_order):
-        order_fields = super(PosOrder, self)._order_fields(ui_order)
-        order_fields['employee_id'] = ui_order.get('employee_id')
-        return order_fields
-
     @api.depends('employee_id', 'user_id')
     def _compute_cashier(self):
         for order in self:
@@ -21,10 +15,3 @@ class PosOrder(models.Model):
                 order.cashier = order.employee_id.name
             else:
                 order.cashier = order.user_id.name
-
-    def _export_for_ui(self, order):
-        result = super(PosOrder, self)._export_for_ui(order)
-        result.update({
-            'employee_id': order.employee_id.id,
-        })
-        return result

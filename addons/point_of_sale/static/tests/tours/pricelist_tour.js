@@ -47,7 +47,6 @@ function assertProductPrice(product, pricelist_name, quantity, expected_price) {
 
 registry.category("web_tour.tours").add("pos_pricelist", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             // The global posmodel is only present when the posmodel is instantiated

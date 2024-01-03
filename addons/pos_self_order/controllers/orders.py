@@ -28,33 +28,31 @@ class PosSelfOrderController(http.Controller):
         # Create the order without lines and prices computed
         # We need to remap the order because some required fields are not used in the frontend.
         order = {
-            'data': {
-                'name': order_reference,
-                'sequence_number': sequence_number,
-                'uuid': order.get('uuid'),
-                'takeaway': order.get('takeaway'),
-                'user_id': request.session.uid,
-                'access_token': uuid.uuid4().hex,
-                'pos_session_id': pos_session.id,
-                'table_id': table.id if table else False,
-                'partner_id': False,
-                'date_order': str(fields.Datetime.now()),
-                'fiscal_position_id': fiscal_position.id,
-                'statement_ids': [],
-                'lines': [],
-                'amount_tax': 0,
-                'amount_total': 0,
-                'amount_paid': 0,
-                'amount_return': 0,
-                'table_stand_number': order.get('table_stand_number'),
-                'ticket_code': order.get('ticket_code'),
-            },
-            'to_invoice': False,
+            'name': order_reference,
+            'pos_reference': order_reference,
+            'sequence_number': sequence_number,
+            'uuid': order.get('uuid'),
+            'takeaway': order.get('takeaway'),
+            'user_id': request.session.uid,
+            'access_token': uuid.uuid4().hex,
             'session_id': pos_session.id,
+            'table_id': table.id if table else False,
+            'partner_id': False,
+            'date_order': str(fields.Datetime.now()),
+            'fiscal_position_id': fiscal_position.id,
+            'payment_ids': [],
+            'lines': [],
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'table_stand_number': order.get('table_stand_number'),
+            'ticket_code': order.get('ticket_code'),
         }
 
         # Save the order in the database to get the id
-        posted_order_id = pos_config.env['pos.order'].with_context(from_self=True).create_from_ui([order], draft=True)[0].get('id')
+        posted_order_id = pos_config.env['pos.order'].with_context(from_self=True).sync_from_ui([order])
+        posted_order_id = posted_order_id['pos.order'][0].get('id')
 
         # Process the lines and get their prices computed
         lines = self._process_lines(lines, pos_config, posted_order_id, is_takeaway)

@@ -18,6 +18,11 @@
                         order="order"
                         highlightedOrder="highlightedOrder" />
                 </t>
+                <t t-if="!props.orders || props.orders.length === 0">
+                    <CenteredIcon
+                        icon="this.pos.data.network.loading ? 'fa-spinner fa-spin' : 'fa-shopping-cart fa-4x'"
+                        text="this.pos.data.network.loading ? 'Loading...' : 'No sale orders found'"/>
+                </t>
             </div>
         </div>
     </t>

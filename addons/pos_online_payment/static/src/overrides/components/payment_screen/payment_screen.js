@@ -9,9 +9,18 @@ import { qrCodeSrc } from "@point_of_sale/utils";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 patch(PaymentScreen.prototype, {
+    async addNewPaymentLine(paymentMethod) {
+        if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
+            this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+            this.pos.addPendingOrder([this.currentOrder.id]);
+            await this.pos.syncAllOrders();
+        }
+        return super.addNewPaymentLine(...arguments);
+    },
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
-            (line) => line.payment_method.is_online_payment && line.get_payment_status() !== "done"
+            (line) =>
+                line.payment_method_id.is_online_payment && line.get_payment_status() !== "done"
         );
     },
     checkRemainingOnlinePaymentLines(unpaidAmount) {
@@ -25,7 +34,7 @@ patch(PaymentScreen.prototype, {
                     title: _t("Invalid online payment"),
                     body: _t(
                         "Online payments cannot have a negative amount (%s: %s).",
-                        line.payment_method.name,
+                        line.payment_method_id.name,
                         this.env.utils.formatCurrency(amount)
                     ),
                 });
@@ -63,39 +72,7 @@ patch(PaymentScreen.prototype, {
 
         const onlinePaymentLines = this.getRemainingOnlinePaymentLines();
         if (onlinePaymentLines.length > 0) {
-            // Send the order to the server everytime before the online payments process to
-            // allow the server to get the data for online payments and link the successful
-            // online payments to the order.
-            // The validation process will be done by the server directly after a successful
-            // online payment that makes the order fully paid.
-            this.currentOrder.date_order = luxon.DateTime.now();
-            this.currentOrder.save_to_db();
-            this.pos.addOrderToUpdateSet();
-
-            try {
-                await this.pos.sendDraftToServer();
-            } catch (error) {
-                // Code from _finalizeValidation():
-                if (error.code == 700 || error.code == 701) {
-                    this.error = true;
-                }
-
-                if ("code" in error) {
-                    // We started putting `code` in the rejected object for invoicing error.
-                    // We can continue with that convention such that when the error has `code`,
-                    // then it is an error when invoicing. Besides, _handlePushOrderError was
-                    // introduce to handle invoicing error logic.
-                    await this._handlePushOrderError(error);
-                }
-                this.dialog.add(AlertDialog, {
-                    title: _t("Online payment unavailable"),
-                    body: _t(
-                        "There is a problem with the server. The order cannot be saved and therefore the online payment is not possible."
-                    ),
-                });
-                return false;
-            }
-            if (!this.currentOrder.server_id) {
+            if (!this.currentOrder.id) {
                 this.cancelOnlinePayment(this.currentOrder);
                 this.dialog.add(AlertDialog, {
                     title: _t("Online payment unavailable"),
@@ -108,10 +85,10 @@ patch(PaymentScreen.prototype, {
             for (const onlinePaymentLine of onlinePaymentLines) {
                 const onlinePaymentLineAmount = onlinePaymentLine.get_amount();
                 // The local state is not aware if the online payment has already been done.
-                lastOrderServerOPData =
-                    await this.currentOrder.update_online_payments_data_with_server(
-                        onlinePaymentLineAmount
-                    );
+                lastOrderServerOPData = await this.pos.update_online_payments_data_with_server(
+                    this.currentOrder,
+                    onlinePaymentLineAmount
+                );
                 if (!lastOrderServerOPData) {
                     this.dialog.add(AlertDialog, {
                         title: _t("Online payment unavailable"),
@@ -174,8 +151,10 @@ patch(PaymentScreen.prototype, {
             }
 
             if (!lastOrderServerOPData || !lastOrderServerOPData.is_paid) {
-                lastOrderServerOPData =
-                    await this.currentOrder.update_online_payments_data_with_server(0);
+                lastOrderServerOPData = await this.pos.update_online_payments_data_with_server(
+                    this.currentOrder,
+                    0
+                );
             }
             if (!lastOrderServerOPData || !lastOrderServerOPData.is_paid) {
                 return false;
@@ -183,9 +162,11 @@ patch(PaymentScreen.prototype, {
 
             await this.afterPaidOrderSavedOnServer(lastOrderServerOPData.paid_order);
             return false; // Cancel normal flow because the current order is already saved on the server.
-        } else if (this.currentOrder.server_id) {
-            const orderServerOPData =
-                await this.currentOrder.update_online_payments_data_with_server(0);
+        } else if (typeof this.currentOrder.id === "number") {
+            const orderServerOPData = await this.pos.update_online_payments_data_with_server(
+                this.currentOrder,
+                0
+            );
             if (!orderServerOPData) {
                 return ask(this.dialog, {
                     title: _t("Online payment unavailable"),
@@ -212,7 +193,7 @@ patch(PaymentScreen.prototype, {
     },
     cancelOnlinePayment(order) {
         // Remove the draft order from the server if there is no done online payment
-        order.update_online_payments_data_with_server(0);
+        this.pos.update_online_payments_data_with_server(order, 0);
     },
     async afterPaidOrderSavedOnServer(orderJSON) {
         if (!orderJSON) {
@@ -231,21 +212,14 @@ patch(PaymentScreen.prototype, {
         // Without that update, the payment lines printed on the receipt ticket would
         // be invalid.
         const isInvoiceRequested = this.currentOrder.is_to_invoice();
-        const orderJSONInArray = [orderJSON];
-        await this.pos._loadMissingProducts(orderJSONInArray);
-        await this.pos._loadMissingPartners(orderJSONInArray);
-        const updatedOrder = this.pos.createReactiveOrder(orderJSON);
-        if (!updatedOrder || this.currentOrder.server_id !== updatedOrder.backendId) {
+        const updatedOrder = this.pos.createNewOrder(orderJSON);
+        if (!updatedOrder || this.currentOrder.id !== updatedOrder.id) {
             this.dialog.add(AlertDialog, {
                 title: _t("Order saving issue"),
                 body: _t("The order has not been saved correctly on the server."),
             });
             return;
         }
-        this.pos.orders.push(updatedOrder);
-        const oldLocalOrder = this.currentOrder;
-        this.pos.set_order(updatedOrder);
-        this.pos.removeOrder(oldLocalOrder, false);
         this.pos.validated_orders_name_server_id_map[this.currentOrder.name] = this.currentOrder.id;
 
         // Now, do practically the normal flow
@@ -255,8 +229,6 @@ patch(PaymentScreen.prototype, {
         ) {
             this.hardwareProxy.printer.openCashbox();
         }
-
-        this.currentOrder.finalized = true;
 
         if (isInvoiceRequested) {
             if (!this.currentOrder.account_move) {

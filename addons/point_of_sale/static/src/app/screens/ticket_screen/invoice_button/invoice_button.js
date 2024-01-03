@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PartnerList } from "../../partner_list/partner_list";
 
@@ -16,15 +16,15 @@ export class InvoiceButton extends Component {
 
     setup() {
         this.pos = usePos();
-        this.invoiceButton = useRef("invoice-button");
         this.dialog = useService("dialog");
         this.report = useService("report");
+        this.lock = false;
     }
     get isAlreadyInvoiced() {
         if (!this.props.order) {
             return false;
         }
-        return Boolean(this.props.order.account_move);
+        return Boolean(this.props.order.raw.account_move);
     }
     get commandName() {
         if (!this.props.order) {
@@ -64,10 +64,11 @@ export class InvoiceButton extends Component {
             return;
         }
 
-        const orderId = order.backendId;
+        const orderId = order.id;
         // Part 0. If already invoiced, print the invoice.
         if (this.isAlreadyInvoiced) {
             await this._downloadInvoice(orderId);
+            this.props.onInvoiceOrder(orderId);
             return;
         }
 
@@ -103,11 +104,15 @@ export class InvoiceButton extends Component {
         this.props.onInvoiceOrder(orderId);
     }
     async click() {
+        if (this.lock) {
+            return;
+        }
+
+        this.lock = true;
         try {
-            this.invoiceButton.el.style.pointerEvents = "none";
             await this._invoiceOrder();
         } finally {
-            this.invoiceButton.el.style.pointerEvents = "auto";
+            this.lock = false;
         }
     }
 }

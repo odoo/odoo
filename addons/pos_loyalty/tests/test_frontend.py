@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests import tagged
@@ -355,7 +356,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
-        self.whiteboard_pen.write({'lst_price': 0})
+        self.whiteboard_pen.write({'lst_price': 1})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -705,8 +706,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config2.with_user(self.pos_user).open_ui()
-        self.start_pos_tour("PosLoyaltyTour4")
-
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config2.id,
+            "PosLoyaltyTour4",
+            login="pos_user",
+        )
 
     def test_promotion_program_with_global_discount(self):
         """
@@ -786,7 +790,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config2.with_user(self.pos_user).open_ui()
 
-        self.start_pos_tour("PosCouponTour5")
+        self.start_pos_tour("PosCouponTour5", pos_config=self.main_pos_config2)
 
     def test_loyalty_program_using_same_product(self):
         """
@@ -1323,11 +1327,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("PosLoyaltyTour9")
 
     def test_ewallet_expiration_date(self):
-        """
-        Test for ewallet program.
-        - Collect points in EWalletProgramTour1.
-        - Use points in EWalletProgramTour2.
-        """
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})

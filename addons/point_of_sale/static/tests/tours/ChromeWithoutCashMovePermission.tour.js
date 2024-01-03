@@ -6,7 +6,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("chrome_without_cash_move_permission", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

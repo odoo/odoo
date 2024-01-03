@@ -27,9 +27,7 @@ patch(PosStore.prototype, {
      * @override
      */
     async setup() {
-        this.tableNotifications = {};
-        this.orderToTransfer = null; // table transfer feature
-        this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
+        this.orderToTransferUuid = null; // table transfer feature
         this.floorPlanStyle = "default";
         this.isEditMode = false;
         this.isTableToMerge = false;
@@ -40,7 +38,6 @@ patch(PosStore.prototype, {
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
             // Sync the number of orders on each table with other PoS
             this.getTableOrderCount();
-            this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
         }
     },
     async getTableOrderCount() {
@@ -49,8 +46,8 @@ patch(PosStore.prototype, {
             "get_tables_order_count_and_printing_changes",
             [this.config.id]
         );
-
         this.ws_syncTableCount(result);
+        this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {
@@ -67,13 +64,21 @@ patch(PosStore.prototype, {
             await this.data.read("restaurant.table", table_ids);
         }
 
+        const tableByIds = this.models["restaurant.table"].getAllBy("id");
         for (const table of data) {
-            this.tableNotifications[table.id] = {
-                order_count: table.orders,
-                changes_count: table.changes,
-                skip_changes: table.skip_changes,
-            };
+            tableByIds[table.id].uiState.changeCount = table.changes;
+            tableByIds[table.id].uiState.orderCount = table.orders;
+            tableByIds[table.id].uiState.skipCount = table.skip_changes;
         }
+    },
+    createNewOrder() {
+        const order = super.createNewOrder(...arguments);
+
+        if (this.config.module_pos_restaurant && this.selectedTable && !order.table_id) {
+            order.update({ table_id: this.selectedTable });
+        }
+
+        return order;
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
@@ -114,7 +119,7 @@ patch(PosStore.prototype, {
     },
     shouldResetIdleTimer() {
         const stayPaymentScreen =
-            this.mainScreen.component === PaymentScreen && this.get_order().paymentlines.length > 0;
+            this.mainScreen.component === PaymentScreen && this.get_order().payment_ids.length > 0;
         return (
             this.config.module_pos_restaurant &&
             !stayPaymentScreen &&
@@ -165,91 +170,43 @@ patch(PosStore.prototype, {
         return res;
     },
     //@override
-    // if we have tables, we do not load a default order, as the default order will be
-    // set when the user selects a table.
-    set_start_order() {
-        if (!this.config.module_pos_restaurant) {
-            super.set_start_order(...arguments);
-        }
-    },
-    //@override
     add_new_order() {
         const order = super.add_new_order(...arguments);
-        this.ordersToUpdateSet.add(order);
+        this.addPendingOrder([order.id]);
         return order;
     },
-    async _getTableOrdersFromServer(tableIds) {
-        const orders = await this.data.call("pos.order", "export_for_ui_table_draft", [tableIds]);
-        return orders;
+    getSyncAllOrdersContext(orders) {
+        const context = super.getSyncAllOrdersContext(...arguments);
+        if (this.config.module_pos_restaurant && this.selectedTable) {
+            context["table_ids"] = [this.selectedTable.id];
+            context["force"] = true;
+        }
+        return context;
     },
-    /**
-     * Sync orders that got updated to the back end
-     * @param tableId ID of the table we want to sync
-     */
-    async _syncTableOrdersToServer() {
-        await this.sendDraftToServer();
-        await this._removeOrdersFromServer();
-        // This need to be called here otherwise _onReactiveOrderUpdated() will be called after the set is being cleared
-        this.ordersToUpdateSet.clear();
-        this.transferredOrdersSet.clear();
+    getPendingOrder() {
+        const context = this.getSyncAllOrdersContext();
+        const { orderToCreate, orderToUpdate } = super.getPendingOrder();
+
+        if (!this.config.module_pos_restaurant || !context.table_ids || !context.table_ids.length) {
+            return { orderToCreate, orderToUpdate };
+        }
+
+        return {
+            orderToCreate: orderToCreate.filter((o) => context.table_ids.includes(o.table_id.id)),
+            orderToUpdate: orderToUpdate.filter((o) => context.table_ids.includes(o.table_id.id)),
+        };
     },
-    /**
-     * Replace all the orders of a table by orders fetched from the backend
-     * @param tableId ID of the table
-     * @throws error
-     */
-    async _syncTableOrdersFromServer(tableId) {
-        await this._removeOrdersFromServer(); // in case we were offline and we deleted orders in the mean time
-        const ordersJsons = await this._getTableOrdersFromServer([tableId]);
-        await this._addPricelists(ordersJsons);
-        await this._addFiscalPositions(ordersJsons);
-        const tableOrders = this.getTableOrders(tableId);
-        this._replaceOrders(tableOrders, ordersJsons);
-    },
-    async _getOrdersJson() {
+    async getServerOrders() {
         if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
                 ...this.models["restaurant.floor"].map((floor) =>
                     floor.table_ids.map((table) => table.id)
                 )
             );
-            await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
-            const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
-            await this._loadMissingProducts(ordersJsons);
-            return ordersJsons;
+            return await this.syncAllOrders({ table_ids: tableIds });
         } else {
-            return await super._getOrdersJson();
+            return await super.getServerOrders();
         }
-    },
-    _shouldRemoveOrder(order) {
-        return super._shouldRemoveOrder(...arguments) && !this.transferredOrdersSet.has(order);
-    },
-    _shouldCreateOrder(json) {
-        return (
-            (!this._transferredOrder(json) || this._isSameTable(json)) &&
-            (!this.selectedOrder || super._shouldCreateOrder(...arguments))
-        );
-    },
-    _shouldRemoveSelectedOrder(removeSelected) {
-        return this.selectedOrder && super._shouldRemoveSelectedOrder(...arguments);
-    },
-    _isSelectedOrder(json) {
-        return !this.selectedOrder || super._isSelectedOrder(...arguments);
-    },
-    _isSameTable(json) {
-        const transferredOrder = this._transferredOrder(json);
-        return transferredOrder && transferredOrder.tableId === json.tableId;
-    },
-    _transferredOrder(json) {
-        return [...this.transferredOrdersSet].find((order) => order.uid === json.uid);
-    },
-    _createOrder(json) {
-        const transferredOrder = this._transferredOrder(json);
-        if (this._isSameTable(json)) {
-            // this means we transferred back to the original table, we'll prioritize the server state
-            this.removeOrder(transferredOrder, false);
-        }
-        return super._createOrder(...arguments);
     },
     getDefaultSearchDetails() {
         if (this.selectedTable && this.selectedTable.id) {
@@ -260,29 +217,40 @@ patch(PosStore.prototype, {
         }
         return super.getDefaultSearchDetails();
     },
-    async setTable(table, orderUid = null) {
+    async setTable(table, orderUuid = null) {
         this.selectedTable = table;
         try {
             this.loadingOrderState = true;
-            await this._syncTableOrdersFromServer(table.id);
+            await this.syncAllOrders();
         } finally {
             this.loadingOrderState = false;
-            const currentOrder = this.getTableOrders(table.id).find((order) =>
-                orderUid ? order.uid === orderUid : !order.finalized
+            let currentOrder = this.getTableOrders(table.id).find((order) =>
+                orderUuid ? order.uuid === orderUuid : !order.finalized
             );
+
             if (currentOrder) {
                 this.set_order(currentOrder);
             } else {
-                this.add_new_order();
+                const potentialsOrders = this.models["pos.order"].filter(
+                    (o) => !o.table_id && !o.finalized && o.lines.length === 0
+                );
+
+                if (potentialsOrders.length) {
+                    currentOrder = potentialsOrders[0];
+                    currentOrder.update({ table_id: table });
+                    this.selectedOrderUuid = currentOrder.uuid;
+                } else {
+                    this.add_new_order();
+                }
             }
         }
     },
     getTableOrders(tableId) {
-        return this.get_order_list().filter((order) => order.tableId === tableId);
+        return this.get_order_list().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
         try {
-            await this._syncTableOrdersToServer();
+            await this.syncAllOrders();
         } catch (e) {
             if (!(e instanceof ConnectionLostError)) {
                 throw e;
@@ -297,23 +265,21 @@ patch(PosStore.prototype, {
         this.set_order(null);
     },
     tableHasOrders(table) {
-        return this.orders.some(
-            (o) => o?.tableId === table.id && o.finalized === false && o.orderlines.length
-        );
+        return this.models["pos.order"]
+            .filter((o) => !o.finalized)
+            .some((o) => o.table_id?.id === table?.id && o.lines.length);
     },
     shouldShowNavbarButtons() {
-        return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransfer;
+        return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
     },
     async transferTable(table) {
-        const originalTable = this.models["restaurant.table"].getBy(
-            "id",
-            this.orderToTransfer.tableId
-        );
+        const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
+        const originalTable = order.table_id;
         if (table.id === originalTable.id) {
             return;
         }
         if (
-            this.orderToTransfer.tableId !== table.id &&
+            order.table_id.id !== table.id &&
             this.tableHasOrders(table) &&
             this.tableHasOrders(originalTable)
         ) {
@@ -328,21 +294,16 @@ patch(PosStore.prototype, {
             }
         }
         this.selectedTable = table;
-        try {
-            this.loadingOrderState = true;
-            await this._syncTableOrdersFromServer(table.id);
-        } finally {
-            this.loadingOrderState = false;
-            if (this.isTableToMerge && this.orderToTransfer.tableId !== table.id) {
-                originalTable.update({ parent_id: table });
-                this.updateTables(originalTable);
-                this.isTableToMerge = false;
-            }
-            this.orderToTransfer.tableId = table.id;
-            this.set_order(this.orderToTransfer);
-            this.transferredOrdersSet.add(this.orderToTransfer);
-            this.orderToTransfer = null;
+        this.loadingOrderState = false;
+        if (this.isTableToMerge && order.table_id.id !== table.id) {
+            originalTable.update({ parent_id: table });
+            this.updateTables(originalTable);
+            this.isTableToMerge = false;
         }
+        order.update({ table_id: table });
+        this.set_order(order);
+        this.orderToTransferUuid = null;
+        this.showScreen("ProductScreen");
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
@@ -350,7 +311,7 @@ patch(PosStore.prototype, {
             Object.fromEntries(
                 tables.map((t) => [
                     t.id,
-                    { ...t.serialize(true), parent_id: t.parent_id?.id || false },
+                    { ...t.serialize({ orm: true }), parent_id: t.parent_id?.id || false },
                 ])
             ),
         ]);

@@ -92,10 +92,10 @@ class TestPoSStock(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10)], 'uid': '00100-010-0001'},
-                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 7)], 'uid': '00100-010-0002'},
-                {'pos_order_lines_ui_args': [(self.product1, 6), (self.product2, 6), (self.product3, 6)], 'uid': '00100-010-0003'},
-                {'pos_order_lines_ui_args': [(self.product4, 6)], 'uid': '00100-010-0004'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10)], 'uuid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 7)], 'uuid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product1, 6), (self.product2, 6), (self.product3, 6)], 'uuid': '00100-010-0003'},
+                {'pos_order_lines_ui_args': [(self.product4, 6)], 'uuid': '00100-010-0004'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {},
@@ -162,9 +162,9 @@ class TestPoSStock(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10)], 'uid': '00100-010-0001'},
-                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 7)], 'uid': '00100-010-0002'},
-                {'pos_order_lines_ui_args': [(self.product1, 6), (self.product2, 6), (self.product3, 6)], 'is_invoiced': True, 'customer': self.customer, 'uid': '00100-010-0003'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 10)], 'uuid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 7)], 'uuid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product1, 6), (self.product2, 6), (self.product3, 6)], 'is_invoiced': True, 'customer': self.customer, 'uuid': '00100-010-0003'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
@@ -224,7 +224,7 @@ class TestPoSStock(TestPoSCommon):
         orders.append(self.create_ui_order_data([(self.product4, 1)]))
 
         # sync orders
-        order = self.env['pos.order'].create_from_ui(orders)
+        order = self.env['pos.order'].sync_from_ui(orders)
 
         # check values before closing the session
         self.assertEqual(1, self.pos_session.order_count)
@@ -252,9 +252,9 @@ class TestPoSStock(TestPoSCommon):
         self.open_new_session()
         orders = []
         orders.append(self.create_ui_order_data([(self.product4, 1)]))
-        order = self.env['pos.order'].create_from_ui(orders)
+        order = self.env['pos.order'].sync_from_ui(orders)
 
-        refund_action = self.env['pos.order'].browse(order[0]['id']).refund()
+        refund_action = self.env['pos.order'].browse(order['pos.order'][0]['id']).refund()
         refund = self.env['pos.order'].browse(refund_action['res_id'])
 
         payment_context = {"active_ids": refund.ids, "active_id": refund.id}

@@ -45,9 +45,13 @@ class PosOrder(models.Model):
         return invoice_vals
 
     @api.model
-    def create_from_ui(self, orders, draft=False):
-        order_ids = super(PosOrder, self).create_from_ui(orders, draft)
-        for order in self.sudo().browse([o['id'] for o in order_ids]):
+    def sync_from_ui(self, orders):
+        data = super().sync_from_ui(orders)
+        if len(orders) == 0:
+            return data
+
+        order_ids = self.browse([o['id'] for o in data["pos.order"]])
+        for order in order_ids:
             for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
@@ -100,7 +104,7 @@ class PosOrder(models.Model):
                 if all(is_product_uom_qty_zero(move) for move in picking.move_ids):
                     picking.action_cancel()
 
-        return order_ids
+        return data
 
     def action_view_sale_order(self):
         self.ensure_one()
@@ -151,20 +155,3 @@ class PosOrderLine(models.Model):
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")
     down_payment_details = fields.Text(string="Down Payment Details")
 
-    def _export_for_ui(self, orderline):
-        result = super()._export_for_ui(orderline)
-        # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
-        result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
-        result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
-        return result
-
-    def _order_line_fields(self, line, session_id=None):
-        result = super()._order_line_fields(line, session_id)
-        vals = result[2]
-        if vals.get('sale_order_origin_id', False):
-            vals['sale_order_origin_id'] = vals['sale_order_origin_id']['id']
-        if vals.get('sale_order_line_id', False):
-            #We need to make sure the order line has not been deleted while the order was being handled in the PoS
-            order_line = self.env['sale.order.line'].search([('id', '=', vals['sale_order_line_id']['id'])], limit=1)
-            vals['sale_order_line_id'] = order_line.id if order_line else False
-        return result

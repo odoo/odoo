@@ -132,7 +132,7 @@ class PosOrder(models.Model):
             } for coupon in all_coupons if coupon.program_id.is_nominative],
             'program_updates': [{
                 'program_id': program.id,
-                'usages': program.total_order_count,
+                'usages': program.sudo().total_order_count,
             } for program in all_coupons.program_id],
             'new_coupon_info': [{
                 'program_name': coupon.program_id.name,
@@ -142,7 +142,7 @@ class PosOrder(models.Model):
                 coupon.program_id.applies_on == 'future'
                 # Don't send the coupon code for the gift card and ewallet programs.
                 # It should not be printed in the ticket.
-                and coupon.program_id.program_type not in ['gift_card', 'ewallet']
+                and coupon.program_id.sudo().program_type not in ['gift_card', 'ewallet']
             )],
             'coupon_report': coupon_per_report,
         }

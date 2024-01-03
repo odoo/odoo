@@ -104,7 +104,7 @@ export function finishOrder() {
         {
             content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "click Next Order",

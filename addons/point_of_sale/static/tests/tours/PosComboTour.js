@@ -11,7 +11,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

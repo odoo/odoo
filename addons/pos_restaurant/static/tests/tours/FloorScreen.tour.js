@@ -13,7 +13,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("FloorScreenTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             // check floors if they contain their corresponding tables
@@ -37,6 +36,9 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickEditButton("Copy"),
             FloorScreen.selectedFloorIs("Main Floor (copy)"),
+            FloorScreen.hasTable("2"),
+            FloorScreen.hasTable("4"),
+            FloorScreen.hasTable("5"),
             Utils.refresh(),
             Chrome.clickMenuOption("Edit Plan"),
             FloorScreen.clickFloor("Main Floor (copy)"),

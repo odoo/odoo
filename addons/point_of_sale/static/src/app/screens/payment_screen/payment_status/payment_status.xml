@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.PaymentScreenStatus">
         <section class="paymentlines-container bg-view p-3 mb-1 border-bottom">
-            <div t-if="props.order.get_paymentlines().length === 0" class="paymentlines-empty">
+            <div t-if="props.order.payment_ids.length === 0" class="paymentlines-empty">
                 <div class="total text-center py-2 text-success">
                     <t t-esc="totalDueText" />
                 </div>

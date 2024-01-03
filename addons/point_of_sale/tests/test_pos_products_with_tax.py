@@ -82,9 +82,9 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 5)], 'uid': '00100-010-0001'},
-                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 4)], 'uid': '00100-010-0002'},
-                {'pos_order_lines_ui_args': [(self.product1, 1), (self.product3, 5), (self.product2, 3)], 'payments': [(self.bank_pm1, 230.25)], 'uid': '00100-010-0003'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product2, 5)], 'uuid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product2, 7), (self.product3, 4)], 'uuid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product1, 1), (self.product3, 5), (self.product2, 3)], 'payments': [(self.bank_pm1, 230.25)], 'uuid': '00100-010-0003'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {},
@@ -175,10 +175,10 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product3, 1), (self.product1, 6), (self.product2, 3)], 'uid': '00100-010-0001'},
-                {'pos_order_lines_ui_args': [(self.product2, 20), (self.product1, 1)], 'payments': [(self.bank_pm1, 410.7)], 'uid': '00100-010-0002'},
-                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 426.09)], 'customer': self.customer, 'is_invoiced': True, 'uid': '09876-098-0987'},
-                {'pos_order_lines_ui_args': [(self.product4, 1)], 'payments': [(self.bank_pm1, 54.99)], 'customer': self.customer, 'is_invoiced': True, 'uid': '00100-010-0004'},
+                {'pos_order_lines_ui_args': [(self.product3, 1), (self.product1, 6), (self.product2, 3)], 'uuid': '00100-010-0001'},
+                {'pos_order_lines_ui_args': [(self.product2, 20), (self.product1, 1)], 'payments': [(self.bank_pm1, 410.7)], 'uuid': '00100-010-0002'},
+                {'pos_order_lines_ui_args': [(self.product1, 10), (self.product3, 10)], 'payments': [(self.bank_pm1, 426.09)], 'customer': self.customer, 'is_invoiced': True, 'uuid': '09876-098-0987'},
+                {'pos_order_lines_ui_args': [(self.product4, 1)], 'payments': [(self.bank_pm1, 54.99)], 'customer': self.customer, 'is_invoiced': True, 'uuid': '00100-010-0004'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
@@ -263,7 +263,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             self.assertAlmostEqual(orders_total, self.pos_session.total_payments_amount, msg='Total order amount should be equal to the total payment amount.')
 
             # return order
-            order_to_return = self.pos_session.order_ids.filtered(lambda order: '12345-123-1234' in order.pos_reference)
+            order_to_return = self.pos_session.order_ids.filtered(lambda order: '12345-123-1234' in order.uuid)
             order_to_return.refund()
 
             refund_order = self.pos_session.order_ids.filtered(lambda order: order.state == 'draft')
@@ -286,7 +286,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
             'orders': [
-                {'pos_order_lines_ui_args': [(self.product1, 3), (self.product2, 2), (self.product3, 1)], 'payments': [(self.cash_pm1, 104.01)], 'customer': self.customer, 'is_invoiced': True, 'uid': '12345-123-1234'},
+                {'pos_order_lines_ui_args': [(self.product1, 3), (self.product2, 2), (self.product3, 1)], 'payments': [(self.cash_pm1, 104.01)], 'customer': self.customer, 'is_invoiced': True, 'uuid': '12345-123-1234'},
             ],
             'before_closing_cb': _before_closing_cb,
             'journal_entries_before_closing': {
@@ -344,7 +344,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
             (product1, 1),
             (product2, -1),
         ])])
@@ -390,7 +390,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
             (product1, 1),
             (product2, -1),
         ])])
@@ -436,7 +436,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
             (product1, 1, 10),
             (product2, -1, 10),
         ])])
@@ -483,7 +483,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             tax_ids=tax_21_incl.ids,
         )
         self.open_new_session()
-        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
             (product1, 6, 5),
             (product2, -6, 5),
         ])])
@@ -529,7 +529,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         })
 
         self.open_new_session()
-        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([
             (zero_amount_product, 1),
         ])])
         self.pos_session.action_pos_session_validate()

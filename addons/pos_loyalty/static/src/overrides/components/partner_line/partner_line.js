@@ -14,9 +14,9 @@ patch(PartnerLine.prototype, {
     _getLoyaltyPointsRepr(loyaltyCard) {
         const program = this.pos.models["loyalty.program"].get(loyaltyCard.program_id);
         if (program.program_type === "ewallet") {
-            return `${program.name}: ${this.env.utils.formatCurrency(loyaltyCard.balance)}`;
+            return `${program.name}: ${this.env.utils.formatCurrency(loyaltyCard.points)}`;
         }
-        const balanceRepr = formatFloat(loyaltyCard.balance, { digits: [69, 2] });
+        const balanceRepr = formatFloat(loyaltyCard.points, { digits: [69, 2] });
         if (program.portal_visible) {
             return `${balanceRepr} ${program.portal_point_name}`;
         }

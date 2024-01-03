@@ -16,7 +16,7 @@
                 <button
                     class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
                     t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}"
-                    t-on-click="() => currentOrder.pay()">
+                    t-on-click="() => this.pos.pay()">
                     <span class="fs-1 d-block">Pay</span>
                     <span><t t-esc="total" /></span>
                 </button>

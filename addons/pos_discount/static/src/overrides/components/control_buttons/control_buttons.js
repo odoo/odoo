@@ -36,9 +36,7 @@ patch(ControlButtons.prototype, {
             return;
         }
         // Remove existing discounts
-        lines
-            .filter((line) => line.get_product() === product)
-            .forEach((line) => order._unlinkOrderline(line));
+        lines.filter((line) => line.get_product() === product).forEach((line) => line.delete());
 
         // Add one discount line per tax group
         const linesByTax = order.get_orderlines_grouped_by_tax_ids();
@@ -55,32 +53,17 @@ patch(ControlButtons.prototype, {
                 lines.filter((ll) => ll.isGlobalDiscountApplicable())
             );
 
-            const taxIds = this.pos.models["account.tax"].filter((tax) =>
-                tax_ids_array.includes(tax.id)
-            );
+            const taxes = tax_ids_array
+                .map((taxId) => this.pos.models["account.tax"].get(taxId))
+                .filter(Boolean);
+
             // We add the price as manually set to avoid recomputation when changing customer.
             const discount = (-pc / 100.0) * baseToDiscount;
             if (discount < 0) {
-                order.add_product(product, {
-                    price: discount,
-                    lst_price: discount,
-                    tax_ids: taxIds,
-                    merge: false,
-                    description:
-                        `${pc}%, ` +
-                        (tax_ids_array.length
-                            ? _t(
-                                  "Tax: %s",
-                                  this.pos
-                                      .mapTaxValues(taxIds)
-                                      .map((taxValues) => `${taxValues.amount}%`)
-                                      .join(", ")
-                              )
-                            : _t("No tax")),
-                    extras: {
-                        price_type: "automatic",
-                    },
-                });
+                await this.pos.addLineToCurrentOrder(
+                    { product_id: product, price_unit: discount, tax_ids: [["link", ...taxes]] },
+                    { merge: false }
+                );
             }
         }
     },

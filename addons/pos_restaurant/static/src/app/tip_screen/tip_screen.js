@@ -47,7 +47,7 @@ export class TipScreen extends Component {
     async validateTip() {
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.get_order();
-        const serverId = this.pos.validated_orders_name_server_id_map[order.name];
+        const serverId = typeof order.id === "number" && order.id;
 
         if (!serverId) {
             this.dialog.add(AlertDialog, {
@@ -60,7 +60,7 @@ export class TipScreen extends Component {
         }
 
         if (!amount) {
-            await this.pos.data.call("pos.order", "set_no_tip", [serverId]);
+            await this.pos.data.write("pos.order", [serverId], { is_tipped: true, tip_amount: 0 });
             this.goNextScreen();
             return;
         }
@@ -77,24 +77,28 @@ export class TipScreen extends Component {
             }
         }
 
-        // set the tip by temporarily allowing order modification
-        order.finalized = false;
-        order.set_tip(amount);
-        order.finalized = true;
+        order.state = "draft";
+        await this.pos.set_tip(amount);
+        order.state = "paid";
 
-        const paymentline = this.pos.get_order().get_paymentlines()[0];
-        if (paymentline.payment_method.payment_terminal) {
+        const paymentline = this.pos.get_order().payment_ids[0];
+        if (paymentline.payment_method_id.payment_terminal) {
             paymentline.amount += amount;
-            await paymentline.payment_method.payment_terminal.send_payment_adjust(paymentline.cid);
+            await paymentline.payment_method_id.payment_terminal.send_payment_adjust(
+                paymentline.uuid
+            );
         }
 
-        // set_tip calls add_product which sets the new line as the selected_orderline
-        const tip_line = order.selected_orderline;
-        await this.pos.data.call("pos.order", "set_tip", [serverId, tip_line.export_as_JSON()]);
+        const serializedTipLine = order.get_selected_orderline().serialize({ orm: true });
+        order.get_selected_orderline().delete();
+        const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
+        await this.pos.data.write("pos.order", [serverId], {
+            is_tipped: true,
+            tip_amount: serverTipLine[0].price_subtotal_incl,
+        });
         this.goNextScreen();
     }
     goNextScreen() {
-        this.pos.removeOrder(this.currentOrder);
         if (!this.pos.config.module_pos_restaurant) {
             this.pos.add_new_order();
         }
@@ -107,15 +111,15 @@ export class TipScreen extends Component {
     async printTipReceipt() {
         const order = this.currentOrder;
         const receipts = [
-            order.selected_paymentline.ticket,
-            order.selected_paymentline.cashier_receipt,
+            order.get_selected_paymentline().ticket,
+            order.get_selected_paymentline().cashier_receipt,
         ];
         for (let i = 0; i < receipts.length; i++) {
             await this.printer.print(
                 TipReceipt,
                 {
                     headerData: this.pos.getReceiptHeaderData(order),
-                    data: receipts[i],
+                    data: receipts[i] || {},
                     total: this.env.utils.formatCurrency(this.totalAmount),
                 },
                 { webPrintFallback: true }

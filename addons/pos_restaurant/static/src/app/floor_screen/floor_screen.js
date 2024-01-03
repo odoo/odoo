@@ -73,6 +73,11 @@ export class FloorScreen extends Component {
             this.state.floorWidth = window.innerWidth + "px";
             return;
         }
+
+        if (!this.activeFloor) {
+            return;
+        }
+
         const tables = this.activeFloor.table_ids;
         const floorV = this.floorMapRef.el.clientHeight;
         const floorH = this.floorMapRef.el.offsetWidth;
@@ -100,19 +105,21 @@ export class FloorScreen extends Component {
         }
     }
     getTablesSelectedByDefault() {
-        return this.pos.orderToTransfer ? [this.pos.orderToTransfer.tableId] : [];
+        const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
+        return oToTrans ? [oToTrans.table_id.id] : [];
     }
     async onWillStart() {
         const table = this.pos.selectedTable;
+        const tableByIds = this.pos.models["restaurant.table"].getAllBy("id");
         if (table) {
             const orders = this.pos.get_order_list();
             const tableOrders = orders.filter(
-                (order) => order.tableId === table.id && !order.finalized
+                (order) => order.table_id?.id === table.id && !order.finalized
             );
             const qtyChange = tableOrders.reduce(
                 (acc, order) => {
-                    const quantityChange = order.getOrderChanges();
-                    const quantitySkipped = order.getOrderChanges(true);
+                    const quantityChange = this.pos.getOrderChanges(false, order);
+                    const quantitySkipped = this.pos.getOrderChanges(true, order);
                     acc.changed += quantityChange.count;
                     acc.skipped += quantitySkipped.count;
                     return acc;
@@ -120,10 +127,8 @@ export class FloorScreen extends Component {
                 { changed: 0, skipped: 0 }
             );
 
-            this.pos.tableNotifications[table.id] = {
-                changes_count: qtyChange.changed,
-                skip_changes: qtyChange.skipped,
-            };
+            tableByIds[table.id].uiState.orderCount = tableOrders.length;
+            tableByIds[table.id].uiState.changeCount = qtyChange.changed;
         }
         await this.pos.unsetTable();
     }
@@ -133,6 +138,12 @@ export class FloorScreen extends Component {
             : "none";
     }
     onClickFloorMap() {
+        for (const tableId of this.state.selectedTableIds) {
+            const table = this.pos.models["restaurant.table"].get(tableId);
+            this.pos.data.write("restaurant.table", [tableId], {
+                ...table.serialize({ orm: true }),
+            });
+        }
         this.state.selectedTableIds = this.getTablesSelectedByDefault();
         this.state.isColorPicker = false;
     }
@@ -159,7 +170,7 @@ export class FloorScreen extends Component {
         const existingTable = this.activeFloor.table_ids;
         let newTableData;
         if (copyTable) {
-            newTableData = copyTable.serialize(true);
+            newTableData = copyTable.serialize({ orm: true });
             if (!duplicateFloor) {
                 newTableData.position_h += 10;
                 newTableData.position_v += 10;
@@ -276,7 +287,13 @@ export class FloorScreen extends Component {
         if (!duplicateFloor) {
             newTableData.name = this._getNewTableName();
         }
-        return (await this.pos.data.create("restaurant.table", [newTableData]))[0];
+        const table = await this.createTableFromRaw(newTableData);
+        return table;
+    }
+    async createTableFromRaw(newTableData) {
+        newTableData.active = true;
+        const table = await this.pos.data.create("restaurant.table", [newTableData]);
+        return table[0];
     }
     _getNewTableName() {
         let firstNum = 1;
@@ -334,7 +351,7 @@ export class FloorScreen extends Component {
         this.state.selectedFloorId = floor.id;
         this.unselectTables();
     }
-    async onSelectTable(table, ev) {
+    async onClickTable(table, ev) {
         if (this.pos.isEditMode) {
             if (ev.ctrlKey || ev.metaKey) {
                 this.state.selectedTableIds.push(table.id);
@@ -345,10 +362,11 @@ export class FloorScreen extends Component {
             return;
         }
         if (table.parent_id) {
-            this.onSelectTable(table.parent_id, ev);
+            this.onClickTable(table.parent_id, ev);
             return;
         }
-        if (this.pos.orderToTransfer) {
+        const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
+        if (oToTrans) {
             await this.pos.transferTable(table);
         } else {
             try {
@@ -361,15 +379,18 @@ export class FloorScreen extends Component {
                 Promise.reject(e);
             }
         }
-        const order = this.pos.get_order();
-        if (order) {
-            this.pos.showScreen(order.get_screen_data().name);
+        const orders = this.pos.getTableOrders(table.id);
+        if (orders.length > 0) {
+            this.pos.showScreen(orders[0].get_screen_data().name);
+        } else {
+            this.pos.add_new_order();
+            this.pos.showScreen("ProductScreen");
         }
     }
     unselectTables() {
         if (this.selectedTables.length) {
             for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], table.serialize(true));
+                this.pos.data.write("restaurant.table", [table.id], table.serialize({ orm: true }));
             }
         }
         this.state.selectedTableIds = [];
@@ -422,13 +443,11 @@ export class FloorScreen extends Component {
             this.selectFloor(copyFloor[0]);
             this.pos.isEditMode = true;
 
-            const tableToCreate = [];
             for (const table of tables) {
-                const tableSerialized = table.serialize(true);
+                const tableSerialized = table.serialize({ orm: true });
                 tableSerialized.floor_id = copyFloor[0].id;
-                tableToCreate.push(tableSerialized);
+                await this.createTableFromRaw(tableSerialized);
             }
-            await this.pos.data.create("restaurant.table", tableToCreate);
             return;
         }
         const selectedTables = this.selectedTables;
@@ -493,10 +512,11 @@ export class FloorScreen extends Component {
         });
     }
     stopOrderTransfer() {
-        this.pos.set_order(this.pos.orderToTransfer);
+        const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
+        this.pos.set_order(order);
         this.pos.showScreen("ProductScreen");
         this.pos.isTableToMerge = false;
-        this.pos.orderToTransfer = null;
+        this.pos.orderToTransferUuid = null;
     }
     changeShape(form) {
         for (const table of this.selectedTables) {
@@ -607,7 +627,6 @@ export class FloorScreen extends Component {
 
             activeFloor.delete();
 
-            this.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
             if (this.pos.models["restaurant.floor"].length > 0) {
                 this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
             } else {
@@ -637,7 +656,7 @@ export class FloorScreen extends Component {
                 for (const id of originalSelectedTableIds) {
                     //remove order not send to server
                     for (const order of this.pos.get_order_list()) {
-                        if (order.tableId == id) {
+                        if (order.table_id == id) {
                             this.pos.removeOrder(order, false);
                         }
                     }
@@ -666,7 +685,6 @@ export class FloorScreen extends Component {
         if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
             this.state.selectedTableIds = [];
         }
-        this.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
     }
     getFloorChangeCount(floor) {
         let changeCount = 0;
@@ -675,10 +693,7 @@ export class FloorScreen extends Component {
         }
         const table_ids = floor.table_ids;
         for (const table of table_ids) {
-            const tNotif = this.pos.tableNotifications[table.id];
-            if (tNotif) {
-                changeCount += tNotif.changes_count;
-            }
+            changeCount += table.uiState.changeCount || 0;
         }
 
         return changeCount;

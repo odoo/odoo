@@ -16,7 +16,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SplitBillScreenTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -62,7 +61,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -85,8 +83,8 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             Chrome.clickTicketButton(),
             TicketScreen.selectOrder("-0002"),
             TicketScreen.loadSelectedOrder(),
-            ProductScreen.clickOrderline("Water", "1.0"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
+            ProductScreen.clickOrderline("Water", "1.0"),
             ProductScreen.totalAmountIs("4.00"),
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
@@ -99,7 +97,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
 
 registry.category("web_tour.tours").add("SplitBillScreenTour3", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -136,7 +133,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
 registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

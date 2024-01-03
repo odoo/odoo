@@ -8,9 +8,9 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(() => {
-            const pendingPaymentLine = this.currentOrder.paymentlines.find(
+            const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method.use_payment_terminal === "viva_wallet" &&
+                    paymentLine.payment_method_id.use_payment_terminal === "viva_wallet" &&
                     !paymentLine.is_done() &&
                     paymentLine.get_payment_status() !== "pending"
             );

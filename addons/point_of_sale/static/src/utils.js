@@ -29,28 +29,29 @@ export function deduceUrl(url) {
     return url;
 }
 
-export function constructFullProductName(line, attribute_value_by_id, display_name) {
+export function constructFullProductName(line) {
     let attributeString = "";
 
     if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
-        for (const valId of line.attribute_value_ids) {
-            const value = attribute_value_by_id[valId];
+        for (const value of line.attribute_value_ids) {
             if (value.is_custom) {
                 const customValue = line.custom_attribute_value_ids.find(
-                    (cus) => cus.custom_product_template_attribute_value_id == parseInt(valId)
+                    (cus) =>
+                        cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
                 );
-                attributeString += customValue
-                    ? `${value.name}: ${customValue.custom_value}, `
-                    : `${value.name}, `;
+                if (customValue) {
+                    attributeString += `${value.attribute_id.name}: ${customValue.custom_value}, `;
+                }
             } else {
                 attributeString += `${value.name}, `;
             }
         }
+
         attributeString = attributeString.slice(0, -2);
         attributeString = `(${attributeString})`;
     }
 
-    return attributeString !== "" ? `${display_name} ${attributeString}` : display_name;
+    return `${line?.product_id?.display_name} ${attributeString}`;
 }
 /**
  * Returns a random 5 digits alphanumeric code

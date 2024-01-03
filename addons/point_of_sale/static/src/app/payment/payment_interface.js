@@ -19,14 +19,14 @@
  * in the `pos.session` model
  */
 export class PaymentInterface {
-    constructor(pos, payment_method) {
-        this.setup(pos, payment_method);
+    constructor(pos, payment_method_id) {
+        this.setup(pos, payment_method_id);
     }
 
-    setup(pos, payment_method) {
+    setup(pos, payment_method_id) {
         this.env = pos.env;
         this.pos = pos;
-        this.payment_method = payment_method;
+        this.payment_method_id = payment_method_id;
         this.supports_reversals = false;
     }
 
@@ -50,12 +50,12 @@ export class PaymentInterface {
      * should also set card_type and transaction_id on the line for
      * successful transactions.
      *
-     * @param {string} cid - The id of the paymentline
+     * @param {string} uuid - The uuid of the paymentline
      * @returns {Promise} resolved with a boolean that is false when
      * the payment should be retried. Rejected when the status of the
      * paymentline will be manually updated.
      */
-    send_payment_request(cid) {}
+    send_payment_request(uuid) {}
 
     /**
      * Called when a user removes a payment line that's still waiting
@@ -66,10 +66,10 @@ export class PaymentInterface {
      * automatically after the returned promise resolves.
      *
      * @param {} order - The order of the paymentline
-     * @param {string} cid - The id of the paymentline
+     * @param {string} uuid - The id of the paymentline
      * @returns {Promise}
      */
-    send_payment_cancel(order, cid) {}
+    send_payment_cancel(order, uuid) {}
 
     /**
      * This is an optional method. When implementing this make sure to
@@ -78,10 +78,10 @@ export class PaymentInterface {
      * 'done'. The paymentline will be removed based on returned
      * Promise.
      *
-     * @param {string} cid - The id of the paymentline
+     * @param {string} uuid - The id of the paymentline
      * @returns {Promise} returns true if the reversal was successful.
      */
-    send_payment_reversal(cid) {}
+    send_payment_reversal(uuid) {}
 
     /**
      * Called when the payment screen in the POS is closed (by

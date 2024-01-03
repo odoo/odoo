@@ -2,28 +2,34 @@
 
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { useService } from "@web/core/utils/hooks";
+import { SyncPopup } from "./sync_popup/sync_popup";
 
 export class SyncNotification extends Component {
     static template = "point_of_sale.SyncNotification";
+    static components = { SyncPopup };
     static props = {};
 
     setup() {
         this.pos = usePos();
+        this.dialog = useService("dialog");
     }
     get sync() {
-        const pending =
-            this.pos.db.get_orders().length + this.pos.db.get_ids_to_remove_from_server().length;
-
         return {
             loading: this.pos.data.network.loading,
             offline: this.pos.data.network.offline,
-            pending: this.pos.data.network.unsyncData.length + pending,
+            pending: this.pos.data.network.unsyncData.length,
         };
     }
     onClick() {
         if (this.pos.data.network.offline) {
             this.pos.data.network.warningTriggered = false;
         }
-        this.pos.push_orders({ show_error: true });
+
+        if (this.pos.data.network.unsyncData.length > 0) {
+            this.dialog.add(SyncPopup, {
+                confirm: () => this.pos.data.syncData(),
+            });
+        }
     }
 }

@@ -19,7 +19,7 @@ patch(TicketScreen.prototype, {
             return this.numberBuffer.reset();
         }
         const selectedOrderlineId = this.getSelectedOrderlineId();
-        const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
+        const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (orderline && this._isEWalletGiftCard(orderline)) {
             this._showNotAllowedRefundNotification();
             return this.numberBuffer.reset();
@@ -28,7 +28,7 @@ patch(TicketScreen.prototype, {
     },
     _prepareAutoRefundOnOrder(order) {
         const selectedOrderlineId = this.getSelectedOrderlineId();
-        const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
+        const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (this._isEWalletGiftCard(orderline)) {
             this._showNotAllowedRefundNotification();
             return false;
@@ -46,13 +46,13 @@ patch(TicketScreen.prototype, {
     _isEWalletGiftCard(orderline) {
         const linkedProgramIds = this.pos.models["loyalty.program"].getBy(
             "trigger_product_ids",
-            orderline.product.id
+            orderline.product_id.id
         );
         if (linkedProgramIds) {
             return linkedProgramIds.length > 0;
         }
         if (orderline.is_reward_line) {
-            const reward = this.pos.models["loyalty.reward"].get(orderline.reward_id);
+            const reward = orderline.reward_id;
             const program = reward && reward.program_id;
             if (program && ["gift_card", "ewallet"].includes(program.program_type)) {
                 return true;

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.Table">
         <t t-set="isSelected" t-value="props.selectedTables.some(t => t.id === props.table.id)"/>
-        <t t-set="isOccupied" t-value="pos.getCustomerCount(props.table.id) > 0 || tNotif?.order_count > 0"/>
+        <t t-set="isOccupied" t-value="pos.getCustomerCount(props.table.id) > 0 || props.table.uiState.orderCount > 0"/>
         <div class="table d-flex flex-column align-items-center justify-content-between cursor-pointer"
             t-ref="root"
             t-att-class="{'selected': isSelected, 'isLinked': props.table.parent_id}"
@@ -19,9 +19,9 @@
                 <div t-esc="props.table.parent_id?.name or props.table.name" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
                 <div  t-esc="orderCount" t-if="orderCount and !pos.isEditMode"
                     t-att-class="{
-                        'text-bg-danger': tNotif.changes_count,
-                        'text-bg-info'  : !tNotif.changes_count and tNotif.skip_changes,
-                        'text-bg-dark'  : !tNotif.changes_count and !tNotif.skip_changes
+                        'text-bg-danger': props.table.uiState.changeCount,
+                        'text-bg-info'  : !props.table.uiState.changeCount and props.table.uiState.skipCount,
+                        'text-bg-dark'  : !props.table.uiState.changeCount and !props.table.uiState.skipCount
                     }"
                     class="order-count d-flex align-items-center justify-content-center position-absolute rounded-circle"
                     t-att-style="'width: 1.5rem; height: 1.5rem; ' + badgeStyle"/>

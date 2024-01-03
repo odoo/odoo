@@ -12,7 +12,6 @@ import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/helpers
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             // Go by default to home category
@@ -144,7 +143,6 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
 
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -165,7 +163,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
 
 registry.category("web_tour.tours").add("CashClosingDetails", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             ProductScreen.enterOpeningAmount("90"),
@@ -176,7 +173,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
 
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -191,7 +187,6 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
 
 registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -226,7 +221,6 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
 
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Ouvrir la session"),

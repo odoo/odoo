@@ -7,10 +7,8 @@ import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods
 import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 import { registry } from "@web/core/registry";
 
-//#region EWalletProgramTour1
 registry.category("web_tour.tours").add("EWalletProgramTour1", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -32,12 +30,10 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
             PosLoyalty.finalizeOrder("Cash", "10"),
         ].flat(),
 });
-//#endregion
-//#region EWalletProgramTour2
+
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("EWalletProgramTour2", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
@@ -56,6 +52,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
             ProductScreen.addOrderline("Desk Pad", "6", "6", "36.00"),
             PosLoyalty.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") }),
             PosLoyalty.clickEWalletButton(getEWalletText("Pay")),
+            PosLoyalty.eWalletButtonState({ highlighted: false }),
             PosLoyalty.orderTotalIs("26.00"),
             PosLoyalty.finalizeOrder("Cash", "26"),
 
@@ -100,11 +97,8 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
         ].flat(),
 });
 
-//#endregion
-
 registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),

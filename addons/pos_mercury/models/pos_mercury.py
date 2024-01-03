@@ -58,21 +58,3 @@ class PoSPaymentMethod(models.Model):
         super(PoSPaymentMethod, self)._onchange_use_payment_terminal()
         if self.use_payment_terminal != 'mercury':
             self.pos_mercury_config_id = False
-
-class PosOrder(models.Model):
-    _inherit = "pos.order"
-
-    @api.model
-    def _payment_fields(self, order, ui_paymentline):
-        fields = super(PosOrder, self)._payment_fields(order, ui_paymentline)
-
-        fields.update({
-            'mercury_card_number': ui_paymentline.get('mercury_card_number'),
-            'mercury_card_brand': ui_paymentline.get('mercury_card_brand'),
-            'mercury_card_owner_name': ui_paymentline.get('mercury_card_owner_name'),
-            'mercury_ref_no': ui_paymentline.get('mercury_ref_no'),
-            'mercury_record_no': ui_paymentline.get('mercury_record_no'),
-            'mercury_invoice_no': ui_paymentline.get('mercury_invoice_no')
-        })
-
-        return fields

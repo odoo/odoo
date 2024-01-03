@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Component, useRef } from "@odoo/owl";
+import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { getLimits, useMovable, constrain } from "@point_of_sale/app/utils/movable_hook";
 
@@ -103,28 +104,29 @@ export class Table extends Component {
         left += 0.7 * radius - 8;
         return `bottom: ${bottom}px; left: ${left}px;`;
     }
-    get tNotif() {
-        return this.pos.tableNotifications[this.props.table.id];
-    }
     get orderCount() {
-        const tNotif = this.tNotif;
-        if (!tNotif) {
-            return 0;
+        // These informations in uiState came from the server websocket
+        const table = this.props.table;
+        if (table.uiState.changeCount > 0) {
+            return table.uiState.changeCount;
         }
-        if (tNotif.changes_count > 0) {
-            return tNotif.changes_count;
+        if (table.uiState.skipCount > 0) {
+            return table.uiState.skipCount;
         }
-        if (tNotif.skip_changes > 0) {
-            return tNotif.skip_changes;
-        }
-        const unsynced_orders = this.pos.getTableOrders(this.props.table.id).filter(
-            (o) =>
-                o.server_id === undefined &&
-                (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
-                // do not count the orders that are already finalized
-                !o.finalized
+
+        // If the table is not synced, we need to count the unsynced orders
+        const orderCount = new Set();
+        const tableOrders = this.pos.models["pos.order"].filter(
+            (o) => o.table_id?.id === table.id && !o.finalized
         );
-        return tNotif.order_count + unsynced_orders.length || 0;
+
+        table.uiState.orderCount = tableOrders.length;
+        for (const order of tableOrders) {
+            const changes = getOrderChanges(order, false, this.pos.orderPreparationCategories);
+            table.uiState.changeCount += changes.nbrOfChanges;
+        }
+
+        return table.uiState.orderCount + orderCount.size || 0;
     }
     onMoveStart() {
         if (this.isKanban()) {

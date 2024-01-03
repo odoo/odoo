@@ -6,7 +6,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { Orderline } from "@point_of_sale/app/store/models";
 
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -16,7 +15,7 @@ import { SaleOrderList } from "@pos_sale/app/order_management_screen/sale_order_
 import { SaleOrderManagementControlPanel } from "@pos_sale/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel";
 import { Component, onMounted, useRef } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
 
 /**
@@ -45,17 +44,7 @@ export class SaleOrderManagementScreen extends Component {
         onMounted(this.onMounted);
     }
     onMounted() {
-        // calculate how many can fit in the screen.
-        // It is based on the height of the header element.
-        // So the result is only accurate if each row is just single line.
-        const flexContainer = this.root.el.querySelector(".flex-container");
-        const cpEl = this.root.el.querySelector(".control-panel");
-        const headerEl = this.root.el.querySelector(".header-row");
-        const val = Math.trunc(
-            (flexContainer.offsetHeight - cpEl.offsetHeight - headerEl.offsetHeight) /
-                headerEl.offsetHeight
-        );
-        this.saleOrderFetcher.setNPerPage(val);
+        this.saleOrderFetcher.setNPerPage(35);
         this.saleOrderFetcher.fetch();
     }
     _getSaleOrderOrigin(order) {
@@ -114,73 +103,38 @@ export class SaleOrderManagementScreen extends Component {
         if (currentSaleOriginId) {
             const linkedSO = await this._getSaleOrder(currentSaleOriginId);
             if (
-                linkedSO.partner_id !== sale_order.partner_id ||
-                linkedSO.partner_invoice_id !== sale_order.partner_invoice_id ||
-                linkedSO.partner_shipping_id !== sale_order.partner_shipping_id
+                linkedSO.partner_id?.id !== sale_order.partner_id?.id ||
+                linkedSO.partner_invoice_id?.id !== sale_order.partner_invoice_id?.id ||
+                linkedSO.partner_shipping_id?.id !== sale_order.partner_shipping_id?.id
             ) {
-                currentPOSOrder = this.pos.add_new_order();
+                currentPOSOrder = this.pos.add_new_order({
+                    partner_id: sale_order.partner_id,
+                });
                 this.notification.add(_t("A new order has been created."));
             }
         }
 
-        try {
-            await this.pos.load_new_partners();
-        } catch {
-            // FIXME Universal catch seems ill advised
-        }
-        const order_partner = this.pos.models["res.partner"].get(sale_order.partner_id);
-        if (order_partner) {
-            currentPOSOrder.set_partner(order_partner);
-        } else {
-            try {
-                await this.pos._loadPartners([sale_order.partner_id]);
-            } catch {
-                const title = _t("Customer loading error");
-                const body = _t("There was a problem in loading the %s customer.");
-                this.dialog.add(AlertDialog, { title, body });
-            }
-            currentPOSOrder.set_partner(this.pos.models["res.partner"].get(sale_order.partner_id));
-        }
         const orderFiscalPos = sale_order.fiscal_position_id
             ? this.pos.models["account.fiscal.position"].find(
                   (position) => position.id === sale_order.fiscal_position_id
               )
             : false;
         if (orderFiscalPos) {
-            currentPOSOrder.fiscal_position = orderFiscalPos;
+            currentPOSOrder.update({
+                fiscal_position_id: orderFiscalPos,
+            });
+        }
+
+        if (sale_order.partner_id) {
+            currentPOSOrder.set_partner(sale_order.partner_id);
         }
 
         if (selectedOption == "settle") {
             // settle the order
             const lines = sale_order.order_line;
-            const product_to_add_in_pos = lines
-                .filter((line) => !this.pos.models["product.product"].get(line.product_id))
-                .map((line) => line.product_id);
-            if (product_to_add_in_pos.length) {
-                const confirmed = await ask(this.dialog, {
-                    title: _t("Products not available in POS"),
-                    body: _t(
-                        "Some of the products in your Sale Order are not available in POS, do you want to import them?"
-                    ),
-                    confirmLabel: _t("Yes"),
-                    cancelLabel: _t("No"),
-                });
-                if (confirmed) {
-                    await this.pos.data.ormWrite("product.product", product_to_add_in_pos, {
-                        available_in_pos: true,
-                    });
-                    await this.pos.loadProducts([...product_to_add_in_pos]);
-                }
-            }
 
-            // The pricelist of the sale order is available after loading the products.
-            const orderPricelist = sale_order.pricelist_id
-                ? this.pos.models["product.pricelist"].find(
-                      (pricelist) => pricelist.id === sale_order.pricelist_id
-                  )
-                : false;
-            if (orderPricelist) {
-                currentPOSOrder.set_pricelist(orderPricelist);
+            if (sale_order.pricelist_id) {
+                currentPOSOrder.set_pricelist(sale_order.pricelist_id);
             }
 
             /**
@@ -194,34 +148,42 @@ export class SaleOrderManagementScreen extends Component {
              * and vice versa.
              */
             let useLoadedLots;
-
-            for (var i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                const productProduct = this.pos.models["product.product"].get(line.product_id);
-
-                if (!productProduct) {
-                    continue;
-                }
-
-                const line_values = {
-                    pos: this.pos,
-                    order: this.pos.get_order(),
-                    product: productProduct,
-                    description: line.name,
-                    price: line.price_unit,
-                    tax_ids: orderFiscalPos ? undefined : line.tax_id,
-                    price_manually_set: false,
+            let previousProductLine = null;
+            for (const line of lines) {
+                const newLineValues = {
+                    product_id: line.product_id,
+                    qty: line.product_uom_qty,
+                    price_unit: line.price_unit,
+                    tax_ids:
+                        orderFiscalPos || !line.tax_id
+                            ? undefined
+                            : line.tax_id.map((t) => ["link", t]),
                     sale_order_origin_id: clickedOrder,
                     sale_order_line_id: line,
                     customer_note: line.customer_note,
+                    description: line.name,
+                    order_id: currentPOSOrder,
                 };
-                const new_line = new Orderline({ env: this.env }, line_values);
+
+                if (line.display_type === "line_note") {
+                    if (previousProductLine) {
+                        const previousNote = previousProductLine.customer_note;
+                        previousProductLine.customer_note = previousNote
+                            ? previousNote + "--" + line.name
+                            : line.name;
+                    }
+
+                    continue;
+                }
+
+                const newLine = await this.pos.addLineToCurrentOrder(newLineValues, {}, false);
+                previousProductLine = newLine;
 
                 if (
-                    new_line.get_product().tracking !== "none" &&
+                    newLine.get_product().tracking !== "none" &&
                     (this.pos.pickingType.use_create_lots ||
                         this.pos.pickingType.use_existing_lots) &&
-                    line.lot_names.length > 0
+                    line.pack_lot_ids?.length > 0
                 ) {
                     // Ask once when `useLoadedLots` is undefined, then reuse it's value on the succeeding lines.
                     const { confirmed } =
@@ -237,7 +199,7 @@ export class SaleOrderManagementScreen extends Component {
                             : { confirmed: useLoadedLots };
                     useLoadedLots = confirmed;
                     if (useLoadedLots) {
-                        new_line.setPackLotLines({
+                        newLine.setPackLotLines({
                             modifiedPackLotLines: [],
                             newPackLotLines: (line.lot_names || []).map((name) => ({
                                 lot_name: name,
@@ -245,30 +207,30 @@ export class SaleOrderManagementScreen extends Component {
                         });
                     }
                 }
-                new_line.setQuantityFromSOL(line);
-                new_line.set_unit_price(line.price_unit);
-                new_line.set_discount(line.discount);
-                const product_unit = productProduct.uom_id;
+                newLine.setQuantityFromSOL(line);
+                newLine.set_unit_price(line.price_unit);
+                newLine.set_discount(line.discount);
+
+                const product_unit = line.product_id.uom_id;
                 if (product_unit && !product_unit.is_pos_groupable) {
-                    let remaining_quantity = new_line.quantity;
+                    let remaining_quantity = newLine.qty;
                     while (!floatIsZero(remaining_quantity, 6)) {
-                        const splitted_line = new Orderline({ env: this.env }, line_values);
+                        const splitted_line =
+                            this.pos.models["pos.order.line"].create(newLineValues);
                         splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
-                        this.pos.get_order().add_orderline(splitted_line);
-                        remaining_quantity -= splitted_line.quantity;
+                        remaining_quantity -= splitted_line.qty;
                     }
-                } else {
-                    this.pos.get_order().add_orderline(new_line);
+                    newLine.delete();
                 }
             }
         } else {
             // apply a downpayment
             if (this.pos.config.down_payment_product_id) {
                 const lines = sale_order.order_line.filter((line) => {
-                    return line.product_id !== this.pos.config.down_payment_product_id.id;
+                    return line.product_id.id !== this.pos.config.down_payment_product_id.id;
                 });
                 const tab = lines.map((line) => ({
-                    product_name: line.product_id[1],
+                    product_name: line.product_id.display_name,
                     product_uom_qty: line.product_uom_qty,
                     price_unit: line.price_unit,
                     total: line.price_total,
@@ -350,20 +312,15 @@ export class SaleOrderManagementScreen extends Component {
                     down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
                 }
 
-                const new_line = new Orderline(
-                    { env: this.env },
-                    {
-                        pos: this.pos,
-                        order: this.pos.get_order(),
-                        product: down_payment_product,
-                        price: down_payment,
-                        price_type: "automatic",
-                        sale_order_origin_id: clickedOrder,
-                        down_payment_details: tab,
-                    }
-                );
+                const new_line = await this.pos.addLineToCurrentOrder({
+                    order_id: this.pos.get_order(),
+                    product_id: down_payment_product,
+                    price_unit: down_payment,
+                    sale_order_origin_id: clickedOrder,
+                    down_payment_details: tab,
+                });
+                new_line.uiState.price_type = "automatic";
                 new_line.set_unit_price(down_payment);
-                this.pos.get_order().add_orderline(new_line);
             } else {
                 const title = _t("No down payment product");
                 const body = _t(
@@ -377,26 +334,8 @@ export class SaleOrderManagementScreen extends Component {
     }
 
     async _getSaleOrder(id) {
-        const result = await this.pos.data.read(
-            "sale.order",
-            [id],
-            [
-                "order_line",
-                "partner_id",
-                "pricelist_id",
-                "fiscal_position_id",
-                "amount_total",
-                "amount_untaxed",
-                "amount_unpaid",
-                "picking_ids",
-                "partner_shipping_id",
-                "partner_invoice_id",
-            ]
-        );
-
+        const result = await this.pos.data.read("sale.order", [id]);
         const sale_order = result[0];
-        const sale_lines = await this._getSOLines(sale_order.order_line);
-        sale_order.order_line = sale_lines;
 
         if (sale_order.picking_ids[0]) {
             const result = await this.pos.data.read(
@@ -409,11 +348,6 @@ export class SaleOrderManagementScreen extends Component {
         }
 
         return sale_order;
-    }
-
-    async _getSOLines(ids) {
-        const so_lines = await this.pos.data.call("sale.order.line", "read_converted", [ids]);
-        return so_lines;
     }
 }
 

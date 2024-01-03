@@ -5,7 +5,6 @@ import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_sc
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { Component, useState } from "@odoo/owl";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 patch(TicketScreen.prototype, {
     _getScreenToStatusMap() {
@@ -36,7 +35,7 @@ patch(TicketScreen.prototype, {
         }
         return Object.assign({}, super._getSearchFields(...arguments), {
             TABLE: {
-                repr: this.getTable.bind(this),
+                repr: (order) => order.table_id?.name || "",
                 displayName: _t("Table"),
                 modelField: "table_id.name",
             },
@@ -48,7 +47,7 @@ patch(TicketScreen.prototype, {
         }
         // we came from the FloorScreen
         const orderTable = order.getTable();
-        await this.pos.setTable(orderTable, order.uid);
+        await this.pos.setTable(orderTable, order.uuid);
         this.closeTicketScreen();
     },
     async onDeleteOrder(order) {
@@ -57,7 +56,9 @@ patch(TicketScreen.prototype, {
             confirmed &&
             this.pos.config.module_pos_restaurant &&
             this.pos.selectedTable &&
-            !this.pos.orders.some((order) => order.tableId === this.pos.selectedTable.id)
+            !this.pos.models["pos.order"].some(
+                (order) => order.table_id.id === this.pos.selectedTable.id
+            )
         ) {
             return this.pos.showScreen("FloorScreen");
         }
@@ -68,62 +69,51 @@ patch(TicketScreen.prototype, {
             : super.allowNewOrders;
     },
     async settleTips() {
-        // set tip in each order
+        const promises = [];
         for (const order of this.getFilteredOrderList()) {
-            const tipAmount = this.env.utils.parseValidFloat(
-                order.uiState.TipScreen.inputTipAmount
-            );
-            const serverId = this.pos.validated_orders_name_server_id_map[order.name];
-            if (!serverId) {
+            const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
+
+            if (typeof order.id === "string") {
                 console.warn(
                     `${order.name} is not yet sync. Sync it to server before setting a tip.`
                 );
-            } else {
-                const result = await this.setTip(order, serverId, tipAmount);
-                if (!result) {
-                    break;
-                }
-            }
-        }
-    },
-    async setTip(order, serverId, amount) {
-        try {
-            const paymentline = order.get_paymentlines()[0];
-            if (paymentline.payment_method.payment_terminal) {
-                paymentline.amount += amount;
-                this.pos.set_order(order, { silent: true });
-                await paymentline.payment_method.payment_terminal.send_payment_adjust(
-                    paymentline.cid
-                );
+                continue;
             }
 
-            if (!amount) {
-                await this.setNoTip(serverId);
-            } else {
-                order.finalized = false;
-                order.set_tip(amount);
-                order.finalized = true;
-                const tip_line = order.selected_orderline;
-                await this.pos.data.call("pos.order", "set_tip", [
-                    serverId,
-                    tip_line.export_as_JSON(),
-                ]);
-            }
-            if (order === this.pos.get_order()) {
-                this._selectNextOrder(order);
-            }
-            this.pos.removeOrder(order);
-            return true;
-        } catch {
-            const confirmed = await ask(this.dialog, {
-                title: "Failed to set tip",
-                body: `Failed to set tip to ${order.name}. Do you want to proceed on setting the tips of the remaining?`,
-            });
-            return confirmed;
+            order.state = "draft";
+            this.pos.selectedOrderUuid = order.uuid;
+            this.pos.set_tip(amount);
+            order.state = "paid";
+            order.uiState.screen_data.value = { name: "", props: {} };
+
+            const serializedTipLine = order.get_selected_orderline().serialize({ orm: true });
+            order.get_selected_orderline().delete();
+
+            promises.push(
+                new Promise((resolve) => {
+                    const fn = async () => {
+                        const tipLine = await this.pos.data.create("pos.order.line", [
+                            serializedTipLine,
+                        ]);
+                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
+                            is_tipped: true,
+                            tip_amount: tipLine[0].price_unit,
+                        });
+
+                        if (state) {
+                            order.update({
+                                isTipped: true,
+                                tipAmount: tipLine[0].price_unit,
+                            });
+                        }
+                        resolve();
+                    };
+                    fn();
+                })
+            );
         }
-    },
-    async setNoTip(serverId) {
-        await this.pos.data.call("pos.order", "set_no_tip", [serverId]);
+
+        await Promise.all(promises);
     },
     _getOrderStates() {
         const result = super._getOrderStates(...arguments);

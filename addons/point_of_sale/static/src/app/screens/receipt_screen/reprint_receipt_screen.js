@@ -18,7 +18,7 @@ export class ReprintReceiptScreen extends Component {
     }
 
     confirm() {
-        this.pos.showScreen("TicketScreen", { reuseSavedUIState: true });
+        this.pos.showScreen("TicketScreen", { stateOverride: { filter: "SYNCED" } });
     }
 
     tryReprint() {

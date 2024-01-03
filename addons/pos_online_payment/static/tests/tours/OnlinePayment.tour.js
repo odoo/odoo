@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             Dialog.confirm("Open session"),
@@ -31,9 +30,9 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             // successfully confirming the dialog would imply that the error popup is actually shown
+            // Online payment line is now automatically deleted after the error popup
             Dialog.confirm(),
-            PaymentScreen.clickPaymentline("Online payment", "47.0"),
-            PaymentScreen.clickPaymentlineDelButton("Online payment", "47.0"),
+            PaymentScreen.remainingIs("46.0"),
             PaymentScreen.clickPaymentMethod("Online payment"),
             PaymentScreen.selectedPaymentlineHas("Online payment", "46.0"),
             PaymentScreen.clickPaymentMethod("Online payment"),
@@ -43,7 +42,12 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             // successfully confirming the dialog would imply that the error popup is actually shown
+            // Online payment line is now automatically deleted after the error popup
             Dialog.confirm(),
+            PaymentScreen.remainingIs("46.0"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "46.0"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
             PaymentScreen.clickPaymentline("Online payment", "0.0"),
             PaymentScreen.clickPaymentlineDelButton("Online payment", "0.0"),
             PaymentScreen.clickPaymentline("Cash", "2.0"),
@@ -56,6 +60,7 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
             // successfully confirming the dialog would imply that the error popup is actually shown
+            // Online payment line is now automatically deleted after the error popup
             Dialog.confirm(),
         ].flat(),
 });

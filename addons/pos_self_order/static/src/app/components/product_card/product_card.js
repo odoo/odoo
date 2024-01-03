@@ -113,11 +113,7 @@ export class ProductCard extends Component {
                     qty: qty,
                     product_id: product.id,
                 });
-                line.full_product_name = constructFullProductName(
-                    line,
-                    this.selfOrder.attributeValueById,
-                    product.name
-                );
+                line.full_product_name = constructFullProductName(line);
                 lines.push(line);
             }
             await this.selfOrder.getPricesFromServer();

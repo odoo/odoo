@@ -35,6 +35,16 @@ export class OrderSummary extends Component {
         return this.pos.get_order();
     }
 
+    async editPackLotLines(line) {
+        const isAllowOnlyOneLot = line.product_id.isAllowOnlyOneLot();
+        const editedPackLotLines = await this.pos.editLots(
+            line.product_id,
+            line.getPackLotLinesToEdit(isAllowOnlyOneLot)
+        );
+
+        line.editPackLotLines(editedPackLotLines);
+    }
+
     selectLine(orderline) {
         this.numberBuffer.reset();
         this.currentOrder.select_orderline(orderline);
@@ -79,8 +89,8 @@ export class OrderSummary extends Component {
             this.pos.numpadMode === "quantity" &&
             this.pos.disallowLineQuantityChange()
         ) {
-            const orderlines = order.orderlines;
-            const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
+            const orderlines = order.lines;
+            const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).uuid;
             const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
 
             if (selectedLine.noDecrease) {
@@ -91,7 +101,7 @@ export class OrderSummary extends Component {
                 return;
             }
             const parsedInput = (buffer && parseFloat(buffer)) || 0;
-            if (lastId != selectedLine.cid) {
+            if (lastId != selectedLine.uuid) {
                 this._showDecreaseQuantityPopup();
             } else if (currentQuantity < parsedInput) {
                 this._setValue(buffer);
@@ -117,14 +127,16 @@ export class OrderSummary extends Component {
                     this.currentOrder.removeOrderline(selectedLine);
                 } else {
                     const result = selectedLine.set_quantity(val);
-                    if (!result) {
+
+                    if (result !== true) {
+                        this.dialog.add(AlertDialog, result);
                         this.numberBuffer.reset();
                     }
                 }
             } else if (numpadMode === "discount") {
                 selectedLine.set_discount(val);
             } else if (numpadMode === "price") {
-                selectedLine.price_type = "manual";
+                selectedLine.uiState.price_type = "manual";
                 selectedLine.set_unit_price(val);
             }
         }
@@ -147,7 +159,7 @@ export class OrderSummary extends Component {
             if (newQuantity >= selectedLine.saved_quantity) {
                 selectedLine.set_quantity(newQuantity);
                 if (newQuantity == 0) {
-                    order._unlinkOrderline(selectedLine);
+                    selectedLine.delete();
                 }
                 return true;
             }

@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { PosStore } from "@point_of_sale/app/store/pos_store";
-import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosStore.prototype, {
@@ -10,14 +9,11 @@ patch(PosStore.prototype, {
         await super.processServerData(...arguments);
         this.self_ordering = this.data.custom.self_ordering;
     },
-});
+    async getServerOrders() {
+        if (this.self_ordering) {
+            await this.data.callRelated("pos.order", "get_standalone_self_order", []);
+        }
 
-patch(Order.prototype, {
-    defaultTableNeeded(options) {
-        return (
-            super.defaultTableNeeded(...arguments) &&
-            !this.name.includes("Kiosk") &&
-            !this.name.includes("Self-Order")
-        );
+        return await super.getServerOrders(...arguments);
     },
 });
