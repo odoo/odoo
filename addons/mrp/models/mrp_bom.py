@@ -521,28 +521,16 @@ class MrpBomLine(models.Model):
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
     manual_consumption = fields.Boolean(
-        'Manual Consumption', default=False, compute='_compute_manual_consumption',
+        'Manual Consumption', default=False,
         readonly=False, store=True, copy=True,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
-    manual_consumption_readonly = fields.Boolean(
-        'Manual Consumption Readonly', compute='_compute_manual_consumption_readonly')
 
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater or equal to 0.\n'
             'Lines with 0 quantities can be used as optional lines. \n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs!'),
     ]
-
-    @api.depends('product_id', 'tracking', 'operation_id')
-    def _compute_manual_consumption(self):
-        for line in self:
-            line.manual_consumption = (line.tracking != 'none' or line.operation_id)
-
-    @api.depends('tracking', 'operation_id')
-    def _compute_manual_consumption_readonly(self):
-        for line in self:
-            line.manual_consumption_readonly = (line.tracking != 'none' or line.operation_id)
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):

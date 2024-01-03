@@ -50,7 +50,7 @@ class TestStockLot(TestStockCommon):
             'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3}),
+                (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3, 'manual_consumption': True}),
             ]})
 
         cls.location_stock = cls.env['stock.location'].browse(cls.stock_location)
@@ -79,7 +79,7 @@ class TestStockLot(TestStockCommon):
         mo_form.qty_producing = 1
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
-        with details_operation_form.move_line_ids.new() as ml:
+        with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 3
             ml.lot_id = self.lot_good_apple
         details_operation_form.save()
@@ -102,7 +102,7 @@ class TestStockLot(TestStockCommon):
         mo_form.qty_producing = 1
         mo = mo_form.save()
         details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
-        with details_operation_form.move_line_ids.new() as ml:
+        with details_operation_form.move_line_ids.edit(0) as ml:
             ml.quantity = 3
             ml.lot_id = self.lot_expired_apple
         details_operation_form.save()

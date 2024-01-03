@@ -21,10 +21,6 @@ class StockPickingType(models.Model):
         help="Allow to create new lot/serial numbers for the components",
         default=False,
     )
-    use_auto_consume_components_lots = fields.Boolean(
-        string="Consume Reserved Lots/Serial Numbers automatically",
-        help="Allow automatic consumption of tracked components that are reserved",
-    )
 
     auto_print_done_production_order = fields.Boolean(
         "Auto Print Done Production Order",

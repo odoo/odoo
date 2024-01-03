@@ -37,8 +37,8 @@ class TestMrpCommon(common2.TestStockCommon):
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
-                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2, 'manual_consumption': tracking_base_2 != 'none'}),
+                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1, 'manual_consumption': tracking_base_1 != 'none'})
             ]})
         mo_form = Form(cls.env['mrp.production'])
         mo_form.product_id = product_to_build

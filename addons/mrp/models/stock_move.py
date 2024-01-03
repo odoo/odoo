@@ -605,12 +605,11 @@ class StockMove(models.Model):
 
     def _is_manual_consumption(self):
         self.ensure_one()
-        return self._determine_is_manual_consumption(self.product_id, self.raw_material_production_id, self.bom_line_id)
+        return self._determine_is_manual_consumption(self.bom_line_id)
 
     @api.model
-    def _determine_is_manual_consumption(self, product, production, bom_line):
-        return (product.product_tmpl_id.tracking != 'none' and not production.use_auto_consume_components_lots) or \
-               (product.product_tmpl_id.tracking == 'none' and bom_line and bom_line.manual_consumption)
+    def _determine_is_manual_consumption(self, bom_line):
+        return bom_line and bom_line.manual_consumption
 
     def _get_relevant_state_among_moves(self):
         res = super()._get_relevant_state_among_moves()

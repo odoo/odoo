@@ -1049,13 +1049,13 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertFalse(move_byproduct_1.picked)
+        self.assertTrue(move_byproduct_1.picked)
 
         move_byproduct_2 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertFalse(move_byproduct_2.picked)
+        self.assertTrue(move_byproduct_2.picked)
 
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
@@ -1084,13 +1084,13 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(move_byproduct_1), 1)
         self.assertEqual(move_byproduct_1.product_uom_qty, 1.0)
         self.assertEqual(move_byproduct_1.quantity, 1)
-        self.assertFalse(move_byproduct_1.picked)
+        self.assertTrue(move_byproduct_1.picked)
 
         move_byproduct_2 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2)
         self.assertEqual(len(move_byproduct_2), 1)
         self.assertEqual(move_byproduct_2.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_2.quantity, 2)
-        self.assertFalse(move_byproduct_2.picked)
+        self.assertTrue(move_byproduct_2.picked)
 
         move_byproduct_3 = mo2.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 2.0)
@@ -1912,7 +1912,6 @@ class TestMrpOrder(TestMrpCommon):
         """
 
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
-        picking_type.use_auto_consume_components_lots = True
 
         # the overall decimal accuracy is set to 3 digits
         precision = self.env.ref('product.decimal_product_uom')
@@ -3922,7 +3921,19 @@ class TestMrpOrder(TestMrpCommon):
         self.product_4.uom_id = self.uom_unit
 
         mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_1
+        mo_form.bom_id = self.env['mrp.bom'].create({
+            'product_id': self.product_4.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'consumption': 'flexible',
+            'operation_ids': [
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2, 'manual_consumption': True}),
+                (0, 0, {'product_id': self.product_1.id, 'product_qty': 4, 'manual_consumption': True})
+            ]})
         mo = mo_form.save()
         mo.action_confirm()
         mo.action_assign()
