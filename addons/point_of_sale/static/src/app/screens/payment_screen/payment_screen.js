@@ -301,7 +301,7 @@ export class PaymentScreen extends Component {
                 throw error;
             }
         } finally {
-            this.env.services.ui.unblock()
+            this.env.services.ui.unblock();
         }
 
         // 3. Post process.
@@ -357,7 +357,7 @@ export class PaymentScreen extends Component {
 
             if (invoiced_finalized) {
                 const printResult = await this.printer.print(
-                    OrderReceipt, 
+                    OrderReceipt,
                     {
                         data: this.pos.get_order().export_for_printing(),
                         formatCurrency: this.env.utils.formatCurrency,
@@ -436,7 +436,7 @@ export class PaymentScreen extends Component {
             return false;
         }
 
-        if (await this._askForCustomerIfRequired() === false) {
+        if ((await this._askForCustomerIfRequired()) === false) {
             return false;
         }
 

@@ -21,12 +21,7 @@ class PosSession(models.Model):
         return result
 
     def _loader_params_hr_employee(self):
-        if len(self.config_id.basic_employee_ids) > 0:
-            domain = [
-                '&', ('company_id', '=', self.config_id.company_id.id),
-                '|', ('user_id', '=', self.user_id.id), ('id', 'in', self.config_id.basic_employee_ids.ids + self.config_id.advanced_employee_ids.ids)]
-        else:
-            domain = [('company_id', '=', self.config_id.company_id.id)]
+        domain = self.config_id._employee_domain(self.user_id.id)
         return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id', 'work_contact_id'], 'load': False}}
 
     def _get_pos_ui_hr_employee(self, params):

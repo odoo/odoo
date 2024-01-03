@@ -447,6 +447,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
+            self._check_before_creating_new_session()
             pos_session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             pos_session._ensure_access_token()
             self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {

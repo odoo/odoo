@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.osv.expression import AND
 
 
 class PosConfig(models.Model):
@@ -24,3 +25,12 @@ class PosConfig(models.Model):
         for employee in self.advanced_employee_ids:
             if employee in self.basic_employee_ids:
                 self.basic_employee_ids -= employee
+
+    def _employee_domain(self, user_id):
+        domain = self._check_company_domain(self.company_id)
+        if len(self.basic_employee_ids) > 0:
+            domain = AND([
+                domain,
+                ['|', ('user_id', '=', user_id), ('id', 'in', self.basic_employee_ids.ids + self.advanced_employee_ids.ids)]
+            ])
+        return domain
