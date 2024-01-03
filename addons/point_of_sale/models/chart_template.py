@@ -14,8 +14,8 @@ class AccountChartTemplate(models.AbstractModel):
         """
         reload_template = template_code == company.chart_template
         if not reload_template:
-            self.env['pos.payment.method'].search(self.env['pos.payment.method']._check_company_domain(company)).unlink()
-            self.env["pos.config"].search(self.env['pos.config']._check_company_domain(company)).write({
+            self.env['pos.payment.method'].with_context(active_test=False).search(self.env['pos.payment.method']._check_company_domain(company)).unlink()
+            self.env["pos.config"].with_context(active_test=False).search(self.env['pos.config']._check_company_domain(company)).write({
                 'journal_id': False,
                 'invoice_journal_id': False,
             })
