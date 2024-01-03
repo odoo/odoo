@@ -393,7 +393,7 @@ class AccountEdiFormat(models.Model):
             if tax_details_info_service_vals['tax_details_info']:
                 desglose.setdefault('DesgloseTipoOperacion', {})
                 desglose['DesgloseTipoOperacion']['PrestacionServicios'] = tax_details_info_service_vals['tax_details_info']
-                desglose['TipoDesglose']['DesgloseTipoOperacion']['PrestacionServicios'].update(
+                desglose['DesgloseTipoOperacion']['PrestacionServicios'].update(
                     {'S1': tax_details_info_service_vals['S1_list'],
                      'S2': tax_details_info_service_vals['S2_list']})
 
