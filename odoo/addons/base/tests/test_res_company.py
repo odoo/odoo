@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import TransactionCase
 
 
@@ -50,3 +50,27 @@ class TestCompany(TransactionCase):
         self.assertTrue(company.uses_default_logo)
         company.partner_id.image_1920 = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
         self.assertFalse(company.uses_default_logo)
+
+    def _create_companies(self):
+        return self.env['res.company'].create([{'name': f'company_{i}'} for i in range(4)])
+
+    def test_setting_parent_company_for_single_child(self):
+        child_1, _, parent_1, parent_2 = self._create_companies()
+
+        # Can set parent company only for the first time
+        child_1.write({'parent_id': parent_1.id})
+
+        # The company hierarchy cannot be changed.
+        with self.assertRaises(UserError):
+            child_1.write({'parent_id': parent_2.id})
+
+    def test_setting_parent_company_for_multiple_children_01(self):
+        companies = self._create_companies()
+        children, parent_1, parent_2 = companies[:2], companies[2], companies[3]
+
+        # Can set parent company only for the first time
+        children.write({'parent_id': parent_1.id})
+
+        # The company hierarchy cannot be changed.
+        with self.assertRaises(UserError):
+            children.write({'parent_id': parent_2.id})

@@ -294,7 +294,7 @@ class Company(models.Model):
             # and thus needs to invalidate the assets cache when this is changed
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
 
-        if 'parent_id' in values:
+        if 'parent_id' in values and any(company.parent_id for company in self):
             raise UserError(_("The company hierarchy cannot be changed."))
 
         if values.get('currency_id'):
