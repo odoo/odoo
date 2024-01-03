@@ -17,7 +17,7 @@
                             <input class="form-control mb-3" type="text" placeholder="Your name" t-att-name="welcomeView.guestNameInputUniqueId" t-att-id="welcomeView.guestNameInputUniqueId" t-att-value="welcomeView.pendingGuestName" t-ref="guestNameInput" t-on-input="welcomeView.onInputGuestNameInput" t-on-keydown="welcomeView.onKeydownGuestNameInput"/>
                         </t>
                         <t t-if="messaging.currentUser">
-                            <p class="o_WelcomeView_loggedAsStatus">Logged as <span t-esc="messaging.currentUser.nameOrDisplayName"/></p>
+                            <p class="o_WelcomeView_loggedAsStatus" t-esc="loggedInAsText"/>
                         </t>
                         <button class="o_WelcomeView_joinButton btn btn-success btn-lg align-self-end p-0 rounded-circle shadow fa fa-phone" title="Join Channel" t-att-disabled="welcomeView.isJoinButtonDisabled" t-on-click="welcomeView.onClickJoinButton"/>
                     </div>
