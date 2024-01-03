@@ -48,11 +48,6 @@ class MrpConsumptionWarning(models.TransientModel):
                     qty_expected = line.product_uom_id._compute_quantity(line.product_expected_qty_uom, move.product_uom)
                     qty_compare_result = float_compare(qty_expected, move.quantity, precision_rounding=move.product_uom.rounding)
                     if qty_compare_result != 0:
-                        if (move.has_tracking in ('lot', 'serial')
-                            and not production.use_auto_consume_components_lots
-                            and qty_compare_result > 0):
-                            problem_tracked_products |= line.product_id
-                            break
                         move.quantity = qty_expected
                     # move should be set to picked to correctly consume the product
                     move.picked = True
@@ -60,9 +55,6 @@ class MrpConsumptionWarning(models.TransientModel):
                     line.product_expected_qty_uom = 0
                 # move was deleted before confirming MO or force deleted somehow
                 if not float_is_zero(line.product_expected_qty_uom, precision_rounding=line.product_uom_id.rounding):
-                    if line.product_id.tracking in ('lot', 'serial') and not line.mrp_production_id.use_auto_consume_components_lots:
-                        problem_tracked_products |= line.product_id
-                        continue
                     missing_move_vals.append({
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom_id.id,

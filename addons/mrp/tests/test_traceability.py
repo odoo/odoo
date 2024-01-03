@@ -368,7 +368,6 @@ class TestTraceability(TestMrpCommon):
         """
         stock_location = self.env.ref('stock.stock_location_stock')
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
-        picking_type.use_auto_consume_components_lots = True
 
         productA, productB, productC = self.env['product.product'].create([{
             'name': 'Product A',
