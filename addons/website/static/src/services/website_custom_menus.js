@@ -86,7 +86,7 @@ registry.category('website_custom_menus').add('website.menu_edit_menu', {
 registry.category('website_custom_menus').add('website.menu_optimize_seo', {
     Component: OptimizeSEODialog,
     isDisplayed: (env) => env.services.website.currentWebsite
-        && env.services.website.isDesigner
+        && env.services.website.isRestrictedEditor
         && !!env.services.website.currentWebsite.metadata.canOptimizeSeo,
 });
 registry.category('website_custom_menus').add('website.menu_ace_editor', {

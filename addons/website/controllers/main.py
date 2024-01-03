@@ -752,6 +752,15 @@ class Website(Home):
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
             res['seo_name_default'] = slugify(record.display_name)  # default slug, if seo_name become empty
             res['seo_name'] = record.seo_name and slugify(record.seo_name) or ''
+
+        try:
+            record.check_access_rights('write')
+            record.check_access_rule('write')
+        except AccessError:
+            res['can_edit_seo'] = False
+        else:
+            res['can_edit_seo'] = True
+
         return res
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
