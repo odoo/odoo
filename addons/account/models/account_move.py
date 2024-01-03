@@ -3762,7 +3762,7 @@ class AccountMoveLine(models.Model):
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", readonly=True)
     account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
-    sequence = fields.Integer(default=10)
+    sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False)
     name = fields.Char(string='Label', tracking=True, compute='_compute_name', store=True, readonly=False)
     quantity = fields.Float(string='Quantity',
         default=lambda self: 0 if self._context.get('default_display_type') else 1.0, digits='Product Unit of Measure',
@@ -4087,6 +4087,12 @@ class AccountMoveLine(models.Model):
                 )
                 if rec:
                     record.analytic_account_id = rec.analytic_id
+
+    @api.depends('display_type')
+    def _compute_sequence(self):
+        for line in self:
+            highest_sequence = max(line.move_id.invoice_line_ids.mapped('sequence'), default=0)
+            line.sequence = highest_sequence + 1 if highest_sequence else 10
 
     @api.depends('product_id', 'account_id', 'partner_id', 'date')
     def _compute_analytic_tag_ids(self):
