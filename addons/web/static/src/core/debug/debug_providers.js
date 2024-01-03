@@ -28,20 +28,19 @@ commandProviderRegistry.add("debug", {
                 name: _t("Deactivate debug mode"),
             });
             result.push({
-                action() {
-                    const runTestsURL = browser.location.origin + "/web/tests?debug=assets";
-                    browser.open(runTestsURL);
-                },
+                action: () => browser.open("/web/tests/next?debug=assets"),
                 category: "debug",
-                name: _t("Run JS Tests"),
+                name: _t("Run unit tests"),
             });
             result.push({
-                action() {
-                    const runTestsURL = browser.location.origin + "/web/tests/mobile?debug=assets";
-                    browser.open(runTestsURL);
-                },
+                action: () => browser.open("/web/tests?debug=assets"),
                 category: "debug",
-                name: _t("Run JS Mobile Tests"),
+                name: _t("Run QUnit tests (legacy)"),
+            });
+            result.push({
+                action: () => browser.open("/web/tests/mobile?debug=assets"),
+                category: "debug",
+                name: _t("Run QUnit mobile tests (legacy)"),
             });
         } else {
             if (options.searchValue.toLowerCase() === "debug") {

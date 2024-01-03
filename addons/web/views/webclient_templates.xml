@@ -212,6 +212,19 @@
         <t t-call-assets="web.tests_assets" t-css="False"/>
     </template>
 
+    <template id="web.unit_tests_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Web Unit Tests</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+                <t t-call-assets="web.assets_unit_tests_setup" />
+                <t t-call-assets="web.assets_unit_tests" />
+            </t>
+        </t>
+    </template>
+
     <template id="web.qunit_suite">
         <t t-call="web.layout">
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>

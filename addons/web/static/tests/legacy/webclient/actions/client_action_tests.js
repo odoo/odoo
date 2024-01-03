@@ -360,7 +360,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("test reload client action", async function (assert) {
         patchWithCleanup(browser.location, {
             assign: (url) => {
-                assert.step(url);
+                assert.step(url.replace(location.pathname, ""));
             },
             origin: "",
             reload: function () {
@@ -401,13 +401,13 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await nextTick(); // wait for reload to be done
         assert.verifySteps([
-            // "/web/tests?test=42", // This one was not push to the history because it's the current url (see router.js)
+            // "?test=42", // This one was not push to the history because it's the current url (see router.js)
             "window_reload",
-            "/web/tests?action=2",
+            "?action=2",
             "window_reload",
-            "/web/tests?menu_id=1",
+            "?menu_id=1",
             "window_reload",
-            "/web/tests?menu_id=2&action=1",
+            "?menu_id=2&action=1",
             "window_reload",
         ]);
     });
