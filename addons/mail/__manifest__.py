@@ -169,6 +169,12 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/tours/discuss_channel_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
         ],
+        # Unit test files
+        'web.assets_unit_tests': [
+            'mail/static/tests/**/*',
+            ('remove', 'mail/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
+            ('remove', 'mail/static/tests/tours/**/*'),
+        ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
         ],

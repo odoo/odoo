@@ -363,7 +363,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("test reload client action", async function (assert) {
         patchWithCleanup(browser.location, {
             assign: (url) => {
-                assert.step(url);
+                assert.step(url.replace(location.pathname, ""));
             },
             origin: "",
         });
@@ -398,10 +398,10 @@ QUnit.module("ActionManager", (hooks) => {
             },
         });
         assert.verifySteps([
-            "/web/tests?reload=true#test=42",
-            "/web/tests?reload=true#action=2",
-            "/web/tests?reload=true#menu_id=1",
-            "/web/tests?reload=true#menu_id=2&action=1",
+            "?reload=true#test=42",
+            "?reload=true#action=2",
+            "?reload=true#menu_id=1",
+            "?reload=true#menu_id=2&action=1",
         ]);
     });
 });
