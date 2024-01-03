@@ -1,34 +1,40 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
-
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-function runJSTestsItem({ env }) {
-    const runTestsURL = browser.location.origin + "/web/tests?debug=assets";
+function runHootItem() {
+    const href = "/web/tests/next?debug=assets";
     return {
         type: "item",
-        description: _t("Run JS Tests"),
-        href: runTestsURL,
-        callback: () => {
-            browser.open(runTestsURL);
-        },
+        description: _t("Run unit tests"),
+        href,
+        callback: () => browser.open(href),
         sequence: 10,
     };
 }
 
-function runJSTestsMobileItem({ env }) {
-    const runTestsMobileURL = browser.location.origin + "/web/tests/mobile?debug=assets";
+function runJSTestsItem() {
+    const href = "/web/tests?debug=assets";
     return {
         type: "item",
-        description: _t("Run JS Mobile Tests"),
-        href: runTestsMobileURL,
-        callback: () => {
-            browser.open(runTestsMobileURL);
-        },
+        description: _t("Run QUnit tests (legacy)"),
+        href,
+        callback: () => browser.open(href),
         sequence: 20,
+    };
+}
+
+function runJSTestsMobileItem() {
+    const href = "/web/tests/mobile?debug=assets";
+    return {
+        type: "item",
+        description: _t("Run QUnit mobile tests (legacy)"),
+        href,
+        callback: () => browser.open(href),
+        sequence: 30,
     };
 }
 
@@ -80,6 +86,7 @@ function globalSeparator() {
 registry
     .category("debug")
     .category("default")
+    .add("runHootItem", runHootItem)
     .add("runJSTestsItem", runJSTestsItem)
     .add("runJSTestsMobileItem", runJSTestsMobileItem)
     .add("globalSeparator", globalSeparator)

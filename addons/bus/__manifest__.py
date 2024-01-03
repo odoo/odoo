@@ -24,6 +24,11 @@
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
+        # Unit test files
+        'web.assets_unit_tests': [
+            'bus/static/tests/**/*',
+            ('remove', 'bus/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
+        ],
         'web.tests_assets': [
             'bus/static/tests/legacy/helpers/**/*',
         ],

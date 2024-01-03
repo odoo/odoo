@@ -46,8 +46,3 @@ patch(FormRenderer.prototype, {
         return this.messagingState.thread.attachmentsInWebClientView.length > 0;
     },
 });
-
-patch(FormRenderer.props, {
-    // Template props : added by the FormCompiler
-    saveRecord: { type: Function, optional: true },
-});

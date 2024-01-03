@@ -1,0 +1,626 @@
+:root {
+    /* Generic colors */
+    --hoot-primary: #714b67;
+    --hoot-secondary: #74b4b9;
+    --hoot-abort: #f59e0b;
+    --hoot-abort-bg: #fef3c7;
+    --hoot-fail: #9f1239;
+    --hoot-fail-bg: #fecdd3;
+    --hoot-pass: #047857;
+    --hoot-pass-bg: #ecfdf5;
+    --hoot-skip: #0891b2;
+    --hoot-skip-bg: #e0f2fe;
+    --hoot-todo: #581c87;
+    --hoot-todo-bg: #f3e8ff;
+
+    /* Grays */
+    --hoot-gray-100: #f1f5f9;
+    --hoot-gray-200: #e2e8f0;
+    --hoot-gray-300: #cbd5e1;
+    --hoot-gray-400: #94a3b8;
+    --hoot-gray-500: #64748b;
+    --hoot-gray-600: #475569;
+    --hoot-gray-700: #334155;
+    --hoot-gray-800: #1e293b;
+    --hoot-gray-900: #0f172a;
+
+    /* App colors */
+    --hoot-bg: var(--hoot-gray-100);
+    --hoot-text: var(--hoot-gray-900);
+    --hoot-panel-bg: var(--hoot-gray-200);
+    --hoot-status-bg: var(--hoot-gray-300);
+    --hoot-btn-bg: #714b67;
+    --hoot-btn-bg-hover: #624159;
+    --hoot-btn-text: #ffffff;
+    --hoot-bg-result: rgba(255, 255, 255, 0.6);
+    --hoot-border-result: var(--hoot-gray-300);
+    --hoot-border-search: #d8dadd;
+
+    /* HootReporting colors */
+    --hoot-bg-report: #ffffff;
+    --hoot-text-report: #202124;
+    --hoot-border-report: #f0f0f0;
+    --hoot-bg-report-error: #fff0f0;
+    --hoot-text-report-error: #ff0000;
+    --hoot-border-report-error: #ffd6d6;
+    --hoot-text-report-number: #1a1aa6;
+    --hoot-text-report-string: #c80000;
+    --hoot-text-report-key: #881280;
+    --hoot-text-report-html-tag: #881280;
+    --hoot-text-report-html-id: #1a1aa8;
+    --hoot-text-report-html-class: #994500;
+
+    /* Bootstrap */
+    --body-bg: var(--hoot-bg) !important;
+    --body-color: var(--hoot-text) !important;
+}
+
+/*---------------------------------------------------------------------------*/
+/* Dark mode                                                                 */
+/*---------------------------------------------------------------------------*/
+
+.hoot-dark {
+    /* Generic colors */
+    --hoot-primary: #14b8a6;
+    --hoot-abort: #fbbf24;
+    --hoot-abort-bg: #422006;
+    --hoot-fail: #fb7185;
+    --hoot-fail-bg: #4c0519;
+    --hoot-pass: #34d399;
+    --hoot-pass-bg: #064e3b;
+    --hoot-skip: #22d3ee;
+    --hoot-skip-bg: #083344;
+    --hoot-todo: #a855f7;
+    --hoot-todo-bg: #3b0764;
+
+    /* App colors */
+    --hoot-bg: var(--hoot-gray-900);
+    --hoot-text: var(--hoot-gray-100);
+    --hoot-panel-bg: var(--hoot-gray-800);
+    --hoot-status-bg: var(--hoot-gray-700);
+    --hoot-btn-bg: #00dac5;
+    --hoot-btn-bg-hover: #00c1ae;
+    --hoot-btn-text: #000000;
+    --hoot-bg-result: rgba(0, 0, 0, 0.5);
+    --hoot-border-result: var(--hoot-gray-600);
+    --hoot-border-search: #3c3f4c;
+
+    /* HootReporting colors */
+    --hoot-bg-report: #202124;
+    --hoot-text-report: #e8eaed;
+    --hoot-border-report: #3a3a3a;
+    --hoot-bg-report-error: #290000;
+    --hoot-text-report-error: #ff8080;
+    --hoot-border-report-error: #5c0000;
+    --hoot-text-report-number: #9980ff;
+    --hoot-text-report-string: #f28b54;
+    --hoot-text-report-key: #5db0d7;
+    --hoot-text-report-html-tag: #5db0d7;
+    --hoot-text-report-html-id: #f29364;
+    --hoot-text-report-html-class: #9bbbdc;
+}
+
+/*---------------------------------------------------------------------------*/
+/* CSS reset                                                                 */
+/*---------------------------------------------------------------------------*/
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+input,
+button,
+textarea,
+select {
+    background-color: inherit;
+    border: none;
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    text-align: start;
+}
+
+/*---------------------------------------------------------------------------*/
+/* Panel                                                                     */
+/*---------------------------------------------------------------------------*/
+
+.hoot .hoot-transition-colors {
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.hoot .hoot-panel {
+    background: var(--hoot-panel-bg);
+}
+
+.hoot .hoot-controls {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.hoot .hoot-buttons {
+    border-radius: 0.25rem;
+    gap: 1px;
+}
+.hoot .hoot-buttons .hoot-btn {
+    border-radius: 0;
+}
+
+.hoot .hoot-config .hoot-dropdown {
+    width: clamp(200px, 256px, 100vw);
+}
+
+.hoot .hoot-search {
+    flex: 1;
+}
+.hoot .hoot-search .hoot-dropdown {
+    width: clamp(300px, 100%, 100vw);
+}
+
+.hoot .hoot-search-bar {
+    background-color: var(--hoot-bg);
+    border-radius: 0.25rem;
+    border: 1px solid var(--hoot-border-search);
+    color: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+}
+.hoot .hoot-search-bar:focus-within {
+    border-color: var(--hoot-secondary);
+}
+.hoot .hoot-search-bar input[type="text"] {
+    outline: none;
+}
+
+.hoot .hoot-search-debug i {
+    color: var(--hoot-gray-500);
+}
+.hoot .hoot-search-debug input:checked ~ i {
+    color: var(--hoot-pass);
+}
+
+.hoot .hoot-logo strong {
+    font-size: 1.6rem;
+    letter-spacing: -1px;
+}
+.hoot-animations .hoot-logo:hover > * {
+    animation: hoot-sick-traverse 1.2s ease-in-out;
+}
+
+.hoot .hoot-status {
+    background-color: var(--hoot-status-bg);
+}
+
+.hoot .hoot-include-widget {
+    align-items: center;
+    border-radius: 100vh;
+    border: 1px solid var(--hoot-primary);
+    display: flex;
+    height: 20px;
+    padding: 1px;
+    position: relative;
+}
+
+.hoot .hoot-include-widget input[type="radio"] {
+    appearance: none;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+}
+
+.hoot .hoot-include-widget input[type="radio"]:last-child::after {
+    background-color: var(--_background, var(--hoot-gray-500));
+    border-radius: 100vh;
+    content: "";
+    height: 16px;
+    left: 1px;
+    pointer-events: none;
+    position: absolute;
+    top: 1px;
+    transform: translateX(100%);
+    transition: 150ms;
+    width: 16px;
+}
+
+.hoot .hoot-include-widget input[type="radio"]:first-child:checked ~ input:last-child:after {
+    --_background: var(--hoot-fail);
+    transform: translateX(0);
+}
+
+.hoot .hoot-include-widget input[type="radio"]:last-child:checked:after {
+    --_background: var(--hoot-pass);
+    transform: translateX(200%);
+}
+
+.hoot-particle {
+    animation: hoot-particle-slide-up calc(var(--_fly-duration, 2000) * 1ms) linear;
+    font-size: calc(var(--_size, 16) * 1px);
+    left: calc(var(--_x, 50) * 1vw);
+    top: calc(var(--_y, 100) * 1vh);
+}
+.hoot-particle::after {
+    animation: hoot-particle-wiggle calc(var(--_wiggle-duration, 1000) * 1ms) ease-in-out infinite;
+    content: '' var(--_content, "🦉");
+    display: inline-block;
+}
+
+/*---------------------------------------------------------------------------*/
+/* Components                                                                */
+/*---------------------------------------------------------------------------*/
+
+.hoot .hoot-btn {
+    align-items: center;
+    border-radius: 0.25rem;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+    user-select: none;
+}
+.hoot .hoot-btn.hoot-btn-primary {
+    background: var(--hoot-btn-bg);
+    color: var(--hoot-btn-text);
+}
+.hoot .hoot-btn.hoot-btn-primary:active,
+.hoot .hoot-btn.hoot-btn-primary:focus-within,
+.hoot .hoot-btn.hoot-btn-primary:hover {
+    background: var(--hoot-btn-bg-hover);
+}
+.hoot .hoot-btn:active {
+    transform: translateY(1px);
+}
+.hoot .hoot-btn[disabled] {
+    opacity: 0.4;
+}
+
+.hoot .hoot-circle {
+    border-radius: 999rem;
+    display: inline-flex;
+    min-height: 12px;
+    min-width: 12px;
+}
+
+.hoot .hoot-checkbox {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.hoot .hoot-checkbox input[type="checkbox"] {
+    appearance: none;
+    border-radius: 2px;
+    border: 1px solid var(--hoot-primary);
+    cursor: inherit;
+    min-height: 1em;
+    min-width: 1em;
+}
+.hoot .hoot-checkbox input[type="checkbox"]:checked {
+    background-color: var(--hoot-primary);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23FFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.hoot .hoot-tag {
+    background: var(--hoot-tag-bg);
+    color: var(--hoot-tag-text);
+}
+
+/*---------------------------------------------------------------------------*/
+/* Dropdown                                                                  */
+/*---------------------------------------------------------------------------*/
+
+.hoot .hoot-dropdown {
+    --bs-dropdown-link-active-bg: var(--hoot-primary);
+    --bs-dropdown-link-color: var(--hoot-text);
+
+    animation: hoot-slide-down 0.1s ease-in-out;
+    background-color: var(--hoot-bg);
+    color: var(--hoot-text);
+    margin-top: 0.25rem;
+    z-index: 1;
+}
+
+.hoot .hoot-dropdown-category:hover .hoot-remove-category {
+    visibility: visible;
+}
+
+.hoot .hoot-dropdown-title {
+    flex: 1;
+}
+
+.hoot .hoot-remove-category {
+    color: gray;
+    cursor: pointer;
+    float: right;
+    padding: 0.3rem 0.5rem;
+    visibility: hidden;
+}
+.hoot .hoot-remove-category:hover {
+    background-color: #eeeeee;
+}
+
+.hoot .hoot-dropdown-lines {
+    margin: 0 0.5rem;
+    overflow-y: auto;
+}
+
+.hoot .hoot-dropdown-line:hover {
+    background-color: var(--hoot-status-bg);
+}
+
+/* Bootstrap SM breakpoint */
+@media (max-width: 576px) {
+    .hoot .hoot-controls {
+        display: grid;
+        gap: 0.25rem;
+        grid-template: 1fr auto auto / 1fr auto auto;
+    }
+
+    .hoot .hoot-controls .hoot-search {
+        grid-column: span 3;
+        order: 99;
+    }
+}
+
+/*---------------------------------------------------------------------------*/
+/* Reporting                                                                 */
+/*---------------------------------------------------------------------------*/
+
+.hoot .hoot-reporting,
+.hoot .hoot-results {
+    overflow-y: auto;
+}
+
+.hoot .hoot-result {
+    border-bottom: 1px solid var(--hoot-border-result);
+}
+.hoot .hoot-result.hoot-abort {
+    background: var(--hoot-abort-bg);
+}
+.hoot .hoot-result.hoot-fail {
+    background: var(--hoot-fail-bg);
+}
+.hoot .hoot-result.hoot-skip {
+    background: var(--hoot-skip-bg);
+}
+
+.hoot .hoot-result-detail {
+    background: var(--hoot-bg-result);
+    grid-template-columns: 1fr auto;
+}
+
+.hoot .hoot-info {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-columns: auto 1fr;
+}
+
+.hoot .hoot-info-line {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-columns: 80px auto;
+}
+
+.hoot .hoot-technical ins {
+    background: var(--hoot-pass-bg);
+    color: var(--hoot-pass);
+    text-decoration: none;
+}
+
+.hoot .hoot-technical del {
+    background: var(--hoot-fail-bg);
+    color: var(--hoot-fail);
+    text-decoration: none;
+}
+
+.hoot .hoot-object-type {
+    align-items: center;
+    color: var(--hoot-text-report);
+    display: inline-flex;
+}
+
+.hoot .hoot-log {
+    color: #909090;
+}
+.hoot .hoot-log:hover {
+    color: #606060;
+}
+
+.hoot .hoot-copy {
+    color: var(--hoot-gray-400);
+}
+
+.hoot .hoot-copy:hover {
+    color: var(--hoot-gray-500);
+}
+
+.hoot .hoot-copy.hoot-copied {
+    color: var(--hoot-pass);
+}
+
+.hoot .hoot-link:active,
+.hoot .hoot-link:focus-within,
+.hoot .hoot-link:hover {
+    color: var(--hoot-primary);
+    text-decoration: underline;
+}
+
+.hoot .hoot-btn-link {
+    border: 1px solid var(--hoot-primary);
+    transition: color 0.15s, background-color 0.15s;
+}
+.hoot .hoot-btn-link:active,
+.hoot .hoot-btn-link:focus-within,
+.hoot .hoot-btn-link:hover {
+    color: white;
+    background: var(--hoot-primary);
+}
+
+.hoot .hoot-path a,
+.hoot .hoot-name {
+    user-select: text;
+}
+
+.hoot .hoot-html {
+    background: transparent;
+    color: var(--hoot-text-report-html-tag);
+    font-weight: 700;
+}
+.hoot .hoot-html:hover {
+    font-weight: 800;
+}
+
+.hoot .hoot-html-id {
+    color: var(--hoot-text-report-html-id);
+}
+
+.hoot .hoot-html-class {
+    color: var(--hoot-text-report-html-class);
+}
+
+.hoot .hoot-boolean,
+.hoot .hoot-number {
+    color: var(--hoot-text-report-number);
+}
+
+.hoot-string {
+    color: var(--hoot-text-report-string);
+}
+
+.hoot .hoot-key {
+    color: var(--hoot-text-report-key);
+}
+
+.hoot .hoot-span-2 {
+    grid-column: 1 / span 2;
+}
+
+/*---------------------------------------------------------------------------*/
+/* Colors                                                                    */
+/*---------------------------------------------------------------------------*/
+
+.hoot .hoot-bg-primary {
+    background: var(--hoot-primary);
+    color: var(--hoot-btn-text);
+}
+.hoot .hoot-border-primary {
+    border: 1px solid var(--hoot-primary);
+}
+.hoot .hoot-text-primary {
+    color: var(--hoot-primary);
+}
+
+.hoot .hoot-bg-abort {
+    background: var(--hoot-abort);
+}
+.hoot .hoot-text-abort {
+    color: var(--hoot-abort);
+}
+
+.hoot .hoot-bg-fail {
+    background: var(--hoot-fail);
+}
+.hoot .hoot-text-fail {
+    color: var(--hoot-fail);
+}
+
+.hoot .hoot-bg-muted {
+    background: var(--hoot-gray-500);
+}
+.hoot .hoot-text-muted {
+    color: var(--hoot-gray-500);
+}
+
+.hoot .hoot-bg-pass {
+    background: var(--hoot-pass);
+}
+.hoot .hoot-text-pass {
+    color: var(--hoot-pass);
+}
+
+.hoot .hoot-bg-skip {
+    background: var(--hoot-skip);
+}
+.hoot .hoot-text-skip {
+    color: var(--hoot-skip);
+}
+
+.hoot .hoot-bg-todo {
+    background: var(--hoot-todo);
+}
+.hoot .hoot-text-todo {
+    color: var(--hoot-todo);
+}
+
+/*---------------------------------------------------------------------------*/
+/* Fixture                                                                   */
+/*---------------------------------------------------------------------------*/
+
+.hoot-fixture {
+    border: none;
+    height: 100vh;
+    width: 100vw;
+}
+.hoot-fixture:not(.hoot-debug) {
+    opacity: 0;
+    left: -10000px;
+    position: fixed;
+    top: -10000px;
+}
+
+@keyframes hoot-particle-slide-up {
+    to {
+        transform: translateY(-200vh);
+        opacity: 0.5;
+    }
+}
+
+@keyframes hoot-particle-wiggle {
+    25% {
+        transform: translateX(calc(var(--_wiggle-range, 10) * -1px));
+    }
+    50% {
+        transform: none;
+    }
+    75% {
+        transform: translateX(calc(var(--_wiggle-range, 10) * 1px));
+    }
+}
+
+@keyframes hoot-slide-down {
+    from {
+        margin-top: -0.5rem;
+        opacity: 0.25;
+    }
+}
+
+@keyframes hoot-sick-traverse {
+    10% {
+        transform: scaleX(85%) skew(5deg);
+    }
+
+    20% {
+        opacity: 1;
+        transform: scaleX(115%) skew(-10deg);
+    }
+
+    60% {
+        opacity: 0;
+        transform: scaleX(115%) skew(-10deg) translateX(20vw);
+    }
+
+    60.1% {
+        transform: scaleX(115%) skew(-10deg) translateX(-10vw);
+    }
+
+    80% {
+        transform: skew(-10deg) translateX(0.5vw);
+    }
+
+    90% {
+        transform: skew(5deg) translateX(-0.2vw);
+    }
+}
