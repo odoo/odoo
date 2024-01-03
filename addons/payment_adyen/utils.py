@@ -53,20 +53,19 @@ def format_partner_address(partner):
     """
     STREET_FORMAT = '%(street_number)s/%(street_number2)s %(street_name)s'
     street_data = split_street_with_params(partner.street, STREET_FORMAT)
-    address = {
-        'city': partner.city,
+    # Unlike what is stated in https://docs.adyen.com/risk-management/avs-checks/, not all fields
+    # are required at all time. Thus, we fall back to 'Unknown' when a field is not set to avoid
+    # blocking the payment (empty string are not accepted) or passing `False` (which may not pass
+    # the fraud check).
+    return {
+        'city': partner.city or 'Unknown',
         'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
-        'stateOrProvince': partner.state_id.code or '', # The state is not always required.
-        'postalCode': partner.zip,
+        'stateOrProvince': partner.state_id.code or 'Unknown',  # The state is not always required.
+        'postalCode': partner.zip or '',
         # Fill in the address fields if the format is supported, or fallback to the raw address.
-        'street': street_data.get('street_name', partner.street),
-        'houseNumberOrName': street_data.get('street_number'),
+        'street': street_data.get('street_name', partner.street) or 'Unknown',
+        'houseNumberOrName': street_data.get('street_number') or '',
     }
-    for key, value in address.items():
-        if key == 'stateOrProvince' and partner.country_id.code not in ['CA', 'US', 'GB']:
-            continue
-        if not value:
-            raise ValidationError(_("Please complete your address details."))
 
 
 # The method is copy-pasted from `base_address_extended` with small modifications.
@@ -75,6 +74,7 @@ def split_street_with_params(street_raw, street_format):
     vals = {}
     previous_pos = 0
     field_name = None
+    street_raw = street_raw or ''
     # iter on fields in street_format, detected as '%(<field_name>)s'
     for re_match in re.finditer(r'%\(\w+\)s', street_format):
         field_pos = re_match.start()
