@@ -184,7 +184,7 @@ export class SplitBillScreen extends Component {
             var split = this.splitlines[id];
             var line = this.currentOrder.get_orderline(parseInt(id));
 
-            if (!this.props.disallow) {
+            if (!this.pos.disallowLineQuantityChange()) {
                 line.set_quantity(
                     line.get_quantity() - split.quantity,
                     "do not recompute unit price"
@@ -199,7 +199,7 @@ export class SplitBillScreen extends Component {
                 }
             }
         }
-        if (!this.props.disallow) {
+        if (!this.pos.disallowLineQuantityChange()) {
             for (id in this.splitlines) {
                 line = this.currentOrder.get_orderline(parseInt(id));
                 if (line && Math.abs(line.get_quantity()) < 0.00001) {

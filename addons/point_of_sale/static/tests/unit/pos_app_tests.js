@@ -45,6 +45,15 @@ QUnit.module("Chrome", {
                 start() {
                     return { addChannel: () => {}, addEventListener: () => {} };
                 },
+            })
+            .add("printer", {
+                start() {
+                    return {
+                        printWeb: () => {},
+                        printHtml: () => {},
+                        printHtmlAlternative: () => {},
+                    };
+                },
             });
 
         for (const service of ["hardware_proxy", "debug", "pos_notification", "sound", "action"]) {
