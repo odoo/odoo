@@ -996,7 +996,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        self.filtered(lambda tx: tx.operation != 'validation')._reconcile_after_done()
+        self._reconcile_after_done()
         self.is_post_processed = True
 
     def _reconcile_after_done(self):
