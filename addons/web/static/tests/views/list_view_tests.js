@@ -1030,10 +1030,15 @@ QUnit.module("Views", (hooks) => {
                 <tree>
                     <header>
                         <button name="display" type="object" class="display" string="display" display="always"/>
+                        <button name="display" type="object" class="display_invisible" string="invisible 1" display="always" invisible="1"/>
+                        <button name="display" type="object" class="display_invisible" string="invisible context" display="always" invisible="context.get('a')"/>
                         <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                     </header>
                     <field name="foo" />
                 </tree>`,
+                context: {
+                    a: true,
+                },
             });
             let cpButtons = getVisibleButtons(target);
             assert.deepEqual(
