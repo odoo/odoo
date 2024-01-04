@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import json
 import logging as logger
 import os
@@ -14,7 +15,7 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from urllib.parse import urlsplit
 
-from .tools import jwt
+from . import jwt
 
 MAX_PAYLOAD_SIZE = 4096
 
