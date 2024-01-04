@@ -33,7 +33,7 @@ patch(ChatWindow.prototype, {
             this.thread?.delete();
             await super.close();
         }
-        this.livechatService.leaveSession();
+        this.livechatService.leave();
         this.chatbotService.stop();
     },
 });

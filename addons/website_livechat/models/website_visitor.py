@@ -93,9 +93,10 @@ class WebsiteVisitor(models.Model):
                         }
                     )
                     channel.add_members(guest_ids=guest.ids, post_joined_message=False)
-            # Open empty chatter to allow the operator to start chatting with the visitor.
+            # Open empty chatter to allow the operator to start chatting with
+            # the visitor. Also open the visitor's chat window in order for it
+            # to be displayed at the next page load.
             channel_members = self.env['discuss.channel.member'].sudo().search([
-                ('partner_id', '=', self.env.user.partner_id.id),
                 ('channel_id', 'in', discuss_channels.ids),
             ])
             channel_members.write({

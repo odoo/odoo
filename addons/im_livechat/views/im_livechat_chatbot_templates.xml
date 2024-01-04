@@ -7,7 +7,7 @@
                 <t t-set="head">
                     <script>
                         <t t-call="im_livechat.loader">
-                            <t t-set="info" t-value="{ 'available': True, 'options': { 'isTestChatbot': True, 'testChatbotChannelData': channel_data, 'testChatbotData': chatbot_data, 'current_partner_id': current_partner_id  }, 'server_url': server_url }"/>
+                            <t t-set="info" t-value="{ 'available': True, 'options': { 'init': { 'rule': { 'chatbot': chatbot_data } }, 'isTestChatbot': True, 'force_thread': channel_data, 'current_partner_id': current_partner_id  }, 'server_url': server_url }"/>
                         </t>
                     </script>
                 </t>

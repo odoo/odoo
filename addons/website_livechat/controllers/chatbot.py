@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo import http, Command
 from odoo.http import request
 
 
@@ -14,12 +14,20 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         that will hold the conversation between the bot and the user testing the script. """
 
         discuss_channel_values = {
-            'channel_member_ids': [(0, 0, {
-                'partner_id': chatbot_script.operator_partner_id.id,
-                'is_pinned': False
-            }, {
-                'partner_id': request.env.user.partner_id.id
-            })],
+            "channel_member_ids": [
+                Command.create(
+                    {
+                        "partner_id": chatbot_script.operator_partner_id.id,
+                        "is_pinned": False,
+                    }
+                ),
+                Command.create(
+                    {
+                        "partner_id": request.env.user.partner_id.id,
+                        "fold_state": "open",
+                    }
+                ),
+            ],
             'livechat_active': True,
             'livechat_operator_id': chatbot_script.operator_partner_id.id,
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id,
@@ -36,7 +44,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
 
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
-            'channel_data': discuss_channel._channel_info()[0],
+            'channel_data': {'id': discuss_channel.id, 'model': 'discuss.channel'},
             'chatbot_data': chatbot_script._format_for_frontend(),
             'current_partner_id': request.env.user.partner_id.id,
         })
