@@ -7,6 +7,8 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
+import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -30,6 +32,7 @@ patch(PosStore.prototype, {
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
         this.floorPlanStyle = "default";
         this.isEditMode = false;
+        this.isTableToMerge = false;
         await super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
@@ -256,13 +259,42 @@ patch(PosStore.prototype, {
             (o) => o?.tableId === table.id && o.finalized === false && o.orderlines.length
         );
     },
+    shouldShowNavbarButtons() {
+        return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransfer;
+    },
     async transferTable(table) {
+        const originalTable = this.models["restaurant.table"].getBy(
+            "id",
+            this.orderToTransfer.tableId
+        );
+        if (
+            this.orderToTransfer.tableId !== table.id &&
+            this.tableHasOrders(table) &&
+            this.tableHasOrders(originalTable)
+        ) {
+            const confirm = await ask(this.dialog, {
+                title: _t("Multiple open orders"),
+                body: _t(
+                    "Both tables have an open order. If you proceed, both orders will live on the same table. You can access them anytime from the Orders menu."
+                ),
+            });
+            if (!confirm) {
+                this.isTableToMerge = false;
+                this.orderToTransfer = null;
+                return;
+            }
+        }
         this.selectedTable = table;
         try {
             this.loadingOrderState = true;
             await this._syncTableOrdersFromServer(table.id);
         } finally {
             this.loadingOrderState = false;
+            if (this.isTableToMerge && this.orderToTransfer.tableId !== table.id) {
+                originalTable.update({ parent_id: table });
+                this.updateTables(originalTable);
+                this.isTableToMerge = false;
+            }
             this.orderToTransfer.tableId = table.id;
             this.set_order(this.orderToTransfer);
             this.transferredOrdersSet.add(this.orderToTransfer);
@@ -272,7 +304,12 @@ patch(PosStore.prototype, {
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
             tables.map((t) => t.id),
-            Object.fromEntries(tables.map((t) => [t.id, t.serialize(true)])),
+            Object.fromEntries(
+                tables.map((t) => [
+                    t.id,
+                    { ...t.serialize(true), parent_id: t.parent_id?.id || false },
+                ])
+            ),
         ]);
     },
     getCustomerCount(tableId) {

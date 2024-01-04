@@ -14,7 +14,7 @@
                     <i class="fa fa-print me-1"></i>Bill
                 </button>
                 <button class="btn btn-light rounded-0 fw-bolder"
-                    t-att-disabled="pos.get_order().get_orderlines().reduce((sum, line) => sum + line.quantity, 0) lt 2"
+                    t-att-disabled="pos.get_order()?.get_orderlines()?.reduce((sum, line) => sum + line.quantity, 0) lt 2"
                     t-on-click="() => pos.showScreen('SplitBillScreen')">
                     <i class="fa fa-files-o me-1"/>Split
                 </button>
@@ -23,7 +23,7 @@
                     <span>Dine-in Guests</span>
                 </button>
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTransferOrder">
-                    <i class="oi oi-arrow-right me-1" />Transfer
+                    <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
                 <SelectPartnerButton partner="partner" t-if="pos.config.module_pos_restaurant" />
             </t>

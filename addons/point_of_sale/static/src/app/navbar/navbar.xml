@@ -6,7 +6,7 @@
             <div t-if="!ui.isSmall" class="pos-branding d-flex justify-content-start flex-grow-1 h-100 p-0 my-0 text-start">
                 <img class="pos-logo h-75 ms-3 me-auto align-self-center" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>
-            <div class="pos-rightheader d-flex flex-grow-1 h-100">
+            <div class="pos-rightheader d-flex flex-grow-1 h-100" t-if="pos.shouldShowNavbarButtons()">
                 <BackButton t-if="showBackButton()"/>
                 <div class="status-buttons d-flex flex-grow-1 flex-basis-0 justify-content-end h-100">
                     <CashierName />

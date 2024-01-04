@@ -3,6 +3,14 @@
     <t t-name="pos_restaurant.FloorScreen">
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-100 text-start overflow-hidden">
             <t t-set="editButtonClass" t-value="'text-center d-flex flex-column align-items-center btn btn-light text-uppercase'" />
+            <div t-if="pos.orderToTransfer" class="d-flex align-items-center justify-content-between px-3 border-bottom bg-view overflow-x-auto w-100">
+                <button t-attf-class="ms-auto {{editButtonClass}}" t-att-class="{active: !pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = false">
+                    <i class="fa fa-arrow-right" role="img" aria-label="Transfer" title="Transfer" />Transfer</button>
+                <button t-attf-class="{{editButtonClass}}" t-att-class="{active: pos.isTableToMerge}" t-on-click="() => this.pos.isTableToMerge = true">
+                    <i class="fa fa-link" role="img" aria-label="Merge" title="Merge" />Merge</button>
+                <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="stopOrderTransfer">
+                    <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Close</button>
+            </div>
             <div t-if="pos.isEditMode" class="edit-buttons d-flex align-items-center justify-content-center px-3 border-bottom bg-view overflow-x-auto w-100">
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="createTable">
                     <i class="fa fa-plus" role="img" aria-label="Add" title="Add" />Table</button>
@@ -18,6 +26,8 @@
                     <i class="fa fa-pencil-square-o" role="img" aria-label="Rename" title="Rename" />Rename</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="duplicateTableOrFloor">
                     <i class="fa fa-clone" role="img" aria-label="Copy" title="Copy" />Copy</button>
+                <button t-attf-class="{{editButtonClass}}" t-if="activeTables.some(t=>t.parent_id)" t-att-disabled="!selectedTables.some(t=>t.parent_id)" t-on-click="unlinkTables">
+                    <i class="fa fa-unlink" role="img" aria-label="Unlink" title="Unlink" />Unlink</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="deleteFloorOrTable">
                     <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete" />Delete</button>
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="closeEditMode">
