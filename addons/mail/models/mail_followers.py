@@ -4,7 +4,7 @@
 from collections import defaultdict
 import itertools
 
-from odoo import api, fields, models, Command
+from odoo import _, api, fields, models, Command
 
 
 class Followers(models.Model):
@@ -30,13 +30,46 @@ class Followers(models.Model):
     res_id = fields.Many2oneReference(
         'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
     partner_id = fields.Many2one(
-        'res.partner', string='Related Partner', index=True, ondelete='cascade', required=True)
+        'res.partner', string='Related Partner', index=True, ondelete='cascade', required=False)
+    customer_email = fields.Char('Customer Email')
+    follower_email = fields.Char('Email', compute='_compute_follower_email', compute_sudo=True)
+    follower_name = fields.Char('Name', compute='_compute_follower_name', compute_sudo=True)
     subtype_ids = fields.Many2many(
         'mail.message.subtype', string='Subtype',
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
-    name = fields.Char('Name', related='partner_id.name')
-    email = fields.Char('Email', related='partner_id.email')
-    is_active = fields.Boolean('Is Active', related='partner_id.active')
+    is_active = fields.Boolean('Is Active', compute='_compute_is_active', compute_sudo=True)
+
+    @api.depends('partner_id')
+    def _compute_display_name(self):
+        for follower in self:
+            if follower.partner_id:
+                follower.display_name = follower.partner_id.display_name
+            else:
+                follower.display_name = _('Customer %(email)s', email=follower.customer_email)
+
+    @api.depends('customer_email', 'partner_id')
+    def _compute_follower_email(self):
+        for follower in self:
+            if follower.partner_id:
+                follower.follower_email = follower.partner_id.email
+            else:
+                follower.follower_email = follower.customer_email
+
+    @api.depends('partner_id')
+    def _compute_follower_name(self):
+        for follower in self:
+            if follower.partner_id:
+                follower.follower_name = follower.partner_id.name
+            else:
+                follower.follower_name = _('Customer')
+
+    @api.depends('partner_id')
+    def _compute_is_active(self):
+        for follower in self:
+            if follower.partner_id:
+                follower.is_active = follower.partner_id.active
+            else:
+                follower.is_active = True
 
     def _invalidate_documents(self, vals_list=None):
         """ Invalidate the cache of the documents followed by ``self``.
@@ -556,10 +589,10 @@ GROUP BY fol.id%s%s""" % (
     def _follower_format(self):
         return [{
             'id': follower.id,
-            'partner_id': follower.partner_id.id,
-            'name': follower.name,
             'display_name': follower.display_name,
-            'email': follower.email,
+            'email': follower.follower_email,
             'is_active': follower.is_active,
+            'name': follower.follower_name,
             'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
+            'partner_id': follower.partner_id.id,
         } for follower in self]
