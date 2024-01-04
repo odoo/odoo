@@ -11,6 +11,7 @@ from odoo.tools.translate import _
 class MailNotification(models.Model):
     _name = 'mail.notification'
     _table = 'mail_notification'
+    _order = "id DESC"
     _rec_name = 'res_partner_id'
     _log_access = False
     _description = 'Message Notifications'
