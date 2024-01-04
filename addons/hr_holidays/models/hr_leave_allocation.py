@@ -629,12 +629,11 @@ class HolidaysAllocation(models.Model):
                     current_level._get_previous_date(today),
                     allocation.date_from + get_timedelta(current_level.start_count, current_level.start_type)
                 )
-            if not allocation.nextcall and allocation.lastcall < today:
+            if current_level and not allocation.nextcall:
                 accrual_plan = allocation.accrual_plan_id
-                next_level = False
                 allocation.nextcall = current_level._get_next_date(allocation.lastcall)
                 if current_level_idx < (len(accrual_plan.level_ids) - 1) and accrual_plan.transition_mode == 'immediately':
-                    next_level = allocation.accrual_plan_id.level_ids[current_level_idx + 1]
+                    next_level = accrual_plan.level_ids[current_level_idx + 1]
                     next_level_start = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     allocation.nextcall = min(allocation.nextcall, next_level_start)
 
