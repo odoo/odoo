@@ -13811,6 +13811,8 @@ QUnit.module("Views", (hooks) => {
                 <kanban class="o_kanban_test">
                     <header>
                         <button name="display" type="object" class="display" string="display" display="always"/>
+                        <button name="display" type="object" class="display_invisible" string="invisible 1" display="always" invisible="1"/>
+                        <button name="display" type="object" class="display_invisible_2" string="invisible context" display="always" invisible="context.get('a')"/>
                         <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                     </header>
                     <field name="bar" />
@@ -13823,6 +13825,9 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
                 domain,
+                context: {
+                    a: true,
+                },
             });
             patchWithCleanup(kanban.env.services.action, {
                 doActionButton: async (params) => {
@@ -13840,6 +13845,7 @@ QUnit.module("Views", (hooks) => {
                     });
 
                     assert.deepEqual(context, {
+                        a: true,
                         lang: "en",
                         tz: "taht",
                         uid: 7,

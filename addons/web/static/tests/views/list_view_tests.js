@@ -603,15 +603,12 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("control+k");
         await nextTick();
 
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_command_hotkey")),
-            [
-                "NewALT + C",
-                "ActionsALT + U",
-                "Search...ALT + Q",
-                "Toggle search panelALT + SHIFT + Q"
-            ]
-        );
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_command_hotkey")), [
+            "NewALT + C",
+            "ActionsALT + U",
+            "Search...ALT + Q",
+            "Toggle search panelALT + SHIFT + Q",
+        ]);
     });
 
     QUnit.test('list with delete="0"', async function (assert) {
@@ -1029,10 +1026,15 @@ QUnit.module("Views", (hooks) => {
                 <tree>
                     <header>
                         <button name="display" type="object" class="display" string="display" display="always"/>
+                        <button name="display" type="object" class="display_invisible" string="invisible 1" display="always" invisible="1"/>
+                        <button name="display" type="object" class="display_invisible" string="invisible context" display="always" invisible="context.get('a')"/>
                         <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                     </header>
                     <field name="foo" />
                 </tree>`,
+                context: {
+                    a: true,
+                },
             });
             let cpButtons = getVisibleButtons(target);
             assert.deepEqual(
