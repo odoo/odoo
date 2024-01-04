@@ -8,6 +8,10 @@ import wUtils from "website.utils";
 
 var _t = core._t;
 var qweb = core.qweb;
+import {
+    loadImageInfo,
+    applyModifications,
+} from "web_editor.image_processing";
 
 /**
  * This class provides layout methods for interacting with the ImageGallery
@@ -500,8 +504,9 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 multiImages: true,
                 onlyImages: true,
                 save: images => {
+                    const imagePromises = [];
                     for (const image of images) {
-                        $('<img/>', {
+                        const $img = $('<img/>', {
                             class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
                             src: image.src,
                             'data-index': ++index,
@@ -509,9 +514,34 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                             'data-name': _t('Image'),
                             style: $images.length > 0 ? $images[0].style.cssText : '',
                         }).appendTo($container);
+                        const imgEl = $img[0];
+                        imagePromises.push(new Promise(resolve => {
+                            loadImageInfo(imgEl, this._rpc.bind(this)).then(() => {
+                                if (imgEl.dataset.mimetype && ![
+                                    "image/gif",
+                                    "image/svg+xml",
+                                    "image/webp",
+                                ].includes(imgEl.dataset.mimetype)) {
+                                    // Convert to webp but keep original width.
+                                    imgEl.dataset.mimetype = "image/webp";
+                                    applyModifications(imgEl, {
+                                        mimetype: "image/webp",
+                                    }).then(src => {
+                                        imgEl.src = src;
+                                        imgEl.classList.add("o_modified_image_to_save");
+                                        resolve();
+                                    });
+                                } else {
+                                    resolve();
+                                }
+                            });
+                        }));
                     }
+                    savedPromise = Promise.all(imagePromises);
                     if (images.length > 0) {
-                        savedPromise = this._relayout();
+                        savedPromise = savedPromise.then(async () => {
+                            await this._relayout();
+                        });
                         this.trigger_up('cover_update');
                     }
                 },
