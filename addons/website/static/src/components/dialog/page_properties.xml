@@ -61,9 +61,12 @@
 
 <t t-name="website.DeletePageDialog">
     <WebsiteDialog title="title" close="props.close">
-        <p t-if="props.resIds.length > 1">Ready to make those web pages disappear into thin air? Are you sure?\n It will be gone forever!\n</p>
-        <p t-else="">Ready to make this web page disappear into thin air? Are you sure?\n It will be gone forever!\n</p>
-        <p class="text-warning">But before deleting it, make sure you update all links referring to it. That way, your customers won't bump into the not-so-famous 404 error page.</p>
+        <p t-if="props.resIds.length > 1">Ready to make those web pages disappear into thin air? Are you sure?\n It will be gone forever!\n
+            <p class="text-warning">But before deleting them, make sure you update all links referring to them. That way, your customers won't bump into the not-so-famous 404 error page.</p>
+        </p>
+        <p t-else="">Ready to make this web page disappear into thin air? Are you sure?\n It will be gone forever!\n
+            <p class="text-warning">But before deleting it, make sure you update all links referring to it. That way, your customers won't bump into the not-so-famous 404 error page.</p>
+        </p>
         <PageDependencies resIds="props.resIds" resModel="props.resModel" mode="'collapse'"/>
         <CheckBox value="state.confirm" onChange.bind="onConfirmCheckboxChange">
             <p class="text-warning">I am sure about this.</p>
