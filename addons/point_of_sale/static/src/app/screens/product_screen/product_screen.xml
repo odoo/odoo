@@ -19,7 +19,7 @@
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column bg-300 w-60" t-att-class="{'d-none': ui.isSmall and pos.mobile_pane !== 'right'}">
                 <div t-att-class="{'d-none': state.scrollDown and ui.isSmall}" class="d-flex bg-view shadow-sm control-top-bar">
-                    <div class="d-flex overflow-auto w-100">
+                    <div class="d-flex overflow-auto w-100" t-attf-class="{{ui.isSmall ? 'scrollbar-hidden' : ''}}">
                         <div class="d-flex align-items-center">
                             <button t-on-click="() => this.pos.setSelectedCategoryId(0)"
                                 class="category-button btn btn-light d-flex flex-column align-items-center justify-content-center p-1 h-100">
