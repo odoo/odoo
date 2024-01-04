@@ -25,9 +25,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'data/website_livechat_chatbot_demo.xml',
     ],
     'assets': {
-        'im_livechat.assets_embed_core': [
-            'website_livechat/static/src/embed/common/**/*',
-        ],
         'website.assets_wysiwyg': [
             'website_livechat/static/src/scss/**/*',
         ],
@@ -36,7 +33,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.assets_backend': [
             'website_livechat/static/src/**/*',
-            ('remove', 'website_livechat/static/src/embed/**/*'),
             ('remove', 'website_livechat/static/src/scss/**/*'),
         ],
         'web.assets_tests': [
@@ -47,12 +43,9 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/**/*',
-            ('remove', 'website_livechat/static/tests/embed/**/*'),
             ('remove', 'website_livechat/static/tests/tours/**/*'),
             ('remove', 'website_livechat/static/tests/helpers/**/*.js'),
-        ],
-        'im_livechat.embed_test_assets': [
-            'website_livechat/static/src/embed/**/*',
+            ('remove', 'website_livechat/static/tests/embed/**/*'),
         ],
         'im_livechat.qunit_embed_suite': [
             'website_livechat/static/tests/embed/**/*',

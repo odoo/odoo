@@ -9,21 +9,24 @@ import { session } from "@web/session";
 messagingService.dependencies.push("im_livechat.livechat");
 
 patch(Messaging.prototype, {
-    initialize() {
-        if (this.env.services["im_livechat.livechat"].state === SESSION_STATE.PERSISTED) {
-            return super.initialize();
+    async initialize() {
+        const livechatService = this.env.services["im_livechat.livechat"];
+        await livechatService.initializedDeferred;
+        if (livechatService.state === SESSION_STATE.PERSISTED) {
+            await super.initialize();
+            if (!livechatService.thread) {
+                livechatService.leave({ notifyServer: false });
+            }
+            return;
         }
+        const messagingData = { Thread: [], settings: {} };
         if (session.livechatData?.options.current_partner_id) {
-            this.store.self = {
-                type: "partner",
-                id: session.livechatData.options.current_partner_id,
-            };
+            messagingData.current_partner = { id: session.livechatData.options.current_partner_id };
         }
-        this.store.isMessagingReady = true;
-        this.isReady.resolve({
-            Thread: [],
-            settings: {},
-        });
+        if (livechatService.savedState?.threadData) {
+            messagingData.Thread.push(livechatService.savedState.threadData);
+        }
+        this.initMessagingCallback(messagingData);
     },
     get initMessagingParams() {
         return {

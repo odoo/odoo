@@ -28,7 +28,8 @@ patch(ThreadService.prototype, {
     async fetchNewMessages(thread) {
         if (
             thread.type !== "livechat" ||
-            (this.livechatService.state === SESSION_STATE.PERSISTED && !thread.isNewlyCreated)
+            (this.env.services["im_livechat.livechat"].state === SESSION_STATE.PERSISTED &&
+                !thread.isNewlyCreated)
         ) {
             return super.fetchNewMessages(...arguments);
         }

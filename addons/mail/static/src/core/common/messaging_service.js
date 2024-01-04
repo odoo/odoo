@@ -59,7 +59,7 @@ export class Messaging {
     initMessagingCallback(data) {
         this.store.update(data);
         this.store.discuss.isActive =
-            data.menu_id === this.router.current.hash?.menu_id ||
+            (data.menu_id && data.menu_id === this.router.current.hash?.menu_id) ||
             this.router.hash?.action === "mail.action_discuss";
         this.isReady.resolve(data);
         this.store.isMessagingReady = true;

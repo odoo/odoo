@@ -27,8 +27,10 @@ QUnit.test("new message from operator displays unread counter", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    cookie.set("im_livechat_session", JSON.stringify(channelInfo));
+    cookie.set(
+        "im_livechat.saved_state",
+        JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
+    );
     await start();
     $(".o-mail-Composer-input").blur();
     pyEnv.withUser(pyEnv.adminUserId, () =>
@@ -55,8 +57,14 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    cookie.set("im_livechat_session", JSON.stringify(channelInfo));
+    cookie.set(
+        "im_livechat.saved_state",
+        JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
+    );
+    cookie.set(
+        "im_livechat.saved_state",
+        JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
+    );
     await start();
     $(".o-mail-Composer-input").blur();
     pyEnv.withUser(pyEnv.adminUserId, () =>

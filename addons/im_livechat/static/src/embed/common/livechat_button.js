@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { Component, useRef, useState } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 
@@ -66,15 +67,14 @@ export class LivechatButton extends Component {
 
     onClick() {
         this.state.animateNotification = false;
-        this.threadService.openChat();
+        this.livechatService.open();
     }
 
     get isShown() {
         return (
             this.livechatService.initialized &&
             this.livechatService.available &&
-            !this.livechatService.shouldRestoreSession &&
-            this.store.discuss.chatWindows.length === 0
+            this.livechatService.state === SESSION_STATE.NONE
         );
     }
 }

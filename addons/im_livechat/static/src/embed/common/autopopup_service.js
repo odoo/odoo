@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { registry } from "@web/core/registry";
@@ -34,29 +35,15 @@ export class AutopopupService {
         this.ui = ui;
 
         livechatService.initializedDeferred.then(() => {
-            if (livechatService.shouldRestoreSession) {
-                threadService.openChat();
-            } else if (this.allowAutoPopup) {
+            if (this.allowAutoPopup && livechatService.state === SESSION_STATE.NONE) {
                 browser.setTimeout(async () => {
-                    if (await this.shouldOpenChatWindow()) {
+                    if (!this.storeService.ChatWindow.get({ thread: livechatService.thread })) {
                         cookie.set(AutopopupService.COOKIE, JSON.stringify(false));
-                        threadService.openChat();
+                        livechatService.open();
                     }
                 }, livechatService.rule.auto_popup_timer * 1000);
             }
         });
-    }
-
-    /**
-     * Determines if a chat window should be opened. This is the case if
-     * there is an available operator and if no chat window linked to
-     * the session exists.
-     *
-     * @returns {Promise<boolean>}
-     */
-    async shouldOpenChatWindow() {
-        const thread = await this.livechatService.thread;
-        return this.storeService.discuss.chatWindows.every((cw) => !cw.thread?.eq(thread));
     }
 
     get allowAutoPopup() {
