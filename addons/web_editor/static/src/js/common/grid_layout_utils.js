@@ -320,8 +320,7 @@ export function _checkIfImageColumn(columnEl) {
 }
 /**
  * Removes the line breaks and textnodes of the column, adds the grid class and
- * sets the image width to default so it can be displayed as expected. Also
- * blocks the edition of the column.
+ * sets the image width to default so it can be displayed as expected.
  *
  * @private
  * @param {Element} columnEl a column containing only an image.
