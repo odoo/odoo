@@ -141,31 +141,42 @@ class AccountPartialReconcile(models.Model):
         self.env['account.partial.reconcile'].flush_model()
         amls.flush_recordset(['full_reconcile_id'])
         self.env.cr.execute("""
-            WITH RECURSIVE partials (line_id, current_id) AS (
-                    SELECT id, id 
-                      FROM account_move_line
-                     WHERE id = ANY(%s)
-                       AND full_reconcile_id IS NULL
+            CREATE TEMPORARY TABLE matching (min_id integer, line_id integer);
+            CREATE INDEX matching_min_id_idx ON matching USING btree (min_id);
 
-                                                UNION
-                                                
-                    SELECT p.line_id,
-                           CASE WHEN partial.debit_move_id = p.current_id THEN partial.credit_move_id
-                                ELSE partial.debit_move_id
-                           END
-                      FROM partials p
-                      JOIN account_partial_reconcile partial ON p.current_id = partial.debit_move_id
-                                                             OR p.current_id = partial.credit_move_id
-            )
-              SELECT line_id, 'P' || MIN(partial.id) AS matching_number
-                FROM partials
-                JOIN account_partial_reconcile partial ON current_id = partial.debit_move_id
-                                                       OR current_id = partial.credit_move_id
-            GROUP BY line_id
-        """, [
-            amls.ids,
-        ])
+            DO $$
+            DECLARE
+                r record;
+                debit_min_id integer;
+                credit_min_id integer;
+            BEGIN
+                FOR r IN SELECT id, debit_move_id, credit_move_id
+                           FROM account_partial_reconcile
+                          WHERE debit_move_id = ANY(%(amls)s)
+                             OR credit_move_id = ANY(%(amls)s)
+                       ORDER BY id
+                LOOP
+                    SELECT min_id INTO debit_min_id FROM matching WHERE line_id = r.debit_move_id;
+                    SELECT min_id INTO credit_min_id FROM matching WHERE line_id = r.credit_move_id;
+                    IF debit_min_id IS NOT NULL AND credit_min_id IS NOT NULL AND credit_min_id != debit_min_id THEN
+                        UPDATE matching
+                           SET min_id = LEAST(credit_min_id, debit_min_id)
+                         WHERE min_id IN (credit_min_id, debit_min_id)
+                           AND min_id != LEAST(credit_min_id, debit_min_id);
+                    ELSIF debit_min_id IS NOT NULL THEN
+                        INSERT INTO matching (min_id, line_id) VALUES (debit_min_id, r.credit_move_id);
+                    ELSIF credit_min_id IS NOT NULL THEN
+                        INSERT INTO matching (min_id, line_id) VALUES (credit_min_id, r.debit_move_id);
+                    ELSE
+                        INSERT INTO matching (min_id, line_id) VALUES (r.id, r.debit_move_id), (r.id, r.credit_move_id);
+                    END IF;
+                END LOOP;
+            END$$
+        """, {
+            'amls': amls.ids,
+        })
 
+        self.env.cr.execute("SELECT line_id, 'P' || min_id FROM matching")
         line_matching_number = dict(self.env.cr.fetchall())
 
         for line in amls.with_context(skip_invoice_sync=True):
@@ -175,6 +186,8 @@ class AccountPartialReconcile(models.Model):
                 line.matching_number = line_matching_number[line.id]
             else:
                 line.matching_number = False
+
+        self.env.cr.execute("DROP TABLE matching")  # cleanup for tests
 
 
     # -------------------------------------------------------------------------
