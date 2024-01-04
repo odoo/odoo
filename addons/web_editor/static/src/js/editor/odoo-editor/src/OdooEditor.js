@@ -65,7 +65,6 @@ import {
     descendants,
     hasValidSelection,
     hasTableSelection,
-    pxToFloat,
     parseHTML,
     splitTextNode,
     isMacOS,
@@ -2533,127 +2532,6 @@ export class OdooEditor extends EventTarget {
         }
     }
     /**
-     * Resizes a table in the given direction, by "pulling" the border between
-     * the given targets (ordered left to right or top to bottom).
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _resizeTable(ev, direction, target1, target2) {
-        ev.preventDefault();
-        const position = target1 ? (target2 ? 'middle' : 'last') : 'first';
-        let [item, neighbor] = [target1 || target2, target2];
-        const table = closestElement(item, 'table');
-        const [sizeProp, positionProp, clientPositionProp] = direction === 'col' ? ['width', 'x', 'clientX'] : ['height', 'y', 'clientY'];
-
-        // Preserve current sizes.
-        const tableRect = table.getBoundingClientRect();
-        table.style[sizeProp] = tableRect[sizeProp] + 'px';
-        const unsizedItemsSelector = `${direction === 'col' ? 'td' : 'tr'}:not([style*=${sizeProp}])`;
-        for (const unsizedItem of table.querySelectorAll(unsizedItemsSelector)) {
-            unsizedItem.style[sizeProp] = unsizedItem.getBoundingClientRect()[sizeProp] + 'px';
-        }
-
-        // TD widths should only be applied in the first row. Change targets and
-        // clean the rest.
-        if (direction === 'col') {
-            let hostCell = closestElement(table, 'td');
-            const hostCells = [];
-            while (hostCell) {
-                hostCells.push(hostCell);
-                hostCell = closestElement(hostCell.parentElement, 'td');
-            }
-            const nthColumn = getColumnIndex(item);
-            const firstRow = [...table.querySelector('tr').children];
-            [item, neighbor] = [firstRow[nthColumn], firstRow[nthColumn + 1]];
-            for (const td of hostCells) {
-                if (td !== item && td !== neighbor && closestElement(td, 'table') === table && getColumnIndex(td) !== 0) {
-                    td.style.removeProperty(sizeProp);
-                }
-            }
-        }
-
-        const MIN_SIZE = 33; // TODO: ideally, find this value programmatically.
-        switch (position) {
-            case 'first': {
-                const marginProp = direction === 'col' ? 'marginLeft' : 'marginTop';
-                const itemRect = item.getBoundingClientRect();
-                const tableStyle = getComputedStyle(table);
-                const currentMargin = pxToFloat(tableStyle[marginProp]);
-                const sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
-                const newMargin = currentMargin - sizeDelta;
-                const currentSize = itemRect[sizeProp];
-                const newSize = currentSize + sizeDelta;
-                if (newMargin >= 0 && newSize > MIN_SIZE) {
-                    const tableRect = table.getBoundingClientRect();
-                    // Check if a nested table would overflow its parent cell.
-                    const hostCell = closestElement(table.parentElement, 'td');
-                    const childTable = item.querySelector('table');
-                    if (direction === 'col' &&
-                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
-                        break;
-                    }
-                    table.style[marginProp] = newMargin + 'px';
-                    item.style[sizeProp] = newSize + 'px';
-                    table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
-                }
-                break;
-            }
-            case 'middle': {
-                const [itemRect, neighborRect] = [item.getBoundingClientRect(), neighbor.getBoundingClientRect()];
-                const [currentSize, newSize] = [itemRect[sizeProp], ev[clientPositionProp] - itemRect[positionProp]];
-                const editableStyle = getComputedStyle(this.editable);
-                const sizeDelta = newSize - currentSize;
-                const currentNeighborSize = neighborRect[sizeProp];
-                const newNeighborSize = currentNeighborSize - sizeDelta;
-                const maxWidth = this.editable.clientWidth - pxToFloat(editableStyle.paddingLeft) - pxToFloat(editableStyle.paddingRight);
-                const tableRect = table.getBoundingClientRect();
-                if (newSize > MIN_SIZE &&
-                        // prevent resizing horizontally beyond the bounds of
-                        // the editable:
-                        (direction === 'row' ||
-                        newNeighborSize > MIN_SIZE ||
-                        tableRect[sizeProp] + sizeDelta < maxWidth)) {
-
-                    // Check if a nested table would overflow its parent cell.
-                    const childTable = item.querySelector('table');
-                    if (direction === 'col' &&
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5) {
-                        break
-                    }
-                    item.style[sizeProp] = newSize + 'px';
-                    if (direction === 'col') {
-                        neighbor.style[sizeProp] = (newNeighborSize > MIN_SIZE ? newNeighborSize : currentNeighborSize) + 'px';
-                    } else {
-                        table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
-                    }
-                }
-                break;
-            }
-            case 'last': {
-                const itemRect = item.getBoundingClientRect();
-                const sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
-                const currentSize = itemRect[sizeProp];
-                const newSize = currentSize + sizeDelta;
-                if ((newSize >= 0 || direction === 'row') && newSize > MIN_SIZE) {
-                    const tableRect = table.getBoundingClientRect();
-                    // Check if a nested table would overflow its parent cell.
-                    const hostCell = closestElement(table.parentElement, 'td');
-                    const childTable = item.querySelector('table');
-                    if (direction === 'col' &&
-                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
-                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
-                        break
-                    }
-                    table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
-                    item.style[sizeProp] = newSize + 'px';
-                }
-                break;
-            }
-        }
-    }
-    /**
      * Show/hide and position the table row/column manipulation UI.
      *
      * @private
@@ -4327,33 +4205,145 @@ export class OdooEditor extends EventTarget {
         if (isHoveringTdBorder) {
             ev.preventDefault();
             const direction = { top: 'row', right: 'col', bottom: 'row', left: 'col' }[isHoveringTdBorder] || false;
-            let target1, target2;
-            const column = closestElement(ev.target, 'tr');
-            if (isHoveringTdBorder === 'top' && column) {
-                target1 = getAdjacentPreviousSiblings(column).find(node => node.nodeName === 'TR');
-                target2 = closestElement(ev.target, 'tr');
-            } else if (isHoveringTdBorder === 'right') {
-                target1 = ev.target;
-                target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD');
-            } else if (isHoveringTdBorder === 'bottom' && column) {
-                target1 = closestElement(ev.target, 'tr');
-                target2 = getAdjacentNextSiblings(column).find(node => node.nodeName === 'TR');
-            } else if (isHoveringTdBorder === 'left') {
-                target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD');
-                target2 = ev.target;
+            const closestTable = closestElement(ev.target, 'table');
+            const closestTR = closestElement(ev.target, 'tr');
+            const firstTableTR = closestTable.querySelector('tr');
+            const closestFirstTD = closestTR.querySelector('td');
+            const closestLastTD = closestTR.querySelector('td:last-child');
+            const isRTL = this.options.direction === 'rtl';
+            const firstTableColumns = [...firstTableTR.children].filter(node => node.nodeName === 'TD' || node.nodeName === 'TH');
+
+            let inverseIncrement = false;
+            let cssProp;
+            let uniqueTarget;
+            let target1;
+            let target1cssProp;
+            let target2;
+            let target2cssProp;
+
+            for (const column of firstTableColumns) {
+                const columnRect = column.getBoundingClientRect();
+                column.style.width = `${columnRect.width}px`;
             }
+
+            if (isHoveringTdBorder === 'top' && closestTR) {
+                if (firstTableTR === closestTR) {
+                    uniqueTarget = closestTable;
+                    cssProp = 'margin-top';
+                } else {
+                    uniqueTarget = getAdjacentPreviousSiblings(closestTR).find(node => node.nodeName === 'TR');
+                    cssProp = 'height';
+                }
+            } else if (isHoveringTdBorder === 'bottom' && closestTR) {
+                uniqueTarget = closestTR;
+                cssProp = 'height';
+            } else if (isHoveringTdBorder === 'left') {
+                const isLeftmostTD = isRTL ? closestLastTD === ev.target : closestFirstTD === ev.target;
+                if (isLeftmostTD && isRTL) {
+                    uniqueTarget = ev.target;
+                    cssProp = 'width';
+                    inverseIncrement = true;
+                } else if (isLeftmostTD && !isRTL) {
+                    target1 = closestTable;
+                    target1cssProp = 'margin-left';
+
+                    target2 = ev.target;
+                    cssProp = 'width';
+                } else if (isRTL) {
+                    target1 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD' || node.nodeName === 'TH');
+                    target2 = ev.target;
+                    cssProp = 'width';
+                } else {
+                    target1 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD' || node.nodeName === 'TH');
+                    target2 = ev.target;
+                    cssProp = 'width';
+                }
+            } else if (isHoveringTdBorder === 'right') {
+                const isRightmostTD = isRTL ? closestFirstTD === ev.target : closestLastTD === ev.target;
+                if (isRightmostTD && isRTL) {
+                    target2 = closestTable;
+                    target2cssProp = 'margin-right';
+
+                    target1 = ev.target;
+                    cssProp = 'width';
+                } else if (isRightmostTD && !isRTL) {
+                    uniqueTarget = ev.target;
+                    cssProp = 'width';
+                } else if (isRTL) {
+                    target1 = ev.target;
+                    target2 = getAdjacentPreviousSiblings(ev.target).find(node => node.nodeName === 'TD' || node.nodeName === 'TH');
+                    cssProp = 'width';
+                } else {
+                    target1 = ev.target;
+                    target2 = getAdjacentNextSiblings(ev.target).find(node => node.nodeName === 'TD' || node.nodeName === 'TH');
+                    cssProp = 'width';
+                }
+            }
+            const getElement = (element) => {
+                if (element.nodeName === 'TD' || element.nodeName === 'TH') {
+                    const nthColumn = getColumnIndex(element);
+                    return firstTableColumns[nthColumn];
+                } else {
+                    return element;
+                }
+            }
+            uniqueTarget = uniqueTarget && getElement(uniqueTarget);
+            target1 = target1 && getElement(target1);
+            target2 = target2 && getElement(target2);
+
+            target1cssProp = target1cssProp || cssProp;
+            target2cssProp = target2cssProp || cssProp;
+
+            const startX = ev.clientX;
+            const startY = ev.clientY;
+            const startElementProp = uniqueTarget && parseFloat(window.getComputedStyle(uniqueTarget)[cssProp], 10);
+            const startTarget1Prop = target1 && parseFloat(window.getComputedStyle(target1)[target1cssProp], 10);
+            const startTarget2Prop = target2 && parseFloat(window.getComputedStyle(target2)[target2cssProp], 10);
+
             this._isResizingTable = true;
             this._toggleTableResizeCursor(direction);
-            const resizeTable = ev => this._resizeTable(ev, direction, target1, target2);
+
+            const mouseMove = (ev) => {
+                ev.preventDefault();
+
+                const deltaX = ev.clientX - startX;
+                const deltaY = ev.clientY - startY;
+                const delta = direction === 'row' ? deltaY : deltaX;
+                // TODO: ideally, find this value programmatically.
+                const ELEMENT_MIN_SIZE = 33;
+                const minSize = (cssProp === 'height' || cssProp === 'width') ? ELEMENT_MIN_SIZE : 0;
+                if (uniqueTarget) {
+                    uniqueTarget.style[cssProp] = `${Math.max(startElementProp + (inverseIncrement ? -delta : delta), minSize)}px`;
+                } else {
+                    // 1. Get final delta
+                    const prop1MinSize = (target1cssProp === 'height' || target1cssProp === 'width') ? ELEMENT_MIN_SIZE : 0;
+                    const prop2MinSize = (target2cssProp === 'height' || target2cssProp === 'width') ? ELEMENT_MIN_SIZE : 0;
+                    const prop1NewVal = Math.max(startTarget1Prop + delta, prop1MinSize);
+                    const prop2NewVal = Math.max(startTarget2Prop + -delta, prop2MinSize);
+                    const prop1Difference = Math.abs(prop1NewVal - startTarget1Prop);
+                    const prop2Difference = Math.abs(prop2NewVal - startTarget2Prop);
+                    const maxDelta = Math.min(prop1Difference, prop2Difference);
+                    const finaldelta = maxDelta * Math.sign(delta);
+
+                    // 2. Apply final delta
+                    target1.style[target1cssProp] = `${startTarget1Prop + finaldelta}px`;
+                    target2.style[target2cssProp] = `${startTarget2Prop + -finaldelta}px`;
+                }
+
+                // Update table width
+                closestTable.style.width = `fit-content`;
+                const closestTableRect = closestTable.getBoundingClientRect();
+                closestTable.style.width = `${closestTableRect.width}px`;
+            };
             const stopResizing = ev => {
                 ev.preventDefault();
                 this._isResizingTable = false;
                 this._toggleTableResizeCursor(false);
-                this.document.removeEventListener('mousemove', resizeTable);
+                this.document.removeEventListener('mousemove', mouseMove);
                 this.document.removeEventListener('mouseup', stopResizing);
                 this.document.removeEventListener('mouseleave', stopResizing);
             };
-            this.document.addEventListener('mousemove', resizeTable);
+            this.document.addEventListener('mousemove', mouseMove);
             this.document.addEventListener('mouseup', stopResizing);
             this.document.addEventListener('mouseleave', stopResizing);
         }
