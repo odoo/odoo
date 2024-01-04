@@ -834,6 +834,11 @@ td {
 .pos .rightpane-header .categories-header {
     display: flex;
     overflow-x: auto;
+}
+
+.pos .rightpane-header .categories-header.scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
         display: none;
