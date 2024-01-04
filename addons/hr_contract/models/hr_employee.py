@@ -146,7 +146,12 @@ class Employee(models.Model):
         if not valid_contracts:
             return super()._get_calendar_attendances(date_from, date_to)
         employee_timezone = timezone(self.tz) if self.tz else None
-        return valid_contracts.resource_calendar_id.with_context(employee_timezone=employee_timezone).get_work_duration_data(date_from, date_to)
+        return valid_contracts.resource_calendar_id\
+            .with_context(employee_timezone=employee_timezone)\
+            .get_work_duration_data(
+                date_from,
+                date_to,
+                domain=[('company_id', 'in', [False, self.company_id.id])])
 
     def write(self, vals):
         res = super().write(vals)
