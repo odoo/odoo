@@ -680,8 +680,10 @@ export class GraphRenderer extends Component {
         if (this.chart) {
             this.chart.destroy();
         }
-        const config = this.getChartConfig();
-        this.chart = new Chart(this.canvasRef.el, config);
+        if (this.canvasRef.el) {
+            const config = this.getChartConfig();
+            this.chart = new Chart(this.canvasRef.el, config);
+        }
     }
 
     /**

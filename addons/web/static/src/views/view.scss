@@ -8,12 +8,6 @@
     .form-check {
         pointer-events: none !important;
     }
-
-    .o_nocontent_help {
-        border-radius: 20%;
-        background-color: $o-view-background-color;
-        box-shadow: 0 0 120px 100px $o-view-background-color;
-    }
 }
 
 // No content helper
@@ -24,7 +18,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image:  radial-gradient(at 50% 50%, #{$o-view-background-color} 0px, #{rgba($o-view-background-color, 0.5)} 100%);
 
     .o_nocontent_help {
         @include o-nocontent-empty;

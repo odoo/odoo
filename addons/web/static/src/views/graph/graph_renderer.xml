@@ -32,7 +32,7 @@
             <div class="d-flex gap-1 mt-2 mx-3 mb-3">
                 <t t-call="{{ props.buttonTemplate }}"/>
             </div>
-            <div class="o_graph_canvas_container flex-grow-1 position-relative" t-ref="container">
+            <div t-if="model.hasData()" class="o_graph_canvas_container flex-grow-1 position-relative" t-ref="container">
                 <canvas t-ref="canvas" />
             </div>
         </div>
