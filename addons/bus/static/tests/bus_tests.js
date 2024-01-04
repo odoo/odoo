@@ -197,7 +197,7 @@ QUnit.test("Last notification id is passed to the worker on service start", asyn
         ["lambda", "notifType", "beta"],
         ["lambda", "notifType", "beta"],
     ]);
-    await waitForBusEvent(env1, "notification");
+    await waitNotifications([env1, "notifType", "beta"], [env1, "notifType", "beta"]);
     updateLastNotificationDeferred = makeDeferred();
     const env2 = await makeTestEnv();
     await env2.services["bus_service"].start();

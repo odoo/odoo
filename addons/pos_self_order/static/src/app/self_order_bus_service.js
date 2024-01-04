@@ -28,26 +28,21 @@ export class SelfOrderBus {
         );
 
         bus_service.addChannel(`pos_config-${this.selfOrder.access_token}`);
-        bus_service.addEventListener("notification", ({ detail }) => {
-            for (const message of detail) {
-                this.dispatch(message);
+        bus_service.subscribe("ORDER_STATE_CHANGED", (payload) =>
+            this.ws_changeOrderState(payload.access_token, payload.state)
+        );
+        bus_service.subscribe("ORDER_CHANGED", (payload) => this.ws_syncOrder(payload.order));
+        bus_service.subscribe("STATUS", (payload) => {
+            if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+                this.ws_status(payload);
             }
         });
-    }
-
-    dispatch(message) {
-        const mode = this.selfOrder.config.self_ordering_mode;
-        if (message.type === "ORDER_STATE_CHANGED") {
-            this.ws_changeOrderState(message.payload.access_token, message.payload.state);
-        } else if (message.type === "ORDER_CHANGED") {
-            this.ws_syncOrder(message.payload.order);
-        } else if (message.type === "STATUS" && mode === "kiosk") {
-            this.ws_status(message);
-        } else if (message.type === "PAYMENT_STATUS" && mode === "kiosk") {
-            this.ws_paymentStatus(message);
-        } else if (message.type === "PRODUCT_CHANGED") {
-            this.ws_productChanged(message);
-        }
+        bus_service.subscribe("PAYMENT_STATUS", (payload) => {
+            if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+                this.ws_paymentStatus(payload);
+            }
+        });
+        bus_service.subscribe("PRODUCT_CHANGED", (payload) => this.ws_productChanged(payload));
     }
 
     ws_changeOrderState(access_token, state) {
@@ -58,9 +53,7 @@ export class SelfOrderBus {
         this.selfOrder.updateOrdersFromServer([order], [order.access_token]);
     }
 
-    ws_paymentStatus(message) {
-        const payload = message.payload;
-
+    ws_paymentStatus(payload) {
         if (payload.payment_result === "Success") {
             this.selfOrder.updateOrderFromServer(payload.order);
             this.selfOrder.router.navigate("confirmation", {
@@ -72,9 +65,7 @@ export class SelfOrderBus {
         }
     }
 
-    ws_status(message) {
-        const payload = message.payload;
-
+    ws_status(payload) {
         if (payload.status === "closed") {
             this.selfOrder.pos_session = [];
             this.selfOrder.ordering = false;
@@ -85,8 +76,8 @@ export class SelfOrderBus {
         }
     }
 
-    ws_productChanged(message) {
-        this.selfOrder.handleProductChanges(message.payload);
+    ws_productChanged(payload) {
+        this.selfOrder.handleProductChanges(payload);
     }
 }
 

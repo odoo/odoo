@@ -11,18 +11,9 @@ export class PosBus {
 
     setup(env, { pos, bus_service }) {
         this.pos = pos;
-
-        bus_service.addChannel(
-            `pos_session-${pos.session.id}-${pos.session.access_token}`
-        );
-        bus_service.addEventListener("notification", ({ detail }) => {
-            for (const message of detail) {
-                this.dispatch(message);
-            }
-        });
+        this.busService = bus_service;
+        this.busService.addChannel(`pos_session-${pos.session.id}-${pos.session.access_token}`);
     }
-
-    dispatch(message) {}
 }
 
 export const posBusService = {
