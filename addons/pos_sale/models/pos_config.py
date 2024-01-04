@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.osv.expression import OR
 
 
 class PosConfig(models.Model):
@@ -17,3 +18,7 @@ class PosConfig(models.Model):
     def _get_special_products(self):
         res = super()._get_special_products()
         return res | self.env['pos.config'].search([]).mapped('down_payment_product_id')
+
+    def _get_available_product_domain(self):
+        domain = super()._get_available_product_domain()
+        return OR([domain, [('id', '=', self.down_payment_product_id.id)]])
