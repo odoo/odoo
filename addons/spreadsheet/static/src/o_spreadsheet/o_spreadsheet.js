@@ -5598,6 +5598,7 @@
         },
     };
 
+    const macRegex = /Mac/i;
     /**
      * Return true if the event was triggered from
      * a child element.
@@ -5637,7 +5638,15 @@
         return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
     }
     function isMacOS() {
-        return navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
+        return Boolean(macRegex.test(navigator.userAgent));
+    }
+    /**
+     * @param {KeyboardEvent | MouseEvent} ev
+     * @returns Returns true if the event was triggered with the "ctrl" modifier pressed.
+     * On Mac, this is the "meta" or "command" key.
+     */
+    function isCtrlKey(ev) {
+        return isMacOS() ? ev.metaKey : ev.ctrlKey;
     }
 
     /**
@@ -20491,10 +20500,10 @@
     function updateSelectionWithArrowKeys(ev, selection) {
         const direction = arrowMap[ev.key];
         if (ev.shiftKey) {
-            selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : 1);
+            selection.resizeAnchorZone(direction, isCtrlKey(ev) ? "end" : 1);
         }
         else {
-            selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : 1);
+            selection.moveAnchorCell(direction, isCtrlKey(ev) ? "end" : 1);
         }
     }
 
@@ -25539,7 +25548,10 @@
                 return;
             }
             const [col, row] = this.getCartesianCoordinates(ev);
-            this.props.onCellClicked(col, row, { shiftKey: ev.shiftKey, ctrlKey: ev.ctrlKey });
+            this.props.onCellClicked(col, row, {
+                expandZone: ev.shiftKey,
+                addZone: isCtrlKey(ev),
+            });
         }
         onDoubleClick(ev) {
             const [col, row] = this.getCartesianCoordinates(ev);
@@ -25767,7 +25779,7 @@
                 this._increaseSelection(index);
             }
             else {
-                this._selectElement(index, ev.ctrlKey);
+                this._selectElement(index, isCtrlKey(ev));
             }
             this.lastSelectedElementIndex = index;
             const mouseMoveSelect = (col, row) => {
@@ -25780,7 +25792,7 @@
             const mouseUpSelect = () => {
                 this.state.isSelecting = false;
                 this.lastSelectedElementIndex = null;
-                this.env.model.dispatch(ev.ctrlKey ? "PREPARE_SELECTION_INPUT_EXPANSION" : "STOP_SELECTION_INPUT");
+                this.env.model.dispatch(isCtrlKey(ev) ? "PREPARE_SELECTION_INPUT_EXPANSION" : "STOP_SELECTION_INPUT");
                 this._computeGrabDisplay(ev);
             };
             dragAndDropBeyondTheViewport(this.env, mouseMoveSelect, mouseUpSelect);
@@ -25932,8 +25944,8 @@
                 this.env.raiseError(MergeErrorMessage);
             }
         }
-        _selectElement(index, ctrlKey) {
-            this.env.model.selection.selectColumn(index, ctrlKey ? "newAnchor" : "overrideSelection");
+        _selectElement(index, addDistinctHeader) {
+            this.env.model.selection.selectColumn(index, addDistinctHeader ? "newAnchor" : "overrideSelection");
         }
         _increaseSelection(index) {
             this.env.model.selection.selectColumn(index, "updateAnchor");
@@ -26106,8 +26118,8 @@
                 this.env.raiseError(MergeErrorMessage);
             }
         }
-        _selectElement(index, ctrlKey) {
-            this.env.model.selection.selectRow(index, ctrlKey ? "newAnchor" : "overrideSelection");
+        _selectElement(index, addDistinctHeader) {
+            this.env.model.selection.selectRow(index, addDistinctHeader ? "newAnchor" : "overrideSelection");
         }
         _increaseSelection(index) {
             this.env.model.selection.selectRow(index, "updateAnchor");
@@ -26913,8 +26925,8 @@
         // ---------------------------------------------------------------------------
         // Zone selection with mouse
         // ---------------------------------------------------------------------------
-        onCellClicked(col, row, { ctrlKey, shiftKey }) {
-            if (ctrlKey) {
+        onCellClicked(col, row, { addZone, expandZone }) {
+            if (addZone) {
                 this.env.model.dispatch("PREPARE_SELECTION_INPUT_EXPANSION");
             }
             if (this.env.model.getters.hasOpenedPopover()) {
@@ -26923,10 +26935,10 @@
             if (this.env.model.getters.getEditionMode() === "editing") {
                 this.env.model.dispatch("STOP_EDITION");
             }
-            if (shiftKey) {
+            if (expandZone) {
                 this.env.model.selection.setAnchorCorner(col, row);
             }
-            else if (ctrlKey) {
+            else if (addZone) {
                 this.env.model.selection.addCellToSelection(col, row);
             }
             else {
@@ -26988,9 +27000,7 @@
                 return;
             }
             let keyDownString = "";
-            if (ev.ctrlKey)
-                keyDownString += "CTRL+";
-            if (ev.metaKey)
+            if (isCtrlKey(ev))
                 keyDownString += "CTRL+";
             if (ev.altKey)
                 keyDownString += "ALT+";
@@ -35559,56 +35569,758 @@
         }
     }
 
+    function quickselect(arr, k, left, right, compare) {
+        quickselectStep(arr, k, left || 0, right || (arr.length - 1), compare || defaultCompare);
+    }
+
+    function quickselectStep(arr, k, left, right, compare) {
+
+        while (right > left) {
+            if (right - left > 600) {
+                var n = right - left + 1;
+                var m = k - left + 1;
+                var z = Math.log(n);
+                var s = 0.5 * Math.exp(2 * z / 3);
+                var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+                var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+                var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+                quickselectStep(arr, k, newLeft, newRight, compare);
+            }
+
+            var t = arr[k];
+            var i = left;
+            var j = right;
+
+            swap(arr, left, k);
+            if (compare(arr[right], t) > 0) swap(arr, left, right);
+
+            while (i < j) {
+                swap(arr, i, j);
+                i++;
+                j--;
+                while (compare(arr[i], t) < 0) i++;
+                while (compare(arr[j], t) > 0) j--;
+            }
+
+            if (compare(arr[left], t) === 0) swap(arr, left, j);
+            else {
+                j++;
+                swap(arr, j, right);
+            }
+
+            if (j <= k) left = j + 1;
+            if (k <= j) right = j - 1;
+        }
+    }
+
+    function swap(arr, i, j) {
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+
+    function defaultCompare(a, b) {
+        return a < b ? -1 : a > b ? 1 : 0;
+    }
+
+    class RBush {
+        constructor(maxEntries = 9) {
+            // max entries in a node is 9 by default; min node fill is 40% for best performance
+            this._maxEntries = Math.max(4, maxEntries);
+            this._minEntries = Math.max(2, Math.ceil(this._maxEntries * 0.4));
+            this.clear();
+        }
+
+        all() {
+            return this._all(this.data, []);
+        }
+
+        search(bbox) {
+            let node = this.data;
+            const result = [];
+
+            if (!intersects(bbox, node)) return result;
+
+            const toBBox = this.toBBox;
+            const nodesToSearch = [];
+
+            while (node) {
+                for (let i = 0; i < node.children.length; i++) {
+                    const child = node.children[i];
+                    const childBBox = node.leaf ? toBBox(child) : child;
+
+                    if (intersects(bbox, childBBox)) {
+                        if (node.leaf) result.push(child);
+                        else if (contains(bbox, childBBox)) this._all(child, result);
+                        else nodesToSearch.push(child);
+                    }
+                }
+                node = nodesToSearch.pop();
+            }
+
+            return result;
+        }
+
+        collides(bbox) {
+            let node = this.data;
+
+            if (!intersects(bbox, node)) return false;
+
+            const nodesToSearch = [];
+            while (node) {
+                for (let i = 0; i < node.children.length; i++) {
+                    const child = node.children[i];
+                    const childBBox = node.leaf ? this.toBBox(child) : child;
+
+                    if (intersects(bbox, childBBox)) {
+                        if (node.leaf || contains(bbox, childBBox)) return true;
+                        nodesToSearch.push(child);
+                    }
+                }
+                node = nodesToSearch.pop();
+            }
+
+            return false;
+        }
+
+        load(data) {
+            if (!(data && data.length)) return this;
+
+            if (data.length < this._minEntries) {
+                for (let i = 0; i < data.length; i++) {
+                    this.insert(data[i]);
+                }
+                return this;
+            }
+
+            // recursively build the tree with the given data from scratch using OMT algorithm
+            let node = this._build(data.slice(), 0, data.length - 1, 0);
+
+            if (!this.data.children.length) {
+                // save as is if tree is empty
+                this.data = node;
+
+            } else if (this.data.height === node.height) {
+                // split root if trees have the same height
+                this._splitRoot(this.data, node);
+
+            } else {
+                if (this.data.height < node.height) {
+                    // swap trees if inserted one is bigger
+                    const tmpNode = this.data;
+                    this.data = node;
+                    node = tmpNode;
+                }
+
+                // insert the small tree into the large tree at appropriate level
+                this._insert(node, this.data.height - node.height - 1, true);
+            }
+
+            return this;
+        }
+
+        insert(item) {
+            if (item) this._insert(item, this.data.height - 1);
+            return this;
+        }
+
+        clear() {
+            this.data = createNode([]);
+            return this;
+        }
+
+        remove(item, equalsFn) {
+            if (!item) return this;
+
+            let node = this.data;
+            const bbox = this.toBBox(item);
+            const path = [];
+            const indexes = [];
+            let i, parent, goingUp;
+
+            // depth-first iterative tree traversal
+            while (node || path.length) {
+
+                if (!node) { // go up
+                    node = path.pop();
+                    parent = path[path.length - 1];
+                    i = indexes.pop();
+                    goingUp = true;
+                }
+
+                if (node.leaf) { // check current node
+                    const index = findItem(item, node.children, equalsFn);
+
+                    if (index !== -1) {
+                        // item found, remove the item and condense tree upwards
+                        node.children.splice(index, 1);
+                        path.push(node);
+                        this._condense(path);
+                        return this;
+                    }
+                }
+
+                if (!goingUp && !node.leaf && contains(node, bbox)) { // go down
+                    path.push(node);
+                    indexes.push(i);
+                    i = 0;
+                    parent = node;
+                    node = node.children[0];
+
+                } else if (parent) { // go right
+                    i++;
+                    node = parent.children[i];
+                    goingUp = false;
+
+                } else node = null; // nothing found
+            }
+
+            return this;
+        }
+
+        toBBox(item) { return item; }
+
+        compareMinX(a, b) { return a.minX - b.minX; }
+        compareMinY(a, b) { return a.minY - b.minY; }
+
+        toJSON() { return this.data; }
+
+        fromJSON(data) {
+            this.data = data;
+            return this;
+        }
+
+        _all(node, result) {
+            const nodesToSearch = [];
+            while (node) {
+                if (node.leaf) result.push(...node.children);
+                else nodesToSearch.push(...node.children);
+
+                node = nodesToSearch.pop();
+            }
+            return result;
+        }
+
+        _build(items, left, right, height) {
+
+            const N = right - left + 1;
+            let M = this._maxEntries;
+            let node;
+
+            if (N <= M) {
+                // reached leaf level; return leaf
+                node = createNode(items.slice(left, right + 1));
+                calcBBox(node, this.toBBox);
+                return node;
+            }
+
+            if (!height) {
+                // target height of the bulk-loaded tree
+                height = Math.ceil(Math.log(N) / Math.log(M));
+
+                // target number of root entries to maximize storage utilization
+                M = Math.ceil(N / Math.pow(M, height - 1));
+            }
+
+            node = createNode([]);
+            node.leaf = false;
+            node.height = height;
+
+            // split the items into M mostly square tiles
+
+            const N2 = Math.ceil(N / M);
+            const N1 = N2 * Math.ceil(Math.sqrt(M));
+
+            multiSelect(items, left, right, N1, this.compareMinX);
+
+            for (let i = left; i <= right; i += N1) {
+
+                const right2 = Math.min(i + N1 - 1, right);
+
+                multiSelect(items, i, right2, N2, this.compareMinY);
+
+                for (let j = i; j <= right2; j += N2) {
+
+                    const right3 = Math.min(j + N2 - 1, right2);
+
+                    // pack each entry recursively
+                    node.children.push(this._build(items, j, right3, height - 1));
+                }
+            }
+
+            calcBBox(node, this.toBBox);
+
+            return node;
+        }
+
+        _chooseSubtree(bbox, node, level, path) {
+            while (true) {
+                path.push(node);
+
+                if (node.leaf || path.length - 1 === level) break;
+
+                let minArea = Infinity;
+                let minEnlargement = Infinity;
+                let targetNode;
+
+                for (let i = 0; i < node.children.length; i++) {
+                    const child = node.children[i];
+                    const area = bboxArea(child);
+                    const enlargement = enlargedArea(bbox, child) - area;
+
+                    // choose entry with the least area enlargement
+                    if (enlargement < minEnlargement) {
+                        minEnlargement = enlargement;
+                        minArea = area < minArea ? area : minArea;
+                        targetNode = child;
+
+                    } else if (enlargement === minEnlargement) {
+                        // otherwise choose one with the smallest area
+                        if (area < minArea) {
+                            minArea = area;
+                            targetNode = child;
+                        }
+                    }
+                }
+
+                node = targetNode || node.children[0];
+            }
+
+            return node;
+        }
+
+        _insert(item, level, isNode) {
+            const bbox = isNode ? item : this.toBBox(item);
+            const insertPath = [];
+
+            // find the best node for accommodating the item, saving all nodes along the path too
+            const node = this._chooseSubtree(bbox, this.data, level, insertPath);
+
+            // put the item into the node
+            node.children.push(item);
+            extend(node, bbox);
+
+            // split on node overflow; propagate upwards if necessary
+            while (level >= 0) {
+                if (insertPath[level].children.length > this._maxEntries) {
+                    this._split(insertPath, level);
+                    level--;
+                } else break;
+            }
+
+            // adjust bboxes along the insertion path
+            this._adjustParentBBoxes(bbox, insertPath, level);
+        }
+
+        // split overflowed node into two
+        _split(insertPath, level) {
+            const node = insertPath[level];
+            const M = node.children.length;
+            const m = this._minEntries;
+
+            this._chooseSplitAxis(node, m, M);
+
+            const splitIndex = this._chooseSplitIndex(node, m, M);
+
+            const newNode = createNode(node.children.splice(splitIndex, node.children.length - splitIndex));
+            newNode.height = node.height;
+            newNode.leaf = node.leaf;
+
+            calcBBox(node, this.toBBox);
+            calcBBox(newNode, this.toBBox);
+
+            if (level) insertPath[level - 1].children.push(newNode);
+            else this._splitRoot(node, newNode);
+        }
+
+        _splitRoot(node, newNode) {
+            // split root node
+            this.data = createNode([node, newNode]);
+            this.data.height = node.height + 1;
+            this.data.leaf = false;
+            calcBBox(this.data, this.toBBox);
+        }
+
+        _chooseSplitIndex(node, m, M) {
+            let index;
+            let minOverlap = Infinity;
+            let minArea = Infinity;
+
+            for (let i = m; i <= M - m; i++) {
+                const bbox1 = distBBox(node, 0, i, this.toBBox);
+                const bbox2 = distBBox(node, i, M, this.toBBox);
+
+                const overlap = intersectionArea(bbox1, bbox2);
+                const area = bboxArea(bbox1) + bboxArea(bbox2);
+
+                // choose distribution with minimum overlap
+                if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    index = i;
+
+                    minArea = area < minArea ? area : minArea;
+
+                } else if (overlap === minOverlap) {
+                    // otherwise choose distribution with minimum area
+                    if (area < minArea) {
+                        minArea = area;
+                        index = i;
+                    }
+                }
+            }
+
+            return index || M - m;
+        }
+
+        // sorts node children by the best axis for split
+        _chooseSplitAxis(node, m, M) {
+            const compareMinX = node.leaf ? this.compareMinX : compareNodeMinX;
+            const compareMinY = node.leaf ? this.compareMinY : compareNodeMinY;
+            const xMargin = this._allDistMargin(node, m, M, compareMinX);
+            const yMargin = this._allDistMargin(node, m, M, compareMinY);
+
+            // if total distributions margin value is minimal for x, sort by minX,
+            // otherwise it's already sorted by minY
+            if (xMargin < yMargin) node.children.sort(compareMinX);
+        }
+
+        // total margin of all possible split distributions where each node is at least m full
+        _allDistMargin(node, m, M, compare) {
+            node.children.sort(compare);
+
+            const toBBox = this.toBBox;
+            const leftBBox = distBBox(node, 0, m, toBBox);
+            const rightBBox = distBBox(node, M - m, M, toBBox);
+            let margin = bboxMargin(leftBBox) + bboxMargin(rightBBox);
+
+            for (let i = m; i < M - m; i++) {
+                const child = node.children[i];
+                extend(leftBBox, node.leaf ? toBBox(child) : child);
+                margin += bboxMargin(leftBBox);
+            }
+
+            for (let i = M - m - 1; i >= m; i--) {
+                const child = node.children[i];
+                extend(rightBBox, node.leaf ? toBBox(child) : child);
+                margin += bboxMargin(rightBBox);
+            }
+
+            return margin;
+        }
+
+        _adjustParentBBoxes(bbox, path, level) {
+            // adjust bboxes along the given tree path
+            for (let i = level; i >= 0; i--) {
+                extend(path[i], bbox);
+            }
+        }
+
+        _condense(path) {
+            // go through the path, removing empty nodes and updating bboxes
+            for (let i = path.length - 1, siblings; i >= 0; i--) {
+                if (path[i].children.length === 0) {
+                    if (i > 0) {
+                        siblings = path[i - 1].children;
+                        siblings.splice(siblings.indexOf(path[i]), 1);
+
+                    } else this.clear();
+
+                } else calcBBox(path[i], this.toBBox);
+            }
+        }
+    }
+
+    function findItem(item, items, equalsFn) {
+        if (!equalsFn) return items.indexOf(item);
+
+        for (let i = 0; i < items.length; i++) {
+            if (equalsFn(item, items[i])) return i;
+        }
+        return -1;
+    }
+
+    // calculate node's bbox from bboxes of its children
+    function calcBBox(node, toBBox) {
+        distBBox(node, 0, node.children.length, toBBox, node);
+    }
+
+    // min bounding rectangle of node children from k to p-1
+    function distBBox(node, k, p, toBBox, destNode) {
+        if (!destNode) destNode = createNode(null);
+        destNode.minX = Infinity;
+        destNode.minY = Infinity;
+        destNode.maxX = -Infinity;
+        destNode.maxY = -Infinity;
+
+        for (let i = k; i < p; i++) {
+            const child = node.children[i];
+            extend(destNode, node.leaf ? toBBox(child) : child);
+        }
+
+        return destNode;
+    }
+
+    function extend(a, b) {
+        a.minX = Math.min(a.minX, b.minX);
+        a.minY = Math.min(a.minY, b.minY);
+        a.maxX = Math.max(a.maxX, b.maxX);
+        a.maxY = Math.max(a.maxY, b.maxY);
+        return a;
+    }
+
+    function compareNodeMinX(a, b) { return a.minX - b.minX; }
+    function compareNodeMinY(a, b) { return a.minY - b.minY; }
+
+    function bboxArea(a)   { return (a.maxX - a.minX) * (a.maxY - a.minY); }
+    function bboxMargin(a) { return (a.maxX - a.minX) + (a.maxY - a.minY); }
+
+    function enlargedArea(a, b) {
+        return (Math.max(b.maxX, a.maxX) - Math.min(b.minX, a.minX)) *
+               (Math.max(b.maxY, a.maxY) - Math.min(b.minY, a.minY));
+    }
+
+    function intersectionArea(a, b) {
+        const minX = Math.max(a.minX, b.minX);
+        const minY = Math.max(a.minY, b.minY);
+        const maxX = Math.min(a.maxX, b.maxX);
+        const maxY = Math.min(a.maxY, b.maxY);
+
+        return Math.max(0, maxX - minX) *
+               Math.max(0, maxY - minY);
+    }
+
+    function contains(a, b) {
+        return a.minX <= b.minX &&
+               a.minY <= b.minY &&
+               b.maxX <= a.maxX &&
+               b.maxY <= a.maxY;
+    }
+
+    function intersects(a, b) {
+        return b.minX <= a.maxX &&
+               b.minY <= a.maxY &&
+               b.maxX >= a.minX &&
+               b.maxY >= a.minY;
+    }
+
+    function createNode(children) {
+        return {
+            children,
+            height: 1,
+            leaf: true,
+            minX: Infinity,
+            minY: Infinity,
+            maxX: -Infinity,
+            maxY: -Infinity
+        };
+    }
+
+    // sort an array so that items come in groups of n unsorted items, with groups sorted between each other;
+    // combines selection algorithm with binary divide & conquer approach
+
+    function multiSelect(arr, left, right, n, compare) {
+        const stack = [left, right];
+
+        while (stack.length) {
+            right = stack.pop();
+            left = stack.pop();
+
+            if (right - left <= n) continue;
+
+            const mid = left + Math.ceil((right - left) / n / 2) * n;
+            quickselect(arr, mid, left, right, compare);
+
+            stack.push(left, mid, mid, right);
+        }
+    }
+
     /**
-     * This class is an implementation of a dependency Graph.
+     * R-Tree Data Structure
+     *
+     * R-Tree is a spatial data structure used for efficient indexing and querying
+     * of multi-dimensional objects, particularly in geometric and spatial applications.
+     *
+     * It organizes objects into a tree hierarchy, grouping nearby objects together
+     * in bounding boxes. Each node in the tree represents a bounding box that
+     * contains its child nodes or leaf objects. This hierarchical structure allows
+     * for faster spatial queries.
+     *
+     * @see https://en.wikipedia.org/wiki/R-tree
+     *
+     * Consider a 2D Space with four zones: A, B, C, D
+     * +--------------------------+
+     * |                          |
+     * |   +---+     +-------+    |
+     * |   | A |     |   B   |    |
+     * |   +---+     +-------+    |
+     * |                          |
+     * |                          |
+     * |          +---+           |
+     * |          | C |           |
+     * |          +---+           |
+     * |      +-----------+       |
+     * |      |     D     |       |
+     * |      +-----------+       |
+     * |                          |
+     * +--------------------------+
+     *
+     * It groups together zones that are spatially close into a minimum bounding box.
+     * For example, A and B are grouped together in rectangle R1, and C and D are grouped
+     * in R2.
+     *
+     * R0
+     * +--------------------------+
+     * |   R1                     |
+     * |   +-----------------+    |
+     * |   | A |     |   B   |    |
+     * |   +-----------------+    |
+     * |                          |
+     * |      R2                  |
+     * |      +---+---+---+       |
+     * |      |   | C |   |       |
+     * |      |   +---+   |       |
+     * |      +-----------+       |
+     * |      |     D     |       |
+     * |      +-----------+       |
+     * |                          |
+     * +--------------------------+
+     *
+     * The tree would look like this:
+     *          R0
+     *         /  \
+     *        /    \
+     *       R1     R2
+     *       |      |
+     *      A,B    C,D
+
+     * Choosing how to group the zones is crucial for the performance of the tree.
+     * Key considerations include avoiding excessive empty space coverage and minimizing overlap
+     * to reduce the number of subtrees processed during searches.
+     *
+     * Various heuristics exist for determining the optimal grouping strategy, such as "least enlargement"
+     * which prioritizes grouping nodes resulting in the smallest increase in bounding box size. In cases where
+     * the choice cannot be made based on this criterion due to the same enlargement for different groupings,
+     * we then evaluate "least area," aiming to minimize the overall area of bounding boxes.
+     *
+     * This implementation is tailored for spreadsheet use, indexing objects associated
+     * with a zone and a sheet.
+     *
+     * It uses the RBush library under the hood. One 2D RBush R-tree per sheet.
+     * @see https://github.com/mourner/rbush
+     */
+    class SpreadsheetRTree {
+        /**
+         * One 2D R-tree per sheet
+         */
+        rTrees = {};
+        /**
+         * Bulk-inserts the given items into the tree. Bulk insertion is usually ~2-3 times
+         * faster than inserting items one by one. After bulk loading (bulk insertion into
+         * an empty tree), subsequent query performance is also ~20-30% better.
+         */
+        constructor(items = []) {
+            const rangesPerSheet = {};
+            for (const item of items) {
+                const sheetId = item.boundingBox.sheetId;
+                if (!rangesPerSheet[sheetId]) {
+                    rangesPerSheet[sheetId] = [];
+                }
+                rangesPerSheet[sheetId].push(item);
+            }
+            for (const sheetId in rangesPerSheet) {
+                this.rTrees[sheetId] = new ZoneRBush();
+                this.rTrees[sheetId].load(rangesPerSheet[sheetId]); // bulk-insert
+            }
+        }
+        insert(item) {
+            const sheetId = item.boundingBox.sheetId;
+            if (!this.rTrees[sheetId]) {
+                this.rTrees[sheetId] = new ZoneRBush();
+            }
+            this.rTrees[sheetId].insert(item);
+        }
+        search({ zone, sheetId }) {
+            if (!this.rTrees[sheetId]) {
+                return [];
+            }
+            return this.rTrees[sheetId].search({
+                minX: zone.left,
+                minY: zone.top,
+                maxX: zone.right,
+                maxY: zone.bottom,
+            });
+        }
+        remove(item) {
+            const sheetId = item.boundingBox.sheetId;
+            if (!this.rTrees[sheetId]) {
+                return;
+            }
+            this.rTrees[sheetId].remove(item, deepEquals);
+        }
+    }
+    /**
+     * RBush extension to use zones as bounding boxes
+     */
+    class ZoneRBush extends RBush {
+        toBBox({ boundingBox }) {
+            const zone = boundingBox.zone;
+            return {
+                minX: zone.left,
+                minY: zone.top,
+                maxX: zone.right,
+                maxY: zone.bottom,
+            };
+        }
+        compareMinX(a, b) {
+            return a.boundingBox.zone.left - b.boundingBox.zone.left;
+        }
+        compareMinY(a, b) {
+            return a.boundingBox.zone.top - b.boundingBox.zone.top;
+        }
+    }
+
+    /**
+     * Implementation of a dependency Graph.
      * The graph is used to evaluate the cells in the correct
      * order, and should be updated each time a cell's content is modified
      *
+     * It uses an R-Tree data structure to efficiently find dependent cells.
      */
     class FormulaDependencyGraph {
-        /**
-         * Internal structure:
-         * - key: a cell position (encoded as an integer)
-         * - value: a set of cell positions that depends on the key
-         *
-         * Given
-         * - A1:"= B1 + SQRT(B2)"
-         * - C1:"= B1";
-         * - C2:"= C1"
-         *
-         * we will have something like:
-         * - B1 ---> (A1, C1)   meaning A1 and C1 depends on B1
-         * - B2 ---> (A1)       meaning A1 depends on B2
-         * - C1 ---> (C2)       meaning C2 depends on C1
-         */
-        inverseDependencies = new Map();
+        encoder;
         dependencies = new Map();
+        rTree;
+        constructor(encoder, data = []) {
+            this.encoder = encoder;
+            this.rTree = new SpreadsheetRTree(data);
+        }
         removeAllDependencies(formulaPositionId) {
-            const dependencies = this.dependencies.get(formulaPositionId);
-            if (!dependencies) {
+            const ranges = this.dependencies.get(formulaPositionId);
+            if (!ranges) {
                 return;
             }
-            for (const dependency of dependencies) {
-                this.inverseDependencies.get(dependency)?.delete(formulaPositionId);
+            for (const range of ranges) {
+                this.rTree.remove(range);
             }
             this.dependencies.delete(formulaPositionId);
         }
         addDependencies(formulaPositionId, dependencies) {
-            for (const dependency of dependencies) {
-                const inverseDependencies = this.inverseDependencies.get(dependency);
-                if (inverseDependencies) {
-                    inverseDependencies.add(formulaPositionId);
-                }
-                else {
-                    this.inverseDependencies.set(dependency, new Set([formulaPositionId]));
-                }
+            const rTreeItems = dependencies.map(({ sheetId, zone }) => ({
+                data: formulaPositionId,
+                boundingBox: {
+                    zone,
+                    sheetId,
+                },
+            }));
+            for (const item of rTreeItems) {
+                this.rTree.insert(item);
             }
             const existingDependencies = this.dependencies.get(formulaPositionId);
             if (existingDependencies) {
-                existingDependencies.push(...dependencies);
+                existingDependencies.push(...rTreeItems);
             }
             else {
-                this.dependencies.set(formulaPositionId, dependencies);
+                this.dependencies.set(formulaPositionId, rTreeItems);
             }
         }
         /**
@@ -35616,20 +36328,20 @@
          * in the correct order they should be evaluated.
          * This is called a topological ordering (excluding cycles)
          */
-        getCellsDependingOn(positionIds) {
+        getCellsDependingOn(ranges) {
             const visited = new JetSet();
-            const queue = Array.from(positionIds).reverse();
+            const queue = Array.from(ranges).reverse();
             while (queue.length > 0) {
-                const node = queue.pop();
-                visited.add(node);
-                const adjacentNodes = this.inverseDependencies.get(node) || new Set();
-                for (const adjacentNode of adjacentNodes) {
-                    if (!visited.has(adjacentNode)) {
-                        queue.push(adjacentNode);
+                const range = queue.pop();
+                visited.add(...this.encoder.encodeBoundingBox(range));
+                const impactedPositionIds = this.rTree.search(range).map((dep) => dep.data);
+                for (const positionId of impactedPositionIds) {
+                    if (!visited.has(positionId)) {
+                        queue.push(this.encoder.decodeToBoundingBox(positionId));
                     }
                 }
             }
-            visited.delete(...positionIds);
+            visited.delete(...ranges.flatMap((r) => this.encoder.encodeBoundingBox(r)));
             return visited;
         }
     }
@@ -35717,9 +36429,9 @@
         context;
         getters;
         compilationParams;
-        positionEncoder = new PositionBitsEncoder();
+        encoder = new PositionBitsEncoder();
         evaluatedCells = new Map();
-        formulaDependencies = lazy(new FormulaDependencyGraph());
+        formulaDependencies = lazy(new FormulaDependencyGraph(this.encoder));
         blockedArrayFormulas = new Set();
         spreadingRelations = new SpreadingRelation();
         constructor(context, getters) {
@@ -35728,16 +36440,16 @@
             this.compilationParams = buildCompilationParameters(this.context, this.getters, this.computeAndSave.bind(this));
         }
         getEvaluatedCell(position) {
-            return (this.evaluatedCells.get(this.encodePosition(position)) ||
+            return (this.evaluatedCells.get(this.encoder.encode(position)) ||
                 createEvaluatedCell("", { locale: this.getters.getLocale() }));
         }
         getArrayFormulaSpreadingOn(position) {
-            const positionId = this.encodePosition(position);
+            const positionId = this.encoder.encode(position);
             const formulaPosition = this.getArrayFormulaSpreadingOnId(positionId);
-            return formulaPosition !== undefined ? this.decodePosition(formulaPosition) : undefined;
+            return formulaPosition !== undefined ? this.encoder.decode(formulaPosition) : undefined;
         }
         getEvaluatedPositions() {
-            return [...this.evaluatedCells.keys()].map(this.decodePosition.bind(this));
+            return [...this.evaluatedCells.keys()].map((p) => this.encoder.decode(p));
         }
         getArrayFormulaSpreadingOnId(positionId) {
             if (!this.spreadingRelations.hasArrayFormulaResult(positionId)) {
@@ -35747,7 +36459,7 @@
             return Array.from(arrayFormulas).find((positionId) => !this.blockedArrayFormulas.has(positionId));
         }
         updateDependencies(position) {
-            const positionId = this.encodePosition(position);
+            const positionId = this.encoder.encode(position);
             this.formulaDependencies().removeAllDependencies(positionId);
             const dependencies = this.getDirectDependencies(positionId);
             this.formulaDependencies().addDependencies(positionId, dependencies);
@@ -35757,12 +36469,12 @@
             this.compilationParams = buildCompilationParameters(this.context, this.getters, this.computeAndSave.bind(this));
         }
         evaluateCells(positions) {
-            const cells = positions.map(this.encodePosition.bind(this));
+            const cells = positions.map((p) => this.encoder.encode(p));
             const cellsToCompute = new JetSet(cells);
-            const arrayFormulas = this.getArrayFormulasImpactedByChangesOf(cells);
+            const arrayFormulasPositionIds = this.getArrayFormulasImpactedByChangesOf(cells);
             cellsToCompute.add(...this.getCellsDependingOn(cells));
-            cellsToCompute.add(...arrayFormulas);
-            cellsToCompute.add(...this.getCellsDependingOn(arrayFormulas));
+            cellsToCompute.add(...arrayFormulasPositionIds);
+            cellsToCompute.add(...this.getCellsDependingOn(arrayFormulasPositionIds));
             this.evaluate(cellsToCompute);
         }
         getArrayFormulasImpactedByChangesOf(positionIds) {
@@ -35785,12 +36497,14 @@
             this.blockedArrayFormulas = new Set();
             this.spreadingRelations = new SpreadingRelation();
             this.formulaDependencies = lazy(() => {
-                const dependencyGraph = new FormulaDependencyGraph();
-                for (const positionId of this.getAllCells()) {
-                    const dependencies = this.getDirectDependencies(positionId);
-                    dependencyGraph.addDependencies(positionId, dependencies);
-                }
-                return dependencyGraph;
+                const dependencies = [...this.getAllCells()].flatMap((positionId) => this.getDirectDependencies(positionId).map((range) => ({
+                    data: positionId,
+                    boundingBox: {
+                        zone: range.zone,
+                        sheetId: range.sheetId,
+                    },
+                })));
+                return new FormulaDependencyGraph(this.encoder, dependencies);
             });
         }
         evaluateAllCells() {
@@ -35811,7 +36525,7 @@
             for (const sheetId of this.getters.getSheetIds()) {
                 const cellIds = this.getters.getCells(sheetId);
                 for (const cellId in cellIds) {
-                    positionIds.add(this.encodePosition(this.getters.getCellPosition(cellId)));
+                    positionIds.add(this.encoder.encode(this.getters.getCellPosition(cellId)));
                 }
             }
             return positionIds;
@@ -35878,7 +36592,7 @@
             }
         }
         computeAndSave(position) {
-            const positionId = this.encodePosition(position);
+            const positionId = this.encoder.encode(position);
             const evaluatedCell = this.computeCell(positionId);
             if (!this.evaluatedCells.has(positionId)) {
                 this.setEvaluatedCell(positionId, evaluatedCell);
@@ -35939,15 +36653,15 @@
             throw new Error(_lt("Result couldn't be automatically expanded. Please insert more columns and rows."));
         }
         updateSpreadRelation({ sheetId, col, row, }) {
-            const arrayFormulaPositionId = this.encodePosition({ sheetId, col, row });
+            const arrayFormulaPositionId = this.encoder.encode({ sheetId, col, row });
             return (i, j) => {
                 const position = { sheetId, col: i + col, row: j + row };
-                const resultPositionId = this.encodePosition(position);
+                const resultPositionId = this.encoder.encode(position);
                 this.spreadingRelations.addRelation({ resultPositionId, arrayFormulaPositionId });
             };
         }
         checkCollision({ sheetId, col, row }) {
-            const formulaPositionId = this.encodePosition({ sheetId, col, row });
+            const formulaPositionId = this.encoder.encode({ sheetId, col, row });
             return (i, j) => {
                 const position = { sheetId: sheetId, col: i + col, row: j + row };
                 const rawCell = this.getters.getCell(position);
@@ -35969,7 +36683,7 @@
                     format: format || formatFromPosition(i, j),
                     locale: this.getters.getLocale(),
                 });
-                const positionId = this.encodePosition(position);
+                const positionId = this.encoder.encode(position);
                 this.setEvaluatedCell(positionId, evaluatedCell);
                 // check if formula dependencies present in the spread zone
                 // if so, they need to be recomputed
@@ -36001,29 +36715,17 @@
             if (!cell?.isFormula) {
                 return [];
             }
-            const dependencies = [];
-            for (const range of cell.dependencies) {
-                if (range.invalidSheetName || range.invalidXc) {
-                    continue;
-                }
-                const sheetId = range.sheetId;
-                forEachPositionsInZone(range.zone, (col, row) => {
-                    dependencies.push(this.encodePosition({ sheetId, col, row }));
-                });
-            }
-            return dependencies;
+            return cell.dependencies;
         }
         getCellsDependingOn(positionIds) {
-            return this.formulaDependencies().getCellsDependingOn(positionIds);
+            const ranges = [];
+            for (const positionId of positionIds) {
+                ranges.push(this.encoder.decodeToBoundingBox(positionId));
+            }
+            return this.formulaDependencies().getCellsDependingOn(ranges);
         }
         getCell(positionId) {
-            return this.getters.getCell(this.decodePosition(positionId));
-        }
-        encodePosition(position) {
-            return this.positionEncoder.encode(position);
-        }
-        decodePosition(positionId) {
-            return this.positionEncoder.decode(positionId);
+            return this.getters.getCell(this.encoder.decode(positionId));
         }
     }
     function forEachSpreadPositionInMatrix(matrix, callback) {
@@ -36098,12 +36800,23 @@
         encode({ sheetId, col, row }) {
             return (this.encodeSheet(sheetId) << 42n) | (BigInt(col) << 21n) | BigInt(row);
         }
+        encodeBoundingBox({ sheetId, zone }) {
+            const positions = [];
+            forEachPositionsInZone(zone, (col, row) => {
+                positions.push(this.encode({ sheetId, col, row }));
+            });
+            return positions;
+        }
         decode(id) {
             // keep only the last 21 bits by AND-ing the bit sequence with 21 ones
             const row = Number(id & 2097151n);
             const col = Number((id >> 21n) & 2097151n);
             const sheetId = this.decodeSheet(id >> 42n);
             return { sheetId, col, row };
+        }
+        decodeToBoundingBox(id) {
+            const { sheetId, col, row } = this.decode(id);
+            return { sheetId, zone: { left: col, top: row, right: col, bottom: row } };
         }
         encodeSheet(sheetId) {
             const sheetKey = this.sheetMapping[sheetId];
@@ -36219,6 +36932,7 @@
     class EvaluationPlugin extends UIPlugin {
         static getters = [
             "evaluateFormula",
+            "getCorrespondingFormulaCell",
             "getRangeFormattedValues",
             "getRangeValues",
             "getRangeFormats",
@@ -36272,7 +36986,12 @@
         // Getters
         // ---------------------------------------------------------------------------
         evaluateFormula(sheetId, formulaString) {
-            return this.evaluator.evaluateFormula(sheetId, formulaString);
+            try {
+                return this.evaluator.evaluateFormula(sheetId, formulaString);
+            }
+            catch (error) {
+                return error instanceof EvaluationError ? error.errorType : CellErrorType.GenericError;
+            }
         }
         /**
          * Return the value of each cell in the range as they are displayed in the grid.
@@ -36662,34 +37381,29 @@
         getComputedStyles(sheetId) {
             const computedStyle = {};
             for (let cf of this.getters.getConditionalFormats(sheetId).reverse()) {
-                try {
-                    switch (cf.rule.type) {
-                        case "ColorScaleRule":
-                            for (let range of cf.ranges) {
-                                this.applyColorScale(sheetId, range, cf.rule, computedStyle);
-                            }
-                            break;
-                        case "CellIsRule":
-                            for (let ref of cf.ranges) {
-                                const zone = this.getters.getRangeFromSheetXC(sheetId, ref).zone;
-                                for (let row = zone.top; row <= zone.bottom; row++) {
-                                    for (let col = zone.left; col <= zone.right; col++) {
-                                        const pr = this.rulePredicate[cf.rule.type];
-                                        let cell = this.getters.getEvaluatedCell({ sheetId, col, row });
-                                        if (pr && pr(cell, cf.rule)) {
-                                            if (!computedStyle[col])
-                                                computedStyle[col] = [];
-                                            // we must combine all the properties of all the CF rules applied to the given cell
-                                            computedStyle[col][row] = Object.assign(computedStyle[col]?.[row] || {}, cf.rule.style);
-                                        }
+                switch (cf.rule.type) {
+                    case "ColorScaleRule":
+                        for (let range of cf.ranges) {
+                            this.applyColorScale(sheetId, range, cf.rule, computedStyle);
+                        }
+                        break;
+                    case "CellIsRule":
+                        for (let ref of cf.ranges) {
+                            const zone = this.getters.getRangeFromSheetXC(sheetId, ref).zone;
+                            for (let row = zone.top; row <= zone.bottom; row++) {
+                                for (let col = zone.left; col <= zone.right; col++) {
+                                    const pr = this.rulePredicate[cf.rule.type];
+                                    let cell = this.getters.getEvaluatedCell({ sheetId, col, row });
+                                    if (pr && pr(cell, cf.rule)) {
+                                        if (!computedStyle[col])
+                                            computedStyle[col] = [];
+                                        // we must combine all the properties of all the CF rules applied to the given cell
+                                        computedStyle[col][row] = Object.assign(computedStyle[col]?.[row] || {}, cf.rule.style);
                                     }
                                 }
                             }
-                            break;
-                    }
-                }
-                catch (_) {
-                    // we don't care about the errors within the evaluation of a rule
+                        }
+                        break;
                 }
             }
             return computedStyle;
@@ -36725,7 +37439,7 @@
                     return percentile(rangeValues, Number(threshold.value) / 100, true);
                 case "formula":
                     const value = threshold.value && this.getters.evaluateFormula(sheetId, threshold.value);
-                    return !(value instanceof Promise) ? value : null;
+                    return typeof value === "number" ? value : null;
                 default:
                     return null;
             }
@@ -37292,7 +38006,7 @@
             let row = zone.bottom;
             if (col > 0) {
                 let leftPosition = { sheetId, col: col - 1, row };
-                while (this.getters.getEvaluatedCell(leftPosition).type !== CellValueType.empty ||
+                while (this.getters.getCorrespondingFormulaCell(leftPosition) ||
                     this.getters.getCell(leftPosition)?.content) {
                     row += 1;
                     leftPosition = { sheetId, col: col - 1, row };
@@ -37302,7 +38016,7 @@
                 col = zone.right;
                 if (col <= this.getters.getNumberCols(sheetId)) {
                     let rightPosition = { sheetId, col: col + 1, row };
-                    while (this.getters.getEvaluatedCell(rightPosition).type !== CellValueType.empty ||
+                    while (this.getters.getCorrespondingFormulaCell(rightPosition) ||
                         this.getters.getCell(rightPosition)?.content) {
                         row += 1;
                         rightPosition = { sheetId, col: col + 1, row };
@@ -47050,7 +47764,7 @@
         }
         onKeydown(ev) {
             let keyDownString = "";
-            if (ev.ctrlKey || ev.metaKey) {
+            if (isCtrlKey(ev)) {
                 keyDownString += "CTRL+";
             }
             keyDownString += ev.key.toUpperCase();
@@ -50811,9 +51525,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.16';
-    __info__.date = '2023-12-05T10:45:24.320Z';
-    __info__.hash = '1abbb92';
+    __info__.version = '16.4.17';
+    __info__.date = '2024-01-04T13:01:11.784Z';
+    __info__.hash = '769f8a3';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
