@@ -354,6 +354,11 @@ class MailActivity(models.Model):
                 self.env[model].browse(res_ids).message_subscribe(partner_ids=pids)
 
         # send notifications about activity creation
+        notifications = [
+            (("record", thread), "mail.record/insert", {"Activity": activities.activity_format()})
+            for thread, activities in activities._classify_by_record().items()
+        ]
+        self.env["bus.bus"]._sendmany(notifications)
         todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
             self.env['bus.bus']._sendmany([
@@ -367,7 +372,11 @@ class MailActivity(models.Model):
             user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
             pre_responsibles = user_changes.mapped('user_id.partner_id')
         res = super(MailActivity, self).write(values)
-
+        notifications = [
+            (("record", thread), "mail.record/insert", {"Activity": activities.activity_format()})
+            for thread, activities in self._classify_by_record().items()
+        ]
+        self.env["bus.bus"]._sendmany(notifications)
         if values.get('user_id'):
             if values['user_id'] != self.env.uid:
                 to_check = user_changes.filtered(lambda act: not act.automated)
@@ -391,6 +400,11 @@ class MailActivity(models.Model):
         return res
 
     def unlink(self):
+        notifications = [
+            (("record", thread), "mail.record/delete", {"Activity": [{"id": activity.id} for activity in activities]})
+            for thread, activities in self._classify_by_record().items()
+        ]
+        self.env["bus.bus"]._sendmany(notifications)
         todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
             self.env['bus.bus']._sendmany([
@@ -621,6 +635,7 @@ class MailActivity(models.Model):
         self.mail_template_ids.fetch(['name'])
         self.attachment_ids.fetch(['name'])
         for record, activity in zip(self, activities):
+            activity["request_partner_id"] = record.request_partner_id.id
             activity['mail_template_ids'] = [
                 {'id': mail_template.id, 'name': mail_template.name}
                 for mail_template in record.mail_template_ids
@@ -792,6 +807,13 @@ class MailActivity(models.Model):
             data_by_model[activity.res_model]['activities'] += activity
             data_by_model[activity.res_model]['record_ids'].append(activity.res_id)
         return data_by_model
+
+    def _classify_by_record(self):
+        activities_by_record = defaultdict(lambda: self.env["mail.activity"])
+        for activity in self.filtered(lambda activity: activity.res_model and activity.res_id):
+            record = self.env[activity.res_model].browse(activity.res_id)
+            activities_by_record[record] += activity
+        return activities_by_record
 
     def _prepare_next_activity_values(self):
         """ Prepare the next activity values based on the current activity record and applies _onchange methods

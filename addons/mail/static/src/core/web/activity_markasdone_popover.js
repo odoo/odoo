@@ -31,18 +31,13 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDone() {
-        const { res_id, res_model } = this.props.activity;
-        const thread = this.threadService.getThread(res_model, res_id);
         await this.env.services["mail.activity"].markAsDone(this.props.activity);
         if (this.props.reload) {
-            this.props.reload(thread, ["activities"]);
+            this.props.reload();
         }
-        await this.threadService.fetchNewMessages(thread);
     }
 
     async onClickDoneAndScheduleNext() {
-        const { res_id, res_model } = this.props.activity;
-        const thread = this.threadService.getThread(res_model, res_id);
         if (this.props.onClickDoneAndScheduleNext) {
             this.props.onClickDoneAndScheduleNext();
         }
@@ -52,9 +47,8 @@ export class ActivityMarkAsDone extends Component {
         const action = await this.env.services["mail.activity"].markAsDoneAndScheduleNext(
             this.props.activity
         );
-        this.threadService.fetchNewMessages(thread);
         if (this.props.reload) {
-            this.props.reload(thread, ["activities", "attachments"]);
+            this.props.reload();
         }
         if (!action) {
             return;
@@ -65,7 +59,7 @@ export class ActivityMarkAsDone extends Component {
             });
         });
         if (this.props.reload) {
-            this.props.reload(thread, ["activities"]);
+            this.props.reload();
         }
     }
 }

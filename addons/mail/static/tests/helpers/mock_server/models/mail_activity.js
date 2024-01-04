@@ -6,9 +6,93 @@ import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 
-const { DateTime} = luxon;
+const { DateTime } = luxon;
 
 patch(MockServer.prototype, {
+    /**
+     * @override
+     */
+    mockCreate(modelName, valsList, kwargs = {}) {
+        const ids = super.mockCreate(...arguments);
+        if (modelName == "mail.activity") {
+            const notifications = [];
+            const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
+            for (const activity of activities) {
+                if (activity.res_model && activity.res_id) {
+                    const record = this.getRecords(activity.res_model, [
+                        ["id", "=", activity.res_id],
+                    ]);
+                    notifications.push([
+                        record,
+                        "mail.record/insert",
+                        {
+                            Activity: [this._mockMailActivityActivityFormat([activity.id])[0]],
+                        },
+                    ]);
+                }
+            }
+            if (notifications.length) {
+                this.pyEnv["bus.bus"]._sendmany(notifications);
+            }
+        }
+        return ids;
+    },
+    /**
+     * @override
+     */
+    mockWrite(modelName, args) {
+        const mockWriteResult = super.mockWrite(...arguments);
+        if (modelName == "mail.activity") {
+            const notifications = [];
+            const [ids] = args;
+            const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
+            for (const activity of activities) {
+                if (activity.res_model && activity.res_id) {
+                    const record = this.getRecords(activity.res_model, [
+                        ["id", "=", activity.res_id],
+                    ]);
+                    notifications.push([
+                        record,
+                        "mail.record/insert",
+                        {
+                            Activity: [this._mockMailActivityActivityFormat([activity.id])[0]],
+                        },
+                    ]);
+                }
+            }
+            if (notifications.length) {
+                this.pyEnv["bus.bus"]._sendmany(notifications);
+            }
+        }
+        return mockWriteResult;
+    },
+    /**
+     * @override
+     */
+    mockUnlink(modelName, [ids]) {
+        if (modelName == "mail.activity") {
+            const notifications = [];
+            const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
+            for (const activity of activities) {
+                if (activity.res_model && activity.res_id) {
+                    const record = this.getRecords(activity.res_model, [
+                        ["id", "=", activity.res_id],
+                    ]);
+                    notifications.push([
+                        record,
+                        "mail.record/delete",
+                        {
+                            Activity: [{ id: activity.id }],
+                        },
+                    ]);
+                }
+            }
+            if (notifications.length) {
+                this.pyEnv["bus.bus"]._sendmany(notifications);
+            }
+        }
+        return super.mockUnlink(...arguments);
+    },
     async _performRPC(route, args) {
         if (args.model === "mail.activity" && args.method === "action_feedback") {
             const ids = args.args[0];
@@ -94,7 +178,7 @@ patch(MockServer.prototype, {
      * @param {integer[]} ids
      * @returns {Object}
      */
-    _mockMailActivityActionFeedback(ids, attachment_ids= null) {
+    _mockMailActivityActionFeedback(ids, attachment_ids = null) {
         const activities = this.getRecords("mail.activity", [["id", "in", ids]]);
         const activityTypes = this.getRecords("mail.activity.type", [
             ["id", "in", unique(activities.map((a) => a.activity_type_id))],
@@ -202,7 +286,10 @@ patch(MockServer.prototype, {
             const attachmentIds = allCompleted.map((a) => a.attachment_ids).flat();
             attachmentsById = attachmentIds.length
                 ? Object.fromEntries(
-                      this.getRecords("ir.attachment", [["id", "in", attachmentIds]]).map((a) => [a.id, a])
+                      this.getRecords("ir.attachment", [["id", "in", attachmentIds]]).map((a) => [
+                          a.id,
+                          a,
+                      ])
                   )
                 : {};
         } else {

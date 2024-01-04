@@ -71,22 +71,6 @@ export class DiscussCoreCommon {
                 thread.messages.splice(0, thread.messages.length);
                 thread.delete();
             });
-            this.busService.addEventListener("notification", ({ detail: notifications }) => {
-                // Do not handle new message notification if the channel was just left. This issue
-                // occurs because the "discuss.channel/leave" and the "discuss.channel/new_message"
-                // notifications come from the bus as a batch.
-                const channelsLeft = new Set(
-                    notifications
-                        .filter(({ type }) => type === "discuss.channel/leave")
-                        .map(({ payload }) => payload.id)
-                );
-                for (const notif of notifications.filter(
-                    ({ payload, type }) =>
-                        type === "discuss.channel/new_message" && !channelsLeft.has(payload.id)
-                )) {
-                    this._handleNotificationNewMessage(notif);
-                }
-            });
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
                 const { body, originThread } = payload;
                 const channel = this.store.Thread.get(originThread);
@@ -191,68 +175,6 @@ export class DiscussCoreCommon {
         } else {
             await this.createGroupChat({ partners_to });
         }
-    }
-
-    async _handleNotificationNewMessage(notif) {
-        const { id, message: messageData } = notif.payload;
-        let channel = this.store.Thread.get({ model: "discuss.channel", id });
-        if (!channel || !channel.channel_type) {
-            channel = await this.threadService.fetchChannel(id);
-            if (!channel) {
-                return;
-            }
-        }
-        this.store.Message.get(messageData.temporary_id)?.delete();
-        messageData.temporary_id = null;
-        const message = this.store.Message.insert(messageData, { html: true });
-        if (message.notIn(channel.messages)) {
-            if (!channel.loadNewer) {
-                channel.messages.push(message);
-            } else if (channel.status === "loading") {
-                channel.pendingNewMessages.push(message);
-            }
-            if (message.isSelfAuthored) {
-                channel.seen_message_id = message.id;
-            } else {
-                if (notif.id > this.store.initBusId) {
-                    channel.message_unread_counter++;
-                }
-                if (message.isNeedaction) {
-                    const inbox = this.store.discuss.inbox;
-                    if (message.notIn(inbox.messages)) {
-                        inbox.messages.push(message);
-                        if (notif.id > this.store.initBusId) {
-                            inbox.counter++;
-                        }
-                    }
-                    if (message.notIn(channel.needactionMessages)) {
-                        channel.needactionMessages.push(message);
-                        if (notif.id > this.store.initBusId) {
-                            channel.message_needaction_counter++;
-                        }
-                    }
-                }
-            }
-        }
-        if (
-            !channel.correspondent?.eq(this.store.odoobot) &&
-            channel.channel_type !== "channel" &&
-            this.store.self?.type === "partner"
-        ) {
-            // disabled on non-channel threads and
-            // on "channel" channels for performance reasons
-            this.threadService.markAsFetched(channel);
-        }
-        if (
-            !channel.loadNewer &&
-            !message.isSelfAuthored &&
-            channel.composer.isFocused &&
-            this.store.self?.type === "partner" &&
-            channel.newestPersistentMessage?.eq(channel.newestMessage)
-        ) {
-            this.threadService.markAsRead(channel);
-        }
-        this.env.bus.trigger("discuss.channel/new_message", { channel, message });
     }
 }
 

@@ -180,7 +180,7 @@ patch(MockServer.prototype, {
      * @returns {Object}
      */
     _mockMailThreadMessagePost(model, ids, kwargs, context) {
-        const id = ids[0]; // ensure_one
+        const [thread] = this.getRecords(model, [["id", "in", ids]]);
         if (context?.["mail_post_autofollow"] && kwargs["partner_ids"].length > 0) {
             this._mockMailThreadMessageSubscribe(model, ids, kwargs["partner_ids"]);
         }
@@ -192,7 +192,7 @@ patch(MockServer.prototype, {
             ]);
             const attachmentIds = attachments.map((attachment) => attachment.id);
             this.pyEnv["ir.attachment"].write(attachmentIds, {
-                res_id: id,
+                res_id: thread.id,
                 res_model: model,
             });
             kwargs.attachment_ids = attachmentIds.map((attachmentId) => [4, attachmentId]);
@@ -220,14 +220,16 @@ patch(MockServer.prototype, {
             is_discussion: subtype_xmlid === "mail.mt_comment",
             is_note: subtype_xmlid === "mail.mt_note",
             model,
-            res_id: id,
+            res_id: thread.id,
         });
         delete values.subtype_xmlid;
         const messageId = this.pyEnv["mail.message"].create(values);
-        this._mockMailThread_NotifyThread(model, ids, messageId, context?.temporary_id);
-        return Object.assign(this._mockMailMessageMessageFormat([messageId])[0], {
+        const messageFormat = Object.assign(this._mockMailMessageMessageFormat([messageId])[0], {
             temporary_id: context?.temporary_id,
         });
+        this.pyEnv["bus.bus"]._sendmany([[thread, "mail.thread/new_message", messageFormat]]);
+        this._mockMailThread_NotifyThread(model, [thread.id], messageId);
+        return messageFormat;
     },
     /**
      * Simulates `message_subscribe` on `mail.thread`.
@@ -281,40 +283,29 @@ patch(MockServer.prototype, {
      * @param {integer} messageId
      * @returns {boolean}
      */
-    _mockMailThread_NotifyThread(model, ids, messageId, temporary_id) {
-        const message = this.getRecords("mail.message", [["id", "=", messageId]])[0];
-        const messageFormat = this._mockMailMessageMessageFormat([messageId])[0];
-        const notifications = [];
+    _mockMailThread_NotifyThread(model, ids, messageId) {
         if (model === "discuss.channel") {
-            const channels = this.getRecords("discuss.channel", [["id", "=", message.res_id]]);
-            for (const channel of channels) {
-                const now = serializeDateTime(today());
-                notifications.push([
-                    channel,
-                    "mail.record/insert",
-                    {
-                        Thread: {
-                            id: channel.id,
-                            is_pinned: true,
-                            last_interest_dt: now,
-                            model: "discuss.channel",
-                        },
-                    },
-                ]);
-                notifications.push([
-                    channel,
-                    "discuss.channel/new_message",
-                    {
+            const message = this.getRecords("mail.message", [["id", "=", messageId]])[0];
+            const notifications = [];
+            const [channel] = this.getRecords(model, [["id", "in", ids]]);
+            const now = serializeDateTime(today());
+            notifications.push([
+                channel,
+                "mail.record/insert",
+                {
+                    Thread: {
                         id: channel.id,
-                        message: Object.assign(messageFormat, { temporary_id }),
+                        is_pinned: true,
+                        last_interest_dt: now,
+                        model: "discuss.channel",
                     },
-                ]);
-                if (message.author_id === this.pyEnv.currentPartnerId) {
-                    this._mockDiscussChannel_ChannelSeen(ids, message.id);
-                }
+                },
+            ]);
+            if (message.author_id === this.pyEnv.currentPartnerId) {
+                this._mockDiscussChannel_ChannelSeen(ids, message.id);
             }
+            this.pyEnv["bus.bus"]._sendmany(notifications);
         }
-        this.pyEnv["bus.bus"]._sendmany(notifications);
     },
     /**
      * Simulates `message_unsubscribe` on `mail.thread`.

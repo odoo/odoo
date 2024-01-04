@@ -465,9 +465,6 @@ export class Composer extends Component {
                 }
                 this.clear();
                 this.props.messageToReplyTo?.cancel();
-                if (this.thread) {
-                    this.threadService.fetchNewMessages(this.thread);
-                }
             },
         };
         await this.env.services.action.doAction(action, options);

@@ -70,4 +70,27 @@ patch(Thread.prototype, {
         }
         return super.avatarUrl;
     },
+    async addNewMessage(message) {
+        if (
+            message.originThread.model === "discuss.channel" &&
+            !message.originThread.channel_type
+        ) {
+            const channel = await this._store.env.services["mail.thread"].fetchChannel(
+                message.originThread.id
+            );
+            if (!channel) {
+                return;
+            }
+        }
+        super.addNewMessage(...arguments);
+        if (
+            !message.originThread.correspondent?.eq(this._store.odoobot) &&
+            message.originThread.channel_type !== "channel" &&
+            this._store.self?.type === "partner"
+        ) {
+            // disabled on non-channel threads and
+            // on "channel" channels for performance reasons
+            this._store.env.services["mail.thread"].markAsFetched(message.originThread);
+        }
+    },
 });

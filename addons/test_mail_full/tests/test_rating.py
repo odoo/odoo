@@ -175,10 +175,10 @@ class TestRatingPerformance(TestRatingCommon):
         with self.assertQueryCount(employee=1617):  # tmf 1313 / com 1313
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=2101):  # tmf 1901
+        with self.assertQueryCount(employee=2601):
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=1900):  # tmf 1800
+        with self.assertQueryCount(employee=2400):
             self.apply_ratings(5)
 
     @users('employee')
@@ -187,10 +187,10 @@ class TestRatingPerformance(TestRatingCommon):
         with self.assertQueryCount(employee=1724):  # tmf 1419 / com 1419
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=2304):  # tmf 2104
+        with self.assertQueryCount(employee=2904):
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=2203):  # tmf 2103
+        with self.assertQueryCount(employee=2803):
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):

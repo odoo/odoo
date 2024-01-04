@@ -29,20 +29,6 @@ export class DiscussCoreWeb {
             this.store.discuss.chats.isOpen = data.settings.is_discuss_sidebar_category_chat_open;
             this.busService.start();
         });
-        this.env.bus.addEventListener(
-            "discuss.channel/new_message",
-            ({ detail: { channel, message } }) => {
-                if (this.ui.isSmall || message.isSelfAuthored) {
-                    return;
-                }
-                if (channel.correspondent?.eq(this.store.odoobot) && this.store.odoobotOnboarding) {
-                    // this cancels odoobot onboarding auto-opening of chat window
-                    this.store.odoobotOnboarding = false;
-                    return;
-                }
-                this.threadService.notifyMessageToUser(channel, message);
-            }
-        );
         this.busService.subscribe("res.users.settings", (payload) => {
             if (payload) {
                 this.store.discuss.chats.isOpen =

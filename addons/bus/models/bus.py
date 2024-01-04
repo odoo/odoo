@@ -31,8 +31,10 @@ def hashable(key):
 
 
 def channel_with_db(dbname, channel):
-    if isinstance(channel, models.Model):
+    if isinstance(channel, models.Model):  # sending to specific persons
         return (dbname, channel._name, channel.id)
+    if isinstance(channel, tuple) and channel[0] == "record":  # sending to observers of record
+        return (dbname, "record", channel[1]._name, channel[1].id)
     if isinstance(channel, str):
         return (dbname, channel)
     return channel

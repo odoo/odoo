@@ -41,8 +41,16 @@ patch(MockServer.prototype, {
     /**
      * Simulates `_build_bus_channel_list` on `ir.websocket`.
      */
-    _mockIrWebsocket__buildBusChannelList() {
+    _mockIrWebsocket__buildBusChannelList(channelsOfUser) {
         const channels = ["broadcast"];
+        for (const channel of channelsOfUser) {
+            if (typeof channel === "string" && channel.startsWith("record:")) {
+                const [, model, id] = channel.split(":");
+                channels.push({ model, id: parseInt(id) });
+            } else {
+                channels.push(channel);
+            }
+        }
         const authenticatedUserId = this.pyEnv.cookie.get("authenticated_user_sid");
         const authenticatedPartner = authenticatedUserId
             ? this.pyEnv["res.partner"].searchRead([["user_ids", "in", [authenticatedUserId]]], {
