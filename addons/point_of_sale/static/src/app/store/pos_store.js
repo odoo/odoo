@@ -1174,6 +1174,13 @@ export class PosStore extends Reactive {
         this.synch = { status, pending };
     }
 
+    /**
+     * Context to be overriden in other modules/localisations
+     * while processing orders in the backend
+     */
+    _getCreateOrderContext(orders, options) {
+        return this.context || {};
+    }
     // send an array of orders to the server
     // available options:
     // - timeout: timeout for the rpc call in ms
@@ -1204,7 +1211,9 @@ export class PosStore extends Reactive {
             const serverIds = await orm.call("pos.order", "create_from_ui", [
                 orders,
                 options.draft || false,
-            ]);
+            ], {
+                context: this._getCreateOrderContext(orders, options),
+            });
 
             for (const serverId of serverIds) {
                 const order = this.env.services.pos.orders.find(
