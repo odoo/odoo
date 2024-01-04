@@ -8,7 +8,8 @@ import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_popover_patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
-import { patchAvatarCardResourcePopover } from "@hr_skills/components/avatar_card_resource/avatar_card_resource_popover_patch";
+import { patchAvatarCardResourcePopover } from "@hr/components/avatar_card_resource/avatar_card_resource_popover_patch";
+import { patchAvatarCardResourcePopoverSkills } from "@hr_skills/components/avatar_card_resource/avatar_card_resource_popover_patch";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 
 
@@ -21,6 +22,7 @@ QUnit.module("M2OAvatarEmployeeWidgetTestsSkills", {
         setupViewRegistries();
         patchWithCleanup(AvatarCardPopover.prototype, patchAvatarCardPopover);
         patchWithCleanup(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopover);
+        patchWithCleanup(AvatarCardResourcePopover.prototype, patchAvatarCardResourcePopoverSkills);
 
         const pyEnv = await startServer();
         this.data = {};

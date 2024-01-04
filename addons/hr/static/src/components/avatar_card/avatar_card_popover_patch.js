@@ -7,30 +7,44 @@ import { useService } from "@web/core/utils/hooks";
 export const patchAvatarCardPopover = {
     setup() {
         super.setup();
-        this.userInfoTemplate = "hr.avatarCardUserInfos",
+        this.userInfoTemplate = "hr.avatarCardEmployeeInfos";
         this.actionService = useService("action");
     },
-    get fieldNames(){
-        let fields = super.fieldNames;
-        return fields.concat([
-            "work_phone",
-            "work_email", 
-            "job_title", 
-            "department_id", 
-            "employee_id",
+    get fieldSpecification() {
+        return {
+            ...super.fieldSpecification,
+            employee_id: {
+                fields: {
+                    work_phone: {},
+                    work_email: {},
+                    job_title: {},
+                    department_id: {
+                        fields: {
+                            display_name: {},
+                        },
+                    },
+                },
+            },
+        };
+    },
+    get employee() {
+        return this.record.data.employee_id;
+    },
+    get email() {
+        return this.employee?.work_email || this.user.email;
+    },
+    get phone() {
+        return this.employee?.work_phone || this.user.phone;
+    },
+    async onClickViewEmployee() {
+        if (!this.employee) {
+            return;
+        }
+        const action = await this.orm.call("hr.employee", "get_formview_action", [
+            this.employee.id,
         ]);
+        this.actionService.doAction(action);
     },
-    get email(){
-        return this.user.work_email || this.user.email;
-    },
-    get phone(){
-        return this.user.work_phone || this.user.phone;
-    },
-    async onClickViewEmployee(){
-        const employeeId = this.user.employee_id[0];
-        const action = await this.orm.call('hr.employee', 'get_formview_action', [employeeId]);
-        this.actionService.doAction(action); 
-    }
 };
 
 export const unpatchAvatarCardPopover = patch(AvatarCardPopover.prototype, patchAvatarCardPopover);

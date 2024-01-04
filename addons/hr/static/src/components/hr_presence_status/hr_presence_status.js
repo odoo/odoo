@@ -72,6 +72,7 @@ export const hrPresenceStatus = {
             tag: viewType === "kanban" ? "span" : "small",
         };
     },
+    fieldDependencies: [{ name: "im_status", type: "char" }],
 };
 
-registry.category("fields").add("hr_presence_status", hrPresenceStatus)
+registry.category("fields").add("hr_presence_status", hrPresenceStatus);

@@ -67,6 +67,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_to_define', 'To define'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
+    # im_status is needed for the widget hr_presence_status as relatedField does not (yet) support M2O relation
     im_status = fields.Char(related="user_id.im_status")
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 

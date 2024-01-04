@@ -35,9 +35,6 @@ class ResourceResource(models.Model):
         default='user', required=True)
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
     avatar_128 = fields.Image(compute='_compute_avatar_128')
-    share = fields.Boolean(related='user_id.share')
-    email = fields.Char(related='user_id.email')
-    phone = fields.Char(related='user_id.phone')
 
     time_efficiency = fields.Float(
         'Efficiency Factor', default=100, required=True,
