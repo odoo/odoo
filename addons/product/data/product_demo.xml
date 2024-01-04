@@ -34,6 +34,10 @@
             <field name="parent_id" ref="product_category_all"/>
             <field name="name">Home Construction</field>
         </record>
+        <record id="product_category_outdoor_furniture" model="product.category">
+            <field name="parent_id" ref="product_category_1"/>
+            <field name="name">Outdoor furniture</field>
+        </record>
 
         <!-- Expensable products -->
         <record id="expense_product" model="product.product">
@@ -173,6 +177,28 @@
         <record id="product_attribute_value_6" model="product.attribute.value">
             <field name="name">2 year</field>
             <field name="attribute_id" ref="product_attribute_3"/>
+        </record>
+
+        <record id="pa_extra_options" model="product.attribute">
+            <field name="name">Extra Options</field>
+            <field name="display_type">multi</field>
+            <field name="create_variant">no_variant</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="pav_warranty" model="product.attribute.value">
+            <field name="name">1 year warranty extension</field>
+            <field name="default_extra_price">50</field>
+            <field name="attribute_id" ref="pa_extra_options"/>
+        </record>
+        <record id="pav_cleaning_kit" model="product.attribute.value">
+            <field name="name">Cleaning kit</field>
+            <field name="default_extra_price">5</field>
+            <field name="attribute_id" ref="pa_extra_options"/>
+        </record>
+        <record id="pav_protection_kit" model="product.attribute.value">
+            <field name="name">Protection kit</field>
+            <field name="default_extra_price">10</field>
+            <field name="attribute_id" ref="pa_extra_options"/>
         </record>
 
         <record id="product_product_4_product_template" model="product.template">
@@ -598,6 +624,19 @@
             <field name="description_sale">Three Seater Sofa with Lounger in Steel Grey Colour</field>
             <field name="default_code">FURN_8999</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_d01-image.jpg"/>
+        </record>
+
+        <record id="product_template_dining_table" model="product.template">
+            <field name="name">Outdoor dining table</field>
+            <field name="categ_id" ref="product_category_outdoor_furniture"/>
+            <field name="list_price">589</field>
+            <field name="image_1920" type="base64" file="product/static/img/dining_table.png"/>
+            <field name="attribute_line_ids" eval="[
+                Command.create({
+                    'attribute_id': ref('pa_extra_options'),
+                    'value_ids': [Command.set([ref('pav_warranty'), ref('pav_cleaning_kit'), ref('pav_protection_kit')])],
+                }),
+            ]"/>
         </record>
 
         <!--
