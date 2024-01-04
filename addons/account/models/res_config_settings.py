@@ -222,6 +222,11 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             config.is_account_peppol_eligible = config.country_code in PEPPOL_LIST
 
+    # Unique bill accounting
+    uniq_bill = fields.Boolean(string='Ref unique with date',
+        related='company_id.uniq_bill',
+        readonly=False)
+
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)
