@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
+
 from requests import Session
 
-from ..web_push import push_to_end_point, DeviceUnreachableError
-
 from odoo import api, fields, models
+from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 
 _logger = logging.getLogger(__name__)
 
 
-class WebPush(models.Model):
+class MailNotificationWebPush(models.Model):
     _name = 'mail.notification.web.push'
     _description = 'Cron data used for web push notification'
 

@@ -36,6 +36,8 @@ from . import mail_message_subtype
 from . import mail_message_translation
 from . import mail_message
 from . import mail_mail
+from . import mail_notification_web_push
+from . import mail_partner_device
 from . import mail_tracking_value
 from . import mail_template
 
@@ -61,8 +63,6 @@ from . import res_company
 from . import res_config_settings
 from . import res_users
 from . import update
-from . import web_push
-from . import partner_devices
 
 # after mail specifically as discuss module depends on mail
 from . import discuss
