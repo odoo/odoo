@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.PopoverWowl">
+    <t t-name="web.Popover">
         <div role="tooltip" class="o_popover popover mw-100" t-att-class="props.class" t-ref="ref">
-            <t t-slot="default" />
+            <t
+                t-component="props.component"
+                t-props="props.componentProps"
+                close="props.close"
+            />
             <div t-if="props.arrow" class="popover-arrow"/>
         </div>
     </t>
