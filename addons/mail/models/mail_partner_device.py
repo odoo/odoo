@@ -13,7 +13,7 @@ class InvalidVapidError(Exception):
     pass
 
 
-class PartnerDevice(models.Model):
+class MailPartnerDevice(models.Model):
     _name = 'mail.partner.device'
     _description = 'Partner Web Push Device'
 

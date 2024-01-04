@@ -6,7 +6,7 @@ from datetime import datetime
 
 import odoo
 from odoo.tools.misc import mute_logger
-from odoo.addons.mail.models.partner_devices import InvalidVapidError
+from odoo.addons.mail.models.mail_partner_device import InvalidVapidError
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
@@ -252,7 +252,7 @@ class TestWebPushNotification(SMSCommon):
             'The body must contain the text send by mail'
         )
 
-    @patch.object(odoo.addons.mail.models.web_push, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_notification_web_push, 'push_to_end_point')
     def test_push_notifications_cron(self, push_to_end_point):
         # Add 4 more devices to force sending via cron queue
         for index in range(10, 14):
@@ -307,7 +307,7 @@ class TestWebPushNotification(SMSCommon):
     @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
                   return_value=SimpleNamespace(**{'status_code': 404, 'text': 'Device Unreachable'}))
     def test_push_notifications_device_unreachable(self, post):
-        with mute_logger('odoo.addons.mail.web_push'):
+        with mute_logger('odoo.addons.mail.tools.web_push'):
             self.record_simple.with_user(self.user_email).message_notify(
                 partner_ids=self.user_inbox.partner_id.ids,
                 body='Test message send via Web Push',
