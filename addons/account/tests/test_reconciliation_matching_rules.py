@@ -1131,3 +1131,40 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             rule._apply_rules(st_line, None),
             {'amls': term_lines, 'model': rule},
         )
+
+    def test_amount_check_amount_last(self):
+        """ In case the reconciliation model can't match via text or partner matching
+        we do a last check to find amls with the exact amount
+        """
+        self.rule_1.write({
+            'match_text_location_label': False,
+            'match_partner': False,
+            'match_partner_ids': [Command.clear()],
+        })
+        self.bank_line_1.partner_id = None
+        self.bank_line_1.payment_ref = False
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1: {
+                'amls': self.invoice_line_1,
+                'model': self.rule_1,
+            },
+        })
+
+        # Create bank statement in foreign currency
+        partner = self.env['res.partner'].create({'name': 'Bernard Gagnant'})
+        invoice_line = self._create_invoice_line(300, partner, 'out_invoice', currency=self.currency_data_2['currency'])
+        bank_line_2 = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal.id,
+            'partner_id': False,
+            'payment_ref': False,
+            'foreign_currency_id': self.currency_data_2['currency'].id,
+            'amount': 15.0,
+            'amount_currency': 300.0,
+        })
+        self._check_statement_matching(self.rule_1, {
+            bank_line_2: {
+                'amls': invoice_line,
+                'model': self.rule_1,
+            },
+        })
