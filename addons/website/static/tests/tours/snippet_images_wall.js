@@ -9,9 +9,18 @@ const selectSignImageStep = {
 };
 // Without reselecting the image, the tour manages to click on the
 // move button before the active image is updated.
+// We need to first select the footer and then the social media in it to prevent
+// race condition with the potential loader after image wall order option.
 const reselectSignImageSteps = [{
     content: "Select footer",
     trigger: "iframe footer",
+}, {
+    content: "Select social media in footer",
+    trigger: "iframe footer .s_social_media",
+}, {
+    content: "Check that the social media options are displayed",
+    trigger: "we-list[data-name='social_media_list']",
+    run: () => {}, // This is a check.
 }, selectSignImageStep];
 
 wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
