@@ -2,7 +2,7 @@
 
 import { markRaw } from "@odoo/owl";
 import { registry } from "../registry";
-import { POPOVER_SYMBOL, PopoverController } from "./popover_controller";
+import { Popover, POPOVER_SYMBOL } from "@web/core/popover/popover";
 
 /**
  * @typedef {{
@@ -35,7 +35,7 @@ export const popoverService = {
                     ? options.closeOnClickAway
                     : () => options.closeOnClickAway ?? true;
             const remove = overlay.add(
-                PopoverController,
+                Popover,
                 {
                     target,
                     close: () => remove(),
@@ -43,15 +43,12 @@ export const popoverService = {
                     subPopovers: options[POPOVER_SYMBOL],
                     component,
                     componentProps: markRaw(props),
-                    popoverProps: {
-                        target,
-                        class: options.popoverClass,
-                        animation: options.animation,
-                        arrow: options.arrow,
-                        position: options.position,
-                        onPositioned: options.onPositioned,
-                        fixedPosition: options.fixedPosition,
-                    },
+                    class: options.popoverClass,
+                    animation: options.animation,
+                    arrow: options.arrow,
+                    position: options.position,
+                    onPositioned: options.onPositioned,
+                    fixedPosition: options.fixedPosition,
                 },
                 { onRemove: options.onClose }
             );
