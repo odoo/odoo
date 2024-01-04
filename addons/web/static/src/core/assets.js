@@ -61,7 +61,11 @@ assets.loadCSS = async function loadCSS(url, retryCount = 0) {
     linkEl.type = "text/css";
     linkEl.rel = "stylesheet";
     linkEl.href = url;
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, _reject) => {
+        const reject = (...args) => {
+            cacheMap.delete(url);
+            return _reject(...args);
+        };
         linkEl.onload = () => resolve(true);
         linkEl.onerror = async () => {
             cacheMap.delete(url);
@@ -93,29 +97,39 @@ assets.loadCSS = async function loadCSS(url, retryCount = 0) {
  * @returns {Promise<{cssLibs, jsLibs}>}
  */
 assets.getBundle = async function getBundle(bundleName) {
-    if (cacheMap.has(bundleName)) {
-        return cacheMap.get(bundleName);
-    }
-    const url = new URL(`/web/bundle/${bundleName}`, location.origin);
-    for (const [key, value] of Object.entries(session.bundle_params || {})) {
-        url.searchParams.set(key, value);
-    }
-    const response = await browser.fetch(url.href);
-    const json = await response.json();
-    const assets = {
-        cssLibs: [],
-        jsLibs: [],
-    };
-    for (const key in json) {
-        const file = json[key];
-        if (file.type === "link" && file.src) {
-            assets.cssLibs.push(file.src);
-        } else if (file.type === "script" && file.src) {
-            assets.jsLibs.push(file.src);
+    if (!cacheMap.has(bundleName)) {
+        const url = new URL(`/web/bundle/${bundleName}`, location.origin);
+        for (const [key, value] of Object.entries(session.bundle_params || {})) {
+            url.searchParams.set(key, value);
         }
+        const promise = new Promise((resolve, reject) => {
+            browser
+                .fetch(url.href)
+                .then((response) => {
+                    return response.json().then((json) => {
+                        const assets = {
+                            cssLibs: [],
+                            jsLibs: [],
+                        };
+                        for (const key in json) {
+                            const file = json[key];
+                            if (file.type === "link" && file.src) {
+                                assets.cssLibs.push(file.src);
+                            } else if (file.type === "script" && file.src) {
+                                assets.jsLibs.push(file.src);
+                            }
+                        }
+                        resolve(assets);
+                    });
+                })
+                .catch((...args) => {
+                    cacheMap.delete(bundleName);
+                    reject(...args);
+                });
+        });
+        cacheMap.set(bundleName, promise);
     }
-    cacheMap.set(bundleName, assets);
-    return assets;
+    return cacheMap.get(bundleName);
 };
 
 /**
