@@ -2180,9 +2180,9 @@ class MailThread(models.AbstractModel):
         return new_message
 
     def message_post_batch(self, bodies):
-        for record in self:
+        for record, body in zip(self, bodies):
             record.message_post(
-                body=bodies,
+                body=body,
                 notify_skip=True,
             )
         return False

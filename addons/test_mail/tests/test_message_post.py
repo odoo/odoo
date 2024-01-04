@@ -801,11 +801,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.user_employee_2.write({'notification_type': 'inbox'})
         test_records = self.test_records.with_env(self.env)
 
-        new_messages = test_records.message_post(
-                body='Body',
-                message_type='comment',
-                subtype_xmlid='mail.mt_comment',
-                partner_ids=[self.partner_employee_2.id],
+        new_messages = test_records.message_post_batch(
+                bodies=['Body'] * len(test_records),
             )
         self.assertEqual(len(new_messages), 10)
 
