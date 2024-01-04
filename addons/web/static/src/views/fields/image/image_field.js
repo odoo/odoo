@@ -88,7 +88,7 @@ export class ImageField extends Component {
     }
     get hasTooltip() {
         return (
-            this.props.enableZoom && this.props.readonly && this.props.record.data[this.props.name]
+            this.props.enableZoom && this.props.record.data[this.props.name]
         );
     }
     get tooltipAttributes() {
