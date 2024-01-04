@@ -154,7 +154,7 @@ class HrEmployeePrivate(models.Model):
             avatar = employee._origin[image_field]
             if not avatar:
                 if employee.user_id:
-                    avatar = employee.user_id[avatar_field]
+                    avatar = employee.user_id.sudo()[avatar_field]
                 else:
                     avatar = base64.b64encode(employee._avatar_get_placeholder())
             employee[avatar_field] = avatar
