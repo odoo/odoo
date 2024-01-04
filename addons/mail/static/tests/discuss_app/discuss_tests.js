@@ -25,7 +25,7 @@ import {
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
-import { contains, focus, scroll } from "@web/../tests/utils";
+import { click as clickContains, contains, focus, scroll } from "@web/../tests/utils";
 
 QUnit.module("discuss");
 
@@ -1803,7 +1803,7 @@ QUnit.test(
 
 QUnit.test(
     "failure on loading more messages should display error and prompt retry button",
-    async (assert) => {
+    async () => {
         // first call needs to be successful as it is the initial loading of messages
         // second call comes from load more and needs to fail in order to show the error alert
         // any later call should work so that retry button and load more clicks would now work
@@ -1830,14 +1830,14 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
+        await contains(".o-mail-Message", { count: 30 });
         messageFetchShouldFail = true;
-        await click("button:contains(Load More)");
-        assert.containsOnce(
-            $,
-            ".o-mail-Thread-error:contains(An error occurred while fetching messages.)"
-        );
-        assert.containsOnce($, "button:contains(Click here to retry)");
-        assert.containsNone($, "button:contains(Load More)");
+        await clickContains("button", { text: "Load More" });
+        await contains(".o-mail-Thread-error", {
+            text: "An error occurred while fetching messages.",
+        });
+        await contains("button", { text: "Click here to retry" });
+        await contains("button", { text: "Load More", count: 0 });
     }
 );
 
