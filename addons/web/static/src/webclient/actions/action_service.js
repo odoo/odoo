@@ -849,6 +849,7 @@ function makeActionManager(env) {
             Component: ControllerComponent,
             componentProps: controller.props,
         };
+        env.services.dialog.closeAll();
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
     }
@@ -1451,6 +1452,7 @@ export const actionService = {
         "title",
         "ui",
         "user",
+        "dialog",
     ],
     start(env) {
         return makeActionManager(env);
