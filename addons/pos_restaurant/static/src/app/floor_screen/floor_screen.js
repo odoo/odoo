@@ -27,7 +27,7 @@ export class FloorScreen extends Component {
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
-            selectedTableIds: [],
+            selectedTableIds: this.pos.orderToTransfer ? [this.pos.orderToTransfer.tableId] : [],
             isColorPicker: false,
         });
         this.floorMapRef = useRef("floor-map-ref");
@@ -273,21 +273,27 @@ export class FloorScreen extends Component {
                 this.state.selectedTableIds = [];
                 this.state.selectedTableIds.push(table.id);
             }
+            return;
+        }
+        if (table.parent_id) {
+            this.onSelectTable(table.parent_id, ev);
+            return;
+        }
+        if (this.pos.orderToTransfer) {
+            await this.pos.transferTable(table);
         } else {
-            if (this.pos.orderToTransfer) {
-                await this.pos.transferTable(table);
-            } else {
-                try {
-                    await this.pos.setTable(table);
-                } catch (e) {
-                    if (!(e instanceof ConnectionLostError)) {
-                        throw e;
-                    }
-                    // Reject error in a separate stack to display the offline popup, but continue the flow
-                    Promise.reject(e);
+            try {
+                await this.pos.setTable(table);
+            } catch (e) {
+                if (!(e instanceof ConnectionLostError)) {
+                    throw e;
                 }
+                // Reject error in a separate stack to display the offline popup, but continue the flow
+                Promise.reject(e);
             }
-            const order = this.pos.get_order();
+        }
+        const order = this.pos.get_order();
+        if (order) {
             this.pos.showScreen(order.get_screen_data().name);
         }
     }
@@ -407,11 +413,18 @@ export class FloorScreen extends Component {
         });
     }
     stopOrderTransfer() {
+        this.pos.isTableToMerge = false;
         this.pos.orderToTransfer = null;
     }
     changeShape(form) {
         for (const table of this.selectedTables) {
             table.shape = form;
+        }
+        this.pos.updateTables(...this.selectedTables);
+    }
+    unlinkTables() {
+        for (const table of this.selectedTables) {
+            table.update({ parent_id: null });
         }
         this.pos.updateTables(...this.selectedTables);
     }

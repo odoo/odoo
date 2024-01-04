@@ -20,7 +20,7 @@ class PosSession(models.Model):
                 'restaurant.table': {
                     'domain': lambda data: [('active', '=', True), ('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']])],
                     'fields': [
-                        'name', 'width', 'height', 'position_h', 'position_v',
+                        'name', 'width', 'height', 'position_h', 'position_v', 'parent_id',
                         'shape', 'floor_id', 'color', 'seats', 'active'
                     ],
                 }

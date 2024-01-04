@@ -11,11 +11,12 @@
             t-attf-style="border: 3px solid {{props.table.color}};
                         border-radius: {{props.table.shape === 'round' ? 1000 : 3}}px;
                         background: {{isOccupied ? props.table.color || 'rgb(53, 211, 116)' : '#00000020'}};
-                        color: {{!isOccupied ? 'black' : 'white'}};
+                        color: {{props.table.parent_id or !isOccupied ? 'black' : 'white'}};
+                        {{props.table.parent_id ? `background: repeating-linear-gradient(-45deg, ${props.table.parent_id.color}, ${props.table.parent_id.color} 2px, transparent 5px, transparent 10px);` : ''}}
                         box-shadow: {{isSelected ? '0px 0px 12px 7px #a0a0a0' : '0px 3px rgba(0,0,0,0.07)'}};
                         {{props.style}}" >
             <div class="info position-relative w-100 h-100">
-                <div class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" t-esc="props.table.name" />
+                <div t-esc="props.table.parent_id?.name or props.table.name" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
                 <div  t-esc="orderCount" t-if="orderCount and !pos.isEditMode"
                     t-att-class="{
                         'text-bg-danger': tNotif.changes_count,

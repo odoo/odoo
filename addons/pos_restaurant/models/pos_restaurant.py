@@ -87,6 +87,7 @@ class RestaurantTable(models.Model):
     height = fields.Float('Height', default=50, help="The table's height in pixels")
     seats = fields.Integer('Seats', default=1, help="The default number of customer served at this table.")
     color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value", default="#35D374")
+    parent_id = fields.Many2one('restaurant.table', string='Parent Table', help="The parent table if this table is part of a group of tables")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
 
     def are_orders_still_in_draft(self):
