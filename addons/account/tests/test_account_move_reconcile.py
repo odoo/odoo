@@ -4098,6 +4098,26 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertFalse(line_c.matching_number)
         self.assertFalse(line_d.matching_number)
 
+    def test_matching_loop(self):
+        currency = self.env.company.currency_id
+        wrong_credit = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        debit_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        credit_a = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        debit_b = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        credit_b = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        (wrong_credit + debit_a).reconcile()
+        (debit_a + credit_a).reconcile()
+        wrong_credit.remove_move_reconcile()  # now there is an open amount on both the payment and the invoice
+        (credit_a + debit_b).reconcile()
+        (debit_b + credit_b).reconcile()
+        # Everything is reconciled but some amounts are still open
+        self.assertEqual(len(set((debit_a + debit_b + credit_a + credit_b).mapped('matching_number'))), 1)
+        self.assertFalse(all(aml.amount_residual == 0 for aml in (debit_a, debit_b, credit_a, credit_b)))
+
+        # Now this should create a loop, it should still work, and the residual amounts should now reach 0
+        (credit_b + debit_a).reconcile()
+        self.assertTrue(all(aml.amount_residual == 0 for aml in (debit_a, debit_b, credit_a, credit_b)))
+
     def test_caba_mix_reconciliation(self):
         """ Test the reconciliation of tax lines (when using a reconcilable tax account)
         for cases mixing taxes exigible on payment and on invoices.
