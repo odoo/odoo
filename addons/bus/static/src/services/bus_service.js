@@ -16,7 +16,6 @@ import { EventBus } from "@odoo/owl";
  *  @emits disconnect
  *  @emits reconnect
  *  @emits reconnecting
- *  @emits notification
  */
 export const busService = {
     dependencies: ["bus.parameters", "localization", "multi_tab"],
@@ -25,6 +24,7 @@ export const busService = {
     start(env, { multi_tab: multiTab, "bus.parameters": params }) {
         const bus = new EventBus();
         const notificationBus = new EventBus();
+        const subscribeFnToWrapper = new Map();
         let worker;
         let isActive = false;
         let isInitialized = false;
@@ -66,15 +66,17 @@ export const busService = {
                 data.forEach((d) => (d.message.id = d.id)); // put notification id in notif message
                 multiTab.setSharedValue("last_notification_id", data[data.length - 1].id);
                 data = data.map((notification) => notification.message);
-                for (const { type, payload } of data) {
-                    notificationBus.trigger(type, payload);
+                for (const { id, type, payload } of data) {
+                    notificationBus.trigger(type, { id, payload });
                 }
             } else if (type === "initialized") {
                 isInitialized = true;
                 connectionInitializedDeferred.resolve();
                 return;
             }
-            bus.trigger(type, data);
+            if (type !== "notification") {
+                bus.trigger(type, data);
+            }
         }
 
         /**
@@ -197,9 +199,25 @@ export const busService = {
              * @param {function} callback
              */
             subscribe(notificationType, callback) {
-                notificationBus.addEventListener(notificationType, ({ detail }) =>
-                    callback(detail)
+                const wrapper = ({ detail }) => {
+                    const { id, payload } = detail;
+                    callback(payload, { id });
+                };
+                subscribeFnToWrapper.set(callback, wrapper);
+                notificationBus.addEventListener(notificationType, wrapper);
+            },
+            /**
+             * Unsubscribe from a single notification type.
+             *
+             * @param {string} notificationType
+             * @param {function} callback
+             */
+            unsubscribe(notificationType, callback) {
+                notificationBus.removeEventListener(
+                    notificationType,
+                    subscribeFnToWrapper.get(callback)
                 );
+                subscribeFnToWrapper.delete(callback);
             },
         };
     },

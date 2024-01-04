@@ -693,27 +693,24 @@ export class Wysiwyg extends Component {
         this._historyStepsBuffer = [];
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
-        const collaborationBusListener = ({ detail: notifications}) => {
-            for (const { payload, type } of notifications) {
-                if (
-                    type === 'editor_collaboration' &&
-                    payload.model_name === modelName &&
-                    payload.field_name === fieldName &&
-                    payload.res_id === resId
-                ) {
-                    if (payload.notificationName === 'html_field_write') {
-                        this._onServerLastIdUpdate(payload.notificationPayload.last_step_id);
-                    } else if (this._ptpJoined) {
-                        this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
-                    }
+        const collaborationBusListener = (payload) => {
+            if (
+                payload.model_name === modelName &&
+                payload.field_name === fieldName &&
+                payload.res_id === resId
+            ) {
+                if (payload.notificationName === 'html_field_write') {
+                    this._onServerLastIdUpdate(payload.notificationPayload.last_step_id);
+                } else if (this._ptpJoined) {
+                    this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
                 }
             }
         }
-        this.busService.addEventListener('notification', collaborationBusListener);
+        this.busService.subscribe('editor_collaboration', collaborationBusListener);
         this.busService.addChannel(this._collaborationChannelName);
         this._collaborationStopBus = () => {
             Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
-            this.busService.removeEventListener('notification', collaborationBusListener);
+            this.busService.unsubscribe('editor_collaboration', collaborationBusListener);
             this.busService.deleteChannel(this._collaborationChannelName);
         }
 

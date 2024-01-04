@@ -120,31 +120,23 @@ function _waitNotification(notification) {
             !received,
             `Notification of type "${type}" with payload ${payload} not received.`
         );
-        env.services["bus_service"].removeEventListener("notification", callback);
+        env.services["bus_service"].unsubscribe(type, callback);
         notificationDeferred.resolve();
     }, TIMEOUT);
-    const callback = ({ detail: notifications }) => {
-        for (const notification of notifications) {
-            if (notification.type !== type) {
-                continue;
-            }
-            if (
-                payload === undefined ||
-                JSON.stringify(notification.payload) === JSON.stringify(payload)
-            ) {
-                QUnit.assert.ok(
-                    received,
-                    `Notification of type "${type}" with payload ${JSON.stringify(
-                        notification.payload
-                    )} receveived.`
-                );
-                notificationDeferred.resolve();
-                clearTimeout(failTimeout);
-                env.services["bus_service"].removeEventListener("notification", callback);
-            }
+    const callback = (notifPayload) => {
+        if (payload === undefined || JSON.stringify(notifPayload) === JSON.stringify(payload)) {
+            QUnit.assert.ok(
+                received,
+                `Notification of type "${type}" with payload ${JSON.stringify(
+                    notifPayload
+                )} receveived.`
+            );
+            notificationDeferred.resolve();
+            clearTimeout(failTimeout);
+            env.services["bus_service"].unsubscribe(type, callback);
         }
     };
-    env.services["bus_service"].addEventListener("notification", callback);
+    env.services["bus_service"].subscribe(type, callback);
     return notificationDeferred;
 }
 
