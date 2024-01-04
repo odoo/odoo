@@ -3795,7 +3795,11 @@ class AccountMove(models.Model):
         validation_msgs = set()
 
         for invoice in self.filtered(lambda move: move.is_invoice(include_receipts=True)):
-            if invoice.quick_edit_mode and invoice.quick_edit_total_amount and invoice.quick_edit_total_amount != invoice.amount_total:
+            if (
+                invoice.quick_edit_mode
+                and invoice.quick_edit_total_amount
+                and invoice.currency_id.compare_amounts(invoice.quick_edit_total_amount, invoice.amount_total) != 0
+            ):
                 validation_msgs.add(_(
                     "The current total is %s but the expected total is %s. In order to post the invoice/bill, "
                     "you can adjust its lines or the expected Total (tax inc.).",
