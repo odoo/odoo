@@ -42,17 +42,6 @@ class ProductReplenish(models.TransientModel):
         for rec in self:
             rec.show_vendor = rec._get_show_vendor(rec.route_id)
 
-    @api.onchange('route_id')
-    def _onchange_route_id(self):
-        for rec in self:
-            if rec.route_id == self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False) and not rec.product_id.product_tmpl_id.seller_ids:
-                return {
-                    'warning': {
-                        'title': _("Vendor Not Found in Product %s", rec.product_id.name),
-                        'message': _("Go on the product form and add the list of vendors"),
-                    },
-                }
-
     def _prepare_run_values(self):
         res = super()._prepare_run_values()
         if self.supplier_id:
