@@ -805,7 +805,7 @@ class BaseAutomation(models.Model):
                         if 'domain' in res:
                             result.setdefault('domain', {}).update(res['domain'])
                         if 'warning' in res:
-                            result['warning'] += res["warning"]
+                            result['warning'] = res["warning"]
                 return result
 
             return base_automation_onchange
