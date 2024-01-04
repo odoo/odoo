@@ -1,20 +1,27 @@
 /** @odoo-module **/
 
-import { Component } from "@odoo/owl";
+import { Component, onWillDestroy, useExternalListener, useRef, useSubEnv } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+
+export const POPOVER_SYMBOL = Symbol("popover");
 
 export class Popover extends Component {
-    static template = "web.PopoverWowl";
+    static template = "web.Popover";
     static defaultProps = {
         position: "bottom",
         class: "",
         fixedPosition: false,
         arrow: true,
         animation: true,
+        componentProps: {},
+        closeOnClickAway: () => true,
     };
     static props = {
+        component: { type: Function },
+        componentProps: { type: Object, optional: true },
         ref: {
             type: Function,
             optional: true,
@@ -68,13 +75,26 @@ export class Popover extends Component {
                 default: { optional: true },
             },
         },
+        close: {
+            type: Function,
+            optional: true,
+        },
+        closeOnClickAway: {
+            type: Function,
+            optional: true,
+        },
+        subPopovers: {
+            optional: true,
+        },
     };
 
     static animationTime = 200;
     setup() {
         useActiveElement("ref");
         useForwardRefToParent("ref");
+        this.popoverRef = useRef("ref");
         this.shouldAnimate = this.props.animation;
+
         this.position = usePosition("ref", () => this.props.target, {
             onPositioned: (el, solution) => {
                 (this.props.onPositioned || this.onPositioned.bind(this))(el, solution);
@@ -85,7 +105,45 @@ export class Popover extends Component {
             },
             position: this.props.position,
         });
+
+        this.props.subPopovers?.add(this);
+        this.subPopovers = new Set();
+        useSubEnv({ [POPOVER_SYMBOL]: this.subPopovers });
+
+        if (this.props.target.isConnected) {
+            useExternalListener(window, "pointerdown", this.onClickAway, { capture: true });
+            useHotkey("escape", () => this.props.close());
+            const targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
+            targetObserver.observe(this.props.target.parentElement, { childList: true });
+            onWillDestroy(() => {
+                targetObserver.disconnect();
+                this.props.subPopovers?.delete(this);
+            });
+        } else {
+            this.props.close();
+        }
     }
+
+    isInside(target) {
+        if (this.props.target.contains(target) || this.popoverRef.el.contains(target)) {
+            return true;
+        }
+        return [...this.subPopovers].some((p) => p.isInside(target));
+    }
+
+    onClickAway(ev) {
+        const target = ev.composedPath()[0];
+        if (this.props.closeOnClickAway(target) && !this.isInside(target)) {
+            this.props.close();
+        }
+    }
+
+    onTargetMutate() {
+        if (!this.props.target.isConnected) {
+            this.props.close();
+        }
+    }
+
     onPositioned(el, { direction, variant }) {
         const position = `${direction[0]}${variant[0]}`;
 

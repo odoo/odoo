@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 
 import { onWillUnmount, status, useComponent, useEnv } from "@odoo/owl";
-import { POPOVER_SYMBOL } from "./popover_controller";
+import { POPOVER_SYMBOL } from "./popover";
 
 /**
  * @typedef PopoverHookReturnType
