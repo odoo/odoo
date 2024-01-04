@@ -4097,6 +4097,31 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertFalse(line_c.matching_number)
         self.assertFalse(line_d.matching_number)
 
+    def test_matching_loop(self):
+        currency = self.env.company.currency_id
+        wrong_credit = self.create_line_for_reconciliation(-500, -500, currency, '2016-01-01')
+        debit_a = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        debit_b = self.create_line_for_reconciliation(1000, 1000, currency, '2016-01-01')
+        credit_a = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        credit_b = self.create_line_for_reconciliation(-1000, -1000, currency, '2016-01-01')
+        all_lines = debit_a + debit_b + credit_a + credit_b
+        (wrong_credit + debit_a).reconcile()
+        (debit_a + credit_a).reconcile()
+        wrong_credit.remove_move_reconcile()  # now there is an open amount on both the payment and the invoice
+        (credit_a + debit_b).reconcile()
+        (debit_b + credit_b).reconcile()
+
+        # Everything is reconciled but some amounts are still open
+        matching_number = f'P{debit_a.matched_credit_ids.ids[0]}'
+        self.assertEqual(all_lines.mapped('matching_number'), [matching_number]*4)
+        self.assertEqual(all_lines.mapped('amount_residual'), [500, 0, 0, -500])
+
+        # Now this should create a loop, it should still work, and the residual amounts should now reach 0
+        (debit_a + credit_b).reconcile()
+        matching_number = f'{debit_a.full_reconcile_id.id}'
+        self.assertEqual(all_lines.mapped('matching_number'), [matching_number]*4)
+        self.assertEqual(all_lines.mapped('amount_residual'), [0, 0, 0, 0])
+
     def test_caba_mix_reconciliation(self):
         """ Test the reconciliation of tax lines (when using a reconcilable tax account)
         for cases mixing taxes exigible on payment and on invoices.
