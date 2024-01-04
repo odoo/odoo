@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv.expression import OR
 
 
 class PosConfig(models.Model):
@@ -35,3 +36,7 @@ class PosConfig(models.Model):
     def _get_special_products(self):
         res = super()._get_special_products()
         return res | self.env['pos.config'].search([]).mapped('discount_product_id')
+
+    def _get_available_product_domain(self):
+        domain = super()._get_available_product_domain()
+        return OR([domain, [('id', '=', self.discount_product_id.id)]])
