@@ -513,7 +513,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("ImageField: zoom and zoom_delay options (edit)", async function (assert) {
-        serverData.models.partner.records[0].document = MY_IMAGE;
+        serverData.models.partner.records[0].document = "3 kb";
+        serverData.models.partner.records[0].write_date = "2022-08-05 08:37:00";
 
         await makeView({
             type: "form",
@@ -527,8 +528,15 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.ok(
-            !target.querySelector(".o_field_image img").dataset["tooltipInfo"],
-            "the tooltip is not present in edition"
+            JSON.parse(
+                target.querySelector(".o_field_image img").dataset["tooltipInfo"]
+            ).url.endsWith("/web/image?model=partner&id=1&field=document&unique=1659688620000"),
+            "tooltip show the full image from the field value"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_image img").dataset["tooltipDelay"],
+            "600",
+            "tooltip has the right delay"
         );
     });
 
