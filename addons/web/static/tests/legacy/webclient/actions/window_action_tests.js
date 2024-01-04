@@ -7,6 +7,7 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/views/debug_items";
 import { listView } from "@web/views/list/list_view";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
@@ -2397,5 +2398,21 @@ QUnit.module("ActionManager", (hooks) => {
             target.querySelector(".modal .modal-title").textContent,
             "Validation Error"
         );
+    });
+
+    QUnit.test("executing an action closes dialogs", async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        webClient.env.services.dialog.add(FormViewDialog, { resModel: "partner", resId: 1 });
+        await nextTick();
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        await click(
+            target.querySelector(".o_dialog .o_form_view .o_statusbar_buttons button[name='4']")
+        );
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsNone(target, ".o_dialog");
     });
 });
