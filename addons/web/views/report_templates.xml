@@ -187,17 +187,9 @@
                                </tr>
                            </tbody>
                        </table>
-                       <div class="clearfix">
-                           <div class="row">
-                               <div class="col-6">
-                                   <p name="payment_term">
-                                       <span>Payment terms: 30 Days</span>
-                                   </p>
-                                   <p>
-                                       Payment Communication: <b><span>INV/2023/00003</span></b>
-                                   </p>
-                               </div>
-                               <div id="total" class="col-6">
+                       <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
+                           <div id="total" class="clearfix row">
+                               <div class="ms-auto">
                                    <table class="table table-sm table-borderless" style="page-break-inside: avoid; position:relative;">
                                        <tbody><tr class="border-black o_subtotal" style="">
                                            <td><strong>Untaxed Amount</strong></td>
@@ -222,6 +214,16 @@
                                </div>
                            </div>
                        </div>
+                       <div id="payment_term">
+                            <div class="mb-3">
+                                <p name="payment_term">
+                                    <span>Payment terms: 30 Days</span>
+                                </p>
+                                <p name="payment_communication">
+                                    Payment Communication: <b><span>INV/2023/00003</span></b>
+                                </p>
+                            </div>
+                        </div>
                    </div>
            </t>
         </t>
