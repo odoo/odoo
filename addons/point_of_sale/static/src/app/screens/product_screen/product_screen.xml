@@ -19,7 +19,7 @@
             </div>
             <div class="rightpane d-flex flex-grow-1 flex-column bg-300 w-60" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div t-att-class="{'d-none': scrollDirection.down and ui.isSmall}" class="d-flex bg-view shadow-sm control-top-bar">
-                    <CategorySelector categories="getCategories()" onClick="(id) => this.pos.setSelectedCategory(id)" />
+                    <CategorySelector categories="getCategories()" onClick="(id) => this.pos.setSelectedCategory(id)" class="ui.isSmall ? 'scrollbar-hidden' : ''" />
                     <Input tModel="[pos, 'searchProductWord']"
                         class="'p-2'"
                         isSmall="ui.isSmall"
