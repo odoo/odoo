@@ -563,7 +563,7 @@
                     <group>
                         <field name="project_id" invisible="1" />
                         <field name="company_id" invisible="1" />
-                        <field name="parent_id" domain="[('id', '!=', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" /> 
+                        <field name="parent_id" domain="[('id', '!=', id), '!', ('id', 'child_of', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" />
                     </group>
                     <footer>
                         <button string="Convert Task" class="btn-primary" special="save" data-hotkey="q"/>
