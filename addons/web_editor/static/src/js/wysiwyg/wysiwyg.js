@@ -144,6 +144,7 @@ export class Wysiwyg extends Component {
     });
 
     setup() {
+        window.wysiwyg = this;
         this.orm = useService('orm');
         this.getColorPickerTemplateService = useService('get_color_picker_template');
         this.notification = useService("notification");

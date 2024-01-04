@@ -684,6 +684,7 @@ export class OdooEditor extends EventTarget {
         this._resizeObserver.observe(this.document.body);
         this._resizeObserver.observe(this.editable);
         this.addDomListener(this.editable, 'scroll', this.multiselectionRefresh);
+        this.addDomListener(this.document, 'selectionchange', this.multiselectionRefresh);
 
         if (this._collabClientId) {
             this._snapshotInterval = setInterval(() => {
@@ -1816,6 +1817,13 @@ export class OdooEditor extends EventTarget {
     }
 
     multiselectionRefresh() {
+        // Draw current selection
+        const currentSelection = this.getCurrentCollaborativeSelection();
+        currentSelection.color = `hsl(200, 75%, 50%)`;
+        currentSelection.withTopCarret = false;
+        currentSelection.blink = true;
+        currentSelection.uncollapsedCarret = false;
+        this._drawClientSelection(currentSelection);
         for (const { selection } of this._collabSelectionInfos.values()) {
             console.log(`selection:`, selection);
             this._drawClientSelection(selection);
@@ -1824,7 +1832,9 @@ export class OdooEditor extends EventTarget {
         this._updateAvatarCounters();
     }
 
-    _drawClientSelection({ selection, color, clientId, clientName = this.options._t('Anonymous') }) {
+    _drawClientSelection({ selection, color, clientId, clientName = this.options._t('Anonymous'), withTopCarret = true, blink = false, uncollapsedCarret = true }) {
+        this._multiselectionRemoveClient(clientId);
+
         let clientRects;
 
         let anchorNode = this.idFind(selection.anchorNodeOid);
@@ -1840,6 +1850,7 @@ export class OdooEditor extends EventTarget {
 
         [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
         [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
+        const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
 
         const direction = getCursorDirection(
             anchorNode,
@@ -1849,21 +1860,31 @@ export class OdooEditor extends EventTarget {
         );
         const range = new Range();
         try {
-            if (direction === DIRECTIONS.RIGHT) {
+            const childNodes = [...anchorNode.childNodes].filter((node) => {
+                return (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) ||
+                    node.nodeType === Node.ELEMENT_NODE;
+            });
+            const hasOnlyOneBR = childNodes.length === 1 && childNodes[0].tagName === "BR";
+
+            if (isCollapsed && hasOnlyOneBR) {
+                range.selectNode(childNodes[0]);
+            } else if (direction === DIRECTIONS.RIGHT) {
                 range.setStart(anchorNode, anchorOffset);
                 range.setEnd(focusNode, focusOffset);
             } else {
                 range.setStart(focusNode, focusOffset);
                 range.setEnd(anchorNode, anchorOffset);
             }
-
+            console.log(`range:`, range);
             clientRects = Array.from(range.getClientRects());
-        } catch {
+        } catch (e) {
             // Changes in the dom might prevent the range to be instantiated
             // (because of a removed node for example), in which case we ignore
             // the range.
+            console.log('else', e);
             clientRects = [];
         }
+        console.log(`clientRects.length:`, clientRects.length);
         if (!clientRects.length) {
             return;
         }
@@ -1874,8 +1895,7 @@ export class OdooEditor extends EventTarget {
             const rectElement = this.document.createElement('div');
             rectElement.style = `
                 position: absolute;
-                top: ${y - containerRect.y}px;
-                left: ${x - containerRect.x}px;
+                transform: translate(${x - containerRect.x}px, ${y - containerRect.y}px);
                 width: ${width}px;
                 height: ${height}px;
                 background-color: ${color};
@@ -1887,31 +1907,46 @@ export class OdooEditor extends EventTarget {
         });
 
         // Draw carret.
-        const caretElement = this.document.createElement('div');
-        caretElement.style = `border-left: 2px solid ${color}; position: absolute;`;
-        caretElement.setAttribute('data-selection-client-id', clientId);
-        caretElement.className = 'oe-collaboration-caret';
+        let caretElement;
 
-        // Draw carret top square.
-        const caretTopSquare = this.document.createElement('div');
-        caretTopSquare.className = 'oe-collaboration-caret-top-square';
-        caretTopSquare.style['background-color'] = color;
-        caretTopSquare.setAttribute('data-client-name', clientName);
-        caretElement.append(caretTopSquare);
+        console.log(`isCollapsed:`, isCollapsed);
+        if (isCollapsed || uncollapsedCarret) {
+            caretElement = this.document.createElement('div');
+            caretElement.style = `border-left: 2px solid ${color}; position: absolute;`;
+            caretElement.setAttribute('data-selection-client-id', clientId);
+            caretElement.className = 'oe-collaboration-caret';
 
-        if (direction === DIRECTIONS.LEFT) {
-            const rect = clientRects[0];
-            caretElement.style.height = `${rect.height * 1.2}px`;
-            caretElement.style.top = `${rect.y - containerRect.y}px`;
-            caretElement.style.left = `${rect.x - containerRect.x}px`;
-        } else {
-            const rect = peek(clientRects);
-            caretElement.style.height = `${rect.height * 1.2}px`;
-            caretElement.style.top = `${rect.y - containerRect.y}px`;
-            caretElement.style.left = `${rect.right - containerRect.x}px`;
+
+            // Draw carret top square.
+            if (withTopCarret) {
+                const caretTopSquare = this.document.createElement('div');
+                caretTopSquare.className = 'oe-collaboration-caret-top-square';
+                caretTopSquare.style['background-color'] = color;
+                caretTopSquare.setAttribute('data-client-name', clientName);
+                caretElement.append(caretTopSquare);
+            }
+
+            if (direction === DIRECTIONS.LEFT) {
+                const rect = clientRects[0];
+                caretElement.style.height = `${rect.height}px`;
+                caretElement.style.transform = `translate(${rect.x - containerRect.x}px, ${rect.y - containerRect.y}px)`;
+            } else {
+                const rect = peek(clientRects);
+                caretElement.style.height = `${rect.height}px`;
+                caretElement.style.transform = `translate(${rect.right - containerRect.x}px, ${rect.y - containerRect.y}px)`;
+            }
+
+            if (blink) {
+                caretElement.classList.add('blink');
+            }
         }
-        this._multiselectionRemoveClient(clientId);
-        this._selectionsContainer.append(caretElement, ...indicators);
+
+
+
+        if (caretElement) {
+            this._selectionsContainer.append(caretElement);
+        }
+        this._selectionsContainer.append(...indicators);
     }
 
     _drawClientAvatar({ selection, clientId, clientAvatarUrl = '', clientName = this.options._t('Anonymous') }) {
