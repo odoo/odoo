@@ -724,8 +724,8 @@ class PosOrder(models.Model):
             else False
         }
         if self.refunded_order_ids.account_move:
-            vals['ref'] = _('Reversal of: %s', self.refunded_order_ids.account_move.name)
-            vals['reversed_entry_id'] = self.refunded_order_ids.account_move.id
+            vals['ref'] = _('Reversal of: %s', ','.join(self.refunded_order_ids.account_move.mapped('name')))
+            vals['reversed_entry_id'] = self.refunded_order_ids.account_move.id if len(self.refunded_order_ids.account_move) == 1 else False
         if self.note:
             vals.update({'narration': self.note})
         return vals
