@@ -34,7 +34,6 @@ commandProviderRegistry.add("menu", {
     async provide(env, options) {
         const result = [];
         const menuService = env.services.menu;
-        const dialogService = env.services.dialog;
         let { apps, menuItems } = computeAppsAndMenuItems(menuService.getMenuAsTree("root"));
         if (options.searchValue !== "") {
             apps = fuzzyLookup(options.searchValue, apps, (menu) => menu.label);
@@ -44,7 +43,6 @@ commandProviderRegistry.add("menu", {
             ).forEach((menu) => {
                 result.push({
                     action() {
-                        dialogService.closeAll();
                         menuService.selectMenu(menu);
                     },
                     category: "menu_items",
@@ -69,7 +67,6 @@ commandProviderRegistry.add("menu", {
             result.push({
                 Component: AppIconCommand,
                 action() {
-                    dialogService.closeAll();
                     menuService.selectMenu(menu);
                 },
                 category: "apps",
