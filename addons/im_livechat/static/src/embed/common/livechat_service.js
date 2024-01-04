@@ -1,9 +1,7 @@
 /* @odoo-module */
 
-import { Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -35,31 +33,27 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
     "_"
 )}_im_livechat.odoo_version`;
 
-const TEMPORARY_ID = -1;
-const SESSION_COOKIE = "im_livechat_session";
 const OPERATOR_COOKIE = "im_livechat_previous_operator";
 const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
+const SAVED_STATE_COOKIE = "im_livechat.saved_state";
 
 export function getGuestToken() {
     return localStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
 }
 
 export class LivechatService {
-    TEMPORARY_ID = TEMPORARY_ID;
-    SESSION_COOKIE = SESSION_COOKIE;
-    OPERATOR_COOKIE = OPERATOR_COOKIE;
-    GUEST_TOKEN_STORAGE_KEY = GUEST_TOKEN_STORAGE_KEY;
     /** @type {keyof typeof SESSION_STATE} */
     state = SESSION_STATE.NONE;
     /** @type {LivechatRule} */
     rule;
     initializedDeferred = new Deferred();
     initialized = false;
-    persistThreadPromise = null;
-    sessionInitialized = false;
-    available = false;
-    /** @type {string} */
-    userName;
+    available = session.livechatData?.isAvailable;
+    _onStateChangeCallbacks = {
+        [SESSION_STATE.CREATED]: [],
+        [SESSION_STATE.PERSISTED]: [],
+        [SESSION_STATE.NONE]: [],
+    };
 
     constructor(env, services) {
         this.setup(env, services);
@@ -79,75 +73,42 @@ export class LivechatService {
         this.chatWindowService = services["mail.chat_window"];
         this.notificationService = services.notification;
         this.store = services["mail.store"];
-        this.available = session.livechatData?.isAvailable;
-        this.userName = this.options.default_username ?? _t("Visitor");
     }
 
     async initialize() {
-        let init;
-        if (!this.options.isTestChatbot) {
-            init = await rpc("/im_livechat/init", {
+        const data =
+            this.options?.init ??
+            (await rpc("/im_livechat/init", {
                 channel_id: this.options.channel_id,
-            });
-            // Clear session if it is outdated.
-            const prevOdooVersion = browser.localStorage.getItem(ODOO_VERSION_KEY);
-            const currOdooVersion = init?.odoo_version;
-            const visitorUid = this.visitorUid || false;
-            const userId = session.user_id || false;
-            if (
-                prevOdooVersion !== currOdooVersion ||
-                (this.sessionCookie && visitorUid !== userId)
-            ) {
-                this.leaveSession({ notifyServer: false });
-            }
-            browser.localStorage.setItem(ODOO_VERSION_KEY, currOdooVersion);
+            }));
+        this.available = data?.available_for_me ?? this.available;
+        this.rule = data?.rule ?? {};
+        if (this.options?.force_thread) {
+            this._saveLivechatState(this.options.force_thread, { persisted: true });
         }
-        this.available = init?.available_for_me ?? this.available;
-        this.rule = init?.rule ?? {};
+        if (this.savedState) {
+            this.state = this.savedState.persisted
+                ? SESSION_STATE.PERSISTED
+                : SESSION_STATE.CREATED;
+        }
+        if (this.state === SESSION_STATE.PERSISTED) {
+            await this.busService.addChannel(`mail.guest_${this.guestToken}`);
+        }
         this.initialized = true;
         this.initializedDeferred.resolve();
     }
 
     /**
-     * Update the session with the given values.
+     * Open a new live chat thread.
      *
-     * @param {Object} values
+     * @returns {Promise<import("models").Thread|undefined>}
      */
-    updateSession(values) {
-        if (Record.isRecord(values?.channel)) {
-            values.channel = values.channel.toData();
+    async open() {
+        await this._createThread({ persist: false });
+        if (!this.thread) {
+            return;
         }
-        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
-        Object.assign(session, {
-            visitor_uid: this.visitorUid,
-            ...values,
-        });
-        cookie.delete(this.SESSION_COOKIE);
-        cookie.delete(this.OPERATOR_COOKIE);
-        cookie.set(this.SESSION_COOKIE, JSON.stringify(session).replaceAll("→", " "), 60 * 60 * 24); // 1 day cookie.
-        if (session?.operator) {
-            cookie.set(this.OPERATOR_COOKIE, session.operator.id, 7 * 24 * 60 * 60); // 1 week cookie.
-        }
-    }
-
-    /**
-     * @param {object} param0
-     * @param {boolean} param0.notifyServer Whether to call the
-     * `visitor_leave_session` route. Note that this route will
-     * never be called if the session was not persisted.
-     */
-    async leaveSession({ notifyServer = true } = {}) {
-        const session = JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "{}");
-        try {
-            if (session?.uuid && notifyServer) {
-                this.busService.deleteChannel(session.uuid);
-                await rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
-            }
-        } finally {
-            cookie.delete(this.SESSION_COOKIE);
-            this.state = SESSION_STATE.NONE;
-            this.sessionInitialized = false;
-        }
+        this.env.services["mail.chat_window"].open(this.thread);
     }
 
     /**
@@ -156,18 +117,12 @@ export class LivechatService {
      *
      * @returns {Promise<import("models").Thread|undefined>}
      */
-    async persistThread() {
+    async persist() {
         if (this.state === SESSION_STATE.PERSISTED) {
             return this.thread;
         }
         const temporaryThread = this.thread;
-        this.persistThreadPromise =
-            this.persistThreadPromise ?? this.getOrCreateThread({ persist: true });
-        try {
-            await this.persistThreadPromise;
-        } finally {
-            this.persistThreadPromise = null;
-        }
+        await this._createThread({ persist: true });
         if (temporaryThread) {
             const chatWindow = this.store.discuss.chatWindows.find(
                 (c) => c.thread?.id === temporaryThread.id
@@ -179,85 +134,107 @@ export class LivechatService {
             return;
         }
         this.chatWindowService.open(this.thread);
-        if (this.env.services["im_livechat.chatbot"].active) {
-            await this.env.services["im_livechat.chatbot"].postWelcomeSteps();
-        }
+        await this.busService.addChannel(`mail.guest_${this.guestToken}`);
+        await this.env.services["mail.messaging"].initialize();
+        await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.PERSISTED].map((fn) => fn()));
         return this.thread;
     }
 
     /**
-     *
-     * @param {{ persist: boolean}} [param0]
-     * @returns {Promise<import("models").Thread>|undefined"}
+     * @param {object} param0
+     * @param {boolean} param0.notifyServer Whether to call the
+     * `visitor_leave_session` route. Note that this route will never be called
+     * if the session was not persisted.
      */
-    async getOrCreateThread({ persist = false } = {}) {
-        let threadData = this.sessionCookie;
-        let isNewlyCreated = false;
-        if (!threadData || (!threadData.uuid && persist)) {
-            const chatbotScriptId = this.sessionCookie
-                ? this.sessionCookie.chatbot_script_id
-                : this.rule.chatbot?.scriptId;
-            threadData = await rpc(
-                "/im_livechat/get_session",
-                {
-                    channel_id: this.options.channel_id,
-                    anonymous_name: this.userName,
-                    chatbot_script_id: chatbotScriptId,
-                    previous_operator_id: cookie.get(this.OPERATOR_COOKIE),
-                    persisted: persist,
-                },
-                { shadow: true }
-            );
-            isNewlyCreated = true;
+    async leave({ notifyServer = true } = {}) {
+        try {
+            if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
+                await rpc("/im_livechat/visitor_leave_session", {
+                    uuid: this.thread.uuid,
+                });
+            }
+        } finally {
+            cookie.delete(SAVED_STATE_COOKIE);
+            this.state = SESSION_STATE.NONE;
+            await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.NONE].map((fn) => fn()));
         }
-        if (!threadData?.operator) {
-            this.notificationService.add(_t("No available collaborator, please try again later."));
-            this.leaveSession({ notifyServer: false });
-            return;
-        }
-        if ("guest_token" in threadData) {
-            localStorage.setItem(this.GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
-            delete threadData.guest_token;
-        }
-        this.updateSession(threadData);
-        const thread = this.store.Thread.insert({
-            ...threadData,
-            id: threadData.id ?? this.TEMPORARY_ID,
-            isLoaded: !threadData.id || isNewlyCreated,
-            model: "discuss.channel",
-            channel_type: "livechat",
-            isNewlyCreated,
-        });
-        this.state = thread.uuid ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
-        if (this.state === SESSION_STATE.PERSISTED && !this.sessionInitialized) {
-            this.sessionInitialized = true;
-            await this.initializePersistedSession();
-        }
-        return thread;
     }
 
-    async initializePersistedSession() {
-        await this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        await this.env.services["mail.messaging"].initialize();
+    /**
+     * Add a callback to be executed when the livechat service state changes.
+     *
+     * @param {keyof typeof SESSION_STATE} state
+     * @param {Function} callback
+     */
+    onStateChange(state, callback) {
+        this._onStateChangeCallbacks[state].push(callback);
+    }
+
+    /**
+     * Save the current live chat state. Only save the strict minimum if the
+     * thread is persisted.
+     *
+     * @param {object} threadData
+     * @param {object} param1
+     * @param {boolean} [param1.persisted=false]
+     */
+    _saveLivechatState(threadData, { persisted = false } = {}) {
+        const { guest_token } = threadData;
+        if (guest_token) {
+            localStorage.setItem(GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
+            delete threadData.guest_token;
+        }
+        cookie.set(
+            SAVED_STATE_COOKIE,
+            JSON.stringify({
+                threadData: persisted ? { id: threadData.id, model: threadData.model } : threadData,
+                persisted,
+                livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
+            }),
+            60 * 60 * 24
+        );
+        if (threadData.operator) {
+            cookie.set(OPERATOR_COOKIE, threadData.operator.id, 7 * 24 * 60 * 60);
+        }
+    }
+
+    /**
+     * @param {object} param0
+     * @param {boolean} [param0.persist=false]
+     * @returns {Promise<import("models").Thread>}
+     */
+    async _createThread({ persist = false }) {
+        const threadData = await rpc(
+            "/im_livechat/get_session",
+            {
+                channel_id: this.options.channel_id,
+                anonymous_name: this.options.default_username ?? _t("Visitor"),
+                chatbot_script_id: this.savedState
+                    ? this.savedState.threadData.chatbot_script_id
+                    : this.rule.chatbot?.scriptId,
+                previous_operator_id: cookie.get(OPERATOR_COOKIE),
+                temporary_id: this.thread?.id,
+                persisted: persist,
+            },
+            { shadow: true }
+        );
+        if (!threadData?.operator) {
+            this.notificationService.add(_t("No available collaborator, please try again later."));
+            this.leave({ notifyServer: false });
+            return;
+        }
+        this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
+        this._saveLivechatState(threadData, { persisted: persist });
+        this.store.Thread.insert(threadData);
+        await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.CREATED].map((fn) => fn()));
     }
 
     get options() {
         return session.livechatData?.options ?? {};
     }
 
-    get displayWelcomeMessage() {
-        return true;
-    }
-
-    get sessionCookie() {
-        return JSON.parse(cookie.get(this.SESSION_COOKIE) ?? "false");
-    }
-
-    get shouldRestoreSession() {
-        if (this.state !== SESSION_STATE.NONE) {
-            return false;
-        }
-        return Boolean(cookie.get(this.SESSION_COOKIE));
+    get savedState() {
+        return JSON.parse(cookie.get(SAVED_STATE_COOKIE) ?? "false");
     }
 
     /**
@@ -271,17 +248,10 @@ export class LivechatService {
      * @returns {import("models").Thread|undefined}
      */
     get thread() {
-        return Object.values(this.store.Thread.records).find(
-            ({ id, type }) =>
-                type === "livechat" && id === (this.sessionCookie?.id ?? this.TEMPORARY_ID)
-        );
-    }
-
-    get visitorUid() {
-        const sessionCookie = this.sessionCookie;
-        return sessionCookie && "visitor_uid" in sessionCookie
-            ? sessionCookie.visitor_uid
-            : session.user_id;
+        if (!this.savedState) {
+            return null;
+        }
+        return this.store.Thread.get(this.savedState.threadData);
     }
 }
 
@@ -289,9 +259,16 @@ export const livechatService = {
     dependencies: ["bus_service", "mail.chat_window", "mail.store", "notification"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
-        if (livechat.available) {
-            livechat.initialize();
-        }
+        (async () => {
+            if ((livechat.savedState?.livechatUserId || false) !== (session.user_id || false)) {
+                // live chat state is linked to another user (log in/out after chat
+                // start), discard it.
+                await livechat.leave({ notifyServer: false });
+            }
+            if (livechat.available) {
+                livechat.initialize();
+            }
+        })();
         return livechat;
     },
 };

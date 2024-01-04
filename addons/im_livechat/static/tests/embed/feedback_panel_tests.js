@@ -40,7 +40,7 @@ QUnit.test("Close without feedback", async (assert) => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Close Chat Window']");
     await click("button", { text: "Close conversation" });
-    await contains(".o-livechat-LivechatButton", { count: 0 });
+    await contains(".o-livechat-LivechatButton");
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
 });
 

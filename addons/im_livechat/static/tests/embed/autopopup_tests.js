@@ -19,14 +19,16 @@ QUnit.test("persisted session", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.adminPartnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ guest_id: guestId, fold_state: "open" }),
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    cookie.set("im_livechat_session", JSON.stringify(channelInfo));
+    cookie.set(
+        "im_livechat.saved_state",
+        JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
+    );
     start();
     await contains(".o-mail-ChatWindow");
 });

@@ -23,7 +23,7 @@ class Website(models.Model):
             if livechat_info['available']:
                 livechat_request_session = self._get_livechat_request_session()
                 if livechat_request_session:
-                    livechat_info['options']['chat_request_session'] = livechat_request_session
+                    livechat_info['options']['force_thread'] = livechat_request_session
             return livechat_info
         return {}
 
@@ -37,6 +37,7 @@ class Website(models.Model):
         :return: {dict} livechat request session information
         """
         visitor = self.env['website.visitor']._get_visitor_from_request()
+        chat_request_session = {}
         if visitor:
             # get active chat_request linked to visitor
             chat_request_channel = self.env['discuss.channel'].sudo().search([
@@ -53,22 +54,19 @@ class Website(models.Model):
                         # Channel was created with a guest but the visitor was
                         # linked to another guest in the meantime. We need to
                         # update the channel to link it to the current guest.
-                        chat_request_channel.write({'channel_member_ids': [Command.unlink(channel_guest_member.id), Command.create({'guest_id': current_guest.id})]})
-                    if not current_guest and not channel_guest_member:
-                        return {}
-                    if not current_guest:
+                        chat_request_channel.write({'channel_member_ids': [
+                            Command.unlink(channel_guest_member.id),
+                            Command.create({'guest_id': current_guest.id, 'fold_state': 'open'})
+                        ]})
+                    if not current_guest and channel_guest_member:
                         channel_guest_member.guest_id._set_auth_cookie()
                         chat_request_channel = chat_request_channel.with_context(guest=channel_guest_member.guest_id.sudo(False))
-                return {
-                    "folded": False,
-                    "id": chat_request_channel.id,
-                    "requested_by_operator": chat_request_channel.create_uid in chat_request_channel.livechat_operator_id.user_ids,
-                    "operator": chat_request_channel.livechat_operator_id.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[chat_request_channel.livechat_operator_id],
-                    "name": chat_request_channel.name,
-                    "uuid": chat_request_channel.uuid,
-                    "type": "chat_request"
-                }
-        return {}
+                if chat_request_channel._get_livechat_visitor_member().is_self:
+                    chat_request_session = {
+                        "id": chat_request_channel.id,
+                        "model": "discuss.channel",
+                    }
+        return chat_request_session
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()

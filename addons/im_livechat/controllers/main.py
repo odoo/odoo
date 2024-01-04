@@ -108,7 +108,6 @@ class LivechatController(http.Controller):
                 chatbot_script = matching_rule.chatbot_script_id
                 rule.update({'chatbot': chatbot_script._format_for_frontend()})
         return {
-            'odoo_version': release.version,
             'available_for_me': (rule and rule.get('chatbot'))
                                 or operator_available and (not rule or rule['action'] != 'hide_button'),
             'rule': rule,
@@ -151,30 +150,37 @@ class LivechatController(http.Controller):
         )
         if not channel_vals:
             return False
+        channel_info = None
         if not persisted:
             operator_partner = request.env['res.partner'].sudo().browse(channel_vals['livechat_operator_id'])
-            return {
+            channel_info = {
+                'id': -1, # only one temporary thread at a time, id does not matter.
+                'model': 'discuss.channel',
                 'name': channel_vals['name'],
                 'chatbot_current_step_id': channel_vals['chatbot_current_step_id'],
                 'state': 'open',
                 'operator': operator_partner.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[operator_partner],
+                'channel_type': 'livechat',
                 'chatbot_script_id': chatbot_script.id if chatbot_script else None
             }
-        channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
-        with replace_exceptions(UserError, by=NotFound()):
-            # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
-            __, guest = channel.sudo()._find_or_create_persona_for_channel(
-                guest_name=self._get_guest_name(),
-                country_code=request.geoip.country_code,
-                timezone=request.env['mail.guest']._get_timezone_from_request(request),
-                post_joined_message=False
-            )
-        channel = channel.with_context(guest=guest)  # a new guest was possibly created
-        if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
-            channel._broadcast([channel.livechat_operator_id.id])
-        channel_info = channel._channel_info()[0]
-        if guest:
-            channel_info['guest_token'] = guest._format_auth_cookie()
+        else:
+            channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
+            with replace_exceptions(UserError, by=NotFound()):
+                # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
+                __, guest = channel.sudo()._find_or_create_persona_for_channel(
+                    guest_name=self._get_guest_name(),
+                    country_code=request.geoip.country_code,
+                    timezone=request.env['mail.guest']._get_timezone_from_request(request),
+                    post_joined_message=False
+                )
+            channel = channel.with_context(guest=guest)  # a new guest was possibly created
+            channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
+            if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
+                channel._broadcast([channel.livechat_operator_id.id])
+            channel_info = channel._channel_info()[0]
+            if guest:
+                channel_info['guest_token'] = guest._format_auth_cookie()
+        channel_info.update(isNewlyCreated=True, isLoaded=True)
         return channel_info
 
     def _post_feedback_message(self, channel, rating, reason):
