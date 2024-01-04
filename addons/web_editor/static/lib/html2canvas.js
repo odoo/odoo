@@ -5214,7 +5214,10 @@
       }
       DocumentCloner.prototype.toIFrame = function (ownerDocument, windowSize) {
           var _this = this;
+           
           var iframe = createIFrameContainer(ownerDocument, windowSize);
+          // eslint-disable-next-line no-console
+            console.info("Iframe Container created", iframe);
           if (!iframe.contentWindow) {
               return Promise.reject("Unable to find iframe window");
           }
@@ -5225,9 +5228,18 @@
           /* Chrome doesn't detect relative background-images assigned in inline <style> sheets when fetched through getComputedStyle
            if window url is about:blank, we can assign the url to current by writing onto the document
            */
-          var iframeLoad = iframeLoader(iframe).then(function () { return __awaiter(_this, void 0, void 0, function () {
+          // eslint-disable-next-line no-console
+        console.info("Calling iframeLoader", iframe);
+          var iframeLoad = iframeLoader(iframe).then(function () { 
+            // eslint-disable-next-line no-console
+            console.info("In then of iframeLoader");
+            return __awaiter(_this, void 0, void 0, function () {
               var onclone, referenceElement;
+              // eslint-disable-next-line no-console
+              console.info("In iframeLoader awaiter");
               return __generator(this, function (_a) {
+                // eslint-disable-next-line no-console
+                console.info("In iframeLoader generator");
                   switch (_a.label) {
                       case 0:
                           this.scrolledElements.forEach(restoreNodeScroll);
@@ -5244,18 +5256,28 @@
                           if (typeof referenceElement === 'undefined') {
                               return [2 /*return*/, Promise.reject("Error finding the " + this.referenceElement.nodeName + " in the cloned document")];
                           }
+                          // eslint-disable-next-line no-console
+                          console.info("Case 0 iFrame ", documentClone.fonts);
                           if (!(documentClone.fonts && documentClone.fonts.ready)) return [3 /*break*/, 2];
                           return [4 /*yield*/, documentClone.fonts.ready];
                       case 1:
+                          // eslint-disable-next-line no-console
+                          console.info("Case 1 iFrame ");
                           _a.sent();
                           _a.label = 2;
                       case 2:
+                        // eslint-disable-next-line no-console
+                          console.info("Case 2 iFrame ");
                           if (!/(AppleWebKit)/g.test(navigator.userAgent)) return [3 /*break*/, 4];
                           return [4 /*yield*/, imagesReady(documentClone)];
                       case 3:
+                        // eslint-disable-next-line no-console
+                          console.info("Case 3 iFrame ");
                           _a.sent();
                           _a.label = 4;
                       case 4:
+                        // eslint-disable-next-line no-console
+                          console.info("Case 4 iFrame ", iframe);
                           if (typeof onclone === 'function') {
                               return [2 /*return*/, Promise.resolve()
                                       .then(function () { return onclone(documentClone, referenceElement); })
@@ -5264,13 +5286,20 @@
                           return [2 /*return*/, iframe];
                   }
               });
-          }); });
+          }); }).catch((error)=>{
+            // eslint-disable-next-line no-console
+                console.info("In iframe loeader rejected promise error", error);
+          });
+          // eslint-disable-next-line no-console
+            console.info("In iframe document clone", documentClone);
           documentClone.open();
           documentClone.write(serializeDoctype(document.doctype) + "<html></html>");
           // Chrome scrolls the parent document for some reason after the write to the cloned window???
           restoreOwnerScroll(this.referenceElement.ownerDocument, scrollX, scrollY);
           documentClone.replaceChild(documentClone.adoptNode(this.documentElement), documentClone.documentElement);
           documentClone.close();
+          // eslint-disable-next-line no-console
+        console.info("Finished Ifram", iframeLoad);
           return iframeLoad;
       };
       DocumentCloner.prototype.createElementClone = function (node) {
@@ -5597,21 +5626,26 @@
       return Promise.all([].slice.call(document.images, 0).map(imageReady));
   };
   var iframeLoader = function (iframe) {
+        // eslint-disable-next-line no-console
+        console.info("In iframeLoader", iframe);
       return new Promise(function (resolve, reject) {
+        // eslint-disable-next-line no-console
+        console.info("In iframe loader return promse", iframe);
           var cloneWindow = iframe.contentWindow;
           if (!cloneWindow) {
               return reject("No window assigned for iframe");
           }
+          // eslint-disable-next-line no-console
+        console.info("In iframe loader clone window", cloneWindow);
           var documentClone = cloneWindow.document;
-          cloneWindow.onload = iframe.onload = function () {
-              cloneWindow.onload = iframe.onload = null;
-              var interval = setInterval(function () {
-                  if (documentClone.body.childNodes.length > 0 && documentClone.readyState === 'complete') {
-                      clearInterval(interval);
-                      resolve(iframe);
-                  }
-              }, 50);
-          };
+          var interval = setInterval(function () {
+            // eslint-disable-next-line no-console
+            console.info("Clearing interval", documentClone.body.childNodes.length,documentClone.readyState);
+            if (documentClone.body.childNodes.length > 0 && (documentClone.readyState === 'complete' || documentClone.readyState === 'interactive')) {
+                clearInterval(interval);
+                resolve(iframe);
+            }
+        }, 50);
       });
   };
   var ignoredStyleProperties = [
@@ -7754,6 +7788,8 @@
                   if (!clonedElement) {
                       return [2 /*return*/, Promise.reject("Unable to find element in cloned iframe")];
                   }
+                  // eslint-disable-next-line no-console
+                  console.info("Calling toIFram in html2Canvas function");
                   return [4 /*yield*/, documentCloner.toIFrame(ownerDocument, windowBounds)];
               case 1:
                   container = _u.sent();
