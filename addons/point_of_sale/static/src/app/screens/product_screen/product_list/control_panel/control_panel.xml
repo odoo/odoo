@@ -5,7 +5,7 @@
         <div class="products-widget-control" t-ref="products-widget-control">
             <div class="rightpane-header">
                 <t t-if="!props.hasNoCategories">
-                    <div class="categories-header">
+                    <div class="categories-header" t-attf-class="{{state.isMobile ? 'scrollbar-hidden' : ''}}">
                     <!-- Breadcrumbs -->
                         <div class="breadcrumbs">
                             <span class="breadcrumb">
