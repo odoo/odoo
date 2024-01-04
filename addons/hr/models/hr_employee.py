@@ -175,7 +175,7 @@ class HrEmployeePrivate(models.Model):
                 continue
             avatar = employee._origin[image_field]
             if not avatar and employee.user_id:
-                avatar = employee.user_id[avatar_field]
+                avatar = employee.user_id.sudo()[avatar_field]
             employee[avatar_field] = avatar
         super(HrEmployeePrivate, self.browse(employee_wo_user_or_image_ids))._compute_avatar(avatar_field, image_field)
 
