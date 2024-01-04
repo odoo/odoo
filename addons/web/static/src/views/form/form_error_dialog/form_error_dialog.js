@@ -30,7 +30,7 @@ FormErrorDialog.template = "web.FormErrorDialog";
 FormErrorDialog.components = { Dialog };
 
 function formSaveErrorHandler(env, error, originalError) {
-    if (originalError.__raisedOnFormSave) {
+    if (originalError && originalError.__raisedOnFormSave) {
         const event = originalError.event;
         error.unhandledRejectionEvent.preventDefault();
         if (event.isDefaultPrevented()) {
