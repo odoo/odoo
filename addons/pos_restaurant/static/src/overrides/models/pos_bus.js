@@ -4,13 +4,19 @@ import { patch } from "@web/core/utils/patch";
 import { PosBus } from "@point_of_sale/app/bus/pos_bus_service";
 
 patch(PosBus.prototype, {
-    // Override
+    /**
+     * @override
+     */
     setup() {
         super.setup(...arguments);
-
         if (this.pos.config.module_pos_restaurant) {
             this.initTableOrderCount();
         }
+        this.busService.subscribe("TABLE_ORDER_COUNT", (payload) => {
+            if (this.pos.config.module_pos_restaurant) {
+                this.ws_syncTableCount(payload);
+            }
+        });
     },
 
     async initTableOrderCount() {
@@ -21,15 +27,6 @@ patch(PosBus.prototype, {
         );
 
         this.ws_syncTableCount(result);
-    },
-
-    // Override
-    dispatch(message) {
-        super.dispatch(...arguments);
-
-        if (message.type === "TABLE_ORDER_COUNT" && this.pos.config.module_pos_restaurant) {
-            this.ws_syncTableCount(message.payload);
-        }
     },
 
     // Sync the number of orders on each table with other PoS

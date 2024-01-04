@@ -71,22 +71,9 @@ export class DiscussCoreCommon {
                 thread.messages.splice(0, thread.messages.length);
                 thread.delete();
             });
-            this.busService.addEventListener("notification", ({ detail: notifications }) => {
-                // Do not handle new message notification if the channel was just left. This issue
-                // occurs because the "discuss.channel/leave" and the "discuss.channel/new_message"
-                // notifications come from the bus as a batch.
-                const channelsLeft = new Set(
-                    notifications
-                        .filter(({ type }) => type === "discuss.channel/leave")
-                        .map(({ payload }) => payload.id)
-                );
-                for (const notif of notifications.filter(
-                    ({ payload, type }) =>
-                        type === "discuss.channel/new_message" && !channelsLeft.has(payload.id)
-                )) {
-                    this._handleNotificationNewMessage(notif);
-                }
-            });
+            this.busService.subscribe("discuss.channel/new_message", (payload, metadata) =>
+                this._handleNotificationNewMessage(payload, metadata)
+            );
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
                 const { body, originThread } = payload;
                 const channel = this.store.Thread.get(originThread);
@@ -193,11 +180,11 @@ export class DiscussCoreCommon {
         }
     }
 
-    async _handleNotificationNewMessage(notif) {
-        const { id, message: messageData } = notif.payload;
-        let channel = this.store.Thread.get({ model: "discuss.channel", id });
+    async _handleNotificationNewMessage(payload, { id: notifId }) {
+        const { id: channelId, message: messageData } = payload;
+        let channel = this.store.Thread.get({ model: "discuss.channel", id: channelId });
         if (!channel || !channel.channel_type) {
-            channel = await this.threadService.fetchChannel(id);
+            channel = await this.threadService.fetchChannel(channelId);
             if (!channel) {
                 return;
             }
@@ -214,20 +201,20 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.seen_message_id = message.id;
             } else {
-                if (notif.id > this.store.initBusId) {
+                if (notifId > this.store.initBusId) {
                     channel.message_unread_counter++;
                 }
                 if (message.isNeedaction) {
                     const inbox = this.store.discuss.inbox;
                     if (message.notIn(inbox.messages)) {
                         inbox.messages.push(message);
-                        if (notif.id > this.store.initBusId) {
+                        if (notifId > this.store.initBusId) {
                             inbox.counter++;
                         }
                     }
                     if (message.notIn(channel.needactionMessages)) {
                         channel.needactionMessages.push(message);
-                        if (notif.id > this.store.initBusId) {
+                        if (notifId > this.store.initBusId) {
                             channel.message_needaction_counter++;
                         }
                     }

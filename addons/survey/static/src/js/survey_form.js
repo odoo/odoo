@@ -272,14 +272,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     },
 
     /**
-     * We listen to 'next_question' and 'end_session' events to load the next
-     * page of the survey automatically, based on the host pacing.
-     *
-     * If the trigger is 'next_question', we handle some extra computation to find
-     * a suitable "fadeInOutDelay" based on the delay between the time of the question
-     * change by the host and the time of reception of the event.
-     * This will allow us to account for a little bit of server lag (up to 1 second)
-     * while giving everyone a fair experience on the quiz.
+     * Handle some extra computation to find a suitable "fadeInOutDelay" based
+     * on the delay between the time of the question change by the host and the
+     * time of reception of the event. This will allow us to account for a
+     * little bit of server lag (up to 1 second) while giving everyone a fair
+     * experience on the quiz.
      *
      * e.g 1:
      * - The host switches the question
@@ -292,53 +289,54 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * - -> The fadeInOutDelay will be 200ms (600ms delay + 200ms * 2 fade in fade out)
      *
      * @private
-     * @param {CustomEvent} ev
-     * @param {Array[]} [ev.detail] notifications structured as specified by the bus feature
+     * @param {object} notification notification of type `next_question` as
+     * specified by the bus.
      */
-    _onNotification: function ({ detail: notifications }) {
-        var nextPageEvent = false;
-        if (notifications && notifications.length !== 0) {
-            notifications.forEach(function (notification) {
-                if (notification.type === 'next_question' ||
-                    notification.type === 'end_session') {
-                    nextPageEvent = notification;
-                }
-            });
+    _onNextQuestionNotification(notification) {
+        let serverDelayMS = (DateTime.now().toSeconds() - notification.question_start) * 1000;
+        if (serverDelayMS < 0) {
+            serverDelayMS = 0;
+        } else if (serverDelayMS > 1000) {
+            serverDelayMS = 1000;
         }
+        this.fadeInOutDelay = (1000 - serverDelayMS) / 2;
+        this._goToNextPage();
+    },
 
-        if (this.options.isStartScreen && nextPageEvent.type === 'end_session') {
+    /**
+     * Handle the `end_session` bus event. This will fade out the current page
+     * and fade in the end screen.
+     *
+     * @private
+     */
+    _onEndSessionNotification() {
+        if (this.options.isStartScreen) {
             // can happen when triggering the same survey session multiple times
             // we received an "old" end_session event that needs to be ignored
             return;
         }
+        this.fadeInOutDelay = 400;
+        this._goToNextPage({ isFinish: true });
+    },
 
-        if (nextPageEvent) {
-            if (nextPageEvent.type === 'next_question') {
-                var serverDelayMS =
-                   (DateTime.now().toSeconds() - nextPageEvent.payload.question_start) * 1000;
-                if (serverDelayMS < 0) {
-                    serverDelayMS = 0;
-                } else if (serverDelayMS > 1000) {
-                    serverDelayMS = 1000;
-                }
-                this.fadeInOutDelay = (1000 - serverDelayMS) / 2;
-            } else {
-                this.fadeInOutDelay = 400;
+    /**
+     * Go to the next page of the survey.
+     *
+     * @private
+     * @param {Object} param0
+     * @param {Object} param0.isFinish Wether the survey is done or not
+     */
+    _goToNextPage: function ({ isFinish = false } = {}) {
+        this.$(".o_survey_main_title:visible").fadeOut(400);
+        this.preventEnterSubmit = false;
+        this.readonly = false;
+        this._nextScreen(
+            rpc(`/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`),
+            {
+                initTimer: true,
+                isFinish,
             }
-
-            this.$('.o_survey_main_title:visible').fadeOut(400);
-
-            this.preventEnterSubmit = false;
-            this.readonly = false;
-            this._nextScreen(
-                rpc(
-                    `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`
-                ), {
-                    initTimer: true,
-                    isFinish: nextPageEvent.type === 'end_session'
-                }
-            );
-        }
+        );
     },
 
     // SUBMIT
@@ -892,7 +890,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 }, 2000);
             }
 
-            this.call('bus_service', 'addEventListener', 'notification', this._onNotification.bind(this));
+            this.call('bus_service', 'subscribe', 'next_question', this._onNextQuestionNotification.bind(this));
+            this.call('bus_service', 'subscribe', 'end_session', this._onEndSessionNotification.bind(this));
         }
     },
 
