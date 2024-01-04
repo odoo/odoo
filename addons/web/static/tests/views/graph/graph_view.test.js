@@ -2704,7 +2704,7 @@ test("reload graph with correct fields", async () => {
 });
 
 test("initial groupby is kept when reloading", async () => {
-    expect.assertions(12);
+    expect.assertions(8);
 
     onRpc("web_read_group", (_route, { kwargs }) => {
         expect(kwargs.groupby).toEqual(["product_id"]);
@@ -2733,12 +2733,7 @@ test("initial groupby is kept when reloading", async () => {
 
     await toggleSearchBarMenu();
     await toggleMenuItem("False Domain");
-
-    checkLabels(view, []);
-    checkLegend(view, []);
-    checkDatasets(view, "data", []);
-    expect(getXAxisLabel(view)).toBe("Product");
-    expect(getYAxisLabel(view)).toBe("Foo");
+    expect(".o_graph_canvas_container").toHaveCount(0);
 });
 
 test("use a many2one as a measure should work (without groupBy)", async () => {
@@ -3387,7 +3382,7 @@ test("non empty graph view with sample data", async () => {
     await toggleMenuItem("False Domain");
 
     expect(".o_content").not.toHaveClass("o_view_sample_data");
-    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    expect(".o_graph_canvas_container canvas").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
 });
 
@@ -3404,7 +3399,7 @@ test("empty graph view without sample data after filter", async () => {
         noContentHelp: /* xml */ `<p class="abc">click to add a foo</p>`,
     });
 
-    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    expect(".o_graph_canvas_container canvas").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
 });
 
@@ -3679,7 +3674,7 @@ test("fake data in line chart", async () => {
 
     Foo._records = [];
 
-    const view = await mountView({
+    await mountView({
         type: "graph",
         resModel: "foo",
         context: {
@@ -3700,7 +3695,7 @@ test("fake data in line chart", async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("Date: Previous period");
 
-    checkLabels(view, ["", ""]);
+    expect(".o_graph_canvas_container").toHaveCount(0);
 });
 
 test("no filling color for period of comparison", async () => {
@@ -3883,7 +3878,7 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
     await toggleMenuItem("Revenue");
 
     expect(".o_graph_view .o_view_sample_data").toHaveCount(0);
-    expect(getChart(view).data.datasets.length).toBe(0);
+    expect(".o_graph_canvas_container").toHaveCount(0);
 });
 
 test("single chart rendering on search", async () => {
