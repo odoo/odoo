@@ -516,7 +516,7 @@ GROUP BY fol.id%s%s""" % (
     # Misc discuss
     # --------------------------------------------------
 
-    def _format_for_chatter(self):
+    def _follower_format(self):
         return [{
             'id': follower.id,
             'partner_id': follower.partner_id.id,

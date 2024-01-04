@@ -4356,7 +4356,7 @@ class MailThread(models.AbstractModel):
             ]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
-        return self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._format_for_chatter()
+        return self.env["mail.followers"].search(domain, limit=limit, order='id ASC')._follower_format()
 
     # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
@@ -4489,6 +4489,29 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
 
+    def _get_mail_thread_data_followers(self):
+        res = {}
+        if self.message_is_follower:
+            self_follower = self.message_follower_ids.filtered_domain(
+                [('partner_id', '=', self.env.user.partner_id.id)]
+            )._follower_format()
+            res['selfFollower'] = self_follower[0]
+        else:
+            res['selfFollower'] = None
+        comment_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        recipients_followers = self.message_follower_ids.filtered(
+            lambda f: (
+                f.partner_id != self.env.user.partner_id and
+                f.partner_id.active and
+                comment_id in f.subtype_ids.ids
+            )
+        )
+        res['followersCount'] = len(self.message_follower_ids)
+        res['followers'] = self.message_follower_ids[:100]._follower_format()
+        res['recipientsCount'] = len(recipients_followers)
+        res['recipients'] = recipients_followers[:100]._follower_format()
+        return res
+
     def _get_mail_thread_data(self, request_list):
         res = {'hasWriteAccess': False, 'hasReadAccess': True}
         if not self:
@@ -4508,26 +4531,7 @@ class MailThread(models.AbstractModel):
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
         if 'followers' in request_list:
-            res['followersCount'] = self.env['mail.followers'].search_count([
-                ("res_id", "=", self.id),
-                ("res_model", "=", self._name)
-            ])
-            self_follower = self.env['mail.followers'].search([
-                ("res_id", "=", self.id),
-                ("res_model", "=", self._name),
-                ['partner_id', '=', self.env.user.partner_id.id]
-            ])._format_for_chatter()
-            res['selfFollower'] = self_follower[0] if len(self_follower) > 0 else None
-            res['followers'] = self.message_get_followers()
-            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-            res['recipientsCount'] = self.env['mail.followers'].search_count([
-                ("res_id", "=", self.id),
-                ("res_model", "=", self._name),
-                ('partner_id', '!=', self.env.user.partner_id.id),
-                ('subtype_ids', '=', subtype_id),
-                ("partner_id.active", "=", True)
-            ])
-            res['recipients'] = self.message_get_followers(filter_recipients=True)
+            res.update(self._get_mail_thread_data_followers())
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
         return res
