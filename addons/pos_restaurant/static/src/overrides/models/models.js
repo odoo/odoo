@@ -51,6 +51,7 @@ patch(Order.prototype, {
         return {
             ...super.export_for_printing(...arguments),
             set_tip_after_payment: this.pos.config.set_tip_after_payment,
+            isRestaurant: this.pos.config.module_pos_restaurant,
         };
     },
 });
