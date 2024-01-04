@@ -1204,6 +1204,13 @@ export class PosStore extends Reactive {
         }
     }
 
+    /**
+     * Context to be overriden in other modules/localisations
+     * while processing orders in the backend
+     */
+    _getCreateOrderContext(orders, options) {
+        return this.context || {};
+    }
     // send an array of orders to the server
     // available options:
     // - timeout: timeout for the rpc call in ms
@@ -1222,7 +1229,9 @@ export class PosStore extends Reactive {
             const serverIds = await this.data.call("pos.order", "create_from_ui", [
                 orders,
                 options.draft || false,
-            ]);
+            ], {
+                context: this._getCreateOrderContext(orders, options),
+            });
 
             const orderToRemove = serverIds.map((sid) => sid.pos_reference.split(" ")[1]);
             for (const serverId of serverIds) {
