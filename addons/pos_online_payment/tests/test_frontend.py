@@ -168,9 +168,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         # Checks that the products used in the tours are available in this pos_config.
         # This code is executed here because _loader_params_product_product is defined in pos.session
         # and not in pos.config.
-        params = self.pos_config.current_session_id._loader_params_product_product()
-        self.assertTrue(params)
-        pos_config_products_domain = params['search_params']['domain']
+        pos_config_products_domain = self.pos_config._get_available_product_domain()
         self.assertTrue(pos_config_products_domain)
         tests_products_domain = AND([pos_config_products_domain, ['&', '&', ('name', '=', 'Letter Tray'), ('list_price', '=', 4.8), ('available_in_pos', '=', True)]])
         # active_test=False to follow pos.config:get_pos_ui_product_product_by_params
