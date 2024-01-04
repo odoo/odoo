@@ -1812,6 +1812,9 @@ export class PosStore extends Reactive {
             }
         }
     }
+    shouldShowNavbarButtons() {
+        return true;
+    }
     async selectPartner({ missingFields = [] } = {}) {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.get_order();
