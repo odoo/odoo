@@ -128,7 +128,7 @@ class AccountAnalyticLine(models.Model):
             else:  # then pricing_type = 'employee_rate'
                 map_entry = self.project_id.sale_line_employee_ids.filtered(
                     lambda map_entry:
-                        map_entry.employee_id == self.employee_id
+                        map_entry.employee_id == (self.employee_id or self.env.user.employee_id)
                         and map_entry.sale_line_id.order_partner_id.commercial_partner_id == self.task_id.partner_id.commercial_partner_id
                 )
                 if map_entry:
