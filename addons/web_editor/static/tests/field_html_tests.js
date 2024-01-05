@@ -604,7 +604,8 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
+            $field[0].querySelectorAll('[data-o-link-zws').forEach(el => el.remove()); // Make sure to just target the text
+            const pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
@@ -653,7 +654,8 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
+            $field[0].querySelectorAll('[data-o-link-zws').forEach(el => el.remove()); // Make sure to just target the text
+            const pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
@@ -703,7 +705,8 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
+            $field[0].querySelectorAll('[data-o-link-zws').forEach(el => el.remove()); // Make sure to just target the text
+            const pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
@@ -756,7 +759,8 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
-            let pText = $field.find('.note-editable p').first().contents()[0];
+            $field[0].querySelectorAll('[data-o-link-zws').forEach(el => el.remove()); // Make sure to just target the text
+            const pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 0, pText, pText.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
             // load static xml file (dialog, link dialog)
@@ -806,6 +810,7 @@ QUnit.module('web_editor', {}, function () {
                 }
             });
 
+            $field[0].querySelectorAll('[data-o-link-zws').forEach(el => el.remove()); // Make sure to just target the text
             let pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 0, pText, pText.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');
@@ -829,6 +834,7 @@ QUnit.module('web_editor', {}, function () {
             await promise;
 
             $field = form.$('.oe_form_field[name="body"]');
+            $field[0].querySelectorAll('[data-o-link-zws').forEach(el => el.remove()); // Make sure to just target the text
             pText = $field.find('.note-editable a').eq(0).contents()[0];
             Wysiwyg.setRange(pText, 0, pText, pText.length);
             await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'click');

@@ -61,6 +61,7 @@ import {
     splitTextNode,
     boundariesOut,
     rightLeafOnlyNotBlockPath,
+    getAdjacentPreviousSiblings,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1362,7 +1363,6 @@ export class OdooEditor extends EventTarget {
     }
 
     _setLinkZws() {
-        this._resetLinkZws();
         const selection = this.document.getSelection();
         if (!selection.isCollapsed) {
             return;
@@ -1391,6 +1391,7 @@ export class OdooEditor extends EventTarget {
             }
             const offset = selection.anchorOffset;
             let didAddZwsInLinkInSelection = false;
+            const zwsToPreserve = [];
             for (const link of links) {
                 if (
                     link &&
@@ -1398,23 +1399,34 @@ export class OdooEditor extends EventTarget {
                     // Only add the ZWS for simple (possibly styled) text links.
                     ![link, ...link.querySelectorAll('*')].some(isBlock)
                 ) {
-                    this._insertLinkZws('start', link);
-                    // Only add the ZWS at the end if the link is in selection.
+                    let startZws = this._getLinkZws('start', link);
+                    if (!startZws) {
+                        startZws = this._insertLinkZws('start', link);
+                        didAddZwsInLinkInSelection = true;
+                    }
+                    zwsToPreserve.push(startZws);
                     if (link === linkInSelection) {
-                        this._insertLinkZws('end', link);
                         this.observerUnactive('_setLinkZws_o_link_in_selection');
                         link.classList.add('o_link_in_selection');
                         this.observerActive('_setLinkZws_o_link_in_selection');
-                        didAddZwsInLinkInSelection = true;
                     }
-                    const zwsAfter = this._insertLinkZws('after', link);
-                    if (!zwsAfter.parentElement || !zwsAfter.parentElement.isContentEditable) {
-                        this.observerUnactive('_setLinkZws_zwsAfter_remove');
-                        zwsAfter.remove();
-                        this.observerActive('_setLinkZws_zwsAfter_remove');
+                    // Only add the ZWS before if there is nothing before the
+                    // link.
+                    const zwsBefore = this._getLinkZws('before', link) ||
+                        (!getAdjacentPreviousSiblings(link, isVisible).length && this._insertLinkZws('before', link));
+                    const zwsAfter = this._getLinkZws('after', link) || this._insertLinkZws('after', link);
+                    for (const [zws, side] of [[zwsBefore, 'Before'], [zwsAfter, 'After']]) {
+                        if (zws && (!zws.parentElement || !zws.parentElement.isContentEditable)) {
+                            this.observerUnactive(`_setLinkZws_zws${side}_remove`);
+                            zws.remove();
+                            this.observerActive(`_setLinkZws_zws${side}_remove`);
+                        } else if (zws) {
+                            zwsToPreserve.push(zws);
+                        }
                     }
                 }
             }
+            this._resetLinkZws(this.editable, zwsToPreserve, linkInSelection);
             if (isLinkSelection && offset && didAddZwsInLinkInSelection) {
                 // Correct the offset if the link is in selection, to account
                 // for the added ZWS.
@@ -1781,10 +1793,21 @@ export class OdooEditor extends EventTarget {
             }
         }
     }
-    _resetLinkZws(element = this.editable) {
+    _resetLinkZws(element = this.editable, zwsToPreserve = [], linkInSelection) {
         this.observerUnactive('_resetLinkZws');
-        element.querySelectorAll('[data-o-link-zws]').forEach(zws => zws.remove());
-        element.querySelectorAll('.o_link_in_selection').forEach(link => link.classList.remove('o_link_in_selection'));
+        for (const zws of element.querySelectorAll('[data-o-link-zws]')) {
+            if (zws.textContent.replaceAll('\u200B', '')) {
+                // The zws has text in it -> don't remove it.
+                zws.removeAttribute('data-o-link-zws');
+            } else if (!zwsToPreserve.includes(zws)) {
+                zws.remove();
+            }
+        }
+        for (const link of element.querySelectorAll('.o_link_in_selection')) {
+            if (link !== linkInSelection) {
+                link.classList.remove('o_link_in_selection');
+            }
+        }
         this.observerActive('_resetLinkZws');
     }
     _activateContenteditable() {
@@ -2535,23 +2558,20 @@ export class OdooEditor extends EventTarget {
         }
         this.observer.takeRecords();
     }
+    _getLinkZws(side, link) {
+        const linkZws = link[{ start: 'firstChild', before: 'previousSibling', after: 'nextSibling' }[side]];
+        if (linkZws && linkZws.getAttribute && linkZws.getAttribute('data-o-link-zws') === side) {
+            return linkZws;
+        }
+    }
     _insertLinkZws(side, link) {
         this.observerUnactive('_insertLinkZws');
-        const span = document.createElement('span');
-        span.setAttribute('data-o-link-zws', side);
-        if (side !== 'end') {
-            span.setAttribute('contenteditable', 'false');
-        }
-        span.textContent = '\u200B';
-        if (side === 'start') {
-            link.prepend(span);
-        } else if (side === 'end') {
-            link.append(span);
-        } else if (side === 'after') {
-            link.after(span);
-        }
+        const linkZws = document.createElement('span');
+        linkZws.setAttribute('data-o-link-zws', side);
+        linkZws.textContent = '\u200B';
+        link[side === 'start' ? 'prepend' : side](linkZws);
         this.observerActive('_insertLinkZws');
-        return span;
+        return linkZws;
     }
 
     //--------------------------------------------------------------------------
@@ -2850,38 +2870,17 @@ export class OdooEditor extends EventTarget {
             this._fixFontAwesomeSelection();
         }
         if (selection.rangeCount && selection.getRangeAt(0)) {
-            // Handle selection/navigation at the edges of links.
-            const link = getInSelection(this.document, EDITABLE_LINK_SELECTOR);
-            if (link && selection.isCollapsed) {
-                // 1. If the selection starts or ends at the end of a link
-                //    (after the end zws), move the selection after the "after"
-                //    zws. This ensures that the cursor is visibly outside the
-                //    link. We want to do this only if the link has an end zws
-                //    to prevent ejecting the selection when moving in from the
-                //    right.
-                const endZws = link.querySelector('[data-o-link-zws="end"]');
-                const isAtEndOfLink = (
-                    // The selection is at the end of the link, ie. at offset
-                    // max of the link, with no next leaf that is in the link.
-                    endZws && selection.anchorOffset === nodeSize(selection.anchorNode) &&
-                    closestElement(selection.anchorNode, EDITABLE_LINK_SELECTOR) === link &&
-                    closestElement(nextLeaf(selection.anchorNode, this.editable), EDITABLE_LINK_SELECTOR) !== link
-                );
-                if (isAtEndOfLink) {
-                    let afterZws = link.nextElementSibling;
-                    if (!afterZws) {
-                        afterZws = this._insertLinkZws('after', link);
-                    }
-                    setSelection(
-                        afterZws.nextSibling || afterZws.parentElement,
-                        afterZws.nextSibling ? 0 : nodeSize(afterZws.parentElement),
-                    );
-                    return; // The selection is changed and will therefore re-trigger the _onSelectionChange.
-                }
-            }
-            // 2. Make sure the link has the required zws if the selection
-            //    wasn't changed.
             this._setLinkZws();
+            if (
+                selection.isCollapsed &&
+                selection.anchorNode.nodeType === Node.TEXT_NODE &&
+                selection.anchorNode.parentElement &&
+                selection.anchorNode.parentElement.hasAttribute('data-o-link-zws') &&
+                !selection.anchorOffset
+            ) {
+                // Move next to link zws.
+                setSelection(selection.anchorNode, 1);
+            }
 
             if (this.options.onCollaborativeSelectionChange) {
                 this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
