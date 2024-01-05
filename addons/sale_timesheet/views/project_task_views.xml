@@ -120,10 +120,6 @@
                  <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="pricing_type" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </xpath>
-                <xpath expr="//field[@name='timesheet_ids']" position="attributes">
-                    <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
-                    <attribute name="widget">so_line_one2many</attribute>
-                </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
                     <field name="is_so_line_edited" column_invisible="True"/>
