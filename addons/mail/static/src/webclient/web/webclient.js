@@ -109,9 +109,7 @@ patch(WebClient.prototype, {
         if (!subscription) {
             return;
         }
-        await this.orm.call(USER_DEVICES_MODEL, "unregister_devices", [], {
-            endpoint: subscription.endpoint,
-        });
+        await this.orm.call(USER_DEVICES_MODEL, "unregister_devices", [], subscription.endpoint);
         await subscription.unsubscribe();
         browser.localStorage.removeItem(`${USER_DEVICES_MODEL}_endpoint`);
     },

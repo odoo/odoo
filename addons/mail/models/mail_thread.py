@@ -26,7 +26,7 @@ from xmlrpc import client as xmlrpclib
 from markupsafe import Markup, escape
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
-from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
+from odoo.addons.mail.tools.web_push import DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import (
@@ -3556,31 +3556,31 @@ class MailThread(models.AbstractModel):
         and every direct message. We have to take into account the risk of
         duplicated notifications in case of a mention in a channel of `chat` type.
 
-        :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
+            'groups': res.group IDs if linked to a user;
+            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]. See ``MailThread._notify_get_recipients()``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
         """
-
         msg_vals = dict(msg_vals or {})
-        partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
-        if not partner_ids:
+        partner_data = self._extract_partner_data_for_side_notifications(message, recipients_data, msg_vals=msg_vals)
+        if not partner_data:
             return
 
-        partner_devices_sudo = self.env['mail.push.device'].sudo()
-        devices = partner_devices_sudo.search([
-            ('partner_id', 'in', partner_ids)
+        devices = self.env['mail.push.device'].sudo().search([
+            ('partner_id', 'in', [r['id'] for r in partner_data])
         ])
         if not devices:
             return
@@ -3594,83 +3594,62 @@ class MailThread(models.AbstractModel):
 
         payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
         payload = self._truncate_payload(payload)
+        devices_to_unlink_sudo = self.env['mail.push.device'].sudo()
         if len(devices) < MAX_DIRECT_PUSH:
-            session = Session()
-            devices_to_unlink = set()
-            for device in devices:
-                try:
-                    push_to_end_point(
-                        base_url=self.get_base_url(),
-                        device={
-                            'id': device.id,
-                            'endpoint': device.endpoint,
-                            'keys': device.keys
-                        },
-                        payload=json.dumps(payload),
-                        vapid_private_key=vapid_private_key,
-                        vapid_public_key=vapid_public_key,
-                        session=session,
-                    )
-                except DeviceUnreachableError:
-                    devices_to_unlink.add(device.id)
-                except Exception as e:  # pylint: disable=broad-except
-                    # Avoid blocking the whole request just for a notification
-                    _logger.error('An error occurred while contacting the endpoint: %s', e)
-
-            # clean up obsolete devices
-            if devices_to_unlink:
-                devices_list = list(devices_to_unlink)
-                self.env['mail.push.device'].sudo().browse(devices_list).unlink()
-
+            devices_to_unlink_sudo = devices._push_to_end_point(
+                {device.id: [json.dumps(payload)] for device in devices},
+                base_url=self.get_base_url(),
+            )
         else:
-            self.env['mail.push'].sudo().create([{
-                'mail_push_device_id': device.id,
-                'payload': json.dumps(payload),
-            } for device in devices])
+            self.env['mail.push'].sudo().create([
+                {
+                    'mail_push_device_id': device.id,
+                    'payload': json.dumps(payload),
+                } for device in devices
+            ])
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()
+
+        if devices_to_unlink_sudo:
+            devices_to_unlink_sudo.unlink()
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
         """ Returns dictionary containing message information for a browser device.
         This info will be delivered to a browser device via its recorded endpoint.
         REM: It is having a limit of 4000 bytes (4kb)
         """
+        if self:
+            self.ensure_one()
         if msg_vals:
-            author_id = [msg_vals.get('author_id')]
+            author_id = msg_vals.get('author_id')
             author_name = self.env['res.partner'].browse(author_id).name
-            model = msg_vals.get('model')
             title = msg_vals.get('record_name') or msg_vals.get('subject')
-            res_id = msg_vals.get('res_id')
             body = msg_vals.get('body')
-            if not model and body:
-                model, res_id = self._extract_model_and_id(msg_vals)
         else:
-            author_id = message.author_id.ids
-            author_name = self.env['res.partner'].browse(author_id).name
-            model = message.model
+            author_id = message.author_id.id
+            author_name = message.author_id.name
             title = message.record_name or message.subject
-            res_id = message.res_id
             body = message.body
 
-        icon = '/web/static/img/odoo-icon-192x192.png'
-
+        if author_id:
+            icon = f"/web/image/res.partner/{author_id}/avatar_128"
+        else:
+            icon = '/web/static/img/odoo-icon-192x192.png'
         if author_name:
-            title = "%s: %s" % (author_name, title)
-            icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
+            title = f"{author_name}: {title}"
 
-        payload = {
+        payload_body = tools.html2plaintext(body)
+        payload_body += self._generate_tracking_message(message)
+        return {
             'title': title,
             'options': {
+                'body': payload_body,
                 'icon': icon,
                 'data': {
-                    'model': model if model else '',
-                    'res_id': res_id if res_id else '',
+                    'model': self._name if self else (msg_vals.get('model') or message.model),
+                    'res_id': self.id if self else (msg_vals.get('res_id') or message.res_id),
                 }
             }
         }
-        payload['options']['body'] = tools.html2plaintext(body)
-        payload['options']['body'] += self._generate_tracking_message(message)
-
-        return payload
 
     def _notify_get_recipients(self, message, msg_vals, **kwargs):
         """ Compute recipients to notify based on subtype and followers. This
@@ -3981,44 +3960,31 @@ class MailThread(models.AbstractModel):
         hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
 
-    @api.model
-    def _extract_model_and_id(self, msg_vals):
+    def _extract_partner_data_for_side_notifications(self, message, recipients_data, msg_vals=None):
+        """ Extract recipient information for side notifications (push, mobile
+        with mail_enterprise). Those follow a specific rule
+          * 'comment': notify active recipients except author;
+          * anything else: notify active recipients using inbox, except author
+            (aka do not send to people outside of Odoo if not comment);
+
+        :return: list of filtered recipients information
         """
-        Return the model and the id when is present in a link (HTML)
-
-        :param msg_vals: see :meth:`._notify_thread_by_web_push`
-
-        :return: a dict empty if no matches and a dict with these keys if match : model and res_id
-        """
-        regex = r"<a.+model=(?P<model>[\w.]+).+res_id=(?P<id>\d+).+>[\s\w\/\\.]+<\/a>"
-        matches = re.finditer(regex, msg_vals['body'])
-
-        for match in matches:
-            return match['model'], match['id']
-        return None, None
-
-    def _extract_partner_ids_for_notifications(self, message, msg_vals, recipients_data):
-        notif_pids = []
-        no_inbox_pids = []
-        for recipient in recipients_data:
-            if recipient['active']:
-                notif_pids.append(recipient['id'])
-                if recipient['notif'] != 'inbox':
-                    no_inbox_pids.append(recipient['id'])
-
-        if not notif_pids:
+        msg_vals = msg_vals or {}
+        valid_recipients = [r for r in recipients_data if r['active']]
+        # early skip, save queries
+        if not valid_recipients:
             return []
 
-        msg_sudo = message.sudo()
-        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
-        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
-        # never send to author and to people outside Odoo (email), except comments
-        pids = set()
-        if msg_type == 'comment':
-            pids = set(notif_pids) - set(author_id)
-        elif msg_type in ('notification', 'user_notification', 'email'):
-            pids = (set(notif_pids) - set(author_id) - set(no_inbox_pids))
-        return list(pids)
+        msg_type = msg_vals.get('message_type') or message.message_type
+        author_id = msg_vals.get('author_id') if 'author_id' in msg_vals else message.author_id.id
+        final_recipients = []
+        for recipient in valid_recipients:
+            if recipient['id'] == author_id:
+                continue
+            if recipient['notif'] != 'inbox' and msg_type != 'comment':
+                continue
+            final_recipients.append(recipient)
+        return final_recipients
 
     @api.model
     def _generate_tracking_message(self, message, return_line='\n'):

@@ -63,7 +63,7 @@ class TestWebPushNotification(SMSCommon):
         notification_count = self.env['mail.push'].search_count([])
         self.assertEqual(notification_count, number_of_notification)
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     @mute_logger('odoo.tests')
     def test_notify_by_push(self, push_to_end_point):
         """ When posting a comment, notify both inbox and people outside of Odoo
@@ -79,7 +79,7 @@ class TestWebPushNotification(SMSCommon):
         # two recipients, comment notifies both inbox and email people
         self.assertEqual(push_to_end_point.call_count, 2)
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     def test_notify_by_push_channel(self, push_to_end_point):
         """ Test various use case with discuss.channel. Chat and group channels
         sends push notifications, channel not. """
@@ -146,7 +146,7 @@ class TestWebPushNotification(SMSCommon):
         )
         push_to_end_point.assert_called_once()
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_notify_by_push_mail_gateway(self, push_to_end_point):
         test_record = self.env['mail.test.gateway'].with_context(self._test_context).create({
@@ -181,7 +181,7 @@ class TestWebPushNotification(SMSCommon):
             'The body must contain the text send by mail'
         )
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     @mute_logger('odoo.tests')
     def test_notify_by_push_message_notify(self, push_to_end_point):
         """ In case of notification, only inbox users are notified """
@@ -216,7 +216,7 @@ class TestWebPushNotification(SMSCommon):
                     push_to_end_point.assert_not_called()
                 push_to_end_point.reset_mock()
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     def test_notify_by_push_tracking(self, push_to_end_point):
         """ Test tracking message included in push notifications """
         container_update_subtype = self.env.ref('test_mail.st_mail_test_ticket_container_upd')
@@ -258,7 +258,7 @@ class TestWebPushNotification(SMSCommon):
             'Tracking changes should be included in push notif payload'
         )
 
-    @patch.object(odoo.addons.mail.models.mail_push, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     def test_push_notifications_cron(self, push_to_end_point):
         # Add 4 more devices to force sending via cron queue
         for index in range(10, 14):
@@ -336,11 +336,10 @@ class TestWebPushNotification(SMSCommon):
         with self.assertRaises(InvalidVapidError):
             self.env['mail.push.device'].register_devices(
                 endpoint='https://test.odoo.com/webpush/user1',
-                expiration_time=None,
+                expirationTime=None,
                 keys=json.dumps({
                     'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
                     'auth': 'DJFdtAgZwrT6yYkUMgUqow'
                 }),
-                partner_id=self.user_email.partner_id.id,
                 vapid_public_key=self.vapid_public_key,
             )
