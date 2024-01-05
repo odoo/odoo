@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import {PageControllerMixin, PageRendererMixin} from "./page_views_mixin";
+import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -94,6 +95,7 @@ PageListController.components = {
     CheckboxItem,
 };
 
+// TODO master: remove `PageRendererMixin` extend and props override
 export class PageListRenderer extends PageRendererMixin(listView.Renderer) {}
 PageListRenderer.props = [
     ...listView.Renderer.props,
@@ -105,6 +107,7 @@ export const PageListView = {
     ...listView,
     Renderer: PageListRenderer,
     Controller: PageListController,
+    SearchModel: PageSearchModel,
 };
 
 registry.category("views").add("website_pages_list", PageListView);
