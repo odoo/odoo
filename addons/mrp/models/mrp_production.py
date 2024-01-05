@@ -1499,7 +1499,7 @@ class MrpProduction(models.Model):
             for move_raw_id in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 iterate_key = self._get_document_iterate_key(move_raw_id)
                 if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
+                    document = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
                     for key, value in document.items():
                         documents[key] += [value]
             if documents:
