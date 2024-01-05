@@ -1513,8 +1513,6 @@ class MrpProduction(models.Model):
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         (finish_moves | raw_moves)._action_cancel()
-        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-        picking_ids.action_cancel()
 
         for production, documents in documents_by_production.items():
             filtered_documents = {}
