@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
@@ -412,29 +413,39 @@ class ResCompany(models.Model):
         }
 
     @api.model
+    def _get_default_opening_move_values(self):
+        """ Get the default values to create the opening move.
+
+        :return: A dictionary to be passed to account.move.create.
+        """
+        self.ensure_one()
+        default_journal = self.env['account.journal'].search(
+            domain=[
+                *self.env['account.journal']._check_company_domain(self),
+                ('type', '=', 'general'),
+            ],
+            limit=1,
+        )
+
+        if not default_journal:
+            raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
+
+        return {
+            'ref': _('Opening Journal Entry'),
+            'company_id': self.id,
+            'journal_id': default_journal.id,
+            'date': self.account_opening_date - timedelta(days=1),
+        }
+
     def create_op_move_if_non_existant(self):
         """ Creates an empty opening move in 'draft' state for the current company
         if there wasn't already one defined. For this, the function needs at least
         one journal of type 'general' to exist (required by account.move).
         """
+        # TO BE REMOVED IN MASTER
         self.ensure_one()
         if not self.account_opening_move_id:
-            default_journal = self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(self),
-                ('type', '=', 'general')
-            ], limit=1)
-
-            if not default_journal:
-                raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
-
-            opening_date = self.account_opening_date - timedelta(days=1)
-
-            self.account_opening_move_id = self.env['account.move'].create({
-                'ref': _('Opening Journal Entry'),
-                'company_id': self.id,
-                'journal_id': default_journal.id,
-                'date': opening_date,
-            })
+            self.account_opening_move_id = self.env['account.move'].create(self._get_default_opening_move_values())
 
     def opening_move_posted(self):
         """ Returns true if this company has an opening account move and this move is posted."""
@@ -467,6 +478,7 @@ class ResCompany(models.Model):
             })
 
     def get_opening_move_differences(self, opening_move_lines):
+        # TO BE REMOVED IN MASTER
         currency = self.currency_id
         balancing_move_line = opening_move_lines.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
@@ -487,6 +499,7 @@ class ResCompany(models.Model):
         and is unbalanced, balances it with a automatic account.move.line in the
         current year earnings account.
         """
+        # TO BE REMOVED IN MASTER
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
             balancing_account = self.get_unaffected_earnings_account()
             currency = self.currency_id
@@ -516,6 +529,93 @@ class ResCompany(models.Model):
                         'debit': credit_diff,
                         'credit': debit_diff,
                     })
+
+    def _update_opening_move(self, to_update):
+        """ Create or update the opening move for the accounts passed as parameter.
+
+        :param to_update:   A dictionary mapping each account with a tuple (debit, credit).
+                            A separated opening line is created for both fields. A None value on debit/credit means the corresponding
+                            line will not be updated.
+        """
+        self.ensure_one()
+
+        # Don't allow to modify the opening move if not in draft.
+        opening_move = self.account_opening_move_id
+        if opening_move and opening_move.state != 'draft':
+            raise UserError(_(
+                'You cannot import the "openning_balance" if the opening move (%s) is already posted. \
+                If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
+                self.account_opening_move_id.name,
+            ))
+
+        def del_lines(lines):
+            nonlocal open_balance
+            for line in lines:
+                open_balance -= line.balance
+                yield Command.delete(line.id)
+
+        def update_vals(account, side, balance, balancing=False):
+            nonlocal open_balance
+            corresponding_lines = corresponding_lines_per_account[(account, side)]
+            currency = account.currency_id or self.currency_id
+            amount_currency = balance if balancing else self.currency_id._convert(balance, currency, date=conversion_date)
+            open_balance += balance
+            if self.currency_id.is_zero(balance):
+                yield from del_lines(corresponding_lines)
+            elif corresponding_lines:
+                line_to_update = corresponding_lines[0]
+                open_balance -= line_to_update.balance
+                yield Command.update(line_to_update.id, {
+                    'balance': balance,
+                    'amount_currency': amount_currency,
+                })
+                yield from del_lines(corresponding_lines[1:])
+            else:
+                yield Command.create({
+                    'name':_("Automatic Balancing Line") if balancing else _("Opening balance"),
+                    'account_id': account.id,
+                    'balance': balance,
+                    'amount_currency': amount_currency,
+                    'currency_id': currency.id,
+                })
+
+        # Decode the existing opening move.
+        corresponding_lines_per_account = defaultdict(lambda: self.env['account.move.line'])
+        corresponding_lines_per_account.update(opening_move.line_ids.grouped(lambda line: (
+            line.account_id,
+            'debit' if line.balance > 0.0 or line.amount_currency > 0.0 else 'credit',
+        )))
+
+        # Update the opening move's lines.
+        balancing_account = self.get_unaffected_earnings_account()
+        open_balance = (
+            sum(corresponding_lines_per_account[(balancing_account, 'credit')].mapped('credit'))
+            -sum(corresponding_lines_per_account[(balancing_account, 'debit')].mapped('debit'))
+        )
+        commands = []
+        move_values = {'line_ids': commands}
+        if opening_move:
+            conversion_date = opening_move.date
+        else:
+            move_values.update(self._get_default_opening_move_values())
+            conversion_date = move_values['date']
+        for account, (debit, credit) in to_update.items():
+            if debit is not None:
+                commands.extend(update_vals(account, 'debit', debit))
+            if credit is not None:
+                commands.extend(update_vals(account, 'credit', -credit))
+
+        commands.extend(update_vals(balancing_account, 'debit', max(-open_balance, 0), balancing=True))
+        commands.extend(update_vals(balancing_account, 'credit', -max(open_balance, 0), balancing=True))
+
+        # Nothing to do.
+        if not commands:
+            return
+
+        if opening_move:
+            opening_move.write(move_values)
+        else:
+            self.account_opening_move_id = self.env['account.move'].create(move_values)
 
     def action_save_onboarding_sale_tax(self):
         """ Set the onboarding step as done """
