@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2024-01-05 12:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,20 @@ msgstr ""
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_base
 msgid "Base"
+msgstr ""
+
+#. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
+#, python-format
+msgid "Cannot change the parent because it will cause a cyclic."
+msgstr ""
+
+#. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
+#, python-format
+msgid "Fold"
 msgstr ""
 
 #. module: web_hierarchy
@@ -79,6 +93,13 @@ msgid "The parent record cannot be the record dragged."
 msgstr ""
 
 #. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
+#, python-format
+msgid "Unfold"
+msgstr ""
+
+#. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_ui_view
 msgid "View"
 msgstr ""
@@ -87,11 +108,4 @@ msgstr ""
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__type
 msgid "View Type"
-msgstr ""
-
-#. module: web_hierarchy
-#. odoo-javascript
-#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
-#, python-format
-msgid "people"
 msgstr ""
