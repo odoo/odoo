@@ -1829,6 +1829,10 @@ class Task(models.Model):
             }
         }
 
+    def action_archive(self):
+        self.filtered(lambda t: not t.display_in_project and t.parent_id).display_in_project = True
+        return super().action_archive()
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
