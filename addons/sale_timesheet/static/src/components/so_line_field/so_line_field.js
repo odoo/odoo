@@ -33,5 +33,3 @@ export const timesheetsOne2ManyField = {
     component: TimesheetsOne2ManyField,
     additionalClasses: ['o_field_one2many'],
 };
-
-registry.category("fields").add('so_line_one2many', timesheetsOne2ManyField); // TODO: Remove me when the gantt view is converted in OWL
