@@ -7,6 +7,7 @@
     'license': 'LGPL-3',
     'data': [
         'views/company_views.xml',
+        'views/payment_terms_views.xml',
         'views/voltage_views.xml',
         'views/contract_views.xml',
         'views/profile_views.xml',
@@ -18,8 +19,14 @@
         'views/border_views.xml',
         'views/contract_prices_views.xml',
         'views/menu.xml',
-        'security/ir.model.access.csv'
-        
+        'security/ir.model.access.csv',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'energy/static/src/js/loadshape_details.js',
+            'energy/static/src/js/form_controller_extension.js',
+
+        ],
+    },
     'category': 'Productivity'
 }

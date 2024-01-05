@@ -9,7 +9,7 @@
                 <form string="Loadshape Details">
                     <sheet>
                         <group>
-                            <field name="powerdate" string="Date"/>
+                           <field name="powerdate" string="Date"/>
                             <field name="powerhour" string="Hour" />
                             <field name="power" string="Power" />
                             <field name="powerprice" string="Price" />
@@ -30,7 +30,7 @@
                 <tree string="LoadShapeDetails" default_order="powerdate desc" >
                     <!-- Define the columns to display in the tree view -->
                     <field name="contract_id"/>
-                    <field name="powerdate" string="Date"/>
+                    <field name="powerdate" string="Date" />
                     <field name="powerhour" string="Hour" />
                     <field name="power" string="Power" />
                     <field name="powerprice" string="Price" />
@@ -47,7 +47,6 @@
             <field name="model">loadshape_details</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="name" string="loadshape_details Level"/>
                 </search>
             </field>
         </record>

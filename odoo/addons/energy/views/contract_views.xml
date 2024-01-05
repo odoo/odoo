@@ -25,21 +25,30 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Power">
+                            <page string="Power and Value">
+                            <group col="2">
                                 <group>
-                                   <field name="power" string="Power"/>
+                                   <field name="power" string="Power Per Time/Unit"/>
                                     <field name="powerUnit" string="Power Unit"/>
                                     <field name="timeUnit" string="Time Unit"/>
                                 </group>
+                                <group>
+                                    <field name="total_contract_power" string="Total Contract Power"/>
+                                    <field name="total_contract_value" string="Total Contract Value - no VAT"/>
+                                    <field name="vat" string="VAT"/>
+                                    <field name="total_contract_value_with_vat" string="Total Contract Value - with VAT"/>
+                                </group>
+                            </group>    
                             </page>
                             <page string="Delivery">
                                 <group>
                                     <field name="delivery_point_id" string="Delivery Point"/>
-                                    <field name="transit_border_ids" string="Transit border"   widget="many2many_checkboxes"/>
-                                    <field name="other_border_ids" string="Other border"   widget="many2many_checkboxes" />
                                 </group>
                             </page>
                             <page string="Price">
+                                <group>
+                                    <field name="price" string="Price per time unit "  />
+                                </group>
                                 <field name="contract_price_ids" string="Price Components"  >
                                 <tree editable="bottom">
                                 <field name="priceComponents_id"/>
@@ -58,11 +67,18 @@
                                     <field name="excel_file" string="Select Loadshape file"/>
                                </group>
                                 </group>
-                                <field name="loadshape_details_ids" string="Loadshape Details"/>
+                                <field name="loadshape_details_ids" >
+                                    <tree  >
+                                    <field name="powerdate"/>
+                                    <field name="powerhour"/>
+                                    <field name="power" sum="power_total"/>
+                                    <!-- other fields -->
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Payment Terms">
                                 <group>
-                                   
+                                 <field name="payment_terms_id" string="Payment Terms"/>
                                 </group>
                             </page>
                             
@@ -109,6 +125,14 @@
             <field name="code">
                 action = records.action_import_excel()
             </field>
+        </record>
+        <record id="action_loadshape_details" model="ir.actions.act_window">
+            <field name="name">Loadshape Grouped</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">loadshape_details</field>
+            <field name="binding_model_id" ref="model_contract"/>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'group_by': 'powerdate'}</field>
         </record>
          <record model="ir.actions.server" id="action_delete_detail">
             <field name="name">Delete Loadshape</field>

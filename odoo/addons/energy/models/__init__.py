@@ -4,4 +4,6 @@ from . import voltage
 from . import loadshape_details,price_components
 from . import border,contract_prices
 from . import period, profile,profile_details
+from . import payment_terms, area
+
 

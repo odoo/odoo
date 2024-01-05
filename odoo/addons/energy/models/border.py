@@ -4,8 +4,6 @@ class Border(models.Model):
     _name = "border"
     _description = "Description of the Border model"
     name = fields.Char()
-    directions = fields.Char()
-    out_area = fields.Char()
-    in_area = fields.Char()
-    contract_other_id = fields.Many2one('contract', string='Contracts')
-    contract_transit_id = fields.Many2one('contract', string='Contracts')
+    direction = fields.Selection([('in', 'In'), ('out', 'Out')], 'Direction')
+    out_area = fields.Many2one('area', string='Out Area')
+    in_area = fields.Many2one('area', string='In Area')

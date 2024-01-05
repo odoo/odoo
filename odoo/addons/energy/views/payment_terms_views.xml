@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Payment Terms Form View -->
+        <record id="view_payment_terms_form" model="ir.ui.view">
+            <field name="name">payment_terms.form</field>
+            <field name="model">payment_terms</field>
+            <field name="arch" type="xml">
+                <form string="Payment Terms">
+                    <sheet>
+                        <group>
+                            <field name="name" string="Name"/>
+                            <field name="due_payment_date" string="Due Payment Date"/>
+                            <field name="method" string="Method"/>
+                            <field name="amount_calculation" string="Amount Calculation"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Payment Terms Tree View -->
+        <record id="view_payment_terms_tree" model="ir.ui.view">
+            <field name="name">payment_terms.tree</field>
+            <field name="model">payment_terms</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="due_payment_date"/>
+                    <field name="method"/>
+                    <field name="amount_calculation"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Payment Terms Search View -->
+        <record id="view_payment_terms_search" model="ir.ui.view">
+            <field name="name">payment_terms.search</field>
+            <field name="model">payment_terms</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Payment Terms Action -->
+        <record id="action_payment_terms" model="ir.actions.act_window">
+            <field name="name">Payment Terms</field>
+            <field name="res_model">payment_terms</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

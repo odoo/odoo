@@ -12,4 +12,3 @@ class LoadShapeDetails(models.Model):
     powerunit = fields.Char(string='Power Unit')
     powerfinalprice = fields.Float(string='Power Final Price')
     powerfinal = fields.Float(string='Power Final')
-
