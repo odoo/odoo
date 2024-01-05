@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -163,7 +162,7 @@ class HrExpense(models.Model):
                 expense.state = "refused"
             elif expense.sheet_id.state == "approve" or expense.sheet_id.state == "post":
                 expense.state = "approved"
-            elif not expense.sheet_id.account_move_id:
+            elif not expense.sheet_id.account_move_id and expense.sheet_id.state != 'done':
                 expense.state = "reported"
             else:
                 expense.state = "done"
@@ -1016,7 +1015,13 @@ class HrExpenseSheet(models.Model):
     @api.depends('account_move_id.payment_state')
     def _compute_payment_state(self):
         for sheet in self:
-            sheet.payment_state = sheet.account_move_id.payment_state or 'not_paid'
+            sheet_move = sheet.account_move_id
+            if not sheet_move:
+                sheet.payment_state = 'not_paid'
+            elif sheet_move.currency_id.compare_amounts(sheet_move.reversal_move_id.amount_total, sheet_move.amount_total) == 0:
+                sheet.payment_state = 'reversed'
+            else:
+                sheet.payment_state = sheet_move.payment_state
 
     def _compute_attachment_number(self):
         for sheet in self:
