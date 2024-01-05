@@ -75,23 +75,6 @@ export const PageControllerMixin = (component) => class extends component {
 
     onSelectWebsite(website) {
         this.state.activeWebsite = website;
-    }
-};
-
-export const PageRendererMixin = (component) => class extends component {
-    /**
-     * The goal here is to tweak the renderer to display records following some
-     * rules:
-     * - All websites (props.activeWebsite.id === 0):
-     *     -> Show all generic/specific records.
-     * - A website is selected:
-     *     -> Display website-specific records & generic ones (only those without
-     *        specific clones).
-     */
-    recordFilter(record, records) {
-        const websiteId = record.data.website_id && record.data.website_id[0];
-        return !this.props.activeWebsite.id
-            || this.props.activeWebsite.id === websiteId
-            || !websiteId && records.filter(rec => rec.data.website_url === record.data.website_url).length === 1;
+        this.env.searchModel.notifyWebsiteChange(website.id);
     }
 };

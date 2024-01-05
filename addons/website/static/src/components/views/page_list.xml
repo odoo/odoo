@@ -7,15 +7,9 @@
             <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
         </t>
     </xpath>
-    <xpath expr="//tr[@class='o_data_row']" position="attributes">
-        <attribute name="t-if">recordFilter(record, list.records)</attribute>
-    </xpath>
 </t>
 
 <t t-name="website.PageListView" t-inherit="web.ListView">
-    <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
-        <attribute name="activeWebsite">state.activeWebsite</attribute>
-    </xpath>
     <xpath expr="//SearchBar" position="inside">
         <t t-set-slot="search-bar-additional-menu">
             <t t-call="website.RecordFilter"/>
