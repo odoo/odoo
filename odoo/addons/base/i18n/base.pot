@@ -7376,8 +7376,8 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid ""
-"- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
-"%(values)s) belongs to another company."
+"- %(record)r belongs to company %(company)r while %(field)r (%(fname)s: "
+"%(values)s) belongs to a totally different company."
 msgstr ""
 
 #. module: base
@@ -7410,8 +7410,8 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid ""
-"- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
-"belongs to another company."
+"- Record is company %(company)r while %(field)r (%(fname)s: %(values)s) "
+"belongs to a totally different company."
 msgstr ""
 
 #. module: base
@@ -17694,7 +17694,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/models.py:0
 #, python-format
-msgid "Incompatible companies on records:"
+msgid "Uh-oh! You’ve got some company inconsistencies here:"
 msgstr ""
 
 #. module: base
@@ -28636,10 +28636,12 @@ msgstr ""
 #: code:addons/model.py:0
 #, python-format
 msgid ""
-"The operation cannot be completed: another model requires the record being deleted. If possible, archive it instead.\n"
+"Another model is using the record you are trying to delete.\n"
 "\n"
-"Model: %(model_name)s (%(model_tech_name)s)\n"
-"Constraint: %(constraint)s\n"
+"Our troublemaker is: %(model_name)s (%(model_tech_name)s)\n"
+"Blame the following constraint: %(constraint)s\n"
+"\n"
+"How about archiving the record instead?"
 msgstr ""
 
 #. module: base
@@ -29488,6 +29490,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__todo
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "To avoid a mess, no company crossover allowed!"
 msgstr ""
 
 #. module: base

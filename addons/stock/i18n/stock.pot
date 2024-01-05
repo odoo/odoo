@@ -9983,8 +9983,11 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
-"You can not delete product moves if the picking is done. You can only "
-"correct the done quantities."
+"Deleting product moves after a picking is done?\n"
+"\n"
+"That would be like going back in time to revert all operations triggered after this move. Who knows what the end result would be! So let's not do it.\n"
+"\n"
+"Instead, try changing the “done” quantity to 0."
 msgstr ""
 
 #. module: stock
@@ -10203,8 +10206,8 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
-"You cannot validate a transfer if no quantities are reserved. To force the "
-"transfer, encode quantities."
+"Transfer trouble alert! Zero quantity transfer? That's like trying to move air around!\n"
+"Set some quantities, and let the magic happen!"
 msgstr ""
 
 #. module: stock
