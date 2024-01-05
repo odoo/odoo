@@ -2654,6 +2654,7 @@ export class OdooEditor extends EventTarget {
                     ev.data === ' ' &&
                     selection &&
                     selection.anchorNode &&
+                    isHtmlContentSupported(selection.anchorNode) &&
                     !closestElement(selection.anchorNode).closest('a') &&
                     selection.anchorNode.nodeType === Node.TEXT_NODE &&
                     (!this.commandBar._active ||
@@ -3272,7 +3273,10 @@ export class OdooEditor extends EventTarget {
             link.remove();
             setSelection(...start, ...start, false);
         }
-        if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
+        if (!targetSupportsHtmlContent) {
+            const text = ev.clipboardData.getData('text/plain');
+            this._applyCommand('insertText', text);
+        } else if (files.length || clipboardHtml) {
             // Differentiate or choose between images and html
             const clipboardElem = document.createElement('template');
             clipboardElem.innerHTML = this._prepareClipboardData(clipboardHtml);
