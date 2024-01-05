@@ -844,15 +844,21 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mo.subcontracting_record_component()
         self.assertEqual(move.quantity_done, 7)
 
+        # Check MO state before validating without backorder
+        action = move.action_show_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        self.assertEqual(mo.state, 'to_close')
+
         # Validate picking without backorder
         backorder_wizard_dict = picking_receipt.button_validate()
         backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
         backorder_wizard_form.save().process_cancel_backorder()
 
+        self.assertEqual(mo.product_qty, 3)
+        self.assertEqual(mo.state, 'cancel')
         self.assertRecordValues(move._get_subcontract_production(), [
             {'product_qty': 5, 'state': 'done'},
             {'product_qty': 2, 'state': 'done'},
-            {'product_qty': 3, 'state': 'cancel'},
         ])
 
     def test_decrease_quantity_done(self):
