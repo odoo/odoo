@@ -10,6 +10,14 @@
             <field name="perm_read" eval="True"/>
         </record>
 
+        <!-- SOME DEFAULT TEST.MODEL RECORDS WITH DIFFERENT WEBSITE_ID -->
+        <record id="test_model_generic" model="test.model">
+            <field name="name">Test Model Generic</field>
+        </record>
+        <record id="test_model_website_1" model="test.model">
+            <field name="name">Test Model Website 1</field>
+            <field name="website_id" ref="website.default_website"/>
+        </record>
 
         <!-- RECORDS FOR RESET VIEWS TESTS -->
         <record id="test_view" model="ir.ui.view">
