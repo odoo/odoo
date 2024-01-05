@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import {PageControllerMixin, PageRendererMixin} from "./page_views_mixin";
+import {PageControllerMixin} from "./page_views_mixin";
+import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -96,8 +97,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
     }
 }
 
-export class PageListRenderer extends PageRendererMixin(listView.Renderer) {
-    static props = [...listView.Renderer.props, "activeWebsite"];
+export class PageListRenderer extends listView.Renderer {
     static recordRowTemplate = "website.PageListRenderer.RecordRow";
 }
 
@@ -105,6 +105,7 @@ export const PageListView = {
     ...listView,
     Renderer: PageListRenderer,
     Controller: PageListController,
+    SearchModel: PageSearchModel,
 };
 
 registry.category("views").add("website_pages_list", PageListView);
