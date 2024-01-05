@@ -115,8 +115,9 @@ class MergePartnerAutomatic(models.TransientModel):
         # this guarantees cache consistency
         self.env.invalidate_all()
 
+        ignore_tables = dst_partner._context.get('ignore_tables_fk')
         for table, column in relations:
-            if 'base_partner_merge_' in table:  # ignore two tables
+            if 'base_partner_merge_' in table or (ignore_tables and table in ignore_tables):  # ignore two tables
                 continue
 
             # get list of columns of current table (exept the current fk column)
