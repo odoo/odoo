@@ -17,8 +17,7 @@ import { patch } from "@web/core/utils/patch";
 import { App, EventBus, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
 import { cookie } from "@web/core/browser/cookie";
-import { router, routerBus } from "@web/core/browser/router";
-import { objectToUrlEncodedString } from "@web/core/utils/urls";
+import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 
 function forceLocaleAndTimezoneWithCleanup() {
@@ -31,33 +30,12 @@ function forceLocaleAndTimezoneWithCleanup() {
 }
 
 function makeMockLocation() {
-    const locationLink = Object.assign(document.createElement("a"), {
+    return Object.assign(document.createElement("a"), {
         href: window.location.origin + window.location.pathname,
         assign(url) {
             this.href = url;
         },
         reload() {},
-    });
-    return new Proxy(locationLink, {
-        get(target, p) {
-            return target[p];
-        },
-        set(target, p, value) {
-            if (p === "hash") {
-                const oldURL = new URL(locationLink.href).toString();
-                target[p] = value;
-                const newURL = new URL(locationLink.href).toString();
-
-                // the event hashchange must be triggered in a nonBlocking stack
-                // https://html.spec.whatwg.org/multipage/browsing-the-web.html#scroll-to-fragid
-                window.setTimeout(() => {
-                    window.dispatchEvent(new HashChangeEvent("hashchange", { oldURL, newURL }));
-                });
-                return true;
-            }
-            target[p] = value;
-            return true;
-        },
     });
 }
 
@@ -105,6 +83,8 @@ function patchBrowserWithCleanup() {
     let nextAnimationFrameHandle = 1;
     const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation();
+    let historyStack = [];
+    let currentHistoryStack = 0;
     patchWithCleanup(browser, {
         // patch addEventListner to automatically remove listeners bound (via
         // browser.addEventListener) during a test (e.g. during the deployment of a service)
@@ -145,10 +125,33 @@ function patchBrowserWithCleanup() {
         location: mockLocation,
         history: {
             pushState(state, title, url) {
+                historyStack = historyStack.slice(0, currentHistoryStack);
+                historyStack.push(url);
+                currentHistoryStack++;
                 mockLocation.assign(url);
             },
             replaceState(state, title, url) {
+                historyStack = [url];
+                currentHistoryStack = 1;
                 mockLocation.assign(url);
+            },
+            back() {
+                currentHistoryStack--;
+                const url = historyStack[currentHistoryStack - 1];
+                if (!url) {
+                    throw new Error("there is no history");
+                }
+                mockLocation.assign(url);
+                window.dispatchEvent(new PopStateEvent("popstate", { state: { newURL: url } }));
+            },
+            forward() {
+                currentHistoryStack++;
+                const url = historyStack[currentHistoryStack - 1];
+                if (!url) {
+                    throw new Error("No more history");
+                }
+                mockLocation.assign(url);
+                window.dispatchEvent(new PopStateEvent("popstate", { state: { newURL: url } }));
             },
         },
         // in tests, we never want to interact with the real local/session storages.
@@ -184,18 +187,6 @@ function patchBrowserWithCleanup() {
             }
         },
     });
-}
-
-function patchRouterWithCleanup() {
-    const hashchange = (ev) => {
-        const hash = ev.detail;
-        browser.location.hash = objectToUrlEncodedString(hash);
-    };
-    routerBus.addEventListener("test:hashchange", hashchange);
-    registerCleanup(() => {
-        routerBus.removeEventListener("test:hashchange", hashchange);
-    });
-    registerCleanup(router.cancelPushes);
 }
 
 function patchBodyAddEventListener() {
@@ -366,7 +357,7 @@ export async function setupTests() {
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
-        patchRouterWithCleanup();
+        registerCleanup(router.cancelPushes);
         patchCookie();
         patchBodyAddEventListener();
         patchEventBus();

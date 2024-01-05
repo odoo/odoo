@@ -30,7 +30,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         return menusData[menuId];
     }
     function _updateURL(menuId) {
-        router.pushState({ menu_id: menuId }, { lock: true });
+        router.pushState({ menu_id: menuId });
     }
     function _setCurrentMenu(menu, updateURL = true) {
         menu = typeof menu === "number" ? _getMenu(menu) : menu;
@@ -90,6 +90,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
 export const menuService = {
     dependencies: ["action"],
     async start(env) {
+        router.addLockedKey("menu_id");
         const fetchLoadMenus = makeFetchLoadMenus();
         const menusData = await fetchLoadMenus();
         return makeMenus(env, menusData, fetchLoadMenus);

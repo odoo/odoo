@@ -845,7 +845,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelector(".o_control_panel .o_form_button_save"));
 
         await nextTick();
-        assert.notOk(router.current.hash.id);
+        assert.notOk(router.current.id);
     });
 
     QUnit.test(

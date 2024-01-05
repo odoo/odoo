@@ -2734,7 +2734,7 @@ export class Wysiwyg extends Component {
      * @returns {Promise} (never resolved, the page is reloading anyway)
      */
     _reload() {
-        window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
+        window.location.search = 'scrollTop=' + window.document.body.scrollTop;
         if (window.location.search.indexOf('enable_editor') >= 0) {
             window.location.href = window.location.href.replace(/&?enable_editor(=[^&]*)?/g, '');
         } else {

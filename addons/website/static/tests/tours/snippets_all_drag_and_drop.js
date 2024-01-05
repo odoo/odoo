@@ -22,7 +22,7 @@ import { registry } from "@web/core/registry";
 let snippetsNames = (new URL(document.location.href)).searchParams.get('snippets_names') || '';
 // When this test is loaded in the backend, the search params aren't as easy to
 // read as before. Little trickery to make this test run.
-const searchParams = new URLSearchParams(window.location.href.split('#')[1]).get('path');
+const searchParams = new URLSearchParams(window.location.search).get('path');
 if (searchParams) {
     snippetsNames = new URLSearchParams(searchParams.split('/')[1]).get('snippets_names') || '';
     snippetsNames = snippetsNames.split(',');

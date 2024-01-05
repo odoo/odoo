@@ -6,11 +6,10 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 import { cookie } from "@web/core/browser/cookie";
-import { redirect } from "@web/core/utils/urls";
 import { user } from "@web/core/user";
-import { routeToUrl, router } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 
-const CIDS_HASH_SEPARATOR = "-";
+const CIDS_SEARCH_SEPARATOR = "-";
 
 function parseCompanyIds(cids, separator = ",") {
     if (typeof cids === "string") {
@@ -39,16 +38,16 @@ function computeActiveCompanyIds(cids) {
     return activeCompanyIds;
 }
 
-function getCompanyIdsFromBrowser(hash) {
+function getCompanyIdsFromBrowser(state) {
     let cids;
-    if ("cids" in hash) {
+    if ("cids" in state) {
         // backward compatibility s.t. old urls (still using "," as separator) keep working
         // deprecated as of 17.0
-        let separator = CIDS_HASH_SEPARATOR;
-        if (typeof hash.cids === "string" && !hash.cids.includes(CIDS_HASH_SEPARATOR)) {
+        let separator = CIDS_SEARCH_SEPARATOR;
+        if (typeof state.cids === "string" && !state.cids.includes(CIDS_SEARCH_SEPARATOR)) {
             separator = ",";
         }
-        cids = parseCompanyIds(hash.cids, separator);
+        cids = parseCompanyIds(state.cids, separator);
     } else if (cookie.get("cids")) {
         cids = parseCompanyIds(cookie.get("cids"));
     }
@@ -57,22 +56,18 @@ function getCompanyIdsFromBrowser(hash) {
 
 const errorHandlerRegistry = registry.category("error_handlers");
 function accessErrorHandler(env, error, originalError) {
-    const hash = router.current.hash;
-    if (!hash._company_switching) {
+    if (!router.current._company_switching) {
         return false;
     }
     if (originalError?.exceptionName === "odoo.exceptions.AccessError") {
-        const { model, id, view_type } = hash;
+        const { model, id, view_type } = router.current;
         if (!model || !id || view_type !== "form") {
             return false;
         }
-        const route = { ...router.current };
-        delete route.hash.id;
-        delete route.hash.view_type;
-        redirect(routeToUrl(route));
         if (error.event) {
             error.event.preventDefault();
         }
+        router.pushState({ id: undefined, view_type: undefined }, { reload: true });
         return true;
     }
     return false;
@@ -91,13 +86,12 @@ export const companyService = {
             ...allowedCompanies,
             ...disallowedAncestorCompanies,
         };
-        const activeCompanyIds = computeActiveCompanyIds(
-            getCompanyIdsFromBrowser(router.current.hash)
-        );
+        const activeCompanyIds = computeActiveCompanyIds(getCompanyIdsFromBrowser(router.current));
 
         // update browser data
-        const cidsHash = formatCompanyIds(activeCompanyIds, CIDS_HASH_SEPARATOR);
-        router.replaceState({ cids: cidsHash }, { lock: true });
+        const cidsSearch = formatCompanyIds(activeCompanyIds, CIDS_SEARCH_SEPARATOR);
+        router.addLockedKey("cids");
+        router.replaceState({ cids: cidsSearch });
         cookie.set("cids", formatCompanyIds(activeCompanyIds));
         user.updateContext({ allowed_company_ids: activeCompanyIds });
 
@@ -152,11 +146,9 @@ export const companyService = {
                     );
                 }
 
-                const cidsHash = formatCompanyIds(newCompanyIds, CIDS_HASH_SEPARATOR);
-                router.pushState({ cids: cidsHash }, { lock: true });
-                router.pushState({ _company_switching: true });
+                const cidsSearch = formatCompanyIds(newCompanyIds, CIDS_SEARCH_SEPARATOR);
                 cookie.set("cids", formatCompanyIds(newCompanyIds));
-                browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
+                router.pushState({ cids: cidsSearch, _company_switching: true }, { reload: true });
             },
         };
     },

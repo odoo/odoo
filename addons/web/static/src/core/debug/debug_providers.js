@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";
-import { routeToUrl, router } from "../browser/router";
+import { router } from "../browser/router";
 
 const commandProviderRegistry = registry.category("command_provider");
 
@@ -14,7 +14,7 @@ commandProviderRegistry.add("debug", {
             if (!env.debug.includes("assets")) {
                 result.push({
                     action() {
-                        browser.location.search = "?debug=assets";
+                        router.pushState({ debug: "assets" }, { reload: true });
                     },
                     category: "debug",
                     name: _t("Activate debug mode (with assets)"),
@@ -22,9 +22,7 @@ commandProviderRegistry.add("debug", {
             }
             result.push({
                 action() {
-                    const route = router.current;
-                    route.search.debug = "";
-                    browser.location.href = browser.location.origin + routeToUrl(route);
+                    router.pushState({ debug: undefined }, { reload: true });
                 },
                 category: "debug",
                 name: _t("Deactivate debug mode"),
@@ -49,7 +47,7 @@ commandProviderRegistry.add("debug", {
             if (options.searchValue.toLowerCase() === "debug") {
                 result.push({
                     action() {
-                        browser.location.search = "?debug=assets";
+                        router.pushState({ debug: "assets" }, { reload: true });
                     },
                     category: "debug",
                     name: _t("Activate debug mode (with assets)"),

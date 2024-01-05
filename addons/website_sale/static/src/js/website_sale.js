@@ -82,9 +82,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         this._startZoom();
 
-        window.addEventListener('hashchange', () => {
-            this._applyHash();
-            this.triggerVariantChange(this.$el);
+        window.addEventListener('popstate', (ev) => {
+            if (ev.state?.newURL) {
+                this._applyHash();
+                this.triggerVariantChange(this.$el);
+            }
         });
 
         this.getRedirectOption();

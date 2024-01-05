@@ -156,12 +156,6 @@ export function patchWithCleanup(obj, patchValue) {
     });
 }
 
-export async function setBrowserLocation(value) {
-    Object.assign(browser.location, value);
-    // hashchange event isn't trigerred synchronously, so we have to wait for it
-    await nextTick();
-}
-
 /**
  * @returns {Element}
  */

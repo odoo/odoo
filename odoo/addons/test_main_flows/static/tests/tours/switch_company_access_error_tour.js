@@ -58,12 +58,12 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
                     "model_multicompany_menu"
                 );
                 const url = new URL(window.location);
-                const hash = new URLSearchParams(url.hash.slice(1));
-                assertEqual(hash.get("model"), "test.model_multicompany");
-                assertEqual(hash.has("action"), true);
-                assertEqual(hash.has("menu_id"), true);
-                assertEqual(hash.get("view_type"), "list");
-                assertEqual(hash.has("_company_switching"), false);
+                const search = new URLSearchParams(url.search);
+                assertEqual(search.get("model"), "test.model_multicompany");
+                assertEqual(search.has("action"), true);
+                assertEqual(search.has("menu_id"), true);
+                assertEqual(search.get("view_type"), "list");
+                assertEqual(search.has("_company_switching"), false);
             },
             isCheck: true,
         },

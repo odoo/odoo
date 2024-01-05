@@ -3,13 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import {
-    click,
-    getFixture,
-    nextTick,
-    patchWithCleanup,
-    setBrowserLocation,
-} from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { Component, onMounted, xml } from "@odoo/owl";
@@ -366,15 +360,18 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.step(url);
             },
             origin: "",
+            reload: function () {
+                assert.step("window_reload");
+            },
         });
-        await setBrowserLocation({ hash: "#test=42" });
-
+        Object.assign(browser.location, { search: "?test=42" });
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, {
             type: "ir.actions.client",
             tag: "reload",
         });
+        await nextTick(); // wait for reload to be done
         await doAction(webClient, {
             type: "ir.actions.client",
             tag: "reload",
@@ -382,6 +379,7 @@ QUnit.module("ActionManager", (hooks) => {
                 action_id: 2,
             },
         });
+        await nextTick(); // wait for reload to be done
         await doAction(webClient, {
             type: "ir.actions.client",
             tag: "reload",
@@ -389,6 +387,7 @@ QUnit.module("ActionManager", (hooks) => {
                 menu_id: 1,
             },
         });
+        await nextTick(); // wait for reload to be done
         await doAction(webClient, {
             type: "ir.actions.client",
             tag: "reload",
@@ -397,11 +396,16 @@ QUnit.module("ActionManager", (hooks) => {
                 menu_id: 2,
             },
         });
+        await nextTick(); // wait for reload to be done
         assert.verifySteps([
-            "/web/tests?reload=true#test=42",
-            "/web/tests?reload=true#action=2",
-            "/web/tests?reload=true#menu_id=1",
-            "/web/tests?reload=true#menu_id=2&action=1",
+            // "/web/tests?test=42", // This one was not push to the history because it's the current url (see router.js)
+            "window_reload",
+            "/web/tests?action=2",
+            "window_reload",
+            "/web/tests?menu_id=1",
+            "window_reload",
+            "/web/tests?menu_id=2&action=1",
+            "window_reload",
         ]);
     });
 });

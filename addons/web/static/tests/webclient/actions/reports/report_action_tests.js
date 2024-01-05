@@ -400,9 +400,9 @@ QUnit.module("ActionManager", (hooks) => {
 
         await doAction(webClient, 12); // 12 is a html report action in serverData
         await nextTick();
-        const hash = router.current.hash;
+        const urlState = router.current;
         // used to put report.client_action in the url
-        assert.strictEqual(hash.action === "report.client_action", false);
-        assert.strictEqual(hash.action === 12, true);
+        assert.strictEqual(urlState.action === "report.client_action", false);
+        assert.strictEqual(urlState.action === 12, true);
     });
 });

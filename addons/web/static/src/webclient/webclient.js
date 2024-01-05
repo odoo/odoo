@@ -10,7 +10,7 @@ import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
 import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
-import { routerBus, router } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/browser/router";
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -58,7 +58,7 @@ export class WebClient extends Component {
 
     async loadRouterState() {
         let stateLoaded = await this.actionService.loadState();
-        let menuId = Number(router.current.hash.menu_id || 0);
+        let menuId = Number(router.current.menu_id || 0);
 
         if (!stateLoaded && menuId) {
             // Determines the current actionId based on the current menu
