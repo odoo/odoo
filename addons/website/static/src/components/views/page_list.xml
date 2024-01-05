@@ -7,12 +7,15 @@
             <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
         </t>
     </xpath>
+    <!-- TODO master: remove this xpath -->
     <xpath expr="//tr[@class='o_data_row']" position="attributes">
         <attribute name="t-if">recordFilter(record, list.records)</attribute>
+        <attribute name="t-if"/><!-- stable way to cancel the above `t-if` -->
     </xpath>
 </t>
 
 <t t-name="website.PageListView" t-inherit="web.ListView" owl="1">
+    <!-- TODO master: remove this xpath -->
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>

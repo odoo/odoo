@@ -73,9 +73,11 @@ export const PageControllerMixin = (component) => class extends component {
 
     onSelectWebsite(website) {
         this.state.activeWebsite = website;
+        this.env.searchModel.notifyWebsiteChange(website.id);
     }
 };
 
+// TODO: Remove in master, records are not hidden through `t-if` anymore.
 export const PageRendererMixin = (component) => class extends component {
     /**
      * The goal here is to tweak the renderer to display records following some
