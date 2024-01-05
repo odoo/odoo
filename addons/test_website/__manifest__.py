@@ -17,8 +17,12 @@ models which only purpose is to run tests.""",
         'website',
         'theme_default',
     ],
+    'demo': [
+        'data/test_website_demo.xml',
+    ],
     'data': [
         'views/templates.xml',
+        'views/test_model_views.xml',
         'data/test_website_data.xml',
         'security/ir.model.access.csv',
     ],
