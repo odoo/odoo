@@ -4719,6 +4719,7 @@ export class OdooEditor extends EventTarget {
         if (
             selection &&
             selection.anchorNode &&
+            isHtmlContentSupported(selection.anchorNode) &&
             !closestElement(selection.anchorNode).closest('a') &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
@@ -4803,7 +4804,10 @@ export class OdooEditor extends EventTarget {
             link.remove();
             setSelection(...start, ...start, false);
         }
-        if (odooEditorHtml && targetSupportsHtmlContent) {
+        if (!targetSupportsHtmlContent) {
+            const text = ev.clipboardData.getData("text/plain");
+            this._applyCommand("insert", text);
+        } else if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             // Instantiate DOMPurify with the correct window.
             this.DOMPurify ??= DOMPurify(this.document.defaultView);
@@ -4811,7 +4815,7 @@ export class OdooEditor extends EventTarget {
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
-        } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
+        } else if (files.length || clipboardHtml) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
             // When copy pasting a table from the outside, a picture of the
             // table can be included in the clipboard as an image file. In that
