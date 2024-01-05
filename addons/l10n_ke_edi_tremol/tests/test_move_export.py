@@ -184,3 +184,42 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
         expected_double_negative_header = [b'01;     0;0;1;Sirius Cybernetics Corporation;A000123456F   ;Test StreetFurther Test Street;Test StreetFurther Test Street;00500Nairobi                  ;                              ;INV202300002   ']
         expected_messages = expected_double_negative_header + expected_messages[1:]
         self.assertEqual(generated_messages, expected_messages)
+
+    def test_export_multi_tax_line_invoice(self):
+        """ When handling invoices with multiple taxes per line, the export should handle the
+            reported amounts correctly. Using only the VAT taxes in its calculation and not, for
+            instance, the 2% tourism levy, or the 4% drinks service charge, or the 10% food service
+            charge.
+        """
+        tourism_levy = self.env['account.tax'].create({
+            'name': 'Tourism levy',
+            'amount': 2,
+            'company_id': self.company_data['company'].id,
+        })
+        multi_tax_line_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'quantity': 10,
+                    'price_unit': 1000,
+                    'tax_ids': [
+                        (6, 0, [
+                            self.company_data['company'].account_sale_tax_id.id,
+                            tourism_levy.id,
+                        ]),
+                    ],
+                    'discount': 25,
+                }),
+            ],
+        })
+        multi_tax_line_invoice.action_post()
+        generated_messages = multi_tax_line_invoice._l10n_ke_cu_lines_messages()
+        expected_sale_line = self.line_dict_to_bytes({
+            'name': b'Infinite Improbability Drive        ',
+            'price': b'1160.0', # This is the unit price, tax included, but only the 16% VAT
+            'quantity': b'10.0',
+            'discount': b'-25.0%',
+        })
+        self.assertEqual(generated_messages, [expected_sale_line])
