@@ -6,8 +6,9 @@ import string
 import re
 import stdnum
 from stdnum.eu.vat import check_vies
-from stdnum.exceptions import InvalidComponent
+from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
 from stdnum.util import clean
+from stdnum import luhn
 
 import logging
 
@@ -804,9 +805,18 @@ class ResPartner(models.Model):
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
         introduced in January 2024."""
-        if len(vat) in (15, 16) and vat[0:15].isdigit() and vat[-1].isdigit():
-            return True
-        return False
+        vat = clean(vat, ' -.').strip()
+
+        if len(vat) not in (15, 16) or not vat[0:15].isdecimal() or not vat[-1].isdecimal():
+            return False
+
+        # VAT is only digits and of the right length, check the Luhn checksum.
+        try:
+            luhn.validate(vat[0:9])
+        except (InvalidFormat, InvalidChecksum):
+            return False
+
+        return True
 
     def format_vat_sm(self, vat):
         stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact

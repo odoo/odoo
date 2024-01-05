@@ -29,7 +29,7 @@
                 </style>
             </defs>
             <!-- adapt textLength to prevent distortion and left overflow with small words -->
-            <text t-esc="text" x="50%" t-att-y="height * 4 / 5" t-att-font-size="height * 4 / 5"
+            <text t-esc="text" x="50%" t-att-y="height * 3 / 5" t-att-font-size="height * 3 / 5"
                 t-att-textLength="width * 4 / 5 * (type === 'signature' ? Math.min(1, text.length / 7) : 1)"
                 t-att-lengthAdjust="'spacing' + (type === 'signature' ? 'AndGlyphs' : '')"
                 t-attf-style="font-family:'font'; stroke: none; fill: {{color}};"  text-anchor="middle"/>

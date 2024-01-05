@@ -314,3 +314,68 @@ QUnit.test("UI active element: trap focus - first or last tabable changes", asyn
     assert.strictEqual(event.defaultPrevented, true);
     assert.strictEqual(document.activeElement, target.querySelector("input[name=c]"));
 });
+
+QUnit.test(
+    "UI active element: trap focus is not bypassed using invisible elements",
+    async (assert) => {
+        class MyComponent extends Component {
+            setup() {
+                useActiveElement("delegatedRef");
+            }
+        }
+        MyComponent.template = xml`
+        <div>
+            <h1>My Component</h1>
+            <input type="text" placeholder="outerUIActiveElement"/>
+            <div t-ref="delegatedRef">
+                <input type="text" placeholder="withFocus"/>
+                <input class="d-none" type="text" placeholder="withFocusNotDisplayed"/>
+                <div class="d-none">
+                    <input type="text" placeholder="withFocusNotDisplayedToo"/>
+                </div>
+            </div>
+        </div>
+    `;
+
+        const env = await makeTestEnv({ ...baseConfig });
+        await mount(MyComponent, target, { env });
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector("input[placeholder=withFocus]"),
+            "The focus is on the first 'focusable' element of the UI active element"
+        );
+
+        // Pressing 'Tab'
+        let event = await triggerEvent(
+            document.activeElement,
+            null,
+            "keydown",
+            { key: "Tab" },
+            { fast: true }
+        );
+
+        // No other visible element is found
+        assert.strictEqual(event.defaultPrevented, true);
+        await nextTick();
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector("input[placeholder=withFocus]")
+        );
+
+        // Pressing 'Shift + Tab'
+        event = triggerEvent(
+            document.activeElement,
+            null,
+            "keydown",
+            { key: "Tab", shiftKey: true },
+            { fast: true }
+        );
+        assert.strictEqual(event.defaultPrevented, true);
+        await nextTick();
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector("input[placeholder=withFocus]")
+        );
+    }
+);

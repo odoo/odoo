@@ -352,11 +352,7 @@ class AccountMoveLine(models.Model):
                 'price_unit': price,
                 'price_subtotal': qty * price,
                 'amount_currency': qty * price * sign,
-                'balance': self.currency_id._convert(
-                    qty * price * sign,
-                    self.company_currency_id,
-                    self.company_id, fields.Date.today(),
-                ),
+                'balance': self.company_id.currency_id.round((qty * price * sign) / self.currency_rate),
                 'account_id': account.id,
                 'analytic_distribution': self.analytic_distribution,
                 'display_type': 'cogs',
