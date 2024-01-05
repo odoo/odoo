@@ -5603,15 +5603,19 @@
               return reject("No window assigned for iframe");
           }
           var documentClone = cloneWindow.document;
-          cloneWindow.onload = iframe.onload = function () {
-              cloneWindow.onload = iframe.onload = null;
-              var interval = setInterval(function () {
-                  if (documentClone.body.childNodes.length > 0 && documentClone.readyState === 'complete') {
-                      clearInterval(interval);
-                      resolve(iframe);
-                  }
-              }, 50);
-          };
+          /*
+            ODOO Patch for safari v 15.4+ in ios: onload is never called.
+            Issue link: https://github.com/niklasvh/html2canvas/issues/2864
+            Suggested change: https://github.com/niklasvh/html2canvas/issues/2864#issuecomment-1111044861
+            Version that solves the issue: not available yet
+          */
+          var interval = setInterval(function () {
+            if (documentClone.body.childNodes.length > 0 && (documentClone.readyState === 'complete' || documentClone.readyState === 'interactive')) {
+                clearInterval(interval);
+                resolve(iframe);
+            }
+          }, 50);
+          // End patch
       });
   };
   var ignoredStyleProperties = [
