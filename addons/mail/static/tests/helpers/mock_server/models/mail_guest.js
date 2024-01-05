@@ -10,11 +10,14 @@ patch(MockServer.prototype, {
     },
     _mockMailGuest__initMessaging() {
         const guest = this._mockMailGuest__getGuestFromContext();
-        const channelIds = this.pyEnv["discuss.channel.member"]
-            .searchRead([["guest_id", "=", guest.id]])
-            .map(({ channel_id }) => channel_id[0]);
+        const members = this.getRecords("discuss.channel.member", [
+            ["guest_id", "=", guest.id],
+            "|",
+            ["fold_state", "in", ["open", "folded"]],
+            ["inviting_partner_ids", "!=", false],
+        ]);
         return {
-            Thread: this._mockDiscussChannelChannelInfo(channelIds),
+            Thread: this._mockDiscussChannelChannelInfo(members.map((member) => member.channel_id)),
             self: { id: guest.id, name: guest.name, type: "guest" },
             current_user_id: false,
             settings: {},

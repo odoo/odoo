@@ -1104,7 +1104,7 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
             return originalRPC(route, args);
         },
     });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
     await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
     rpc("/mail/message/post", {
         thread_id: channelId,

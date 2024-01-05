@@ -76,7 +76,6 @@ export class DiscussCoreCommon {
             );
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
                 const { body, originThread } = payload;
-                const channel = this.store.Thread.get(originThread);
                 const lastMessageId = this.messageService.getLastMessageId();
                 const message = this.store.Message.insert(
                     {
@@ -89,8 +88,8 @@ export class DiscussCoreCommon {
                     },
                     { html: true }
                 );
-                channel.messages.push(message);
-                channel.transientMessages.push(message);
+                message.originThread.messages.push(message);
+                message.originThread.transientMessages.push(message);
             });
             this.busService.subscribe("discuss.channel/unpin", (payload) => {
                 const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
@@ -182,12 +181,12 @@ export class DiscussCoreCommon {
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
         const { id: channelId, message: messageData } = payload;
-        let channel = this.store.Thread.get({ model: "discuss.channel", id: channelId });
-        if (!channel || !channel.channel_type) {
-            channel = await this.threadService.fetchChannel(channelId);
-            if (!channel) {
-                return;
-            }
+        const channel = await this.store.Thread.getOrFetch({
+            model: "discuss.channel",
+            id: channelId,
+        });
+        if (!channel) {
+            return;
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
@@ -202,7 +201,7 @@ export class DiscussCoreCommon {
                 channel.seen_message_id = message.id;
             } else {
                 if (notifId > this.store.initBusId) {
-                    channel.message_unread_counter++;
+                    channel.incrementUnreadCounter();
                 }
                 if (message.isNeedaction) {
                     const inbox = this.store.discuss.inbox;

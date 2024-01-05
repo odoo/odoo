@@ -312,6 +312,7 @@ QUnit.test(
     async () => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({});
+        pyEnv["discuss.channel"].create({ name: "General" });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 Command.create({
@@ -321,6 +322,7 @@ QUnit.test(
                 }),
                 Command.create({ partner_id: partnerId }),
             ],
+            channel_type: "chat",
         });
         pyEnv["mail.message"].create([
             {
@@ -332,6 +334,9 @@ QUnit.test(
         ]);
         await start();
         await contains(".o_menu_systray i[aria-label='Messages']");
+        await contains(".o-mail-MessagingMenu-counter", { count: 0 });
+        await click(".o_menu_systray i[aria-label='Messages']"); // fetch channels
+        await contains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
         await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     }
 );

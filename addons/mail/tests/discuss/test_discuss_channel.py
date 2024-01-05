@@ -264,9 +264,9 @@ class TestChannelInternals(MailCommon):
         chat_user_current.action_unfollow()
         self.assertEqual(len(group_restricted_channel.channel_member_ids), 0)
         self.assertEqual(len(public_channel.channel_member_ids), 0)
-        # sudo: mail.channel - reading members of non-accessible channel for testing purposes
+        # sudo: discuss.channel - reading members of non-accessible channel for testing purposes
         self.assertEqual(len(private_group.sudo().channel_member_ids), 0)
-        # sudo: mail.channel - reading members of non-accessible channel for testing purposes
+        # sudo: discuss.channel - reading members of non-accessible channel for testing purposes
         self.assertEqual(len(chat_user_current.sudo().channel_member_ids), 0)
 
     def test_channel_unfollow_should_not_post_message_if_the_partner_has_been_removed(self):

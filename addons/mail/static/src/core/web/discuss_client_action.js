@@ -25,38 +25,38 @@ export class DiscussClientAction extends Component {
         this.store = useState(useService("mail.store"));
         this.messaging = useState(useService("mail.messaging"));
         this.threadService = useService("mail.thread");
-        onWillStart(() => this.restoreDiscussThread(this.props));
+        onWillStart(async () => {
+            await this.messaging.isReady;
+            await this.restoreDiscussThread(this.props);
+        });
         onWillUpdateProps((nextProps) => this.restoreDiscussThread(nextProps));
     }
 
     /**
-     * Restore the discuss thread according to the active_id in the action
-     * if necessary: thread is different than the one already displayed and
-     * we are not in a public page. If the thread is not yet known, fetch it.
+     * @param {string} rawActiveId
+     */
+    parseActiveId(rawActiveId) {
+        const [model, id] = rawActiveId.split("_");
+        if (model === "mail.box") {
+            return ["mail.box", id];
+        }
+        return [model, parseInt(id)];
+    }
+
+    /**
+     * Restore the discuss thread according to the active_id in the action if
+     * necessary.
      *
      * @param {Props} props
      */
     async restoreDiscussThread(props) {
-        await this.messaging.isReady;
-        if (this.store.inPublicPage) {
-            return;
-        }
         const rawActiveId =
             props.action.context.active_id ??
             props.action.params?.active_id ??
             this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
             "mail.box_inbox";
-        const activeId =
-            typeof rawActiveId === "number" ? `discuss.channel_${rawActiveId}` : rawActiveId;
-        let [model, id] = activeId.split("_");
-        if (model === "mail.channel") {
-            // legacy format (sent in old emails, shared links, ...)
-            model = "discuss.channel";
-        }
-        let activeThread = this.store.Thread.get({ model, id });
-        if (!activeThread?.channel_type && model === "discuss.channel") {
-            activeThread = await this.threadService.fetchChannel(parseInt(id));
-        }
+        const [model, id] = this.parseActiveId(rawActiveId);
+        const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             this.threadService.setDiscussThread(activeThread);
         }

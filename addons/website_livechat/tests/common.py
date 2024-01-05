@@ -50,17 +50,16 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
         ])
         self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
 
-        base_url = self.livechat_channel.get_base_url()
+        self.livechat_base_url = self.livechat_channel.get_base_url()
 
-        self.open_chat_url = base_url + "/im_livechat/get_session"
+        self.open_chat_url = f"{self.livechat_base_url}/im_livechat/get_session"
         self.open_chat_params = {'params': {
             'channel_id': self.livechat_channel.id,
             'anonymous_name': "Wrong Name"
         }}
 
-        self.send_feedback_url = base_url + "/im_livechat/feedback"
-        self.leave_session_url = base_url + "/im_livechat/visitor_leave_session"
-        self.message_info_url = base_url + "/mail/init_messaging"
+        self.send_feedback_url = f"{self.livechat_base_url}/im_livechat/feedback"
+        self.leave_session_url = f"{self.livechat_base_url}/im_livechat/visitor_leave_session"
 
         # override the get_available_users to return only Michel as available
         def _compute_available_operator_ids(channel_self):

@@ -43,21 +43,16 @@ class ResUsers(models.Model):
         ).unlink()
 
     def _init_messaging(self):
-        self.ensure_one()
-        # 2 different queries because the 2 sub-queries together with OR are less efficient
-        channels = self.env["discuss.channel"].with_user(self)
-        channels += channels.search([("channel_type", "in", ("channel", "group")), ("is_member", "=", True)])
-        channels += channels.search(
-            [
-                ("channel_type", "not in", ("channel", "group")),
-                ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
-            ]
-        )
+        self = self.with_user(self)
+        channels = self.env["discuss.channel"]._get_channels_as_member()
+        domain = [("channel_id", "in", channels.ids), ("is_self", "=", True)]
+        members = self.env["discuss.channel.member"].search(domain)
         return {
-            "Thread": channels._filter_for_init_messaging()._channel_info(),
+            "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
             # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
             "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
             # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
             'hasMessageTranslationFeature': bool(self.env["ir.config_parameter"].sudo().get_param("mail.google_translate_api_key")),
+            "initChannelsUnreadCounter": len(members.filtered(lambda member: member.message_unread_counter)),
             **super()._init_messaging(),
         }

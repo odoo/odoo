@@ -21,11 +21,14 @@ patch(MockServer.prototype, {
     _mockResUsers_InitMessaging(ids) {
         const user = this.getRecords("res.users", [["id", "in", ids]])[0];
         const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
+        const channels = this._mockDiscussChannel__get_channels_as_member();
+        const members = this.getRecords("discuss.channel.member", [
+            ["channel_id", "in", channels.map((channel) => channel.id)],
+            ["partner_id", "=", user.partner_id],
+        ]);
         return {
             Thread: this._mockDiscussChannelChannelInfo(
-                this._mockResPartner_GetChannelsAsMember(user.partner_id).map(
-                    (channel) => channel.id
-                )
+                this._mockDiscussChannel__get_init_channels(user).map((channel) => channel.id)
             ),
             self: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.pyEnv.currentUserId,
@@ -33,6 +36,8 @@ patch(MockServer.prototype, {
             hasGifPickerFeature: true,
             hasMessageTranslationFeature: true,
             initBusId: this.lastBusNotificationId,
+            initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
+                .length,
             menu_id: false, // not useful in QUnit tests
             discuss: {
                 inbox: {
