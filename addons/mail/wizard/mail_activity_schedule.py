@@ -154,17 +154,9 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_plan_summary(self):
         self.plan_summary = False
         for scheduler in self:
-            summaries = []
-            for template in scheduler.plan_id.template_ids:
-                summary = template.activity_type_id.name
-                if template.summary:
-                    summary += f": {template.summary}"
-                # We don't display deadlines when the user doesn't specify a plan_date
-                if scheduler.plan_date:
-                    summary += f" ({format_date(self.env, template._get_date_deadline(scheduler.plan_date))})"
-                summaries.append(Markup('<li>%s</li>') % summary)
-            if summaries:
-                scheduler.plan_summary = Markup('<ul>%s</ul>') % Markup().join(summaries)
+            if not scheduler.plan_id.template_ids:
+                continue
+            scheduler.plan_summary = scheduler._get_summary_lines(scheduler.plan_id.template_ids)
 
     @api.depends('res_model')
     def _compute_activity_type_id(self):
@@ -344,3 +336,16 @@ class MailActivitySchedule(models.TransientModel):
 
     def _plan_filter_activity_templates_to_schedule(self):
         return self.plan_id.template_ids
+
+    def _get_summary_lines(self, templates):
+        self.ensure_one()
+        summaries = []
+        for template in templates:
+            summary_line = template.activity_type_id.name
+            if template.summary:
+                summary_line += f": {template.summary}"
+            # We don't display deadlines when the user doesn't specify a plan_date
+            if self.plan_date:
+                summary_line += f" ({format_date(self.env, template._get_date_deadline(self.plan_date))})"
+            summaries.append(Markup('<li>%s</li>') % summary_line)
+        return Markup('<ul>%s</ul>') % Markup().join(summaries) if summaries else ''

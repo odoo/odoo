@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -27,6 +28,24 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_plan_department_filterable(self):
         for wizard in self:
             wizard.plan_department_filterable = wizard.res_model == 'hr.employee'
+
+    @api.depends('plan_date', 'plan_id')
+    def _compute_plan_summary(self):
+        if not self.env.context.get('sort_by_responsible', False):
+            return super()._compute_plan_summary()
+        self.plan_summary = False
+        responsible_value_to_label = dict(
+            self.env['mail.activity.plan.template']._fields['responsible_type']._description_selection(self.env)
+        )
+        for scheduler in self:
+            templates_by_responsible_type = scheduler.plan_id.template_ids.grouped('responsible_type')
+            scheduler.plan_summary = Markup('<ul>%(summary_by_responsible)s</ul>') % {
+                'summary_by_responsible': Markup().join(
+                    Markup("%(responsible)s %(summary_lines)s") % {
+                        'responsible': responsible_value_to_label[key],
+                        'summary_lines': scheduler._get_summary_lines(templates)
+                    } for key, templates in templates_by_responsible_type.items()
+                )}
 
     @api.depends('res_model_id', 'res_ids')
     def _compute_department_id(self):

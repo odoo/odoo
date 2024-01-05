@@ -8,11 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
-                <field name="resume_line_ids" string="Resume" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
+                <field name="resume_line_ids" string="Resume" filter_domain="
+                    ['|',
+                        ('resume_line_ids.name', 'ilike', self),
+                        ('resume_line_ids.description', 'ilike', self),
+                    ]"/>
             </xpath>
-            <filter name="group_job" position="after">
-                <filter name="group_by_skill_ids" string="Skills" domain="[]" context="{'group_by': 'skill_ids'}"/>
-            </filter>
         </field>
     </record>
 
