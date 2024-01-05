@@ -400,7 +400,7 @@
                                 </group>
                                 <group invisible="state != 'webhook'">
                                     <label for="webhook_sample_payload" />
-                                    <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'js'}" />
+                                    <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'javascript'}" />
                                 </group>
                         </group>
                         <field name="child_ids" domain="[('model_id', '=', model_id)]" invisible="state != 'multi'"/>

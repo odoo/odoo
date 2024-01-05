@@ -228,9 +228,9 @@ QUnit.module("Web Components", (hooks) => {
         const codeEditor = await mount(Parent, target, { env });
         assert.verifySteps(["ace/mode/xml"], "XML mode should be loaded");
 
-        await codeEditor.setMode("js");
+        await codeEditor.setMode("javascript");
         await nextTick();
-        assert.verifySteps(["ace/mode/js"], "JS mode should be loaded");
+        assert.verifySteps(["ace/mode/javascript"], "JS mode should be loaded");
     });
 
     QUnit.test("Theme props updates imports the theme", async (assert) => {

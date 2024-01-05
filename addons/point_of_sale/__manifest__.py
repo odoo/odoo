@@ -199,10 +199,9 @@
             'web/static/lib/zxing-library/zxing-library.js',
 
             'web/static/lib/ace/ace.js',
-            'web/static/lib/ace/javascript_highlight_rules.js',
             'web/static/lib/ace/mode-python.js',
             'web/static/lib/ace/mode-xml.js',
-            'web/static/lib/ace/mode-js.js',
+            'web/static/lib/ace/mode-javascript.js',
             'web/static/lib/ace/mode-qweb.js',
             'web/static/lib/stacktracejs/stacktrace.js',
             ('include', "web.chartjs_lib"),
