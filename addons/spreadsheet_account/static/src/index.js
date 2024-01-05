@@ -27,9 +27,14 @@ cellMenuRegistry.add("move_lines_see_records", {
         codes = toString(codes).split(",");
         const locale = env.model.getters.getLocale();
         const dateRange = parseAccountingDate(date_range, locale);
+        offset = parseInt(offset) || 0;
         dateRange.year += offset || 0;
-        companyId = companyId || null;
-        includeUnposted = toBoolean(includeUnposted);
+        companyId = parseInt(companyId) || null;
+        try {
+            includeUnposted = toBoolean(includeUnposted);
+        } catch {
+            includeUnposted = false;
+        }
 
         const action = await env.services.orm.call(
             "account.account",
