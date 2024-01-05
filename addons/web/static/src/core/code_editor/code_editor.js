@@ -53,7 +53,7 @@ export class CodeEditor extends Component {
         sessionId: 1,
     };
 
-    static MODES = ["js", "xml", "qweb", "scss", "python"];
+    static MODES = ["javascript", "xml", "qweb", "scss", "python"];
     static THEMES = ["", "monokai"];
 
     setup() {
