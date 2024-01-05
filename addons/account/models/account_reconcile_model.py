@@ -92,7 +92,7 @@ class AccountReconcileModelLine(models.Model):
         if self.amount_type in ('percentage', 'percentage_st_line'):
             self.amount_string = '100'
         elif self.amount_type == 'regex':
-            self.amount_string = '([\d,]+)'
+            self.amount_string = r'([\d,]+)'
 
     @api.depends('amount_string')
     def _compute_float_amount(self):
