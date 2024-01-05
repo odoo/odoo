@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import escape
@@ -7,6 +6,21 @@ from odoo.exceptions import UserError
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
+
+    def action_cancel(self):
+        # EXTENDS account
+        for payment in self:
+            if payment.expense_sheet_id.payment_mode != 'own_account':
+                continue
+            payment.with_context(skip_account_move_synchronization=True).expense_sheet_id.state = 'approve'
+        return super().action_cancel()
+
+    def action_draft(self):
+        employee_expense_sheets = self.reconciled_bill_ids.expense_sheet_id.filtered(
+            lambda expense_sheet: expense_sheet.payment_mode == 'own_account'
+        )
+        employee_expense_sheets.state = 'post'
+        return super().action_draft()
 
     def action_open_expense_report(self):
         self.ensure_one()

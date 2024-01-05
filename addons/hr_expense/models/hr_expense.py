@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -170,7 +169,7 @@ class HrExpense(models.Model):
                 expense.state = 'refused'
             elif expense.sheet_id.state in {'approve', 'post'}:
                 expense.state = 'approved'
-            elif not expense.sheet_id.account_move_id:
+            elif not expense.sheet_id.account_move_id and expense.sheet_id.state != 'done':
                 expense.state = 'submitted'
             else:
                 expense.state = 'done'
@@ -1023,13 +1022,17 @@ class HrExpenseSheet(models.Model):
     @api.depends('account_move_id.payment_state', 'account_move_id.amount_residual')
     def _compute_from_account_move_id(self):
         for sheet in self:
-            amount = sheet.account_move_id.amount_residual
-            state = sheet.account_move_id.payment_state or 'not_paid'
-            # when the sheet is paid by the company, the state/amount of
-            # the related account_move_id is not relevant
-            if sheet.account_move_id and sheet.payment_mode == 'company_account':
-                state = 'paid'
-                amount = 0.0
+            sheet_move = sheet.account_move_id
+            amount = sheet_move.amount_residual
+            state = sheet_move.payment_state or 'not_paid'
+            if sheet_move:
+                if sheet_move.currency_id.compare_amounts(sheet_move.reversal_move_id.amount_total, sheet_move.amount_total) == 0:
+                    state = 'reversed'
+                elif sheet.payment_mode == 'company_account':
+                    # when the sheet is paid by the company, the state/amount of
+                    # the related account_move_id is not relevant (unless reversed)
+                    state = 'paid'
+                    amount = 0.0
             sheet.payment_state = state
             sheet.amount_residual = amount
 
