@@ -180,15 +180,8 @@ export class WebsitePreview extends Component {
 
         useEffect(() => {
             let leftOnBackNavigation = false;
-            // When reaching a "regular" url of the webclient's router, an
-            // hashchange event should be dispatched to properly display the
-            // content of the previous URL before reaching the client action,
-            // which was lost after being replaced for the frontend's URL.
             const handleBackNavigation = () => {
                 if (window.location.pathname === '/web') {
-                    window.dispatchEvent(new HashChangeEvent('hashchange', {
-                        newURL: window.location.href.toString()
-                    }));
                     leftOnBackNavigation = true;
                 }
             };
@@ -258,7 +251,7 @@ export class WebsitePreview extends Component {
                 // ... otherwise, the path still needs to be normalized (as it
                 // would be if the given path was used as an href of a  <a/>
                 // element).
-                path = url.pathname + url.search + url.hash;
+                path = url.pathname + url.search;
             }
         } else {
             path = '/';
@@ -409,7 +402,7 @@ export class WebsitePreview extends Component {
         }
         this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
         this._replaceBrowserUrl();
-        this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
+        this.iframe.el.contentWindow.addEventListener('popstate', this._replaceBrowserUrl.bind(this));
         this.iframe.el.contentWindow.addEventListener('pagehide', this._onPageHide.bind(this));
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;

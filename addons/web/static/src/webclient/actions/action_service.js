@@ -314,7 +314,7 @@ export function makeActionManager(env, router = _router) {
      * @returns {ActionParams | null}
      */
     function _getActionParams() {
-        const state = router.current.hash;
+        const state = router.current;
         const options = { clearBreadcrumbs: true };
         let actionRequest = null;
         if (state.action) {
@@ -425,7 +425,7 @@ export function makeActionManager(env, router = _router) {
      * @returns {SwitchViewParams | null}
      */
     function _getSwitchViewParams() {
-        const state = router.current.hash;
+        const state = router.current;
         if (state.action && !actionRegistry.contains(state.action)) {
             const currentController = controllerStack[controllerStack.length - 1];
             const currentActionId =

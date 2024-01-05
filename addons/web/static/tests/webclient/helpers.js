@@ -30,7 +30,6 @@ import { Component, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
-import { routerBus } from "@web/core/browser/router";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -112,6 +111,10 @@ export async function createWebClient(params) {
     });
     // Wait for visual changes caused by a potential loadState
     await nextTick();
+    // wait for BlankComponent
+    await nextTick();
+    // wait for the regular rendering
+    await nextTick();
     return wc;
 }
 
@@ -120,20 +123,6 @@ export function doAction(env, ...args) {
         env = env.env;
     }
     return env.services.action.doAction(...args);
-}
-
-export async function loadState(env, state) {
-    if (env instanceof Component) {
-        env = env.env;
-    }
-    routerBus.trigger("test:hashchange", state);
-    // wait the asynchronous hashchange
-    // (the event hashchange must be triggered in a nonBlocking stack)
-    await nextTick();
-    // wait for BlankComponent
-    await nextTick();
-    // wait for the regular rendering
-    await nextTick();
 }
 
 export function getActionManagerServerData() {

@@ -5,14 +5,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeTestEnv } from "../../helpers/mock_env";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import {
-    click,
-    getFixture,
-    hushConsole,
-    nextTick,
-    patchWithCleanup,
-    setBrowserLocation,
-} from "../../helpers/utils";
+import { click, getFixture, hushConsole, nextTick, patchWithCleanup } from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -218,8 +211,8 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         let currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, defaultTitle);
-        let currentHash = router.current.hash;
-        assert.deepEqual(currentHash, {});
+        let currentState = router.current;
+        assert.deepEqual(currentState, {});
         await doAction(webClient, 4);
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
@@ -227,8 +220,8 @@ QUnit.module("ActionManager", (hooks) => {
             ...defaultTitle,
             action: "Partners Action 4",
         });
-        currentHash = router.current.hash;
-        assert.deepEqual(currentHash, { action: 4, model: "partner", view_type: "kanban" });
+        currentState = router.current;
+        assert.deepEqual(currentState, { action: 4, model: "partner", view_type: "kanban" });
         await doAction(webClient, 8);
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
@@ -236,8 +229,8 @@ QUnit.module("ActionManager", (hooks) => {
             ...defaultTitle,
             action: "Favorite Ponies",
         });
-        currentHash = router.current.hash;
-        assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
+        currentState = router.current;
+        assert.deepEqual(currentState, { action: 8, model: "pony", view_type: "list" });
         await click(target.querySelector(".o_data_row .o_data_cell"));
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
@@ -245,8 +238,8 @@ QUnit.module("ActionManager", (hooks) => {
             ...defaultTitle,
             action: "Twilight Sparkle",
         });
-        currentHash = router.current.hash;
-        assert.deepEqual(currentHash, { action: 8, id: 4, model: "pony", view_type: "form" });
+        currentState = router.current;
+        assert.deepEqual(currentState, { action: 8, id: 4, model: "pony", view_type: "form" });
     });
 
     QUnit.test('handles "history_back" event', async function (assert) {
@@ -399,11 +392,10 @@ QUnit.module("ActionManager", (hooks) => {
             );
 
             // Prepare the URL hash to make sure the stored action will get executed.
-            await setBrowserLocation({ hash: "#model=partner&view_type=kanban" });
+            Object.assign(browser.location, { search: "?model=partner&view_type=kanban" });
 
             // Create the web client. It should execute the stored action.
             const webClient = await createWebClient({ serverData });
-            await nextTick();
 
             // Check the current action context
             assert.deepEqual(webClient.env.services.action.currentController.action.context, {

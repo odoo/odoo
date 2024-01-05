@@ -6,6 +6,7 @@ import {
     parseSearchQuery,
     routeToUrl,
     router,
+    routerBus,
     startRouter,
 } from "@web/core/browser/router";
 import { nextTick, patchWithCleanup } from "../helpers/utils";
@@ -90,14 +91,19 @@ QUnit.test("can parse URI encoded strings", (assert) => {
 });
 
 QUnit.test("routeToUrl encodes URI compatible strings", (assert) => {
-    const route = { pathname: "/asf", search: {}, hash: {} };
+    patchWithCleanup(browser, {
+        location: {
+            pathname: "/asf",
+        },
+    });
+    let route = {};
     assert.strictEqual(routeToUrl(route), "/asf");
 
-    route.search = { a: "11", g: "summer wine" };
+    route = { a: "11", g: "summer wine" };
     assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine");
 
-    route.hash = { b: "2", c: "", e: "kloug,gloubi" };
-    assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine#b=2&c=&e=kloug%2Cgloubi");
+    route = { b: "2", c: "", e: "kloug,gloubi" };
+    assert.strictEqual(routeToUrl(route), "/asf?b=2&c=&e=kloug%2Cgloubi");
 });
 
 QUnit.module("Router: Push state");
@@ -105,90 +111,76 @@ QUnit.module("Router: Push state");
 QUnit.test("can push in same timeout", async (assert) => {
     await createRouter();
 
-    assert.deepEqual(router.current.hash, {});
+    assert.deepEqual(router.current, {});
 
     router.pushState({ k1: 2 });
-    assert.deepEqual(router.current.hash, {});
+    assert.deepEqual(router.current, {});
 
     router.pushState({ k1: 3 });
-    assert.deepEqual(router.current.hash, {});
+    assert.deepEqual(router.current, {});
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 3 });
+    assert.deepEqual(router.current, { k1: 3 });
 });
 
 QUnit.test("can lock keys", async (assert) => {
     await createRouter();
 
-    router.pushState({ k1: 2 }, { lock: true });
-    await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
+    router.addLockedKey(["k1"]);
 
-    router.pushState({ k1: 3 });
+    router.replaceState({ k1: 2 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
+    assert.deepEqual(router.current, { k1: 2 });
 
-    router.pushState({ k1: 4 }, { lock: true });
+    router.replaceState({ k1: 3 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 4 });
+    assert.deepEqual(router.current, { k1: 3 });
 
-    router.pushState({ k1: 3 });
+    router.replaceState({ k2: 4 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 4 });
+    assert.deepEqual(router.current, { k1: 3, k2: 4 });
+
+    router.replaceState({ k1: 4 });
+    await nextTick();
+    assert.deepEqual(router.current, { k1: 4, k2: 4 });
 });
 
 QUnit.test("can re-lock keys in same final call", async (assert) => {
     await createRouter();
 
-    router.pushState({ k1: 2 }, { lock: true });
+    router.addLockedKey(["k1"]);
+
+    router.pushState({ k1: 2 });
     await nextTick();
-    router.pushState({ k1: 1 }, { lock: true });
+    router.pushState({ k2: 1 });
     router.pushState({ k1: 4 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 1 });
+    assert.deepEqual(router.current, { k1: 4, k2: 1 });
 });
 
-QUnit.test("can unlock keys", async (assert) => {
-    await createRouter();
-
-    router.pushState({ k1: 2 }, { lock: true });
-    await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
-
-    router.pushState({ k1: 3 });
-    await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
-
-    router.pushState({ k1: 4 }, { lock: false });
-    await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 4 });
-
-    router.pushState({ k1: 3 });
-    await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 3 });
-});
-
-QUnit.test("can replace hash", async (assert) => {
+QUnit.test("can replace search state", async (assert) => {
     await createRouter();
 
     router.pushState({ k1: 2 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
+    assert.deepEqual(router.current, { k1: 2 });
 
     router.pushState({ k2: 3 }, { replace: true });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k2: 3 });
+    assert.deepEqual(router.current, { k2: 3 });
 });
 
-QUnit.test("can replace hash with locked keys", async (assert) => {
+QUnit.test("can replace search state with locked keys", async (assert) => {
     await createRouter();
 
-    router.pushState({ k1: 2 }, { lock: true });
+    router.addLockedKey("k1");
+
+    router.pushState({ k1: 2 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
+    assert.deepEqual(router.current, { k1: 2 });
 
     router.pushState({ k2: 3 }, { replace: true });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2, k2: 3 });
+    assert.deepEqual(router.current, { k1: 2, k2: 3 });
 });
 
 QUnit.test("can merge hash", async (assert) => {
@@ -196,11 +188,11 @@ QUnit.test("can merge hash", async (assert) => {
 
     router.pushState({ k1: 2 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2 });
+    assert.deepEqual(router.current, { k1: 2 });
 
     router.pushState({ k2: 3 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 2, k2: 3 });
+    assert.deepEqual(router.current, { k1: 2, k2: 3 });
 });
 
 QUnit.test("undefined keys are not pushed", async (assert) => {
@@ -210,7 +202,7 @@ QUnit.test("undefined keys are not pushed", async (assert) => {
     router.pushState({ k1: undefined });
     await nextTick();
     assert.verifySteps([]);
-    assert.deepEqual(router.current.hash, {});
+    assert.deepEqual(router.current, {});
 });
 
 QUnit.test("undefined keys destroy previous non locked keys", async (assert) => {
@@ -218,11 +210,11 @@ QUnit.test("undefined keys destroy previous non locked keys", async (assert) => 
 
     router.pushState({ k1: 1 });
     await nextTick();
-    assert.deepEqual(router.current.hash, { k1: 1 });
+    assert.deepEqual(router.current, { k1: 1 });
 
     router.pushState({ k1: undefined });
     await nextTick();
-    assert.deepEqual(router.current.hash, {});
+    assert.deepEqual(router.current, {});
 });
 
 QUnit.test("do not re-push when hash is same", async (assert) => {
@@ -249,4 +241,79 @@ QUnit.test("do not re-push when hash is same (with integers as strings)", async 
     router.pushState({ k2: 2, k1: "1" });
     await nextTick();
     assert.verifySteps([]);
+});
+
+QUnit.test("test the help utils history.back and history.forward", async (assert) => {
+    patchWithCleanup(browser.location, {
+        pathname: "/asf",
+        origin: "http://lordofthering",
+    });
+    routerBus.addEventListener("ROUTE_CHANGE", () => assert.step("ROUTE_CHANGE"));
+    await createRouter();
+
+    router.pushState({ k1: 1 });
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1");
+
+    router.pushState({ k2: 2 });
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1&k2=2");
+
+    router.pushState({ k3: 3 }, { replace: true });
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k3=3");
+
+    browser.history.back(); // Click on back button
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1&k2=2");
+
+    router.pushState({ k4: 3 }, { replace: true }); // Click on a link
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k4=3");
+
+    browser.history.back(); // Click on back button
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1&k2=2");
+
+    browser.history.forward(); // Click on forward button
+    await nextTick();
+    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k4=3");
+
+    assert.verifySteps(["ROUTE_CHANGE", "ROUTE_CHANGE", "ROUTE_CHANGE"]);
+});
+
+QUnit.module("Router: Retrocompatibility");
+
+QUnit.test("parse an url with hash (key/values)", async (assert) => {
+    browser.location.hash = "#a=114&b=c.e&f=1&g=91";
+    await createRouter();
+    assert.strictEqual(browser.location.search, "?a=114&b=c.e&f=1&g=91");
+    assert.strictEqual(browser.location.hash, "");
+    assert.deepEqual(router.current, { a: 114, b: "c.e", f: 1, g: 91 });
+});
+
+QUnit.test("parse an url with hash (key/values) and query string", async (assert) => {
+    browser.location.hash = "#g=91";
+    browser.location.search = "?a=114&b=c.e&f=1";
+    await createRouter();
+    assert.strictEqual(browser.location.search, "?a=114&b=c.e&f=1&g=91");
+    assert.strictEqual(browser.location.hash, "");
+    assert.deepEqual(router.current, { a: 114, b: "c.e", f: 1, g: 91 });
+});
+
+QUnit.test("parse an url with hash (anchor link)", async (assert) => {
+    browser.location.hash = "#anchor";
+    await createRouter();
+    assert.strictEqual(browser.location.search, "");
+    assert.strictEqual(browser.location.hash, "#anchor");
+    assert.deepEqual(router.current, {});
+});
+
+QUnit.test("parse an url with hash (anchor link) and query string", async (assert) => {
+    browser.location.hash = "#anchor";
+    browser.location.search = "?a=114&b=c.e&f=1";
+    await createRouter();
+    assert.strictEqual(browser.location.search, "?a=114&b=c.e&f=1");
+    assert.strictEqual(browser.location.hash, "#anchor");
+    assert.deepEqual(router.current, { a: 114, b: "c.e", f: 1 });
 });

@@ -6,8 +6,9 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { patchWithCleanup, setBrowserLocation } from "../helpers/utils";
+import { patchWithCleanup } from "../helpers/utils";
 import { patchRPCWithCleanup } from "../helpers/mock_services";
+import { browser } from "@web/core/browser/browser";
 
 const serviceRegistry = registry.category("services");
 
@@ -67,7 +68,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("extract allowed company ids from url hash", async (assert) => {
+QUnit.test("extract allowed company ids from url search", async (assert) => {
     patchWithCleanup(session.user_companies, {
         allowed_companies: {
             1: { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
@@ -78,7 +79,7 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
 
     serviceRegistry.add("company", companyService);
 
-    await setBrowserLocation({ hash: "cids=3-1" });
+    Object.assign(browser.location, { search: "cids=3-1" });
     let env = await makeTestEnv();
     assert.deepEqual(
         Object.values(env.services.company.allowedCompanies).map((c) => c.id),
@@ -89,7 +90,7 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
 
     // backward compatibility
     registry.category("error_handlers").remove("accessErrorHandlerCompanies");
-    await setBrowserLocation({ hash: "cids=3%2C1" });
+    Object.assign(browser.location, { search: "cids=3%2C1" });
     env = await makeTestEnv();
     assert.deepEqual(env.services.company.activeCompanyIds, [3, 1]);
     assert.strictEqual(env.services.company.currentCompany.id, 3);

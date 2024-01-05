@@ -10,7 +10,6 @@ import {
     makeDeferred,
     mount,
     patchWithCleanup,
-    setBrowserLocation,
 } from "@web/../tests/helpers/utils";
 import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 import { companyService } from "@web/webclient/company_service";
@@ -96,7 +95,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
 
         const prom = makeDeferred();
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
             prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
@@ -130,7 +129,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
 
         const prom = makeDeferred();
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
             prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
@@ -179,7 +178,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 2
          *   [ ] Company 3
          */
-        assert.deepEqual(router.current.hash, { cids: 1 });
+        assert.deepEqual(router.current, { cids: 1 });
         assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [1]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 1);
         assert.containsN(scMenuEl, "[data-company-id]", 3);
@@ -192,7 +191,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
          *   [ ] Company 3
          */
         await click(scMenuEl.querySelectorAll(".toggle_company")[0]);
-        assert.deepEqual(router.current.hash, {
+        assert.deepEqual(router.current, {
             cids: 1,
             _company_switching: 1,
         });
@@ -206,7 +205,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.expect(7);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
@@ -235,9 +234,9 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.expect(7);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
-        await setBrowserLocation({ hash: "cids=3-1" });
+        Object.assign(browser.location, { search: "cids=3-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
@@ -265,9 +264,9 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.expect(7);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
-        await setBrowserLocation({ hash: "cids=2-3" });
+        Object.assign(browser.location, { search: "cids=2-3" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
@@ -295,7 +294,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         assert.expect(7);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
         const scMenuEl = target.querySelector(".o_burger_menu_companies");

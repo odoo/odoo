@@ -66,7 +66,7 @@ import {
     toggleSaveFavorite,
     validateSearch,
 } from "../search/helpers";
-import { createWebClient, doAction, loadState } from "../webclient/helpers";
+import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
 import { makeServerError } from "../helpers/mock_server";
 
@@ -16466,19 +16466,13 @@ QUnit.module("Views", (hooks) => {
         ); //m2o field
 
         // switch to kanban view
-        await loadState(webClient, {
-            action: 2,
-            view_type: "kanban",
-        });
+        await click(target.querySelector(".o_switch_view.o_kanban"));
 
         assert.containsNone(target, ".o_list_view", "should not display the list view anymore");
         assert.containsOnce(target, ".o_kanban_view", "should have switched to the kanban view");
 
         // switch back to list view
-        await loadState(webClient, {
-            action: 2,
-            view_type: "list",
-        });
+        await click(target.querySelector(".o_switch_view.o_list"));
 
         assert.containsNone(target, ".o_kanban_view", "should not display the kanban view anymoe");
         assert.containsOnce(target, ".o_list_view", "should display the list view");

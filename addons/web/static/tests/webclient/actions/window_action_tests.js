@@ -21,8 +21,8 @@ import {
     nextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
-import { router, routerBus } from "@web/core/browser/router";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { router } from "@web/core/browser/router";
 
 import { onMounted } from "@odoo/owl";
 import { patchUserContextWithCleanup } from "../../helpers/mock_services";
@@ -518,8 +518,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("A new form view can be reloaded after a failed one", async function (assert) {
-        assert.expect(5);
-
         const webClient = await createWebClient({ serverData });
         serviceRegistry.add("error", errorService);
 
@@ -528,47 +526,44 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "The list view should be displayed");
 
         // Click on the first record
-        await testUtils.dom.click(
-            $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
-        );
+        await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view", "The form view should be displayed");
+        assert.strictEqual(
+            target.querySelector(".o_last_breadcrumb_item").textContent,
+            "First record"
+        );
 
         // Delete the current record
         await click(target, ".o_cp_action_menus .fa-cog");
-        await testUtils.dom.click(
+        await click(
             Array.from(document.querySelectorAll(".o_menu_item")).find(
                 (e) => e.textContent === "Delete"
             )
         );
         assert.containsOnce(target, ".modal", "a confirm modal should be displayed");
-        await testUtils.dom.click(target.querySelector(".modal-footer button.btn-primary"));
-
+        await click(target.querySelector(".modal-footer button.btn-primary"));
+        // await nextTick();
         // The form view is automatically switched to the next record
-        // Go back to the previous (now deleted) record
-        routerBus.trigger("test:hashchange", {
-            model: "partner",
-            id: 1,
-            action: 3,
-            view_type: "form",
-        });
-        await testUtils.nextTick();
-
-        // Go back to the list view
-        routerBus.trigger("test:hashchange", {
-            model: "partner",
-            action: 3,
-            view_type: "list",
-        });
-        await testUtils.nextTick();
-        assert.containsOnce(target, ".o_list_view", "should still display the list view");
-
-        await testUtils.dom.click(
-            $(target).find(".o_list_view .o_data_row:first .o_data_cell:first")
+        assert.strictEqual(
+            target.querySelector(".o_last_breadcrumb_item").textContent,
+            "Second record"
         );
+
+        // Go back to the previous (now deleted) record
+        browser.history.back();
+        await nextTick();
+        // As the previous one is deleted, we go back to the list
+        assert.containsOnce(target, ".o_list_view", "should still display the list view");
+        // Click on the first record
+        await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
         assert.containsOnce(
             target,
             ".o_form_view",
             "The form view should still load after a previous failed update | reload"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_last_breadcrumb_item").textContent,
+            "Second record"
         );
     });
 
@@ -1258,15 +1253,15 @@ QUnit.module("ActionManager", (hooks) => {
             // open a record in form view
             await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             await nextTick(); // wait for the router to update its state
-            assert.strictEqual(router.current.hash.id, 1);
+            assert.strictEqual(router.current.id, 1);
             // do some other action
             await doAction(webClient, 4);
             await nextTick(); // wait for the router to update its state
-            assert.notOk(router.current.hash.id);
+            assert.notOk(router.current.id);
             // go back to form view
             await click(target.querySelectorAll(".o_control_panel .breadcrumb a")[1]);
             await nextTick(); // wait for the router to update its state
-            assert.strictEqual(router.current.hash.id, 1);
+            assert.strictEqual(router.current.id, 1);
         }
     );
 
@@ -1578,12 +1573,8 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
+        Object.assign(browser.location, { search: "action=3&id=2&view_type=form" });
         const webClient = await createWebClient({ serverData });
-        await loadState(webClient, {
-            action: 3,
-            id: 2,
-            view_type: "form",
-        });
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
@@ -1973,7 +1964,7 @@ QUnit.module("ActionManager", (hooks) => {
         // Open Partner form in create mode
         await doAction(webClient, 3, { viewType: "form" });
         await nextTick();
-        const prevHash = Object.assign({}, router.current.hash);
+        const prevUrlState = Object.assign({}, router.current);
         // Edit another partner in a dialog
         await doAction(webClient, {
             name: "Edit a Partner",
@@ -1986,8 +1977,8 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await nextTick();
         assert.deepEqual(
-            router.current.hash,
-            prevHash,
+            router.current,
+            prevUrlState,
             "push_state in dialog shouldn't change the hash"
         );
     });

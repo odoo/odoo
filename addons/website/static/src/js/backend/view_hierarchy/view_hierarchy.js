@@ -15,7 +15,7 @@ export class ViewHierarchy extends Component {
         this.orm = useService("orm");
         this.state = useState({ showInactive: false, searchedView: {}, viewTree: {} });
         this.websites = useState({ names: new Set(["All Websites"]), selected: "All Websites" });
-        this.viewId = this.props.action.context.active_id || router.current.hash.active_id;
+        this.viewId = this.props.action.context.active_id || router.current.active_id;
         this.hideGenericViewByWebsite = {};
 
         onWillStart(async () => {
