@@ -219,6 +219,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             providers_sudo.ids,
             partner_sudo.id,
             currency_id=currency.id,
+            sale_order_id=order_sudo.id,
         )  # In sudo mode to read the fields of providers.
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
             providers_sudo.ids, partner_sudo.id, **kwargs

@@ -181,11 +181,23 @@ class PaymentMethod(models.Model):
 
         return super().write(values)
 
+    def _is_method_tokenization_required(self, **kwargs):
+        """ Return whether method tokenizing is required.
+
+        For a module to make the tokenization required based on the payment context, it must
+        override this method and return whether it is required.
+
+        :param dict kwargs: The payment context. This parameter is not used here.
+        :return: Whether tokenizing the transaction is required.
+        :rtype: bool
+        """
+        return False
+
     # === BUSINESS METHODS === #
 
     def _get_compatible_payment_methods(
         self, provider_ids, partner_id, currency_id=None, force_tokenization=False,
-        is_express_checkout=False
+        is_express_checkout=False, **kwargs,
     ):
         """ Search and return the payment methods matching the compatibility criteria.
 
@@ -229,7 +241,7 @@ class PaymentMethod(models.Model):
             ])
 
         # Handle tokenization support requirements.
-        if force_tokenization:
+        if force_tokenization or self._is_method_tokenization_required(**kwargs):
             domain = expression.AND([domain, [('support_tokenization', '=', True)]])
 
         # Handle express checkout.
