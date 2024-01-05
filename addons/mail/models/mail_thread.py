@@ -3586,7 +3586,7 @@ class MailThread(models.AbstractModel):
         if not partner_ids:
             return
 
-        partner_devices_sudo = self.env['mail.partner.device'].sudo()
+        partner_devices_sudo = self.env['mail.push.device'].sudo()
         devices = partner_devices_sudo.search([
             ('partner_id', 'in', partner_ids)
         ])
@@ -3628,11 +3628,11 @@ class MailThread(models.AbstractModel):
             # clean up obsolete devices
             if devices_to_unlink:
                 devices_list = list(devices_to_unlink)
-                self.env['mail.partner.device'].sudo().browse(devices_list).unlink()
+                self.env['mail.push.device'].sudo().browse(devices_list).unlink()
 
         else:
-            self.env['mail.notification.web.push'].sudo().create([{
-                'user_device': device.id,
+            self.env['mail.push'].sudo().create([{
+                'mail_push_device_id': device.id,
                 'payload': json.dumps(payload),
             } for device in devices])
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()

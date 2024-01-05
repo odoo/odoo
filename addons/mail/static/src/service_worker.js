@@ -19,7 +19,7 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
     const subscription = await self.registration.pushManager.subscribe(
         event.oldSubscription.options
     );
-    await fetch("/web/dataset/call_kw/mail.partner.device/register_devices", {
+    await fetch("/web/dataset/call_kw/mail.push.device/register_devices", {
         headers: {
             "Content-type": "application/json",
         },
@@ -28,7 +28,7 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
             jsonrpc: "2.0",
             method: "call",
             params: {
-                model: "mail.partner.device",
+                model: "mail.push.device",
                 method: "register_devices",
                 args: [],
                 kwargs: {
