@@ -51,7 +51,7 @@ export class ProjectTaskFormController extends FormController {
                 recordModel: this.props.resModel,
                 versionedFieldName,
                 historyMetadata,
-                restoreRequested: (html) => {
+                restoreRequested: (html, close) => {
                     this.dialogService.add(ConfirmationDialog, {
                         title: _t("Are you sure you want to restore this version ?"),
                         body: _t("Restoring will replace the current content with the selected version. Any unsaved changes will be lost."),
@@ -59,12 +59,11 @@ export class ProjectTaskFormController extends FormController {
                             const restoredData = {};
                             restoredData[versionedFieldName] = html;
                             record.update(restoredData);
+                            close();
                         },
                         confirmLabel: _t("Restore"),
-                        cancel: () => {},
                     });
                 },
-                close: () => {},
             },
         );
     }
