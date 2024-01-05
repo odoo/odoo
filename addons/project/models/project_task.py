@@ -76,13 +76,17 @@ class Task(models.Model):
         'mail.thread.cc',
         'mail.activity.mixin',
         'rating.mixin',
-        'mail.tracking.duration.mixin'
+        'mail.tracking.duration.mixin',
+        'html.field.history.mixin',
     ]
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
     _systray_view = 'activity'
     _track_duration_field = 'stage_id'
+
+    def _get_versioned_fields(self):
+        return [Task.description.name]
 
     @api.model
     def _get_default_partner_id(self, project=None, parent=None):
