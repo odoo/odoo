@@ -5,11 +5,17 @@
             <attribute name="t-attf-class" add="table-borderless {{ !showTable ? 'd-none' : ''}}" remove="table-striped" separator=" "/>
         </xpath>
         <xpath expr="//table" position="after">
-             <t t-if="!showTable">
-                 <button t-on-click="props.onAdd" class="btn btn-secondary ms-4 mt-3" role="button" t-if="isEditable">
+            <t t-if="!showTable">
+                <div name="no_resume_line" class="ms-3 mt-3">
+                    <p>
+                        There are no resume lines on this employee.
+                        Why not add a new one ?
+                    </p>
+                </div>
+                <button t-on-click="props.onAdd" class="btn btn-secondary ms-4 mt-3" role="button" t-if="isEditable">
                     Create a new entry
-                 </button>
-             </t>
+                </button>
+            </t>
         </xpath>
         <xpath expr="//div[@name='skills_header']" position="replace"/>
         <xpath expr="//thead/tr" position="replace">

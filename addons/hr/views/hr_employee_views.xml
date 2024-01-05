@@ -58,7 +58,8 @@
                     <field name="last_activity" invisible="1"/>
                     <field name="work_contact_id" invisible="1"/>
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user" invisible="not active"/>
+                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
+                            groups="hr.group_hr_user" invisible="not active" context="{'sort_by_responsible': True}"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -75,9 +76,8 @@
                                         required="True" style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
                                 <h2>
-                                    <field name="job_title" placeholder="Job Position" />
+                                    <field name="job_title" placeholder="Job Title"/>
                                 </h2>
-                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_user"/>
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
@@ -90,6 +90,9 @@
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="work_phone" widget="phone"/>
                                 <field name="work_email" widget="email"/>
+                                <field name="category_ids" widget="many2many_tags"
+                                    options="{'color_field': 'color', 'no_create_edit': True}"
+                                    placeholder="Tags" groups="hr.group_hr_user"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="company_country_code" invisible="1"/>
@@ -160,6 +163,15 @@
                                     <group string="Emergency" name="emergency">
                                         <field name="emergency_contact"/>
                                         <field name="emergency_phone" class="o_force_ltr"/>
+                                        <separator string="Citizenship"/>
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="ssnid"/>
+                                        <field name="passport_id"/>
+                                        <field name="gender"/>
+                                        <field name="birthday"/>
+                                        <field name="place_of_birth"/>
+                                        <field name="country_of_birth"/>
                                     </group>
                                     <group string="Education">
                                         <field name="certificate"/>
@@ -172,16 +184,6 @@
                                         <field name="work_permit_expiration_date"/>
                                         <field name="work_permit_name" invisible="1"/>
                                         <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
-                                    </group>
-                                    <group string="Citizenship">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
-                                        <field name="ssnid"/>
-                                        <field name="passport_id"/>
-                                        <field name="gender"/>
-                                        <field name="birthday"/>
-                                        <field name="place_of_birth"/>
-                                        <field name="country_of_birth"/>
                                     </group>
                                 </group>
                             </page>
