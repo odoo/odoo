@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-08 06:51+0000\n"
+"PO-Revision-Date: 2024-01-08 06:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -162,23 +162,6 @@ msgstr ""
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "<span style=\"font-size: 14px;\">Try the following</span>"
-msgstr ""
-
-#. module: project_todo
-#: model:ir.model.fields,field_description:project_todo.field_mail_activity_type__category
-msgid "Action"
-msgstr ""
-
-#. module: project_todo
-#: model:ir.model.fields,help:project_todo.field_mail_activity_type__category
-msgid ""
-"Actions may trigger specific behavior like opening calendar view or "
-"automatically mark as done when a document is uploaded"
-msgstr ""
-
-#. module: project_todo
-#: model:ir.model,name:project_todo.model_mail_activity_type
-msgid "Activity Type"
 msgstr ""
 
 #. module: project_todo
@@ -359,12 +342,6 @@ msgid "Open"
 msgstr ""
 
 #. module: project_todo
-#: model:ir.model.fields.selection,name:project_todo.selection__mail_activity_type__category__reminder
-#: model:mail.activity.type,name:project_todo.mail_activity_data_reminder
-msgid "Reminder"
-msgstr ""
-
-#. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Reminder to..."
 msgstr ""
@@ -397,8 +374,16 @@ msgid "Tags"
 msgstr ""
 
 #. module: project_todo
+#. odoo-python
+#: code:addons/project_todo/models/res_users.py:0
 #: model:ir.model,name:project_todo.model_project_task
 msgid "Task"
+msgstr ""
+
+#. module: project_todo
+#. odoo-python
+#: code:addons/project_todo/models/res_users.py:0
+msgid "To-Do"
 msgstr ""
 
 #. module: project_todo
@@ -430,11 +415,16 @@ msgid "Todos"
 msgstr ""
 
 #. module: project_todo
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 msgid "Untitled to-do"
+msgstr ""
+
+#. module: project_todo
+#: model:ir.model,name:project_todo.model_res_users
+msgid "User"
 msgstr ""
 
 #. module: project_todo
