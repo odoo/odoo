@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from markupsafe import escape
 
-from odoo import models, fields, api, _
+from odoo import Command, models, fields, api, _
 from odoo.tools.misc import frozendict
 
 
@@ -57,7 +55,26 @@ class AccountMove(models.Model):
                 }
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
-        if self.expense_sheet_id:
-            self.expense_sheet_id = False
-            self.ref = False # else, when restarting the expense flow we get duplicate issue on vendor.bill
+        # Extends account
+        # Reversing vendor bills that represent employee reimbursements should clear them from the expense sheet such that another
+        # can be generated in place.
+        own_account_moves = self.filtered(lambda move: move.expense_sheet_id.payment_mode == 'own_account')
+        own_account_moves.write({
+            'ref': False,  # else, when restarting the expense flow we get duplicate issue on vendor.bill
+            'expense_sheet_id': [Command.clear()],  # There is no reversed state for employee expense
+        })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+    def unlink(self):
+        # EXTENDS account
+        if self.expense_sheet_id:
+            self.expense_sheet_id.state = 'approve'
+        return super().unlink()
+
+    def button_draft(self):
+        # EXTENDS account
+        employee_expense_sheets = self.expense_sheet_id.filtered(
+            lambda expense_sheet: expense_sheet.payment_mode == 'own_account'
+        )
+        employee_expense_sheets.state = 'post'
+        return super().button_draft()
