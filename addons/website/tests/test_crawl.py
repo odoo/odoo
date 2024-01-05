@@ -54,7 +54,7 @@ class Crawler(HttpCaseWithUserDemo):
             seen = set()
 
         url_slug = re.sub(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", '/<slug>/', url)
-        url_slug = re.sub(r"([^/=?&]+)=[^/=?&]+", '\g<1>=param', url_slug)
+        url_slug = re.sub(r"([^/=?&]+)=[^/=?&]+", r'\g<1>=param', url_slug)
         if url_slug in seen:
             return seen
         else:
