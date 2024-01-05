@@ -293,6 +293,8 @@ class MergePartnerAutomatic(models.TransientModel):
             :param dst_partner : record of destination res.partner
             :param extra_checks: pass False to bypass extra sanity check (e.g. email address)
         """
+        # This context is used to don't show errors, only in loggers to allow continue from the cron job
+        skip_raise_errors = self._context.get("skip_validation_merging_more_contacts_together")
         # super-admin can be used to bypass extra checks
         if self.env.is_admin():
             extra_checks = False
@@ -302,7 +304,7 @@ class MergePartnerAutomatic(models.TransientModel):
         if len(partner_ids) < 2:
             return
 
-        if len(partner_ids) > 3:
+        if len(partner_ids) > 3 and not skip_raise_errors:
             raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
 
         # check if the list of partners to merge contains child/parent relation
