@@ -289,7 +289,7 @@ class MassMailing(models.Model):
             FROM mailing_trace AS stats
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
-            AND stats.trace_status != 'cancel'
+            AND stats.trace_status not in ('bounce', 'cancel', 'error')
             GROUP BY stats.mass_mailing_id
         """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
@@ -337,9 +337,10 @@ class MassMailing(models.Model):
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
             total = (row['expected'] - row['canceled']) or 1
+            total_no_error = (row['expected'] - row['canceled'] - row['bounced'] - row['failed']) or 1
             row['received_ratio'] = float_round(100.0 * row['delivered'] / total, precision_digits=2)
-            row['opened_ratio'] = float_round(100.0 * row['opened'] / total, precision_digits=2)
-            row['replied_ratio'] = float_round(100.0 * row['replied'] / total, precision_digits=2)
+            row['opened_ratio'] = float_round(100.0 * row['opened'] / total_no_error, precision_digits=2)
+            row['replied_ratio'] = float_round(100.0 * row['replied'] / total_no_error, precision_digits=2)
             row['bounced_ratio'] = float_round(100.0 * row['bounced'] / total, precision_digits=2)
             self.browse(row.pop('mailing_id')).update(row)
 
