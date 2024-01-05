@@ -716,7 +716,7 @@ export class StaticList extends DataPoint {
         const id = resId || params.virtualId;
         const config = {
             context: this.context,
-            activeFields: params.activeFields || this.activeFields,
+            activeFields: Object.assign({}, params.activeFields || this.activeFields),
             resModel: this.resModel,
             fields: params.fields || this.fields,
             relationField: this.config.relationField,
