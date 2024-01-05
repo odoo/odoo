@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"PO-Revision-Date: 2024-01-08 06:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,12 @@ msgid "CF Site Key"
 msgstr ""
 
 #. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+msgid "Cloudflare Turnstile Error"
+msgstr ""
+
+#. module: website_cf_turnstile
 #: model:ir.model,name:website_cf_turnstile.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -61,6 +67,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 msgid "The request is invalid or malformed."
+msgstr ""
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+msgid ""
+"There was an error with Cloudflare Turnstile, the captcha system.\n"
+"Please make sure your credentials for this service are properly set up.\n"
+"The error code is: %s.\n"
+"You can find more information about this error code here: https://developers.cloudflare.com/turnstile/reference/errors."
 msgstr ""
 
 #. module: website_cf_turnstile
