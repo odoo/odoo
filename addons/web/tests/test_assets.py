@@ -114,3 +114,81 @@ class TestLoad(HttpCase):
         with patch('odoo.addons.base.models.assetsbundle.AssetsBundle.save_attachment', save_attachment):
             self.url_open('/web').raise_for_status()
             self.url_open('/').raise_for_status()
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestWebAssetsCursors(HttpCase):
+    """
+    This tests class tests the specificities of the route /web/assets regarding used connections.
+
+    The route is almost always read-only, except when the bundle is missing/outdated.
+    To avoid retrying in all cases on the first request after an update/change, the route
+    uses a cursor to check if the bundle is up-to-date, then opens a new cursor to generate
+    the bundle if needed.
+
+    This optimization is only possible because the route has a simple flow: check, generate, return.
+    No other operation is done on the database in between.
+    We don't want to open another cursor to generate the bundle if the check is done with a read/write
+    cursor, if we don't have a replica.
+    """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.bundle_name = 'web.assets_frontend'
+        cls.bundle_version = cls.env['ir.qweb']._get_asset_bundle(cls.bundle_name).get_version('css')
+
+    def setUp(self):
+        super().setUp()
+        self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()
+        self.bundle_name = 'web.assets_frontend'
+
+    def _get_generate_cursors_readwriteness(self):
+        """
+        This method returns the list cursors read-writness used to generate the bundle
+        :returns: [('ro|rw', '(ro_requested|rw_requested)')]
+        """
+        cursors = []
+        original_cursor = self.env.registry.cursor
+        def cursor(readonly=False):
+            cursor = original_cursor(readonly=readonly)
+            cursors.append(('ro' if cursor.readonly else 'rw', '(ro_requested)' if readonly else '(rw_requested)'))
+            return cursor
+
+        with patch.object(self.env.registry, 'cursor', cursor):
+            response = self.url_open(f'/web/assets/{self.bundle_version}/{self.bundle_name}.min.css', allow_redirects=False)
+            self.assertEqual(response.status_code, 200)
+
+        # remove the check_signaling cursor
+        self.assertEqual(cursors[0][1], '(ro_requested)', "the first cursor used for match and check signaling should be ro")
+        return cursors[1:]
+
+    def test_web_binary_keep_cursor_ro(self):
+        """
+        With replica, will need two cursors for generation, then a read-only cursor for all other call
+        """
+        self.assertEqual(
+            self._get_generate_cursors_readwriteness(),
+            [
+                ('ro', '(ro_requested)'),
+                ('rw', '(rw_requested)'),
+            ],
+            'A ro and rw cursor should be used to generate assets without replica when cold',
+        )
+
+        self.assertEqual(
+            self._get_generate_cursors_readwriteness(),
+            [
+                ('ro', '(ro_requested)'),
+            ],
+            'Only one readonly cursor should be used to generate assets wit replica when warm',
+        )
+
+    def test_web_binary_keep_cursor_rw(self):
+        self.env.registry.test_readonly_enabled = False
+        self.assertEqual(
+            self._get_generate_cursors_readwriteness(),
+            [
+                ('rw', '(ro_requested)'),
+            ],
+            'Only one readwrite cursor should be used to generate assets without replica',
+        )

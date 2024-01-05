@@ -81,7 +81,6 @@ except ImportError:
 
 _logger = logging.getLogger(__name__)
 
-
 # backward compatibility: Form was defined in this file
 def __getattr__(name):
     # pylint: disable=import-outside-toplevel
