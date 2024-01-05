@@ -702,7 +702,7 @@ class MassMailing(models.Model):
         return {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'link.tracker',
             'domain': [('mass_mailing_id', '=', self.id)],
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
@@ -753,7 +753,7 @@ class MassMailing(models.Model):
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
             'context': dict(self._context, create=False),
