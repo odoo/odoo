@@ -10,6 +10,12 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
 class ChannelController(http.Controller):
+    @http.route("/discuss/channels", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def discuss_channels(self):
+        """Returns the list of channels the current user is a member of."""
+        return request.env["discuss.channel"]._get_channels_as_member()._channel_info()
+
     @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def discuss_channel_members(self, channel_id, known_member_ids):

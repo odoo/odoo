@@ -134,7 +134,7 @@ class MailGuest(models.Model):
         # sudo: mail.guest - guest reading their own id/name/channels
         guest_sudo = self.sudo()
         return {
-            'Thread': guest_sudo.channel_ids._filter_for_init_messaging()._channel_info(),
+            "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
             'companyName': self.env.company.name,
             'self': {
                 'id': guest_sudo.id,

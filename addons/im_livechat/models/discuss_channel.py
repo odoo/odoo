@@ -127,28 +127,20 @@ class DiscussChannel(models.Model):
                 subtype_xmlid='mail.mt_comment'
             )
 
-    def _get_livechat_visitor_member(self):
-        """Return the member of the live chat visitor if applicable."""
-        self.ensure_one()
-        if self.channel_type != "livechat":
-            return self.env["discuss.channel.member"]
-        # The first member is always the operator and the second always the visitor.
-        return self.channel_member_ids[1:2]
-
-    def _filter_for_init_messaging(self):
+    def _get_init_channels(self):
         """Override to only return the latest live chat channel for which the
         current persona is the visitor in the embed live chat context: every
         other channel is irrelevant in this case.
         """
-        channels = super()._filter_for_init_messaging()
         if self.env.context.get("is_for_livechat"):
-            # Only returns the latest live chat, every other channel is irrelevant in the live chat context.
-            return channels.filtered(
-                lambda c: c.channel_type == "livechat"
-                and c.livechat_active
-                and c._get_livechat_visitor_member().is_self
-            )[-1:]
-        return channels
+            channel_domain = [
+                ("channel_type", "=", "livechat"),
+                ("livechat_active", "=", True),
+                ("is_member", "=", True),
+            ]
+            return self.search(channel_domain)
+        return super()._get_init_channels()
+
 
     # Rating Mixin
 

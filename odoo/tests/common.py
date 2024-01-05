@@ -1837,7 +1837,7 @@ class HttpCase(TransactionCase):
             'id': 0,
             'jsonrpc': '2.0',
             'method': 'call',
-            'params': params,
+            'params': params or {},
         }).encode()
         headers = headers or {}
         headers['Content-Type'] = 'application/json'

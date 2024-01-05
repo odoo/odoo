@@ -1,12 +1,12 @@
 /* @odoo-module */
 
+import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
 
-import { user } from "@web/core/user";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 
 /**
  * @typedef SuggestedRecipient
@@ -51,6 +51,9 @@ export class Thread extends Record {
             }
         });
         return thread;
+    }
+    static async getOrFetch(data) {
+        return this.get(data);
     }
 
     /** @type {number} */

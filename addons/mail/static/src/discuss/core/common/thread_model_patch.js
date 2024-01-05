@@ -70,4 +70,7 @@ patch(Thread.prototype, {
         }
         return super.avatarUrl;
     },
+    incrementUnreadCounter() {
+        this.message_unread_counter++;
+    },
 });

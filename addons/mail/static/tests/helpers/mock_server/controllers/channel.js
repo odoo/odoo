@@ -8,6 +8,9 @@ patch(MockServer.prototype, {
      * @override
      */
     async _performRPC(route, args) {
+        if (route === "/discuss/channels") {
+            return this._mockRouteDiscussChannels();
+        }
         if (route === "/discuss/channel/attachments") {
             return this._mockRouteDiscussChannelAttachments(
                 args.channel_id,
@@ -20,7 +23,14 @@ patch(MockServer.prototype, {
         }
         return super._performRPC(route, args);
     },
-
+    /**
+     * Simulates the `/discuss/channels` route.
+     */
+    _mockRouteDiscussChannels() {
+        return this._mockDiscussChannelChannelInfo(
+            this._mockDiscussChannel__get_channels_as_member().map((channel) => channel.id)
+        );
+    },
     /**
      * Simulates the `/discuss/channel/attachments` route.
      *

@@ -35,6 +35,7 @@ commandProviderRegistry.add("mail.partner", {
      */
     async provide(env, options) {
         const messaging = env.services["mail.messaging"];
+        await messaging.store.fetchChannels();
         const threadService = env.services["mail.thread"];
         const suggestionService = env.services["mail.suggestion"];
         const commands = [];
@@ -113,6 +114,7 @@ commandProviderRegistry.add("discuss.channel", {
      */
     async provide(env, options) {
         const messaging = env.services["mail.messaging"];
+        await messaging.store.fetchChannels();
         const threadService = env.services["mail.thread"];
         const commands = [];
         const recentChannels = threadService.getRecentChannels();

@@ -37,7 +37,7 @@ export class MessagingMenu extends Component {
         });
     }
 
-    beforeOpen() {
+    async beforeOpen() {
         this.threadService.fetchPreviews();
         if (
             !this.store.discuss.inbox.isLoaded &&
@@ -237,9 +237,6 @@ export class MessagingMenu extends Component {
     get counter() {
         let value =
             this.store.discuss.inbox.counter +
-            Object.values(this.store.Thread.records).filter(
-                (thread) => thread.is_pinned && thread.message_unread_counter > 0
-            ).length +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);
         if (this.canPromptToInstall) {
             value++;
