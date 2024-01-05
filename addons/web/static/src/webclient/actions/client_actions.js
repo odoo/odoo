@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { router, routeToUrl } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -50,30 +50,20 @@ registry.category("actions").add("invalid_action", InvalidAction);
  */
 function reload(env, action) {
     const { menu_id, action_id } = action.params || {};
-    const route = { ...router.current };
+    let route = { ...router.current };
 
     if (menu_id || action_id) {
-        route.hash = {};
+        route = {};
         if (menu_id) {
-            route.hash.menu_id = menu_id;
+            route.menu_id = menu_id;
         }
         if (action_id) {
-            route.hash.action = action_id;
+            route.action = action_id;
         }
     }
 
-    // We want to force location.assign(...) to do a page reload.
-    // To do this, we need to make sure that the url is different.
-    route.search = { ...route.search };
-    if ("reload" in route.search) {
-        delete route.search.reload;
-    } else {
-        route.search.reload = true;
-    }
-    const url = browser.location.origin + routeToUrl(route);
-
     env.bus.trigger("CLEAR-CACHES");
-    browser.location.assign(url);
+    router.pushState(route, { replace: true, reload: true });
 }
 
 registry.category("actions").add("reload", reload);

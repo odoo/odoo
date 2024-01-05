@@ -39,7 +39,7 @@ class TestSnippets(HttpCase):
                 'name': 'My Mail Group',
                 'alias_name': 'my_mail_group',
             })
-        self.start_tour("/web#action=website.website_preview&%s" % path, "snippets_all_drag_and_drop", login='admin', timeout=300)
+        self.start_tour("/web?action=website.website_preview&%s" % path, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_countdown', login='admin')

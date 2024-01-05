@@ -6,14 +6,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
 import { makeTestEnv } from "../helpers/mock_env";
 import { companyService } from "@web/webclient/company_service";
-import {
-    click,
-    getFixture,
-    makeDeferred,
-    mount,
-    patchWithCleanup,
-    setBrowserLocation,
-} from "../helpers/utils";
+import { click, getFixture, makeDeferred, mount, patchWithCleanup } from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
 import { router } from "@web/core/browser/router";
@@ -92,7 +85,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
     QUnit.test("companies can be toggled: toggle a second company", async (assert) => {
         const prom = makeDeferred();
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
             prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
@@ -155,7 +148,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
 
         const prom = makeDeferred();
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
             prom.resolve();
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
@@ -210,7 +203,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hercules
          *   [ ]    Hulk
          */
-        assert.deepEqual(router.current.hash, { cids: 3 });
+        assert.deepEqual(router.current, { cids: 3 });
         assert.deepEqual(scMenu.env.services.company.activeCompanyIds, [3]);
         assert.strictEqual(scMenu.env.services.company.currentCompany.id, 3);
         await click(target.querySelector(".dropdown-toggle"));
@@ -226,7 +219,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
          *   [ ]    Hulk
          */
         await click(target.querySelectorAll(".toggle_company")[0]);
-        assert.deepEqual(router.current.hash, {
+        assert.deepEqual(router.current, {
             cids: 3,
             _company_switching: 1,
         });
@@ -241,7 +234,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.expect(8);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
@@ -275,9 +268,9 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.expect(8);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
-        await setBrowserLocation({ hash: "cids=3-1" });
+        Object.assign(browser.location, { search: "cids=3-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
         /**
@@ -310,9 +303,9 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.expect(8);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
-        await setBrowserLocation({ hash: "cids=2-1" });
+        Object.assign(browser.location, { search: "cids=2-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
         /**
@@ -345,7 +338,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         assert.expect(8);
 
         function onPushState(url) {
-            assert.step(url.split("#")[1]);
+            assert.step(url.split("?")[1]);
         }
         const scMenu = await createSwitchCompanyMenu({ onPushState }, ORIGINAL_TOGGLE_DELAY);
 

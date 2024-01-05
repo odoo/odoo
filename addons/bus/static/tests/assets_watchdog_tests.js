@@ -19,9 +19,9 @@ QUnit.test("can listen on bus and displays notifications in DOM", async (assert)
         setTimeout(fn) {
             return super.setTimeout(fn, 0);
         },
-        location: {
-            reload: () => assert.step("reloadPage"),
-        },
+    });
+    patchWithCleanup(browser.location, {
+        reload: () => assert.step("reloadPage"),
     });
     await createWebClient({});
     const pyEnv = await getPyEnv();

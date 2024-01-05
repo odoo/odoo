@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import {
     click,
     getFixture,
@@ -21,7 +22,6 @@ import {
     createWebClient,
     doAction,
     getActionManagerServerData,
-    loadState,
 } from "@web/../tests/webclient/helpers";
 
 import { Component, onWillStart, xml } from "@odoo/owl";
@@ -154,12 +154,8 @@ QUnit.module("ActionManager", (hooks) => {
                     await def;
                 }
             };
+            Object.assign(browser.location, { search: "action=4&id=2&view_type=form" });
             const webClient = await createWebClient({ serverData, mockRPC });
-            await loadState(webClient, {
-                action: 4,
-                id: 2,
-                view_type: "form",
-            });
             assert.containsOnce(target, ".o_form_view", "should display the form view of action 4");
             // click to go back to Kanban (this request is blocked)
             def = makeDeferred();
@@ -174,8 +170,8 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".o_list_view", "should display action 8");
             assert.containsNone(target, ".o_form_view", "should no longer display the form view");
             assert.verifySteps([
-                "/web/webclient/load_menus",
                 "/web/action/load",
+                "/web/webclient/load_menus",
                 "get_views",
                 "web_read",
                 "web_search_read",

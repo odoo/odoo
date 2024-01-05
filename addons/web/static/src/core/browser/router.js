@@ -36,51 +36,47 @@ function parseString(str) {
 /**
  * For each push request (replaceState or pushState), filterout keys that have been locked before
  * overrides locked keys that are explicitly re-locked or unlocked
- * registers keys in "hash" in "lockedKeys" according to the "lock" Boolean
+ * registers keys in "search" in "lockedKeys" according to the "lock" Boolean
  *
- * @param {Set<string>} lockedKeys A set containing all keys that were locked
- * @param {Query} hash An Object representing the pushed url hash
- * @param {Query} currentHash The current hash compare against
- * @param  {Object} [options={}] Whether to lock all hash keys in "hash" to prevent them from being changed afterwards
- * @param  {Boolean} [options.lock] Whether to lock all hash keys in "hash" to prevent them from being changed afterwards
- * @return {Query} The resulting "hash" where previous locking has been applied
+ * @param {Query} search An Object representing the pushed url search
+ * @param {Query} currentSearch The current search compare against
+ * @return {Query} The resulting "search" where previous locking has been applied
  */
-function applyLocking(lockedKeys, hash, currentHash, options = {}) {
-    const newHash = {};
-    for (const key in hash) {
-        if ("lock" in options) {
-            options.lock ? lockedKeys.add(key) : lockedKeys.delete(key);
-        } else if (lockedKeys.has(key)) {
-            // forbid implicit override of key
-            continue;
-        }
-        newHash[key] = hash[key];
-    }
-    for (const key in currentHash) {
-        if (lockedKeys.has(key) && !(key in newHash)) {
-            newHash[key] = currentHash[key];
+function applyLocking(search, currentSearch) {
+    const newSearch = Object.assign({}, search);
+    for (const key in currentSearch) {
+        if ([..._lockedKeys].includes(key) && !(key in newSearch)) {
+            newSearch[key] = currentSearch[key];
         }
     }
-    return newHash;
+    return newSearch;
 }
 
-function computeNewRoute(hash, replace, currentRoute) {
+function computeNewRoute(search, replace, currentRoute) {
     if (!replace) {
-        hash = Object.assign({}, currentRoute.hash, hash);
+        search = Object.assign({}, currentRoute, search);
     }
-    hash = sanitizeHash(hash);
-    if (!shallowEqual(currentRoute.hash, hash)) {
-        return Object.assign({}, currentRoute, { hash });
+    search = sanitizeSearch(search);
+    if (!shallowEqual(currentRoute, search)) {
+        return search;
     }
     return false;
 }
 
-function sanitizeHash(hash) {
+function sanitize(obj, valueToRemove) {
     return Object.fromEntries(
-        Object.entries(hash)
-            .filter(([, v]) => v !== undefined)
+        Object.entries(obj)
+            .filter(([, v]) => v !== valueToRemove)
             .map(([k, v]) => [k, cast(v)])
     );
+}
+
+function sanitizeSearch(search) {
+    return sanitize(search);
+}
+
+function sanitizeHash(hash) {
+    return sanitize(hash, "");
 }
 
 /**
@@ -104,35 +100,50 @@ export function parseSearchQuery(search) {
  * @returns
  */
 export function routeToUrl(route) {
-    const search = objectToUrlEncodedString(route.search);
-    const hash = objectToUrlEncodedString(route.hash);
-    return route.pathname + (search ? "?" + search : "") + (hash ? "#" + hash : "");
+    const search = objectToUrlEncodedString(route);
+    return browser.location.pathname + (search ? "?" + search : "");
 }
 
 function getRoute(urlObj) {
-    const { pathname, search, hash } = urlObj;
-    const searchQuery = parseSearchQuery(search);
-    const hashQuery = parseHash(hash);
-    return { pathname, search: searchQuery, hash: hashQuery };
+    const search = parseSearchQuery(urlObj.search);
+
+    // If the url contains a hash, it can be for two motives:
+    // 1. It is an anchor link, in that case, we ignore it, as it will not have a keys/values format
+    //    the sanitizeHash function will remove it from the hash object.
+    // 2. It has one or more keys/values, in that case, we merge it with the search.
+    const hash = sanitizeHash(parseHash(urlObj.hash));
+    if (Object.keys(hash).length > 0) {
+        Object.assign(search, hash);
+        const url = browser.location.origin + routeToUrl(search);
+        browser.history.replaceState({}, "", url);
+    }
+    return search;
 }
 
 let current;
 let pushTimeout;
-let lockedKeys;
 let allPushArgs;
+let _lockedKeys;
 
 export function startRouter() {
-    lockedKeys = new Set();
     current = getRoute(browser.location);
     pushTimeout = null;
     allPushArgs = [];
+    _lockedKeys = new Set(["debug"]);
 }
 
-browser.addEventListener("hashchange", (ev) => {
-    browser.clearTimeout(pushTimeout);
-    const loc = new URL(ev.newURL);
-    current = getRoute(loc);
-    routerBus.trigger("ROUTE_CHANGE");
+// pushState and replaceState keep the browser on the same document. It's a simulation of going to a new page.
+// The back button on the browser is a navigation tool that takes you to the previous document.
+// But in this case, there isn't a previous document.
+// To make the back button appear to work, we need to simulate a new document being loaded.
+
+browser.addEventListener("popstate", (ev) => {
+    if (ev.state?.newURL) {
+        browser.clearTimeout(pushTimeout);
+        const loc = new URL(ev.state.newURL);
+        current = getRoute(loc);
+        routerBus.trigger("ROUTE_CHANGE");
+    }
 });
 
 /**
@@ -143,29 +154,30 @@ function makeDebouncedPush(mode) {
     function doPush() {
         // Aggregates push/replace state arguments
         const replace = allPushArgs.some(([, options]) => options && options.replace);
-        const newHash = allPushArgs.reduce((finalHash, [hash, options]) => {
-            hash = applyLocking(lockedKeys, hash, current.hash, options);
-            if (finalHash) {
-                hash = applyLocking(lockedKeys, hash, finalHash, options);
-            }
-            return Object.assign(finalHash || {}, hash);
+        let newSearch = allPushArgs.reduce((finalSearch, [search]) => {
+            return Object.assign(finalSearch || {}, search);
         }, null);
-        // Calculates new route based on aggregated hash and options
-        const newRoute = computeNewRoute(newHash, replace, current);
-        if (!newRoute) {
-            return;
+        // apply Locking on the final search
+        newSearch = applyLocking(newSearch, current);
+        // Calculates new route based on aggregated search and options
+        const newRoute = computeNewRoute(newSearch, replace, current);
+        if (newRoute) {
+            // If the route changed: pushes or replaces browser state
+            const url = browser.location.origin + routeToUrl(newRoute);
+            if (mode === "push") {
+                browser.history.pushState({ newURL: url }, "", url);
+            } else {
+                browser.history.replaceState({ newURL: url }, "", url);
+            }
+            current = getRoute(browser.location);
         }
-        // If the route changed: pushes or replaces browser state
-        const url = browser.location.origin + routeToUrl(newRoute);
-        if (mode === "push") {
-            browser.history.pushState({}, "", url);
-        } else {
-            browser.history.replaceState({}, "", url);
+        const reload = allPushArgs.some(([, options]) => options && options.reload);
+        if (reload) {
+            browser.location.reload();
         }
-        current = getRoute(browser.location);
     }
-    return function pushOrReplaceState(hash, options) {
-        allPushArgs.push([hash, options]);
+    return function pushOrReplaceState(search, options) {
+        allPushArgs.push([search, options]);
         browser.clearTimeout(pushTimeout);
         pushTimeout = browser.setTimeout(() => {
             doPush();
@@ -184,6 +196,7 @@ export const router = {
     pushState: makeDebouncedPush("push"),
     replaceState: makeDebouncedPush("replace"),
     cancelPushes: () => browser.clearTimeout(pushTimeout),
+    addLockedKey: (key) => _lockedKeys.add(key),
 };
 
 export function objectToQuery(obj) {
