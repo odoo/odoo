@@ -875,6 +875,7 @@ patch(MockServer.prototype, {
                         authorizedGroupFullName: channel.group_public_id
                             ? channel.group_public_id.name
                             : false,
+                        channel_type: channel.channel_type,
                         id: channel.id,
                         model: "discuss.channel",
                         name: channel.name,
@@ -976,5 +977,37 @@ patch(MockServer.prototype, {
      */
     _mockDiscussChannel__typesAllowingSeenInfos() {
         return ["chat", "group"];
+    },
+    /**
+     * Simulates `get_channels_as_member` on `discuss.channel`.
+     */
+    _mockDiscussChannel__get_channels_as_member() {
+        const guest = this._mockMailGuest__getGuestFromContext();
+        const memberDomain = guest
+            ? [["guest_id", "=", guest.id]]
+            : [["partner_id", "=", this.pyEnv.currentPartnerId]];
+        const members = this.getRecords("discuss.channel.member", memberDomain);
+        const pinnedMembers = members.filter((member) => member.is_pinned);
+        const channels = this.getRecords("discuss.channel", [
+            ["channel_type", "in", ["channel", "group"]],
+            ["channel_member_ids", "in", members.map((member) => member.id)],
+        ]);
+        const pinnedChannels = this.getRecords("discuss.channel", [
+            ["channel_type", "not in", ["channel", "group"]],
+            ["channel_member_ids", "in", pinnedMembers.map((member) => member.id)],
+        ]);
+        return channels.concat(pinnedChannels);
+    },
+    /**
+     * Simulates `_get_init_channels` on `discuss.channel`.
+     */
+    _mockDiscussChannel__get_init_channels(user) {
+        const members = this.getRecords("discuss.channel.member", [
+            ["partner_id", "=", user.partner_id],
+            "|",
+            ["fold_state", "in", ["open", "folded"]],
+            ["rtc_inviting_session_id", "!=", false],
+        ]);
+        return this.getRecords("discuss.channel", [["id", "in", members.map((m) => m.channel_id)]]);
     },
 });

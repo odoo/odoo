@@ -363,32 +363,6 @@ patch(MockServer.prototype, {
         );
     },
     /**
-     * Simulates `_get_channels_as_member` on `res.partner`.
-     *
-     * @private
-     * @param {integer[]} ids
-     * @returns {Object}
-     */
-    _mockResPartner_GetChannelsAsMember(ids) {
-        const partner = this.getRecords("res.partner", [["id", "in", ids]])[0];
-        const channelMembers = this.getRecords("discuss.channel.member", [
-            ["partner_id", "=", partner.id],
-        ]);
-        const channels = this.getRecords("discuss.channel", [
-            ["channel_type", "in", ["channel", "group"]],
-            ["channel_member_ids", "in", channelMembers.map((member) => member.id)],
-        ]);
-        const directMessagesMembers = this.getRecords("discuss.channel.member", [
-            ["partner_id", "=", partner.id],
-            ["is_pinned", "=", true],
-        ]);
-        const directMessages = this.getRecords("discuss.channel", [
-            ["channel_type", "=", "chat"],
-            ["channel_member_ids", "in", directMessagesMembers.map((member) => member.id)],
-        ]);
-        return [...channels, ...directMessages];
-    },
-    /**
      * Simulates `_get_current_persona` on `res.partner`.
      *
      */

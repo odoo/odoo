@@ -35,6 +35,7 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
+        "/discuss/channels",
         "/mail/inbox/messages",
         "/web/dataset/call_kw/discuss.channel/search_read",
         "/web/dataset/call_kw/discuss.channel/channel_create",
@@ -95,6 +96,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
     assert.verifySteps([
         "/mail/init_messaging",
         "/mail/load_message_failures",
+        "/discuss/channels",
         "/mail/inbox/messages",
         "/web/dataset/call_kw/discuss.channel/channel_get",
         "/discuss/channel/messages",

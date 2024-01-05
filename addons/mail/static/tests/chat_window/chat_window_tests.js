@@ -164,6 +164,7 @@ QUnit.test("Fold state of chat window is sync among browser tabs", async () => {
     const tab2 = await start({ asTab: true });
     await click(".o_menu_systray i[aria-label='Messages']", { target: tab1.target });
     await click(".o-mail-NotificationItem", { target: tab1.target });
+    await contains(".o-mail-ChatWindow-header", { target: tab2.target }); // Fold
     await click(".o-mail-ChatWindow-header", { target: tab1.target }); // Fold
     await contains(".o-mail-Thread", { count: 0, target: tab1.target });
     await contains(".o-mail-Thread", { count: 0, target: tab2.target });

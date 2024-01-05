@@ -41,6 +41,7 @@ class Website(models.Model):
         if visitor:
             # get active chat_request linked to visitor
             chat_request_channel = self.env['discuss.channel'].sudo().search([
+                ("channel_type", "=", "livechat"),
                 ('livechat_visitor_id', '=', visitor.id),
                 ('livechat_channel_id', '=', self.channel_id.id),
                 ('livechat_active', '=', True),
@@ -61,7 +62,7 @@ class Website(models.Model):
                     if not current_guest and channel_guest_member:
                         channel_guest_member.guest_id._set_auth_cookie()
                         chat_request_channel = chat_request_channel.with_context(guest=channel_guest_member.guest_id.sudo(False))
-                if chat_request_channel._get_livechat_visitor_member().is_self:
+                if chat_request_channel.is_member:
                     chat_request_session = {
                         "id": chat_request_channel.id,
                         "model": "discuss.channel",

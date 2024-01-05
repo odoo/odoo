@@ -67,8 +67,8 @@ export class DiscussCoreWeb {
                 this.store.ChatWindow.insert({ thread: chat });
             }
         });
-        this.busService.subscribe("discuss.Thread/fold_state", (data) => {
-            const thread = this.store.Thread.get(data);
+        this.busService.subscribe("discuss.Thread/fold_state", async (data) => {
+            const thread = await this.store.Thread.getOrFetch(data);
             if (data.fold_state && thread && data.foldStateCount > thread.foldStateCount) {
                 thread.foldStateCount = data.foldStateCount;
                 if (data.fold_state !== thread.state) {
@@ -87,6 +87,12 @@ export class DiscussCoreWeb {
                         });
                     }
                 }
+            }
+        });
+        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
+            if (message.originThread?.model === "discuss.channel") {
+                // initChannelsUnreadCounter becomes unreliable
+                this.store.fetchChannels();
             }
         });
     }

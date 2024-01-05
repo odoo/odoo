@@ -4,6 +4,8 @@ import { rpc } from "@web/core/network/rpc";
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { Command } from "@mail/../tests/helpers/command";
+import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -156,4 +158,71 @@ QUnit.test("channel preview ignores messages from the past", async () => {
         })
     );
     await contains(".o-mail-NotificationItem-text", { text: "You: new message" });
+});
+
+QUnit.test("counter is taking into account non-fetched channels", async (assert) => {
+    patchBrowserNotification("denied");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({
+                fold_state: "closed", // minimized channels are fetched at init
+                message_unread_counter: 1,
+                partner_id: pyEnv.currentPartnerId,
+            }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "first message",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const { env } = await start();
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    assert.notOk(
+        env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
+    );
+});
+
+QUnit.test("counter is updated on receiving message on non-fetched channels", async (assert) => {
+    patchBrowserNotification("denied");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({
+                fold_state: "closed", // minimized channels are fetched at init
+                partner_id: pyEnv.currentPartnerId,
+            }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "first message",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const { env } = await start();
+    await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
+    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
+    assert.notOk(
+        env.services["mail.store"].Thread.get({ model: "discuss.channel", id: channelId })
+    );
+    pyEnv.withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "new message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });

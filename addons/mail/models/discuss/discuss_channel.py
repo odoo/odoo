@@ -756,11 +756,28 @@ class Channel(models.Model):
             self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
-    def _filter_for_init_messaging(self):
-        """Override to filter the channels that should be returned by the
-        init_messaging RPC.
-        """
-        return self
+    @api.model
+    def _get_init_channels(self):
+        member_domain = [
+            ("is_self", "=", True),
+            "|",
+            ("fold_state", "in", ("open", "folded")),
+            ("rtc_inviting_session_id", "!=", False)
+        ]
+        channel_domain = [("channel_member_ids", "any", member_domain)]
+        return self.search(channel_domain)
+
+    @api.model
+    def _get_channels_as_member(self):
+        # 2 different queries because the 2 sub-queries together with OR are less efficient
+        member_domain = [("channel_type", "in", ("channel", "group")), ("is_member", "=", True)]
+        pinned_member_domain = [
+                ("channel_type", "not in", ("channel", "group")),
+                ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
+            ]
+        channels = self.env["discuss.channel"].search(member_domain)
+        channels += self.env["discuss.channel"].search(pinned_member_domain)
+        return channels
 
     def _channel_basic_info(self):
         self.ensure_one()
@@ -840,7 +857,7 @@ class Channel(models.Model):
                     info['is_pinned'] = member.is_pinned
                     info['last_interest_dt'] = fields.Datetime.to_string(member.last_interest_dt)
                     if member.rtc_inviting_session_id:
-                        info['rtcInvitingSession'] = {'id': member.rtc_inviting_session_id.id}
+                        info['rtcInvitingSession'] = member.rtc_inviting_session_id._mail_rtc_session_format()
             # add members info
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels

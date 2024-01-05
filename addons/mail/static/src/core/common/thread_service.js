@@ -40,19 +40,6 @@ export class ThreadService {
         this.outOfFocusService = services["mail.out_of_focus"];
     }
 
-    /**
-     * @param {import("models).Thread} thread
-     * @param {number} id
-     * @returns {Promise<import("models").Thread|undefined>}
-     */
-    async fetchChannel(id) {
-        const channelData = await rpc("/discuss/channel/info", { channel_id: id });
-        if (!channelData) {
-            return;
-        }
-        return this.store.Thread.insert(channelData);
-    }
-
     async fetchChannelMembers(thread) {
         if (thread.fetchMembersState === "pending") {
             return;
