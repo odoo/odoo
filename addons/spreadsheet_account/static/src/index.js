@@ -25,9 +25,14 @@ cellMenuRegistry.add("move_lines_see_records", {
             .map((arg) => env.model.getters.evaluateFormula(arg));
         codes = toString(codes).split(",");
         const dateRange = parseAccountingDate(date_range);
+        offset = parseInt(offset) || 0;
         dateRange.year += offset || 0;
-        companyId = companyId || null;
-        includeUnposted = toBoolean(includeUnposted);
+        companyId = parseInt(companyId) || null;
+        try {
+            includeUnposted = toBoolean(includeUnposted);
+        } catch {
+            includeUnposted = false;
+        }
 
         const action = await env.services.orm.call(
             "account.account",
