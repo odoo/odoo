@@ -76,9 +76,9 @@
                     <field name="company_id" invisible="1"/>
                     <field name="account_type" widget="account_type_selection"/>
                     <field name="reconcile" widget="boolean_toggle"/>
-                    <field name="opening_debit"/>
-                    <field name="opening_credit"/>
-                    <field name="opening_balance" optional="hide"/>
+                    <field name="opening_debit" options="{'no_symbol': True}"/>
+                    <field name="opening_credit" options="{'no_symbol': True}"/>
+                    <field name="opening_balance" optional="hide" options="{'no_symbol': True}"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
