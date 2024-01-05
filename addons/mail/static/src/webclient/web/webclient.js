@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
 import { onWillDestroy } from "@odoo/owl";
 
-const USER_DEVICES_MODEL = "mail.partner.device";
+const USER_DEVICES_MODEL = "mail.push.device";
 
 patch(WebClient.prototype, {
     /**
@@ -78,7 +78,7 @@ patch(WebClient.prototype, {
             await this.orm.call(USER_DEVICES_MODEL, "register_devices", [], kwargs);
         } catch (e) {
             const invalidVapidErrorClass =
-                "odoo.addons.mail.models.mail_partner_device.InvalidVapidError";
+                "odoo.addons.mail.tools.jwt.InvalidVapidError";
             const warningMessage = "Error sending subscription information to the server";
             if (e.data?.name === invalidVapidErrorClass) {
                 const MAX_TRIES = 2;

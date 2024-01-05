@@ -9,8 +9,8 @@ from datetime import datetime, timedelta
 import odoo
 
 from odoo.tools.misc import mute_logger
-from odoo.addons.mail.models.mail_partner_device import InvalidVapidError
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tools.jwt import InvalidVapidError
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import tagged
@@ -43,8 +43,8 @@ class TestWebPushNotification(SMSCommon):
         ])
 
         # generate keys and devices
-        cls.vapid_public_key = cls.env['mail.partner.device'].get_web_push_vapid_public_key()
-        cls.env['mail.partner.device'].sudo().create([
+        cls.vapid_public_key = cls.env['mail.push.device'].get_web_push_vapid_public_key()
+        cls.env['mail.push.device'].sudo().create([
             {
                 'endpoint': f'https://test.odoo.com/webpush/user{(idx + 1)}',
                 'expiration_time': None,
@@ -60,7 +60,7 @@ class TestWebPushNotification(SMSCommon):
         self.env.ref('mail.ir_cron_web_push_notification').method_direct_trigger()
 
     def _assert_notification_count_for_cron(self, number_of_notification):
-        notification_count = self.env['mail.notification.web.push'].search_count([])
+        notification_count = self.env['mail.push'].search_count([])
         self.assertEqual(notification_count, number_of_notification)
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
@@ -258,11 +258,11 @@ class TestWebPushNotification(SMSCommon):
             'Tracking changes should be included in push notif payload'
         )
 
-    @patch.object(odoo.addons.mail.models.mail_notification_web_push, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push, 'push_to_end_point')
     def test_push_notifications_cron(self, push_to_end_point):
         # Add 4 more devices to force sending via cron queue
         for index in range(10, 14):
-            self.env['mail.partner.device'].sudo().create([{
+            self.env['mail.push.device'].sudo().create([{
                 'endpoint': 'https://test.odoo.com/webpush/user%d' % index,
                 'expiration_time': None,
                 'keys': json.dumps({
@@ -298,7 +298,7 @@ class TestWebPushNotification(SMSCommon):
         self._assert_notification_count_for_cron(0)
         post.assert_called_once()
         # Test that the unreachable device is deleted from the DB
-        notification_count = self.env['mail.partner.device'].search_count([('endpoint', '=', 'https://test.odoo.com/webpush/user2')])
+        notification_count = self.env['mail.push.device'].search_count([('endpoint', '=', 'https://test.odoo.com/webpush/user2')])
         self.assertEqual(notification_count, 0)
 
     @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
@@ -331,10 +331,10 @@ class TestWebPushNotification(SMSCommon):
             'mail.web_push_vapid_private_key',
             'mail.web_push_vapid_public_key'
         ])]).unlink()
-        new_vapid_public_key = self.env['mail.partner.device'].get_web_push_vapid_public_key()
+        new_vapid_public_key = self.env['mail.push.device'].get_web_push_vapid_public_key()
         self.assertNotEqual(self.vapid_public_key, new_vapid_public_key)
         with self.assertRaises(InvalidVapidError):
-            self.env['mail.partner.device'].register_devices(
+            self.env['mail.push.device'].register_devices(
                 endpoint='https://test.odoo.com/webpush/user1',
                 expiration_time=None,
                 keys=json.dumps({
