@@ -6,6 +6,7 @@
             <form string="POS Printer">
                 <sheet>
                     <group>
+                        <field name="company_id" invisible="1" />
                         <field name="name" />
                         <field name="printer_type" widget="radio"/>
                         <field name="proxy_ip" invisible="printer_type != 'iot'"/>
@@ -40,6 +41,7 @@
         <field name="model">pos.printer</field>
         <field name="arch" type="xml">
             <tree string="Preparation Printers">
+                <field name="company_id" invisible="1" />
                 <field name="name" />
                 <field name="proxy_ip" />
                 <field name="product_categories_ids" widget="many2many_tags"/>
