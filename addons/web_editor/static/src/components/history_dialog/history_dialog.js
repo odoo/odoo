@@ -81,9 +81,8 @@ class HistoryDialog extends Component {
         const restoredContent = await this.getRevisionContent(
             this.state.revisionId
         );
-        this.props.restoreRequested(restoredContent);
+        this.props.restoreRequested(restoredContent, this.props.close);
         this.env.services.ui.unblock();
-        this.props.close();
     }
 
     /**
