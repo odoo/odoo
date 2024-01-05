@@ -116,7 +116,7 @@ class Binary(http.Controller):
             else:
                 # if we don't have a replica, the cursor is not readonly, use the same one to avoid a rollback
                 cursor_manager = nullcontext(env.cr)
-            with cursor_manager as rw_cr:  # TODO add test generating an attachment with this route
+            with cursor_manager as rw_cr:
                 rw_env = api.Environment(rw_cr, env.user.id, {})
                 try:
                     if filename.endswith('.map'):
