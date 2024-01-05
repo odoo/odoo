@@ -86,6 +86,13 @@ class PrinterDriver(Driver):
         })
 
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
+
+        if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
+            self.device_subtype = "receipt_printer"
+        elif "COMMAND SET:ZPL;" in device['device-id']:
+            self.device_subtype = "label_printer"
+        else:
+            self.device_subtype = "office_printer"
         if 'direct' in self.device_connection and any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.print_status()
 

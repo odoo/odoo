@@ -60,6 +60,7 @@ class Manager(Thread):
                     'type': iot_devices[device].device_type,
                     'manufacturer': iot_devices[device].device_manufacturer,
                     'connection': iot_devices[device].device_connection,
+                    'subtype': iot_devices[device].device_subtype if iot_devices[device].device_type == 'printer' else '',
                 }
             data = {'params': {'iot_box': iot_box, 'devices': devices_list,}}
             # disable certifiacte verification

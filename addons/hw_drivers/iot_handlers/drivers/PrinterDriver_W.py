@@ -55,6 +55,12 @@ class PrinterDriver(Driver):
         })
 
         self.receipt_protocol = 'escpos'
+        if any(cmd in device['identifier'] for cmd in ['STAR', 'Receipt']):
+            self.device_subtype = "receipt_printer"
+        elif "ZPL" in device['identifier']:
+            self.device_subtype = "label_printer"
+        else:
+            self.device_subtype = "office_printer"
 
     @classmethod
     def supported(cls, device):
