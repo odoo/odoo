@@ -127,7 +127,9 @@ export class Chrome extends PosComponent {
             }
         });
 
-        this.start();
+        onMounted(() => {
+            this.start();
+        });
     }
 
     // GETTERS //
