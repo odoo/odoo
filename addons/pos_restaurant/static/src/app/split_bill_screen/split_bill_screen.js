@@ -16,7 +16,7 @@ export class SplitBillScreen extends Component {
     setup() {
         this.pos = usePos();
         this.splitlines = useState(this._initSplitLines(this.pos.get_order()));
-        this.newOrderLines = {};
+        this.newOrderLines = useState({});
         this.newOrder = undefined;
         this._isFinal = false;
         this.newOrder = new Order(
