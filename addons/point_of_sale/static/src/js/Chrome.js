@@ -92,7 +92,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 console.error(error.cause);
             });
 
-            this.props.setupIsDone(this);
+            onMounted(() => {
+                this.props.setupIsDone(this);
+            });
         }
 
         // GETTERS //
