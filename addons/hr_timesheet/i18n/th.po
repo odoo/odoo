@@ -4,21 +4,26 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "#{timesheet.employee_id.name}"
+msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
@@ -32,7 +37,7 @@ msgstr "%(effective)s %(uom_name)s"
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(effective)s / %(allocated)s %(uom_name)s"
-msgstr ""
+msgstr "%(effective)s / %(allocated)s %(uom_name)s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -282,7 +287,7 @@ msgstr "รายการวิเคราะห์"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "ไลน์การวิเคราะห์"
+msgstr "รายการการวิเคราะห์"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
@@ -292,8 +297,8 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"บัญชีการวิเคราะห์ที่เชื่อมโยงโปรเจกต์นี้ งาน และระบบบันทึกเวลาของโปรเจกต์นี้\n"
-"ติดตามต้นทุนและรายได้ของโปรเจกต์ของคุณโดยการตั้งค่าบัญชีการวิเคราะห์นี้ในเอกสารที่เกี่ยวข้องของคุณ (เช่น ใบสั่งขาย ใบแจ้งหนี้ ใบสั่งซื้อ ใบเรียกเก็บเงินของผู้ขาย ค่าใช้จ่าย และอื่นๆ)\n"
+"บัญชีการวิเคราะห์ที่เชื่อมโยงโปรเจ็กต์นี้ งาน และระบบบันทึกเวลาของโปรเจ็กต์นี้\n"
+"ติดตามต้นทุนและรายได้ของโปรเจ็กต์ของคุณโดยการตั้งค่าบัญชีการวิเคราะห์นี้ในเอกสารที่เกี่ยวข้องของคุณ (เช่น ใบสั่งขาย ใบแจ้งหนี้ ใบสั่งซื้อ ใบเรียกเก็บเงินของผู้ขาย ค่าใช้จ่าย และอื่นๆ)\n"
 "บัญชีการวิเคราะห์นี้สามารถเปลี่ยนแปลงได้ในแต่ละงานแยกกันหากจำเป็น\n"
 "จำเป็นต้องมีบัญชีการวิเคราะห์เพื่อใช้ระบบบันทึกเวลา"
 
@@ -341,7 +346,7 @@ msgstr "โดยพนักงาน"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr "ตามโปรเจกต์"
+msgstr "ตามโปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
@@ -356,7 +361,7 @@ msgstr "โทรหาลูกค้าและหารือเกี่ย
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr "ผู้ทำงานร่วมกันในโปรเจกต์ที่แชร์"
+msgstr "ผู้ทำงานร่วมกันในโปรเจ็กต์ที่แชร์"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -432,7 +437,7 @@ msgstr "วันที่ใช้ไป"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr "ค่าโปรเจกต์เริ่มต้นสำหรับใบบันทึกเวลาที่สร้างจากประเภทเวลาหยุด"
+msgstr "ค่าโปรเจ็กต์เริ่มต้นสำหรับใบบันทึกเวลาที่สร้างจากประเภทเวลาหยุด"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -637,7 +642,7 @@ msgstr "ภายใน"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__internal_project_id
 msgid "Internal Project"
-msgstr "โปรเจกต์เบื้องต้น"
+msgstr "โปรเจ็กต์เบื้องต้น"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -663,7 +668,7 @@ msgstr "คือการเข้ารหัส Uom วัน"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
 msgid "Is Internal Project"
-msgstr "เป็นโปรเจกต์ภายใน"
+msgstr "เป็นโปรเจ็กต์ภายใน"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__job_title
@@ -827,18 +832,18 @@ msgstr "ความคืบหน้า"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 #, python-format
 msgid "Project"
-msgstr "โปรเจกต์"
+msgstr "โปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
-msgstr "หน่วยเวลาของโปรเจกต์"
+msgstr "หน่วยเวลาของโปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_update
 msgid "Project Update"
-msgstr "การอัปเดตโปรเจกต์"
+msgstr "การอัปเดตโปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
@@ -848,7 +853,7 @@ msgstr "โปรเจ็กต์ในช่วงล่วงเวลา"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "ใบบันทึกเวลาของโปรเจกต์"
+msgstr "ใบบันทึกเวลาของโปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
@@ -867,7 +872,7 @@ msgid ""
 "hotkey to add 15min to your projects."
 msgstr ""
 "บันทึกใบบันทึกเวลาของคุณในทันทีโดยกด Shift + ปุ่มลัดที่เกี่ยวข้องเพื่อเพิ่ม "
-"15 นาทีให้กับโปรเจกต์ของคุณ"
+"15 นาทีให้กับโปรเจ็กต์ของคุณ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -940,7 +945,7 @@ msgstr "ค้นหาในพนักงาน"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "ค้นหาในโปรเจกต์"
+msgstr "ค้นหาในโปรเจ็กต์"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1023,7 +1028,7 @@ msgstr "วิเคราะห์งาน"
 #: code:addons/hr_timesheet/models/res_company.py:0
 #, python-format
 msgid "The Internal Project of a company should be in that company."
-msgstr "โปรเจกต์ภายในของบริษัทควรอยู่ในบริษัทนั้น"
+msgstr "โปรเจ็กต์ภายในของบริษัทควรอยู่ในบริษัทนั้น"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1038,7 +1043,7 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
 msgstr ""
-"โปรเจกต์เหล่านี้มีรายการใบบันทึกเวลาอ้างอิง ก่อนลบโปรเจกต์เหล่านี้ "
+"โปรเจ็กต์เหล่านี้มีรายการใบบันทึกเวลาอ้างอิง ก่อนลบโปรเจ็กต์เหล่านี้ "
 "คุณต้องลบรายการใบบันทึกเวลาเหล่านี้ก่อน"
 
 #. module: hr_timesheet
@@ -1081,7 +1086,7 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
 msgstr ""
-"โปรเจกต์นี้มีรายการใบบันทึกเวลาที่อ้างอิง ก่อนลบโปรเจกต์นี้ "
+"โปรเจ็กต์นี้มีรายการใบบันทึกเวลาที่อ้างอิง ก่อนลบโปรเจ็กต์นี้ "
 "คุณต้องลบรายการใบบันทึกเวลาหล่านี้ก่อน"
 
 #. module: hr_timesheet
@@ -1118,8 +1123,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
-"ซึ่งจะกำหนดหน่วยวัดที่ใช้ในโปรเจกต์และงานต่าง ๆ\n"
-"หากคุณใช้ใบบันทึกเวลาที่เชื่อมโยงกับโปรเจกต์ อย่าลืมตั้งค่าหน่วยวัดที่เหมาะสมให้กับพนักงานของคุณ"
+"ซึ่งจะกำหนดหน่วยวัดที่ใช้ในโปรเจ็กต์และงานต่าง ๆ\n"
+"หากคุณใช้ใบบันทึกเวลาที่เชื่อมโยงกับโปรเจ็กต์ อย่าลืมตั้งค่าหน่วยวัดที่เหมาะสมให้กับพนักงานของคุณ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1295,7 +1300,7 @@ msgstr "ใบบันทึกเวลาตามพนักงาน"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr "ใบบันทึกเวลาตามโปรเจกต์"
+msgstr "ใบบันทึกเวลาตามโปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
@@ -1395,7 +1400,7 @@ msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
 msgstr ""
-"จำนวนเวลาทั้งหมด (ใน UoM ที่เหมาะสม) ที่บันทึกในโปรเจกต์และปัดเศษเป็นหน่วย"
+"จำนวนเวลาทั้งหมด (ใน UoM ที่เหมาะสม) ที่บันทึกในโปรเจ็กต์และปัดเศษเป็นหน่วย"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1410,7 +1415,7 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
-"ติดตามชั่วโมงทำงานของคุณตามโปรเจกต์ทุกวัน "
+"ติดตามชั่วโมงทำงานของคุณตามโปรเจ็กต์ทุกวัน "
 "และออกใบแจ้งหนี้ตามเวลานี้ให้กับลูกค้าของคุณ"
 
 #. module: hr_timesheet
@@ -1493,10 +1498,10 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
-"คุณไม่สามารถบันทึกใบบันทึกเวลาในโปรเจกต์นี้ได้ "
+"คุณไม่สามารถบันทึกใบบันทึกเวลาในโปรเจ็กต์นี้ได้ "
 "เนื่องจากมีการเชื่อมโยงกับบัญชีการวิเคราะห์ที่ไม่ได้ใช้งาน "
 "โปรดเปลี่ยนบัญชีนี้ "
-"หรือเปิดใช้งานบัญชีปัจจุบันในใบบันทึกเวลาของโปรเจกต์อีกครั้ง"
+"หรือเปิดใช้งานบัญชีปัจจุบันในใบบันทึกเวลาของโปรเจ็กต์อีกครั้ง"
 
 #. module: hr_timesheet
 #. odoo-python

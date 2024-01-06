@@ -18,12 +18,12 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Simon S, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Lasse L, 2023
-# Kim Asplund <kim.asplund@gmail.com>, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Martin Trigaux, 2023
 # Robin Calvin, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Lasse L, 2024
+# Kim Asplund <kim.asplund@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2023\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -504,7 +504,7 @@ msgstr "Aliasdomän"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Alias-domännamn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_full_name
@@ -2000,6 +2000,11 @@ msgid "No applications yet"
 msgstr "Inga ansökningar ännu"
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
+msgid "No data to display"
+msgstr "Ingen data att visa"
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_department
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_job
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_analysis
@@ -2841,6 +2846,13 @@ msgid "Try sending an email"
 msgstr "Försök skicka e-post"
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Typ av undantagsaktivitet som har registrerats."
@@ -3013,7 +3025,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "t.ex. domän.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

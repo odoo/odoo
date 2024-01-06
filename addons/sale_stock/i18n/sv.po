@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -668,9 +668,7 @@ msgstr ""
 "                        Du bör förmodligen uppdatera partnern på detta dokument."
 
 #. module: sale_stock
-#. odoo-python
 #. odoo-javascript
-#: code:addons/sale_stock/models/sale_order_line.py:0
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
@@ -679,6 +677,15 @@ msgid ""
 msgstr ""
 "Den beställda kvantiteten kan inte minskas under den mängd som redan "
 "levererats. Skapa istället en retur i ditt lager."
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
+msgstr ""
 
 #. module: sale_stock
 #. odoo-javascript

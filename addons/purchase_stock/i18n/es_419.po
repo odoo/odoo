@@ -5,15 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -290,13 +290,6 @@ msgstr "Genere el borrador de la factura de proveedor."
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
 msgstr "Regrese a la orden de compra para generar la factura del proveedor."
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/wizard/product_replenish.py:0
-#, python-format
-msgid "Go on the product form and add the list of vendors"
-msgstr "Vaya al formulario de producto y agregue la lista de proveedores."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
@@ -649,7 +642,6 @@ msgstr "Mostrar el botón de configurar proveedor"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
-#: model_terms:ir.ui.view,arch_db:purchase_stock.view_product_replenish_form_inherit_stock
 msgid "Show Vendor"
 msgstr "Mostrar proveedor"
 
@@ -776,12 +768,11 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Esto agrega una ruta de triangulación aplicable a productos con el fin de "
-"solicitar a sus proveedores que entreguen directamente a sus clientes. Un "
-"producto para triangulación generará una solicitud de cotización de compra "
-"una vez que se confirme la orden de venta. A esto se le llama flujo bajo "
-"demanda. La dirección de entrega solicitada será la dirección de entrega del"
-" cliente."
+"Esto agrega una ruta de triangulación aplicable a los productos para "
+"solicitar que sus proveedores los entreguen a sus clientes. Un producto para"
+" triangulación generará una solicitud de cotización de compra al confirmar "
+"la orden de venta. A esto se le llama flujo bajo demanda. La dirección de "
+"entrega solicitada será la dirección de entrega del cliente, no su almacén."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -853,13 +844,6 @@ msgstr "Reporte de demora del proveedor"
 #, python-format
 msgid "Vendor Lead Time"
 msgstr "Plazo de entrega del proveedor"
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/wizard/product_replenish.py:0
-#, python-format
-msgid "Vendor Not Found in Product %s"
-msgstr "No se encontró un proveedor en el producto %s"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report

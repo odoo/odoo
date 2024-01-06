@@ -7,14 +7,15 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # allen_infante <allen.infante@outlook.com>, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1117,6 +1118,13 @@ msgstr "Todos los usuarios"
 #, python-format
 msgid "Almond"
 msgstr "Almendra"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Always range"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2731,7 +2739,7 @@ msgstr "Drácula"
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #, python-format
 msgid "Draw"
-msgstr "Dibujar"
+msgstr "Trazar"
 
 #. module: web
 #. odoo-javascript
@@ -3110,6 +3118,13 @@ msgstr "Rueda de la fortuna "
 #, python-format
 msgid "Field Type"
 msgstr "Tipo de campo"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/expression_editor/expression_editor.js:0
+#, python-format
+msgid "Field properties not supported"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5447,6 +5462,11 @@ msgid "Password"
 msgstr "Contraseña"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5574,15 +5594,6 @@ msgid ""
 msgstr ""
 "Utilice el botón de copiar para reportar el error a su servicio de soporte "
 "técnico."
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-"Utilice la siguiente referencia para su pago: <b><span>\n"
-"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -6584,6 +6595,15 @@ msgstr "Establecer prioridad..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid ""
+"Set to true the full range input has to be display by default, even if "
+"empty."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_controller.js:0
@@ -6647,7 +6667,7 @@ msgstr "Mostrar subcampos"
 #: code:addons/web/static/src/views/view_components/view_scale_selector.xml:0
 #, python-format
 msgid "Show weekends"
-msgstr "Mostrar fines de semanas"
+msgstr "Mostrar fines de semana"
 
 #. module: web
 #. odoo-javascript
@@ -7464,27 +7484,6 @@ msgstr "Desarchivar todos"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught CORS Error"
-msgstr "Error CORS no controlado"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Javascript Error"
-msgstr "Error de JavaScript no controlado"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Promise"
-msgstr "Promesa no controlada"
-
-#. module: web
-#. odoo-javascript
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
@@ -7501,23 +7500,6 @@ msgstr "Indefinido"
 #, python-format
 msgid "Unfold"
 msgstr "Desplegar"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid ""
-"Unknown CORS error\n"
-"\n"
-"An unknown CORS error occured.\n"
-"The error probably originates from a JavaScript file served from a different origin.\n"
-"(Opening your browser console might give you a hint on the error.)"
-msgstr ""
-"Error CORS desconocido\n"
-"\n"
-"Ocurrió un error CORS desconocido.\n"
-"El error probablemente proviene de un archivo de JavaScript de un origen diferente.\n"
-"(Abrir la consola de su navegador puede darle una pista sobre el error)."
 
 #. module: web
 #. odoo-javascript

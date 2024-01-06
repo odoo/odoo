@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,36 +28,38 @@ msgid ""
 "An error occurred during the processing of your payment (success code %s; "
 "primary response code %s). Please try again."
 msgstr ""
+"เกิดข้อผิดพลาดระหว่างการประมวลผลการชำระเงินของคุณ (รหัสสำเร็จ %s; "
+"รหัสตอบกลับหลัก %s) กรุณาลองใหม่อีกครั้ง"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
 msgid "AsiaPay"
-msgstr ""
+msgstr "AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "AsiaPay Merchant ID"
-msgstr ""
+msgstr "รหัสผู้ค้า AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "AsiaPay Secure Hash Function"
-msgstr ""
+msgstr "ฟังก์ชันแฮชที่ปลอดภัยของ AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
 msgid "AsiaPay Secure Hash Secret"
-msgstr ""
+msgstr "ความลับแฮชที่ปลอดภัยของ AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "Asiapay Brand"
-msgstr ""
+msgstr "แบรนด์ Asiapay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__bimopay
 msgid "BimoPay"
-msgstr ""
+msgstr "BimoPay"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
@@ -78,19 +81,19 @@ msgstr "ไอดีผู้ค้า"
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "ไม่พบธุรกรรมที่ตรงกับการอ้างอิง %s"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by AsiaPay account."
-msgstr ""
+msgstr "บัญชี AsiaPay สามารถเลือกได้เพียงสกุลเงินเดียวเท่านั้น"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
 msgid "PayDollar"
-msgstr ""
+msgstr "PayDollar"
 
 #. module: payment_asiapay
 #: model:ir.model,name:payment_asiapay.model_payment_provider
@@ -105,75 +108,75 @@ msgstr "ธุรกรรมสำหรับการชำระเงิน
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__pesopay
 msgid "PesoPay"
-msgstr ""
+msgstr "PesoPay"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(ref)s."
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีการอ้างอิง %(ref)s"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing success code."
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีรหัสสำเร็จ"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
 msgid "SHA1"
-msgstr ""
+msgstr "SHA1"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha256
 msgid "SHA256"
-msgstr ""
+msgstr "SHA256"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha512
 msgid "SHA512"
-msgstr ""
+msgstr "SHA512"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Function"
-msgstr ""
+msgstr "ฟังก์ชันแฮชที่ปลอดภัย"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Secret"
-msgstr ""
+msgstr "ความลับแฮชที่ปลอดภัย"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
 msgid "SiamPay"
-msgstr ""
+msgstr "SiamPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "The Merchant ID solely used to identify your AsiaPay account."
-msgstr ""
+msgstr "ID ผู้ค้าใช้เพื่อระบุบัญชี AsiaPay ของคุณเท่านั้น"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "The brand associated to your AsiaPay account."
-msgstr ""
+msgstr "แบรนด์ที่เชื่อมโยงกับบัญชี AsiaPay ของคุณ"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "The secure hash function associated to your AsiaPay account."
-msgstr ""
+msgstr "ฟังก์ชันแฮชที่ปลอดภัยซึ่งเชื่อมโยงกับบัญชี AsiaPay ของคุณ"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "รหัสทางเทคนิคของผู้ให้บริการชำระเงินรายนี้"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown success code: %s"
-msgstr ""
+msgstr "รหัสสำเร็จที่ไม่รู้จัก: %s"

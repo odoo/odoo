@@ -5,15 +5,15 @@
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2023
 # Wil Odoo, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -243,6 +243,13 @@ msgstr "<span>บล็อก</span>"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "<span>Customize</span>"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "ACCESS OPTIONS ANYWAY"
 msgstr ""
 
 #. module: web_editor
@@ -1387,7 +1394,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
 #, python-format
-msgid "Generating alternatives..."
+msgid "Generating"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+#, python-format
+msgid "Generating an alternative..."
 msgstr ""
 
 #. module: web_editor
@@ -1430,28 +1444,28 @@ msgstr "ส่วนหัว 1"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Header 1 Display 1"
-msgstr ""
+msgstr "ส่วนหัว 1 จอแสดงผล 1"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Header 1 Display 2"
-msgstr ""
+msgstr "ส่วนหัว 1 จอแสดงผล 2"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Header 1 Display 3"
-msgstr ""
+msgstr "ส่วนหัว 1 จอแสดงผล 3"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Header 1 Display 4"
-msgstr ""
+msgstr "ส่วนหัว 1 จอแสดงผล 4"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2238,7 +2252,7 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.tests
 msgid "Odoo Editor Tests"
-msgstr ""
+msgstr "การทดสอบตัวแก้ไข Odoo"
 
 #. module: web_editor
 #. odoo-python
@@ -2462,6 +2476,13 @@ msgstr "ฟิลด์ข้อความ Qweb"
 #: model:ir.model,name:web_editor.model_ir_qweb_field_qweb
 msgid "Qweb Field qweb"
 msgstr "Qweb Field qweb"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "REPLACE BY NEW VERSION"
+msgstr ""
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -2738,7 +2759,7 @@ msgstr "ค้นหารูปภาพ"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "Search for a block (e.g. numbers, image wall, ...)"
-msgstr ""
+msgstr "ค้นหาบล็อก (เช่น ตัวเลข ผนังรูปภาพ ...)"
 
 #. module: web_editor
 #. odoo-javascript
@@ -3178,8 +3199,8 @@ msgstr "URL นี้ไม่ถูกต้อง ไม่สามารถ�
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
-msgid "This block is outdated"
-msgstr "บล็อกนี้ล้าสมัยแล้ว"
+msgid "This block is outdated."
+msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
@@ -3232,15 +3253,6 @@ msgstr "คำนำหน้าชื่อ"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Title tag"
 msgstr "แท็กชื่อเรื่อง"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/snippets.xml:0
-#, python-format
-msgid ""
-"To make changes, drop this block and use the new options in the last "
-"version."
-msgstr "หากต้องการเปลี่ยนแปลง วางบล็อกนี้และใช้ตัวเลือกใหม่ในเวอร์ชันที่แล้ว"
 
 #. module: web_editor
 #. odoo-javascript
@@ -3574,12 +3586,26 @@ msgstr "ใช่"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "You can still access the block options but it might be ineffective."
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/document_selector.xml:0
 #, python-format
 msgid ""
 "You can upload documents with the button located in the top left of the "
 "screen."
 msgstr "คุณสามารถอัปโหลดเอกสารด้วยปุ่มที่อยู่ด้านบนซ้ายของหน้าจอ"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "You might not be able to customize it anymore."
+msgstr ""
 
 #. module: web_editor
 #. odoo-python
@@ -3635,6 +3661,13 @@ msgstr "ขยายออก"
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "add"
 msgstr "เพิ่ม"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
+#, python-format
+msgid "alternatives..."
+msgstr ""
 
 #. module: web_editor
 #. odoo-javascript

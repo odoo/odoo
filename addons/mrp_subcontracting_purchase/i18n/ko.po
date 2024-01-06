@@ -3,22 +3,31 @@
 # 	* mrp_subcontracting_purchase
 # 
 # Translators:
-# Wil Odoo, 2023
 # Sarah Park, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, python-format
+msgid "+ %d day(s)"
+msgstr "+ %d일"
 
 #. module: mrp_subcontracting_purchase
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.purchase_order_form_mrp_subcontracting_purchase
@@ -46,9 +55,23 @@ msgid "Count of Subcontracting Resupply for component"
 msgstr "구성 요소에 대한 외주 재공급 건수"
 
 #. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, python-format
+msgid "Days to Supply Components"
+msgstr "부품 공급 일수"
+
+#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_account_move_line
 msgid "Journal Item"
 msgstr "전표 항목"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, python-format
+msgid "Manufacturing Lead Time"
+msgstr "제조 리드타임"
 
 #. module: mrp_subcontracting_purchase
 #: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
@@ -73,6 +96,11 @@ msgid "Source PO of %s"
 msgstr "%s의 구매주문서 원본"
 
 #. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_stock_rule
+msgid "Stock Rule"
+msgstr "재고 규칙"
+
+#. module: mrp_subcontracting_purchase
 #: model:ir.model,name:mrp_subcontracting_purchase.model_stock_valuation_layer
 msgid "Stock Valuation Layer"
 msgstr "재고 평가 레이어"
@@ -81,3 +109,10 @@ msgstr "재고 평가 레이어"
 #: model:ir.model,name:mrp_subcontracting_purchase.model_stock_picking
 msgid "Transfer"
 msgstr "전송"
+
+#. module: mrp_subcontracting_purchase
+#. odoo-python
+#: code:addons/mrp_subcontracting_purchase/models/stock_rule.py:0
+#, python-format
+msgid "Vendor Lead Time"
+msgstr "거래처 리드타임"
