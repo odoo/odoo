@@ -1,5 +1,7 @@
 import { reactive, toRaw } from "@odoo/owl";
 import { uuidv4 } from "@point_of_sale/utils";
+import { TrapDisabler } from "@point_of_sale/proxy_trap";
+import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 
 const ID_CONTAINER = {};
 
@@ -139,12 +141,12 @@ function processModelDefs(modelDefs) {
     return [inverseMap, modelDefs];
 }
 
-export class Base {
-    constructor({ models, records, model, proxyTrap }) {
+export class Base extends WithLazyGetterTrap {
+    constructor({ models, records, model, traps }) {
+        super({ traps });
         this.models = models;
         this.records = records;
         this.model = model;
-        return new Proxy(this, proxyTrap);
     }
     /**
      * Called during instantiation when the instance is fully-populated with field values.
@@ -433,19 +435,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return records[model].has(id);
     }
 
-    // If value is more than 0, then the proxy trap is disabled.
-    let proxyTrapDisabled = 0;
-    function withoutProxyTrap(fn) {
-        return function (...args) {
-            try {
-                proxyTrapDisabled += 1;
-                return fn(...args);
-            } finally {
-                proxyTrapDisabled -= 1;
-            }
-        };
-    }
-
     /**
      * This check assumes that if the first element is a command, then the rest are commands.
      */
@@ -457,30 +446,39 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         );
     }
 
-    const proxyTraps = {};
-    function getProxyTrap(model) {
-        if (model in proxyTraps) {
-            return proxyTraps[model];
-        }
+    const disabler = new TrapDisabler();
+    function withoutProxyTrap(fn) {
+        return (...args) => disabler.call(fn, ...args);
+    }
+
+    const setTrapsCache = {};
+    function instantiateModel(model, { models, records }) {
         const fields = getFields(model);
-        const proxyTrap = {
-            set(target, prop, value) {
-                if (proxyTrapDisabled || !(prop in fields)) {
-                    return Reflect.set(target, prop, value);
+        const Model = modelClasses[model] || Base;
+        if (!(model in setTrapsCache)) {
+            setTrapsCache[model] = function setTrap(target, prop, value, receiver) {
+                if (disabler.isDisabled() || !(prop in fields)) {
+                    return Reflect.set(target, prop, value, receiver);
                 }
-                const field = fields[prop];
-                if (field && X2MANY_TYPES.has(field.type)) {
-                    if (!isX2ManyCommands(value)) {
-                        value = [["clear"], ["link", ...value]];
+                return disabler.call(() => {
+                    const field = fields[prop];
+                    if (field && X2MANY_TYPES.has(field.type)) {
+                        if (!isX2ManyCommands(value)) {
+                            value = [["clear"], ["link", ...value]];
+                        }
                     }
-                }
-                target.update({ [prop]: value });
-                target.model.triggerEvents("update", { field: prop, value, id: target.id });
-                return true;
-            },
-        };
-        proxyTraps[model] = proxyTrap;
-        return proxyTrap;
+                    receiver.update({ [prop]: value });
+                    target.model.triggerEvents("update", { field: prop, value, id: target.id });
+                    return true;
+                });
+            };
+        }
+        return new Model({
+            models,
+            records,
+            model: models[model],
+            traps: { set: setTrapsCache[model] },
+        });
     }
 
     const create = withoutProxyTrap(_create);
@@ -495,9 +493,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             vals["id"] = uuid(model);
         }
 
-        const Model = modelClasses[model] || Base;
-        const proxyTrap = getProxyTrap(model);
-        let record = new Model({ models, records, model: models[model], proxyTrap });
+        let record = instantiateModel(model, { models, records });
 
         const id = vals["id"];
         record.id = id;
