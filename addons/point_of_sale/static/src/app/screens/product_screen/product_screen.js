@@ -17,13 +17,11 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
-import { fuzzyLookup } from "@web/core/utils/search";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
-import { unaccent } from "@web/core/utils/strings";
 import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
 
 export class ProductScreen extends Component {
@@ -285,75 +283,6 @@ export class ProductScreen extends Component {
 
     get searchWord() {
         return this.pos.searchProductWord.trim();
-    }
-
-    get products() {
-        return this.pos.models["product.template"].getAll();
-    }
-
-    get productsToDisplay() {
-        let list = [];
-
-        if (this.searchWord !== "") {
-            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
-        } else if (this.pos.selectedCategory?.id) {
-            list = this.getProductsByCategory(this.pos.selectedCategory);
-        } else {
-            list = this.products;
-        }
-
-        if (!list || list.length === 0) {
-            return [];
-        }
-
-        const excludedProductIds = [
-            this.pos.config.tip_product_id?.id,
-            ...this.pos.hiddenProductIds,
-            ...this.pos.session._pos_special_products_ids,
-        ];
-
-        list = list
-            .filter(
-                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
-            )
-            .slice(0, 100);
-
-        return this.searchWord !== ""
-            ? list.sort((a, b) => b.is_favorite - a.is_favorite)
-            : list.sort((a, b) => {
-                  if (b.is_favorite !== a.is_favorite) {
-                      return b.is_favorite - a.is_favorite;
-                  }
-                  return a.display_name.localeCompare(b.display_name);
-              });
-    }
-
-    getProductsBySearchWord(searchWord) {
-        return fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
-            unaccent(product.searchString, false)
-        );
-    }
-
-    addMainProductsToDisplay(products) {
-        const uniqueProductsMap = new Map();
-        for (const product of products) {
-            if (product.id in this.pos.mainProductVariant) {
-                const mainProduct = this.pos.mainProductVariant[product.id];
-                uniqueProductsMap.set(mainProduct.id, mainProduct);
-            } else {
-                uniqueProductsMap.set(product.id, product);
-            }
-        }
-        return Array.from(uniqueProductsMap.values());
-    }
-
-    getProductsByCategory(category) {
-        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
-        const products = allCategoryIds.flatMap(
-            (catId) => this.pos.models["product.template"].getBy("pos_categ_ids", catId) || []
-        );
-        // Remove duplicates since owl doesn't like it.
-        return Array.from(new Set(products));
     }
 
     async onPressEnterKey() {

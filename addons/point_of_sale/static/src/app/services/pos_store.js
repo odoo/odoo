@@ -6,7 +6,6 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, getOnNotified, Counter } from "@point_of_sale/utils";
-import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
@@ -34,8 +33,11 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { user } from "@web/core/user";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { unaccent } from "@web/core/utils/strings";
+import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 
-export class PosStore extends Reactive {
+export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
 
@@ -53,9 +55,9 @@ export class PosStore extends Reactive {
         "alert",
         "mail.sound_effects",
     ];
-    constructor() {
-        super();
-        this.ready = this.setup(...arguments).then(() => this);
+    constructor({ traps, env, deps }) {
+        super({ traps });
+        this.ready = this.setup(env, deps).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
     async setup(
@@ -1892,6 +1894,62 @@ export class PosStore extends Reactive {
     getDisplayDeviceIP() {
         return this.config.proxy_ip;
     }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.mainProductVariant) {
+                const mainProduct = this.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    get productsToDisplay() {
+        const searchWord = this.searchProductWord.trim();
+        const allProducts = this.models["product.template"].getAll();
+        let list = [];
+
+        if (searchWord !== "") {
+            list = this.addMainProductsToDisplay(
+                fuzzyLookup(unaccent(searchWord, false), allProducts, (product) =>
+                    unaccent(product.searchString, false)
+                )
+            );
+        } else if (this.selectedCategory?.id) {
+            list = this.selectedCategory.associatedProducts;
+        } else {
+            list = allProducts;
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.config.tip_product_id?.id,
+            ...this.hiddenProductIds,
+            ...this.session._pos_special_products_ids,
+        ];
+
+        list = list
+            .filter(
+                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
+            )
+            .slice(0, 100);
+
+        return searchWord !== ""
+            ? list.sort((a, b) => b.is_favorite - a.is_favorite)
+            : list.sort((a, b) => {
+                  if (b.is_favorite !== a.is_favorite) {
+                      return b.is_favorite - a.is_favorite;
+                  }
+                  return a.display_name.localeCompare(b.display_name);
+              });
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
@@ -1916,7 +1974,7 @@ export function register_payment_method(use_payment_terminal, ImplementedPayment
 export const posService = {
     dependencies: PosStore.serviceDependencies,
     async start(env, deps) {
-        return new PosStore(env, deps).ready;
+        return new PosStore({ traps: {}, env, deps }).ready;
     },
 };
 

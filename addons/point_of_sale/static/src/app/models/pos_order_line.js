@@ -361,19 +361,19 @@ export class PosOrderline extends Base {
         return window.parseFloat(roundDecimals(this.price_unit || 0, digits).toFixed(digits));
     }
 
-    getUnitDisplayPrice() {
+    get unitDisplayPrice() {
         if (this.config.iface_tax_included === "total") {
-            return this.getAllPrices(1).priceWithTax;
+            return this.allUnitPrices.priceWithTax;
         } else {
-            return this.getAllPrices(1).priceWithoutTax;
+            return this.allUnitPrices.priceWithoutTax;
         }
     }
 
     getUnitDisplayPriceBeforeDiscount() {
         if (this.config.iface_tax_included === "total") {
-            return this.getAllPrices(1).priceWithTaxBeforeDiscount;
+            return this.allUnitPrices.priceWithTaxBeforeDiscount;
         } else {
-            return this.getAllPrices(1).priceWithoutTaxBeforeDiscount;
+            return this.allUnitPrices.priceWithoutTaxBeforeDiscount;
         }
     }
     getBasePrice() {
@@ -422,19 +422,19 @@ export class PosOrderline extends Base {
     }
 
     getPriceWithoutTax() {
-        return this.getAllPrices().priceWithoutTax;
+        return this.allPrices.priceWithoutTax;
     }
 
     getPriceWithTax() {
-        return this.getAllPrices().priceWithTax;
+        return this.allPrices.priceWithTax;
     }
 
     getTax() {
-        return this.getAllPrices().tax;
+        return this.allPrices.tax;
     }
 
     getTaxDetails() {
-        return this.getAllPrices().taxDetails;
+        return this.allPrices.taxDetails;
     }
 
     getTotalTaxesIncludedInPrice() {
@@ -516,6 +516,14 @@ export class PosOrderline extends Base {
         };
     }
 
+    get allPrices() {
+        return this.getAllPrices();
+    }
+
+    get allUnitPrices() {
+        return this.getAllPrices(1);
+    }
+
     displayDiscountPolicy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
         // is a percentage discount. However we don't have that information in pos
@@ -584,17 +592,17 @@ export class PosOrderline extends Base {
 
     getComboTotalPrice() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.getAllPrices(1).priceWithTax, 0);
+        return allLines.reduce((total, line) => total + line.allUnitPrices.priceWithTax, 0);
     }
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.getAllPrices(1).priceWithoutTax, 0);
+        return allLines.reduce((total, line) => total + line.allUnitPrices.priceWithoutTax, 0);
     }
 
     getOldUnitDisplayPrice() {
         return (
             this.displayDiscountPolicy() === "without_discount" &&
-            roundCurrency(this.getUnitDisplayPrice(), this.currency) <
+            roundCurrency(this.unitDisplayPrice, this.currency) <
                 roundCurrency(this.getTaxedlstUnitPrice(), this.currency) &&
             this.getTaxedlstUnitPrice()
         );
@@ -616,7 +624,7 @@ export class PosOrderline extends Base {
             price: this.getPriceString(),
             qty: this.getQuantityStr(),
             unit: this.product_id.uom_id ? this.product_id.uom_id.name : "",
-            unitPrice: formatCurrency(this.getUnitDisplayPrice(), this.currency),
+            unitPrice: formatCurrency(this.unitDisplayPrice, this.currency),
             oldUnitPrice: this.getOldUnitDisplayPrice()
                 ? formatCurrency(this.getOldUnitDisplayPrice(), this.currency)
                 : "",

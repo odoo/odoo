@@ -25,9 +25,9 @@
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
                     <CategorySelector t-if="!ui.isSmall || !pos.scanning" />
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
+                    <div t-elif="pos.productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
-                            t-foreach="productsToDisplay" t-as="product" t-key="product.id"
+                            t-foreach="pos.productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"
                             product="product"
                             class="pos.productViewMode"

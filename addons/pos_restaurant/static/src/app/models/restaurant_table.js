@@ -62,7 +62,7 @@ export class RestaurantTable extends Base {
             y: this.getY() + this.height / 2,
         };
     }
-    get orders() {
+    getOrders() {
         return this.models["pos.order"].filter(
             (o) =>
                 o.table_id?.id === this.id &&
