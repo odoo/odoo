@@ -11,7 +11,6 @@
 # Melih Melik Sonmez, 2023
 # Levent Karakaş <levent@mektup.at>, 2023
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2023
-# Umur Akın <umura@projetgrup.com>, 2023
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2023
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2023
 # Ediz Duman <neps1192@gmail.com>, 2023
@@ -20,15 +19,16 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Martin Trigaux, 2023
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2023
-# Murat Kaplan <muratk@projetgrup.com>, 2023
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2023\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -775,6 +775,11 @@ msgid "Show Clear Qty Button"
 msgstr "Miktarı Temizle Düğmesini Göster"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "Lot Metinlerini Göster"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
 msgstr "Miktar Ayarla Düğmesini Göster"
@@ -972,6 +977,11 @@ msgstr "Kayıttaki istisna aktivite türü."
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
+msgid "Unreserve"
+msgstr "Rezervasyonu Kaldır"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form

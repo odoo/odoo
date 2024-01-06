@@ -7,16 +7,16 @@
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Tomáš Píšek, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tomáš Píšek, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -828,7 +828,7 @@ msgid ""
 "                    </div>\n"
 "                    <t t-if=\"object.barcode\"> \n"
 "                        <div style=\"margin-bottom: 5px;\">\n"
-"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" alt=\"QR Code\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" height=\"100\" alt=\"QR Code\">\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -1347,7 +1347,7 @@ msgstr "Nomenklatura čárového kódu"
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
 msgid "Barcode should be unique"
-msgstr ""
+msgstr "Čárový kód by měl být jedinečný"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
@@ -2417,7 +2417,7 @@ msgstr "Neplatná možnost události / vstupenky"
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 #, python-format
 msgid "Invalid ticket"
-msgstr ""
+msgstr "Neplatný tiket"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -3083,8 +3083,8 @@ msgid "Registered"
 msgstr "Registrovaný"
 
 #. module: event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
@@ -3149,7 +3149,7 @@ msgstr ""
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 #, python-format
 msgid "Registration confirmed"
-msgstr ""
+msgstr "Registrace potvrzena"
 
 #. module: event
 #. odoo-python
@@ -3241,7 +3241,7 @@ msgstr "Chyba doručení SMS"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Scan a badge"
-msgstr ""
+msgstr "Skenovat odznak"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3285,7 +3285,7 @@ msgstr "Tajný klíč"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Select Attendee"
-msgstr ""
+msgstr "Vyberte účastníka"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3677,18 +3677,18 @@ msgstr "Tento krok je proveden. Klikněte pro zablokování nebo nastavení."
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "This ticket is for another event"
-msgstr ""
+msgstr "Tiket je na jinou událost"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "Tento tiket není na probíhající událost"
 
 #. module: event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/event/controllers/main.py:0
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
@@ -4113,7 +4113,7 @@ msgstr "je již zaregistrován"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #, python-format
 msgid "is successfully registered"
-msgstr ""
+msgstr "je úspěšně zaregistrován"
 
 #. module: event
 #. odoo-python

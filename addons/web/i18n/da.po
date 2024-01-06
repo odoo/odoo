@@ -16,14 +16,15 @@
 # Mads Søndergaard, 2023
 # Mads Søndergaard, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2023
+# Morten Paaske, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
+"Last-Translator: Morten Paaske, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1111,6 +1112,13 @@ msgstr "Alle brugere"
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 #, python-format
 msgid "Almond"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Always range"
 msgstr ""
 
 #. module: web
@@ -3080,6 +3088,13 @@ msgstr ""
 #, python-format
 msgid "Field Type"
 msgstr "Felttype"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/expression_editor/expression_editor.js:0
+#, python-format
+msgid "Field properties not supported"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5386,6 +5401,11 @@ msgid "Password"
 msgstr "Adgangskode"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5511,13 +5531,6 @@ msgstr "Vælg felter for at gemme eksport liste..."
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr "Brug kopi-knappen til at rapportere fejlen til din support-service."
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6513,6 +6526,15 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid ""
+"Set to true the full range input has to be display by default, even if "
+"empty."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_controller.js:0
@@ -7380,27 +7402,6 @@ msgstr "Af-arkiver alle"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught CORS Error"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Javascript Error"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Promise"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
@@ -7417,18 +7418,6 @@ msgstr "Udefineret"
 #, python-format
 msgid "Unfold"
 msgstr "Fold ud"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid ""
-"Unknown CORS error\n"
-"\n"
-"An unknown CORS error occured.\n"
-"The error probably originates from a JavaScript file served from a different origin.\n"
-"(Opening your browser console might give you a hint on the error.)"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -11171,7 +11160,7 @@ msgstr ""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "cart"
-msgstr ""
+msgstr "Kurv"
 
 #. module: web
 #. odoo-javascript

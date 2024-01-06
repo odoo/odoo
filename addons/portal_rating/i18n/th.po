@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,12 +60,12 @@ msgstr "ความคิดเห็น"
 #. module: portal_rating
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_id
 msgid "Commented by"
-msgstr ""
+msgstr "แสดงความคิดเห็นโดย"
 
 #. module: portal_rating
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_datetime
 msgid "Commented on"
-msgstr ""
+msgstr "แสดงความคิดเห็นเมื่อ"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -93,21 +94,21 @@ msgstr "แก้ไข"
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 #, python-format
 msgid "Edit Review"
-msgstr ""
+msgstr "แก้ไขรีวิว"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Empty star"
-msgstr ""
+msgstr "ไม่มีดาว"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Full star"
-msgstr ""
+msgstr "เต็มดาว"
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_ir_http
@@ -119,49 +120,49 @@ msgstr "การกำหนด HTTP"
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
-msgstr ""
+msgstr "ครึ่งดาว"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I don't like it"
-msgstr ""
+msgstr "ฉันไม่ชอบเลย"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I hate it"
-msgstr ""
+msgstr "ฉันเกลียดมัน"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I like it"
-msgstr ""
+msgstr "ฉันชอบมัน"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
-msgstr ""
+msgstr "ฉันรักมัน"
 
 #. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/controllers/portal_rating.py:0
 #, python-format
 msgid "Invalid rating"
-msgstr ""
+msgstr "การให้คะแนนไม่ถูกต้อง"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "It's okay"
-msgstr ""
+msgstr "ไม่เป็นไร"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -180,14 +181,14 @@ msgstr "ข้อความ"
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Modify your review"
-msgstr ""
+msgstr "แก้ไขรีวิวของคุณ"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Post comment"
-msgstr ""
+msgstr "เขียนความคิดเห็น"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -199,7 +200,7 @@ msgstr "เผยแพร่เมื่อ"
 #. module: portal_rating
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_comment
 msgid "Publisher comment"
-msgstr ""
+msgstr "ความคิดเห็นของผู้เผยแพร่"
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_rating_rating
@@ -211,7 +212,7 @@ msgstr "การให้คะแนน"
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Remove Selection"
-msgstr ""
+msgstr "ลบส่วนที่เลือก"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -229,13 +230,15 @@ msgid ""
 "The rating is required. Please make sure to select one before sending your "
 "review."
 msgstr ""
+"จำเป็นต้องมีการให้คะแนน "
+"โปรดตรวจสอบให้แน่ใจว่าได้เลือกหนึ่งรายการก่อนที่จะส่งรีวิวของคุณ"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Update comment"
-msgstr ""
+msgstr "อัปเดตความคิดเห็น"
 
 #. module: portal_rating
 #. odoo-python
@@ -243,20 +246,21 @@ msgstr ""
 #, python-format
 msgid "Updating rating comment require write access on related record"
 msgstr ""
+"การอัปเดตความคิดเห็นการให้คะแนนจำเป็นต้องมีการเข้าถึงการเขียนในบันทึกที่เกี่ยวข้อง"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 #, python-format
 msgid "Write a review"
-msgstr ""
+msgstr "เขียนรีวิว"
 
 #. module: portal_rating
 #. odoo-javascript
 #: code:addons/portal_rating/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Write your comment"
-msgstr ""
+msgstr "เขียนความคิดเห็นของคุณ"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -271,4 +275,4 @@ msgstr "สัญลักษณ์"
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "stars"
-msgstr ""
+msgstr "ดาว"

@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1148,6 +1148,13 @@ msgstr "Kaikki käyttäjät"
 #, python-format
 msgid "Almond"
 msgstr "Manteli"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Always range"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3141,6 +3148,13 @@ msgstr "Ferris"
 #, python-format
 msgid "Field Type"
 msgstr "Kentän tyyppi"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/expression_editor/expression_editor.js:0
+#, python-format
+msgid "Field properties not supported"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5470,6 +5484,11 @@ msgid "Password"
 msgstr "Salasana"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5596,15 +5615,6 @@ msgstr "Ole hyvä ja valitse kentät vientiluetteloon."
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr "Käytä kopioi-painiketta ilmoittaaksesi virheestä tukipalvelullesi."
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-"Käytä seuraavaa viitettä maksua varten : <b><span>\n"
-"                           INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -6606,6 +6616,15 @@ msgstr "Aseta prioriteetti..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid ""
+"Set to true the full range input has to be display by default, even if "
+"empty."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_controller.js:0
@@ -7485,27 +7504,6 @@ msgstr "Palauta kaikki arkistosta"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught CORS Error"
-msgstr "Uncaught CORS Error"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Javascript Error"
-msgstr "Uncaught Javascript Error"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Promise"
-msgstr "Uncaught Promise"
-
-#. module: web
-#. odoo-javascript
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
@@ -7522,23 +7520,6 @@ msgstr "Ei määritelty"
 #, python-format
 msgid "Unfold"
 msgstr "Avaa laskostus"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid ""
-"Unknown CORS error\n"
-"\n"
-"An unknown CORS error occured.\n"
-"The error probably originates from a JavaScript file served from a different origin.\n"
-"(Opening your browser console might give you a hint on the error.)"
-msgstr ""
-"Unknown CORS error\n"
-"\n"
-"An unknown CORS error occured.\n"
-"The error probably originates from a JavaScript file served from a different origin.\n"
-"(Opening your browser console might give you a hint on the error.)"
 
 #. module: web
 #. odoo-javascript

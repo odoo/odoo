@@ -16,7 +16,6 @@
 # Arminas Grigonis <arminas@versada.lt>, 2023
 # vaalds <vaalds@gmail.com>, 2023
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Arunas V. <arunas@devoro.com>, 2023
 # Gailius Kazlauskas, 2023
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2023
@@ -25,14 +24,15 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2023
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
 # Asta Kasinskaitė, 2023
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Asta Kasinskaitė, 2023\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1645,6 +1645,11 @@ msgid "Product Name"
 msgstr "Produkto pavadinimas"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Produkto variantas"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
 msgstr "Produkto variantai"
@@ -1845,6 +1850,13 @@ msgstr ""
 "Rodyti visus įrašus, kurių sekančio veiksmo data yra ankstesnė nei šiandiena"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Show missing work email employees"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
@@ -1880,6 +1892,11 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
 msgstr ""
 
 #. module: hr_expense
@@ -2049,8 +2066,17 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid ""
-"The work email of the employee is required to post the expense report. "
-"Please add it on the employee form."
+"The work email of some employees is missing. Please add it on the employee "
+"form"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
 msgstr ""
 
 #. module: hr_expense

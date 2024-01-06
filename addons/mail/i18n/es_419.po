@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Iran Villalobos López, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Wil Odoo, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,6 @@ msgstr "%(author name)s desde %(channel name)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 #, python-format
 msgid "%(candidateType)s (%(protocol)s)"
 msgstr "%(candidateType)s (%(protocol)s)"
@@ -113,6 +112,17 @@ msgstr ""
 #, python-format
 msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
+msgid ""
+"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
+"someone, and grab their attention.%(new_line)sType "
+"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
+"%(bold_start)s/command%(bold_end)s to execute a command."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -159,7 +169,14 @@ msgstr "%s (copia)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
+#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
+#, python-format
+msgid "%s Message"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
 #, python-format
 msgid "%s Messages"
 msgstr "%s Mensajes"
@@ -231,8 +248,8 @@ msgstr "%s mensajes encontrados"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
-msgid "%s raised a hand"
-msgstr "%s alzó la mano"
+msgid "%s raised their hand"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -331,13 +348,6 @@ msgid ". Narrow your search to see more choices."
 msgstr ". Limite su búsqueda para ver más opciones."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
-#, python-format
-msgid "1 Message"
-msgstr "1 Mensaje"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
@@ -345,21 +355,6 @@ msgid ""
 msgstr ""
 "<b invisible=\"not no_record\" class=\"text-warning\">Sin registro para este"
 " modelo</b>"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid ""
-"<br><br>\n"
-"            Type <b>@username</b> to mention someone, and grab their attention.<br>\n"
-"            Type <b>#channel</b> to mention a channel.<br>\n"
-"            Type <b>/command</b> to execute a command.<br>"
-msgstr ""
-"<br><br>\n"
-"            Escriba <b>@nombredeusuario</b> para mencionar a alguien y llamar su atención.<br>\n"
-"            Escriba <b>#canal</b> para mencionar un canal.<br>\n"
-"            Escriba <b>/comando</b> para ejecutar un comando.<br>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -1204,13 +1199,6 @@ msgid "And 1 other member."
 msgstr "Y 1 miembro más."
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid "Anonymous"
-msgstr "Anónimo"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
@@ -1894,8 +1882,7 @@ msgid ""
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
 "El seudónimo catchall %(catchall)s ya se utiliza para otro dominio con el "
-"mismo nombre. Utilice otro catchall o simplemente utilice el otro dominio de"
-" seudónimo."
+"mismo nombre. Utilice otro catchall o utilice el otro dominio de seudónimo."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -1926,7 +1913,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
-#: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__channel
@@ -1947,6 +1933,13 @@ msgstr "Miembro del canal"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_type
 msgid "Channel Type"
 msgstr "Tipo de canal"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+#, python-format
+msgid "Channel full"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1984,7 +1977,6 @@ msgstr "Canales/Miembros"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu.js:0
-#: code:addons/mail/static/src/core/web/messaging_menu.js:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 #, python-format
 msgid "Chat"
@@ -1997,8 +1989,7 @@ msgid ""
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
 "El chat es privado y único entre 2 personas. El grupo es privado entre las "
-"personas invitadas, pero cualquiera puede unirse al grupo (dependiendo de la"
-" configuración)."
+"personas invitadas, pero cualquiera puede unirse (según la configuración)."
 
 #. module: mail
 #. odoo-javascript
@@ -2221,8 +2212,8 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 #: code:addons/mail/static/src/core/common/message_confirm_dialog.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_view_form_confirm_delete
@@ -2268,6 +2259,21 @@ msgstr "Error de conexión (problema del servidor de correo saliente)"
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "La prueba de conexión falló: %s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+#, python-format
+msgid "Connection to SFU server closed by the server"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "Connection type:"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2317,7 +2323,7 @@ msgid ""
 "this channel for this partner. This includes: creating, joining, pinning, "
 "and new message posted."
 msgstr ""
-"Incluya la fecha y hora del último evento interesante que ha ocurrido en "
+"Incluye la fecha y hora del último evento interesante que ha ocurrido en "
 "este canal para este contacto. Esto incluye: crear, unirse, fijar, y nuevo "
 "mensaje publicado."
 
@@ -2744,7 +2750,7 @@ msgid ""
 "- email (using email_from or email field)"
 msgstr ""
 "Destinatarios predeterminados del registro:\n"
-"- contacto (usa el id del contacto o partner_id) O\n"
+"- contacto (usa el ID del contacto o partner_id) O\n"
 "- correo electrónico (usa email_from o el correo electrónico)"
 
 #. module: mail
@@ -3094,6 +3100,13 @@ msgstr "Descargar registros"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "Download:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/dropzone.xml:0
 #, python-format
 msgid "Drag Files Here"
@@ -3342,7 +3355,7 @@ msgid ""
 "found and replaces the author_id field in the chatter."
 msgstr ""
 "Dirección de correo del remitente. Este campo se establece cuando no se "
-"encuentra ningún partner coincidente y reemplaza el campo author_id en el "
+"encuentra ningún contacto coincidente y reemplaza el campo author_id en el "
 "chatter."
 
 #. module: mail
@@ -3362,8 +3375,8 @@ msgid ""
 "thread."
 msgstr ""
 "Dirección de correo electrónico a la que se redireccionarán las respuestas "
-"cuando se envíen correos electrónicos masivos; solo se utiliza cuando la "
-"respuesta no está registrada en el hilo de conversación original."
+"al enviar correos electrónicos masivos. Solo se utiliza cuando la respuesta "
+"no está registrada en el hilo de conversación original."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -3627,6 +3640,13 @@ msgid "Failed to load gifs..."
 msgstr "Hubo un error al cargar los gifs..."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+#, python-format
+msgid "Failed to load the SFU server, falling back to peer-to-peer"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
@@ -3672,9 +3692,8 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
-"Motivo del error. Normalmente se trata de la excepción lanzada por el "
-"servidor de correo electrónico que se almacena para facilitar la eliminación"
-" de bugs."
+"Motivo del error. Por lo general es la excepción lanzada por el servidor de "
+"correo electrónico y se almacena para facilitar la eliminación de bugs."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_type
@@ -4510,9 +4529,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
-"Si esta opción está activada, el administrador de tareas enviará el correo "
-"electrónico después de la fecha. Si no está activada, el correo electrónico "
-"se enviará lo antes posible. Puede utilizar expresiones dinámicas."
+"Si esta opción está activa, el administrador de tareas enviará el correo "
+"electrónico después de la fecha. Si no, el correo electrónico se enviará lo "
+"antes posible. Puede utilizar expresiones dinámicas."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -4542,8 +4561,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de correo electrónico está en la lista negra, el contacto ya"
-" no recibirá correo masivo de ninguna lista."
+"El contacto ya no recibirá correos masivos de ninguna lista si la dirección "
+"de correo electrónico está en la lista de exclusión."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -4770,6 +4789,13 @@ msgid ""
 msgstr ""
 "Expresión no válida, debe ser una definición literal del diccionario de "
 "python, por ejemplo \"{'field': 'value'}\""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
+msgid "Invalid field “%(field_name)s” when creating a channel with members."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5026,8 +5052,8 @@ msgid ""
 "forgot to specify the related channel. To move forward, please make sure to "
 "provide the necessary channel information."
 msgstr ""
-"Parece que está intentando crear un miembro de canal, pero parece que ha "
-"olvidado especificar el canal relacionado. Si desea continuar, asegúrese de "
+"Parece que está intentando crear un miembro de canal, pero al parecer no "
+"especificó el canal relacionado. Si desea continuar, asegúrese de "
 "proporcionar la información necesaria sobre el canal."
 
 #. module: mail
@@ -5119,6 +5145,11 @@ msgstr ""
 msgid "Keep activities marked as done in the activity view"
 msgstr ""
 "Mantener las actividades marcadas como hechas en la vista de actividades"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Key"
+msgstr "Clave"
 
 #. module: mail
 #. odoo-python
@@ -5587,8 +5618,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
-"El redactor de correo en modo de agregar comentarios debe ejecutarse en al "
-"menos un registro.  (modelo %(model_name)s)."
+"El redactor de correo en modo comentarios debe ejecutarse por lo menos en un"
+" registro. No se encontraron registros (modelo %(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -6896,6 +6927,14 @@ msgid "Original message was deleted"
 msgstr "Se eliminó el mensaje original"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/res_users.py:0
+#: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
+#, python-format
+msgid "Other activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Outgoing"
@@ -7006,12 +7045,14 @@ msgstr "Servidores POP/IMAP"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Packets received:"
 msgstr "Paquetes recibidos:"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Packets sent:"
@@ -7532,6 +7573,13 @@ msgid "RTC Session"
 msgstr "Sesión de comunicación en tiempo real"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "RTC Session ID:"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
 msgid "RTC Sessions"
 msgstr "Sesiones de comunicación en tiempo real"
@@ -8031,6 +8079,11 @@ msgid "SFU Server key"
 msgstr "Clave del servidor SFU"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "SFU server"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "SMTP Server"
 msgstr "Servidor SMTP"
@@ -8085,8 +8138,8 @@ msgid "Schedule & Mark as Done"
 msgstr "Programar y marcar como hecho"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/web/activity_service.js:0
 #: code:addons/mail/static/src/core/web/activity_service.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
@@ -8095,8 +8148,8 @@ msgid "Schedule Activity"
 msgstr "Programar actividad"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/web/activity_service.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
@@ -9294,8 +9347,8 @@ msgid ""
 msgstr ""
 "El modelo (tipo de documento de Odoo) al que corresponde este seudónimo. "
 "Cualquier correo entrante que no sea respuesta a un registro existente "
-"causará la creación de un nuevo registro de este modelo (por ejemplo, una "
-"tarea de proyecto)."
+"creará un nuevo registro de este modelo (por ejemplo, una tarea de "
+"proyecto)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -9825,6 +9878,7 @@ msgstr "URI"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__source_url
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "URL"
 msgstr "URL"
 
@@ -10026,6 +10080,13 @@ msgstr "Subir archivo"
 #, python-format
 msgid "Upload file"
 msgstr "Subir archivo"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "Upload:"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10271,9 +10332,9 @@ msgid ""
 "email server (@mycompany.odoo.com)."
 msgstr ""
 "Es necesario que utilice su propio servidor de correo electrónico para "
-"enviar/recibir correos electrónicos de las versiones Community y Enterprise."
-" Los usuarios de la versión en línea ya disponen de un servidor de correo "
-"electrónico listo para usar (@mycompany.odoo.com)."
+"enviar o recibir correos electrónicos en las versiones Community y "
+"Enterprise. Los usuarios de la versión en línea ya disponen de un servidor "
+"de correo electrónico listo para usar (@mycompany.odoo.com)."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -10426,7 +10487,7 @@ msgid ""
 "%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"No se pudo crear el seudónimo %(alias_name)s porque el dominio "
+"No se pudo crear el seudónimo %(alias_name)s. El dominio "
 "%(alias_domain_name)s le pertenece a la empresa %(alias_company_names)s "
 "mientras que el documento propietario pertenece a la empresa "
 "%(company_name)s."
@@ -10575,8 +10636,15 @@ msgid ""
 "access to it unless you are invited again. Are you sure you want to "
 "continue?"
 msgstr ""
-"Está a punto de abandonar esta conversación grupal a la cual no podrá volver"
-" a unirse a menos que le inviten de nuevo. ¿Desea continuar?"
+"Está a punto de abandonar esta conversación grupal y no podrá volver a "
+"unirse a menos que le inviten de nuevo. ¿Desea continuar?"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
+msgid "You are alone in a private conversation."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -10589,15 +10657,15 @@ msgstr "Es el único en este canal."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
-msgid "You are in a private conversation with <b>@%s</b>."
-msgstr "Está en una conversación privada con <b>@%s</b>."
+msgid "You are in a private conversation with %(member_names)s."
+msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
-msgid "You are in channel <b>#%s</b>."
-msgstr "Está en el canal <b>#%s</b>."
+msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10888,6 +10956,13 @@ msgstr "archivos adjuntos en este correo electrónico."
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "available bitrate:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "back"
@@ -10915,6 +10990,13 @@ msgid "by"
 msgstr "por"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "camera"
+msgstr "cámara"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid ""
 "cannot be processed. This address\n"
@@ -10932,10 +11014,28 @@ msgstr "canales"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "clock rate:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
 #, python-format
 msgid "close"
 msgstr "cerrar"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "codec:"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -10990,6 +11090,20 @@ msgstr "documento"
 #, python-format
 msgid "done"
 msgstr "hecho"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "down DTLS:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "down ICE:"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -11177,6 +11291,13 @@ msgid "media player Error"
 msgstr "Error del reproductor multimedia"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "microphone"
+msgstr "micrófono"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -11205,7 +11326,6 @@ msgstr "nuevo"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.js:0
 #, python-format
 msgid "no connection"
@@ -11299,6 +11419,13 @@ msgid "results out of"
 msgstr "resultados de"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "screen"
+msgstr "pantalla"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -11356,6 +11483,20 @@ msgstr "error desconocido"
 #, python-format
 msgid "unknown target model %s"
 msgstr "modelo de destino desconocido %s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "up DTLS:"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
+#, python-format
+msgid "up ICE:"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
