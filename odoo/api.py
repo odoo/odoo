@@ -865,6 +865,25 @@ class Environment(Mapping):
         self.cr.execute(query)
         return [] if self.cr.description is None else self.cr.fetchall()
 
+    @contextmanager
+    def new_transaction(self, uid=None, context=None):
+        """ Create an environment with a new transaction
+
+        Usage:
+        ```
+        with env.new_transaction() as nenv:
+            nenv['res.partner'].search(...)
+        ```
+        """
+        dbname = self.cr.dbname
+        uid = uid or self.uid
+        if context is None:
+            context = self.context
+        db_registry = Registry.new(dbname)
+        with db_registry.cursor() as cr:
+            env = Environment(cr, uid, context)
+            yield env
+
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """

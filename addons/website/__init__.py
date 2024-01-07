@@ -1,13 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import controllers
-from . import models
-from . import wizard
-
-import odoo
-from odoo import api, SUPERUSER_ID
+from odoo import SUPERUSER_ID
 from odoo.http import request
-from functools import partial
 
 
 def uninstall_hook(env):
@@ -26,16 +20,13 @@ def uninstall_hook(env):
     env['website'].search([])._remove_attachments_on_website_unlink()
 
     # Properly unlink website_id from ir.model.fields
-    def rem_website_id_null(dbname):
-        db_registry = odoo.modules.registry.Registry.new(dbname)
-        with db_registry.cursor() as cr:
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            env['ir.model.fields'].search([
+    @env.cr.postcommit.add
+    def rem_website_id_null():
+        with env.new_transaction(uid=SUPERUSER_ID, context={}) as nenv:
+            nenv['ir.model.fields'].search([
                 ('name', '=', 'website_id'),
                 ('model', '=', 'res.config.settings'),
             ]).unlink()
-
-    env.cr.postcommit.add(partial(rem_website_id_null, env.cr.dbname))
 
 
 def post_init_hook(env):
