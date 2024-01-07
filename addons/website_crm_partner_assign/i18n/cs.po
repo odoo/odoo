@@ -10,6 +10,7 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Jiří Podhorecký, 2023
 # Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Jakub Smolka, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -188,8 +189,8 @@ msgid ""
 "customer before accepting the lead</span>"
 msgstr ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
-"style=\"display:none;\">Než přijmete potenciálního zákazníka, musíte vyplnit"
-" další akci a kontaktovat zákazníka</span>"
+"style=\"display:none;\">Než přijmete prospektu, musíte vyplnit další akci a "
+"kontaktovat zákazníka</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -199,8 +200,8 @@ msgid ""
 "customer before accepting the lead</span>"
 msgstr ""
 "<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">Než přijmete potenciálního zákazníka, musíte vyplnit"
-" další akci a kontaktovat zákazníka</span>"
+"style=\"display:none;\">Než přijmete prospektu, musíte vyplnit další akci a "
+"kontaktovat zákazníka</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -641,12 +642,12 @@ msgstr "Filtrovat podle úrovně"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
 msgid "Forward Leads To"
-msgstr "Vpřed potenciální zákazníci k"
+msgstr "Vpřed prospekty k"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__forward_type
 msgid "Forward selected leads to"
-msgstr "Přeposlat vybraní potenciální zákazníci k"
+msgstr "Přeposlat vybrané prospekty k"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.crm_lead_forward_to_partner_act
@@ -719,18 +720,14 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am not interested by this lead. I contacted the lead."
-msgstr ""
-"Tento potenciální zákazník mě nezajímá. Kontaktoval jsem potenciální "
-"zákazník."
+msgstr "Tento prospekt mě nezajímá. Kontaktoval jsem prospekt."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am not interested by this lead. I have not contacted the lead."
-msgstr ""
-"Tento potenciální zákazník mě nezajímá. Nekontaktoval jsem potenciální "
-"zákazník."
+msgstr "Tento prospekt mě nezajímá. Nekontaktoval jsem prospekt."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -805,22 +802,22 @@ msgstr "Poslední recenze partnera"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 msgid "Lead"
-msgstr "Potenciální zákazník"
+msgstr "Prospekt"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead -"
-msgstr "Potenciální zákazník -"
+msgstr "Prospekt -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "Lead Assignation"
-msgstr "Přiřazení potenciální zákazník"
+msgstr "Přiřazování prospektů"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead Feedback"
-msgstr "Potenciální zákazník zpětná vazba"
+msgstr "Zpětná vazba prospektu"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,name:website_crm_partner_assign.email_template_lead_forward_mail
@@ -830,24 +827,24 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
-msgstr "Místo potenciální zákazník"
+msgstr "Místo prospektu"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
-msgstr "Potenciální zákazník kupředu k partnerovi"
+msgstr "Prospekt kupředu k partnerovi"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Potenciální zákazník / příležitost"
+msgstr "Prospekt / příležitost"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
-msgstr "Potenciální zákazníci"
+msgstr "Prospekty"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
@@ -869,7 +866,7 @@ msgstr "Vyrovnejte váhu"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
 msgid "Link to Lead"
-msgstr "Link pre potenciální zákazník"
+msgstr "Odkaz na prospekt"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1288,7 +1285,7 @@ msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "There are no leads."
-msgstr "Neexistují žádní potenciální zákazníci."
+msgstr "Neexistují žádné prospekty."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1312,7 +1309,7 @@ msgstr "Aktivity tohoto týdne"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "This lead is a spam"
-msgstr "Tento potenciální zákazník je spam"
+msgstr "Tento prospekt je spam"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner__partner_weight
@@ -1322,7 +1319,7 @@ msgid ""
 "contention for this partner to take this lead/opportunity."
 msgstr ""
 "Mělo by se jednat o číselnou hodnotu větší než 0, která rozhodne o tom, zda "
-"tento partner využije tohoto potenciálního zákazníka / příležitosti."
+"tento partner využije tohoto prospektu / příležitosti."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
