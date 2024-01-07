@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Wichanon Jamwutthipreecha, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-10 15:12+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,7 @@ msgstr "Adyen"
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
 msgstr ""
+"เกิดข้อผิดพลาดระหว่างการประมวลผลการชำระเงินของคุณ กรุณาลองใหม่อีกครั้ง"
 
 #. module: payment_adyen
 #. openerp-web
@@ -54,7 +55,7 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "รหัสลูกค้า"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_acquirer.py:0
@@ -65,7 +66,7 @@ msgstr "ไม่สามารถสร้างการเชื่อมต
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "รหัส HMAC"
 
 #. module: payment_adyen
 #. openerp-web
@@ -77,13 +78,13 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
-msgstr ""
+msgstr "บัญชีการค้า"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "ไม่พบธุรกรรมที่ตรงกับการอ้างอิง %s"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
@@ -106,6 +107,12 @@ msgid "Payment Transaction"
 msgstr "ธุรกรรมการชำระเงิน"
 
 #. module: payment_adyen
+#: code:addons/payment_adyen/utils.py:0
+#, python-format
+msgid "Please complete your address details."
+msgstr ""
+
+#. module: payment_adyen
 #. openerp-web
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
@@ -121,19 +128,19 @@ msgstr "ผู้ให้บริการ"
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "ข้อมูลที่ได้รับมีสถานะการชำระเงินไม่ถูกต้อง: %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีการอ้างอิงผู้ขาย"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีสถานะการชำระเงิน"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
@@ -145,7 +152,7 @@ msgstr ""
 #: code:addons/payment_adyen/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "ได้รับข้อมูลคำขอการชำระเงินที่ถูกแก้ไข"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
@@ -171,17 +178,17 @@ msgstr "เซิร์ฟเวอร์ผิดพลาด"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "การอ้างอิงผู้ซื้อ"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "คีย์ API ของผู้ใช้บริการเว็บ"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "คีย์ HMAC ของเว็บฮุค"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__provider
@@ -201,7 +208,7 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "รหัสลูกค้าของผู้ใช้บริการเว็บ"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_merchant_account
@@ -218,12 +225,12 @@ msgstr "การสื่อสารกับ API ล้มเหลว"
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "ธุรกรรมไม่ได้เชื่อมโยงกับโทเค็น"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "ข้อมูลอ้างอิงเฉพาะของพาร์ทเนอร์ที่เป็นเจ้าของโทเค็นนี้"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/utils.py:0
@@ -244,4 +251,4 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "การชำระเงินของคุณถูกปฏิเสธ กรุณาลองใหม่อีกครั้ง"

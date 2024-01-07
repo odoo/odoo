@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Wichanon Jamwutthipreecha, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-27 15:59+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "เชื่อมต่อ Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -35,12 +35,12 @@ msgstr "ไม่สามารถสร้างการเชื่อมต
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "สร้างเว็บฮุคของคุณ"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "รับคีย์ลับและคีย์ที่เผยแพร่ได้ของคุณ"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
@@ -48,12 +48,15 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"หากเปิดใช้งานเว็บฮุคในบัญชี Stripe ของคุณ "
+"ต้องตั้งค่าความลับในการลงนามนี้เพื่อตรวจสอบสิทธิ์ข้อความที่ส่งจาก Stripe "
+"ไปยัง Odoo"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "ไม่พบธุรกรรมที่ตรงกับการอ้างอิง %s"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -88,25 +91,25 @@ msgstr "ผู้ให้บริการ"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "คีย์ที่เผยแพร่ได้"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr ""
+msgstr "ได้รับข้อมูลที่มีสถานะเจตนาที่ไม่ถูกต้อง: %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีมีสถานะเจตนา"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีการอ้างอิงผู้ขาย"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
@@ -127,25 +130,25 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "ไอดีวิธีการชำระเงิน Stripe"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr ""
+msgstr "ข้อผิดพลาด Stripe พร็อกซี: %(error)s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Stripe Proxy: เกิดข้อผิดพลาดขณะสื่อสารกับพร็อกซี"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr ""
+msgstr "Stripe Proxy: ไม่สามารถสร้างการเชื่อมต่อได้"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
@@ -161,34 +164,37 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"การสื่อสารกับ API ล้มเหลว\n"
+"Stripe ให้ข้อมูลเกี่ยวกับปัญหาดังต่อไปนี้:\n"
+"'%s'"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "คีย์ที่ใช้เพื่อระบุบัญชีกับ Stripe เท่านั้น"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "ธุรกรรมไม่ได้เชื่อมโยงกับโทเค็น"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "ไม่สามารถแปลงโทเค็นการชำระเงินเป็น API ใหม่ได้"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "ความลับในการลงนามเว็บฮุค"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "เว็บฮุค Stripe ของคุณถูกตั้งค่าเรียบร้อยแล้ว!"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -196,6 +202,7 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"คุณไม่สามารถสร้างเว็บฮุค Stripe ได้ หากไม่ได้ตั้งค่าคีย์ลับ Stripe ของคุณ"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -217,4 +224,4 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "เว็บฮุค Stripe ของคุณได้รับการตั้งค่าแล้ว"

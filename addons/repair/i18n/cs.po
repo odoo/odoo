@@ -100,6 +100,25 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Dobrý den <t t-out=\"object.partner_id.name or ''\">Brandone Freemane</t>,<br/>\n"
+"        Zde je vaše objednávka opravy <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            ve výši <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            .<br/>\n"
+"        </t>\n"
+"        Pokud máte nějaké dotazy, můžete odpovědět na tento e-mail.\n"
+"        <br/><br/>\n"
+"        Děkujeme,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -118,7 +137,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Repairs</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Opravy</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -518,7 +537,7 @@ msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
 msgid "Important repair order"
-msgstr ""
+msgstr "Důležitý příkaz opravy"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -926,7 +945,7 @@ msgstr "Oprava"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "Popis opravy"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -951,7 +970,7 @@ msgstr "Řádek oprav (díly)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Poznámky k opravě"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -994,7 +1013,7 @@ msgstr "Oprava nabídky číslo:"
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr ""
+msgstr "Opravy nabídky: Poslat e-mailem"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1040,13 +1059,13 @@ msgstr "Oprava musí být vpořádku, aby mohlo být opravování ukončeno."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "Počet příkazů oprav"
 
 #. module: repair
 #: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Příkazy oprav z %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1094,7 +1113,7 @@ msgstr "Prodejní objednávka"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Objednávka prodeje, ze které pochází produkt určený k opravě."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1126,7 +1145,7 @@ msgstr "Odeslat nabídku"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "Sériové číslo je vyžadováno pro provozní položky s produkty: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1428,3 +1447,4 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.partner_id.name }} Příkazy oprav (Ref {{ object.name or 'n/a' }})"

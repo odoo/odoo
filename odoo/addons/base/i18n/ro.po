@@ -8,8 +8,8 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1121,6 +1121,8 @@ msgid ""
 "        This bridge module allows to manage subcontracting with valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul de punte permite gestionarea subcontractării cu evaluare."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_mrp_subcontracting
@@ -1129,6 +1131,8 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul de punte este instalat automat atunci când modulele stock_barcode și mrp_subcontracting sunt instalate."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -1137,6 +1141,8 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul de punte este instalat automat atunci când modulele stock_barcode și quality_control sunt instalate."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
@@ -1354,6 +1360,8 @@ msgid ""
 "        This module makes it possible to manage employee skills during an appraisal process.\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul permite gestionarea abilităților angajaților în timpul unui proces de evaluare."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -1574,6 +1582,12 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"Faceți ca data de blocare să fie ireversibilă:\n"
+"\n"
+"* Nu puteți impune restricții mai stricte pentru consilieri decât pentru utilizatori. Prin urmare, Data de blocare a tuturor utilizatorilor trebuie să fie anterioară (sau egală) cu Data de blocare a Facturii/Facturilor.\n"
+"* Nu puteți bloca o perioadă care nu s-a încheiat încă. Prin urmare, Data de blocare a tuturor utilizatorilor trebuie să fie anterioară (sau egală) cu ultima zi a lunii anterioare.\n"
+"* Orice nouă Data de blocare a tuturor utilizatorilor trebuie să fie ulterioară (sau egală) celei anterioare."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -17841,6 +17855,12 @@ msgid "Invalid 'group by' parameter"
 msgstr "Parametrul  'group by' e invalid"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
@@ -25799,6 +25819,14 @@ msgstr "Trimiteți expedierile prin Fedex și urmăriți-le online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Trimiteți expedierile prin UPS și urmăriți-le online"
 
@@ -28755,6 +28783,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr ""
 
