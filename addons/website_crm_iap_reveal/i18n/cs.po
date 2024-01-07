@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Jakub Smolka, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Leads </span>"
-msgstr "<span class=\"o_stat_text\"> Potenciální zákazníci </span>"
+msgstr "<span class=\"o_stat_text\"> Prospekty </span>"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -112,8 +113,8 @@ msgstr "Vytvořte pravidlo převodu"
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
 msgstr ""
-"Vytvořte pravidla pro generování B2B potenciálních zákazníků / příležitostí "
-"od návštěvníků vašeho webu."
+"Vytvořte pravidla pro generování B2B prospektů / příležitostí od návštěvníků"
+" vašeho webu."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_uid
@@ -167,7 +168,7 @@ msgstr "Od"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr "Generovaný potenciální zákazník / příležitost"
+msgstr "Generovaný prospekt / příležitost"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model,name:website_crm_iap_reveal.model_ir_http
@@ -216,23 +217,23 @@ msgstr "Naposledy upraveno dne"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__lead
 msgid "Lead"
-msgstr "Potenciální zákazník"
+msgstr "Prospekt"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Lead Data"
-msgstr "Potenciální zákazník dáta"
+msgstr "Prospekt dáta"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_lead_opportunity_form
 msgid "Lead Generation Information"
-msgstr "Informace o generování potenciálních zákazníků"
+msgstr "Informace o generování prospektů"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_rule_id
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_rule_id
 msgid "Lead Generation Rule"
-msgstr "Pravidlo pro generování potenciální zákazník"
+msgstr "Pravidlo pro generování prospekt"
 
 #. module: website_crm_iap_reveal
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_view_action
@@ -243,9 +244,7 @@ msgstr "Návštěvy z generovaných prospektů"
 #. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 msgid "Lead Generation: Leads/Opportunities Generation"
-msgstr ""
-"Generování potenciálních zákazníků: Generování potenciálních zákazníků / "
-"příležitostí"
+msgstr "Generování prospektů: Generování prospektů / příležitostí"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
@@ -256,8 +255,8 @@ msgstr "Prospekt/příležitost"
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
-"Ponechejte prázdné, aby se vždy shodovaly. Odoo nevytvoří potenciální "
-"zákazník, pokud nebude shoda"
+"Ponechejte prázdné, aby se vždy shodovaly. Odoo nevytvoří prospekt, pokud "
+"nebude shoda"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__0
@@ -317,8 +316,8 @@ msgid ""
 "Only visitors of following states will be converted into "
 "leads/opportunities."
 msgstr ""
-"Na potenciální zákazníky / příležitosti budou převedeni pouze návštěvníci "
-"následujících států."
+"Na prospekty / příležitosti budou převedeni pouze návštěvníci následujících "
+"států."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__opportunity
@@ -340,7 +339,7 @@ msgstr "Podmínky generování příležitostí"
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr "Příležitost vytvořená generací Odoo potenciální zákazník"
+msgstr "Příležitost vytvořená generací Odoo prospekt"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__other_role_ids
@@ -371,7 +370,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
 msgid "Restrict Lead generation to this website."
-msgstr "Omezte generování potenciálních zákazníků na tuto webstránku."
+msgstr "Omezte generování prospektů na tuto webstránku."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__role
@@ -443,8 +442,8 @@ msgid ""
 msgstr ""
 "Toto je počet kontaktů ke sledování, zda jejich role / počet odpracovaných "
 "let odpovídají vašim kritériím. Jejich podrobnosti se zobrazí v historickém "
-"vlákně generovaných potenciálních zákazníků / příležitostí. Na sledovaný "
-"kontakt se spotřebuje jeden kredit."
+"vlákně generovaných prospektů / příležitostí. Na sledovaný kontakt se "
+"spotřebuje jeden kredit."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
@@ -452,9 +451,8 @@ msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
 msgstr ""
-"Toto bude připojeno k názvu vygenerovaného potenciálního zákazníka, abyste "
-"mohli identifikovat potenciálního zákazníka / příležitost generovanou tímto "
-"pravidlem"
+"Toto bude připojeno k názvu vygenerovaného prospektu, abyste mohli "
+"identifikovat prospektu / příležitost generovanou tímto pravidlem"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__to_process

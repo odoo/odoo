@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,19 +40,19 @@ msgstr "ไม่สามารถสร้างการเชื่อมต
 #. module: payment_mercado_pago
 #: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
 msgid "Mercado Pago"
-msgstr ""
+msgstr "Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
 msgid "Mercado Pago Access Token"
-msgstr ""
+msgstr "โทเค็นการเข้าถึง Mercado Pago"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "ไม่พบธุรกรรมที่ตรงกับการอ้างอิง %s"
 
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_provider
@@ -68,29 +68,36 @@ msgstr "ธุรกรรมสำหรับการชำระเงิน
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 #, python-format
+msgid "Prices in the currency %s must be expressed in integer values."
+msgstr "ราคาในสกุลเงิน %s จะต้องแสดงเป็นค่าจำนวนเต็ม"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, python-format
 msgid "Received data with invalid status: %s"
-msgstr ""
+msgstr "ได้รับข้อมูลที่มีสถานะไม่ถูกต้อง: %s"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing payment id."
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีรหัสการชำระเงิน"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "ได้รับข้อมูลโดยไม่มีการอ้างอิง"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing status."
-msgstr ""
+msgstr "ได้รับข้อมูลสถานะขาดหาย"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -100,8 +107,10 @@ msgid ""
 "The communication with the API failed. Mercado Pago gave us the following "
 "information: '%s' (code %s)"
 msgstr ""
+"การสื่อสารกับ API ล้มเหลว Mercado Pago ให้ข้อมูลเกี่ยวกับปัญหาดังต่อไปนี้: "
+"'%s' (รหัส %s)"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "รหัสทางเทคนิคของผู้ให้บริการชำระเงินรายนี้"
