@@ -3,14 +3,13 @@
 
 import logging
 import random
-import threading
 
 from collections import namedtuple
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
 from odoo.tools import exception_to_unicode
+from odoo.tools.commit import generic_commit_loop
 from odoo.tools.translate import _
 from odoo.exceptions import MissingError, ValidationError
 
@@ -265,23 +264,15 @@ You receive this email because you are:
 
     @api.model
     def schedule_communications(self, autocommit=False):
-        schedulers = self.search([
+        def on_error(scheduler, e):
+            self._warn_template_error(scheduler, e)
+            return {}
+
+        generic_commit_loop(self.with_context(auto_commit=autocommit).execute, [
             ('event_id.active', '=', True),
             ('mail_done', '=', False),
             ('scheduled_date', '<=', fields.Datetime.now())
-        ])
-
-        for scheduler in schedulers:
-            try:
-                # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
-                self.browse(scheduler.id).execute()
-            except Exception as e:
-                _logger.exception(e)
-                self.env.invalidate_all()
-                self._warn_template_error(scheduler, e)
-            else:
-                if autocommit and not getattr(threading.current_thread(), 'testing', False):
-                    self.env.cr.commit()
+        ], log=_logger, values_err=on_error)
         return True
 
 

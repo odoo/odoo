@@ -6,12 +6,11 @@ from psycopg2 import sql
 
 import hashlib
 import pytz
-import threading
 
 from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools import split_every
+from odoo.tools.commit import generic_commit_loop_batch
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -336,16 +335,12 @@ class WebsiteVisitor(models.Model):
         Visitors were previously archived but we came to the conclusion that
         archived visitors have very little value and bloat the database for no
         reason. """
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
-        visitor_model = self.env['website.visitor']
-        for inactive_visitors_batch in split_every(
-            batch_size,
-            visitor_model.sudo().search(self._inactive_visitors_domain(), limit=limit).ids,
-            visitor_model.browse,
-        ):
-            inactive_visitors_batch.unlink()
-            if auto_commit:
-                self.env.cr.commit()
+        generic_commit_loop_batch(
+            self.sudo().unlink,
+            self._inactive_visitors_domain(),
+            batch_size=batch_size,
+            limit=limit,
+        )
 
     def _inactive_visitors_domain(self):
         """ This method defines the domain of visitors that can be cleaned. By

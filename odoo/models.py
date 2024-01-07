@@ -5590,6 +5590,30 @@ class BaseModel(metaclass=MetaModel):
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
+    @api.returns('self')
+    def exists_lock(self, try_lock=False):
+        """Like exists() but locks records for update
+
+        :param try_lock: If set, skip already locked records
+        :returns: Existing locked records
+        """
+        new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
+        if not ids:
+            return self
+        cr = self.env.cr
+        param = ''
+        if try_lock:
+            param = "SKIP LOCKED"
+        cr.execute(
+            f"SELECT id FROM {self._table_query or self._table}"
+            f" WHERE id IN %(ids)s FOR UPDATE {param}",
+            {'ids': tuple(ids)},
+            log_exceptions=False,
+        )
+        valid_ids = {r[0] for r in self._cr.fetchall()}
+        valid_ids.update(new_ids)
+        return self.browse(i for i in self._ids if i in valid_ids)
+
     def _check_recursion(self, parent=None):
         """
         Verifies that there is no loop in a hierarchical structure of records,
