@@ -292,7 +292,7 @@ class test_search(TransactionCase):
         """, """
             SELECT "res_country"."id"
             FROM "res_country"
-            WHERE "res_country"."code" IS NULL
+            WHERE FALSE
             ORDER BY "res_country"."name"->>%s
         """]):
             Model.search([('code', 'ilike', '')])

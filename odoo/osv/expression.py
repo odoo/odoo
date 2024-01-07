@@ -1397,13 +1397,13 @@ class expression(object):
                     need_wildcard = operator in WILDCARD_OPERATORS
 
                     if need_wildcard and not right:
-                        push_result(SQL("%s IS NULL", sql_field) if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE"))
+                        push_result(SQL("FALSE") if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE"))
                         continue
 
                     if not need_wildcard:
                         right = field.convert_to_column(right, model, validate=False).adapted['en_US']
 
-                    if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
+                    if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS) or (not right and operator == '=' and isinstance(right, str)):
                         sql_exprs.append(SQL("%s IS NULL OR", sql_field))
 
                     if self._has_trigram and field.index == 'trigram' and operator in ('=', 'like', 'ilike', '=like', '=ilike'):

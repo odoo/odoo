@@ -3047,10 +3047,10 @@ class BaseModel(metaclass=MetaModel):
             sql_value = self.env.registry.unaccent(sql_value)
 
         if need_wildcard and not value:
-            return SQL("%s IS NULL", sql_field) if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
+            return SQL("FALSE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
 
         sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
-        if value and operator in expression.NEGATIVE_TERM_OPERATORS:
+        if (value and operator in expression.NEGATIVE_TERM_OPERATORS) or (not value and operator == '=' and isinstance(value, str)):
             sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
 
         return sql
