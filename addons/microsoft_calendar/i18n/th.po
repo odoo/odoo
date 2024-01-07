@@ -6,6 +6,7 @@
 # Martin Trigaux, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,6 +158,39 @@ msgid "Display Name"
 msgstr "แสดงชื่อ"
 
 #. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Due to an Outlook Calendar limitation, recurrence updates must be done "
+"directly in Outlook Calendar."
+msgstr ""
+"เนื่องจากข้อจำกัดของปฏิทิน Outlook "
+"การอัปเดตการเกิดซ้ำจะต้องดำเนินการโดยตรงในปฏิทิน Outlook"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Due to an Outlook Calendar limitation, recurrence updates must be done directly in Outlook Calendar.\n"
+"If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
+msgstr ""
+"เนื่องจากข้อจำกัดของปฏิทิน Outlook การอัปเดตการเกิดซ้ำจะต้องดำเนินการโดยตรงในปฏิทิน Outlook\n"
+"หากการเกิดซ้ำนี้ไม่แสดงในปฏิทิน Outlook คุณต้องลบออกในปฏิทิน Odoo และสร้างใหม่ในปฏิทิน Outlook"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"Due to an Outlook Calendar limitation, recurrent events must be created "
+"directly in Outlook Calendar."
+msgstr ""
+"เนื่องจากข้อจำกัดของปฏิทิน Outlook จึงต้องสร้างกิจกรรมที่เกิดซ้ำในปฏิทิน "
+"Outlook โดยตรง"
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
 msgstr "กฎการเกิดซ้ำของอีเวนต์"
@@ -174,6 +208,17 @@ msgstr ""
 "%s"
 
 #. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"For having a different organizer in your event, it is necessary that the "
+"organizer have its Odoo Calendar synced with Outlook Calendar."
+msgstr ""
+"หากต้องการให้มีผู้จัดงานรายอื่นในกิจกรรมของคุณ ผู้จัดงานจะต้องซิงค์ปฏิทิน "
+"Odoo ของตนกับปฏิทิน Outlook"
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
 msgid "ID"
 msgstr "ไอดี"
@@ -186,6 +231,15 @@ msgid ""
 msgstr ""
 "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" "
 "จะช่วยให้คุณสามารถซ่อนข้อมูลการเตือนเหตุการณ์โดยไม่ต้องลบออก"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"It is necessary adding the proposed organizer as attendee before saving the "
+"event."
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
@@ -276,7 +330,7 @@ msgstr "การแจ้งเตือน"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_organizer_event_id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_organizer_event_id
 msgid "Organizer event Id"
-msgstr ""
+msgstr "รหัสกิจกรรมของผู้จัดงาน"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -304,6 +358,9 @@ msgid ""
 "the day of the previous event, and cannot be moved to or after the day of "
 "the following event."
 msgstr ""
+"ข้อจำกัดของ Outlook: ในกรณีที่เกิดซ้ำ "
+"กิจกรรมจะไม่สามารถย้ายไปยังหรือก่อนวันของกิจกรรมก่อนหน้า "
+"และไม่สามารถย้ายไปยังหรือหลังวันของกิจกรรมต่อไปนี้"
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -388,7 +445,7 @@ msgstr "ความถูกต้องของโทเคน"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__ms_universal_event_id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__ms_universal_event_id
 msgid "Universal event Id"
-msgstr ""
+msgstr "รหัสกิจกรรมสากล"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_users

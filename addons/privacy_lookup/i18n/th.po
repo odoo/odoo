@@ -7,7 +7,7 @@
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-09 14:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,17 +31,17 @@ msgstr "โน๊ตเพิ่มเติม"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__anonymized_email
 msgid "Anonymized Email"
-msgstr ""
+msgstr "อีเมลที่ไม่ระบุชื่อ"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__anonymized_name
 msgid "Anonymized Name"
-msgstr ""
+msgstr "ชื่อที่ไม่ระบุชื่อ"
 
 #. module: privacy_lookup
 #: model:ir.actions.server,name:privacy_lookup.ir_actions_server_archive_all
 msgid "Archive Selection"
-msgstr ""
+msgstr "การเลือกข้อมูลเก็บถาวร"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
@@ -53,7 +53,7 @@ msgstr "เก็บถาวรแล้ว"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
 msgid "Can be archived"
-msgstr ""
+msgstr "สามารถเก็บถาวรได้"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_res_partner
@@ -87,7 +87,7 @@ msgstr "ลบ"
 #. module: privacy_lookup
 #: model:ir.actions.server,name:privacy_lookup.ir_actions_server_unlink_all
 msgid "Delete Selection"
-msgstr ""
+msgstr "ลบการเลือก"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
@@ -117,12 +117,12 @@ msgstr "อีเมล"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__execution_details
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__execution_details
 msgid "Execution Details"
-msgstr ""
+msgstr "รายละเอียดการดำเนินการ"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__records_description
 msgid "Found Records"
-msgstr ""
+msgstr "พบบันทึก"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
@@ -132,12 +132,12 @@ msgstr "กลุ่มโดย"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
-msgstr ""
+msgstr "จัดการโดย"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__has_active
 msgid "Has Active"
-msgstr ""
+msgstr "มีการใช้งานอยู่"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
@@ -155,7 +155,7 @@ msgstr "มีการใช้งานอยู่"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
-msgstr ""
+msgstr "ไม่ได้เชื่อมโยง"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
@@ -211,7 +211,7 @@ msgstr "ชื่อ"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "Open Record"
-msgstr ""
+msgstr "เปิดบันทึก"
 
 #. module: privacy_lookup
 #: model:ir.ui.menu,name:privacy_lookup.privacy_menu
@@ -222,7 +222,7 @@ msgstr "ความเป็นส่วนตัว"
 #: model:ir.model,name:privacy_lookup.model_privacy_log
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_log_view_form
 msgid "Privacy Log"
-msgstr ""
+msgstr "บันทึกความเป็นส่วนตัว"
 
 #. module: privacy_lookup
 #: model:ir.actions.act_window,name:privacy_lookup.privacy_log_action
@@ -230,7 +230,7 @@ msgstr ""
 #: model:ir.ui.menu,name:privacy_lookup.pricacy_log_menu
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_log_view_list
 msgid "Privacy Logs"
-msgstr ""
+msgstr "บันทึกความเป็นส่วนตัว"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
@@ -240,22 +240,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
 #, python-format
 msgid "Privacy Lookup"
-msgstr ""
+msgstr "การค้นหาความเป็นส่วนตัว"
 
 #. module: privacy_lookup
 #: model:ir.actions.act_window,name:privacy_lookup.action_privacy_lookup_wizard_line
 msgid "Privacy Lookup Line"
-msgstr ""
+msgstr "การค้นหาความเป็นส่วนตัว"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard
 msgid "Privacy Lookup Wizard"
-msgstr ""
+msgstr "ตัวช่วยการค้นหาความเป็นส่วนตัว"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard_line
 msgid "Privacy Lookup Wizard Line"
-msgstr ""
+msgstr "รายการตัวช่วยการค้นหาความเป็นส่วนตัว"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__resource_ref
@@ -265,7 +265,7 @@ msgstr "บันทึก"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__records_description
 msgid "Records Description"
-msgstr ""
+msgstr "คำอธิบายบันทึก"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
@@ -290,19 +290,19 @@ msgstr "ชื่อทรัพยากร"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
 msgid "Search References"
-msgstr ""
+msgstr "ค้นหาข้อมูลอ้างอิง"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #, python-format
 msgid "The record is already unlinked."
-msgstr ""
+msgstr "บันทึกถูกยกเลิกการเชื่อมโยงแล้ว"
 
 #. module: privacy_lookup
 #: code:addons/privacy_lookup/models/privacy_log.py:0
 #, python-format
 msgid "This email address is not valid (%s)"
-msgstr ""
+msgstr "ที่อยู่อีเมลนี้ไม่ถูกต้อง (%s)"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
@@ -315,7 +315,7 @@ msgstr ""
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #, python-format
 msgid "Unarchived"
-msgstr ""
+msgstr "ยกเลิกการเก็บถาวร"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
