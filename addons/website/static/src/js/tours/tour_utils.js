@@ -2,6 +2,7 @@
 
 import {_t} from "web.core";
 import "web.legacy_tranlations_loaded";
+import { markup } from "@odoo/owl";
 import {Markup} from "web.utils";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
@@ -160,7 +161,7 @@ function clickOnElement(elementName, selector) {
  */
 function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
-        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_menu_systray .o_edit_website_container a",
         position: position,
     }, {

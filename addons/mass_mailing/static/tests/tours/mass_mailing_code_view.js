@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -14,7 +15,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             trigger: 'button.o_list_button_add',
         }, {
             trigger: 'input#subject_0',
-            content: ('Pick the <b>email subject</b>.'),
+            content: markup('Pick the <b>email subject</b>.'),
             position: 'bottom',
             run: 'text Test'
         }, {
@@ -26,11 +27,11 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             run: 'click',
         }, {
             trigger: 'div[name="body_arch"] iframe #default',
-            content: 'Choose this <b>theme</b>.',
+            content: markup('Choose this <b>theme</b>.'),
             run: 'click',
         }, {
             trigger: 'iframe .o_codeview_btn',
-            content: ('Click here to switch to <b>code view</b>'),
+            content: markup('Click here to switch to <b>code view</b>'),
             run: 'click'
         }, {
             trigger: 'iframe .o_codeview',
@@ -43,7 +44,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             }
         }, {
             trigger: 'iframe .o_codeview_btn',
-            content: ('Click here to switch back from <b>code view</b>'),
+            content: markup('Click here to switch back from <b>code view</b>'),
             run: 'click'
         }, {
             trigger: '[name="body_arch"] iframe .o_mail_wrapper_td',
