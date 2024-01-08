@@ -70,7 +70,7 @@ export class CrmFormRecord extends Record {
         }
         const isSaved = await super.save(...arguments);
         if (changedStage && isSaved) {
-            await checkRainbowmanMessage(this.model.orm, this.model.effect, this.resId);
+            checkRainbowmanMessage(this.model.orm, this.model.effect, this.resId);
         }
         return isSaved;
     }
