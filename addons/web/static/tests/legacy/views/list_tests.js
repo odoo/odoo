@@ -797,7 +797,9 @@ QUnit.module('Views', {
         // Click to: Select all records on ALL pages
         await testUtils.dom.click(list.el.querySelector('.o_list_select_domain'));
         // Click on action button to trigger "search" request
-        await testUtils.dom.click(list.el.querySelector('button[name="x"]'));       
+        await testUtils.dom.click(list.el.querySelector('button[name="x"]'));
+
+        list.destroy();
     });
 
     QUnit.test('column names (noLabel, label, string and default)', async function (assert) {
