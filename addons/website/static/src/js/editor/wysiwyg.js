@@ -77,6 +77,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
                         this._toggleMegaMenu($toggle[0]);
                     }
                 })
+                // FIXME this is not right, the observer should not be inactive
+                // for async periods of time.
                 .then(() => this.odooEditor.observerActive());
         });
 
