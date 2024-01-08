@@ -116,15 +116,16 @@ class LoyaltyReward(models.Model):
 
     def _get_discount_product_domain(self):
         self.ensure_one()
-        domain = []
+        constrains = []
         if self.discount_product_ids:
-            domain = [('id', 'in', self.discount_product_ids.ids)]
+            constrains.append([('id', 'in', self.discount_product_ids.ids)])
         if self.discount_product_category_id:
             product_category_ids = self._find_all_category_children(self.discount_product_category_id, [])
             product_category_ids.append(self.discount_product_category_id.id)
-            domain = expression.OR([domain, [('categ_id', 'in', product_category_ids)]])
+            constrains.append([('categ_id', 'in', product_category_ids)])
         if self.discount_product_tag_id:
-            domain = expression.OR([domain, [('all_product_tag_ids', 'in', self.discount_product_tag_id.id)]])
+            constrains.append([('all_product_tag_ids', 'in', self.discount_product_tag_id.id)])
+        domain = expression.OR(constrains) if constrains else []
         if self.discount_product_domain and self.discount_product_domain != '[]':
             domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
         return domain

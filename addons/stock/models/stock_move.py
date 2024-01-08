@@ -2142,9 +2142,10 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
             return
 
-        domains = []
-        for move in self:
-            domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
+        domains = [
+            [('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)]
+            for move in self
+        ]
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
                          ('reservation_date', '<=', fields.Date.today())]

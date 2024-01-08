@@ -256,14 +256,14 @@ class Product(models.Model):
 
         def _search_ids(model, values):
             ids = set()
-            domain = []
+            domains = []
             for item in values:
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domain = expression.OR([[(self.env[model]._rec_name, 'ilike', item)], domain])
-            if domain:
-                ids |= set(self.env[model].search(domain).ids)
+                    domains.append([(self.env[model]._rec_name, 'ilike', item)])
+            if domains:
+                ids |= set(self.env[model].search(expression.OR(domains)).ids)
             return ids
 
         # We may receive a location or warehouse from the context, either by explicit
@@ -286,8 +286,6 @@ class Product(models.Model):
                     for loc in Location.browse(l_ids)
                     if any(loc.parent_path.startswith(parent) for parent in parents)
                 }
-                if not location_ids:
-                    return [[expression.FALSE_LEAF]] * 3
             else:
                 location_ids = w_ids
         else:
@@ -299,25 +297,31 @@ class Product(models.Model):
         return self._get_domain_locations_new(location_ids)
 
     def _get_domain_locations_new(self, location_ids):
+        if not location_ids:
+            return [[expression.FALSE_LEAF]] * 3
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
-        loc_domain, dest_loc_domain = [], []
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
-        for location in locations:
-            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
-            dest_loc_domain = expression.OR([dest_loc_domain, [
+        loc_domain = expression.OR([
+            [('location_id.parent_path', '=like', location.parent_path + '%')]
+            for location in locations
+        ])
+        dest_loc_domain = expression.OR([
+            [
                 '|',
-                    '&', ('location_final_id', '!=', False), ('location_final_id.parent_path', '=like', location.parent_path + '%'),
-                    '&', ('location_final_id', '=', False), ('location_dest_id.parent_path', '=like', location.parent_path + '%'),
-            ]])
+                '&', ('location_final_id', '!=', False), ('location_final_id.parent_path', '=like', location.parent_path + '%'),
+                '&', ('location_final_id', '=', False), ('location_dest_id.parent_path', '=like', location.parent_path + '%'),
+            ]
+            for location in locations
+        ])
 
+        # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
         return (
             loc_domain,
-            dest_loc_domain + ['!'] + loc_domain if loc_domain else dest_loc_domain,
-            loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else loc_domain
+            dest_loc_domain + ['!'] + loc_domain,
+            loc_domain + ['!'] + dest_loc_domain,
         )
 
     def _search_qty_available(self, operator, value):
