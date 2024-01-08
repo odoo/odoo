@@ -8,16 +8,9 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@id='invoicing_settings']" position="after">
                 <block title="Indonesian Localization" id="l10n_cl_section" invisible="country_code != 'ID'">
-                    <setting company_dependent="1">
+                    <setting id="l10n_id_efaktur">
                         <div class="content-group">
-                            <div class="row mt16">
-                                <label for="l10n_id_tax_address" class="col-lg-3"/>
-                                <field name="l10n_id_tax_address"/>
-                            </div>
-                            <div class="row mt16">
-                                <label for="l10n_id_tax_name" class="col-lg-3"/>
-                                <field name="l10n_id_tax_name"/>
-                            </div>
+                            <button type="action" name="%(l10n_id_efaktur.efaktur_invoice_action)d" string="Configure Your e-Faktur Ranges" class="btn-link" icon="oi-arrow-right"/>
                         </div>
                     </setting>
                 </block>
