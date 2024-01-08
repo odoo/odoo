@@ -12,11 +12,11 @@
             <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
-                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not meeting_rooms_other else '')">
+                <div t-att-class="'row %s mb-5 mx-0' % ('justify-content-center' if not meeting_rooms_other else 'flex-column-reverse flex-md-row')">
+                    <t t-call="website_event_meet.meeting_room_main"/>
                     <t t-if="meeting_rooms_other">
                         <t t-call="website_event_meet.meeting_room_aside"/>
                     </t>
-                    <t t-call="website_event_meet.meeting_room_main"/>
                 </div>
             </div>
             <!-- Drag/Drop Area -->
@@ -30,7 +30,7 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_main" name="Meeting Room: Main Content">
-    <div t-att-class="'col-12 o_wemeet_room_main border mt-3 p-0 %s' % ('col-lg-9 col-xl-10' if option_widescreen else 'col-lg-8 col-xl-9')">
+    <div t-att-class="'col-12 o_wemeet_room_main mt-3 p-0 %s' % ('col-lg-9 col-xl-10' if option_widescreen else 'col-lg-8 col-xl-9')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not meeting_room.event_id.is_ongoing">
             <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
@@ -101,15 +101,13 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_aside" name="Meeting Room: Aside">
-    <div t-att-class="'o_wevent_online_page_aside col-12 mt-3 ps-0 pe-0 border %s' % ('col-lg-3 col-xl-2' if option_widescreen else 'col-lg-4 col-xl-3')">
+    <div t-att-class="'o_wevent_online_page_aside col-12 mt-3 ps-0 pe-0 %s' % ('col-lg-3 col-xl-2' if option_widescreen else 'col-lg-4 col-xl-3')">
         <div class="o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between me-2">
-                <h5 class="m-3">Other Rooms</h5>
-                <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
-                    <i class="oi oi-chevron-down d-lg-none"/>
-                </a>
-            </div>
-            <ul id="collapse_meet_room_aside" class="list-group list-group-flush collapse d-lg-block border-top">
+            <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="o_wevent_online_page_aside_collapse collapsed d-flex align-items-center justify-content-between d-md-none border p-2 text-decoration-none text-reset">
+                <h5 class="m-3">Other Rooms</h5> 
+                <i class="oi oi-chevron-down d-lg-none"/>
+            </a>
+            <ul id="collapse_meet_room_aside" class="list-group list-group-flush collapse d-md-block border mx-md-3">
                 <li class="list-group-item list-group-item-action" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
                     <a class="text-decoration-none text-dark"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
