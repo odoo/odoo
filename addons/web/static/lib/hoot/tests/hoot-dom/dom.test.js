@@ -1,8 +1,7 @@
 /** @odoo-module */
 
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
-    getFixture,
     getFocusableElements,
     getNextFocusableElement,
     getParentFrame,
@@ -226,14 +225,12 @@ describe(parseUrl(import.meta.url), () => {
         await new Promise((resolve) => $("iframe").addEventListener("load", resolve));
 
         // Use as a template literal
-        expect(queryAll`body`).toEqual([document.body]);
+        expect(queryAll`main`).toEqual($$("main"));
         expect(queryAll`.${"title"}`).toEqual($$(".title"));
         expect(queryAll`${"ul"}${" "}${`${"li"}`}`).toEqual($$(".title"));
 
         // Regular selectors
         expect(queryAll()).toEqual([]);
-        expect(queryAll("body")).toEqual([document.body]);
-        expect(queryAll("document")).toEqual([document.body]);
         expect(queryAll(".title")).toEqual($$(".title"));
         expect(queryAll("ul > li")).toEqual($$("ul > li"));
 

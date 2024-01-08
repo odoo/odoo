@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { describe, expect, test } from "@odoo/hoot";
-import { getFixture, waitFor, waitUntil } from "@odoo/hoot-dom";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { waitFor, waitUntil } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, runAllTimers, tick } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
