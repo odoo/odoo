@@ -3,7 +3,7 @@
 import { HootDomError, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
-    getFixture,
+    getDefaultRootNode,
     getNextFocusableElement,
     getPreviousFocusableElement,
     getRect,
@@ -1705,7 +1705,7 @@ export function resetEventActions() {
 export function resize(target, dimensions, options) {
     const [width, height] = parseDimensions(dimensions);
     const element = getFirstTarget(target, options);
-    if (element === getFixture()) {
+    if (element === getDefaultRootNode()) {
         setDimensions(width, height);
     } else {
         if (width !== null) {

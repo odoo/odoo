@@ -4,10 +4,9 @@
 import { reactive, toRaw, whenReady } from "@odoo/owl";
 import {
     cleanupObservers,
-    clearFixture,
-    getFixture,
+    defineRootNode,
+    getActiveElement,
     isEmpty,
-    setFixtureDebug,
     watchChildren,
     watchKeys,
 } from "@web/../lib/hoot-dom/helpers/dom";
@@ -175,6 +174,8 @@ export class TestRunner {
     /** @type {Test | null} */
     #currentTest = null;
     #failed = 0;
+    /** @type {HTMLElement | null} */
+    #fixture = null;
     #hasExcludeFilter = false;
     #hasIncludeFilter = false;
     /** @type {Job[]} */
@@ -547,6 +548,25 @@ export class TestRunner {
     }
 
     /**
+     * Creates a text fixture if it doesn't exist yet and returns it.
+     *
+     * @returns {HTMLElement}
+     */
+    getFixture() {
+        if (!this.#fixture) {
+            this.#fixture = document.createElement("div");
+            this.#fixture.className = "hoot-fixture";
+            if (this.debug) {
+                this.#fixture.classList.add("hoot-debug");
+            }
+
+            document.body.appendChild(this.#fixture);
+            getActiveElement().blur(); // Reset focus
+        }
+        return this.#fixture;
+    }
+
+    /**
      * @param {Callback<ErrorEvent | PromiseRejectionEvent>} callback
      */
     onError(callback) {
@@ -656,15 +676,24 @@ export class TestRunner {
             this.debug = false;
         }
 
+        // Fixture
+        const clearFixture = () => {
+            if (this.#fixture) {
+                this.#fixture.remove();
+                this.#fixture = null;
+            }
+        };
+
         // Register default hooks
         this.afterAll(
             on(window, "error", (ev) => this.#onError(ev)),
-            on(window, "unhandledrejection", (ev) => this.#onError(ev))
+            on(window, "unhandledrejection", (ev) => this.#onError(ev)),
+            this.#useFixture()
         );
         this.afterEach(runAllTimers, resetTime, cleanupObservers, clearFixture, resetEventActions);
         if (!this.config.nowatcher) {
             this.beforeEach(
-                watchChildren(() => getFixture({ lazy: true })),
+                watchChildren(() => this.#fixture),
                 watchListeners(document),
                 watchListeners(document.documentElement),
                 watchListeners(document.body),
@@ -675,7 +704,6 @@ export class TestRunner {
 
         enableEventLogs(this.debug);
         enableNetworkLogs(this.debug);
-        setFixtureDebug(this.debug);
         setFrameRate(this.config.frameRate);
 
         await this.#callbacks.call("before-all");
@@ -1088,5 +1116,11 @@ export class TestRunner {
         } else if (!this.#currentTest?.config.todo) {
             console.error(...hootLog(error));
         }
+    }
+
+    #useFixture() {
+        defineRootNode(() => this.getFixture());
+
+        return () => defineRootNode(null);
     }
 }

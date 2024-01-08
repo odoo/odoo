@@ -11,7 +11,6 @@ import { HootDomError, getTag, isIterable, parseRegExp } from "../hoot_dom_utils
  * }} Dimensions
  *
  * @typedef {{
- *  lazy?: boolean;
  *  size?: Dimensions;
  * }} FixtureOptions
  *
@@ -28,7 +27,7 @@ import { HootDomError, getTag, isIterable, parseRegExp } from "../hoot_dom_utils
  *  pageY?: number;
  * }} Position
  *
- * @typedef {(content: string) => (node: Node, index: number, nodes: Node[])=> boolean | Node} PseudoClassFilterBuilder
+ * @typedef {(content: string) => (node: Node, index: number, nodes: Node[]) => boolean | Node} PseudoSelectorPredicateBuilder
  *
  * @typedef {{
  *  displayed?: boolean;
@@ -88,15 +87,18 @@ const and = (values) => {
     }
 };
 
+const compilePseudoSelectorRegex = () =>
+    new RegExp(`:(${[...customPseudoSelectors.keys()].join("|")})`);
+
 /**
  * @param {string} selector
  */
-const extractCustomPseudoSelectors = (selector) => {
+const extractPseudoSelectorFilters = (selector) => {
     const addCurrentFilter = () => {
-        const [selector, content] = currentPseudo;
+        const [pseudo, content] = currentPseudo;
         currentPseudo = null;
-        const makeFilter = customPseudoClasses.get(selector);
-        filters.push(makeFilter(content));
+        const makeFilter = customPseudoSelectors.get(pseudo);
+        filters.push(Object.assign(makeFilter(content), { _pseudo: pseudo }));
     };
 
     selector ||= "";
@@ -107,6 +109,7 @@ const extractCustomPseudoSelectors = (selector) => {
     let currentPseudo = null;
     let openParens = 0;
 
+    /** @type {(ReturnType<PseudoSelectorPredicateBuilder> & { _pseudo: string })[]} */
     const filters = [];
     for (let i = 0; i < selector.length; i++) {
         if (currentPseudo) {
@@ -131,7 +134,7 @@ const extractCustomPseudoSelectors = (selector) => {
                     pseudo += selector[++i];
                 }
 
-                if (customPseudoClasses.has(pseudo)) {
+                if (customPseudoSelectors.has(pseudo)) {
                     // Open pseudo selector block
                     currentPseudo = [pseudo, ""];
 
@@ -188,7 +191,7 @@ const filterNodes = (...nodesToFilter) => {
     const nodes = [];
     for (let node of nodesToFilter) {
         if (isDocument(node)) {
-            node = node.body;
+            node = node.documentElement;
         }
         if (isNode(node) && !nodes.includes(node)) {
             nodes.push(node);
@@ -211,16 +214,6 @@ const getNodeContent = (node) => {
             return [...node.selectedOptions].map(getNodeContent).join(",");
     }
     return getNodeText(node);
-};
-
-/**
- * @param {string} selector
- */
-const hasCustomPseudoSelectors = (selector) => {
-    if (!compiledPseudoSelectorRegex) {
-        compiledPseudoSelectorRegex = new RegExp(`:(${[...customPseudoClasses.keys()].join("|")})`);
-    }
-    return compiledPseudoSelectorRegex.test(selector);
 };
 
 /**
@@ -260,7 +253,7 @@ const isNodeCssVisible = (node) => {
     const parent = node.parentNode;
     return (
         !parent ||
-        parent === defaultRoot ||
+        parent === getDefaultRoot() ||
         parent === getDocument(node).body ||
         isNodeCssVisible(parent)
     );
@@ -371,70 +364,99 @@ const pixelValueToNumber = (val) => Number(val.endsWith("px") ? val.slice(0, -2)
  * @param {string} selector
  */
 const queryWithCustomSelector = (nodes, selector) => {
-    // Generate query groups
-    const allSelectorGroups = selector
-        .replace(/([+>~])\s*(.)/g, " $1$2") // Removes space between combinators and next char
-        .split(/\s+/g);
-    for (let i = 0; i < allSelectorGroups.length; i++) {
-        let groupSelector = allSelectorGroups[i];
-        let nodeGetter;
-        switch (groupSelector[0]) {
-            case "+": {
-                nodeGetter = NEXT_SIBLING;
-                break;
-            }
-            case ">": {
-                nodeGetter = DIRECT_CHILDREN;
-                break;
-            }
-            case "~": {
-                nodeGetter = NEXT_SIBLINGS;
-                break;
-            }
-        }
+    // Separate selector groups
+    const foundNodes = [];
+    for (const selectorGroup of selector.split(/\s*,\s*/g)) {
+        // Separate selector parts
+        const selectorParts = selectorGroup
+            .replace(/([+>~])\s*(\S)/g, " $1$2") // Removes space between combinators and next char
+            .split(/\s+/g);
 
-        // Slices modifier (if any)
-        if (nodeGetter) {
-            groupSelector = groupSelector.slice(1);
-        }
-
-        // Appends next groups until the scope is closed
-        while (hasUnclosedScope(groupSelector) && i < allSelectorGroups.length - 1) {
-            groupSelector += ` ${allSelectorGroups[++i]}`;
-        }
-
-        // Generate base selectors and isolate pseudo-selector filters
-        const { baseSelector, filters } = extractCustomPseudoSelectors(groupSelector);
-
-        // Retrieve matching nodes and apply filters
-        const getNodes = nodeGetter || DESCENDANTS;
-        const nextNodes = [];
-        for (const node of nodes) {
-            // Get nodes (direct children, descendants, next siblings, etc.)
-            const targetNodes = getNodes(node, baseSelector);
-
-            if (!filters.length) {
-                // No filters => all nodes are valid
-                nextNodes.push(...targetNodes);
-                continue;
-            }
-
-            // Filter/replace nodes based on custom pseudo-selectors
-            for (let i = 0; i < targetNodes.length; i++) {
-                const results = filters.map((filter) => filter(targetNodes[i], i, targetNodes));
-                const nonBooleanResult = results.find((r) => typeof r !== "boolean");
-                if (nonBooleanResult) {
-                    nextNodes.push(nonBooleanResult);
-                } else if (!results.includes(false)) {
-                    nextNodes.push(targetNodes[i]);
+        let groupNodes = nodes;
+        for (let i = 0; i < selectorParts.length; i++) {
+            let selectorPart = selectorParts[i];
+            let nodeGetter;
+            switch (selectorPart[0]) {
+                case "+": {
+                    nodeGetter = NEXT_SIBLING;
+                    break;
+                }
+                case ">": {
+                    nodeGetter = DIRECT_CHILDREN;
+                    break;
+                }
+                case "~": {
+                    nodeGetter = NEXT_SIBLINGS;
+                    break;
                 }
             }
+
+            // Slices modifier (if any)
+            if (nodeGetter) {
+                selectorPart = selectorPart.slice(1);
+            }
+
+            // Appends next groups until the scope is closed
+            while (hasUnclosedScope(selectorPart) && i < selectorParts.length - 1) {
+                selectorPart += ` ${selectorParts[++i]}`;
+            }
+
+            // Generate base selectors and isolate pseudo-selector filters
+            const { baseSelector, filters } = extractPseudoSelectorFilters(selectorPart);
+
+            // Retrieve matching nodes and apply filters
+            const getNodes = nodeGetter || DESCENDANTS;
+            const nextNodes = [];
+            for (const node of groupNodes) {
+                // Get nodes (direct children, descendants, next siblings, etc.)
+                const targetNodes = getNodes(node, baseSelector);
+
+                if (!filters.length) {
+                    // No filters => all nodes are valid
+                    nextNodes.push(...targetNodes);
+                    continue;
+                }
+
+                // Filter/replace nodes based on custom pseudo-selectors
+                for (let i = 0; i < targetNodes.length; i++) {
+                    const pseudoReturningNode = [];
+                    let returnNode = targetNodes[i];
+
+                    for (const filter of filters) {
+                        const result = filter(returnNode, i, targetNodes);
+                        if (result === false) {
+                            returnNode = null;
+                            break;
+                        } else if (result === true) {
+                            continue;
+                        }
+
+                        returnNode = result;
+                        pseudoReturningNode.push(filter._pseudo);
+                    }
+
+                    if (pseudoReturningNode.length > 1) {
+                        throw selectorError(
+                            pseudoReturningNode[0],
+                            `cannot use multiple pseudo selectors returning nodes (${and(
+                                pseudoReturningNode
+                            )})`
+                        );
+                    }
+
+                    if (returnNode) {
+                        nextNodes.push(returnNode);
+                    }
+                }
+            }
+
+            groupNodes = filterNodes(...nextNodes);
         }
 
-        nodes = filterNodes(...nextNodes);
+        foundNodes.push(...groupNodes);
     }
 
-    return nodes;
+    return foundNodes;
 };
 
 /**
@@ -447,12 +469,10 @@ const selectorError = (pseudoSelector, message) =>
 // Regexes
 const QUOTE_REGEX = /['"`]/;
 const PSEUDO_SELECTOR_CHAR_REGEX = /[\w-]/;
-const PSEUDO_SELECTOR_REGEX = /:(?<selector>[\w-]+)(?<content>\(\s*(["'`\b])?(.*?)\3\s*\))?/g;
 const SCOPE_DELIMITERS = [
     [/\[/g, /]/g],
     [/\(/g, /\)/g],
 ];
-let compiledPseudoSelectorRegex = null;
 
 // Following selector is based on this spec:
 // https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
@@ -470,24 +490,6 @@ const FOCUSABLE_SELECTOR = [
 ]
     .map((sel) => `${sel}:not([tabindex="-1"])`)
     .join(",");
-
-const ROOT_SPECIAL_SELECTORS = {
-    get body() {
-        return getDocument().body;
-    },
-    get document() {
-        return getDocument();
-    },
-    get fixture() {
-        return defaultRoot;
-    },
-    get root() {
-        return getDocument().documentElement;
-    },
-    get window() {
-        return getDocument().defaultView;
-    },
-};
 
 // Node getters
 
@@ -530,18 +532,16 @@ let currentDimensions = {
     width: null,
     height: null,
 };
-/** @type {HTMLElement | null} */
-let defaultRoot = null;
-let defaultRootDebug = false;
+let getDefaultRoot = () => document.documentElement;
 
 //-----------------------------------------------------------------------------
-// Default pseudo classes
+// Pseudo selectors
 //-----------------------------------------------------------------------------
 
-/** @type {Map<string, PseudoClassFilterBuilder>} */
-const customPseudoClasses = new Map();
+/** @type {Map<string, PseudoSelectorPredicateBuilder>} */
+const customPseudoSelectors = new Map();
 
-customPseudoClasses
+customPseudoSelectors
     .set("contains", (content) => {
         let regex;
         try {
@@ -550,10 +550,10 @@ customPseudoClasses
             throw selectorError("contains", err.message);
         }
         if (regex instanceof RegExp) {
-            return (node) => regex.test(getNodeContent(node));
+            return (node) => regex.test(String(getNodeContent(node)));
         } else {
             const lowerContent = content.toLowerCase();
-            return (node) => getNodeContent(node).toLowerCase().includes(lowerContent);
+            return (node) => String(getNodeContent(node)).toLowerCase().includes(lowerContent);
         }
     })
     .set("displayed", () => {
@@ -592,7 +592,7 @@ customPseudoClasses
                 }
             }
             const document = node.contentDocument;
-            return document && document.readyState !== "loading" ? document.body : false;
+            return document && document.readyState !== "loading" ? document.documentElement : false;
         };
     })
     .set("last", () => {
@@ -614,6 +614,8 @@ customPseudoClasses
         return (node) => isNodeVisible(node);
     });
 
+let customPseudoSelectorRegex = compilePseudoSelectorRegex();
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -629,12 +631,17 @@ export function cleanupObservers() {
     }
 }
 
-export function clearFixture() {
-    if (!defaultRoot) {
-        return;
+/**
+ * @param {Node | () => Node} node
+ */
+export function defineRootNode(node) {
+    if (typeof node === "function") {
+        getDefaultRoot = node;
+    } else if (node) {
+        getDefaultRoot = () => node;
+    } else {
+        getDefaultRoot = () => document.documentElement;
     }
-    defaultRoot.remove();
-    defaultRoot = null;
 }
 
 /**
@@ -644,42 +651,17 @@ export function getActiveElement(node) {
     return getDocument(node).activeElement;
 }
 
+export function getDefaultRootNode() {
+    return getDefaultRoot();
+}
+
 /**
  * @param {Node} [node]
  * @returns {Document}
  */
 export function getDocument(node) {
-    node ||= defaultRoot;
+    node ||= getDefaultRoot();
     return isDocument(node) ? node : node.ownerDocument || document;
-}
-
-/**
- * Creates a text fixture if it doesn't exist yet and returns it.
- * The options object can be used to configure the fixture:
- * - `lazy`: if true, a new fixture will not be created if it doesn't exist yet;
- * - `size`: an object determining the size of the fixture (see {@link Dimensions}
- *  for the expected shape). This will resize the current fixture if it already
- *  exists.
- *
- * @param {FixtureOptions} [options]
- * @returns {HTMLElement}
- * @example
- *  getFixture({ size: { width: 320, height: 600 } });
- */
-export function getFixture(options) {
-    if (!defaultRoot && !options?.lazy) {
-        defaultRoot = document.createElement("div");
-        defaultRoot.className = "hoot-fixture";
-        if (defaultRootDebug) {
-            defaultRoot.classList.add("hoot-debug");
-        }
-        document.body.appendChild(defaultRoot);
-        getActiveElement().blur(); // Reset focus
-    }
-    if (options?.size) {
-        setDimensions(...parseDimensions(options.size));
-    }
-    return defaultRoot;
 }
 
 /**
@@ -693,7 +675,7 @@ export function getFixture(options) {
  *  getFocusableElements();
  */
 export function getFocusableElements(parent) {
-    parent ||= defaultRoot;
+    parent ||= getDefaultRoot();
     if (typeof parent.querySelectorAll !== "function") {
         return [];
     }
@@ -739,7 +721,7 @@ export function getHeight(dimensions) {
  *  getPreviousFocusableElement();
  */
 export function getNextFocusableElement(parent) {
-    parent ||= defaultRoot;
+    parent ||= getDefaultRoot();
     const focusableEls = getFocusableElements(parent);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
@@ -811,7 +793,7 @@ export function getParentFrame(node) {
  *  getPreviousFocusableElement();
  */
 export function getPreviousFocusableElement(parent) {
-    parent ||= defaultRoot;
+    parent ||= getDefaultRoot();
     const focusableEls = getFocusableElements(parent);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return index < 0 ? focusableEls.at(-1) : focusableEls[index - 1] || null;
@@ -1076,8 +1058,7 @@ export function isVisible(target) {
  */
 export function matches(node, selector) {
     const nodes = isIterable(node) && !isNode(node) ? [...node] : [node];
-
-    const { baseSelector, filters } = extractCustomPseudoSelectors(selector);
+    const { baseSelector, filters } = extractPseudoSelectorFilters(selector);
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
         if (baseSelector && !node.matches(baseSelector)) {
@@ -1237,8 +1218,8 @@ export function parsePosition(position) {
  * @returns {Node[]}
  * @example
  *  // regular selectors
- *  queryAll`body`; // -> [body]
  *  queryAll`window`; // -> []
+ *  queryAll`input#name`; // -> [input]
  *  queryAll`div`; // -> [div, div, ...]
  *  queryAll`ul > li`; // -> [li, li, ...]
  * @example
@@ -1269,13 +1250,8 @@ export function queryAll(target, options) {
     let selector;
 
     if (typeof target === "string") {
-        target = target.trim();
-        if (target in ROOT_SPECIAL_SELECTORS) {
-            nodes = filterNodes(ROOT_SPECIAL_SELECTORS[target]);
-        } else {
-            nodes = filterNodes(root || defaultRoot);
-            selector = target;
-        }
+        nodes = filterNodes(root || getDefaultRoot());
+        selector = target.trim();
         // HTMLSelectElement is iterable ¯\_(ツ)_/¯
     } else if (isIterable(target) && !isNode(target)) {
         nodes = filterNodes(...target);
@@ -1284,7 +1260,7 @@ export function queryAll(target, options) {
     }
 
     if (selector && nodes.length) {
-        if (hasCustomPseudoSelectors(selector)) {
+        if (customPseudoSelectorRegex.test(selector)) {
             nodes = queryWithCustomSelector(nodes, selector);
         } else {
             nodes = filterNodes(...nodes.flatMap((node) => DESCENDANTS(node, selector)));
@@ -1367,32 +1343,32 @@ export function queryOne(target, options) {
 }
 
 /**
+ * @param {string} pseudoSelector
+ * @param {PseudoSelectorPredicateBuilder} predicate
+ */
+export function registerPseudoSelector(pseudoSelector, predicate) {
+    if (customPseudoSelectors.has(pseudoSelector)) {
+        throw new HootDomError(
+            `cannot register pseudo-selector: '${pseudoSelector}' already exists`
+        );
+    }
+    customPseudoSelectors.set(pseudoSelector, predicate);
+    customPseudoSelectorRegex = compilePseudoSelectorRegex();
+}
+
+/**
  * @param {number} width
  * @param {number} height
  */
 export function setDimensions(width, height) {
     Object.assign(currentDimensions, { width, height });
+    const defaultRoot = getDefaultRoot();
     if (width !== null) {
         defaultRoot.style.setProperty("width", `${width}px`, "important");
     }
     if (height !== null) {
         defaultRoot.style.setProperty("height", `${height}px`, "important");
     }
-}
-
-/**
- * @param {boolean} debug
- */
-export function setFixtureDebug(debug) {
-    defaultRootDebug = debug;
-}
-
-export function setManualDefaultRoot(element) {
-    if (!isElement(element)) {
-        throw new HootDomError(`cannot set default root: 'element' must be a valid Element`);
-    }
-
-    defaultRoot = element;
 }
 
 /**
@@ -1412,6 +1388,8 @@ export function toSelector(node, options) {
     }
     return options?.object ? parts : Object.values(parts).join("");
 }
+
+export function useFixture() {}
 
 /**
  * Combination of {@link queryAll} and {@link waitUntil}: waits for a given target
@@ -1467,7 +1445,7 @@ export function waitUntil(predicate, options) {
             () => reject(new HootDomError(message.replace("%timeout%", String(timeout)))),
             timeout
         );
-        disconnect = observe(defaultRoot, () => {
+        disconnect = observe(getDefaultRoot(), () => {
             const result = predicate();
             if (result) {
                 resolve(result);

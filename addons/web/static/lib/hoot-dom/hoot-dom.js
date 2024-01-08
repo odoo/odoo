@@ -12,7 +12,6 @@
  */
 
 export {
-    getFixture,
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
@@ -23,11 +22,13 @@ export {
     isFocusable,
     isInDOM,
     isVisible,
+    matches,
     observe,
     queryAll,
     queryAllContents,
     queryContent,
     queryOne,
+    registerPseudoSelector,
     waitFor,
     waitUntil,
     watchChildren,

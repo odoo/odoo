@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import { after } from "@odoo/hoot";
-import { getFixture } from "@odoo/hoot-dom";
+import { after, getFixture } from "@odoo/hoot";
 import { App, Component, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";

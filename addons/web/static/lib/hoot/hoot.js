@@ -53,6 +53,7 @@ export const onError = runner.exportFn(runner.onError);
 
 // Other functions
 export const getCurrent = runner.exportFn(runner.getCurrent);
+export const getFixture = runner.exportFn(runner.getFixture);
 export const start = runner.exportFn(runner.start);
 
 // Constants
