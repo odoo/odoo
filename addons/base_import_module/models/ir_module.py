@@ -335,12 +335,12 @@ class IrModule(models.Model):
             resp.raise_for_status()
             modules_list = resp.json().get('result', [])
             for mod in modules_list:
-                mod['id'] = -1
                 module_name = mod.get('name', module_name)
+                existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
+                mod['id'] = existing_mod.id if existing_mod else -1
                 if 'icon' in fields:
                     mod['icon'] = f"{APPS_URL}{mod['icon']}"
                 if 'state' in fields:
-                    existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
                     if existing_mod:
                         mod['state'] = 'installed'
                     else:
