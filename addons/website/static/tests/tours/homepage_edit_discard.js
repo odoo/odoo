@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { markup } from "@odoo/owl";
 import wTourUtils from "@website/js/tours/tour_utils";
 
 // TODO remove this test; it is badly written: you just have to change the fact
@@ -13,7 +14,7 @@ wTourUtils.registerWebsitePreviewTour('homepage_edit_discard', {
 }, () => [{
     trigger: "#oe_snippets button[data-action=\"cancel\"]:not([disabled])",
     extra_trigger: "body:not(:has(.o_dialog))",
-    content: "<b>Click Discard</b> to Discard all Changes.",
+    content: markup("<b>Click Discard</b> to Discard all Changes."),
     position: "bottom",
 }, {
     trigger: "iframe body:not(.editor_enable)",
