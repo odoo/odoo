@@ -713,6 +713,7 @@
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
                     <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
+                    <field name="display_in_project" invisible="1"/>
                     <field name="milestone_id" attrs="{'invisible': ['|', ('allow_milestones', '=', False), ('milestone_id', '=', False)]}"/>
                     <field name="user_ids" widget="many2many_avatar_user" attrs="{'invisible': [('user_ids', '=', [])]}"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
