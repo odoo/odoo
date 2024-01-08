@@ -452,8 +452,8 @@
         <field name="name">Public Time Off</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="calendar_id" ref="resource.resource_calendar_std"/>
-        <field name="date_from" eval="(datetime.today() + relativedelta(days=+8)).strftime('%Y-%m-%d 05:00:00')"></field>
-        <field name="date_to" eval="(datetime.today() + relativedelta(days=+8)).strftime('%Y-%m-%d 17:00:00')"></field>
+        <field name="date_from" eval="time.strftime('%Y-02-13 05:00:00')"/>
+        <field name="date_to" eval="time.strftime('%Y-02-13 17:00:00')"/>
     </record>
 
     <!-- Mandatory day -->
