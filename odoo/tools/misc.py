@@ -29,6 +29,7 @@ import warnings
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import ContextDecorator, contextmanager
+from decimal import Decimal, ROUND_HALF_UP
 from difflib import HtmlDiff
 from functools import wraps
 from itertools import islice, groupby as itergroupby
@@ -1221,36 +1222,23 @@ def babel_locale_parse(lang_code):
         except:
             return babel.Locale.parse("en_US")
 
-def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
-    """
-        Assuming 'Account' decimal.precision=3:
-            formatLang(value) -> digits=2 (default)
-            formatLang(value, digits=4) -> digits=4
-            formatLang(value, dp='Account') -> digits=3
-            formatLang(value, digits=5, dp='Account') -> digits=5
-    """
-
-    if digits is None:
-        digits = DEFAULT_DIGITS = 2
-        if dp:
-            decimal_precision_obj = env['decimal.precision']
-            digits = decimal_precision_obj.precision_get(dp)
-        elif currency_obj:
-            digits = currency_obj.decimal_places
-
+def formatLang(env, value, digits=2, rounding=ROUND_HALF_UP, grouping=True, monetary=False, currency_obj=None):
+    # We don't want to return 0
     if isinstance(value, str) and not value:
         return ''
 
-    lang_obj = get_lang(env)
+    if currency_obj:
+        digits = currency_obj.decimal_places
 
-    res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+    rounded_value = Decimal(value).quantize(Decimal(10) ** -digits, rounding=rounding)
+    formatted_value = get_lang(env).format('%.' + str(digits) + 'f', rounded_value, grouping=grouping, monetary=monetary)
 
     if currency_obj and currency_obj.symbol:
-        if currency_obj.position == 'after':
-            res = '%s%s%s' % (res, NON_BREAKING_SPACE, currency_obj.symbol)
-        elif currency_obj and currency_obj.position == 'before':
-            res = '%s%s%s' % (currency_obj.symbol, NON_BREAKING_SPACE, res)
-    return res
+        arguments = (formatted_value, NON_BREAKING_SPACE, currency_obj.symbol)
+
+        return '%s%s%s' % (arguments if currency_obj.position == 'after' else arguments[::-1])
+
+    return formatted_value
 
 
 def format_date(env, value, lang_code=False, date_format=False):

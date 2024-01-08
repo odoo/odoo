@@ -153,7 +153,7 @@ class PricelistItem(models.Model):
 
             if item.compute_price == 'fixed':
                 item.price = formatLang(
-                    item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
+                    item.env, item.fixed_price, monetary=True, digits=self.env['decimal.precision'].precision_get("Product Price"), currency_obj=item.currency_id)
             elif item.compute_price == 'percentage':
                 item.price = _("%s %% discount", item.percent_price)
             else:
