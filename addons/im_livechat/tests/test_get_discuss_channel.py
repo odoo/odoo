@@ -6,11 +6,12 @@ from unittest.mock import patch, PropertyMock
 
 from odoo import fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import tagged
 
 
 @tagged("post_install", "-at_install")
-class TestGetDiscussChannel(TestImLivechatCommon):
+class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
     def test_get_discuss_channel(self):
         """For a livechat with 5 available operators, we open 5 channels 5 times (25 channels total).
         For every 5 channels opening, we check that all operators were assigned.
@@ -207,3 +208,38 @@ class TestGetDiscussChannel(TestImLivechatCommon):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")
+
+    def test_channel_command_help_in_livechat(self):
+        """Ensures the command '/help' works in a livechat"""
+        channel_info = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "<strong>visitor</strong>",
+                "channel_id": self.livechat_channel.id,
+                "previous_operator_id": self.operators[1].partner_id.id
+            },
+        )
+        channel = self.env["discuss.channel"].browse(channel_info["id"])
+        self.env['bus.bus'].sudo().search([]).unlink()
+        with self.assertBus(
+            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+            [
+                {
+                    "type": "discuss.channel/transient_message",
+                    "payload": {
+                        "body":
+                            "<span class='o_mail_notification'>You are in a private conversation with <b>@Paul</b> and <b>@Visitor</b>."
+                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
+                            "<br>Type <b>#channel</b> to mention a channel."
+                            "<br>Type <b>/command</b> to execute a command."
+                            "<br>Type <b>:shortcut</b> to insert a canned response in your message."
+                            "</span>",
+                            "originThread": {
+                                "model": "discuss.channel",
+                                "id": channel.id,
+                            },
+                    },
+                },
+            ],
+        ):
+            channel.execute_command_help()
