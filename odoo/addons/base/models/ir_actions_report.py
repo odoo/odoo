@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path, ustr
-from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
+from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, remove_accents
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
@@ -525,6 +525,11 @@ class IrActionsReport(models.Model):
 
     @api.model
     def barcode(self, barcode_type, value, **kwargs):
+        try:
+            value = remove_accents(value)
+            value.encode('ascii')
+        except UnicodeEncodeError:
+            value = value.encode('ascii', errors='replace').decode()
         defaults = {
             'width': (600, int),
             'height': (100, int),
