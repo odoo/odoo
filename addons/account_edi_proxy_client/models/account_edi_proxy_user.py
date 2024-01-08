@@ -45,7 +45,7 @@ class AccountEdiProxyClientUser(models.Model):
     id_client = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
-    edi_format_id = fields.Many2one('account.edi.format', required=True)
+    edi_format_id = fields.Many2one('account.edi.format', required=True, ondelete='cascade')
     edi_format_code = fields.Char(related='edi_format_id.code', readonly=True)
     edi_identification = fields.Char(required=True, help="The unique id that identifies this user for on the edi format, typically the vat")
     private_key = fields.Binary(required=True, attachment=False, groups="base.group_system", help="The key to encrypt all the user's data")
