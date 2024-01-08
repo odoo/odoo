@@ -34,12 +34,10 @@ class SlidePartnerRelation(models.Model):
         certification_success_slides = self.filtered(lambda slide: slide.survey_scoring_success)
         if not certification_success_slides:
             return
-        certified_channels_domain = []
-        for slide in certification_success_slides:
-            certified_channels_domain = expression.OR([
-                certified_channels_domain, [
-                    ('partner_id', '=', slide.partner_id.id),
-                    ('channel_id', '=', slide.channel_id.id),]])
+        certified_channels_domain = expression.OR([
+            [('partner_id', '=', slide.partner_id.id), ('channel_id', '=', slide.channel_id.id)]
+            for slide in certification_success_slides
+        ])
         self.env['slide.channel.partner'].search(expression.AND([
             [("survey_certification_success", "=", False)],
             certified_channels_domain]

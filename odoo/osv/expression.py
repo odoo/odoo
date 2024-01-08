@@ -280,16 +280,14 @@ def combine(operator, unit, zero, domains):
     """
     result = []
     count = 0
-    if domains == [unit]:
-        return unit
     for domain in domains:
+        domain = normalize_domain(domain)
         if domain == unit:
             continue
         if domain == zero:
             return zero
-        if domain:
-            result += normalize_domain(domain)
-            count += 1
+        result += domain
+        count += 1
     result = [operator] * (count - 1) + result
     return result or unit
 

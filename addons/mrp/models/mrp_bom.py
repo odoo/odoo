@@ -143,11 +143,11 @@ class MrpBom(models.Model):
                     _check_cycle(subcomponents, finished_products | component)
 
         boms_to_check = self
-        domain = []
-        for product in self.bom_line_ids.product_id:
-            domain = OR([domain, self._bom_find_domain(product)])
-        if domain:
-            boms_to_check |= self.env['mrp.bom'].search(domain)
+        if self.bom_line_ids.product_id:
+            boms_to_check |= self.search(OR([
+                self._bom_find_domain(product)
+                for product in self.bom_line_ids.product_id
+            ]))
 
         for bom in boms_to_check:
             if not bom.active:

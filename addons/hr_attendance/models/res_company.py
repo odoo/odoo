@@ -63,15 +63,15 @@ class ResCompany(models.Model):
             self.env.cr.execute_values(query, values_args)
 
     def write(self, vals):
-        search_domain = False  # Overtime to generate
-        delete_domain = False  # Overtime to delete
+        search_domains = []  # Overtime to generate
+        delete_domains = []  # Overtime to delete
 
         overtime_enabled_companies = self.filtered('hr_attendance_overtime')
         # Prevent any further logic if we are disabling the feature
         is_disabling_overtime = False
         # If we disable overtime
         if 'hr_attendance_overtime' in vals and not vals['hr_attendance_overtime'] and overtime_enabled_companies:
-            delete_domain = [('company_id', 'in', overtime_enabled_companies.ids)]
+            delete_domains.append([('company_id', 'in', overtime_enabled_companies.ids)])
             vals['overtime_start_date'] = False
             is_disabling_overtime = True
 
@@ -84,29 +84,32 @@ class ResCompany(models.Model):
                 if start_date == company.overtime_start_date and \
                     (vals.get('overtime_company_threshold') != company.overtime_company_threshold) or\
                     (vals.get('overtime_employee_threshold') != company.overtime_employee_threshold):
-                    search_domain = OR([search_domain, [('employee_id.company_id', '=', company.id)]])
+                    search_domains.append([('employee_id.company_id', '=', company.id)])
                 # If we enabled the overtime with a start date
                 elif not company.overtime_start_date and start_date:
-                    search_domain = OR([search_domain, [
-                        ('employee_id.company_id', '=', company.id),
-                        ('check_in', '>=', start_date)]])
-                # If we move the start date into the past
-                elif start_date and company.overtime_start_date > start_date:
-                    search_domain = OR([search_domain, [
+                    search_domains.append([
                         ('employee_id.company_id', '=', company.id),
                         ('check_in', '>=', start_date),
-                        ('check_in', '<=', company.overtime_start_date)]])
+                    ])
+                # If we move the start date into the past
+                elif start_date and company.overtime_start_date > start_date:
+                    search_domains.append([
+                        ('employee_id.company_id', '=', company.id),
+                        ('check_in', '>=', start_date),
+                        ('check_in', '<=', company.overtime_start_date),
+                    ])
                 # If we move the start date into the future
                 elif start_date and company.overtime_start_date < start_date:
-                    delete_domain = OR([delete_domain, [
+                    delete_domains.append([
                         ('company_id', '=', company.id),
-                        ('date', '<', start_date)]])
+                        ('date', '<', start_date),
+                    ])
 
         res = super().write(vals)
-        if delete_domain:
-            self.env['hr.attendance.overtime'].search(delete_domain).unlink()
-        if search_domain:
-            self.env['hr.attendance'].search(search_domain)._update_overtime()
+        if delete_domains:
+            self.env['hr.attendance.overtime'].search(OR(delete_domains)).unlink()
+        if search_domains:
+            self.env['hr.attendance'].search(OR(search_domains))._update_overtime()
 
         return res
 

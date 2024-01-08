@@ -48,18 +48,18 @@ class TimesheetCustomerPortal(CustomerPortal):
         }
 
     def _get_search_domain(self, search_in, search):
-        search_domain = []
+        search_domains = []
         if search_in in ('project', 'all'):
-            search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
+            search_domains.append([('project_id', 'ilike', search)])
         if search_in in ('name', 'all'):
-            search_domain = OR([search_domain, [('name', 'ilike', search)]])
+            search_domains.append([('name', 'ilike', search)])
         if search_in in ('employee', 'all'):
-            search_domain = OR([search_domain, [('employee_id', 'ilike', search)]])
+            search_domains.append([('employee_id', 'ilike', search)])
         if search_in in ('task', 'all'):
-            search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
+            search_domains.append([('task_id', 'ilike', search)])
         if search_in == 'parent_task_id':
-            search_domain = OR([search_domain, [('parent_task_id', '=', int(search))]])
-        return search_domain
+            search_domains.append([('parent_task_id', '=', int(search))])
+        return OR(search_domains) if search_domains else []
 
     def _get_groupby_mapping(self):
         return {

@@ -176,7 +176,7 @@ class Groups(models.Model):
         if isinstance(operand, str):
             lst = False
             operand = [operand]
-        where = []
+        where_domains = []
         for group in operand:
             values = [v for v in group.split('/') if v]
             group_name = values.pop().strip()
@@ -188,14 +188,14 @@ class Groups(models.Model):
             if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
                 category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
             if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
-                sub_where = expression.AND([group_domain, category_domain])
+                where = expression.AND([group_domain, category_domain])
             else:
-                sub_where = expression.OR([group_domain, category_domain])
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                where = expression.AND([where, sub_where])
-            else:
-                where = expression.OR([where, sub_where])
-        return where
+                where = expression.OR([group_domain, category_domain])
+            where_domains.append(where)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return expression.AND(where_domains)
+        else:
+            return expression.OR(where_domains)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

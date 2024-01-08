@@ -32,13 +32,14 @@ class CalendarLeaves(models.Model):
                     raise ValidationError(_('Two public holidays cannot overlap each other for the same working hours.'))
 
     def _get_domain(self, time_domain_dict):
-        domain = []
-        for date in time_domain_dict:
-            domain = expression.OR([domain, [
-                    ('employee_company_id', '=', date['company_id']),
-                    ('date_to', '>', date['date_from']),
-                    ('date_from', '<', date['date_to'])]
-            ])
+        domain = expression.OR([
+            [
+                ('employee_company_id', '=', date['company_id']),
+                ('date_to', '>', date['date_from']),
+                ('date_from', '<', date['date_to']),
+            ]
+            for date in time_domain_dict
+        ])
         return expression.AND([domain, [('state', '!=', 'refuse')]])
 
     def _get_time_domain_dict(self):
