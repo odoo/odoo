@@ -311,19 +311,15 @@ export class ThreadService {
             }
         }
         if (ids.length) {
-            const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
-            Record.MAKE_UPDATE(() => {
-                for (const preview of previews) {
-                    const thread = this.store.Thread.get({
-                        model: "discuss.channel",
-                        id: preview.id,
-                    });
-                    const message = this.store.Message.insert(preview.last_message, { html: true });
-                    if (message.isNeedaction) {
-                        thread.needactionMessages.add(message);
-                    }
+            const messagesData = await this.orm.call("discuss.channel", "channel_fetch_preview", [
+                ids,
+            ]);
+            const messages = this.store.Message.insert(messagesData, { html: true });
+            for (const message of messages) {
+                if (message.isNeedaction) {
+                    message.originThread.needactionMessages.add(message);
                 }
-            });
+            }
         }
     });
 
