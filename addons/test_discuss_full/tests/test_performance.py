@@ -9,8 +9,8 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
-    _query_count = 56
-    _query_count_discuss_channels = 47
+    _query_count = 66
+    _query_count_discuss_channels = 53
 
     def setUp(self):
         super().setUp()
@@ -29,6 +29,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',
                 'odoobot_state': 'disabled',
+                'password': self.password,
                 'signature': '--\nErnest',
             },
             {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com', 'country_id': self.env.ref('base.in').id},
@@ -140,8 +141,9 @@ class TestDiscussFullPerformance(HttpCase):
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
+        self.authenticate(self.users[0].login, self.password)
         with self.assertQueryCount(emp=self._query_count):
-            init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
+            init_messaging = self.make_jsonrpc_request("/mail/init_messaging")
         self.assertEqual(init_messaging, self._get_init_messaging_result())
 
     def _get_init_messaging_result(self):
@@ -220,7 +222,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'livechat_username': False,
                 'user_id': {'id': self.users[0].id},
                 'voice_active_duration': 0,
-                'volumes': [('ADD', [])],
+                'volumes': [['ADD', []]],
             },
         }
 
@@ -232,33 +234,31 @@ class TestDiscussFullPerformance(HttpCase):
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
+        self.authenticate(self.users[0].login, self.password)
         with self.assertQueryCount(emp=self._query_count_discuss_channels):
-            discuss_channels = (
-                self.env["discuss.channel"]
-                .with_user(self.users[0])
-                ._get_channels_as_member()
-                ._channel_info()
-            )
+            discuss_channels = self.make_jsonrpc_request("/discuss/channels")
         self.assertEqual(discuss_channels, self._get_discuss_channels_result())
 
     def _get_discuss_channels_result(self):
         """Returns the result of a call to discuss/channels.
         The point of having a separate getter is to allow it to be overriden.
         """
-        return [
-            self._expected_result_for_channel(self.channel_general),
-            self._expected_result_for_channel(self.channel_channel_public_1),
-            self._expected_result_for_channel(self.channel_channel_public_2),
-            self._expected_result_for_channel(self.channel_channel_group_1),
-            self._expected_result_for_channel(self.channel_channel_group_2),
-            self._expected_result_for_channel(self.channel_group_1),
-            self._expected_result_for_channel(self.channel_chat_1),
-            self._expected_result_for_channel(self.channel_chat_2),
-            self._expected_result_for_channel(self.channel_chat_3),
-            self._expected_result_for_channel(self.channel_chat_4),
-            self._expected_result_for_channel(self.channel_livechat_1),
-            self._expected_result_for_channel(self.channel_livechat_2),
-        ]
+        return {
+            "Thread": [
+                self._expected_result_for_channel(self.channel_general),
+                self._expected_result_for_channel(self.channel_channel_public_1),
+                self._expected_result_for_channel(self.channel_channel_public_2),
+                self._expected_result_for_channel(self.channel_channel_group_1),
+                self._expected_result_for_channel(self.channel_channel_group_2),
+                self._expected_result_for_channel(self.channel_group_1),
+                self._expected_result_for_channel(self.channel_chat_1),
+                self._expected_result_for_channel(self.channel_chat_2),
+                self._expected_result_for_channel(self.channel_chat_3),
+                self._expected_result_for_channel(self.channel_chat_4),
+                self._expected_result_for_channel(self.channel_livechat_1),
+                self._expected_result_for_channel(self.channel_livechat_2),
+            ],
+        }
 
     def _expected_result_for_channel(self, channel):
         members = channel.channel_member_ids
@@ -286,7 +286,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "channel",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -318,7 +318,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -329,13 +329,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": "General announcements for all employees.",
                 "group_based_subscription": True,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "general",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": False,
@@ -351,7 +351,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "channel",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -383,7 +383,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -394,13 +394,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 1,
                 "name": "public channel 1",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": last_message_id,
@@ -416,7 +416,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "channel",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -448,7 +448,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -459,13 +459,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "public channel 2",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": last_message_id,
@@ -481,7 +481,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "channel",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -513,7 +513,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -525,7 +525,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "description": False,
                 "group_based_subscription": False,
                 "invitedMembers": [
-                    (
+                    [
                         "ADD",
                         [
                             {
@@ -542,7 +542,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                             },
                         ],
-                    ),
+                    ],
                 ],
                 "is_editable": True,
                 "is_pinned": True,
@@ -566,7 +566,7 @@ class TestDiscussFullPerformance(HttpCase):
                     },
                 },
                 "rtcSessions": [
-                    (
+                    [
                         "ADD",
                         [
                             {
@@ -590,7 +590,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 "isSelfMuted": False,
                             }
                         ],
-                    )
+                    ]
                 ],
                 "custom_notifications": False,
                 "mute_until_dt": False,
@@ -607,7 +607,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "channel",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -639,7 +639,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -650,13 +650,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "group restricted channel 2",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": last_message_id,
@@ -672,7 +672,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "group",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -729,7 +729,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -740,13 +740,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": False,
@@ -762,7 +762,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "chat",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -819,7 +819,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -830,13 +830,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test14",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": False,
@@ -852,7 +852,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "chat",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -909,7 +909,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -920,13 +920,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test15",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": False,
@@ -942,7 +942,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "chat",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -999,7 +999,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -1010,13 +1010,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test2",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": False,
@@ -1032,7 +1032,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "chat",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -1091,7 +1091,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -1102,13 +1102,13 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
                 "name": "Ernest Employee, test3",
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "seen_message_id": False,
@@ -1128,7 +1128,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "livechat",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         sorted(
                             [
@@ -1175,7 +1175,7 @@ class TestDiscussFullPerformance(HttpCase):
                             ],
                             key=lambda member_data: member_data["id"],
                         ),
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -1186,7 +1186,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
@@ -1200,7 +1200,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "type": "partner",
                     "write_date": write_date_0,
                 },
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
@@ -1218,7 +1218,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "avatarCacheKey": channel._get_avatar_cache_key(),
                 "channel_type": "livechat",
                 "channelMembers": [
-                    (
+                    [
                         "ADD",
                         [
                             {
@@ -1266,7 +1266,7 @@ class TestDiscussFullPerformance(HttpCase):
                                 },
                             },
                         ],
-                    )
+                    ]
                 ],
                 "custom_channel_name": False,
                 "id": channel.id,
@@ -1277,7 +1277,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "defaultDisplayMode": False,
                 "description": False,
                 "group_based_subscription": False,
-                "invitedMembers": [("ADD", [])],
+                "invitedMembers": [["ADD", []]],
                 "is_editable": False,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
@@ -1291,7 +1291,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "type": "partner",
                     "write_date": write_date_0,
                 },
-                "rtcSessions": [("ADD", [])],
+                "rtcSessions": [["ADD", []]],
                 "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,

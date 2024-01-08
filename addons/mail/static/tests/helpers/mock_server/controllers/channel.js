@@ -27,9 +27,10 @@ patch(MockServer.prototype, {
      * Simulates the `/discuss/channels` route.
      */
     _mockRouteDiscussChannels() {
-        return this._mockDiscussChannelChannelInfo(
-            this._mockDiscussChannel__get_channels_as_member().map((channel) => channel.id)
-        );
+        const channels = this._mockDiscussChannel__get_channels_as_member();
+        return {
+            Thread: this._mockDiscussChannelChannelInfo(channels.map((channel) => channel.id)),
+        };
     },
     /**
      * Simulates the `/discuss/channel/attachments` route.

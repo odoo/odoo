@@ -21,8 +21,8 @@ const StorePatch = {
         this.fetchChannelsState = "fetching";
         this.fetchChannelsDeferred = new Deferred();
         rpc("/discuss/channels").then(
-            (channelsData) => {
-                this.Thread.insert(channelsData);
+            (data) => {
+                this.Store.insert(data);
                 this.fetchChannelsState = "fetched";
                 this.fetchChannelsDeferred.resolve();
             },
