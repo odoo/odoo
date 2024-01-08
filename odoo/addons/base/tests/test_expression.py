@@ -724,18 +724,20 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         Model = self.env['res.partner.category']
         helen = Model.create({'name': 'Hélène'})
-        self.assertEqual(helen, Model.search([('name', 'ilike', 'Helene')]))
-        self.assertEqual(helen, Model.search([('name', 'ilike', 'hélène')]))
-        self.assertEqual(helen, Model.search([('name', '=ilike', 'Hel%')]))
-        self.assertEqual(helen, Model.search([('name', '=ilike', 'hél%')]))
-        self.assertNotIn(helen, Model.search([('name', 'not ilike', 'Helene')]))
-        self.assertNotIn(helen, Model.search([('name', 'not ilike', 'hélène')]))
+        self.assertEqual(helen, self._search(Model, [('name', 'ilike', 'Helene')]))
+        self.assertEqual(helen, self._search(Model, [('name', 'ilike', 'hélène')]))
+        self.assertEqual(helen, self._search(Model, [('name', '=ilike', 'Hel%')]))
+        self.assertEqual(helen, self._search(Model, [('name', '=ilike', 'hél%')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'Helene')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'hélène')]))
 
         # =like and like should be case and accent sensitive
-        self.assertEqual(helen, Model.search([('name', '=like', 'Hél%')]))
-        self.assertNotIn(helen, Model.search([('name', '=like', 'Hel%')]))
-        self.assertEqual(helen, Model.search([('name', 'like', 'élè')]))
-        self.assertNotIn(helen, Model.search([('name', 'like', 'ele')]))
+        self.assertEqual(helen, self._search(Model, [('name', '=like', 'Hél%')]))
+        self.assertNotIn(helen, self._search(Model, [('name', '=like', 'Hel%')]))
+        self.assertEqual(helen, self._search(Model, [('name', 'like', 'élè')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'like', 'ele')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'ele')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'élè')]))
 
         hermione, nicostratus = Model.create([
             {'name': 'Hermione', 'parent_id': helen.id},
