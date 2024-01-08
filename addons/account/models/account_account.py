@@ -38,7 +38,7 @@ class AccountAccount(models.Model):
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
-    code = fields.Char(size=64, required=True, tracking=True)
+    code = fields.Char(size=64, required=True, tracking=True, unaccent=False)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
