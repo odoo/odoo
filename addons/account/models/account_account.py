@@ -64,7 +64,7 @@ class AccountAccount(models.Model):
         ],
         string="Type", tracking=True,
         required=True,
-        compute='_compute_account_type', store=True, readonly=False, precompute=True,
+        compute='_compute_account_type', store=True, readonly=False, precompute=True, index=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."
     )
     include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward",
