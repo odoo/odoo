@@ -16,6 +16,7 @@ import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
 import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
+import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -224,12 +225,17 @@ export class KanbanRenderer extends Component {
             (fieldNode) => fieldNode.name === groupByField.name
         );
         let isReadonly = this.props.list.fields[groupByField.name].readonly;
-        if (
-            !isReadonly &&
-            fieldNodes.length &&
-            fieldNodes.some((fieldNode) => "readonly" in fieldNode)
-        ) {
-            isReadonly = fieldNodes.every((fieldNode) => fieldNode.readonly === "True");
+        if (!isReadonly && fieldNodes.length) {
+            isReadonly = fieldNodes.every((fieldNode) => {
+                if (!fieldNode.readonly) {
+                    return false;
+                }
+                try {
+                    return evaluateExpr(fieldNode.readonly, this.props.list.evalContext);
+                } catch {
+                    return false;
+                }
+            });
         }
         return !isReadonly && this.isMovableField(groupByField);
     }

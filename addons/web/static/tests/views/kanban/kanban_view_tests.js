@@ -14224,4 +14224,74 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.containsNone(target, ".my_kanban_compiler");
     });
+
+    QUnit.test(
+        "Kanban grouped on field with readonly expression depending on context",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="product_id" readonly="context.get('abc')" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+                groupBy: ["product_id"],
+                context: { abc: true },
+            });
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        }
+    );
+
+    QUnit.test(
+        "Kanban grouped on field with readonly expression depending on fields",
+        async (assert) => {
+            // Fields are not available in the current context as the drag and drop must be enabled globally
+            // for the view, it's not a per record thing.
+            // So if the readonly expression contains fields, it will resolve to readonly === false and
+            // the drag and drop will be enabled.
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="foo" />
+                            <field name="product_id" readonly="foo == 'yop'" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+                groupBy: ["product_id"],
+            });
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        }
+    );
 });
