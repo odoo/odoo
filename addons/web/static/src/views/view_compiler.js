@@ -460,10 +460,11 @@ let templateIds = Object.create(null);
  * @returns {Record<string, string>}
  */
 export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
-    if (!templateIds[rawArch]) {
-        templateIds[rawArch] = {};
+    const k = `${ViewCompiler.name}/${rawArch}`;
+    if (!templateIds[k]) {
+        templateIds[k] = {};
     }
-    const compiledTemplates = templateIds[rawArch];
+    const compiledTemplates = templateIds[k];
     const compiler = new ViewCompiler(templates);
     for (const key in templates) {
         if (!compiledTemplates[key]) {
