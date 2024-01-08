@@ -24,7 +24,7 @@
                             <field name="sale_line_id" column_invisible="parent.id" required="True" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
                             <field name="sale_line_id" column_invisible="not parent.id" required="True" groups="!sales_team.group_sale_salesman" options="{'no_create': True}"
                                 context="{'search_default_order_id': sale_order_id}"/>
-                            <field name="sale_line_id" column_invisible="not parent.id" required="True" groups="sales_team.group_sale_salesman" options="{'no_quick_create': True}"
+                            <field name="sale_line_id" column_invisible="not parent.id" required="True" groups="sales_team.group_sale_salesman"
                                 context="{
                                     'search_default_order_id': sale_order_id,
                                     'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
