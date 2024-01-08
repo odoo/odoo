@@ -59,7 +59,7 @@ paymentForm.include({
      */
     _prepareRazorpayOptions(processingValues) {
         return Object.assign({}, processingValues, {
-            'key': processingValues['razorpay_key_id'],
+            'key': processingValues['razorpay_public_token'] || processingValues['razorpay_key_id'],
             'order_id': processingValues['razorpay_order_id'],
             'customer_id': processingValues['razorpay_customer_id'],
             'description': processingValues['reference'],

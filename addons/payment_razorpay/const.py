@@ -3,6 +3,11 @@
 # The currencies supported by Razorpay, in ISO 4217 format. Last updated on May 26, 2021.
 # See https://razorpay.com/docs/payments/payments/international-payments/#supported-currencies.
 # Last seen online: 16 November 2022.
+
+#TODO: change IAP url to the correct one (right now it's a test url)
+OAUTH_URL = "https://razorpay-oauth.odoo.com"
+OAUTH_TEST_URL = "https://razorpay-oauth-test.odoo.com"
+
 SUPPORTED_CURRENCIES = [
     'AED',
     'ALL',
@@ -133,4 +138,5 @@ HANDLED_WEBHOOK_EVENTS = [
     'payment.failed',
     'refund.failed',
     'refund.processed',
+    'account.app.authorization_revoked',
 ]
