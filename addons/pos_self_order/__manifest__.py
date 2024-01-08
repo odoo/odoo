@@ -55,6 +55,7 @@
             'bus/static/src/bus_parameters_service.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/workers/*',
+            'barcodes/static/src/barcode_service.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',
             'web/static/lib/bootstrap/js/dist/dom/event-handler.js',
             'web/static/lib/bootstrap/js/dist/dom/manipulator.js',
