@@ -99,6 +99,14 @@ html, body {
     height: 100%;
 }
 
+pre {    
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    background-color: $gray-100;
+    color: $gray-900;
+}
+
 *[contenteditable=true] {
     outline: none;
 }
@@ -961,4 +969,12 @@ section, .oe_img_bg, [data-oe-shape-data] {
     p, h1, h2, h3 {
         margin-bottom: 1rem;
     }
+}
+
+code.o_inline_code {
+    padding: .2em .4em;
+    border-radius: $border-radius;
+    background-color: var(--WebEditor__inlineCode-bg, #{$gray-200});
+    font-size: 85%;
+    color: $gray-900;
 }
