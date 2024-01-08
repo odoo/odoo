@@ -101,12 +101,27 @@ class SaleOrder(models.Model):
             else:
                 order.is_abandoned_cart = False
 
-    @api.depends('partner_id')
     def _compute_payment_term_id(self):
         super()._compute_payment_term_id()
-        for order in self:
-            if order.website_id:
-                order.payment_term_id = order.website_id.with_company(order.company_id).sale_get_payment_term(order.partner_id)
+        website_orders = self.filtered(
+            lambda so: so.website_id and not so.payment_term_id
+        )
+        if not website_orders:
+            return
+
+        # Try to find a payment term even if there wasn't any set on the partner
+        default_pt = self.env.ref(
+            'account.account_payment_term_immediate', raise_if_not_found=False)
+        for order in website_orders:
+            if default_pt and (
+                order.company_id == default_pt.company_id
+                or not default_pt.company_id
+            ):
+                order.payment_term_id = default_pt
+            else:
+                order.payment_term_id = order.env['account.payment.term'].search([
+                    ('company_id', '=', order.company_id.id),
+                ], limit=1)
 
     def _search_abandoned_cart(self, operator, value):
         website_ids = self.env['website'].search_read(fields=['id', 'cart_abandoned_delay', 'partner_id'])
