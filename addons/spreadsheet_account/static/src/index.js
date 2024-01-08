@@ -46,6 +46,7 @@ cellMenuRegistry.add("move_lines_see_records", {
             !evaluatedCell.error &&
             evaluatedCell.value !== "" &&
             cell &&
+            cell.isFormula &&
             getNumberOfAccountFormulas(cell.compiledFormula.tokens) === 1
         );
     },
