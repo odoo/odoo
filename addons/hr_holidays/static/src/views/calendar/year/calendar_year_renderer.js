@@ -44,7 +44,6 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
             weekNumbers: true,
             weekNumbersWithinDays: false,
             weekLabel: _t("Week"),
-            firstDay: 0,
         });
     }
 
