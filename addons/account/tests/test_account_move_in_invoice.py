@@ -2039,6 +2039,157 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
 
+    def test_in_invoice_with_down_payment_caba(self):
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'account_type': 'asset_current',
+            'company_id': self.company_data['company'].id,
+        })
+        default_expense_account = self.company_data['default_account_expense']
+        not_default_expense_account = self.env['account.account'].create({
+            'name': 'NOT_DEFAULT_EXPENSE',
+            'code': 'NDE',
+            'account_type': 'expense',
+            'company_id': self.company_data['company'].id,
+        })
+        self.env.company.tax_exigibility = True
+        tax_tags = defaultdict(dict)
+        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                'name': '%s %s tag' % (line_type, repartition_type),
+                'applicability': 'taxes',
+                'country_id': self.env.ref('base.us').id,
+            })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'purchase',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'tag_ids': [Command.set(tax_tags['invoice']['base'].ids)],
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [Command.set(tax_tags['invoice']['tax'].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'tag_ids': [Command.set(tax_tags['refund']['base'].ids)],
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [Command.set(tax_tags['refund']['tax'].ids)],
+                }),
+            ],
+        })
+        # create bill
+        # one downpayment on default account and one product line on not default account, both with the caba tax
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2017-01-01'),
+            'invoice_line_ids': [
+                Command.create({
+                    'account_id': not_default_expense_account.id,
+                    'product_id': self.product_a.id,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+                Command.create({
+                    'name': 'Down payment',
+                    'price_unit': 300,
+                    'quantity': -1,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ]
+        })
+        invoice.action_post()
+        # make payment
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': invoice.date,
+        })._create_payments()
+        # check caba move
+        partial_rec = invoice.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        # all amls with tax_tag should all have tax_tag_invert at False since the caba move comes from a bill
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': not_default_expense_account.id,
+                'debit': 0.0,
+                'credit': 800.0,
+                'tax_tag_invert': False,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': not_default_expense_account.id,
+                'debit': 800.0,
+                'credit': 0.0,
+                'tax_tag_invert': False,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': default_expense_account.id,
+                'debit': 300.0,
+                'credit': 0.0,
+                'tax_tag_invert': False,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': default_expense_account.id,
+                'debit': 0.0,
+                'credit': 300.0,
+                'tax_tag_invert': False,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_waiting_account.id,
+                'debit': 0.0,
+                'credit': 50.0,
+                'tax_tag_invert': False,
+            },
+            {
+                'tax_line_id': tax.id,
+                'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_ids': [],
+                'tax_tag_ids': tax_tags['invoice']['tax'].ids,
+                'account_id': tax_final_account.id,
+                'debit': 50.0,
+                'credit': 0.0,
+                'tax_tag_invert': False,
+            },
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
+
     def test_in_invoice_line_tax_line_delete(self):
         with self.assertRaisesRegex(ValidationError, "You cannot delete a tax line"):
             with Form(self.invoice) as invoice_form:
