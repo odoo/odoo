@@ -9,17 +9,10 @@
                 <p t-out="l10n_in_einvoice_json['AckDt']"/>
             </div>
         </xpath>
-        <xpath expr="//div[@id='total']/div[1]" position="attributes">
-            <attribute name="t-attf-class">{{('col-6' if report_type != 'html' else 'col-sm-6 col-md-5 ms-auto') if l10n_in_einvoice_json else ''}}
-                {{(('col-6' if report_type != 'html' else 'col-sm-7 col-md-6') + ' ms-auto') if not l10n_in_einvoice_json else ''}}</attribute>
-        </xpath>
-        <xpath expr="//div[@id='right-elements']" position="attributes">
-            <attribute name="t-attf-class">{{('col-12' if report_type != 'html' else 'col-12 col-md-5') if l10n_in_einvoice_json else '' }} {{(('col-6' if report_type != 'html' else 'col-12 col-md-5') + ' ms-5 d-inline-block float-end' ) if not l10n_in_einvoice_json else ''}} </attribute>
-        </xpath>
-        <xpath expr="//div[@id='total']/div[1]" position="before">
+        <xpath expr="//div[@id='right-elements']" position="after">
             <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
-            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6 ms-auto'} row" t-if="l10n_in_einvoice_json">
-                <div class="col-7 me-2">
+            <div t-attf-class="#{'col-5' if report_type != 'html' else 'ms-auto'} row" t-if="l10n_in_einvoice_json">
+                <div class="col-7 me-2" t-attf-style="#{'' if report_type != 'html' else 'padding: 0 !important;'}">
                     <strong>IRN:</strong>
                     <span t-esc="l10n_in_einvoice_json['Irn']"/>
                 </div>
