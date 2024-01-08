@@ -444,6 +444,7 @@ class IrModuleModule(models.Model):
         for theme in themes:
             # Only generate templates for installed themes.
             if theme.state != 'uninstalled':
+                # TODO In master, remove this call.
                 theme._generate_primary_snippet_templates()
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
