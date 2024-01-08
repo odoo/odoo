@@ -6,7 +6,14 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
 import { makeTestEnv } from "../helpers/mock_env";
 import { companyService } from "@web/webclient/company_service";
-import { click, getFixture, makeDeferred, mount, patchWithCleanup } from "../helpers/utils";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    mount,
+    patchWithCleanup,
+    setBrowserLocation,
+} from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
 import { router } from "@web/core/browser/router";
@@ -270,7 +277,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=3-1" });
+        await setBrowserLocation({ hash: "cids=3-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
         /**
@@ -305,7 +312,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=2-1" });
+        await setBrowserLocation({ hash: "cids=2-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
 
         /**

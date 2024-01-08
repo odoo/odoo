@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
 import { ormService } from "@web/core/orm_service";
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { patchWithCleanup } from "../helpers/utils";
+import { patchWithCleanup, setBrowserLocation } from "../helpers/utils";
 import { patchRPCWithCleanup } from "../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
@@ -79,7 +78,7 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
 
     serviceRegistry.add("company", companyService);
 
-    Object.assign(browser.location, { hash: "cids=3-1" });
+    await setBrowserLocation({ hash: "cids=3-1" });
     let env = await makeTestEnv();
     assert.deepEqual(
         Object.values(env.services.company.allowedCompanies).map((c) => c.id),
@@ -90,7 +89,7 @@ QUnit.test("extract allowed company ids from url hash", async (assert) => {
 
     // backward compatibility
     registry.category("error_handlers").remove("accessErrorHandlerCompanies");
-    Object.assign(browser.location, { hash: "cids=3%2C1" });
+    await setBrowserLocation({ hash: "cids=3%2C1" });
     env = await makeTestEnv();
     assert.deepEqual(env.services.company.activeCompanyIds, [3, 1]);
     assert.strictEqual(env.services.company.currentCompany.id, 3);
