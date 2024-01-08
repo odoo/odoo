@@ -27,8 +27,9 @@ class AccountMove(models.Model):
         ], ['timesheet_invoice_id'], ['unit_amount:sum'])
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({timesheet_invoice.id: amount for timesheet_invoice, amount in group_data})
+        uom_hour = self.env.ref('uom.product_uom_hour')
         for invoice in self:
-            total_time = invoice.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[invoice.id], invoice.timesheet_encode_uom_id)
+            total_time = uom_hour._compute_quantity(timesheet_unit_amount_dict[invoice.id], invoice.timesheet_encode_uom_id)
             invoice.timesheet_total_duration = round(total_time)
 
     @api.depends('timesheet_ids')

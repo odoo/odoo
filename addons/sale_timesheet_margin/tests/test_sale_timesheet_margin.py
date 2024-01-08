@@ -60,6 +60,6 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
         # Cost is expressed in SO line uom
         expected_cost = self.uom_day._compute_quantity(
             self.employee_manager.hourly_cost,
-            self.env.company.project_time_mode_id
+            self.env.ref('uom.product_uom_hour')
         )
         self.assertEqual(sale_order.order_line.purchase_price, expected_cost, "Sale order line cost should be number of working hours on one day * timesheet cost of the employee set on the timesheet linked to the SOL.")

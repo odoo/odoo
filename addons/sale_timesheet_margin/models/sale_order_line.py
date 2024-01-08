@@ -20,17 +20,18 @@ class SaleOrderLine(models.Model):
                 so_line.id: - amount_sum / unit_amount_sum if unit_amount_sum else 0.0
                 for so_line, amount_sum, unit_amount_sum in group_amount
             }
+            database_timesheet_uom = self.env.ref('uom.product_uom_hour')
             for line in timesheet_sols:
                 line = line.with_company(line.company_id)
                 product_cost = mapped_sol_timesheet_amount.get(line.id, line.product_id.standard_price)
                 product_uom = line.product_uom or line.product_id.uom_id
                 if (
-                    product_uom != line.company_id.project_time_mode_id
-                    and product_uom.category_id.id == line.company_id.project_time_mode_id.category_id.id
+                    product_uom != database_timesheet_uom
+                    and product_uom.category_id.id == database_timesheet_uom.category_id.id
                 ):
                     product_cost = product_uom._compute_quantity(
                         product_cost,
-                        line.company_id.project_time_mode_id
+                        database_timesheet_uom
                     )
 
                 line.purchase_price = line._convert_to_sol_currency(

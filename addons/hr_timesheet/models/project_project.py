@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections import defaultdict
 
 from odoo import models, fields, api, _, _lt
 from odoo.exceptions import ValidationError, RedirectWarning
@@ -23,7 +22,7 @@ class Project(models.Model):
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
-        help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
+        help="Total number of time (in the UoM selected in the settings) recorded in the project, rounded to the unit.", compute_sudo=True)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Hours', compute_sudo=True)
@@ -128,26 +127,10 @@ class Project(models.Model):
 
     @api.depends('timesheet_ids', 'timesheet_encode_uom_id')
     def _compute_total_timesheet_time(self):
-        timesheets_read_group = self.env['account.analytic.line']._read_group(
-            [('project_id', 'in', self.ids)],
-            ['project_id', 'product_uom_id'],
-            ['unit_amount:sum'],
-        )
-        timesheet_time_dict = defaultdict(list)
-        for project, product_uom, unit_amount_sum in timesheets_read_group:
-            timesheet_time_dict[project.id].append((product_uom, unit_amount_sum))
-
+        uom_hour = self.env.ref('uom.product_uom_hour')
         for project in self:
-            # Timesheets may be stored in a different unit of measure, so first
-            # we convert all of them to the reference unit
-            # if the timesheet has no product_uom_id then we take the one of the project
-            total_time = 0.0
-            for product_uom, unit_amount in timesheet_time_dict[project.id]:
-                factor = (product_uom or project.timesheet_encode_uom_id).factor_inv
-                total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
-            # Now convert to the proper unit of measure set in the settings
-            total_time *= project.timesheet_encode_uom_id.factor
-            project.total_timesheet_time = int(round(total_time))
+            # Converting timesheets from hours to the uom selected in the settings
+            project.total_timesheet_time = project.effective_hours * uom_hour.factor_inv * project.timesheet_encode_uom_id.factor
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -204,11 +187,6 @@ class Project(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
 
-    def _convert_project_uom_to_timesheet_encode_uom(self, time):
-        uom_from = self.company_id.project_time_mode_id
-        uom_to = self.env.company.timesheet_encode_uom_id
-        return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
-
     def action_project_timesheets(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
         action['display_name'] = _("%(name)s's Timesheets", name=self.name)
@@ -227,7 +205,7 @@ class Project(models.Model):
         uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
 
         allocated = self.allocated_hours / uom_ratio
-        effective = self.total_timesheet_time / uom_ratio
+        effective = self.total_timesheet_time
         color = ""
         if allocated:
             number = f"{round(effective)} / {round(allocated)} {encode_uom.name}"
