@@ -196,6 +196,7 @@ class ProductProduct(models.Model):
                 "is_pos_groupable": self.uom_id.is_pos_groupable,
                 "write_date": self.write_date.timestamp(),
                 "self_order_available": self.self_order_available,
+                "barcode": self.barcode,
             }
 
     def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
