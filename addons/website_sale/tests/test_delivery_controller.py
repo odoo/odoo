@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -109,23 +109,3 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
         self.assertEqual(
             self.empty_order._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
         )
-
-    def test_validate_payment_with_no_available_delivery_method(self):
-        """
-        An error should be raised if you try to validate an order with a storable
-        product without any delivery method available
-        """
-        storable_product = self.env['product.product'].create({
-            'name': 'Storable Product',
-            'sale_ok': True,
-            'type': 'product',
-            'website_published': True,
-        })
-        carriers = self.env['delivery.carrier'].search([])
-        carriers.write({'website_published': False})
-
-        with MockRequest(self.env, website=self.website):
-            self.website.sale_get_order(force_create=True)
-            self.Controller.cart_update_json(product_id=storable_product.id, add_qty=1)
-            with self.assertRaises(ValidationError):
-                self.Controller.shop_payment_validate()
