@@ -11,9 +11,9 @@ import {
     patchWithCleanup,
     mount,
     nextTick,
-    makeDeferred,
     editInput,
     getNodesTextContent,
+    setBrowserLocation,
 } from "../../helpers/utils";
 import {
     pagerNext,
@@ -90,7 +90,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("initial loading with action id", async (assert) => {
         assert.expect(4);
         const hash = "#action=1001";
-        Object.assign(browser.location, { hash });
+        await setBrowserLocation({ hash });
         setupWebClientRegistries();
 
         const mockRPC = (route) => assert.step(route);
@@ -106,7 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("initial loading with action tag", async (assert) => {
         assert.expect(3);
         const hash = "#action=__test__client__action__";
-        Object.assign(browser.location, { hash });
+        await setBrowserLocation({ hash });
         setupWebClientRegistries();
 
         const mockRPC = (route) => assert.step(route);
@@ -134,7 +134,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("correctly sends additional context", async (assert) => {
         assert.expect(1);
         const hash = "#action=1001&active_id=4&active_ids=4,8";
-        Object.assign(browser.location, { hash });
+        await setBrowserLocation({ hash });
         function mockRPC(route, params) {
             if (route === "/web/action/load") {
                 assert.deepEqual(params, {
@@ -261,7 +261,7 @@ QUnit.module("ActionManager", (hooks) => {
             2: { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: "menu_2" },
         };
         const hash = "#id=2&model=partner";
-        Object.assign(browser.location, { hash });
+        await setBrowserLocation({ hash });
         await createWebClient({ serverData, mockRPC });
 
         await nextTick();
@@ -589,7 +589,7 @@ QUnit.module("ActionManager", (hooks) => {
             1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1 },
         };
         const hash = "#home=1";
-        Object.assign(browser.location, { hash });
+        await setBrowserLocation({ hash });
         const mockRPC = async function (route) {
             assert.step(route);
         };
@@ -762,7 +762,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(8);
         assert.expectErrors();
 
-        browser.location.hash = "#action=__test__client__action__&menu_id=1";
+        await setBrowserLocation({ hash: "#action=__test__client__action__&menu_id=1" });
         const ClientAction = registry.category("actions").get("__test__client__action__");
         class Override extends ClientAction {
             setup() {
@@ -793,22 +793,21 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
-        const hashchangeDef = makeDeferred();
+        let def;
         class MyAction extends Component {
             static template = xml`<div class="not-here" />`;
             setup() {
                 onMounted(() => {
                     assert.step("myAction mounted");
-                    browser.addEventListener("hashchange", () => {
-                        hashchangeDef.resolve();
+                    def = setBrowserLocation({
+                        hash: "#action=__test__client__action__&menu_id=1",
                     });
-                    browser.location.hash = "#action=__test__client__action__&menu_id=1";
                 });
             }
         }
         registry.category("actions").add("myAction", MyAction);
 
-        browser.location.hash = "#action=myAction";
+        await setBrowserLocation({ hash: "#action=myAction" });
 
         await createWebClient({ serverData });
         assert.verifySteps([]);
@@ -817,8 +816,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".not-here");
 
         // hashchange event isn't trigerred synchronously, so we have to wait for it
-        await hashchangeDef;
-        await nextTick();
+        await def;
         assert.containsNone(target, ".not-here");
         assert.containsNone(target, ".test_client_action");
         await nextTick();
@@ -849,7 +847,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
         registry.category("actions").add("myAction", MyAction);
 
-        browser.location.hash = "#action=myAction";
+        await setBrowserLocation({ hash: "#action=myAction" });
         await createWebClient({ serverData });
         assert.verifySteps([]);
         await nextTick();

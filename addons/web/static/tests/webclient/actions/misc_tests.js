@@ -5,7 +5,14 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { makeTestEnv } from "../../helpers/mock_env";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
-import { click, getFixture, hushConsole, nextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    getFixture,
+    hushConsole,
+    nextTick,
+    patchWithCleanup,
+    setBrowserLocation,
+} from "../../helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -392,7 +399,7 @@ QUnit.module("ActionManager", (hooks) => {
             );
 
             // Prepare the URL hash to make sure the stored action will get executed.
-            browser.location.hash = "#model=partner&view_type=kanban";
+            await setBrowserLocation({ hash: "#model=partner&view_type=kanban" });
 
             // Create the web client. It should execute the stored action.
             const webClient = await createWebClient({ serverData });

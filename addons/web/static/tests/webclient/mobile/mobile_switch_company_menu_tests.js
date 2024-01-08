@@ -10,6 +10,7 @@ import {
     makeDeferred,
     mount,
     patchWithCleanup,
+    setBrowserLocation,
 } from "@web/../tests/helpers/utils";
 import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 import { companyService } from "@web/webclient/company_service";
@@ -236,7 +237,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=3-1" });
+        await setBrowserLocation({ hash: "cids=3-1" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
@@ -266,7 +267,7 @@ QUnit.module("MobileSwitchCompanyMenu", (hooks) => {
         function onPushState(url) {
             assert.step(url.split("#")[1]);
         }
-        Object.assign(browser.location, { hash: "cids=2-3" });
+        await setBrowserLocation({ hash: "cids=2-3" });
         const scMenu = await createSwitchCompanyMenu({ onPushState });
         const scMenuEl = target.querySelector(".o_burger_menu_companies");
 
