@@ -2278,7 +2278,7 @@ class Model(models.AbstractModel):
         :returns: a form view as an lxml document
         :rtype: etree._Element
         """
-        sheet = E.sheet(string=self._description)
+        sheet = E.sheet(string=self.env['ir.model']._get(self._name).name)
         main_group = E.group()
         left_group = E.group()
         right_group = E.group()
@@ -2319,7 +2319,7 @@ class Model(models.AbstractModel):
         :rtype: etree._Element
         """
         element = E.field(name=self._rec_name_fallback())
-        return E.search(element, string=self._description)
+        return E.search(element, string=self.env['ir.model']._get(self._name).name)
 
     @api.model
     def _get_default_tree_view(self):
@@ -2329,7 +2329,7 @@ class Model(models.AbstractModel):
         :rtype: etree._Element
         """
         element = E.field(name=self._rec_name_fallback())
-        return E.tree(element, string=self._description)
+        return E.tree(element, string=self.env['ir.model']._get(self._name).name)
 
     @api.model
     def _get_default_pivot_view(self):
@@ -2338,7 +2338,7 @@ class Model(models.AbstractModel):
         :returns: a pivot view as an lxml document
         :rtype: etree._Element
         """
-        return E.pivot(string=self._description)
+        return E.pivot(string=self.env['ir.model']._get(self._name).name)
 
     @api.model
     def _get_default_kanban_view(self):
@@ -2353,7 +2353,7 @@ class Model(models.AbstractModel):
         card_div = E.div(content_div, {'t-attf-class': "oe_kanban_card oe_kanban_global_click"})
         kanban_box = E.t(card_div, {'t-name': "kanban-box"})
         templates = E.templates(kanban_box)
-        return E.kanban(templates, string=self._description)
+        return E.kanban(templates, string=self.env['ir.model']._get(self._name).name)
 
     @api.model
     def _get_default_graph_view(self):
@@ -2363,7 +2363,7 @@ class Model(models.AbstractModel):
         :rtype: etree._Element
         """
         element = E.field(name=self._rec_name_fallback())
-        return E.graph(element, string=self._description)
+        return E.graph(element, string=self.env['ir.model']._get(self._name).name)
 
     @api.model
     def _get_default_calendar_view(self):
@@ -2386,7 +2386,7 @@ class Model(models.AbstractModel):
                     return True
             return False
 
-        view = E.calendar(string=self._description)
+        view = E.calendar(string=self.env['ir.model']._get(self._name).name)
         view.append(E.field(name=self._rec_name_fallback()))
 
         if not set_first_of([self._date_name, 'date', 'date_start', 'x_date', 'x_date_start'],

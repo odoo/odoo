@@ -309,7 +309,7 @@ class IrActionsActWindow(models.Model):
         self.env.registry.clear_cache()
         for vals in vals_list:
             if not vals.get('name') and vals.get('res_model'):
-                vals['name'] = self.env[vals['res_model']]._description
+                vals['name'] = self.env['ir.model']._get(vals['res_model']).name
         return super(IrActionsActWindow, self).create(vals_list)
 
     def unlink(self):

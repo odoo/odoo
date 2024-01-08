@@ -100,7 +100,7 @@ class AccountMoveSend(models.TransientModel):
             # Failed.
             if errors:
                 invoice_data['error'] = {
-                    'error_title': _("Errors occurred while creating the EDI document (format: %s):", builder._description),
+                    'error_title': _("Errors occurred while creating the EDI document (format: %s):", self.env['ir.model']._get(builder._name).name),
                     'errors': errors,
                 }
                 invoice_data['error_but_continue'] = True
