@@ -7,7 +7,7 @@ import { Product } from "@pos_self_order/app/models/product";
 import { Combo } from "@pos_self_order/app/models/combo";
 import { session } from "@web/session";
 import { getColor } from "@web/core/colors/colors";
-import { categorySorter, attributeFormatter } from "@pos_self_order/app/utils";
+import { categorySorter, attributeFormatter, attributeFlatter } from "@pos_self_order/app/utils";
 import { Order } from "@pos_self_order/app/models/order";
 import { batched } from "@web/core/utils/timing";
 import { useState, markup } from "@odoo/owl";
@@ -16,8 +16,9 @@ import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/printer/printer_service";
-import { qrCodeSrc } from "@point_of_sale/utils";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { constructFullProductName, qrCodeSrc } from "@point_of_sale/utils";
+import { Line } from "./models/line";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -25,13 +26,14 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(env, { notification, router, printer, renderer }) {
+    async setup(env, { notification, router, printer, renderer, barcode }) {
         // services
         this.notification = notification;
         this.router = router;
         this.env = env;
         this.printer = printer;
         this.renderer = renderer;
+        this.barcode = barcode;
 
         // data
         Object.assign(this, {
@@ -61,6 +63,75 @@ export class SelfOrder extends Reactive {
         } else {
             await this.initMobileData();
         }
+        barcode.bus.addEventListener("barcode_scanned", (ev) => {
+            if (!this.ordering) {
+                this.notification.add(_t("We're currently closed"), {
+                    type: "danger",
+                });
+                return;
+            }
+            const product = Object.values(this.productByIds).filter(
+                (p) => p.barcode === ev.detail.barcode
+            )?.[0];
+            if (!product) {
+                this.notification.add(_t("Product not found"), {
+                    type: "danger",
+                });
+                return;
+            }
+            if (!product.self_order_available) {
+                this.notification.add(_t("Product is not available"), {
+                    type: "danger",
+                });
+                return;
+            }
+            if (product.attributes.length) {
+                this.router.navigate("product", { id: product.id });
+                return;
+            }
+            this.addToCart(product, 1, "", {}, {});
+            this.router.navigate("cart");
+        });
+    }
+
+    async addToCart(product, qty, customer_note, selectedValues, customValues) {
+        const lineToMerge =
+            !product.pos_combo_ids.length &&
+            (this.editedLine ||
+                this.currentOrder.lines.find(
+                    (l) =>
+                        JSON.stringify(l.attribute_value_ids.sort()) ===
+                            JSON.stringify(attributeFlatter(selectedValues).sort()) &&
+                        l.customer_note === customer_note &&
+                        l.product_id === product.id
+                ));
+        if (lineToMerge) {
+            lineToMerge.attribute_value_ids = attributeFlatter(selectedValues);
+            lineToMerge.customer_note = customer_note;
+            lineToMerge.full_product_name = product.name;
+            if (this.editedLine) {
+                lineToMerge.qty = qty;
+            } else {
+                lineToMerge.qty += qty;
+            }
+        } else {
+            const mainLine = new Line({
+                qty,
+                product_id: product.id,
+                customer_note,
+                custom_attribute_value_ids: Object.values(customValues),
+                attribute_value_ids: attributeFlatter(selectedValues),
+            });
+            mainLine.full_product_name = constructFullProductName(
+                mainLine,
+                this.attributeValueById,
+                product.name
+            );
+            this.currentOrder.lines.push(mainLine);
+        }
+        await this.getPricesFromServer();
+        // If a command line does not have a quantity greater than 0, we consider it deleted
+        this.currentOrder.lines = this.currentOrder.lines.filter((o) => o.qty > 0);
     }
 
     async confirmOrder() {
@@ -626,9 +697,9 @@ export class SelfOrder extends Reactive {
 }
 
 export const selfOrderService = {
-    dependencies: ["notification", "router", "printer", "renderer"],
-    async start(env, { notification, router, printer, renderer }) {
-        return new SelfOrder(env, { notification, router, printer, renderer }).ready;
+    dependencies: ["notification", "router", "printer", "renderer", "barcode"],
+    async start(env, { notification, router, printer, renderer, barcode }) {
+        return new SelfOrder(env, { notification, router, printer, renderer, barcode }).ready;
     },
 };
 
