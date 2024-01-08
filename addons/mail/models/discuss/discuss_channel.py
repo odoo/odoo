@@ -1157,29 +1157,22 @@ class Channel(models.Model):
 
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
-        if not self:
-            return []
-        channels_last_message_ids = self._channel_last_message_ids()
-        channels_preview = dict((r['message_id'], r) for r in channels_last_message_ids)
-        last_messages = self.env['mail.message'].browse(channels_preview).message_format()
-        for message in last_messages:
-            channel = channels_preview[message['id']]
-            del(channel['message_id'])
-            channel['last_message'] = message
-        return list(channels_preview.values())
+        return self._get_last_messages().message_format()
 
-    def _channel_last_message_ids(self):
-        """ Return the last message of the given channels."""
+
+    def _get_last_messages(self):
+        """ Return the last message for each of the given channels."""
         if not self:
-            return []
+            return self.env["mail.message"]
         self.env['mail.message'].flush_model()
         self.env.cr.execute("""
-            SELECT res_id AS id, MAX(id) AS message_id
+            SELECT MAX(id) AS message_id
             FROM mail_message
             WHERE model = 'discuss.channel' AND res_id IN %s
             GROUP BY res_id
             """, (tuple(self.ids),))
-        return self.env.cr.dictfetchall()
+        message_ids = [r[0] for r in self.env.cr.fetchall()]
+        return self.env["mail.message"].browse(message_ids)
 
     def load_more_members(self, known_member_ids):
         self.ensure_one()
