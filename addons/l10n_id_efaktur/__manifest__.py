@@ -32,7 +32,9 @@ you have not already sent to the government to reuse its number.
     'depends': ['l10n_id'],
     'data': [
             'security/ir.model.access.csv',
+            'security/ir_rule.xml',
             'views/account_move_views.xml',
+            'views/efaktur_document_views.xml',
             'views/efaktur_views.xml',
             'views/res_config_settings_views.xml',
             'views/res_partner_views.xml',
