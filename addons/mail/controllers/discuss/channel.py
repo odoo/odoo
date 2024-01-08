@@ -14,7 +14,10 @@ class ChannelController(http.Controller):
     @add_guest_to_context
     def discuss_channels(self):
         """Returns the list of channels the current user is a member of."""
-        return request.env["discuss.channel"]._get_channels_as_member()._channel_info()
+        channels = request.env["discuss.channel"]._get_channels_as_member()
+        return {
+            "Thread": channels._channel_info(),
+        }
 
     @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
