@@ -36,7 +36,6 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     get options() {
         return Object.assign(super.options, {
             weekNumbers: true,
-            firstDay: 0,
         });
     }
 
