@@ -7,11 +7,11 @@ import { delay } from "web.concurrency";
 import { loadJS, templates } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
+import { Deferred } from "@web/core/utils/concurrency";
 
 import {
     App,
     Component,
-    EventBus,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -19,9 +19,6 @@ import {
     useState,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-const bus = new EventBus();
-const busOk = "BarcodeDialog-Ok";
-const busError = "BarcodeDialog-Error";
 
 export class BarcodeDialog extends Component {
     /**
@@ -130,8 +127,7 @@ export class BarcodeDialog extends Component {
      * @param {string} result found code
      */
     onResult(result) {
-        this.props.onClose();
-        bus.trigger(busOk, result);
+        this.props.onClose({ barcode: result });
     }
 
     /**
@@ -140,8 +136,7 @@ export class BarcodeDialog extends Component {
      * @param {Error} error
      */
     onError(error) {
-        this.props.onClose();
-        bus.trigger(busError, { error });
+        this.props.onClose({ error });
     }
 
     /**
@@ -205,10 +200,7 @@ export function isBarcodeScannerSupported() {
  * @returns {Promise<string>} resolves when a {qr,bar}code has been detected
  */
 export async function scanBarcode(facingMode = "environment") {
-    const promise = new Promise((resolve, reject) => {
-        bus.on(busOk, null, resolve);
-        bus.on(busError, null, reject);
-    });
+    const promise = new Deferred();
     const appForBarcodeDialog = new App(BarcodeDialog, {
         env: owl.Component.env,
         dev: owl.Component.env.isDebug(),
@@ -216,7 +208,14 @@ export async function scanBarcode(facingMode = "environment") {
         translatableAttributes: ["data-tooltip"],
         translateFn: _t,
         props: {
-            onClose: () => appForBarcodeDialog.destroy(),
+            onClose: (result = {}) => {
+                appForBarcodeDialog.destroy();
+                if (result.error) {
+                    promise.reject({ error: result.error });
+                } else {
+                    promise.resolve(result.barcode);
+                }
+            },
             facingMode: facingMode,
         },
     });
