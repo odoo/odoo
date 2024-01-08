@@ -33,12 +33,12 @@ class LoyaltyGenerateWizard(models.TransientModel):
         self.ensure_one()
         if self.mode != 'selected':
             return self.env['res.partner']
-        domain = []
+        domains = []
         if self.customer_ids:
-            domain = [('id', 'in', self.customer_ids.ids)]
+            domains.append([('id', 'in', self.customer_ids.ids)])
         if self.customer_tag_ids:
-            domain = expression.OR([domain, [('category_id', 'in', self.customer_tag_ids.ids)]])
-        return self.env['res.partner'].search(domain)
+            domains.append([('category_id', 'in', self.customer_tag_ids.ids)])
+        return self.env['res.partner'].search(expression.OR(domains) if domains else [])
 
     @api.depends('program_type', 'points_granted', 'coupon_qty')
     def _compute_confirmation_message(self):

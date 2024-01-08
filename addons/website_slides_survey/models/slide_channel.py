@@ -24,13 +24,11 @@ class Channel(models.Model):
         Removing the relationship between the user_input from the slide_partner_id allows to keep
         track of the current pool of attempts allowed since the user (last) joined
         the course, as only those will have a slide_partner_id."""
-        removed_channel_partner_domain = []
-        for channel in self:
+        if self:
             removed_channel_partner_domain = expression.OR([
-                removed_channel_partner_domain,
                 [('partner_id', 'in', partner_ids), ('channel_id', '=', channel.id)]
+                for channel in self
             ])
-        if removed_channel_partner_domain:
             slide_partners_sudo = self.env['slide.slide.partner'].sudo().search(
                 removed_channel_partner_domain)
             slide_partners_sudo.user_input_ids.slide_partner_id = False

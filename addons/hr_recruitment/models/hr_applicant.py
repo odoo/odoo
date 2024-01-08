@@ -203,14 +203,14 @@ class Applicant(models.Model):
         self.ensure_one()
         if not self:
             return None
-        domain = []
+        domain = [('id', 'in', self.ids)]
         if self.email_normalized:
             domain = expression.OR([domain, [('email_normalized', '=', self.email_normalized)]])
         if self.partner_phone_sanitized:
             domain = expression.OR([domain, ['|', ('partner_phone_sanitized', '=', self.partner_phone_sanitized), ('partner_mobile_sanitized', '=', self.partner_phone_sanitized)]])
         if self.partner_mobile_sanitized:
             domain = expression.OR([domain, ['|', ('partner_mobile_sanitized', '=', self.partner_mobile_sanitized), ('partner_phone_sanitized', '=', self.partner_mobile_sanitized)]])
-        return domain if domain else None
+        return domain
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
