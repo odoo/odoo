@@ -6185,7 +6185,16 @@ class BaseModel(metaclass=MetaModel):
                         model = model[fname]
 
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
-                    value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
+                    if comparator.endswith('ilike'):
+                        # ilike uses unaccent and lower-case comparison
+                        def unaccent(x):
+                            return self.pool.unaccent_python(x.lower()) if x else ''
+                    else:
+                        def unaccent(x):
+                            return x or ''
+                    value_esc = unaccent(value).replace('_', '?').replace('%', '*').replace('[', '?')
+                    if not comparator.startswith('='):
+                        value_esc = f'*{value_esc}*'
                 if comparator in ('in', 'not in'):
                     if isinstance(value, (list, tuple)):
                         value = set(value)
@@ -6228,23 +6237,11 @@ class BaseModel(metaclass=MetaModel):
                         ok = any(x is not None and x <= value for x in data)
                     elif comparator == '>=':
                         ok = any(x is not None and x >= value for x in data)
-                    elif comparator == 'ilike':
-                        data = [(x or "").lower() for x in data]
-                        ok = fnmatch.filter(data, '*' + (value_esc or '').lower() + '*')
-                    elif comparator == 'not ilike':
-                        value = value.lower()
-                        ok = not any(value in (x or "").lower() for x in data)
-                    elif comparator == 'like':
-                        data = [(x or "") for x in data]
-                        ok = fnmatch.filter(data, value and '*' + value_esc + '*')
-                    elif comparator == 'not like':
-                        ok = not any(value in (x or "") for x in data)
-                    elif comparator == '=like':
-                        data = [(x or "") for x in data]
-                        ok = fnmatch.filter(data, value_esc)
-                    elif comparator == '=ilike':
-                        data = [(x or "").lower() for x in data]
-                        ok = fnmatch.filter(data, value and value_esc.lower())
+                    elif comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
+                        # use fnmatchcase to avoid relying on file path case normalization
+                        ok = any(fnmatch.fnmatchcase(unaccent(x), value_esc) for x in data)
+                        if comparator.startswith('not'):
+                            ok = not ok
                     elif comparator == 'any':
                         ok = data.filtered_domain(value)
                     elif comparator == 'not any':

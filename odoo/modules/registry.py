@@ -27,7 +27,7 @@ from odoo.sql_db import TestCursor
 from odoo.tools import (
     config, existing_tables, lazy_classproperty,
     lazy_property, sql, Collector, OrderedSet, SQL,
-    format_frame
+    format_frame, remove_accents,
 )
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
@@ -196,6 +196,7 @@ class Registry(Mapping):
             self.has_trigram = odoo.modules.db.has_trigram(cr)
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x
+        self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
 
     @classmethod
     @locked
