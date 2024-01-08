@@ -1493,6 +1493,9 @@ export class Rtc {
      * negotiationneeded -> offer -> answer -> ...
      */
     async updateRemote(session, trackKind) {
+        if (!session.peerConnection) {
+            return;
+        }
         this.log(session, `updating ${trackKind} transceiver`);
         let track;
         switch (trackKind) {
