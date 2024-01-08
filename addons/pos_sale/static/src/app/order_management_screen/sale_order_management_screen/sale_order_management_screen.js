@@ -176,6 +176,16 @@ export class SaleOrderManagementScreen extends Component {
                 }
             }
 
+            // The pricelist of the sale order is available after loading the products.
+            const orderPricelist = sale_order.pricelist_id
+                ? this.pos.models["product.pricelist"].find(
+                      (pricelist) => pricelist.id === sale_order.pricelist_id
+                  )
+                : false;
+            if (orderPricelist) {
+                currentPOSOrder.set_pricelist(orderPricelist);
+            }
+
             /**
              * This variable will have 3 values, `undefined | false | true`.
              * Initially, it is `undefined`. When looping thru each sale.order.line,
@@ -241,8 +251,7 @@ export class SaleOrderManagementScreen extends Component {
                 new_line.setQuantityFromSOL(line);
                 new_line.set_unit_price(line.price_unit);
                 new_line.set_discount(line.discount);
-                const product = line.product_id;
-                const product_unit = product.uom_id;
+                const product_unit = productProduct.uom_id;
                 if (product_unit && !product_unit.is_pos_groupable) {
                     let remaining_quantity = new_line.quantity;
                     while (!floatIsZero(remaining_quantity, 6)) {
@@ -369,15 +378,6 @@ export class SaleOrderManagementScreen extends Component {
                 );
                 this.dialog.add(AlertDialog, { title, body });
             }
-        }
-
-        const orderPricelist = sale_order.pricelist_id
-            ? this.pos.models["product.pricelist"].find(
-                  (pricelist) => pricelist.id === sale_order.pricelist_id
-              )
-            : false;
-        if (orderPricelist) {
-            currentPOSOrder.set_pricelist(orderPricelist);
         }
 
         this.pos.closeScreen();
