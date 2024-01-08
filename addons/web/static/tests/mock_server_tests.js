@@ -1373,6 +1373,23 @@ QUnit.module("MockServer", (hooks) => {
         mockServer.mockWrite("foo", [[2], { many2one_reference: false }]);
         assert.deepEqual(mockServer.models.bar.records[0].one2many_field, []);
     });
+
+    QUnit.test("webRead sub-fields of a many2one field", async function (assert) {
+        data.models.partner.fields.test_name = { string: "Test Name", type: "char" };
+        data.models.partner.fields.test_number = { string: "Number", type: "integer" };
+
+        data.models.partner.records = [{ id: 1, test_name: "Jean-Michel", test_number: 5 }];
+        data.models.bar.records = [{ id: 1, partner_id: 1 }];
+
+        const mockServer = new MockServer(data);
+        const result = mockServer.mockWebRead("bar", [[1]], {
+            specification: { partner_id: { fields: { test_name: {}, test_number: {} } } },
+        });
+        assert.deepEqual(result, [
+            { id: 1, partner_id: { id: 1, test_name: "Jean-Michel", test_number: 5 } },
+        ]);
+    });
+
     QUnit.test("List View: invisible on processed Arch", async function (assert) {
         data.views = {
             "bar,10001,list": `
