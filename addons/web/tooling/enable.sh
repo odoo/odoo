@@ -16,6 +16,9 @@ enableInDir () {
     cp "$tooling/_jsconfig.json" jsconfig.json
     cp "$tooling/_package.json" package.json
     if [[ $2 == "copy" ]]; then
+        # -i is not supported on mac
+        sed "s@addons@$pathFromEnterpriseToCommunity/addons@g" jsconfig.json > tmp.json
+        mv tmp.json jsconfig.json
         # copy over node_modules and package-lock to avoid double "npm install"
         cp "$community/package-lock.json" package-lock.json
         cp -a "$community/node_modules" node_modules
@@ -31,6 +34,7 @@ then
     read -p "What is the relative path from community to enterprise ? (../enterprise)" pathToEnterprise
     pathToEnterprise=${pathToEnterprise:-../enterprise}
     pathToEnterprise=$(realpath "$community/$pathToEnterprise")
+    pathFromEnterpriseToCommunity=$(realpath --relative-to="$pathToEnterprise" "$community")
 fi
 
 enableInDir "$community"
