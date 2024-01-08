@@ -27,7 +27,7 @@ export class ComboPage extends Component {
         });
 
         if (!this.props.product) {
-            this.router.navigate("productList");
+            this.router.navigate("product_list");
             return;
         }
 

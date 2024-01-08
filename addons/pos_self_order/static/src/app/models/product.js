@@ -35,6 +35,7 @@ export class Product extends Reactive {
         this.is_pos_groupable = product.is_pos_groupable;
         this.write_date = product.write_date;
         this.self_order_available = product.self_order_available;
+        this.barcode = product.barcode;
 
         // data
         this.showPriceTaxIncluded = showPriceTaxIncluded;
