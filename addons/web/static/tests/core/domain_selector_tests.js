@@ -1579,6 +1579,7 @@ QUnit.module("Components", (hooks) => {
             { domain: `[("state", "=", expr)]`, text: `State = expr` },
             { domain: `[("state", "!=", "abc")]`, text: `State != ABC` },
             { domain: `[("state", "in", ["abc", "def"])]`, text: `State is in ( ABC , DEF )` },
+            { domain: `[("state", "in", ["abc", False])]`, text: `State is in ( "ABC" , false )` },
             {
                 domain: `[("state", "not in", ["abc", "def"])]`,
                 text: `State is not in ( ABC , DEF )`,
