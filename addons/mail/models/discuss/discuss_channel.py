@@ -2,6 +2,7 @@
 
 import base64
 import logging
+from babel.lists import format_list
 from collections import defaultdict
 from hashlib import sha512
 from secrets import choice
@@ -12,6 +13,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import html_escape, get_lang
+from odoo.tools.misc import babel_locale_parse
 
 _logger = logging.getLogger(__name__)
 
@@ -1213,22 +1215,41 @@ class Channel(models.Model):
         })
 
     def execute_command_help(self, **kwargs):
-        partner = self.env.user.partner_id
         if self.channel_type == 'channel':
-            msg = _("You are in channel <b>#%s</b>.", html_escape(self.name))
+            msg = html_escape(_("You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s.")) % {
+                "bold_start": Markup("<b>"),
+                "bold_end": Markup("</b>"),
+                "channel_name": self.name,
+            }
         else:
             all_channel_members = self.env['discuss.channel.member'].with_context(active_test=False)
-            channel_members = all_channel_members.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name or member.guest_id.name) for member in channel_members) if channel_members else _("Anonymous"))
+            channel_members = all_channel_members.search([("is_self", "=", False), ("channel_id", "=", self.id)], order='id asc')
+            if channel_members:
+                member_names = Markup(
+                    format_list(
+                        [f"<b>@%(member_{member.id})s</b>" for member in channel_members],
+                        locale=babel_locale_parse(get_lang(self.env).code),
+                    )
+                ) % {
+                    f"member_{member.id}": member.partner_id.name or member.guest_id.name for member in channel_members
+                }
+                msg = html_escape(_("You are in a private conversation with %(member_names)s.")) % {
+                    "member_names": member_names,
+                }
+            else:
+                msg = _("You are alone in a private conversation.")
         msg += self._execute_command_help_message_extra()
-
-        self._send_transient_message(partner, msg)
+        self._send_transient_message(self.env.user.partner_id, msg)
 
     def _execute_command_help_message_extra(self):
-        msg = _("""<br><br>
-            Type <b>@username</b> to mention someone, and grab their attention.<br>
-            Type <b>#channel</b> to mention a channel.<br>
-            Type <b>/command</b> to execute a command.<br>""")
+        msg = html_escape(
+            _(
+                "%(new_line)s"
+                "%(new_line)sType %(bold_start)s@username%(bold_end)s to mention someone, and grab their attention."
+                "%(new_line)sType %(bold_start)s#channel%(bold_end)s to mention a channel."
+                "%(new_line)sType %(bold_start)s/command%(bold_end)s to execute a command."
+            )
+        ) % {"bold_start": Markup("<b>"), "bold_end": Markup("</b>"), "new_line": Markup("<br>")}
         return msg
 
     def execute_command_leave(self, **kwargs):
