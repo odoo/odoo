@@ -474,14 +474,11 @@ patch(MockServer.prototype, {
                     }
                     return lastMessage;
                 }, channelMessages[0]);
-                return {
-                    id: channel.id,
-                    last_message: lastMessage
-                        ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
-                        : false,
-                };
+                return lastMessage
+                    ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
+                    : false;
             })
-            .filter((preview) => preview.last_message);
+            .filter((lastMessage) => lastMessage);
     },
     /**
      * Simulates 'channel_create' on 'discuss.channel'.

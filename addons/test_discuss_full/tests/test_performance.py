@@ -273,10 +273,7 @@ class TestDiscussFullPerformance(HttpCase):
         member_15 = members.filtered(lambda m: m.partner_id == self.users[15].partner_id)
         member_g = members.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
-        try:
-            last_message_id = next(res["message_id"] for res in channel._channel_last_message_ids())
-        except StopIteration:
-            pass
+        last_message = channel._get_last_messages()
         if channel == self.channel_general:
             return {
                 "allow_public_upload": False,
@@ -377,8 +374,8 @@ class TestDiscussFullPerformance(HttpCase):
                                         },
                                         "write_date": write_date_0,
                                     },
-                                    "fetched_message_id": {"id": last_message_id},
-                                    "seen_message_id": {"id": last_message_id},
+                                    "fetched_message_id": {"id": last_message.id},
+                                    "seen_message_id": {"id": last_message.id},
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -403,7 +400,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message_id,
+                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -442,8 +439,8 @@ class TestDiscussFullPerformance(HttpCase):
                                         },
                                         "write_date": write_date_0,
                                     },
-                                    "fetched_message_id": {"id": last_message_id},
-                                    "seen_message_id": {"id": last_message_id},
+                                    "fetched_message_id": {"id": last_message.id},
+                                    "seen_message_id": {"id": last_message.id},
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -468,7 +465,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message_id,
+                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -507,8 +504,8 @@ class TestDiscussFullPerformance(HttpCase):
                                         },
                                         "write_date": write_date_0,
                                     },
-                                    "fetched_message_id": {"id": last_message_id},
-                                    "seen_message_id": {"id": last_message_id},
+                                    "fetched_message_id": {"id": last_message.id},
+                                    "seen_message_id": {"id": last_message.id},
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -594,7 +591,7 @@ class TestDiscussFullPerformance(HttpCase):
                 ],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message_id,
+                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -633,8 +630,8 @@ class TestDiscussFullPerformance(HttpCase):
                                         },
                                         "write_date": write_date_0,
                                     },
-                                    "fetched_message_id": {"id": last_message_id},
-                                    "seen_message_id": {"id": last_message_id},
+                                    "fetched_message_id": {"id": last_message.id},
+                                    "seen_message_id": {"id": last_message.id},
                                 }
                             ],
                             key=lambda member_data: member_data["id"],
@@ -659,7 +656,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
-                "seen_message_id": last_message_id,
+                "seen_message_id": last_message.id,
                 "state": "closed",
                 "uuid": channel.uuid,
             }
@@ -1169,8 +1166,8 @@ class TestDiscussFullPerformance(HttpCase):
                                         "name": "test1",
                                         "type": "partner",
                                     },
-                                    "fetched_message_id": {"id": last_message_id},
-                                    "seen_message_id": {"id": last_message_id},
+                                    "fetched_message_id": {"id": last_message.id},
+                                    "seen_message_id": {"id": last_message.id},
                                 },
                             ],
                             key=lambda member_data: member_data["id"],
@@ -1252,18 +1249,8 @@ class TestDiscussFullPerformance(HttpCase):
                                     "type": "guest",
                                     "write_date": fields.Datetime.to_string(guest.write_date),
                                 },
-                                "fetched_message_id": {
-                                    "id": next(
-                                        res["message_id"]
-                                        for res in channel._channel_last_message_ids()
-                                    )
-                                },
-                                "seen_message_id": {
-                                    "id": next(
-                                        res["message_id"]
-                                        for res in channel._channel_last_message_ids()
-                                    )
-                                },
+                                "fetched_message_id": {"id": last_message.id},
+                                "seen_message_id": {"id": last_message.id},
                             },
                         ],
                     ]
