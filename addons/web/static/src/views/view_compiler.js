@@ -199,8 +199,15 @@ export class ViewCompiler {
         this.id = 1;
         /** @type {Compiler[]} */
         this.compilers = [
-            { selector: "a[type]:not([data-bs-toggle]),a[data-type]:not([data-bs-toggle])", fn: this.compileButton },
-            { selector: "button:not([data-bs-toggle])", fn: this.compileButton, doNotCopyAttributes: true },
+            {
+                selector: "a[type]:not([data-bs-toggle]),a[data-type]:not([data-bs-toggle])",
+                fn: this.compileButton,
+            },
+            {
+                selector: "button:not([data-bs-toggle])",
+                fn: this.compileButton,
+                doNotCopyAttributes: true,
+            },
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];
@@ -368,7 +375,10 @@ export class ViewCompiler {
         field.setAttribute("name", `'${fieldName}'`);
         field.setAttribute("record", params.recordExpr || "__comp__.props.record");
         field.setAttribute("fieldInfo", `__comp__.props.archInfo.fieldNodes['${fieldId}']`);
-        field.setAttribute("readonly", `__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew`);
+        field.setAttribute(
+            "readonly",
+            `__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew`
+        );
 
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);
@@ -460,10 +470,11 @@ let templateIds = Object.create(null);
  * @returns {Record<string, string>}
  */
 export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
-    if (!templateIds[rawArch]) {
-        templateIds[rawArch] = {};
+    const k = `${ViewCompiler.name}/${rawArch}`;
+    if (!templateIds[k]) {
+        templateIds[k] = {};
     }
-    const compiledTemplates = templateIds[rawArch];
+    const compiledTemplates = templateIds[k];
     const compiler = new ViewCompiler(templates);
     for (const key in templates) {
         if (!compiledTemplates[key]) {
