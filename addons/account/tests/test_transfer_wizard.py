@@ -190,6 +190,66 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         })
         cls.move_2.action_post()
 
+    def test_transfer_default_tax(self):
+        """ Make sure default taxes on accounts are not computed on transfer moves
+        """
+        account_with_tax = self.env['account.account'].create({
+            'name': 'Auto Taxed',
+            'code': 'autotaxed',
+            'account_type': 'expense',
+            'tax_ids': [Command.link(self.company_data['default_tax_purchase'].id)],
+        })
+        expense_accrual_account = self.env['account.account'].create({
+            'name': 'Accrual Expense Account',
+            'code': '234567',
+            'account_type': 'expense',
+            'reconcile': True,
+        })
+        move_with_tax = self.env['account.move'].create({
+            'journal_id': self.journal.id,
+            'line_ids': [
+                Command.create({
+                    'account_id': account_with_tax.id,
+                    'balance': 400,
+                }),
+                Command.create({
+                    'account_id': self.payable_account.id,
+                    'balance': -460,
+                }),
+            ]
+        })
+        move_with_tax.action_post()
+
+        self.assertRecordValues(move_with_tax.line_ids, [
+            {'balance': 400, 'account_id': account_with_tax.id},
+            {'balance': -460, 'account_id': self.payable_account.id},
+            {'balance': 60, 'account_id': self.company_data['default_account_tax_purchase'].id},
+        ])
+
+        # Open the transfer wizard
+
+        # We use a form to pass the context properly to the depends_context move_line_ids field
+        context = {'active_model': 'account.move.line', 'active_ids': move_with_tax.line_ids[0].ids, 'default_action': 'change_period'}
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.date = '2019-05-01'
+            wizard_form.journal_id = self.company_data['default_journal_misc']
+            wizard_form.expense_accrual_account = expense_accrual_account
+        wizard = wizard_form.save()
+
+        # Create the adjustment moves.
+        wizard_res = wizard.do_action()
+
+        # Check that the adjustment moves only contain the expense account and not the linked taxes.
+        created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+
+        self.assertRecordValues(created_moves[0].line_ids, [
+            {'balance': 400, 'account_id': account_with_tax.id},
+            {'balance': -400, 'account_id': expense_accrual_account.id},
+        ])
+        self.assertRecordValues(created_moves[1].line_ids, [
+            {'balance': -400, 'account_id': account_with_tax.id},
+            {'balance': 400, 'account_id': expense_accrual_account.id},
+        ])
 
     def test_transfer_wizard_reconcile(self):
         """ Tests reconciliation when doing a transfer with the wizard
