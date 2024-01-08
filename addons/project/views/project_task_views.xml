@@ -750,6 +750,7 @@
                           scales="month,year">
                     <field name="allow_milestones" invisible="1" />
                     <field name="project_id" widget="project" invisible="context.get('default_project_id', False)"/>
+                    <field name="display_in_project" invisible="1"/>
                     <field name="subtask_count" invisible="1"/>
                     <field name="milestone_id" invisible="not allow_milestones or not milestone_id"/>
                     <field name="user_ids" widget="many2many_avatar_user" invisible="not user_ids"/>
