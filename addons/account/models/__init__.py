@@ -6,6 +6,7 @@ from . import ir_http
 from . import res_partner_bank
 from . import account_account_tag
 from . import account_account
+from . import account_accrued_entry
 from . import account_journal
 from . import account_tax
 from . import account_reconcile_model

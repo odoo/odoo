@@ -11,6 +11,7 @@ from odoo.tools.misc import formatLang
 class AccruedExpenseRevenue(models.TransientModel):
     _name = 'account.accrued.orders.wizard'
     _description = 'Accrued Orders Wizard'
+    _inherit = 'account.accrued.entry.mixin'
     _check_company_auto = True
 
     def _get_default_company(self):
@@ -81,22 +82,7 @@ class AccruedExpenseRevenue(models.TransientModel):
     @api.depends('date', 'journal_id', 'account_id', 'amount')
     def _compute_preview_data(self):
         for record in self:
-            preview_vals = [self.env['account.move']._move_dict_to_preview_vals(
-                record._compute_move_vals()[0],
-                record.company_id.currency_id,
-            )]
-            preview_columns = [
-                {'field': 'account_id', 'label': _('Account')},
-                {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
-            ]
-            record.preview_data = json.dumps({
-                'groups_vals': preview_vals,
-                'options': {
-                    'columns': preview_columns,
-                },
-            })
+            record.preview_data = self._get_preview_data(record)
 
     def _get_computed_account(self, order, product, is_purchase):
         accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
@@ -105,28 +91,16 @@ class AccruedExpenseRevenue(models.TransientModel):
         else:
             return accounts['income']
 
-    def _compute_move_vals(self):
-        def _get_aml_vals(order, balance, amount_currency, account_id, label="", analytic_distribution=None):
-            if not is_purchase:
-                balance *= -1
-                amount_currency *= -1
-            values = {
-                'name': label,
-                'debit': balance if balance > 0 else 0.0,
-                'credit': balance * -1 if balance < 0 else 0.0,
-                'account_id': account_id,
-            }
-            if analytic_distribution:
-                values.update({
-                    'analytic_distribution': analytic_distribution,
-                })
-            if len(order) == 1 and self.company_id.currency_id != order.currency_id:
-                values.update({
-                    'amount_currency': amount_currency,
-                    'currency_id': order.currency_id.id,
-                })
-            return values
+    def _get_aml_vals(self, name, balance, account_id, amount_currency=None, analytic_distribution=None, order=None, is_purchase=None):
+        if not is_purchase:
+            balance *= -1
+            amount_currency *= -1
+        if len(order) == 1 and self.company_id.currency_id != order.currency_id:
+            return super()._get_aml_vals(name, balance, account_id, currency_id=order.currency_id.id,
+                                         amount_currency=amount_currency, analytic_distribution=analytic_distribution)
+        return super()._get_aml_vals(name, balance, account_id, analytic_distribution=analytic_distribution)
 
+    def _get_move_vals(self):
         def _ellipsis(string, size):
             if len(string) > size:
                 return string[0:size - 3] + '...'
@@ -140,7 +114,6 @@ class AccruedExpenseRevenue(models.TransientModel):
         if orders.filtered(lambda o: o.company_id != self.company_id):
             raise UserError(_('Entries can only be created for a single company at a time.'))
 
-        orders_with_entries = []
         fnames = []
         total_balance = 0.0
         for order in orders:
@@ -152,7 +125,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                 if not is_purchase and order.analytic_account_id:
                     analytic_account_id = str(order.analytic_account_id.id)
                     distribution[analytic_account_id] = distribution.get(analytic_account_id, 0) + 100.0
-                values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
+                values = self._get_aml_vals(_('Manual entry'), self.amount, account.id, amount_currency=0, analytic_distribution=distribution, order=order, is_purchase=is_purchase)
                 move_lines.append(Command.create(values))
             else:
                 # create a virtual order that will allow to recompute the qty delivered/received (and dependancies)
@@ -180,18 +153,18 @@ class AccruedExpenseRevenue(models.TransientModel):
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
-                        label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                        name = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     else:
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
                         amount_currency = order_line.untaxed_amount_to_invoice
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'untaxed_amount_to_invoice', 'qty_invoiced', 'qty_delivered', 'invoice_lines']
-                        label = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
+                        name = _('%s - %s; %s Invoiced, %s Delivered at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_delivered, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
                     distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                     if not is_purchase and order.analytic_account_id:
                         analytic_account_id = str(order.analytic_account_id.id)
                         distribution[analytic_account_id] = distribution.get(analytic_account_id, 0) + 100.0
-                    values = _get_aml_vals(order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
+                    values = self._get_aml_vals(name, amount, account.id, amount_currency=amount_currency, analytic_distribution=distribution, order=order, is_purchase=is_purchase)
                     move_lines.append(Command.create(values))
                     total_balance += amount
                 # must invalidate cache or o can mess when _create_invoices().action_post() of original order after this
@@ -210,45 +183,24 @@ class AccruedExpenseRevenue(models.TransientModel):
                     continue
                 for account_id, distribution in line.analytic_distribution.items():
                     analytic_distribution.update({account_id : analytic_distribution.get(account_id, 0) + distribution*ratio})
-            values = _get_aml_vals(orders, -total_balance, 0.0, self.account_id.id, label=_('Accrued total'), analytic_distribution=analytic_distribution)
+            values = self._get_aml_vals(_('Accrued total'), -total_balance, self.account_id.id, amount_currency=0.0, analytic_distribution=analytic_distribution, order=orders, is_purchase=is_purchase)
             move_lines.append(Command.create(values))
 
         move_type = _('Expense') if is_purchase else _('Revenue')
-        move_vals = {
+        return {
             'ref': _('Accrued %s entry as of %s', move_type, format_date(self.env, self.date)),
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
         }
-        return move_vals, orders_with_entries
 
     def create_entries(self):
         self.ensure_one()
-
         if self.reversal_date <= self.date:
             raise UserError(_('Reversal date must be posterior to date.'))
 
-        move_vals, orders_with_entries = self._compute_move_vals()
-        move = self.env['account.move'].create(move_vals)
-        move._post()
-        reverse_move = move._reverse_moves(default_values_list=[{
-            'ref': _('Reversal of: %s', move.ref),
-            'date': self.reversal_date,
-        }])
-        reverse_move._post()
-        for order in orders_with_entries:
-            body = _(
-                'Accrual entry created on %(date)s: %(accrual_entry)s.\
-                    And its reverse entry: %(reverse_entry)s.',
-                date=self.date,
-                accrual_entry=move._get_html_link(),
-                reverse_entry=reverse_move._get_html_link(),
-            )
-            order.message_post(body=body)
-        return {
+        move, reverse_move = super().create_and_reverse_move()
+        return self.env['account.move'].create_wizard_view({
             'name': _('Accrual Moves'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'view_mode': 'tree,form',
             'domain': [('id', 'in', (move.id, reverse_move.id))],
-        }
+        })

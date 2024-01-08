@@ -4180,6 +4180,16 @@ class AccountMove(models.Model):
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
         }
 
+    def create_wizard_view(self, view_vals=None):
+        view = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'tree,form',
+        }
+        if view_vals:
+            view.update(view_vals)
+        return view
+
     def open_duplicated_ref_bill_view(self):
         moves = self + self.duplicated_ref_ids
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_line_form")
