@@ -1241,8 +1241,8 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`week numbering`, async (assert) => {
-        // The week is now calculated by FullCalendar (ISO week). If it's start a sunday it
-        // returns the week of the monday.
+        // Using ISO week calculation, get the ISO week number of
+        // the Monday nearest to the start of the week.
 
         patchWithCleanup(localization, { weekStart: 7 });
 
@@ -4214,7 +4214,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".fc-head .fc-week-number").textContent,
-            "Week 36",
+            "Week 37",
             "The number of the week should be correct"
         );
     });
