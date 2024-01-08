@@ -267,7 +267,7 @@ export function formatX2many(value) {
 export function formatMonetary(value, options = {}) {
     // Monetary fields want to display nothing when the value is unset.
     // You wouldn't want a value of 0 euro if nothing has been provided.
-    if (value === false) {
+    if (value === undefined) {
         return "";
     }
 
