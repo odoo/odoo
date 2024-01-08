@@ -928,6 +928,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         false = expression.FALSE_DOMAIN
         true = expression.TRUE_DOMAIN
         normal = [('foo', '=', 'bar')]
+        # OR and AND with empty list should return their unit value
+        self.assertEqual(expression.OR([]), false)
+        self.assertEqual(expression.AND([]), true)
         # OR with single FALSE_LEAF
         expr = expression.OR([false])
         self.assertEqual(expr, false)
@@ -952,6 +955,11 @@ class TestExpression(SavepointCaseWithUserDemo):
         # AND with OR with single FALSE_LEAF and normal leaf
         expr = expression.AND([expression.OR([false]), normal])
         self.assertEqual(expr, false)
+        # empty domain inside the list should be treated as true
+        expr = expression.AND([[], normal])
+        self.assertEqual(expr, normal)
+        expr = expression.OR([[], normal])
+        self.assertEqual(expr, true)
 
     def test_filtered_domain_order(self):
         domain = [('name', 'ilike', 'a')]

@@ -63,13 +63,13 @@ class ProductProduct(models.Model):
         return qty_by_product_location, qty_by_product_wh
 
     def _get_lines_domain(self, location_ids=False, warehouse_ids=False):
-        domain = []
+        domains = []
         rfq_domain = [
             ('state', 'in', ('draft', 'sent', 'to approve')),
             ('product_id', 'in', self.ids)
         ]
         if location_ids:
-            domain = expression.AND([rfq_domain, [
+            domains.append(expression.AND([rfq_domain, [
                 '|',
                 '|',
                     ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
@@ -79,17 +79,16 @@ class ProductProduct(models.Model):
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.location_id', 'in', location_ids)
-            ]])
+            ]]))
         if warehouse_ids:
-            wh_domain = expression.AND([rfq_domain, [
+            domains.append(expression.AND([rfq_domain, [
                 '|',
                     ('order_id.picking_type_id.warehouse_id', 'in', warehouse_ids),
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
-            ]])
-            domain = expression.OR([domain, wh_domain])
-        return domain
+            ]]))
+        return expression.OR(domains) if domains else []
 
 
 class SupplierInfo(models.Model):
