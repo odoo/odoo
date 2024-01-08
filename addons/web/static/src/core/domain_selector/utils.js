@@ -193,7 +193,7 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         }
     }
     if (fieldDef?.type === "selection") {
-        const [, label] = (fieldDef.selection || []).find(([v]) => v === val);
+        const [, label] = (fieldDef.selection || []).find(([v]) => v === val) || [];
         if (label !== undefined) {
             val = label;
         }
