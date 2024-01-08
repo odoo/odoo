@@ -716,16 +716,14 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         self.assertFalse(partner_1._can_edit_name())
 
     def test_11_payment_term_when_address_change(self):
-        ''' This test ensures that the payment term set when triggering
-            `onchange_partner_id` by changing the address of a website sale
-            order is computed by `sale_get_payment_term`.
-        '''
+        """Make sure the expected payment terms are set on ecommerce orders"""
         self._setUp_multicompany_env()
         product_id = self.env['product.product'].create({
             'name': 'Product A',
             'list_price': 100,
             'website_published': True,
-            'sale_ok': True}).id
+            'sale_ok': True,
+        }).id
 
         env = api.Environment(self.env.cr, self.portal_user.id, {})
         with MockRequest(env, website=self.website.with_env(env).with_context(website_id=self.website.id)) as req:

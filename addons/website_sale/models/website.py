@@ -393,7 +393,6 @@ class Website(models.Model):
             # change the partner, and trigger the computes (fpos)
             sale_order_sudo.write({
                 'partner_id': partner_sudo.id,
-                'payment_term_id': self.sale_get_payment_term(partner_sudo),
                 # Must be specified to ensure it is not recomputed when it shouldn't
                 'pricelist_id': pricelist_id,
             })
@@ -444,7 +443,6 @@ class Website(models.Model):
             'partner_shipping_id': addr['delivery'],
 
             'pricelist_id': self.pricelist_id.id,
-            'payment_term_id': self.sale_get_payment_term(partner_sudo),
 
             'team_id': self.salesteam_id.id or partner_sudo.parent_id.team_id.id or partner_sudo.team_id.id,
             'user_id': salesperson_user_sudo.id,
@@ -452,18 +450,6 @@ class Website(models.Model):
         }
 
         return values
-
-    @api.model
-    def sale_get_payment_term(self, partner):
-        pt = self.env.ref('account.account_payment_term_immediate', False)
-        if pt:
-            pt = pt.sudo()
-            pt = (not pt.company_id.id or self.company_id.id == pt.company_id.id) and pt
-        return (
-            partner.property_payment_term_id or
-            pt or
-            self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
-        ).id
 
     def _get_current_fiscal_position(self):
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
