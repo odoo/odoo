@@ -66,6 +66,8 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
         env.model = model;
         setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
         setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
+        // Does not affect non formula cells
+        setCellContent(model, "A4", `5`);
         await waitForDataSourcesLoaded(model);
         selectCell(model, "A1");
         const root = cellMenuRegistry
@@ -75,6 +77,8 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
         await root.execute(env);
         assert.verifySteps(["drill down action"]);
         selectCell(model, "A2");
+        assert.equal(root.isVisible(env), false);
+        selectCell(model, "A4");
         assert.equal(root.isVisible(env), false);
     });
 });
