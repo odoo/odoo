@@ -337,6 +337,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
     def do_action(self):
         move_vals = json.loads(self.move_data)
+        self = self.with_context(skip_computed_taxes=True)
         if self.action == 'change_period':
             return self._do_action_change_period(move_vals)
         elif self.action == 'change_account':
