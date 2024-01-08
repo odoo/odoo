@@ -89,7 +89,7 @@ class AccountTax(models.Model):
     def _l10n_it_get_tax_kind(self):
         return ((self.l10n_it_withholding_type and 'withholding')
                 or (self.l10n_it_pension_fund_type and 'pension_fund')
-                or 'vat')
+                or super()._l10n_it_get_tax_kind())
 
     def _l10n_it_filter_kind(self, kind):
         """ Filters taxes depending on _l10n_it_get_tax_kind. """

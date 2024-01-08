@@ -19,10 +19,11 @@ class AccountMove(models.Model):
     @api.depends('amount_total_signed')
     def _compute_amount_extended(self):
         for move in self:
-            totals = dict(vat=0.0, withholding=0.0, pension_fund=0.0)
+            totals = {None: 0.0, 'vat':0.0, 'withholding': 0.0, 'pension_fund': 0.0}
             if move.is_invoice(True):
                 for line in [line for line in move.line_ids if line.tax_line_id]:
-                    totals[line.tax_line_id._l10n_it_get_tax_kind()] -= line.balance
+                    kind = line.tax_line_id._l10n_it_get_tax_kind()
+                    totals[kind] -= line.balance
             move.l10n_it_amount_vat_signed = totals['vat']
             move.l10n_it_amount_withholding_signed = totals['withholding']
             move.l10n_it_amount_pension_fund_signed = totals['pension_fund']

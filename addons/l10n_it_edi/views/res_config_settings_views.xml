@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='account_vendor_bills']" position="after">
-                <block title="Electronic Document Invoicing" invisible="country_code != 'IT'" id='account_edi'>
+                <block title="Italian Electronic Invoicing" invisible="country_code != 'IT'" id='account_edi'>
                     <setting>
                         <div class="group-content">
                             <field name="l10n_it_edi_proxy_current_state" invisible="1"/>
