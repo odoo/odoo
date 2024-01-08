@@ -236,7 +236,6 @@ class IrModuleModule(models.Model):
         for module in self:
             _logger.info('Load theme %s for website %s from template.' % (module.mapped('name'), website.id))
 
-            module._generate_primary_snippet_templates()
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
@@ -442,9 +441,6 @@ class IrModuleModule(models.Model):
         ], order='name')
 
         for theme in themes:
-            # Only generate templates for installed themes.
-            if theme.state != 'uninstalled':
-                theme._generate_primary_snippet_templates()
             terp = self.get_module_info(theme.name)
             images = terp.get('images', [])
             for image in images:
@@ -729,17 +725,6 @@ class IrModuleModule(models.Model):
 
         if create_count:
             _logger.info("Generated %s primary snippet templates for %r", create_count, self.name)
-
-        if self.name == 'website':
-            # Invoke for themes and website_* - otherwise on -u website, the
-            # additional primary snippets they require are deleted by _process_end.
-            for module in self.env['ir.module.module'].search([
-                ('state', 'in', ('installed', 'to upgrade')),
-                '|',
-                ('name', '=like', f'{escape_psql("theme_")}%'),
-                ('name', '=like', f'{escape_psql("website_")}%'),
-            ]):
-                module._generate_primary_snippet_templates()
 
     def _generate_primary_page_templates(self):
         """ Generates page templates based on manifest entries. """
