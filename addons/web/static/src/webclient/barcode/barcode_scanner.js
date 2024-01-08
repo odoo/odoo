@@ -7,8 +7,32 @@ import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
+import { Deferred } from "@web/core/utils/concurrency";
 
+<<<<<<< HEAD
 import { Component, onMounted, onWillStart, onWillUnmount, useRef, useState } from "@odoo/owl";
+||||||| parent of 125a5561bf6a (temp)
+import {
+    App,
+    Component,
+    EventBus,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useRef,
+    useState,
+} from "@odoo/owl";
+=======
+import {
+    App,
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useRef,
+    useState,
+} from "@odoo/owl";
+>>>>>>> 125a5561bf6a (temp)
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeDialog extends Component {
@@ -115,8 +139,15 @@ export class BarcodeDialog extends Component {
      * @param {string} result found code
      */
     onResult(result) {
+<<<<<<< HEAD
         this.props.close();
         this.props.onResult(result);
+||||||| parent of 125a5561bf6a (temp)
+        this.props.onClose();
+        bus.trigger(busOk, result);
+=======
+        this.props.onClose({ barcode: result });
+>>>>>>> 125a5561bf6a (temp)
     }
 
     /**
@@ -125,8 +156,15 @@ export class BarcodeDialog extends Component {
      * @param {Error} error
      */
     onError(error) {
+<<<<<<< HEAD
         this.props.close();
         this.props.onError(error);
+||||||| parent of 125a5561bf6a (temp)
+        this.props.onClose();
+        bus.trigger(busError, { error });
+=======
+        this.props.onClose({ error });
+>>>>>>> 125a5561bf6a (temp)
     }
 
     /**
@@ -189,6 +227,7 @@ export function isBarcodeScannerSupported() {
  *
  * @returns {Promise<string>} resolves when a {qr,bar}code has been detected
  */
+<<<<<<< HEAD
 export async function scanBarcode(env, facingMode = "environment") {
     let res;
     let rej;
@@ -200,6 +239,43 @@ export async function scanBarcode(env, facingMode = "environment") {
         facingMode,
         onResult: (result) => res(result),
         onError: (error) => rej(error),
+||||||| parent of 125a5561bf6a (temp)
+export async function scanBarcode(facingMode = "environment") {
+    const promise = new Promise((resolve, reject) => {
+        bus.on(busOk, null, resolve);
+        bus.on(busError, null, reject);
+    });
+    const appForBarcodeDialog = new App(BarcodeDialog, {
+        env: owl.Component.env,
+        dev: owl.Component.env.isDebug(),
+        templates,
+        translatableAttributes: ["data-tooltip"],
+        translateFn: _t,
+        props: {
+            onClose: () => appForBarcodeDialog.destroy(),
+            facingMode: facingMode,
+        },
+=======
+export async function scanBarcode(facingMode = "environment") {
+    const promise = new Deferred();
+    const appForBarcodeDialog = new App(BarcodeDialog, {
+        env: owl.Component.env,
+        dev: owl.Component.env.isDebug(),
+        templates,
+        translatableAttributes: ["data-tooltip"],
+        translateFn: _t,
+        props: {
+            onClose: (result = {}) => {
+                appForBarcodeDialog.destroy();
+                if (result.error) {
+                    promise.reject({ error: result.error });
+                } else {
+                    promise.resolve(result.barcode);
+                }
+            },
+            facingMode: facingMode,
+        },
+>>>>>>> 125a5561bf6a (temp)
     });
     return promise;
 }
