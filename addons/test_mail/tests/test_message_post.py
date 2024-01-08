@@ -623,6 +623,22 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             body_content=test_record.name,
             attachments=[])
 
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_post_with_view_no_message_log(self):
+        """ Test posting on documents based on a view is forced to be a message posted and not a note """
+
+        test_record = self.test_record.with_user(self.env.user)
+        with self.mock_mail_gateway():
+            test_record.message_post_with_view(
+                'test_mail.mail_template_simple_test',
+                values={'partner': self.user_employee.partner_id},
+                partner_ids=self.partner_1.ids,
+                message_log=True,
+            )
+        self.assertSentEmail(self.user_employee.partner_id, [self.partner_1])
+        self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_comment'))
+
 
 @tagged('mail_post', 'post_install', '-at_install')
 class TestMessagePostGlobal(TestMailCommon, TestRecipients):
