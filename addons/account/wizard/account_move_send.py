@@ -41,7 +41,7 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
     )
     display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    send_mail_warning_message = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    send_mail_warning_message = fields.Json(compute='_compute_send_mail_extra_fields')
     send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
@@ -254,7 +254,17 @@ class AccountMoveSend(models.TransientModel):
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
             invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
             wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
-            wizard.send_mail_warning_message = bool(invoices_without_mail_data) and (wizard.checkbox_send_mail or wizard.send_mail_readonly)
+            if not (invoices_without_mail_data and wizard.checkbox_send_mail or wizard.send_mail_readonly):
+                wizard.send_mail_warning_message = False
+            else:
+                partners = invoices_without_mail_data.partner_id
+                wizard.send_mail_warning_message = {
+                    **(wizard.send_mail_warning_message or {}),
+                    'partner_missing_email': {
+                        'message': _("Partner(s) should have an email address."),
+                        'action_text': _("View Partner(s)"),
+                        'action': partners._get_records_action(name=_("Check Partner(s)"))
+                    }}
 
     @api.depends('mail_template_id')
     def _compute_mail_lang(self):
@@ -326,25 +336,8 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def action_open_partners_without_email(self, res_ids=None):
-        partners = self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)
-        if len(partners) == 1:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'form',
-                'target': 'current',
-                'res_id': partners.id,
-            }
-        else:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.partner',
-                'view_mode': 'tree,form',
-                'target': 'current',
-                'name': _('Partners without email'),
-                'context': {'create': False, 'delete': False},
-                'domain': [('id', 'in', partners.ids)],
-            }
+        # TODO: remove this method in master
+        return self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)._get_records_action(name=_("Partners without email"))
 
     @api.model
     def _need_invoice_document(self, invoice):
