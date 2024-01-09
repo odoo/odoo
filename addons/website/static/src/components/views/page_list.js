@@ -68,13 +68,16 @@ export class PageListController extends PageControllerMixin(listView.Controller)
         return menuItems;
     }
 
-    onDeleteSelectedRecords() {
+    async onDeleteSelectedRecords() {
+        const pageIds = this.model.root.selection.map((record) => record.resId);
+        const newPageTemplateRecords = await this.orm.read("website.page", pageIds, ["is_new_page_template"]);
         this.dialogService.add(DeletePageDialog, {
-            resIds: this.model.root.selection.map((record) => record.resId),
+            resIds: pageIds,
             resModel: this.props.resModel,
             onDelete: () => {
                 this.model.root.deleteRecords();
             },
+            hasNewPageTemplate: newPageTemplateRecords.some(record => record.is_new_page_template),
         });
     }
 
