@@ -49,7 +49,7 @@ class ResPartner(models.Model):
                 ),
             }}
 
-    def _can_be_edited_by_current_customer(self, sale_order, mode):
+    def _can_be_edited_by_current_customer(self, sale_order, address_type):
         self.ensure_one()
         children_partner_ids = self.env['res.partner']._search([
             ('id', 'child_of', sale_order.partner_id.commercial_partner_id.id),
@@ -60,10 +60,10 @@ class ResPartner(models.Model):
             or self.id in children_partner_ids
         ):
             # address belongs to the customer
-            if mode == 'billing':
+            if address_type == 'billing':
                 # All addresses are editable as billing
                 return True
-            if mode == 'shipping' and self.type == 'delivery':
+            if address_type == 'delivery' and self.type == 'delivery':
                 # Only delivery addresses are editable as delivery
                 return True
 

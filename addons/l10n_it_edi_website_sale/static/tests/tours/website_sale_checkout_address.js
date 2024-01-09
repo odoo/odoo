@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add('shop_checkout_address', {
             tourUtils.goToCart(),
         {
             content: "go to address form",
-            trigger: 'a[href="/shop/checkout?express=1"]',
+            trigger: 'a[href="/shop/checkout?try_skip_step=true"]',
             run: "click",
         },
         // check if the fields Codice Fiscale and PA index are present

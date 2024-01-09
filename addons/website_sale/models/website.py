@@ -462,6 +462,7 @@ class Website(models.Model):
                 'partner_id': partner_sudo.id,
                 # Must be specified to ensure it is not recomputed when it shouldn't
                 'pricelist_id': pricelist_id,
+                # TODO VFE fpos
             })
 
             if sale_order_sudo.fiscal_position_id != previous_fiscal_position:
@@ -643,7 +644,7 @@ class Website(models.Model):
             'name': _lt("Review Order"),
             'current_href': '/shop/cart',
             'main_button': _lt("Sign In") if redirect_to_sign_in else _lt("Checkout"),
-            'main_button_href': f'{"/web/login?redirect=" if redirect_to_sign_in else ""}/shop/checkout?express=1',
+            'main_button_href': f'{"/web/login?redirect=" if redirect_to_sign_in else ""}/shop/checkout?try_skip_step=true',
             'back_button':  _lt("Continue shopping"),
             'back_button_href': '/shop',
         }), (['website_sale.checkout', 'website_sale.address'], {

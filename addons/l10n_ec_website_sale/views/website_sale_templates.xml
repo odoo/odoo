@@ -3,7 +3,7 @@
 
     <template id="address" inherit_id="website_sale.address">
         <div id="div_vat" position="before">
-            <t t-if="address_type == 'billing' and res_company.country_id.code == 'BR'">
+            <t t-if="address_type == 'billing' and res_company.country_id.code == 'EC'">
                 <!-- Break the line to put Identification Type and Number (vat) on the same line -->
                 <div class="clearfix"/>
 
@@ -35,15 +35,4 @@
         </div>
     </template>
 
-    <template id="total" inherit_id="website_sale.total">
-        <tr id="order_total_untaxed" position="attributes">
-            <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
-        </tr>
-        <tr id="order_total_taxes" position="attributes">
-            <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
-        </tr>
-        <tr id="order_total" position="attributes">
-            <attribute name="t-attf-class" add="#{'border-top' if website.company_id.country_code != 'BR' else ''}" separator=" "/>
-        </tr>
-    </template>
 </odoo>

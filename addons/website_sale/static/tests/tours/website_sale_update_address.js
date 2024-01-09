@@ -29,12 +29,12 @@ registry.category("web_tour.tours").add('update_billing_shipping_address', {
         },
         {
             content: "Save address",
-            trigger: 'a.a-submit',
+            trigger: 'button#save_address',
             run: "click",
         },
         {
             content: "Check there is a warning for required field.",
-            trigger: 'h5.text-danger:contains("Some required fields are empty.")',
+            trigger: ':invalid',
         },
     ],
 });

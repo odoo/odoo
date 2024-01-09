@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <!-- FIXME JCO should be in the base loca module, it's portal content, not eCommerce -->
     <template id="partner_info" name="Ecuadorian partner">
 
         <!-- show identification type -->
@@ -22,27 +22,6 @@
             </t>
         </div>
 
-    </template>
-
-    <template id="address" inherit_id="website_sale.address">
-        <xpath expr="//input[@name='vat']/.." position="before">
-            <t t-if="mode[1] == 'billing'">
-                <t t-if="res_company.country_id.code == 'EC'">
-                    <div class="clearfix"/> <!-- Break the line to put Identifaction Type and Identifaction Number (vat) on the same line -->
-                    <t t-set="partner" t-value="website_sale_order.partner_id"/>
-                    <t t-call="l10n_ec_website_sale.partner_info"/>
-                </t>
-            </t>
-        </xpath>
-
-        <label for="vat" position="replace">
-            <t t-if="res_company.country_id.code != 'EC'">$0</t>
-            <t t-else="">
-                <label class="col-form-label label-optional" for="vat">
-                    Identification Number
-                </label>
-            </t>
-        </label>
     </template>
 
     <template id="portal_my_details_fields" name="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">

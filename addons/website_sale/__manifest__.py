@@ -7,47 +7,57 @@
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
-    'depends': ['website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery'],
+    'depends': [
+        'website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery'
+    ],
     'data': [
+        # Security
         'security/ir.model.access.csv',
         'security/ir_rules.xml',
         'security/res_groups.xml',
 
+        # Record data
         'data/data.xml',
         'data/mail_template_data.xml',
         'data/product_snippet_template_data.xml',
         'data/digest_data.xml',
         'data/ir_cron_data.xml',
 
+        # Reports
         'report/sale_report_views.xml',
 
+        # QWeb templates
+        'views/delivery_form_templates.xml',
+        'views/templates.xml',
+
+        # Model views.
         'views/account_move_views.xml',
         'views/crm_team_views.xml',
         'views/delivery_carrier_views.xml',
-        'views/delivery_form_templates.xml',
         'views/digest_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
         'views/product_image_views.xml',
         'views/product_pricelist_views.xml',
+        'views/product_product_add.xml',
         'views/product_public_category_views.xml',
         'views/product_ribbon_views.xml',
         'views/product_tag_views.xml',
         'views/product_views.xml',
+        'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
-        'views/templates.xml',
+        'views/website_base_unit_views.xml',
+        'views/website_pages_views.xml',
+        'views/website_sale_menus.xml',
+        'views/website_sale_visitor_views.xml',
+        'views/variant_templates.xml',
+        'views/website_views.xml',
+
+        # Website snippets
         'views/snippets/snippets.xml',
         'views/snippets/s_add_to_cart.xml',
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_popup.xml',
-        'views/res_config_settings_views.xml',
-        'views/website_sale_visitor_views.xml',
-        'views/website_base_unit_views.xml',
-        'views/product_product_add.xml',
-        'views/website_views.xml',
-        'views/website_pages_views.xml',
-        'views/website_sale_menus.xml',
-        'views/variant_templates.xml',
     ],
     'demo': [
         'data/demo.xml',

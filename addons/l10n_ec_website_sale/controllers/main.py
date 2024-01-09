@@ -1,37 +1,45 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo import _lt
 from odoo.http import request
+
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class L10nECWebsiteSale(WebsiteSale):
 
-    def _get_mandatory_fields_billing(self, country_id=False):
-        """Extend mandatory fields to add new identification and responsibility fields when company is Ecuador"""
-        res = super()._get_mandatory_fields_billing(country_id)
-        if request.website.sudo().company_id.country_id.code == "EC":
-            res += ["l10n_latam_identification_type_id", "vat"]
-        return res
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
+        if request.website.sudo().company_id.country_id.code != 'EC':
+            return mandatory_fields
 
-    def _get_country_related_render_values(self, kw, render_values):
-        res = super()._get_country_related_render_values(kw, render_values)
-        if request.website.sudo().company_id.country_id.code == "EC":
-            res.update({
-                'identification': kw.get('l10n_latam_identification_type_id'),
-                'identification_types': request.env['l10n_latam.identification.type'].search(
-                    ['|', ('country_id', '=', False), ('country_id.code', '=', 'EC')]),
-            })
-        return res
+        # For Peruvian company, the VAT is required for all the partners
+        mandatory_fields.add('vat')
+        mandatory_fields.add('l10n_latam_identification_type_id')
+        return mandatory_fields
 
-    def _get_vat_validation_fields(self, data):
-        res = super()._get_vat_validation_fields(data)
-        latam_id_type_data = data.get("l10n_latam_identification_type_id")
-        if request.website.sudo().company_id.country_id.code == "EC":
-            res.update({
-                'l10n_latam_identification_type_id': int(latam_id_type_data) if latam_id_type_data else False,
-                'name': data.get('name', False),
+    def _prepare_address_form_values(self, *args, address_type, **kwargs):
+        rendering_values = super()._prepare_address_form_values(
+            *args, address_type=address_type, **kwargs
+        )
+        if address_type == 'billing' and request.website.sudo().company_id.country_id.code == 'EC':
+            can_edit_vat = rendering_values['can_edit_vat']
+            LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
+            rendering_values.update({
+                'identification_types': LatamIdentificationType.search([
+                    '|', ('country_id', '=', False), ('country_id.code', '=', 'EC')
+                ]) if can_edit_vat else LatamIdentificationType,
+                'vat_label': _lt("Identification Number"),
             })
-        return res
+
+        return rendering_values
+
+    def _get_vat_validation_fields(self):
+        fnames = super()._get_vat_validation_fields()
+        if request.website.sudo().company_id.account_fiscal_country_id.code == 'EC':
+            fnames.add('l10n_latam_identification_type_id')
+            fnames.add('name')
+        return fnames
 
     def _get_shop_payment_values(self, order, **kwargs):
         payment_values = super()._get_shop_payment_values(order, **kwargs)
