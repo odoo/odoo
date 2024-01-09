@@ -4,7 +4,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests.common import tagged, Form
-from odoo import fields
+from odoo import fields, Command
 
 
 @tagged("post_install", "-at_install")
@@ -152,3 +152,18 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
             product_accounts = basic_product.product_tmpl_id.with_company(company.id).get_product_accounts()
             self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
+
+    def test_access_product_taxes(self):
+        # Add a tag to product_a's default tax
+        tax_line_tag = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': self.company_data['company'].country_id.id,
+        })
+        repartition_line = self.tax_sale_a.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        repartition_line.write({'tag_ids': [(4, tax_line_tag.id, 0)]})
+
+        group = 'stock.group_stock_user'
+        self.env.user.groups_id = [Command.set(self.env.ref(group).ids)]
+        product_form = Form(self.product_a)
+        self.assertEqual(product_form._values['taxes_id'][0][2][0], self.product_a.taxes_id.id)
