@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
-from odoo.http import request, route
+from odoo.http import request
 
 from odoo.addons.website_mass_mailing.controllers.main import MassMailController
 from odoo.addons.website_sale.controllers.main import WebsiteSale as WebsiteSaleController
@@ -10,19 +8,13 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale as WebsiteSale
 
 class WebsiteSale(WebsiteSaleController):
 
-    @route()
-    def address(self, **kw):
-        if (
-            'submitted' in kw
-            and kw.get('newsletter')
-            and request.httprequest.method == 'POST'
-            and re.match(r'[^@]+@[^@]+\.[^@]+', kw['email'])
-        ):
+    def _handle_extra_form_data(self, extra_form_data, address_values):
+        super()._handle_extra_form_data(extra_form_data, address_values)
+        if extra_form_data.get('newsletter') and address_values.get('email'):
             MassMailController.subscribe_to_newsletter(
                 subscription_type='email',
-                value=kw['email'],
+                value=address_values['email'],
                 list_id=request.website.newsletter_id,
                 fname='email',
-                address_name=kw['name'],
+                address_name=address_values['name'],
             )
-        return super().address(**kw)

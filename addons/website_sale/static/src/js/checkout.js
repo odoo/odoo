@@ -69,17 +69,17 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         const newCard = ev.currentTarget.closest('div.one_kanban').querySelector('.card');
         newCard.classList.remove(cardClass);
         newCard.classList.add('bg-primary', 'border', 'border-primary');
-        const mode = newCard.dataset.mode;
+        const addressType = newCard.dataset.addressType;
         await rpc(
-            '/shop/cart/update_address',
+            '/shop/update_address',
             {
-                mode: mode,
+                address_type: addressType,
                 partner_id: newCard.dataset.partnerId,
             }
         )
 
         // When the delivery address is changed, update the available delivery methods.
-        if (mode === 'shipping') {
+        if (addressType === 'delivery') {
             document.getElementById('o_delivery_form').innerHTML = await rpc(
                 '/shop/delivery_methods'
             );

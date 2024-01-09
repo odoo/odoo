@@ -481,8 +481,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      * @param {Event} ev
      */
-    _onClickSubmit: function (ev, forceSubmit) {
-        if ($(ev.currentTarget).is('#add_to_cart, #products_grid .a-submit') && !forceSubmit) {
+    _onClickSubmit: function (ev) {
+        if ($(ev.currentTarget).is('#add_to_cart, #products_grid .a-submit')) {
             return;
         }
         var $aSubmit = $(ev.currentTarget);
@@ -603,6 +603,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _onClickConfirmOrder: function () {
+        // FIXME ANVFE this should only be triggered when we effectively click on that specific button no?
+        // should not impact the address page at least
         const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
         submitFormButton.attr('disabled', true);
         setTimeout(() => submitFormButton.attr('disabled', false), 5000);

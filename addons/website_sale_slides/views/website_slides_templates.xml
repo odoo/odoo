@@ -176,7 +176,7 @@
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
     <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
         <div class="mb-1">
-            <a role="button" class="post_link btn btn-primary d-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
+            <a role="button" class="post_link btn btn-primary d-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;try_skip_step=true">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
         </div>

@@ -78,7 +78,7 @@ function fillAdressForm(adressParams = {
     let steps = [];
     steps.push({
         content: "Address filling",
-        trigger: 'select[name="country_id"]',
+        trigger: 'form.checkout_autoformat',
         run: () => {
             document.querySelector('input[name="name"]').value = adressParams.name;
             document.querySelector('input[name="phone"]').value = adressParams.phone;
@@ -86,13 +86,13 @@ function fillAdressForm(adressParams = {
             document.querySelector('input[name="street"]').value = adressParams.street;
             document.querySelector('input[name="city"]').value = adressParams.city;
             document.querySelector('input[name="zip"]').value = adressParams.zip;
-            document.querySelectorAll("#country_id option")[1].selected = true;
+            document.querySelectorAll("#o_country_id option")[1].selected = true;
         }
     });
     steps.push({
         content: "Continue checkout",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
-        run: "click",
+        trigger: '#save_address',
+        run: 'click',
     });
     return steps;
 }
@@ -126,7 +126,7 @@ function pay() {
     return {
         content: 'Pay',
         //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)', 
+        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
         run: "click",
     };
 }

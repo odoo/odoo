@@ -76,7 +76,7 @@
     },
     {
         content: "Shipping address is not same as billing address",
-        trigger: '#shipping_use_same',
+        trigger: '#use_same_as_delivery',
         run: "click",
     },
     {
