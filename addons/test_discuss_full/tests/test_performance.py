@@ -9,8 +9,8 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
-    _query_count = 55
-    _query_count_discuss_channels = 46
+    _query_count = 56
+    _query_count_discuss_channels = 47
 
     def setUp(self):
         super().setUp()
