@@ -66,15 +66,6 @@ class PosConfig(models.Model):
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
-    def _set_tips_after_payment_if_country_custom(self):
-        self.ensure_one()
-        company = self.company_id or self.env.company or self.env['res.company']._get_main_company()
-        if company and company.country_id and company.country_id.code == 'US':
-            self.update({
-                'iface_tipproduct': True,
-                'set_tip_after_payment': True,
-            })
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -136,7 +127,6 @@ class PosConfig(models.Model):
 
     def _setup_main_restaurant_defaults(self):
         self.ensure_one()
-        self._set_tips_after_payment_if_country_custom()
         self._link_same_non_cash_payment_methods_if_exists('point_of_sale.pos_config_main')
         self._ensure_cash_payment_method('MRCSH', _('Cash Restaurant'))
         self._archive_shop()
