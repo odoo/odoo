@@ -12,7 +12,7 @@ Jordi Ballester jordi.ballester@forgeflow.com https://github.com/JordiBForgeFlow
 
 List of contributors:
 
-Aarón Henríquez ahenriquez@forgeflow.com https://github.com/AaronHForgeFlow
+Aarón Henríquez aaron.henriquez@forgeflow.com https://github.com/AaronHForgeFlow
 Lois Rilo lois.rilo@forgeflow.com https://github.com/LoisRForgeFlow
 Miquel Raich miquel.raich@forgeflow.com https://github.com/MiquelRForgeFlow
 Jordi Ballester jordi.ballester@forgeflow.com https://github.com/JordiBForgeFlow
