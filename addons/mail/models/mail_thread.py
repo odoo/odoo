@@ -2175,7 +2175,9 @@ class MailThread(models.AbstractModel):
             model, res_id = self._name, self.id
         body = ''
         if message_values.get('body'):
-            body = message_values['body'] if not is_html_empty(message_values['body']) else ''
+            # at this point, body should be valid Markup; other content will be
+            # escaped to avoid any issue
+            body = escape(message_values['body']) if not is_html_empty(message_values['body']) else ''
 
         m2m_attachment_ids = []
         if attachment_ids:
@@ -2268,7 +2270,9 @@ class MailThread(models.AbstractModel):
                         node.set('src', f'/web/image/{att_id}?access_token={token}')
                         postprocessed = True
                 if postprocessed:
-                    return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='unicode')
+                    # tostring being a raw string, we have to respect I/O and return
+                    # a valid Markup
+                    return_values['body'] = Markup(lxml.html.tostring(root, pretty_print=False, encoding='unicode'))
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
 
@@ -4109,7 +4113,9 @@ class MailThread(models.AbstractModel):
         if strict:
             self._check_can_update_message_content(message.sudo())
 
-        msg_values = {'body': body} if body is not None else {}
+        msg_values = {
+            'body': escape(body),  # keep html if already Markup, otherwise escape
+        } if body is not None else {}
         if attachment_ids:
             msg_values.update(
                 self._process_attachments_for_post([], attachment_ids, {
