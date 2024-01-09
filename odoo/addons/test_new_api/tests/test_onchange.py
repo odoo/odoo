@@ -1252,3 +1252,22 @@ class TestComputeOnchange2(common.TransactionCase):
                 self.assertEqual(message_form.has_important_sibling, True)
                 message_form.body = 'Required Body'
             self.assertEqual(len(discussion_form.messages), 2)
+
+        # Test the same flow but when the important message is archived.
+        # The _compute_has_important_sibling should take in account archived siblings.
+        discussion = self.env['test_new_api.discussion'].create({
+            'messages': [
+                Command.create({'body': 'Archived Important sibling', 'important': True, 'active': False}),
+            ],
+            'name': 'Required field',
+            'participants': [Command.set(self.env.user.ids)],
+        })
+
+        with Form(discussion, 'test_new_api.discussion_form_2') as discussion_form:
+            self.assertEqual(len(discussion_form.messages), 0)
+            with discussion_form.messages.new() as message_form:
+                # this actually checks that during the onchange, the new message
+                # has access to its archived sibling messages through the discussion
+                self.assertEqual(message_form.has_important_sibling, True)
+                message_form.body = 'Required Body'
+            self.assertEqual(len(discussion_form.messages), 1)
