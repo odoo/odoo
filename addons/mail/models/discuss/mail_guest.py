@@ -134,26 +134,28 @@ class MailGuest(models.Model):
         # sudo: mail.guest - guest reading their own id/name/channels
         guest_sudo = self.sudo()
         return {
+            "Store": {
+                "companyName": self.env.company.name,
+                "current_user_id": False,
+                # sudo: ir.config_parameter: safe to check for existence of tenor api key
+                "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
+                "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
+                "hasMessageTranslationFeature": False,
+                # sudo: bus.bus: reading non-sensitive last id
+                "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
+                "menu_id": False,
+                "odoobot": {
+                    "id": odoobot.id,
+                    "name": odoobot.name,
+                    "type": "partner",
+                },
+                "self": {
+                    "id": guest_sudo.id,
+                    "name": guest_sudo.name,
+                    "type": "guest",
+                },
+            },
             "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
-            'companyName': self.env.company.name,
-            'self': {
-                'id': guest_sudo.id,
-                'name': guest_sudo.name,
-                'type': "guest",
-            },
-            'current_user_id': False,
-             # sudo: ir.config_parameter: safe to check for existence of tenor api key
-            'hasGifPickerFeature': bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
-            'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
-            'hasMessageTranslationFeature': False,
-             # sudo: bus.bus: reading non-sensitive last id
-            'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
-            'menu_id': False,
-            'odoobot': {
-                'id': odoobot.id,
-                'name': odoobot.name,
-                'type': "partner",
-            },
         }
 
     def _guest_format(self, fields=None):

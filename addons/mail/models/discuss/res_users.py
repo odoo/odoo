@@ -47,12 +47,18 @@ class ResUsers(models.Model):
         channels = self.env["discuss.channel"]._get_channels_as_member()
         domain = [("channel_id", "in", channels.ids), ("is_self", "=", True)]
         members = self.env["discuss.channel.member"].search(domain)
-        return {
-            "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
-            # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
-            "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
-            # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
-            'hasMessageTranslationFeature': bool(self.env["ir.config_parameter"].sudo().get_param("mail.google_translate_api_key")),
-            "initChannelsUnreadCounter": len(members.filtered(lambda member: member.message_unread_counter)),
-            **super()._init_messaging(),
-        }
+        members_with_unread = members.filtered(lambda member: member.message_unread_counter)
+        # fetch channels data before calling super to benefit from prefetching (channel info might
+        # prefetch a lot of data that super could use, about the current user in particular)
+        channels_info = self.env["discuss.channel"]._get_init_channels()._channel_info()
+        # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return
+        # whether the feature is enabled
+        get_param = self.env["ir.config_parameter"].sudo().get_param
+        res = super()._init_messaging()
+        res["Store"].update({
+            "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
+            "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
+            "initChannelsUnreadCounter": len(members_with_unread),
+        })
+        res["Thread"] = channels_info
+        return res
