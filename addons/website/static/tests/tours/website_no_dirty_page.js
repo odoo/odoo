@@ -2,11 +2,7 @@
 
 import wTourUtils from '@website/js/tours/tour_utils';
 
-wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
-    test: true,
-    url: '/',
-    edition: true,
-}, () => [
+const makeSteps = (steps = []) => [
     wTourUtils.dragNDrop({
         id: "s_text_image",
         name: "Text - Image",
@@ -25,7 +21,9 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         content: "Confirm we are in edit mode",
         trigger: 'body.editor_has_snippets',
         run: () => null,
-    }, {
+    },
+    ...steps,
+    {
         // Makes sure the dirty flag does not happen after a setTimeout or
         // something like that.
         content: "Click elsewhere and wait for a few ms",
@@ -43,4 +41,23 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         trigger: 'body:not(.editor_has_snippets)',
         run: () => null,
     },
-]);
+];
+
+wTourUtils.registerWebsitePreviewTour('website_no_action_no_dirty_page', {
+    test: true,
+    url: '/',
+    edition: true,
+}, () => makeSteps());
+
+wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
+    test: true,
+    url: '/',
+    edition: true,
+}, () => makeSteps([
+    {
+        // This has been known to mark the page as dirty because of the "drag
+        // the column on image move" feature.
+        content: "Click on default image",
+        trigger: 'iframe .s_text_image img',
+    },
+]));
