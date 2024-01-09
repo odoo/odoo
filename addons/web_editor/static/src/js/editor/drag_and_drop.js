@@ -69,6 +69,10 @@ export function useNativeDraggable(hookParams, initialParams) {
     };
     // Compatibility for tests
     const el = initialParams.ref.el;
+    // TODO this is probably to be removed in master: the received params
+    // contain the selector that should be checked and it will be transferred
+    // to the makeDraggableHook function. There should not be any need to add
+    // the default selector class here.
     el.classList.add("o_draggable");
     cleanupFunctions.push(() => el.classList.remove("o_draggable"));
 

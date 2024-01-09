@@ -116,8 +116,14 @@ var SnippetEditor = Widget.extend({
             this.draggableComponent = this._initDragAndDrop(".o_move_handle", ".oe_overlay", this.el);
             if (!this.$target[0].matches("section")) {
                 // Allow the user to drag the image itself to move the target.
+                // Note that the o_draggable class will be added by the
+                // _initDragAndDrop function. So adding it here is probably
+                // useless. To check. The fact that that class is added in any
+                // case should probably reviewed in master anyway (TODO).
+                this.options.wysiwyg.odooEditor.observerUnactive('image_drag_and_drop');
                 this.$target[0].classList.add("o_draggable");
                 this.draggableComponentImgs = this._initDragAndDrop("img", ".o_draggable", this.$target[0]);
+                this.options.wysiwyg.odooEditor.observerActive('image_drag_and_drop');
             }
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
