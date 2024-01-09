@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from datetime import timedelta
-from functools import partial
+from functools import partial, lru_cache
 from itertools import groupby
 from collections import defaultdict
 
@@ -330,8 +330,18 @@ class PosOrder(models.Model):
 
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
+        @lru_cache
+        def get_rate(from_currency, to_currency, company, date):
+            return self.env['res.currency']._get_conversion_rate(
+                from_currency=from_currency,
+                to_currency=to_currency,
+                company=company,
+                date=date,
+            )
         for order in self:
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            # date_order is a datetime, but the rates are looked up on a date basis,
+            # therefor converting the date_order to a date helps with sharing entries in the lru_cache
+            order.currency_rate = get_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order.date())
 
     @api.depends('lines.is_total_cost_computed')
     def _compute_is_total_cost_computed(self):
@@ -656,7 +666,7 @@ class PosOrder(models.Model):
                 product=line.product_id,
                 taxes=line.tax_ids_after_fiscal_position,
                 price_unit=line.price_unit,
-                quantity=sign * line.qty,
+                quantity=-line.qty,
                 discount=line.discount,
                 account=account,
                 is_refund=is_refund,
@@ -800,7 +810,11 @@ class PosOrder(models.Model):
                 move_lines.append(aml_values)
 
         # Make a move with all the lines.
-        reversal_entry = self.env['account.move'].with_context(default_journal_id=self.config_id.journal_id.id).create({
+        reversal_entry = self.env['account.move'].with_context(
+            default_journal_id=self.config_id.journal_id.id,
+            skip_invoice_sync=True,
+            skip_invoice_line_sync=True,
+        ).create({
             'journal_id': self.config_id.journal_id.id,
             'date': fields.Date.context_today(self),
             'ref': _('Reversal of POS closing entry %s for order %s from session %s', self.session_move_id.name, self.name, self.session_id.name),

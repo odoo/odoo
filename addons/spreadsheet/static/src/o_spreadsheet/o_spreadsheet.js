@@ -3884,6 +3884,7 @@
         return node.description ? node.description : "";
     }
 
+    const macRegex = /Mac/i;
     /**
      * Return true if the event was triggered from
      * a child element.
@@ -3903,7 +3904,15 @@
         return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
     }
     function isMacOS() {
-        return navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
+        return Boolean(macRegex.test(navigator.userAgent));
+    }
+    /**
+     * @param {KeyboardEvent | MouseEvent} ev
+     * @returns Returns true if the event was triggered with the "ctrl" modifier pressed.
+     * On Mac, this is the "meta" or "command" key.
+     */
+    function isCtrlKey(ev) {
+        return isMacOS() ? ev.metaKey : ev.ctrlKey;
     }
 
     /**
@@ -21473,7 +21482,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             const [col, row] = this.getCartesianCoordinates(ev);
-            this.props.onCellClicked(col, row, { shiftKey: ev.shiftKey, ctrlKey: ev.ctrlKey });
+            this.props.onCellClicked(col, row, {
+                expandZone: ev.shiftKey,
+                addZone: isCtrlKey(ev),
+            });
         }
         onDoubleClick(ev) {
             const [col, row] = this.getCartesianCoordinates(ev);
@@ -21701,7 +21713,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this._increaseSelection(index);
             }
             else {
-                this._selectElement(index, ev.ctrlKey);
+                this._selectElement(index, isCtrlKey(ev));
             }
             this.lastSelectedElementIndex = index;
             const mouseMoveSelect = (col, row) => {
@@ -21714,7 +21726,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const mouseUpSelect = () => {
                 this.state.isSelecting = false;
                 this.lastSelectedElementIndex = null;
-                this.env.model.dispatch(ev.ctrlKey ? "PREPARE_SELECTION_INPUT_EXPANSION" : "STOP_SELECTION_INPUT");
+                this.env.model.dispatch(isCtrlKey(ev) ? "PREPARE_SELECTION_INPUT_EXPANSION" : "STOP_SELECTION_INPUT");
                 this._computeGrabDisplay(ev);
             };
             dragAndDropBeyondTheViewport(this.env, mouseMoveSelect, mouseUpSelect);
@@ -21861,8 +21873,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.env.raiseError(MergeErrorMessage);
             }
         }
-        _selectElement(index, ctrlKey) {
-            this.env.model.selection.selectColumn(index, ctrlKey ? "newAnchor" : "overrideSelection");
+        _selectElement(index, addDistinctHeader) {
+            this.env.model.selection.selectColumn(index, addDistinctHeader ? "newAnchor" : "overrideSelection");
         }
         _increaseSelection(index) {
             this.env.model.selection.selectColumn(index, "updateAnchor");
@@ -22031,8 +22043,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.env.raiseError(MergeErrorMessage);
             }
         }
-        _selectElement(index, ctrlKey) {
-            this.env.model.selection.selectRow(index, ctrlKey ? "newAnchor" : "overrideSelection");
+        _selectElement(index, addDistinctHeader) {
+            this.env.model.selection.selectRow(index, addDistinctHeader ? "newAnchor" : "overrideSelection");
         }
         _increaseSelection(index) {
             this.env.model.selection.selectRow(index, "updateAnchor");
@@ -22723,18 +22735,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Zone selection with mouse
         // ---------------------------------------------------------------------------
-        onCellClicked(col, row, { ctrlKey, shiftKey }) {
-            if (ctrlKey) {
+        onCellClicked(col, row, { addZone, expandZone }) {
+            if (addZone) {
                 this.env.model.dispatch("PREPARE_SELECTION_INPUT_EXPANSION");
             }
             this.closeOpenedPopover();
             if (this.env.model.getters.getEditionMode() === "editing") {
                 this.env.model.dispatch("STOP_EDITION");
             }
-            if (shiftKey) {
+            if (expandZone) {
                 this.env.model.selection.setAnchorCorner(col, row);
             }
-            else if (ctrlKey) {
+            else if (addZone) {
                 this.env.model.selection.addCellToSelection(col, row);
             }
             else {
@@ -22788,10 +22800,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
             const direction = arrowMap[ev.key];
             if (ev.shiftKey) {
-                this.env.model.selection.resizeAnchorZone(direction, ev.ctrlKey ? "end" : 1);
+                this.env.model.selection.resizeAnchorZone(direction, isCtrlKey(ev) ? "end" : 1);
             }
             else {
-                this.env.model.selection.moveAnchorCell(direction, ev.ctrlKey ? "end" : 1);
+                this.env.model.selection.moveAnchorCell(direction, isCtrlKey(ev) ? "end" : 1);
             }
             if (this.env.model.getters.isPaintingFormat()) {
                 this.env.model.dispatch("PASTE", {
@@ -22805,9 +22817,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             let keyDownString = "";
-            if (ev.ctrlKey)
-                keyDownString += "CTRL+";
-            if (ev.metaKey)
+            if (isCtrlKey(ev))
                 keyDownString += "CTRL+";
             if (ev.altKey)
                 keyDownString += "ALT+";
@@ -32568,13 +32578,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Getters
         // ---------------------------------------------------------------------------
         evaluateFormula(formulaString, sheetId = this.getters.getActiveSheetId()) {
-            const compiledFormula = compile(formulaString);
-            const params = this.getCompilationParameters(() => { });
-            const ranges = [];
-            for (let xc of compiledFormula.dependencies) {
-                ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
+            try {
+                const compiledFormula = compile(formulaString);
+                const params = this.getCompilationParameters(() => { });
+                const ranges = [];
+                for (let xc of compiledFormula.dependencies) {
+                    ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
+                }
+                return compiledFormula.execute(ranges, ...params).value;
             }
-            return compiledFormula.execute(ranges, ...params).value;
+            catch (error) {
+                return error instanceof EvaluationError ? error.errorType : CellErrorType.GenericError;
+            }
         }
         /**
          * Return the value of each cell in the range as they are displayed in the grid.
@@ -32976,39 +32991,34 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.computedIcons[activeSheetId] = {};
             const computedStyle = this.computedStyles[activeSheetId];
             for (let cf of this.getters.getConditionalFormats(activeSheetId).reverse()) {
-                try {
-                    switch (cf.rule.type) {
-                        case "ColorScaleRule":
-                            for (let range of cf.ranges) {
-                                this.applyColorScale(range, cf.rule);
-                            }
-                            break;
-                        case "IconSetRule":
-                            for (let range of cf.ranges) {
-                                this.applyIcon(range, cf.rule);
-                            }
-                            break;
-                        default:
-                            for (let ref of cf.ranges) {
-                                const zone = this.getters.getRangeFromSheetXC(activeSheetId, ref).zone;
-                                for (let row = zone.top; row <= zone.bottom; row++) {
-                                    for (let col = zone.left; col <= zone.right; col++) {
-                                        const pr = this.rulePredicate[cf.rule.type];
-                                        let cell = this.getters.getCell(activeSheetId, col, row);
-                                        if (pr && pr(cell, cf.rule)) {
-                                            if (!computedStyle[col])
-                                                computedStyle[col] = [];
-                                            // we must combine all the properties of all the CF rules applied to the given cell
-                                            computedStyle[col][row] = Object.assign(((_a = computedStyle[col]) === null || _a === void 0 ? void 0 : _a[row]) || {}, cf.rule.style);
-                                        }
+                switch (cf.rule.type) {
+                    case "ColorScaleRule":
+                        for (let range of cf.ranges) {
+                            this.applyColorScale(range, cf.rule);
+                        }
+                        break;
+                    case "IconSetRule":
+                        for (let range of cf.ranges) {
+                            this.applyIcon(range, cf.rule);
+                        }
+                        break;
+                    default:
+                        for (let ref of cf.ranges) {
+                            const zone = this.getters.getRangeFromSheetXC(activeSheetId, ref).zone;
+                            for (let row = zone.top; row <= zone.bottom; row++) {
+                                for (let col = zone.left; col <= zone.right; col++) {
+                                    const pr = this.rulePredicate[cf.rule.type];
+                                    let cell = this.getters.getCell(activeSheetId, col, row);
+                                    if (pr && pr(cell, cf.rule)) {
+                                        if (!computedStyle[col])
+                                            computedStyle[col] = [];
+                                        // we must combine all the properties of all the CF rules applied to the given cell
+                                        computedStyle[col][row] = Object.assign(((_a = computedStyle[col]) === null || _a === void 0 ? void 0 : _a[row]) || {}, cf.rule.style);
                                     }
                                 }
                             }
-                            break;
-                    }
-                }
-                catch (_) {
-                    // we don't care about the errors within the evaluation of a rule
+                        }
+                        break;
                 }
             }
         }
@@ -33032,7 +33042,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return percentile(rangeValues, Number(threshold.value) / 100, true);
                 case "formula":
                     const value = threshold.value && this.getters.evaluateFormula(threshold.value);
-                    return !(value instanceof Promise) ? value : null;
+                    return typeof value === "number" ? value : null;
                 default:
                     return null;
             }
@@ -39111,7 +39121,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onKeydown(ev) {
             let keyDownString = "";
-            if (ev.ctrlKey || ev.metaKey) {
+            if (isCtrlKey(ev)) {
                 keyDownString += "CTRL+";
             }
             keyDownString += ev.key.toUpperCase();
@@ -43060,9 +43070,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.26';
-    __info__.date = '2023-12-05T10:10:01.055Z';
-    __info__.hash = '10de093';
+    __info__.version = '16.0.27';
+    __info__.date = '2024-01-04T12:42:45.292Z';
+    __info__.hash = '54006f6';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

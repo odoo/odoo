@@ -117,22 +117,6 @@ export class ListRenderer extends Component {
             this.allColumns = nextProps.archInfo.columns;
             this.state.columns = this.getActiveColumns(nextProps.list);
         });
-        onPatched(() => {
-            const editedRecord = this.props.list.editedRecord;
-            if (editedRecord && this.activeRowId !== editedRecord.id) {
-                if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
-                    const column = this.cellToFocus.column;
-                    const forward = this.cellToFocus.forward;
-                    this.focusCell(column, forward);
-                } else if (this.lastEditedCell) {
-                    this.focusCell(this.lastEditedCell.column, true);
-                } else {
-                    this.focusCell(this.state.columns[0]);
-                }
-            }
-            this.cellToFocus = null;
-            this.lastEditedCell = null;
-        });
         let dataRowId;
         this.rootRef = useRef("root");
         this.resequencePromise = Promise.resolve();
@@ -200,6 +184,22 @@ export class ListRenderer extends Component {
         useExternalListener(window, "resize", () => {
             this.columnWidths = null;
             this.freezeColumnWidths();
+        });
+        onPatched(() => {
+            const editedRecord = this.props.list.editedRecord;
+            if (editedRecord && this.activeRowId !== editedRecord.id) {
+                if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
+                    const column = this.cellToFocus.column;
+                    const forward = this.cellToFocus.forward;
+                    this.focusCell(column, forward);
+                } else if (this.lastEditedCell) {
+                    this.focusCell(this.lastEditedCell.column, true);
+                } else {
+                    this.focusCell(this.state.columns[0]);
+                }
+            }
+            this.cellToFocus = null;
+            this.lastEditedCell = null;
         });
         this.isRTL = localization.direction === "rtl";
     }
@@ -656,7 +656,7 @@ export class ListRenderer extends Component {
     }
 
     shouldReverseHeader(column) {
-        return this.isNumericColumn(column) && (!this.isRTL);
+        return this.isNumericColumn(column) && !this.isRTL;
     }
 
     isSortable(column) {

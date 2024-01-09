@@ -37,6 +37,9 @@ import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -13428,4 +13431,75 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("kanbans with basic and custom compiler, same arch", async (assert) => {
+        // In this test, the exact same arch will be rendered by 2 different kanban renderers:
+        // once with the basic one, and once with a custom renderer having a custom compiler. The
+        // purpose of the test is to ensure that the template is compiled twice, once by each
+        // compiler, even though the arch is the same.
+        class MyKanbanCompiler extends KanbanCompiler {
+            setup() {
+                super.setup();
+                this.compilers.push({ selector: "div", fn: this.compileDiv });
+            }
+
+            compileDiv(node, params) {
+                const compiledNode = this.compileGenericNode(node, params);
+                compiledNode.setAttribute("class", "my_kanban_compiler");
+                return compiledNode;
+            }
+        }
+        class MyKanbanRecord extends KanbanRecord {}
+        MyKanbanRecord.Compiler = MyKanbanCompiler;
+        class MyKanbanRenderer extends KanbanRenderer {}
+        MyKanbanRenderer.components = {
+            ...KanbanRenderer.components,
+            KanbanRecord: MyKanbanRecord,
+        };
+        viewRegistry.add("my_kanban", {
+            ...kanbanView,
+            Renderer: MyKanbanRenderer,
+        });
+
+        serverData.models.partner.fields.one2many = {
+            type: "one2many",
+            name: "o2m",
+            relation: "partner",
+        };
+        serverData.models.partner.records[0].one2many = [1];
+        serverData.views = {
+            "partner,false,form": `<form><field name="one2many" mode="kanban"/></form>`,
+            "partner,false,search": `<search/>`,
+            "partner,false,kanban": `<kanban js_class="my_kanban">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click"><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+        });
+
+        // main kanban, custom view
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsN(target, ".my_kanban_compiler", 4);
+
+        // switch to form
+        await click(target.querySelector(".o_kanban_record"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsOnce(target, ".o_form_view .o_field_widget[name=one2many]");
+
+        // x2many kanban, basic renderer
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+        assert.containsNone(target, ".my_kanban_compiler");
+    });
 });

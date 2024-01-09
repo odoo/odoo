@@ -5287,6 +5287,7 @@ QUnit.module("Views", (hooks) => {
         "comparison with two groupbys: rows from reference period should be displayed",
         async function (assert) {
             assert.expect(3);
+            patchDate(2023, 2, 22, 1, 0, 0);
 
             serverData.models.partner.records = [
                 { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },

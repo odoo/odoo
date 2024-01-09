@@ -31,6 +31,7 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
             'The email was edited, the form should have been sent to the configured email')
 
     def test_website_form_contact_us_edition_no_email(self):
+        self.env.company.email = 'website_form_contactus_edition_no_email@mail.com'
         self.start_tour('/web', 'website_form_contactus_edition_no_email', login="admin")
         self.start_tour('/contactus', 'website_form_contactus_submit', login="portal")
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)
@@ -41,3 +42,11 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
 
     def test_website_form_conditional_required_checkboxes(self):
         self.start_tour('/', 'website_form_conditional_required_checkboxes', login="admin")
+
+    def test_contactus_form_email_stay_dynamic(self):
+        # The contactus form should always be sent to the company email except
+        # if the user explicitly changed it in the options.
+        self.env.company.email = 'before.change@mail.com'
+        self.start_tour('/contactus', 'website_form_contactus_change_random_option', login="admin")
+        self.env.company.email = 'after.change@mail.com'
+        self.start_tour('/contactus', 'website_form_contactus_check_changed_email', login="portal")

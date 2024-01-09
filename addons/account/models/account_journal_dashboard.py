@@ -106,7 +106,7 @@ class account_journal(models.Model):
               FROM account_move move
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
-               AND (move.state = 'posted' OR (move.state = 'draft' AND move.sequence_prefix IS NOT NULL))
+               AND (move.state = 'posted' OR (move.state = 'draft' AND move.name != '/'))
                AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
