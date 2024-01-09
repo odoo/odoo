@@ -436,7 +436,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         const noPeriod = !value.period || value.period === "empty";
         const noYear = value.yearOffset === undefined;
         if (noPeriod && noYear) {
-            return [];
+            return new Domain();
         }
         const setParam = { year: now.year };
         const yearOffset = value.yearOffset || 0;
