@@ -6,6 +6,7 @@ import sys
 import threading
 import unittest
 from pathlib import Path
+from unittest import case, util
 
 from .. import tools
 from .tag_selector import TagsSelector
@@ -13,9 +14,25 @@ from .suite import OdooSuite
 from .result import OdooTestResult
 
 
+def loadTestsFromModule(module):
+        """Return a suite of all test cases contained in the given module"""
+        tests = []
+        for name in dir(module):
+            obj = getattr(module, name)
+            if isinstance(obj, type) and issubclass(obj, case.TestCase):
+                testCaseClass = obj
+                testCaseNames = []
+                for method in dir(testCaseClass):
+                    if method.startswith('test') and callable(getattr(testCaseClass, method)):
+                        testCaseNames.append(method)
+                testCaseNames.sort()
+                tests += list(map(testCaseClass, testCaseNames))
+        return tests
+
+
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
-    feed unittest.TestLoader.loadTestsFromModule() """
+    feed loadTestsFromModule() """
     results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
     results += list(_get_upgrade_test_modules(module))
 
@@ -70,7 +87,7 @@ def make_suite(module_names, position='at_install'):
         t
         for module_name in module_names
         for m in get_test_modules(module_name)
-        for t in unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
+        for t in loadTestsFromModule(m)
         if position_tag.check(t) and config_tags.check(t)
     )
     return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
@@ -88,29 +105,3 @@ def run_suite(suite, module_name=None):
     threading.current_thread().testing = False
     module.current_test = None
     return results
-
-
-def unwrap_suite(test):
-    """
-    Attempts to unpack testsuites (holding suites or cases) in order to
-    generate a single stream of terminals (either test cases or customized
-    test suites). These can then be checked for run/skip attributes
-    individually.
-
-    An alternative would be to use a variant of @unittest.skipIf with a state
-    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
-    but then things become weird with post_install as tests should *not* run
-    by default there
-    """
-    if isinstance(test, unittest.TestCase):
-        yield test
-        return
-
-    subtests = list(test)
-    ## custom test suite (no test cases)
-    #if not len(subtests):
-    #    yield test
-    #    return
-
-    for item in itertools.chain.from_iterable(unwrap_suite(t) for t in subtests):
-        yield item
