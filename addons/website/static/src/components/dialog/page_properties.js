@@ -81,6 +81,7 @@ export class DeletePageDialog extends Component {
         resModel: String,
         onDelete: { type: Function, optional: true },
         close: Function,
+        hasNewPageTemplate: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -194,8 +195,9 @@ export class PagePropertiesDialog extends FormViewDialog {
         });
     }
 
-    deletePage() {
+    async deletePage() {
         const pageIds = [this.resId];
+        const newPageTemplateFields = await this.orm.read("website.page", pageIds, ["is_new_page_template"]);
         this.dialog.add(DeletePageDialog, {
             resIds: pageIds,
             resModel: 'website.page',
@@ -205,6 +207,7 @@ export class PagePropertiesDialog extends FormViewDialog {
                 this.props.close();
                 this.props.onClose();
             },
+            hasNewPageTemplate: newPageTemplateFields[0].is_new_page_template,
         });
     }
 }
