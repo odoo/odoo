@@ -98,7 +98,7 @@ const extractPseudoSelectorFilters = (selector) => {
         const [pseudo, content] = currentPseudo;
         currentPseudo = null;
         const makeFilter = customPseudoSelectors.get(pseudo);
-        filters.push(Object.assign(makeFilter(content), { _pseudo: pseudo }));
+        filters.push(Object.assign(makeFilter(trimQuotes(content)), { _pseudo: pseudo }));
     };
 
     selector ||= "";
@@ -118,12 +118,10 @@ const extractPseudoSelectorFilters = (selector) => {
                 if (selector[i] === currentQuote) {
                     // Close quotes
                     currentQuote = null;
-                    continue;
                 }
             } else if (QUOTE_REGEX.test(selector[i])) {
                 // Open quotes
                 currentQuote = selector[i];
-                continue;
             }
         }
 
@@ -465,6 +463,11 @@ const queryWithCustomSelector = (nodes, selector) => {
  */
 const selectorError = (pseudoSelector, message) =>
     new HootDomError(`invalid selector \`:${pseudoSelector}\`: ${message}`);
+
+/**
+ * @param {string} string
+ */
+const trimQuotes = (string) => string.match(/^\s*(['"`])?(.*?)\1?\s*$/)?.[2] || string;
 
 // Regexes
 const QUOTE_REGEX = /['"`]/;
