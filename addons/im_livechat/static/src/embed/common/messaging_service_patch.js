@@ -19,9 +19,14 @@ patch(Messaging.prototype, {
             }
             return;
         }
-        const messagingData = { Thread: [], settings: {} };
+        const messagingData = {
+            Store: { settings: {} },
+            Thread: [],
+        };
         if (session.livechatData?.options.current_partner_id) {
-            messagingData.current_partner = { id: session.livechatData.options.current_partner_id };
+            messagingData.Store.current_partner = {
+                id: session.livechatData.options.current_partner_id,
+            };
         }
         if (livechatService.savedState?.threadData) {
             messagingData.Thread.push(livechatService.savedState.threadData);

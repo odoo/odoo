@@ -27,37 +27,39 @@ patch(MockServer.prototype, {
             ["partner_id", "=", user.partner_id],
         ]);
         return {
-            Thread: this._mockDiscussChannelChannelInfo(
-                this._mockDiscussChannel__get_init_channels(user).map((channel) => channel.id)
-            ),
-            self: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
-            current_user_id: this.pyEnv.currentUserId,
-            settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
-            hasGifPickerFeature: true,
-            hasMessageTranslationFeature: true,
-            initBusId: this.lastBusNotificationId,
-            initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
-                .length,
-            menu_id: false, // not useful in QUnit tests
-            discuss: {
-                inbox: {
-                    counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
-                    id: "inbox",
-                    model: "mail.box",
-                },
-                starred: {
-                    counter: this.getRecords("mail.message", [
-                        ["starred_partner_ids", "in", user.partner_id],
-                    ]).length,
-                    id: "starred",
-                    model: "mail.box",
-                },
-            },
-            odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
             CannedResponse: this.pyEnv["mail.shortcode"].searchRead([], {
                 fields: ["source", "substitution"],
             }),
-            hasLinkPreviewFeature: true,
+            Store: {
+                current_user_id: this.pyEnv.currentUserId,
+                discuss: {
+                    inbox: {
+                        counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
+                        id: "inbox",
+                        model: "mail.box",
+                    },
+                    starred: {
+                        counter: this.getRecords("mail.message", [
+                            ["starred_partner_ids", "in", user.partner_id],
+                        ]).length,
+                        id: "starred",
+                        model: "mail.box",
+                    },
+                },
+                hasGifPickerFeature: true,
+                hasLinkPreviewFeature: true,
+                hasMessageTranslationFeature: true,
+                initBusId: this.lastBusNotificationId,
+                initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
+                    .length,
+                menu_id: false, // not useful in QUnit tests
+                odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
+                self: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
+                settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
+            },
+            Thread: this._mockDiscussChannelChannelInfo(
+                this._mockDiscussChannel__get_init_channels(user).map((channel) => channel.id)
+            ),
         };
     },
     /**

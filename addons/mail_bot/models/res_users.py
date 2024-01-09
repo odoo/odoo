@@ -30,7 +30,7 @@ class Users(models.Model):
             odoobot_onboarding = True
             self._init_odoobot()
         res = super()._init_messaging()
-        res['odoobotOnboarding'] = odoobot_onboarding
+        res["Store"]["odoobotOnboarding"] = odoobot_onboarding
         return res
 
     def _init_odoobot(self):
