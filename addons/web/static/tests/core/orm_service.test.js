@@ -427,6 +427,7 @@ test("orm is specialized for component", async () => {
     const env = await makeMockEnv();
 
     class MyComponent extends Component {
+        static props = {};
         static template = xml`<div />`;
         setup() {
             this.orm = useService("orm");
