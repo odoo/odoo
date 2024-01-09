@@ -11,8 +11,7 @@ export class OverlayPlugin extends Plugin {
     static name = "overlay";
     static shared = ["createOverlay"];
 
-    constructor() {
-        super(...arguments);
+    setup() {
         this.overlays = [];
         this.addDomListener(document, "scroll", this.onScroll, true);
         this.addDomListener(window, "resize", this.updatePositions, true);

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "OXP Demo App",
+    'name': "HTML Editor",
 
     'summary': """
-        Demo App for GED Talk
+        Experimental implementation
     """,
 
     'description': """
-        Demo App for GED Talk
+        New implementation for html editor
     """,
 
     'author': "GED",

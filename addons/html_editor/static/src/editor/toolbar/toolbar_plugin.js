@@ -7,8 +7,7 @@ export class ToolbarPlugin extends Plugin {
     static name = "toolbar";
     static dependencies = ["overlay"];
 
-    constructor() {
-        super(...arguments);
+    setup() {
         /** @type {import("../core/overlay_plugin").Overlay} */
         this.overlay = this.shared.createOverlay(Toolbar, "top", { dispatch: this.dispatch });
         this.addDomListener(document, "selectionchange", this.handleSelectionChange);

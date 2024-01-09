@@ -1,5 +1,17 @@
 /** @odoo-module */
 
+/** @odoo-module */
+
+import { expect, test } from "@odoo/hoot";
+// import { Deferred } from "@odoo/hoot-mock";
+import { Cache } from "@web/core/utils/cache";
+
+test("one plus one equals two", () => {
+
+    expect(1 + 1).toBe(2);
+});
+
+
 /**
  * To write:
  *

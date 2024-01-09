@@ -19,9 +19,10 @@ export class Plugin {
         this.shared = shared;
         this.dispatch = dispatch;
         this._cleanups = [];
+        this.setup();
     }
 
-    // setup() {}
+    setup() {}
 
     /**
      * add it here so it is available in tooling

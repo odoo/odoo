@@ -9,8 +9,7 @@ export class HintPlugin extends Plugin {
     static dependencies = ["history"];
     static shared = ["createTempHint"];
 
-    constructor() {
-        super(...arguments);
+    setup() {
         this.tempHints = new Set();
         this.hints = {
             BLOCKQUOTE: _t("Empty quote"),
