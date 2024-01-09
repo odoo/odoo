@@ -61,7 +61,7 @@ export class Messaging {
         this.store.discuss.isActive =
             (data.menu_id && data.menu_id === router.current.hash?.menu_id) ||
             router.hash?.action === "mail.action_discuss";
-        this.isReady.resolve(data);
+        this.isReady.resolve();
         this.store.isMessagingReady = true;
     }
 

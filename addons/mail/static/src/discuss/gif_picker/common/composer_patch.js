@@ -11,7 +11,6 @@ import { patch } from "@web/core/utils/patch";
 /** @type {Composer} */
 const composerPatch = {
     setup() {
-        this.gifPickerService = useState(useService("discuss.gifPicker"));
         this.gifButton = useRef("gif-button");
         super.setup();
         this.ui = useState(useService("ui"));
@@ -28,7 +27,7 @@ const composerPatch = {
     },
     get hasGifPicker() {
         return (
-            (this.gifPickerService.hasGifPickerFeature || this.store.self?.isAdmin) &&
+            (this.store.hasGifPickerFeature || this.store.self?.isAdmin) &&
             !this.env.inChatter &&
             !this.props.composer.message
         );
