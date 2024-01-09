@@ -315,7 +315,10 @@ export class DateTimePicker extends Component {
         rounding: { type: Number, optional: true },
         slots: {
             type: Object,
-            shape: { buttons: { type: Object, optional: true } },
+            shape: {
+                bottom_left: { type: Object, optional: true },
+                buttons: { type: Object, optional: true },
+            },
             optional: true,
         },
         type: { type: [{ value: "date" }, { value: "datetime" }], optional: true },
