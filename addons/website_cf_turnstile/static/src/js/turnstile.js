@@ -21,7 +21,7 @@ odoo.define('website_cf_turnstile.s_website_form', function (require) {
                          data-sitekey="${session.turnstile_site_key}"
                          data-error-callback="throwTurnstileError"
                     ></div>
-                    <script>
+                    <script class="s_turnstile">
                         // Rethrow the error, or we only will catch a "Script error" without any info 
                         // because of the script api.js originating from a different domain.
                         function throwTurnstileError(code) {
