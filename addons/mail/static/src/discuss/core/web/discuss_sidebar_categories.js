@@ -143,14 +143,15 @@ export class DiscussSidebarCategories extends Component {
     }
 
     async toggleCategory(category) {
-        category.isOpen = !category.isOpen;
+        this.store.settings[category.serverStateKey] =
+            !this.store.settings[category.serverStateKey];
         await this.orm.call(
             "res.users.settings",
             "set_res_users_settings",
             [[this.store.settings.id]],
             {
                 new_settings: {
-                    [category.serverStateKey]: category.isOpen,
+                    [category.serverStateKey]: this.store.settings[category.serverStateKey],
                 },
             }
         );
