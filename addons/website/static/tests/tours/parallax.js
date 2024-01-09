@@ -47,4 +47,18 @@ wTourUtils.registerWebsitePreviewTour("test_parallax", {
     trigger: "iframe span.s_parallax_bg[data-gl-filter='blur']",
     isCheck: true,
 },
+    wTourUtils.changeOption("Parallax", "we-toggler"),
+    wTourUtils.changeOption("Parallax", 'we-button[data-select-data-attribute="1.5"]'),
+{
+    content: "Check that the option was correctly applied",
+    trigger: 'iframe span.s_parallax_bg[style*=top][style*=bottom][style*=transform]',
+    run: () => {}, //it's a check
+},
+    ...wTourUtils.clickOnSave(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+{
+    content: "The parallax should not add o_dirty when entering edit mode",
+    trigger: 'iframe #wrap:not(.o_dirty)',
+    run: () => {}, //it's a check
+},
 ]);
