@@ -68,6 +68,7 @@ class ResPartner(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         action["domain"] = [("partner_id", "in", all_child.ids)]
+        action["context"] = {'search_default_partner_id': all_child.ids}
         return action
 
     def _compute_credit_to_invoice(self):

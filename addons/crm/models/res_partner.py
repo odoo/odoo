@@ -59,10 +59,14 @@ class Partner(models.Model):
         This function returns an action that displays the opportunities from partner.
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
-        action['context'] = {}
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
             action['domain'] = [('partner_id', '=', self.id)]
         action['domain'] = expression.AND([action['domain'], [('active', 'in', [True, False])]])
+        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        action['context'] = {
+            'partner_ids': all_child.ids,
+            'search_default_partner_filter': 1,
+        }
         return action

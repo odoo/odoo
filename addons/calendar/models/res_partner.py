@@ -52,7 +52,7 @@ class Partner(models.Model):
                     partner = partner.parent_id
                     if partner in self:
                         meetings[partner.id] = meetings.get(partner.id, set()) | meetings[p.id]
-            return {p_id: list(meetings.get(p_id, set())) for p_id in self.ids}
+            return {**{p_id: list(meetings.get(p_id, set())) for p_id in self.ids}, 'pids': all_partners.ids}
         return {}
 
     def get_attendee_detail(self, meeting_ids):
@@ -89,8 +89,11 @@ class Partner(models.Model):
         partner_ids = self.ids
         partner_ids.append(self.env.user.partner_id.id)
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
+        result = self._compute_meeting()
         action['context'] = {
             'default_partner_ids': partner_ids,
+            'pids': result['pids'],
+            'search_default_invite_partner': 1,
         }
-        action['domain'] = ['|', ('id', 'in', self._compute_meeting()[self.id]), ('partner_ids', 'in', self.ids)]
+        action['domain'] = ['|', ('id', 'in', result[self.id]), ('partner_ids', 'in', self.ids)]
         return action

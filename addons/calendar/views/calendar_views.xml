@@ -403,6 +403,8 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
                 </group>
+                <filter string="Invited Partners" name="invite_partner" domain="[('partner_ids', 'in', context.get('pids'))]" invisible="1"/>
+                <separator/>
             </search>
         </field>
     </record>
