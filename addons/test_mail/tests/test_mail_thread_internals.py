@@ -25,6 +25,77 @@ class TestAPI(MailCommon, TestRecipients):
             'user_id': cls.user_employee.id,
         })
 
+    @users('employee')
+    def test_body_escape(self):
+        """ Test various use cases involving HTML encoding / escaping """
+        ticket_record = self.ticket_record.with_env(self.env)
+        attachments = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+        self.assertFalse(self.env['ir.attachment'].sudo().search([('name', '=', 'test_image.jpeg')]))
+
+        # attachments processing through CID, rewrites body (if escaped)
+        body = '<div class="ltr"><img src="cid:ii_lps7a8sm0" alt="test_image.jpeg" width="542" height="253">Zboing</div>'
+        for with_markup in [False, True]:
+            with self.subTest(with_markup=with_markup):
+                test_body = Markup(body) if with_markup else body
+                message = ticket_record.message_post(
+                    attachments=[("test_image.jpeg", "b", {"cid": "ii_lps7a8sm0"})],
+                    attachment_ids=attachments.ids,
+                    body=test_body,
+                    message_type="comment",
+                    partner_ids=self.partner_1.ids,
+                )
+                new_attachment = self.env['ir.attachment'].sudo().search([('name', '=', 'test_image.jpeg')])
+                self.assertEqual(new_attachment.res_id, ticket_record.id)
+                if with_markup:
+                    expected_body = Markup(
+                        f'<div class="ltr"><img src="/web/image/{new_attachment.id}?access_token={new_attachment.access_token}" '
+                         'alt="test_image.jpeg" width="542" height="253">Zboing</div>'
+                    )
+                else:
+                    expected_body = Markup('<p>&lt;div class="ltr"&gt;&lt;img src="cid:ii_lps7a8sm0" alt="test_image.jpeg" width="542" height="253"&gt;Zboing&lt;/div&gt;</p>')
+                self.assertEqual(message.attachment_ids, attachments + new_attachment)
+                self.assertEqual(message.body, expected_body)
+                new_attachment.unlink()
+
+        # internals of attachment processing, in case it is called for other addons
+        for with_markup in [False, True]:
+            with self.subTest(with_markup=with_markup):
+                message_values = {
+                    'body': Markup(body) if with_markup else body,
+                    'model': ticket_record._name,
+                    'res_id': ticket_record.id,
+                }
+                processed_values = self.env['mail.thread']._process_attachments_for_post(
+                    [("test_image.jpeg", "b", {"cid": "ii_lps7a8sm0"})], attachments.ids, message_values,
+                )
+                if not with_markup:
+                    self.assertFalse('body' in processed_values, 'Mail: escaped html does not contain tags to handle anymore')
+                else:
+                    self.assertTrue(isinstance(processed_values['body'], Markup))
+
+        # html is escaped in main API methods
+        content = 'I am "Robert <robert@poilvache.com>"'
+        expected = Markup('<p>I am "Robert &lt;robert@poilvache.com&gt;"</p>')  # enclosed in p to make valid html
+        message = ticket_record._message_log(
+            body=content,
+        )
+        self.assertEqual(message.body, expected)
+        message = ticket_record.message_notify(
+            body=content,
+            partner_ids=self.partner_1.ids,
+        )
+        self.assertEqual(message.body, expected)
+        message = ticket_record.message_post(
+            body=content,
+            message_type="comment",
+            partner_ids=self.partner_1.ids,
+        )
+        self.assertEqual(message.body, expected)
+        ticket_record._message_update_content(message, "Hello <R&D/>")
+        self.assertEqual(message.body, Markup("<p>Hello &lt;R&amp;D/&gt;</p>"))
+
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content(self):
@@ -52,7 +123,7 @@ class TestAPI(MailCommon, TestRecipients):
             self._generate_attachments_data(2, 'mail.compose.message', 0)
         )
         ticket_record._message_update_content(
-            message, "<p>New Body</p>",
+            message, Markup("<p>New Body</p>"),
             attachment_ids=new_attachments.ids
         )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
@@ -62,7 +133,7 @@ class TestAPI(MailCommon, TestRecipients):
 
         # void attachments
         ticket_record._message_update_content(
-            message, "<p>Another Body, void attachments</p>",
+            message, Markup("<p>Another Body, void attachments</p>"),
             attachment_ids=[]
         )
         self.assertFalse(message.attachment_ids)
