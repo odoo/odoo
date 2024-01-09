@@ -18,7 +18,10 @@ class TestPaymentTransaction(RazorpayCommon):
 
     def test_no_item_missing_from_order_request_payload(self):
         """ Test that the request values are conform to the transaction fields. """
-        tx = self._create_transaction('direct')
+        inr_currency = self.env['res.currency'].with_context(active_test=False).search([
+            ('name', '=', 'INR'),
+        ], limit=1)
+        tx = self._create_transaction('direct', currency_id=inr_currency.id)
         for tokenize in (False, True):
             tx.tokenize = tokenize
             request_payload = tx._razorpay_prepare_order_payload(customer_id=self.customer_id)
