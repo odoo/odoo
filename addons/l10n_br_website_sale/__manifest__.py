@@ -9,6 +9,8 @@
         'website_sale',
     ],
     'data': [
+        'data/ir_model_fields.xml',
+
         'views/portal.xml',
         'views/templates.xml',
     ],

@@ -236,6 +236,38 @@ class SaleOrder(models.Model):
             order_line = self.env['sale.order.line'].sudo().create(order_line_values)
         return order_line
 
+    def _update_address(self, partner_id, fnames=None):
+        if not fnames:
+            return
+
+        fpos_before = self.fiscal_position_id
+        pricelist_before = self.pricelist_id
+
+        self.write(dict.fromkeys(fnames, partner_id))
+
+        fpos_changed = fpos_before != self.fiscal_position_id
+        if fpos_changed:
+            # Recompute taxes on fpos change
+            self._recompute_taxes()
+
+        if self.pricelist_id != pricelist_before or fpos_changed:
+            # Pricelist may have been recomputed by the `partner_id` field update
+            # we need to recompute the prices to match the new pricelist if it changed
+            self._recompute_prices()
+
+            request.session['website_sale_current_pl'] = self.pricelist_id.id
+            self.website_id.invalidate_recordset(['pricelist_id'])
+
+        if self.carrier_id and 'partner_shipping_id' in fnames and self._has_deliverable_products():
+            # Update the delivery method on shipping address change.
+            delivery_methods = self._get_delivery_methods()
+            delivery_method = self._get_preferred_delivery_method(delivery_methods)
+            self._set_delivery_method(delivery_method)
+
+        if 'partner_id' in fnames:
+            # Only add the main partner as follower of the order
+            self._message_subscribe([partner_id])
+
     def _cart_update_pricelist(self, pricelist_id=None, update_pricelist=False):
         self.ensure_one()
 
@@ -643,7 +675,14 @@ class SaleOrder(models.Model):
 
     #=== TOOLING ===#
 
-    def _is_public_order(self):
+    def _is_anonymous_cart(self):
+        """ Return whether the cart was created by the public user and no address was added yet.
+
+        Note: `self.ensure_one()`
+
+        :return: Whether the cart is anonymous.
+        :rtype: bool
+        """
         self.ensure_one()
         return self.partner_id.id == request.website.user_id.sudo().partner_id.id
 

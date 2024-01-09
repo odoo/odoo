@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests import tagged
 
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website.tools import MockRequest
-from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
@@ -13,7 +12,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
 
     @classmethod
     def setUpClass(cls):
-        super(TestWebsiteBoothPriceList, cls).setUpClass()
+        super().setUpClass()
 
         cls.WebsiteSaleController = WebsiteSale()
         cls.booth_1 = cls.env['event.booth'].create({
