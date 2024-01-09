@@ -23,7 +23,7 @@ export class DiscussCoreCommon {
     }
 
     setup() {
-        this.messagingService.isReady.then((data) => {
+        this.messagingService.isReady.then(() => {
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert(channel);

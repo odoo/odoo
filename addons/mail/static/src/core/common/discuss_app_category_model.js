@@ -43,7 +43,6 @@ export class DiscussAppCategory extends Record {
     /** @type {string} */
     name;
     hideWhenEmpty = false;
-    isOpen = false;
     canView = false;
     canAdd = false;
     app = Record.one("DiscussApp", {

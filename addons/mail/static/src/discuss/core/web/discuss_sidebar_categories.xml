@@ -14,19 +14,19 @@
         <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
         <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
             <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
-                <i class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="category.isOpen ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                <i class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="store.settings[category.serverStateKey] ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
                 <span class="btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
             </div>
             <div class="flex-grow-1"/>
             <div class="d-flex me-3">
                 <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
-                <i t-if="category.canAdd and category.isOpen" class="o-mail-DiscussSidebarCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"  t-att-data-hotkey="category.addHotkey"/>
+                <i t-if="category.canAdd and store.settings[category.serverStateKey]" class="o-mail-DiscussSidebarCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"  t-att-data-hotkey="category.addHotkey"/>
             </div>
-            <div t-if="!category.isOpen and threadService.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
+            <div t-if="!store.settings[category.serverStateKey] and threadService.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
                 <t t-esc="threadService.getDiscussSidebarCategoryCounter(category.id)"/>
             </div>
         </div>
-        <t t-if="category.isOpen">
+        <t t-if="store.settings[category.serverStateKey]">
             <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
                 <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true" close.bind="stopEditing" />
             </div>
