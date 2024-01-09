@@ -23,12 +23,7 @@ export class DiscussCoreWeb {
     }
 
     setup() {
-        this.messagingService.isReady.then((data) => {
-            this.store.discuss.channels.isOpen =
-                data.settings.is_discuss_sidebar_category_channel_open;
-            this.store.discuss.chats.isOpen = data.settings.is_discuss_sidebar_category_chat_open;
-            this.busService.start();
-        });
+        this.messagingService.isReady.then(() => this.busService.start());
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
             ({ detail: { channel, message } }) => {
@@ -43,16 +38,6 @@ export class DiscussCoreWeb {
                 this.threadService.notifyMessageToUser(channel, message);
             }
         );
-        this.busService.subscribe("res.users.settings", (payload) => {
-            if (payload) {
-                this.store.discuss.chats.isOpen =
-                    payload.is_discuss_sidebar_category_chat_open ??
-                    this.store.discuss.chats.isOpen;
-                this.store.discuss.channels.isOpen =
-                    payload.is_discuss_sidebar_category_channel_open ??
-                    this.store.discuss.channels.isOpen;
-            }
-        });
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present

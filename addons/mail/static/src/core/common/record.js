@@ -1588,6 +1588,7 @@ export class Record {
      */
     _fields = new Map();
     __uses__ = markRaw(new RecordUses());
+    /** @returns {import("models").Store} */
     get _store() {
         return toRaw(this)._raw.Model._rawStore._proxy;
     }
