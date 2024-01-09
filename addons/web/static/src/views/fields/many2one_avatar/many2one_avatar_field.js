@@ -5,28 +5,14 @@ import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
-import { Component } from "@odoo/owl";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 
-export class Many2OneAvatarField extends Component {
+export class Many2OneAvatarField extends Many2OneField {
     static template = "web.Many2OneAvatarField";
     static components = {
-        Many2OneField,
+        ...Many2OneField.components,
+        Many2XAutocomplete: AvatarMany2XAutocomplete,
     };
-    static props = {
-        ...Many2OneField.props,
-    };
-
-    get relation() {
-        return this.props.relation || this.props.record.fields[this.props.name].relation;
-    }
-    get many2OneProps() {
-        return Object.fromEntries(
-            Object.entries(this.props).filter(
-                ([key, _val]) => key in this.constructor.components.Many2OneField.props
-            )
-        );
-    }
 }
 
 export const many2OneAvatarField = {
