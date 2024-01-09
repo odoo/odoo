@@ -670,3 +670,28 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po.order_line[0].qty_received, 5)
         self.assertEqual(po.order_line[1].qty_received, 5)
+
+    def test_receive_qty_invoiced_but_no_posted(self):
+        """
+        Create a purchase order, confirm it, invoice it, but don't post the invoice.
+        Receive the products.
+        """
+        self.product_id_1.type = 'product'
+        self.product_id_1.categ_id.property_cost_method = 'average'
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+        self.assertEqual(po.order_line[0].product_id, self.product_id_1)
+        # Invoice the PO
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        self.assertTrue(invoice)
+        # Receive the products
+        receipt01 = po.picking_ids
+        action = receipt01.button_validate()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+        self.assertEqual(po.order_line[0].qty_received, 5)
+        self.assertEqual(po.order_line[0].price_unit, 500)
+        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product_id_1.id)])
+        self.assertEqual(len(layers), 1)
+        self.assertEqual(layers.quantity, 5)
+        self.assertEqual(layers.value, 2500)
