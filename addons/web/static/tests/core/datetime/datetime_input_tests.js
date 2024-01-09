@@ -484,6 +484,22 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(input.value, "08/02/1997 15:45:05");
     });
 
+    QUnit.test("Clicking close button closes datetime picker", async function (assert) {
+        const input = await mountInput({
+            value: DateTime.fromFormat("09/01/1997 12:30:01", "dd/MM/yyyy HH:mm:ss"),
+            type: "datetime",
+            format: "dd MMM, yyyy HH:mm:ss",
+        });
+        await click(input);
+        await click(getFixture(), ".o_datetime_picker .o_datetime_buttons .btn-secondary");
+
+        assert.strictEqual(
+            getFixture().querySelector(".o_datetime_picker"),
+            null,
+            "Datetime picker is closed"
+        );
+    });
+
     QUnit.test("arab locale, latin numbering system as input", async (assert) => {
         patchWithCleanup(localization, {
             dateFormat: "dd MMM, yyyy",
