@@ -1,15 +1,22 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { renderToMarkup } from "@web/core/utils/render";
 import { View } from "@web/views/view";
-import { escape } from "@web/core/utils/strings";
 
 import { FormViewDialog } from "./form_view_dialog";
 
-import { Component, markup, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+
+let _defaultNoContentHelp;
+function getDefaultNoContentHelp() {
+    if (!_defaultNoContentHelp) {
+        _defaultNoContentHelp = renderToMarkup("web.SelectCreateDialog.DefaultNoContentHelp");
+    }
+    return _defaultNoContentHelp;
+}
 
 export class SelectCreateDialog extends Component {
     static components = { Dialog, View };
@@ -27,6 +34,7 @@ export class SelectCreateDialog extends Component {
         title: { type: String, optional: true },
         noCreate: { type: Boolean, optional: true },
         onUnselect: { type: Function, optional: true },
+        noContentHelp: { type: String, optional: true }, // Markup
     };
     static defaultProps = {
         dynamicFilters: [],
@@ -40,14 +48,12 @@ export class SelectCreateDialog extends Component {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
         this.state = useState({ resIds: [] });
-        // ℹ️ `_t` can only be inlined directly inside JS template literals
-        // after Babel has been updated to version 2.12.
-        const translatedText = _t("No records found!");
+        const noContentHelp = this.props.noContentHelp || getDefaultNoContentHelp();
         this.baseViewProps = {
             display: { searchPanel: false },
             editable: false, // readonly
             noBreadcrumbs: true,
-            noContentHelp: markup(`<p>${escape(translatedText)}</p>`),
+            noContentHelp,
             showButtons: false,
             selectRecord: (resId) => this.select([resId]),
             onSelectionChanged: (resIds) => {

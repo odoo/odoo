@@ -5,6 +5,8 @@
     --ListRenderer-thead-bg-color:  #{$o-webclient-background-color};
     --ListRenderer-thead-border-end-color: #{$border-color};
     --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
+    --sticky-header-zindex: 1;
+    --o-view-nocontent-zindex: calc(var(--sticky-header-zindex) + 1);
 
     margin-left: var(--ListRenderer-margin-x, unset);
     margin-right: var(--ListRenderer-margin-x, unset);
@@ -15,7 +17,7 @@
 
         .o_list_table thead {
             @include o-position-sticky(0);
-            z-index: 1;
+            z-index: var(--sticky-header-zindex);
         }
     }
 
