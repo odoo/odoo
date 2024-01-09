@@ -256,23 +256,26 @@ class Users(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
+        self = self.with_user(self)
         odoobot = self.env.ref('base.partner_root')
         values = {
-            'companyName': self.env.company.name,
-            'self': self.partner_id.mail_partner_format().get(self.partner_id),
-            'current_user_id': self.id,
-            'settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
-            'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
-            'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
-            'internalUserGroupId': self.env.ref('base.group_user').id,
-            'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
-            'mt_comment_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
-            'discuss': {
-                'inbox': {'counter': self.partner_id._get_needaction_count(), 'id': "inbox", 'model': "mail.box"},
-                'starred': {'counter': self.env['mail.message'].search_count([('starred_partner_ids', 'in', self.partner_id.ids)]), 'id': "starred", 'model': "mail.box"},
+            "CannedResponse": self.env["mail.shortcode"].sudo().search_read([], ["source", "substitution"]),
+            "Store": {
+                "companyName": self.env.company.name,
+                "current_user_id": self.id,
+                "discuss": {
+                    "inbox": {"counter": self.partner_id._get_needaction_count(), "id": "inbox", "model": "mail.box"},
+                    "starred": {"counter": self.env["mail.message"].search_count([("starred_partner_ids", "in", self.partner_id.ids)]), "id": "starred", "model": "mail.box"},
+                },
+                "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
+                "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
+                "internalUserGroupId": self.env.ref("base.group_user").id,
+                "menu_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.menu_root_discuss"),
+                "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
+                "odoobot": odoobot.sudo().mail_partner_format().get(odoobot),
+                "self": self.partner_id.mail_partner_format().get(self.partner_id),
+                "settings": self.env["res.users.settings"]._find_or_create_for_user(self)._res_users_settings_format(),
             },
-            'odoobot': odoobot.sudo().mail_partner_format().get(odoobot),
-            'CannedResponse': self.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution']),
         }
         return values
 

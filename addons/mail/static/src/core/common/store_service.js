@@ -194,7 +194,7 @@ export class Store extends BaseStore {
      */
     insert(dataByModelName, options = {}) {
         const store = this;
-        return StoreRecord.MAKE_UPDATE(function storeInsert() {
+        return Record.MAKE_UPDATE(function storeInsert() {
             const res = {};
             for (const [modelName, data] of Object.entries(dataByModelName)) {
                 res[modelName] = store[modelName].insert(data, options);

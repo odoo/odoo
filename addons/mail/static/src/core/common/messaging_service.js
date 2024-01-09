@@ -57,7 +57,7 @@ export class Messaging {
     }
 
     initMessagingCallback(data) {
-        this.store.update(data);
+        this.store.insert(data);
         this.store.discuss.isActive =
             (data.menu_id && data.menu_id === router.current.hash?.menu_id) ||
             router.hash?.action === "mail.action_discuss";
