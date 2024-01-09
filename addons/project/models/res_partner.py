@@ -69,10 +69,10 @@ class ResPartner(models.Model):
             'display_name': _("%(partner_name)s's Tasks", partner_name=self.name),
             'context': {
                 'default_partner_id': self.id,
+                'search_default_partner_id': self.id,
             },
         }
-        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        search_domain = [('partner_id', 'in', (self | all_child).ids)]
+        search_domain = [('partner_id', 'child_of', self.ids)]
         if self.task_count <= 1:
             task_id = self.env['project.task'].search(search_domain, limit=1)
             action['res_id'] = task_id.id

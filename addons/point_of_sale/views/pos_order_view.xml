@@ -416,7 +416,7 @@
                 <field name="date_order"/>
                 <field name="tracking_number"/>
                 <field name="user_id"/>
-                <field name="partner_id"/>
+                <field name="partner_id" operator="child_of"/>
                 <field name="session_id"/>
                 <field name="config_id"/>
                 <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>

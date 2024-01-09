@@ -448,6 +448,8 @@
                     <separator/>
                     <filter string="Date" name="group_by_start" domain="[]" context="{'group_by': 'start'}"/>
                 </group>
+                <filter string="Attendees" name="invite_partner" domain="[('partner_ids', 'child_of', context.get('meetings_parent_partner'))]" context="{'active_test': False}" invisible="1"/>
+                <separator/>
             </search>
         </field>
     </record>
