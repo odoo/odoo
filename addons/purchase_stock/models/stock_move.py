@@ -67,7 +67,7 @@ class StockMove(models.Model):
             remaining_value = invoiced_value - receipt_value
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
-            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec) if remaining_value and remaining_qty else line._get_gross_price_unit()
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
