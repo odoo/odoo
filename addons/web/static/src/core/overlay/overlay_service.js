@@ -9,6 +9,7 @@ const services = registry.category("services");
 
 /**
  * @typedef {{
+ *  env?: object;
  *  onRemove?: () => void;
  *  sequence?: number;
  * }} OverlayServiceAddOptions
@@ -43,6 +44,7 @@ export const overlayService = {
             overlays[id] = {
                 id,
                 component,
+                env: options.env,
                 props,
                 remove: removeCurrentOverlay,
                 sequence: options.sequence ?? 50,

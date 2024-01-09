@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onError, xml, useSubEnv } from "@odoo/owl";
+import { Component, onError, xml, useChildSubEnv } from "@odoo/owl";
 
 export class ErrorHandler extends Component {
     static template = xml`<t t-slot="default" />`;
@@ -14,8 +14,25 @@ export class ErrorHandler extends Component {
 
 export class WithEnv extends Component {
     static template = xml`<t t-slot="default"/>`;
-    static props = ["env", "slots"];
+    static props = {
+        env: {
+            type: Object,
+            optional: true,
+        },
+        replace: {
+            type: Boolean,
+            optional: true,
+        },
+        slots: {
+            type: Object,
+            optional: true,
+        },
+    };
     setup() {
-        useSubEnv(this.props.env);
+        if (this.props.replace) {
+            this.__owl__.childEnv = this.props.env;
+        } else {
+            useChildSubEnv(this.props.env);
+        }
     }
 }
