@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="l10n_in_tds_entry.AccountPaymentField" t-inherit="account.AccountPaymentField" t-inherit-mode="extension" owl="1">
+        <xpath expr="//td[@t-if='!line.is_exchange']" position="replace">
+            <td t-if="line.l10n_in_is_tds">
+                <i class="o_field_widget text-start o_payment_label">TDS on <t t-out="line.date"></t></i>
+            </td>
+            <t t-else="">
+                <td t-if="!line.is_exchange">
+                    <i class="o_field_widget text-start o_payment_label">Paid on <t t-out="line.date"></t></i>
+                </td>
+            </t>
+        </xpath>
+    </t>
+</templates>
