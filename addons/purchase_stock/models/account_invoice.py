@@ -110,14 +110,28 @@ class AccountMove(models.Model):
                 # - price unit is not zero with respect to product price decimal precision.
                 # - subtotal is not zero with respect to move currency precision.
                 # - no discount was applied, as we can't round the price unit anymore
-                if (
+                if self._price_difference_is_applicable(move, line, price_subtotal, price_unit_val_dif, price_unit_prec):
+                    # Add price difference account line.
+
+                    vals = self._prepare_price_difference_account_line_vals(line, move, debit_pdiff_account, price_unit_val_dif)
+                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
+                    lines_vals_list.append(vals)
+
+                    # Correct the amount of the current line.
+                    vals = self._prepare_price_difference_current_line_vals(line, move, debit_pdiff_account, price_unit_val_dif)
+                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
+                    lines_vals_list.append(vals)
+        return lines_vals_list
+
+    def _price_difference_is_applicable(self, move, line, price_subtotal, price_unit_val_dif, price_unit_prec):
+        return (
                     not move.currency_id.is_zero(price_subtotal)
                     and not float_is_zero(price_unit_val_dif, precision_digits=price_unit_prec)
                     and float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0
-                ):
+                )
 
-                    # Add price difference account line.
-                    vals = {
+    def _prepare_price_difference_account_line_vals(self, line, move, debit_pdiff_account, price_unit_val_dif):
+        return {
                         'name': line.name[:64],
                         'move_id': move.id,
                         'partner_id': line.partner_id.id or move.commercial_partner_id.id,
@@ -133,11 +147,9 @@ class AccountMove(models.Model):
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
                     }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                    lines_vals_list.append(vals)
 
-                    # Correct the amount of the current line.
-                    vals = {
+    def _prepare_price_difference_current_line_vals(self, line, move, debit_pdiff_account, price_unit_val_dif):
+        return {
                         'name': line.name[:64],
                         'move_id': move.id,
                         'partner_id': line.partner_id.id or move.commercial_partner_id.id,
@@ -153,9 +165,6 @@ class AccountMove(models.Model):
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
                     }
-                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                    lines_vals_list.append(vals)
-        return lines_vals_list
 
     def _post(self, soft=True):
         # OVERRIDE
