@@ -159,7 +159,7 @@ class Message(models.Model):
     @api.depends('discussion.messages.important')
     def _compute_has_important_sibling(self):
         for record in self:
-            siblings = record.discussion.messages - record
+            siblings = record.discussion.with_context(active_test=False).messages - record
             record.has_important_sibling = any(siblings.mapped('important'))
 
     @api.constrains('author', 'discussion')
