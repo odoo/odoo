@@ -1,10 +1,10 @@
 import { Component } from "@odoo/owl";
-import { sortBy } from "../utils/arrays";
-import { ErrorHandler } from "../utils/components";
+import { sortBy } from "@web/core/utils/arrays";
+import { ErrorHandler, WithEnv } from "@web/core/utils/components";
 
 export class OverlayContainer extends Component {
     static template = "web.OverlayContainer";
-    static components = { ErrorHandler };
+    static components = { ErrorHandler, WithEnv };
     static props = { overlays: Object };
 
     get sortedOverlays() {
