@@ -39,10 +39,10 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             'city': 'ooo',
             'zip': '1200',
             'country_id': self.country_id,
-            'submitted': 1,
-            'phone': '+333333333333333'
+            'phone': '+333333333333333',
+            'mode': 'shipping',
         }
-        self.default_billing_address_values = self.default_address_values | {'mode': 'billing'}
+        self.default_billing_address_values = dict(self.default_address_values, mode='billing')
 
     def _get_last_address(self, partner):
         """ Useful to retrieve the last created address (shipping or billing) """
@@ -56,12 +56,12 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             self.assertFalse(self._get_last_address(p).website_id, "New shipping address should not have a website set on it (no specific_user_account).")
 
             self.website.specific_user_account = True
 
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             self.assertEqual(self._get_last_address(p).website_id, self.website, "New shipping address should have a website set on it (specific_user_account).")
 
     # TEST COMPANY
@@ -102,14 +102,14 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             req.httprequest.method = "POST"
 
             # 1. Logged in user, new shipping
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             new_shipping = self._get_last_address(self.demo_partner)
             self.assertTrue(new_shipping.company_id != self.env.user.company_id, "Logged in user new shipping should not get the company of the sudo() neither the one from it's partner..")
             self.assertEqual(new_shipping.company_id, self.website.company_id, ".. but the one from the website.")
 
             # 2. Logged in user/internal user, should not edit name or email address of billing
             self.default_address_values['partner_id'] = self.demo_partner.id
-            self.WebsiteSaleController.address(**self.default_billing_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_billing_address_values)
             self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
             self.assertNotEqual(self.demo_partner.name, self.default_address_values['name'], "Employee cannot change their name during the checkout process.")
             self.assertNotEqual(self.demo_partner.email, self.default_address_values['email'], "Employee cannot change their email during the checkout process.")
@@ -126,14 +126,14 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
             # 1. Public user, new billing
             self.default_address_values['partner_id'] = -1
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             new_partner = so.partner_id
             self.assertNotEqual(new_partner, self.website.user_id.partner_id, "New billing should have created a new partner and assign it on the SO")
             self.assertEqual(new_partner.company_id, self.website.company_id, "The new partner should get the company of the website")
 
             # 2. Public user, edit billing
             self.default_address_values['partner_id'] = new_partner.id
-            self.WebsiteSaleController.address(**self.default_billing_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_billing_address_values)
             self.assertEqual(new_partner.company_id, self.website.company_id, "Public user edited billing (the partner itself) should not get its company modified.")
 
     def test_03_carrier_rate_on_shipping_address_change(self):
@@ -248,14 +248,14 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             req.httprequest.method = "POST"
 
             # 1. Portal user, new shipping, same with the log in user
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             new_shipping = self._get_last_address(self.portal_partner)
             self.assertTrue(new_shipping.company_id != self.env.user.company_id, "Portal user new shipping should not get the company of the sudo() neither the one from it's partner..")
             self.assertEqual(new_shipping.company_id, self.website.company_id, ".. but the one from the website.")
 
             # 2. Portal user, edit billing
             self.default_address_values['partner_id'] = self.portal_partner.id
-            self.WebsiteSaleController.address(**self.default_billing_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_billing_address_values)
             # Name cannot be changed if there are issued invoices
             self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
 
@@ -327,7 +327,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         with MockRequest(self.env, website=self.website.with_env(env), sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
-            self.WebsiteSaleController.address(**be_address_POST)
+            self.WebsiteSaleController.shop_address_submit(**be_address_POST)
             self.assertEqual(
                 so.fiscal_position_id,
                 fpos_be,
@@ -337,7 +337,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
                 [90.91, 18.18, 109.09] # (100 : (1 + 10%)) * (1 + 20%) = 109.09
             )
 
-            self.WebsiteSaleController.address(**nl_address_POST)
+            self.WebsiteSaleController.shop_address_submit(**nl_address_POST)
             self.assertEqual(
                 so.fiscal_position_id,
                 fpos_nl,
@@ -362,13 +362,13 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.assertEqual(self.demo_partner, so.partner_shipping_id)
 
             # 1. Logged-in user, new shipping
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             new_shipping = self._get_last_address(self.demo_partner)
             msg = "New shipping address should have its type set as 'delivery'"
             self.assertTrue(new_shipping.type == 'delivery', msg)
 
             # 2. Logged-in user, new billing
-            self.WebsiteSaleController.address(**self.default_billing_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_billing_address_values)
             new_billing = self._get_last_address(self.demo_partner)
             msg = "New billing should have its type set as 'invoice'"
             self.assertTrue(new_billing.type == 'invoice', msg)
@@ -380,7 +380,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
             # 4. Logged-in user, new billing use same
             use_same = self.default_billing_address_values | {'use_same': 1}
-            self.WebsiteSaleController.address(**use_same)
+            self.WebsiteSaleController.shop_address_submit(**use_same)
             new_billing_use_same = self._get_last_address(self.demo_partner)
             msg = "New billing use same should have its type set as 'other'"
             self.assertTrue(new_billing_use_same.type == 'other', msg)
@@ -392,9 +392,9 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
             # 6. forbid address page opening with wrong partners:
             with self.assertRaises(Forbidden):
-                self.WebsiteSaleController.address(partner_id=self.env.user.partner_id.id, mode='billing')
+                self.WebsiteSaleController.shop_address_submit(partner_id=self.env.user.partner_id.id, mode='billing')
             with self.assertRaises(Forbidden):
-                self.WebsiteSaleController.address(partner_id=self.env.user.partner_id.id, mode='shipping')
+                self.WebsiteSaleController.shop_address_submit(partner_id=self.env.user.partner_id.id, mode='shipping')
 
     def test_09_update_cart_address(self):
         self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
@@ -498,7 +498,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.WebsiteSaleController.update_cart_address(
                 partner_id=bad_invoicing.id, mode='billing')
             self.assertEqual(so.partner_invoice_id, bad_invoicing)
-            redirection = self.WebsiteSaleController.checkout_check_address(so)
+            redirection = self.WebsiteSaleController._checkout_check_address(so)
             self.assertTrue(redirection is not None)
             self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_invoicing.id}&mode=billing')
 
@@ -508,7 +508,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.WebsiteSaleController.update_cart_address(
                 partner_id=bad_shipping.id, mode='shipping')
             self.assertEqual(so.partner_shipping_id, bad_shipping)
-            redirection = self.WebsiteSaleController.checkout_check_address(so)
+            redirection = self.WebsiteSaleController._checkout_check_address(so)
             self.assertTrue(redirection is not None)
             self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_shipping.id}&mode=shipping')
 
@@ -576,27 +576,20 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
     def test_11_payment_term_when_address_change(self):
         """Make sure the expected payment terms are set on ecommerce orders"""
-        self._setUp_multicompany_env()
-        product_id = self.env['product.product'].create({
-            'name': 'Product A',
-            'list_price': 100,
-            'website_published': True,
-            'sale_ok': True,
-        }).id
+        self.portal_user = self.user_portal
+        self.portal_partner = self.portal_user.partner_id
+        self.assertFalse(self.portal_partner.property_payment_term_id)
+        so = self._create_so(partner_id=self.portal_partner.id)
+        self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
 
         env = api.Environment(self.env.cr, self.portal_user.id, {})
         with MockRequest(env, website=self.website.with_env(env).with_context(website_id=self.website.id)) as req:
             req.httprequest.method = "POST"
 
-            self.WebsiteSaleController.cart_update(product_id)
-            so = self.portal_user.sale_order_ids[0]
-            self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
-
             self.default_address_values['partner_id'] = self.portal_partner.id
-            self.default_address_values['name'] = self.portal_partner.name
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.shop_address_submit(**self.default_billing_address_values)
             self.assertTrue(so.payment_term_id, "A payment term should still be set on the sale order")
 
             so.website_id = False
-            self.WebsiteSaleController.address(**self.default_address_values)
+            so._compute_payment_term_id()
             self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")

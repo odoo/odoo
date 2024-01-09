@@ -44,14 +44,14 @@ class MondialRelay(http.Controller):
 
 class WebsiteSaleMondialrelay(WebsiteSale):
 
-    @http.route()
-    def address(self, **kw):
-        res = super().address(**kw)
-        Partner_sudo = request.env['res.partner'].sudo()
-        partner_id = res.qcontext.get('partner_id', 0)
-        if partner_id > 0 and Partner_sudo.browse(partner_id).is_mondialrelay:
+    def _check_address_update(self, order_sudo, partner_id, mode):
+        """Updates of mondialrelay addresses are forbidden"""
+        partner_sudo, mode = super()._check_address_update(order_sudo, partner_id, mode)
+
+        if partner_sudo and partner_sudo.is_mondialrelay:
             raise UserError(_('You cannot edit the address of a Point Relais®.'))
-        return res
+
+        return partner_sudo, mode
 
     def _check_shipping_partner_mandatory_fields(self, partner_id):
         # skip check for mondialrelay partners as the customer can not edit them
