@@ -394,6 +394,7 @@ export function previousLeaf(node, editable, skipInvisible = false) {
         }
     }
 }
+window.isVisible = isVisible;
 export function nextLeaf(node, editable, skipInvisible = false) {
     let ancestor = node;
     while (ancestor && !ancestor.nextSibling && ancestor !== editable) {
@@ -671,10 +672,13 @@ export function setCursorEnd(node, normalize = true) {
  * @returns {boolean} the direction of the current range if the selection not is collapsed | false
  */
 export function getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset) {
+    // console.log(`anchorNode === focusNode:`, anchorNode === focusNode);
     if (anchorNode === focusNode) {
         if (anchorOffset === focusOffset) return false;
         return anchorOffset < focusOffset ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
     }
+    // console.log(`anchorNode:`, anchorNode);
+    // console.log(`focusNode:`, focusNode);
     return anchorNode.compareDocumentPosition(focusNode) & Node.DOCUMENT_POSITION_FOLLOWING
         ? DIRECTIONS.RIGHT
         : DIRECTIONS.LEFT;
