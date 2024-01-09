@@ -653,8 +653,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
-        if (pricelist.selectable or pricelist == request.env.user.partner_id.property_product_pricelist) \
-                and website.is_pricelist_available(pricelist.id):
+        if (
+            website.is_pricelist_available(pricelist.id)
+            and (
+                pricelist.selectable
+                or pricelist == request.env.user.partner_id.property_product_pricelist
+            )
+        ):
             if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
                 decoded_url = url_parse(redirect_url)
                 args = url_decode(decoded_url.query)
@@ -678,7 +683,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         pass
                     redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
             request.session['website_sale_current_pl'] = pricelist.id
-            request.website.sale_get_order(update_pricelist=True)
+            order_sudo = request.website.sale_get_order()
+            if order_sudo:
+                order_sudo._cart_update_pricelist(pricelist_id=pricelist.id)
         return request.redirect(redirect_url or '/shop')
 
     @route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
@@ -691,14 +698,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
             request.session['website_sale_current_pl'] = pricelist_sudo.id
-            # TODO find the best way to create the order with the correct pricelist directly ?
-            # not really necessary, but could avoid one write on SO record
-            order_sudo = request.website.sale_get_order(force_create=True)
-            order_sudo._cart_update_pricelist(pricelist_id=pricelist_sudo.id)
-        else:
             order_sudo = request.website.sale_get_order()
             if order_sudo:
-                order_sudo._cart_update_pricelist(update_pricelist=True)
+                order_sudo._cart_update_pricelist(pricelist_id=pricelist_sudo.id)
+        else:
+            # Reset the pricelist if empty promo code is given
+            request.session.pop('website_sale_current_pl', None)
+            order_sudo = request.website.sale_get_order()
+            if order_sudo:
+                pl_before = order_sudo.pricelist_id
+                order_sudo._compute_pricelist_id()
+                if order_sudo.pricelist_id != pl_before:
+                    order_sudo._recompute_prices()
         return request.redirect(redirect)
 
     def _cart_values(self, **post):
@@ -1693,9 +1704,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
-        order_sudo.order_line._compute_tax_id()
+        order_sudo._recompute_taxes()
+        order_sudo._recompute_prices()
         request.session['sale_last_order_id'] = order_sudo.id
-        request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
