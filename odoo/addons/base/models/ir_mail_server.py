@@ -11,7 +11,6 @@ import idna
 import logging
 import re
 import smtplib
-import ssl
 import sys
 import threading
 
@@ -19,6 +18,13 @@ from socket import gaierror, timeout
 from OpenSSL import crypto as SSLCrypto
 from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
 from OpenSSL.SSL import Context as SSLContext, Error as SSLError
+try:
+    # will raise an exception when either OpenSSL either the underlying
+    # ssl library wasn't build to support TLS_CLIENT_METHOD
+    from OpenSSL.SSL import TLS_CLIENT_METHOD
+    SSLContext(TLS_CLIENT_METHOD)
+except Exception:
+    from OpenSSL.SSL import TLSv1_2_METHOD as TLS_CLIENT_METHOD
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -259,7 +265,7 @@ class IrMailServer(models.Model):
                and mail_server.smtp_ssl_certificate
                and mail_server.smtp_ssl_private_key):
                 try:
-                    ssl_context = SSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context = SSLContext(TLS_CLIENT_METHOD)
                     smtp_ssl_certificate = base64.b64decode(mail_server.smtp_ssl_certificate)
                     certificate = SSLCrypto.load_certificate(FILETYPE_PEM, smtp_ssl_certificate)
                     smtp_ssl_private_key = base64.b64decode(mail_server.smtp_ssl_private_key)
@@ -289,7 +295,7 @@ class IrMailServer(models.Model):
 
             if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
                 try:
-                    ssl_context = SSLContext(ssl.PROTOCOL_TLS)
+                    ssl_context = SSLContext(TLS_CLIENT_METHOD)
                     ssl_context.use_certificate_chain_file(smtp_ssl_certificate_filename)
                     ssl_context.use_privatekey_file(smtp_ssl_private_key_filename)
                     # Check that the private key match the certificate
