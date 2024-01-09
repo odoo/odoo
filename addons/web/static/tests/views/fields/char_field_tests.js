@@ -722,6 +722,77 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
+        "input field: change value before pending onchange returns (2)",
+        async function (assert) {
+            serverData.models.partner.onchanges = {
+                int_field(obj) {
+                    if (obj.int_field === 7) {
+                        obj.foo = "blabla";
+                    } else {
+                        obj.foo = "tralala";
+                    }
+                },
+            };
+
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="int_field" />
+                            <field name="foo" />
+                        </sheet>
+                    </form>`,
+                async mockRPC(route, { method }) {
+                    if (method === "onchange") {
+                        await def;
+                    }
+                },
+            });
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "yop",
+                "should contain the correct value"
+            );
+
+            // trigger a deferred onchange
+            await editInput(target, ".o_field_widget[name='int_field'] input", "7");
+
+            // insert a value in input foo
+            target.querySelector(".o_field_widget[name=foo] input").value = "test";
+            await triggerEvent(target, ".o_field_widget[name=foo] input", "input");
+
+            // complete the onchange
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "test",
+                "The onchange value should not be applied because the input is in edition"
+            );
+
+            // apply the value of the input foo
+            await triggerEvent(target, ".o_field_widget[name=foo] input", "change");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "test"
+            );
+
+            // trigger another onchange (not deferred)
+            await editInput(target, ".o_field_widget[name='int_field'] input", "10");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='foo'] input").value,
+                "tralala",
+                "the onchange value should be applied because the input is not in edition"
+            );
+        }
+    );
+
+    QUnit.test(
         "input field: change value before pending onchange returns (with fieldDebounce)",
         async function (assert) {
             // this test is exactly the same as the previous one, except that in
