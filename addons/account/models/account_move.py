@@ -1768,7 +1768,7 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        self = self.with_company(self.journal_id.company_id._accessible_branches()[:1])
+        self = self.with_company((self.journal_id.company_id or self.env.company)._accessible_branches()[:1])
 
         warning = {}
         if self.partner_id:
