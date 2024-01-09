@@ -342,8 +342,9 @@ export class CalendarController extends Component {
         const context = this.model.makeContextDefaults(rawRecord);
         return this.editRecord(record, context, false);
     }
-    deleteRecord(record) {
-        this.displayDialog(ConfirmationDialog, {
+
+    deleteConfirmationDialogProps(record) {
+        return {
             title: _t("Bye-bye, record!"),
             body: deleteConfirmationMessage,
             confirm: () => {
@@ -355,7 +356,11 @@ export class CalendarController extends Component {
                 // button but we do nothing on cancel.
             },
             cancelLabel: _t("No, keep it"),
-        });
+        };
+    }
+
+    deleteRecord(record) {
+        this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
     }
 
     onWillStartModel() {}
