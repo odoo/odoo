@@ -21,7 +21,7 @@ export class PasswordField extends Component {
         });
 
         useInputField({
-            getValue: () => this.props.record.data[this.props.name] || "",
+            getValue: (record) => record.data[this.props.name] || "",
         });
 
         const orm = useService("orm");

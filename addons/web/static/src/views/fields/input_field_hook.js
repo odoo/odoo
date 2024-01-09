@@ -3,7 +3,8 @@
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-import { useComponent, useEffect, useRef } from "@odoo/owl";
+import { onMounted, useComponent, useEffect, useRef } from "@odoo/owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -112,15 +113,34 @@ export function useInputField(params) {
      * we need to do nothing.
      * If it is not such a case, we update the field with the new value.
      */
-    useEffect(() => {
+    // useEffect(() => {
+    //     if (
+    //         inputRef.el &&
+    //         !isDirty &&
+    //         !component.props.record.isFieldInvalid(component.props.name)
+    //     ) {
+    //         inputRef.el.value = params.getValue();
+    //         lastSetValue = inputRef.el.value;
+    //     }
+    // });
+
+    function applyValue(value) {
         if (
             inputRef.el &&
             !isDirty &&
             !component.props.record.isFieldInvalid(component.props.name)
         ) {
-            inputRef.el.value = params.getValue();
+            inputRef.el.value = value;
             lastSetValue = inputRef.el.value;
         }
+    }
+
+    onMounted(() => {
+        applyValue(params.getValue(component.props.record));
+    });
+
+    useRecordObserver((record) => {
+        applyValue(params.getValue(record));
     });
 
     const { model } = component.props.record;

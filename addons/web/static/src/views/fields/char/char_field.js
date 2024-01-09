@@ -36,7 +36,7 @@ export class CharField extends Component {
             );
         }
         useInputField({
-            getValue: () => this.props.record.data[this.props.name] || "",
+            getValue: (record) => record.data[this.props.name] || "",
             parse: (v) => this.parse(v),
         });
     }

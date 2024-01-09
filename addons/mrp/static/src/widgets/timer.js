@@ -110,11 +110,15 @@ class MrpTimerField extends Component {
         onWillDestroy(() => clearTimeout(this.timer));
     }
 
-    get durationFormatted() {
-        if (this.props.record.data[this.props.name] != this.duration && this.props.record.dirty) {
-            this.duration = this.props.record.data[this.props.name];
+    getDurationFormatted(record) {
+        if (record.data[this.props.name] != this.duration && record.dirty) {
+            this.duration = record.data[this.props.name];
         }
         return formatMinutes(this.duration);
+    }
+
+    get durationFormatted() {
+        return this.getDurationFormatted(this.props.record);
     }
 
     get ongoing() {
