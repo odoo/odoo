@@ -4129,12 +4129,11 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        if value:
-            cache = records.env.cache
-            for record in records:
-                val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-                cache.set(record, self, val)
-            records.modified([self.name])
+        cache = records.env.cache
+        for record in records.with_context(active_test=False):
+            val = self.convert_to_cache(record[self.name] | value, record, validate=False)
+            cache.set(record, self, val)
+        records.modified([self.name])
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
