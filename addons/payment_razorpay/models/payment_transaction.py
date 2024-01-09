@@ -153,12 +153,13 @@ class PaymentTransaction(models.Model):
         """ Return the eMandate's maximum amount to define.
 
         :return: The eMandate's maximum amount.
-        :rtype: int
+        :rtype: float
         """
         pm_code = (
             self.payment_method_id.primary_payment_method_id or self.payment_method_id
         ).code
-        pm_max_amount = const.MANDATE_MAX_AMOUNT.get(pm_code, 100000)
+        pm_max_amount_INR = const.MANDATE_MAX_AMOUNT.get(pm_code, 100000)
+        pm_max_amount = self._razorpay_convert_inr_to_currency(pm_max_amount_INR, self.currency_id)
         mandate_values = self._get_mandate_values()  # The linked document's values.
         if 'amount' in mandate_values and 'MRR' in mandate_values:
             max_amount = min(
@@ -167,6 +168,20 @@ class PaymentTransaction(models.Model):
         else:
             max_amount = pm_max_amount
         return max_amount
+
+    @api.model
+    def _razorpay_convert_inr_to_currency(self, amount, currency_id):
+        """ Convert the amount from INR to the given currency.
+
+        :param float amount: The amount to converted, in INR.
+        :param currency_id: The currency to which the amount should be converted.
+        :return: The converted amount in the given currency.
+        :rtype: float
+        """
+        inr_currency = self.env['res.currency'].with_context(active_test=False).search([
+            ('name', '=', 'INR'),
+        ], limit=1)
+        return inr_currency._convert(amount, currency_id)
 
     def _send_payment_request(self):
         """ Override of `payment` to send a payment request to Razorpay.
