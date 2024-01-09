@@ -1044,6 +1044,14 @@ export class PosStore extends Reactive {
             this.selectedOrder.firstDraft = false;
             this.selectedOrder.updateSavedQuantity();
         }
+        if (order) {
+            order.lastOpenedOrderTime = luxon.DateTime.now();
+            order.startingOrderlinesUUID = order.orderlines.map((line) => [
+                line.uuid,
+                line.quantity,
+            ]);
+            order.startingLastOrderPreparationChanges = { ...order.lastOrderPrepaChange };
+        }
         this.selectedOrder = order;
     }
 
@@ -1659,7 +1667,7 @@ export class PosStore extends Reactive {
         return this.currency ? this.currency.symbol : "$";
     }
     isOpenOrderShareable() {
-        return this.config.trusted_config_ids.length > 0;
+        return this.config.raw.trusted_config_ids.length > 0;
     }
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
@@ -1700,7 +1708,29 @@ export class PosStore extends Reactive {
     }
 
     // Now the printer should work in PoS without restaurant
-    async sendOrderInPreparation(order, cancelled = false) {
+    async sendOrderInPreparation(order, cancelled = false, skip_update_order = false) {
+        if (!skip_update_order) {
+            await this.updateServerOrder(order);
+            order = this.get_order();
+        }
+        await this.sendOrderToPreparationDevice(order, cancelled);
+    }
+    async updateServerOrder(order) {
+        //sync lastOrderPrepaChange with server
+        if (order.server_id) {
+            const [orderSync] = await this.data.call("pos.order", "update_order_from_ui", [
+                order.server_id,
+                order.export_as_JSON(),
+            ]);
+            order = this.createReactiveOrder(orderSync);
+            this.set_order(order);
+        }
+    }
+    async sendOrderToPreparationDevice(order, cancelled = false) {
+        await this.sendOrderToPrinters(order, cancelled);
+        order.updateLastOrderChange();
+    }
+    async sendOrderToPrinters(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
             try {
                 const changes = order.changesToOrder(cancelled);
@@ -1718,10 +1748,6 @@ export class PosStore extends Reactive {
                 console.warn("Failed in printing the changes in the order", e);
             }
         }
-    }
-    async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
-        await this.sendOrderInPreparation(order, cancelled);
-        order.updateLastOrderChange();
     }
     closeScreen() {
         this.addOrderIfEmpty();

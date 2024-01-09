@@ -1113,6 +1113,9 @@ export class Order extends PosModel {
             (this.pos_session_id % 10) * 100 +
             (this.sequence_number % 100)
         ).toString();
+        this.lastOpenedOrderTime = null;
+        this.startingOrderlinesUUID = [];
+        this.startingLastOrderPreparationChanges = {};
     }
 
     getEmailItems() {
@@ -1272,6 +1275,11 @@ export class Order extends PosModel {
             access_token: this.access_token || "",
             last_order_preparation_change: JSON.stringify(this.lastOrderPrepaChange),
             ticket_code: this.ticketCode || "",
+            last_opened_order_time: this.lastOpenedOrderTime
+                ? serializeDateTime(this.lastOpenedOrderTime)
+                : false,
+            starting_orderlines_uuid: this.startingOrderlinesUUID,
+            starting_last_order_preparation_changes: this.startingLastOrderPreparationChanges,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -1415,6 +1423,12 @@ export class Order extends PosModel {
                 delete this.lastOrderPrepaChange[lineKey];
             }
         }
+
+        // sync preparation changes with server
+        this.pos.data.call("pos.order", "update_last_order_changes", [
+            this.server_id,
+            JSON.stringify(this.lastOrderPrepaChange),
+        ]);
     }
 
     /**

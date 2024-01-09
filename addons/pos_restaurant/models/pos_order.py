@@ -10,6 +10,9 @@ class PosOrderLine(models.Model):
 
     note = fields.Char('Internal Note added by the waiter.')
 
+    def _get_note(self):
+        return self.note or ''
+
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
@@ -93,3 +96,11 @@ class PosOrder(models.Model):
     def export_for_ui_table_draft(self, table_ids):
         orders = self.env['pos.order'].search([('state', '=', 'draft'), ('table_id', 'in', table_ids)])
         return orders.export_for_ui()
+
+    def _update_order(self, order):
+        result = super(PosOrder, self)._update_order(order)
+        if order.get('customer_count'):
+            self.customer_count = order['customer_count']
+        if order.get('table_id'):
+            self.table_id = self.env['restaurant.table'].browse(order['table_id'])
+        return result
