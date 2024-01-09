@@ -311,10 +311,9 @@ export class ThreadService {
             }
         }
         if (ids.length) {
-            const messagesData = await this.orm.call("discuss.channel", "channel_fetch_preview", [
-                ids,
-            ]);
-            const messages = this.store.Message.insert(messagesData, { html: true });
+            /** @type {{ Message: Object[] }} */
+            const data = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
+            const { Message: messages } = this.store.insert(data, { html: true });
             for (const message of messages) {
                 if (message.isNeedaction) {
                     message.originThread.needactionMessages.add(message);

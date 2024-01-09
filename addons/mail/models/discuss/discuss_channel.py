@@ -1157,7 +1157,7 @@ class Channel(models.Model):
 
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
-        return self._get_last_messages().message_format()
+        return {"Message": self._get_last_messages().message_format()}
 
 
     def _get_last_messages(self):

@@ -462,23 +462,25 @@ patch(MockServer.prototype, {
      */
     _mockDiscussChannelChannelFetchPreview(ids) {
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
-        return channels
-            .map((channel) => {
-                const channelMessages = this.getRecords("mail.message", [
-                    ["model", "=", "discuss.channel"],
-                    ["res_id", "=", channel.id],
-                ]);
-                const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                    if (message.id > lastMessage.id) {
-                        return message;
-                    }
-                    return lastMessage;
-                }, channelMessages[0]);
-                return lastMessage
-                    ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
-                    : false;
-            })
-            .filter((lastMessage) => lastMessage);
+        return {
+            Message: channels
+                .map((channel) => {
+                    const channelMessages = this.getRecords("mail.message", [
+                        ["model", "=", "discuss.channel"],
+                        ["res_id", "=", channel.id],
+                    ]);
+                    const lastMessage = channelMessages.reduce((lastMessage, message) => {
+                        if (message.id > lastMessage.id) {
+                            return message;
+                        }
+                        return lastMessage;
+                    }, channelMessages[0]);
+                    return lastMessage
+                        ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
+                        : false;
+                })
+                .filter((lastMessage) => lastMessage),
+        };
     },
     /**
      * Simulates 'channel_create' on 'discuss.channel'.
