@@ -1,23 +1,15 @@
 /** @odoo-module */
-
+//@ts-check
 /**
  *
- * @typedef {Object} PivotDefinition
- * @property {Array<string>} colGroupBys
- * @property {Array<string>} rowGroupBys
- * @property {Array<string>} measures
- * @property {string} model
- * @property {Array} domain
- * @property {Object} context
- * @property {string} name
- * @property {string} id
- * @property {Object | null} sortedColumn
+ * @typedef {import("@spreadsheet").PivotDefinition} PivotDefinition
+ * @typedef {import("@spreadsheet").PivotRuntime} PivotRuntime
+ * @typedef {import("@spreadsheet").AllCoreCommand} AllCoreCommand
  *
- * @typedef {Object} Pivot
+ * @typedef {Object} LocalPivot
  * @property {string} id
- * @property {string} dataSourceId
- * @property {PivotDefinition} definition
- * @property {Object} fieldMatching
+ * @property {PivotRuntime} definition
+ * @property {Record<string, FieldMatching>} fieldMatching
  *
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  * @typedef {import("../pivot_table.js").PivotCell} PivotCell
@@ -54,7 +46,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
         super(config);
 
         this.nextId = 1;
-        /** @type {Object.<string, Pivot>} */
+        /** @type {Object.<string, LocalPivot>} */
         this.pivots = {};
         globalFiltersFieldMatchers["pivot"] = {
             getIds: () => this.getters.getPivotIds(),
@@ -65,6 +57,11 @@ export class PivotCorePlugin extends OdooCorePlugin {
         };
     }
 
+    /**
+     * @param {AllCoreCommand} cmd
+     *
+     * @returns {string | string[]}
+     */
     allowDispatch(cmd) {
         switch (cmd.type) {
             case "RENAME_ODOO_PIVOT":
@@ -98,15 +95,14 @@ export class PivotCorePlugin extends OdooCorePlugin {
     }
 
     /**
-     * Handle a spreadsheet command
+     * @param {AllCoreCommand} cmd
      *
-     * @param {Object} cmd Command
      */
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_PIVOT": {
                 const { sheetId, col, row, id, definition } = cmd;
-                /** @type { col: number, row: number } */
+                /** @type { { col: number, row: number } } */
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
@@ -117,7 +113,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
             }
             case "RE_INSERT_PIVOT": {
                 const { sheetId, col, row, id } = cmd;
-                /** @type { col: number, row: number } */
+                /** @type { { col: number, row: number } } */
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
@@ -186,7 +182,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
 
     /**
      * @param {string} id
-     * @returns {string}
+     * @returns {Record<string, FieldMatching>}
      */
     getPivotFieldMatch(id) {
         return this.pivots[id].fieldMatching;
@@ -282,8 +278,8 @@ export class PivotCorePlugin extends OdooCorePlugin {
 
     /**
      * @param {string} id
-     * @param {PivotDefinition} definition
-     * @param {string} dataSourceId
+     * @param {PivotRuntime} definition
+     * @param {Record<string, FieldMatching>} [fieldMatching]
      */
     _addPivot(id, definition, fieldMatching = undefined) {
         const pivots = { ...this.pivots };
@@ -398,8 +394,8 @@ export class PivotCorePlugin extends OdooCorePlugin {
 
     /**
      * @param {string} sheetId
-     * @param {{ col: number, row: number }} position
      * @param {string} pivotId
+     * @param {{ col: number, row: number }} position
      * @param {PivotCell} pivotCell
      */
     _addPivotFormula(sheetId, pivotId, { col, row }, pivotCell) {

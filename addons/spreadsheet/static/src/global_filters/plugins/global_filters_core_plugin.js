@@ -205,6 +205,8 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     /**
      * Returns the field matching for a given model by copying the matchings of another DataSource that
      * share the same model, including only the chain and type.
+     *
+     * @returns {Record<string, FieldMatching}
      */
     getFieldMatchingForModel(newModel) {
         const globalFilters = this.getGlobalFilters();
