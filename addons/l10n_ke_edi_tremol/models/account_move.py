@@ -165,14 +165,14 @@ class AccountMove(models.Model):
 
         vat_class = {16.0: 'A', 8.0: 'B'}
         msgs = []
-        tax_details = self._prepare_edi_tax_details()
+        tax_details = self._prepare_invoice_aggregated_taxes()
         for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product' and l.quantity and l.price_total > 0 and not discount_dict.get(l.id) >= 100):
             # Here we use the original discount of the line, since it the distributed discount has not been applied in the price_total
             price_total = 0
             percentage = 0
-            for tax in tax_details['invoice_line_tax_details'][line]['tax_details']:
+            for tax in tax_details['tax_details_per_record'][line]['tax_details']:
                 if tax['tax'].amount in (16, 8, 0): # This should only occur once
-                    tax_details = tax_details['invoice_line_tax_details'][line]['tax_details'][tax]
+                    tax_details = tax_details['tax_details_per_record'][line]['tax_details'][tax]
                     price_total = abs(tax_details['base_amount_currency']) + abs(tax_details['tax_amount_currency'])
                     percentage = tax['tax'].amount
 
