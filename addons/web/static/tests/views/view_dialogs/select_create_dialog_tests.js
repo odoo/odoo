@@ -22,6 +22,9 @@ import {
     toggleMenuItem,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
+import { renderToMarkup } from "@web/core/utils/render";
+
+import { xml } from "@odoo/owl";
 
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
@@ -513,5 +516,60 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         assert.containsNone(target, ".o_dialog");
         assert.verifySteps(["onSelected 4"]);
+    });
+
+    QUnit.test("SelectCreateDialog empty list, default no content helper", async function (assert) {
+        serverData.models.partner.records = [];
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        webClient.env.services.dialog.add(SelectCreateDialog, { resModel: "partner" });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_list_view");
+        assert.containsNone(target, ".o_dialog .o_list_view .o_data_row");
+        assert.containsOnce(target, ".o_dialog .o_list_view .o_view_nocontent");
+        assert.strictEqual(
+            target.querySelector(".o_dialog .o_list_view .o_view_nocontent").innerHTML,
+            `<div class="o_nocontent_help"><p>No record found</p><p>Adjust your filters or create a new record.</p></div>`
+        );
+    });
+
+    QUnit.test("SelectCreateDialog empty list, noContentHelp props", async function (assert) {
+        serverData.models.partner.records = [];
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            "partner,false,search": `<search/>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        const template = xml`
+            <p class="custom_classname">Hello</p>
+            <p>I'm an helper</p>
+        `;
+        webClient.env.services.dialog.add(SelectCreateDialog, {
+            resModel: "partner",
+            noContentHelp: renderToMarkup(template),
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_list_view");
+        assert.containsNone(target, ".o_dialog .o_list_view .o_data_row");
+        assert.containsOnce(target, ".o_dialog .o_list_view .o_view_nocontent");
+        assert.strictEqual(
+            target.querySelector(".o_dialog .o_list_view .o_view_nocontent").innerHTML,
+            `<div class="o_nocontent_help"><p class="custom_classname">Hello</p><p>I'm an helper</p></div>`
+        );
     });
 });

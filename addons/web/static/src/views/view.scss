@@ -57,6 +57,13 @@
     }
 }
 
+// Naive heuristic to leave enough space for the nocontent helper in dialogs
+.o_dialog {
+    .o_content:has(.o_view_nocontent) {
+        min-height: 20rem;
+    }
+}
+
 // Invisible modifier (can be inside the view, the button area, ...)
 .o_invisible_modifier {
     display: none!important;
