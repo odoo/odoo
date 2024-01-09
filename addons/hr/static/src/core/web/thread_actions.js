@@ -10,7 +10,7 @@ threadActionsRegistry.add("open-hr-profile", {
         return (
             component.thread?.type === "chat" &&
             component.props.chatWindow?.isOpen &&
-            component.thread.correspondent.employeeId
+            component.thread.correspondent?.employeeId
         );
     },
     icon: "fa fa-fw fa-id-card",
