@@ -12,6 +12,5 @@ patch(PickerContent.prototype, {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.gifPickerService = useState(useService("discuss.gifPicker"));
     },
 });

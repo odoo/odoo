@@ -9,7 +9,6 @@ declare module "services" {
     import { discussCorePublic } from "@mail/discuss/core/public/discuss_core_public_service";
     import { discussCoreWeb } from "@mail/discuss/core/web/discuss_core_web_service";
     import { discussTypingService } from "@mail/discuss/typing/common/typing_service"
-    import { gifPickerService } from "@mail/discuss/gif_picker/common/gif_picker_service";
     import { mailCoreCommon } from "@mail/core/common/mail_core_common_service";
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
     import { messagePinService } from "@mail/discuss/message_pin/common/message_pin_service"
@@ -29,7 +28,6 @@ declare module "services" {
         "discuss.core.common": ReturnType<typeof discussCoreCommon.start>;
         "discuss.core.public": ReturnType<typeof discussCorePublic.start>;
         "discuss.core.web": ReturnType<typeof discussCoreWeb.start>;
-        "discuss.gifPicker": ReturnType<typeof gifPickerService.start>;
         "discuss.message.pin": ReturnType<typeof messagePinService.start>;
         "discuss.rtc": ReturnType<typeof rtcService.start>;
         "discuss.typing": ReturnType<typeof discussTypingService.start>;
