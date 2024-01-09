@@ -186,6 +186,23 @@ export class Store extends BaseStore {
     settings = Record.one("Settings");
     openInviteThread = Record.one("Thread");
 
+    /**
+     * @template T
+     * @param {T} dataByModelName
+     * @param {Object} [options={}]
+     * @returns {{ [K in keyof T]: T[K] extends Array ? import("models").Models[K][] : import("models").Models[K] }}
+     */
+    insert(dataByModelName, options = {}) {
+        const store = this;
+        return StoreRecord.MAKE_UPDATE(function storeInsert() {
+            const res = {};
+            for (const [modelName, data] of Object.entries(dataByModelName)) {
+                res[modelName] = store[modelName].insert(data, options);
+            }
+            return res;
+        });
+    }
+
     async startMeeting() {
         const thread = await this.env.services["discuss.core.common"].createGroupChat({
             default_display_mode: "video_full_screen",

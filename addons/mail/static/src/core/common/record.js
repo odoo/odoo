@@ -170,6 +170,7 @@ function sortRecordList(recordListFullProxy, func) {
     }
 }
 
+/** @returns {import("models").Store} */
 export function makeStore(env) {
     Record.UPDATE = 0;
     const recordByLocalId = reactive(new Map());
