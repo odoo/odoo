@@ -2,15 +2,31 @@
 
 /** @odoo-module */
 
-import { expect, test } from "@odoo/hoot";
-// import { Deferred } from "@odoo/hoot-mock";
-import { Cache } from "@web/core/utils/cache";
+import { expect, getFixture, test } from "@odoo/hoot";
+import { useWysiwyg } from "../src/editor/wysiwyg";
+import { Component, xml } from "@odoo/owl";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+
+class TestEditor extends Component {
+    static template = xml`<div t-ref="target"/>`;
+
+    setup() {
+        this.editor = useWysiwyg("target");
+    }
+}
 
 test("one plus one equals two", () => {
 
     expect(1 + 1).toBe(2);
 });
 
+test("one plus one equals sstwo", async () => {
+    const fixture = getFixture();
+    const testEditor = await mountWithCleanup(TestEditor, {
+        props: { innerHTML: "hello" }
+    });
+    expect(fixture.innerHTML).toBe('sss');
+});
 
 /**
  * To write:
