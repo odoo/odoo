@@ -367,13 +367,12 @@ class Website(models.Model):
     def _product_domain(self):
         return [('sale_ok', '=', True)]
 
-    def sale_get_order(self, force_create=False, update_pricelist=False):
+    def sale_get_order(self, force_create=False):
         """ Return the current sales order after mofications specified by params.
 
         :param bool force_create: Create sales order if not already existing
-        :param bool update_pricelist: Force to recompute all the lines from sales order to adapt the price with the current pricelist.
-        :returns: record for the current sales order (might be empty)
-        :rtype: `sale.order` recordset
+
+        :returns: current cart, as a sudoed `sale.order` recordset (might be empty)
         """
         self.ensure_one()
 
@@ -421,9 +420,6 @@ class Website(models.Model):
                 request.session.pop('website_sale_cart_quantity', None)
             return self.env['sale.order']
 
-        # Only set when neeeded
-        pricelist_id = False
-
         partner_sudo = self.env.user.partner_id
 
         # cart creation was requested
@@ -446,39 +442,8 @@ class Website(models.Model):
             request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
 
         # check for change of partner_id ie after signup
-        if sale_order_sudo.partner_id.id != partner_sudo.id and request.website.partner_id.id != partner_sudo.id:
-            previous_fiscal_position = sale_order_sudo.fiscal_position_id
-            previous_pricelist = sale_order_sudo.pricelist_id
-
-            # Reset the session pricelist according to logged partner pl
-            request.session.pop('website_sale_current_pl', None)
-            # Force recomputation of the website pricelist after reset
-            self.invalidate_recordset(['pricelist_id'])
-            pricelist_id = self.pricelist_id.id
-            request.session['website_sale_current_pl'] = pricelist_id
-
-            # change the partner, and trigger the computes (fpos)
-            sale_order_sudo.write({
-                'partner_id': partner_sudo.id,
-                # Must be specified to ensure it is not recomputed when it shouldn't
-                'pricelist_id': pricelist_id,
-                # TODO VFE fpos
-            })
-
-            if sale_order_sudo.fiscal_position_id != previous_fiscal_position:
-                sale_order_sudo.order_line._compute_tax_id()
-
-            if sale_order_sudo.pricelist_id != previous_pricelist:
-                update_pricelist = True
-        elif update_pricelist:
-            # Only compute pricelist if needed
-            pricelist_id = self.pricelist_id.id
-
-        # update the pricelist
-        if update_pricelist:
-            request.session['website_sale_current_pl'] = pricelist_id
-            sale_order_sudo.write({'pricelist_id': pricelist_id})
-            sale_order_sudo._recompute_prices()
+        if partner_sudo.id not in (sale_order_sudo.partner_id.id, self.partner_id.id):
+            sale_order_sudo._update_address(partner_sudo.id, ['partner_id'])
 
         return sale_order_sudo
 
