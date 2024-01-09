@@ -9,9 +9,10 @@
     'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
-        'data/payment_provider_data.xml',
-
         'views/payment_provider_views.xml',
+        'views/payment_razorpay_templates.xml',
+
+        'data/payment_provider_data.xml',  # Depends on views/payment_razorpay_templates.xml
     ],
     'assets': {
         'web.assets_frontend': [

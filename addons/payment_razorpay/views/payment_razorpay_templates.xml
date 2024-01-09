@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="token_inline_form">
+        <t t-set="warning" t-value="token_sudo._razorpay_get_limit_exceed_warning(amount, currency)"/>
+        <div t-if="warning" t-out="warning" class="alert alert-danger mb-0"/>
+    </template>
+
+</odoo>
