@@ -10,8 +10,8 @@
         <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
             <attribute name="t-on-click.stop.prevent">onClickAvatar</attribute>
         </xpath>
-        <Many2OneField position="attributes">
+        <xpath expr="//t[@t-call='web.Many2OneField']" position="attributes">
             <attribute name="t-if">props.readonly and props.displayAvatarName</attribute>
-        </Many2OneField>
+        </xpath>
     </t>
 </templates>
