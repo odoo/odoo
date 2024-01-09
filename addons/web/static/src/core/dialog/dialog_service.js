@@ -1,15 +1,12 @@
-import { registry } from "../registry";
-import { Component, markRaw, reactive, xml } from "@odoo/owl";
-import { WithEnv } from "../utils/components";
+import { Component, markRaw, reactive, useChildSubEnv, xml } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 
 class DialogWrapper extends Component {
-    static template = xml`
-        <WithEnv env="{ dialogData: props.subEnv }">
-            <t t-component="props.subComponent" t-props="props.subProps" />
-        </WithEnv>
-    `;
-    static components = { WithEnv };
+    static template = xml`<t t-component="props.subComponent" t-props="props.subProps" />`;
     static props = ["*"];
+    setup() {
+        useChildSubEnv({ dialogData: this.props.subEnv });
+    }
 }
 
 /**
