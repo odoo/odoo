@@ -7,9 +7,9 @@ import {
     getFixture,
     getNodesTextContent,
     patchWithCleanup,
-    selectDropdownItem,
     triggerEvent,
     clickDiscard,
+    clickDropdown,
     clickOpenedDropdownItem,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -98,7 +98,9 @@ QUnit.module("Fields", (hooks) => {
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
 
-        await selectDropdownItem(target, "user_id", "Christine");
+        await clickDropdown(target, "user_id");
+        assert.containsN(target, ".o_field_many2one_selection .o_avatar_many2x_autocomplete", 3);
+        await clickOpenedDropdownItem(target, "user_id", "Christine");
 
         assert.containsOnce(
             target,
