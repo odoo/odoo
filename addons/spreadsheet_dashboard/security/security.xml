@@ -8,7 +8,7 @@
         <field name="domain_force">[('group_ids', 'in', user.groups_id.ids)]</field>
     </record>
 
-    <record model="ir.module.category" id="spreadsheet_dashboard.dashboard_management">
+    <record id="base.module_category_productivity_dashboard" model="ir.module.category">
         <field name="name">Dashboard</field>
         <field name="description">User access level for Dashboard module</field>
         <field name="sequence">30</field>
@@ -16,7 +16,7 @@
 
     <record id="spreadsheet_dashboard.group_dashboard_manager" model="res.groups">
         <field name="name">Admin</field>
-        <field name="category_id" ref="spreadsheet_dashboard.dashboard_management" />
+        <field name="category_id" ref="base.module_category_productivity_dashboard" />
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
     </record>
 
