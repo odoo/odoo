@@ -504,6 +504,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.containsOnce(target, ".o_dialog footer button.o_select_button");
         assert.containsOnce(target, ".o_dialog footer button.o_create_button");
         assert.containsOnce(target, ".o_dialog footer button.o_form_button_cancel");
+        assert.containsNone(target, ".o_dialog .o_control_panel_main_buttons .o_list_button_add");
 
         await click(target.querySelector(".o_dialog footer button.o_create_button"));
 

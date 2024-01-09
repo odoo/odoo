@@ -293,7 +293,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("KanbanView");
 
     QUnit.test("basic ungrouped rendering", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         await makeView({
             type: "kanban",
@@ -320,6 +320,10 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_ungrouped");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(target, ".o_kanban_ghost", 6);
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
@@ -436,7 +440,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(17);
+        assert.expect(18);
 
         patchWithCleanup(KanbanRenderer.prototype, {
             setup() {
@@ -473,6 +477,10 @@ QUnit.module("Views", (hooks) => {
         });
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
