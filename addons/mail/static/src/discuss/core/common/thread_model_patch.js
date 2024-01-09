@@ -68,7 +68,7 @@ patch(Thread.prototype, {
                 ...urlParams,
             });
         }
-        if (this.type === "chat") {
+        if (this.type === "chat" && this.correspondent) {
             return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;

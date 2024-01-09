@@ -94,10 +94,11 @@ export class ChannelInvitation extends Component {
 
     async onClickInvite() {
         if (this.props.thread.type === "chat") {
-            await this.discussCoreCommonService.startChat([
-                this.props.thread.correspondent?.id,
-                ...this.state.selectedPartners.map((partner) => partner.id),
-            ]);
+            const partnerIds = this.state.selectedPartners.map((partner) => partner.id);
+            if (this.props.thread.correspondent) {
+                partnerIds.unshift(this.props.thread.correspondent.id);
+            }
+            await this.discussCoreCommonService.startChat(partnerIds);
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
                 partner_ids: this.state.selectedPartners.map((partner) => partner.id),
