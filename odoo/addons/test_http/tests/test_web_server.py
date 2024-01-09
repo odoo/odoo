@@ -12,6 +12,7 @@ WEB_SERVER_URL = getenv('WEB_SERVER_URL', 'http://localhost:80')
 
 @tagged('webserver', '-standard', '-at_install')
 class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpStaticCache):
+    allow_inherited_tests_method = True
     @classmethod
     def base_url(cls):
         return WEB_SERVER_URL
