@@ -4386,11 +4386,16 @@ class TestPrecomputeModel(TransactionCase):
 
         # see what happens if precompute depends on non-precompute
         self.addCleanup(self.registry.reset_changes)
+        def reset():
+            Model.lowup.precompute = True
+        self.addCleanup(reset)
         self.patch(Model.lower, 'precompute', False)
         self.patch(Model.upper, 'precompute', False)
+
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
             self.registry.get_trigger_tree(Model._fields.values())
+
 
     def test_precompute_dependencies_many2one(self):
         Model = self.registry['test_new_api.precompute']
@@ -4420,11 +4425,15 @@ class TestPrecomputeModel(TransactionCase):
 class TestPrecompute(TransactionCase):
 
     def test_precompute(self):
+
         model = self.env['test_new_api.precompute']
+        Model = self.registry['test_new_api.precompute']
+        self.assertTrue(Model.lower.precompute)
+        self.assertTrue(Model.upper.precompute)
+        self.assertTrue(Model.lowup.precompute)
 
         # warmup
         model.create({'name': 'Foo', 'line_ids': [Command.create({'name': 'bar'})]})
-
         # the creation makes one insert query for the main record, and one for the line
         with self.assertQueries([
             insert(model, 'name', 'lower', 'upper', 'lowup', 'commercial_id', 'size'),
