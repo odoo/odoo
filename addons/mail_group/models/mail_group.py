@@ -8,6 +8,7 @@ import lxml
 from ast import literal_eval
 from datetime import datetime
 from dateutil import relativedelta
+from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
@@ -283,7 +284,8 @@ class MailGroup(models.Model):
 
         values.update({
             'author_id': author_id,
-            'body': self._clean_email_body(body),
+            # sanitize then make valid Markup, notably for '_process_attachments_for_post'
+            'body': Markup(self._clean_email_body(body)),
             'email_from': email_from,
             'model': self._name,
             'partner_ids': [],

@@ -64,7 +64,7 @@ class TestMessageValues(MailCommon):
         self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
-        record._message_update_content(message, '<p><br /></p>', attachment_ids=message.attachment_ids.ids)
+        record._message_update_content(message, Markup('<p><br /></p>'), attachment_ids=message.attachment_ids.ids)
         self.assertTrue(is_html_empty(message.body))
         self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
 
