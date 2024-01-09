@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { click, getFixture, editInput } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 QUnit.module("ViewDialogs", (hooks) => {
@@ -147,5 +147,43 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.containsNone(target, ".modal-dialog.modal-lg");
         await click(target, ".o_form_button_save");
         assert.verifySteps([]);
+    });
+
+    QUnit.test("SelectCreateDialog: default props, create a record", async function (assert) {
+        assert.expect(9);
+
+        serverData.views["product,false,form"] = `<form><field name="display_name"/></form>`;
+
+        await makeView({
+            type: "form",
+            resModel: "sale_order_line",
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id"/>
+                    <field name="linked_sale_order_line" widget="many2many_tags"/>
+                </form>`,
+        });
+
+        await click(target, '.o_field_widget[name="product_id"] input');
+        assert.containsOnce(target, ".o_dialog");
+        assert.containsOnce(
+            target,
+            ".o_dialog .o_kanban_view .o_kanban_record:not(.o_kanban_ghost)"
+        );
+        assert.containsN(target, ".o_dialog footer button", 2);
+        assert.containsOnce(target, ".o_dialog footer button.o_create_button");
+        assert.containsOnce(target, ".o_dialog footer button.o_form_button_cancel");
+        assert.containsNone(target, ".o_dialog .o_control_panel_main_buttons .o-kanban-button-new");
+
+        await click(target.querySelector(".o_dialog footer button.o_create_button"));
+
+        assert.containsN(target, ".o_dialog", 2);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        await editInput(target, ".o_dialog .o_form_view .o_field_widget input", "hello");
+        await click(target.querySelector(".o_dialog .o_form_button_save"));
+
+        assert.containsNone(target, ".o_dialog");
     });
 });
