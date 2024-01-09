@@ -55,7 +55,7 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.type === "livechat") {
+        if (this.type === "livechat" && this.correspondent) {
             return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;

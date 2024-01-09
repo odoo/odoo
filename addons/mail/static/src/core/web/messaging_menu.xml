@@ -86,7 +86,7 @@
                     onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
                     <t t-set-slot="icon">
-                        <ImStatus t-if="thread.type === 'chat'" persona="thread.correspondent" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                        <ImStatus t-if="thread.type === 'chat' and thread.correspondent" persona="thread.correspondent" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-if="message" t-set-slot="body-icon">
                         <t t-if="message.isSelfAuthored">
