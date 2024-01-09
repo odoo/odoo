@@ -86,7 +86,10 @@
                 </t>
             </div>
 
-            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute end-0' : '' }}">
+            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute h-100 start-0' : '' }}">
+                <t t-slot="bottom_left" />
+            </div>
+            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute h-100 end-0' : '' }}">
                 <t t-slot="buttons" />
             </div>
         </div>
