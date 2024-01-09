@@ -57,23 +57,13 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         trigger: "button[type=submit]:contains(Go to Payment)",
         run: "click",
     },
-    {
-        content: "Fill address",
-        trigger: 'form.checkout_autoformat',
-        run: function () {
-            document.querySelector("input[name='name']").value = "test1";
-            document.querySelector("input[name='email']").value = "test@example.com";
-            document.querySelector("input[name='phone']").value = "111 111";
-            document.querySelector("input[name='street']").value = "street test 1";
-            document.querySelector("input[name='city']").value = "testCity";
-            document.querySelector("input[name='zip']").value = "123";
-            document.querySelectorAll("#country_id option")[1].selected = true;
-        },
-    },
-    {
-        content: "Validate address",
-        trigger: 'a.a-submit.btn-primary',
-        run: "click",
-    },
+    ...wsTourUtils.fillAdressForm({
+        name: "test1",
+        phone: "111 111",
+        email: "test@example.com",
+        street: "street test 1",
+        city: "testCity",
+        zip: "123",
+    }),
     ...wsTourUtils.payWithTransfer(true),
 ]});

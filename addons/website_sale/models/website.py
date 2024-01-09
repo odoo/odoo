@@ -462,6 +462,7 @@ class Website(models.Model):
                 'partner_id': partner_sudo.id,
                 # Must be specified to ensure it is not recomputed when it shouldn't
                 'pricelist_id': pricelist_id,
+                # TODO VFE fpos
             })
 
             if sale_order_sudo.fiscal_position_id != previous_fiscal_position:
