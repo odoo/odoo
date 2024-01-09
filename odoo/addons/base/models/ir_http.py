@@ -180,7 +180,7 @@ class IrHttp(models.AbstractModel):
         # takes over.
         try:
             key = 'web.max_file_upload_size'
-            if value := (ICP.get_param(key, None) is not None):
+            if (value := ICP.get_param(key, None)) is not None:
                 request.httprequest.max_content_length = int(value)
         except ValueError:  # better not crash on ALL requests
             _logger.error("invalid %s: %r, using %s instead",
