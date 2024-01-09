@@ -438,6 +438,7 @@ class TestChannelInternals(MailCommon):
     @users("employee")
     def test_channel_command_help_in_group(self):
         """Ensures the command '/help' works in a group"""
+        original_partner_employee_nomail_name = self.partner_employee_nomail.name
         self.partner_employee_nomail.name = f"<strong>{self.partner_employee_nomail.name}</strong>"
         # Guarantee that the channel member ids in the group are in order.
         test_group = self.env['discuss.channel'].create({
@@ -455,7 +456,7 @@ class TestChannelInternals(MailCommon):
                     "payload": {
                         "body":
                             "<span class='o_mail_notification'>"
-                            "You are in a private conversation with <b>@Mitchell Admin</b> and <b>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</b>."
+                            f"You are in a private conversation with <b>@{self.user_admin.partner_id.name}</b> and <b>@&lt;strong&gt;{original_partner_employee_nomail_name}&lt;/strong&gt;</b>."
                             "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
