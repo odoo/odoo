@@ -15,7 +15,7 @@
         </xpath>
         <xpath expr="//div[hasclass('o-mail-PickerContent-emojiPicker')]" position="after">
             <div t-if="props.state.picker === this.props.PICKERS.GIF" class="d-flex align-items-center w-100">
-                <GifPicker t-if="gifPickerService.hasGifPickerFeature" PICKERS="props.PICKERS" onSelect="props.pickers.gif" close="props.close" state="props.state"/>
+                <GifPicker t-if="store.hasGifPickerFeature" PICKERS="props.PICKERS" onSelect="props.pickers.gif" close="props.close" state="props.state"/>
                 <div t-elif="store.self.isAdmin" class="d-flex flex-column align-items-center justify-content-center m-3">
                     <span class="o-mail-PickerContent-bigEmoji">🧑‍🍳🌶️</span>
                     <span class="fs-5 text-muted">Want to spice up your conversations with GIFs? Activate the feature in the settings!</span>
