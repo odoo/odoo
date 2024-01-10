@@ -2959,12 +2959,17 @@ class _Relational(Field):
 
     @property
     def _related_domain(self):
+        def validated(domain):
+            if isinstance(domain, str) and not self.inherited:
+                # string domains are expressions that are not valid for self's model
+                return None
+            return domain
+
         if callable(self.domain):
             # will be called with another model than self's
-            return lambda recs: self.domain(recs.env[self.model_name])
+            return lambda recs: validated(self.domain(recs.env[self.model_name]))  # pylint: disable=not-callable
         else:
-            # maybe not correct if domain is a string...
-            return self.domain
+            return validated(self.domain)
 
     _related_context = property(attrgetter('context'))
 
