@@ -159,6 +159,8 @@ export class Dropdown extends Component {
             (isOpen) => {
                 if (isOpen) {
                     this.props.onOpened();
+                } else {
+                    this.position.unlock();
                 }
             },
             () => [this.state.open]
