@@ -2686,6 +2686,59 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'date': one_day_ago,   'debit': 25,    'credit': 0,    'reconciled': True},
         ])
 
+    def test_purchase_with_backorders_and_return_and_price_changes(self):
+        """
+        When you have multiples receipts associated to a Purchase Order, with 1 bill for each receipt,
+            then each bill has an impact on its own receipt only, hence if I modify the price on Bill01,
+            it will not have an effect on Receipt02.
+        However, if we create a return for a portion of a receipt,
+            the invoiced_qty will be higher than the received_qty. This could be iterpreted has the bill
+            being done before the receipt, which is not the case.
+        In this test, we ensure that if the Control Policy is 'On received quantities' (procure_method = 'receive'),
+            we keep using the purchase price for the svl unit_cost even when invoiced_qty > received_qty.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'receive'  # ControlPolicy
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 100
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        def _validate_backorder(po, qty):
+            picking = po.picking_ids.filtered(lambda p: p.state not in ['done', 'draft', 'cancel']).ensure_one()
+            picking.move_ids.move_line_ids.qty_done = qty
+            picking.button_validate()
+            # Validate picking with backorder
+            res_dict = picking.button_validate()
+            wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id')).with_context(res_dict['context'])
+            wizard.process()
+            return picking
+
+        receipt01 = _validate_backorder(po, 30)
+        self.assertEqual(receipt01.move_ids.stock_valuation_layer_ids.ensure_one().value, 300.0)
+        bill01 = self._bill(po, price=12)
+        self.assertEqual(bill01.invoice_line_ids.stock_valuation_layer_ids.ensure_one().value, 60.0)
+
+        receipt02 = _validate_backorder(po, 30)
+        # Even though Bill01 updated the price for Receipt01, the layers of Receipt02 are not impacted.
+        self.assertEqual(receipt02.move_ids.stock_valuation_layer_ids.ensure_one().value, 300.0)
+        bill02 = self._bill(po, price=13)
+        self.assertEqual(bill02.invoice_line_ids.stock_valuation_layer_ids.ensure_one().value, 90.0)
+
+        # With the return, the invoiced qty > received qty,
+        # this must NOT be interpreted as the invoice done before the picking (purchase_method = 'purchase')
+        self._return(receipt02, qty=10)
+
+        receipt03 = _validate_backorder(po, 30)
+        # Like Receipt02 layers, Receipt03 layers should not be impacted by the previous price changes.
+        self.assertEqual(receipt03.move_ids.stock_valuation_layer_ids.ensure_one().value, 300.0)
+
     def test_invoice_on_ordered_qty_with_backorder_and_different_currency_automated(self):
         """Create a PO with currency different from the company currency. Set the
         product to be invoiced on ordered quantities. Receive partially the products
