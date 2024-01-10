@@ -44,7 +44,6 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { scrollerService } from "@web/core/scroller_service";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useService } from "@web/core/utils/hooks";
@@ -1625,8 +1624,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "notebook page is changing when an anchor is clicked from another page",
         async (assert) => {
-            serviceRegistry.add("scroller", scrollerService);
-
             const scrollableParent = document.createElement("div");
             scrollableParent.style.overflow = "auto";
             target.append(scrollableParent);
