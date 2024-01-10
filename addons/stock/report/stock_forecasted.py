@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import date
 
 from odoo import api, models
+from odoo.osv.expression import AND
 from odoo.tools import float_is_zero, format_date, float_round, float_compare
-
 
 class StockForecasted(models.AbstractModel):
     _name = 'stock.forecasted_product_product'
@@ -267,8 +268,14 @@ class StockForecasted(models.AbstractModel):
         in_domain, out_domain = self._move_confirmed_domain(
             product_template_ids, product_ids, wh_location_ids
         )
+        past_domain = [('reservation_date', '<=', date.today())]
+        future_domain = ['|', ('reservation_date', '>', date.today()), ('reservation_date', '=', False)]
 
-        outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
+        past_outs = self.env['stock.move'].search(AND([out_domain, past_domain]), order='priority desc, date, id')
+        future_outs = self.env['stock.move'].search(AND([out_domain, future_domain]), order='reservation_date, priority desc, date, id')
+
+        outs = past_outs | future_outs
+
         outs_per_product = defaultdict(list)
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
