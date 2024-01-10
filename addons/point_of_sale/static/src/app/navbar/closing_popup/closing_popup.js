@@ -10,6 +10,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
+import { deduceUrl } from "@point_of_sale/utils";
 
 export class CancelConfirmationDialog extends ConfirmationDialog {
     static template = "point_of_sale.CancelConfirmationDialog";
@@ -32,7 +33,6 @@ export class ClosePosPopup extends Component {
         this.pos = usePos();
         this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
-        this.customerDisplay = useService("customer_display");
         this.dialog = useService("dialog");
         this.state = useState(this.getInitialState());
         this.confirm = useAsyncLockedMethod(this.confirm);
@@ -146,7 +146,20 @@ export class ClosePosPopup extends Component {
         return true;
     }
     async closeSession() {
-        this.customerDisplay?.update({ closeUI: true });
+        if (this.pos.config.customer_display_type === "proxy") {
+            fetch(`${deduceUrl(this.pos.config.proxy_ip)}/hw_proxy/customer_facing_display`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    action: "close",
+                }),
+            }).catch(() => {
+                console.log("Failed to send data to customer display");
+            });
+        }
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.push_orders_with_closing_popup();
         if (!syncSuccess) {

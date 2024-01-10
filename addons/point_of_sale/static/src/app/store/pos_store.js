@@ -8,13 +8,12 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
-import { memoize } from "@web/core/utils/functions";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
-import { renderToString } from "@web/core/utils/render";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
@@ -30,39 +29,8 @@ import {
     getTaxesValues,
 } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
-import { ConnectionLostError } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
-
-/**
- * Gets a product image as a base64 string so that it can be sent to the
- * customer display, as the display won't be able to fetch it, since the image
- * controller requires the client to be logged. This function is memoized on the
- * product id, so that we will only do this once per product.
- *
- * @param {number} productId id of the product
- * @param {string} writeDate the write date of the product, used as a cache
- *  buster in case the product image has been changed
- * @returns {string} the base64 representation of the product's image
- */
-// FIXME: this can make a lot of requests to the server in case of a lot of
-// products, we should probably load it when it's needed instead of loading it
-// for all products at once.
-const getProductImage = memoize(function getProductImage(productId, writeDate) {
-    return new Promise(function (resolve, reject) {
-        const img = new Image();
-        img.addEventListener("load", () => {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-            canvas.height = img.height;
-            canvas.width = img.width;
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL("image/jpeg"));
-        });
-        img.addEventListener("error", reject);
-        img.src = `/web/image?model=product.product&field=image_128&id=${productId}&unique=${writeDate}`;
-    });
-});
 
 export class PosStore extends Reactive {
     hasBigScrollBars = false;
@@ -1058,6 +1026,9 @@ export class PosStore extends Reactive {
 
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
+    get selectedOrder() {
+        return this.get_order();
+    }
 
     // change the current order
     set_order(order, options) {
@@ -1080,39 +1051,6 @@ export class PosStore extends Reactive {
             }
         }
         return taxes;
-    }
-
-    /**
-     * Renders the HTML for the customer display and returns it as a string.
-     *
-     * @returns {string}
-     */
-    async customerDisplayHTML(closeUI = false) {
-        const order = this.get_order();
-        if (closeUI || !order) {
-            return renderToString("point_of_sale.CustomerFacingDisplayNoOrder", {
-                pos: this,
-                origin: window.location.origin,
-            });
-        }
-
-        const orderLines = order.get_orderlines();
-        const productImages = Object.fromEntries(
-            await Promise.all(
-                orderLines.map(async ({ product_id }) => [
-                    product_id.id,
-                    await getProductImage(product_id.id, product_id.write_date),
-                ])
-            )
-        );
-
-        return renderToString("point_of_sale.CustomerFacingDisplayOrder", {
-            pos: this,
-            formatCurrency: this.env.utils.formatCurrency,
-            origin: window.location.origin,
-            order,
-            productImages,
-        });
     }
 
     // To be used in the context of closing the POS
@@ -1404,16 +1342,9 @@ export class PosStore extends Reactive {
         );
     }
     async closePos() {
-        const customerDisplayService = this.env.services.customer_display;
-        const openOrder = this.models["pos.order"].filter((order) => !order.finalized);
-
-        if (customerDisplayService) {
-            customerDisplayService.update({ closeUI: true });
-        }
-
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
-        if (!this || openOrder.length === 0) {
+        if (!this) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }
 

@@ -10,6 +10,7 @@ import { computeComboLines } from "./utils/compute_combo_lines";
 import { changesToOrder } from "./utils/order_change";
 
 const { DateTime } = luxon;
+const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 
 export class PosOrder extends Base {
     static pythonModel = "pos.order";
@@ -1042,6 +1043,22 @@ export class PosOrder extends Base {
         }
 
         return data;
+    }
+    getCustomerDisplayData() {
+        return {
+            lines: this.lines.map((l) => ({
+                ...l.getDisplayData(),
+                isSelected: l.isSelected(),
+                imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
+            })),
+            finalized: this.finalized,
+            amount: formatCurrency(this.get_total_with_tax() || 0),
+            paymentLines: this.payment_ids.map((pl) => ({
+                name: pl.payment_method_id.name,
+                amount: formatCurrency(pl.get_amount()),
+            })),
+            change: this.get_change() && formatCurrency(this.get_change()),
+        };
     }
 }
 

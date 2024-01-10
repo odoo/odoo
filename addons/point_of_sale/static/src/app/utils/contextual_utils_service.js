@@ -68,5 +68,4 @@ export const contextualUtilsService = {
         };
     },
 };
-
 registry.category("services").add("contextual_utils_service", contextualUtilsService);

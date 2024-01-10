@@ -1,4 +1,4 @@
-/* @odoo-module **/
+/** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
 import { BomOverviewComponentsBlock } from "@mrp/components/bom_overview_components_block/mrp_bom_overview_components_block";
