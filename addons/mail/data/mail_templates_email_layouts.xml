@@ -3,9 +3,9 @@
     <data>
         <template id="mail_notification_layout" name="Mail: mail notification layout template">
 <html t-att-lang="lang">
-<header>
+<head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-</header>
+</head>
 <body style="font-family:Verdana, Arial,sans-serif; color: #454748;">
 <t t-set="subtype_internal" t-value="subtype and subtype.internal"/>
 <!-- HEADER -->
@@ -110,9 +110,9 @@
 
         <template id="mail_notification_light">
 <html t-att-lang="lang">
-<header>
+<head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-</header>
+</head>
 <body>
 <t t-set="subtype_internal" t-value="False"/>
 <t t-call="mail.notification_preview"/>
