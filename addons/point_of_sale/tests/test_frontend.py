@@ -1222,6 +1222,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             warning_outputs = [o for o in log_catcher.output if 'WARNING' in o]
             self.assertEqual(len(warning_outputs), 1, "Exactly one warning should be logged")
 
+    def test_customer_display(self):
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTour', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

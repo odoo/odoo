@@ -44,6 +44,9 @@ class ResConfigSettings(models.TransientModel):
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
+    pos_customer_display_type = fields.Selection(related="pos_config_id.customer_display_type", readonly=False, required=True)
+    pos_customer_display_bg_img = fields.Image(related='pos_config_id.customer_display_bg_img', readonly=False)
+    pos_customer_display_bg_img_name = fields.Char(related='pos_config_id.customer_display_bg_img_name', readonly=False)
 
     # pos.config fields
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
@@ -65,9 +68,6 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
     pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
-    pos_iface_customer_facing_display_local = fields.Boolean(related='pos_config_id.iface_customer_facing_display_local', readonly=False)
-    pos_iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', compute='_compute_pos_iface_customer_facing_display_via_proxy', readonly=False, store=True)
-    pos_iface_customer_facing_display_background_image_1920 = fields.Image(related='pos_config_id.iface_customer_facing_display_background_image_1920', readonly=False)
     pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)
@@ -89,7 +89,7 @@ class ResConfigSettings(models.TransientModel):
     pos_picking_policy = fields.Selection(related='pos_config_id.picking_policy', readonly=False)
     pos_picking_type_id = fields.Many2one(related='pos_config_id.picking_type_id', readonly=False)
     pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True)
-    pos_proxy_ip = fields.Char(string='IP Address', compute='_compute_pos_proxy_ip', readonly=False, store=True)
+    pos_proxy_ip = fields.Char(string='IP Address', related="pos_config_id.proxy_ip", readonly=False)
     pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
     pos_receipt_header = fields.Text(string='Receipt Header', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
     pos_restrict_price_control = fields.Boolean(related='pos_config_id.restrict_price_control', readonly=False)
@@ -287,14 +287,6 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
 
     @api.depends('pos_is_posbox', 'pos_config_id')
-    def _compute_pos_proxy_ip(self):
-        for res_config in self:
-            if not res_config.pos_is_posbox:
-                res_config.pos_proxy_ip = False
-            else:
-                res_config.pos_proxy_ip = res_config.pos_config_id.proxy_ip
-
-    @api.depends('pos_is_posbox', 'pos_config_id')
     def _compute_pos_iface_print_via_proxy(self):
         for res_config in self:
             if not res_config.pos_is_posbox:
@@ -317,14 +309,6 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_iface_electronic_scale = False
             else:
                 res_config.pos_iface_electronic_scale = res_config.pos_config_id.iface_electronic_scale
-
-    @api.depends('pos_is_posbox', 'pos_config_id')
-    def _compute_pos_iface_customer_facing_display_via_proxy(self):
-        for res_config in self:
-            if not res_config.pos_is_posbox:
-                res_config.pos_iface_customer_facing_display_via_proxy = False
-            else:
-                res_config.pos_iface_customer_facing_display_via_proxy = res_config.pos_config_id.iface_customer_facing_display_via_proxy
 
     @api.onchange('pos_trusted_config_ids')
     def _onchange_trusted_config_ids(self):

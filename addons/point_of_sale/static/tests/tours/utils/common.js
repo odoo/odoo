@@ -23,17 +23,12 @@ export function negateStep(step) {
         trigger: negate(step.trigger),
     };
 }
-
-export function refresh() {
-    return {
-        content: `refresh page`,
-        trigger: "body",
-        run: () => {
-            window.location.reload();
-        },
-    };
+export function run(run, content = "run function") {
+    return { content, trigger: "body", run };
 }
-
+export function refresh() {
+    return run(() => window.location.reload(), "refresh page");
+}
 export function elementDoesNotExist(selector) {
     return {
         content: `Check that element "${selector}" don't exist.`,
