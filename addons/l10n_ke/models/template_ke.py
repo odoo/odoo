@@ -16,7 +16,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_valuation_account_id': 'ke1001',
             'property_stock_account_output_categ_id': 'ke100120',
             'property_stock_account_input_categ_id': 'ke100110',
-            'use_anglo_saxon': True,
             'code_digits': '6',
         }
 
@@ -24,6 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ke_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.ke',
                 'bank_account_code_prefix': '12000',
                 'cash_account_code_prefix': '12500',

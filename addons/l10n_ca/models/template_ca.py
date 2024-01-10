@@ -16,7 +16,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'l10n_ca_121130',
             'property_stock_account_output_categ_id': 'l10n_ca_121140',
             'property_stock_valuation_account_id': 'l10n_ca_121120',
-            'use_anglo_saxon': True,
         }
 
     @template('ca_2023', 'res.company')
@@ -36,6 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.ca',
                 'bank_account_code_prefix': '11131',
                 'cash_account_code_prefix': '11121',
