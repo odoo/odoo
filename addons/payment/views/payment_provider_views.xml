@@ -81,6 +81,7 @@
                                            string="Payment Methods"
                                            domain="[('is_primary', '=', True)]"
                                            readonly="True"
+                                           invisible="state == 'disabled'"
                                            widget="many2many_tags"
                                     />
                                     <div colspan="2">
@@ -88,6 +89,7 @@
                                            name="action_view_payment_methods"
                                            class="btn btn-link"
                                            role="button"
+                                           invisible="state == 'disabled'"
                                         >
                                             <i class="oi oi-fw o_button_icon oi-arrow-right"/>
                                             Enable Payment Methods
