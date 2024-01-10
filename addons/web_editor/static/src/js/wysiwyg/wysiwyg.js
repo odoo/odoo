@@ -247,16 +247,23 @@ export class Wysiwyg extends Component {
             const newRecordInfo = newProps.options.recordInfo;
             const newCollaborationChannel = newProps.options.collaborationChannel;
 
+            const isDifferentRecord =
+                JSON.stringify(lastRecordInfo) !== JSON.stringify(newRecordInfo) ||
+                JSON.stringify(lastCollaborationChannel) !== JSON.stringify(newCollaborationChannel);
+
             if (
                 (
                     stripHistoryIds(newValue) !== stripHistoryIds(newProps.editingValue) &&
                     stripHistoryIds(lastValue) !== stripHistoryIds(newValue)
                 ) ||
-                    JSON.stringify(lastRecordInfo) !== JSON.stringify(newRecordInfo) ||
-                    JSON.stringify(lastCollaborationChannel) !== JSON.stringify(newCollaborationChannel)
+                    isDifferentRecord
                 )
             {
-                this.resetEditor(newValue, newProps.options);
+                if (isDifferentRecord) {
+                    this.resetEditor(newValue, newProps.options);
+                } else {
+                    this.setValue(newValue);
+                }
                 this.env.onWysiwygReset && this.env.onWysiwygReset();
             }
         });
