@@ -6201,11 +6201,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'd-none');
         weightEl.title = _t("Size");
         this.$weight = $(weightEl);
-        // Perform the loading of the image info synchronously in order to
-        // avoid an intermediate rendering of the Blocks tab during the
-        // loadImageInfo RPC that obtains the file size.
-        // This does not update the target.
-        await this._applyOptions(false);
     },
 
     //--------------------------------------------------------------------------
