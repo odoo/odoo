@@ -45,6 +45,8 @@ class Currency(models.Model):
     date = fields.Date(compute='_compute_date')
     currency_unit_label = fields.Char(string="Currency Unit")
     currency_subunit_label = fields.Char(string="Currency Subunit")
+    currency_unit_label_singular = fields.Char(string="Singular Currency Unit")
+    currency_subunit_label_singular = fields.Char(string="Singular Currency Subunit")
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
 
     _sql_constraints = [
@@ -186,15 +188,27 @@ class Currency(models.Model):
         fractional_value = int(parts[2] or 0)
 
         lang = tools.get_lang(self.env)
-        amount_words = tools.ustr('{amt_value} {amt_word}').format(
+        if integer_value == 1 and self.currency_unit_label_singular:
+            amount_words = tools.ustr('{amt_value} {amt_word}').format(
                         amt_value=_num2words(integer_value, lang=lang.iso_code),
-                        amt_word=self.currency_unit_label,
+                        amt_word=self.currency_unit_label_singular,
                         )
+        else:
+            amount_words = tools.ustr('{amt_value} {amt_word}').format(
+                            amt_value=_num2words(integer_value, lang=lang.iso_code),
+                            amt_word=self.currency_unit_label,
+                            )
         if not self.is_zero(amount - integer_value):
-            amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
+            if fractional_value == 1 and self.currency_subunit_label_singular:
+                amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
                         amt_value=_num2words(fractional_value, lang=lang.iso_code),
-                        amt_word=self.currency_subunit_label,
+                        amt_word=self.currency_subunit_label_singular,
                         )
+            else: 
+                amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
+                            amt_value=_num2words(fractional_value, lang=lang.iso_code),
+                            amt_word=self.currency_subunit_label,
+                            )
         return amount_words
 
     def format(self, amount):

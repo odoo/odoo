@@ -152,6 +152,17 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">45</field>
                                     </record>
+                                    <!-- Not visible, but used for EC Sales Report -->
+                                    <record id="vat_report_line_ec_goods_tag" model="account.report.expression">
+                                        <field name="label">ec_goods</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">45_G</field>
+                                    </record>
+                                    <record id="vat_report_line_ec_triangular_tag" model="account.report.expression">
+                                        <field name="label">ec_triangular</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">45_T</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="vat_report_line_451" model="account.report.line">
@@ -255,6 +266,12 @@
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">482</field>
+                            </record>
+                            <!-- Not visible, but used for EC Sales Report -->
+                            <record id="vat_report_line_ec_services_tag" model="account.report.expression">
+                                <field name="label">ec_services</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">482_S</field>
                             </record>
                         </field>
                     </record>
