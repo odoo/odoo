@@ -9,18 +9,18 @@ export class CalendarFormController extends FormController {
         super.setup();
         const ormService = useService("orm");
 
-        onWillStart(async () => {
+        /* onWillStart(async () => {
             this.discussVideocallLocation = await ormService.call(
-                "calendar.event",
+                "calendar.event_bis",
                 "get_discuss_videocall_location"
             );
-        });
+        }); */
     }
 
     /**
      * @override
      */
-    async beforeExecuteActionButton(clickParams) {
+    /* async beforeExecuteActionButton(clickParams) {
         const action = clickParams.name;
         if (action === "clear_videocall_location" || action === "set_discuss_videocall_location") {
             let newVal = false;
@@ -39,5 +39,5 @@ export class CalendarFormController extends FormController {
             return false; // no continue
         }
         return super.beforeExecuteActionButton(...arguments);
-    }
+    } */
 }

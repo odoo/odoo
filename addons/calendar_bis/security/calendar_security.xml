@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="calendar_timeslot_read" model="ir.rule">
+            <field name="name">TS: All events</field>
+            <field ref="model_calendar_timeslot" name="model_id"/>
+            <field name="domain_force">[(1, "=", 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="calendar_timeslot_my" model="ir.rule">
+            <field name="name">TS: Own events</field>
+            <field ref="model_calendar_timeslot" name="model_id"/>
+            <field name="domain_force">['|', '|',
+                ('user_id', '=', user.id),
+                ('partner_id', '=', user.partner_id.id),
+                ('partner_id', '=', False)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="calendar_event_bis_my" model="ir.rule">
+            <field name="name">CE: Own events</field>
+            <field ref="model_calendar_event_bis" name="model_id"/>
+            <field name="domain_force">['|',
+                ('user_id', '=', user.id),
+                ('partner_id', '=', user.partner_id.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="calendar_event_bis_inv" model="ir.rule">
+            <field name="name">CE: Invited</field>
+            <field ref="model_calendar_event_bis" name="model_id"/>
+            <field name="domain_force">['|',
+                ('timeslot_ids.attendee_ids.partner_id.user_id', 'in', user.ids),
+                ('timeslot_ids.attendee_ids.partner_id', 'in', user.partner_id.ids)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="calendar_event_bis_public" model="ir.rule">
+            <field name="name">CE: Public</field>
+            <field ref="model_calendar_event_bis" name="model_id"/>
+            <field name="domain_force">[('is_public', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="calendar_attendee_bis_my" model="ir.rule">
+            <field name="name">CA: Me</field>
+            <field ref="model_calendar_attendee_bis" name="model_id"/>
+            <field name="domain_force">['|',
+                ('partner_id', '=', user.partner_id.id),
+                ('partner_id.user_id', '=', user.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <record id="calendar_attendee_bis_my_event" model="ir.rule">
+            <field name="name">CA: My Event</field>
+            <field ref="model_calendar_attendee_bis" name="model_id"/>
+            <field name="domain_force">['|', '|',
+                ('timeslot_id.user_id', '=', user.id),
+                ('timeslot_id.partner_id', '=', user.partner_id.id),
+                ('timeslot_id.partner_id', '=', False)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="calendar_attendee_bis_inv" model="ir.rule">
+            <field name="name">CA: Invited Events</field>
+            <field ref="model_calendar_attendee_bis" name="model_id"/>
+            <field name="domain_force">['|',
+                ('timeslot_id.attendee_ids.partner_id', '=', user.partner_id.id),
+                ('timeslot_id.attendee_ids.partner_id.user_id', '=', user.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>
