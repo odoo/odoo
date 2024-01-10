@@ -215,3 +215,11 @@ export function createGaugeChart(model, chartId, sheetId = model.getters.getActi
         },
     });
 }
+
+export function undo(model) {
+    model.dispatch("REQUEST_UNDO");
+}
+
+export function redo(model) {
+    model.dispatch("REQUEST_REDO");
+}
