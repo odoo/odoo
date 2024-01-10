@@ -13,6 +13,7 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.allowCalls &&
+                !component.thread?.isOnlySelf &&
                 !component.thread?.eq(component.rtc.state.channel) &&
                 !component.props.chatWindow?.hidden
             );

@@ -52,6 +52,20 @@ QUnit.test("no call with odoobot", async () => {
     await contains("[title='Start a Call']", { count: 0 });
 });
 
+QUnit.test("should not make self call if there is only one memeber", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-Discuss-header");
+    await contains("[title='Start a Call']", { count: 0 });
+});
+
 QUnit.test("should not display call UI when no more members (self disconnect)", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
