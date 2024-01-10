@@ -17,3 +17,5 @@ List of contributors:
 - Mladen Meseldžija mladen.meseldzija@modoolar.com https://github.com/mmeseldzija-modoolar
 - Petar Najman petar.najman@modoolar.com https://github.com/pnajman-modoolar
 - Slađan Kantar sladjan.kantar@modoolar.com https://github.com/skantar
+- Dejan Mirosavljević dejan.mirosavljevic@modoolar.com https://github.com/dmirosavljevic-modoolar
+- Vojin Maksinmović vojin.maksimovic@modoolar.com https://github.com/vmaksimovic-modoolar
