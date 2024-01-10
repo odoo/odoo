@@ -244,19 +244,6 @@ class Partner(models.Model):
             partners_format[partner] = data
         return partners_format
 
-    def _message_fetch_failed(self):
-        """Returns first 100 messages, sent by the current partner, that have errors, in
-        the format expected by the web client."""
-        self.ensure_one()
-        notifications = self.env['mail.notification'].search([
-            ('author_id', '=', self.id),
-            ('notification_status', 'in', ('bounce', 'exception')),
-            ('mail_message_id.message_type', '!=', 'user_notification'),
-            ('mail_message_id.model', '!=', False),
-            ('mail_message_id.res_id', '!=', 0),
-        ], limit=100)
-        return notifications.mail_message_id._message_notification_format()
-
     @api.model
     def get_mention_suggestions(self, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
