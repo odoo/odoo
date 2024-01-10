@@ -50,7 +50,7 @@
             <ul class="color_attribute_list d-flex gap-3">
                 <li t-foreach="values" t-as="value" t-key="value.id" class="color_attribute_list_item">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.attribute_value_ids)"/>
-                    <t t-set="img_style" t-value="value.image ? 'background:url(/web/image/product.attribute.value/' + value.id + '/image); background-size:cover;' : ''"/>
+                    <t t-set="img_style" t-value="value.image ? 'background:url(/web/image/product.template.attribute.value/' + value.id + '/image); background-size:cover;' : ''"/>
                     <t t-set="color_style" t-value="value.is_custom ? '' : 'background-color: ' + value.html_color" />
                     <label t-attf-class="configurator_color rounded border {{ value.id == state.attribute_value_ids ? 'active border-3 border-primary' : 'border-3 border-secondary' }}"
                         t-attf-style="#{img_style or color_style}" t-att-data-color="value.name">
