@@ -6,6 +6,8 @@ import { Component, useRef, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
+import { _t } from "@web/core/l10n/translation";
 
 export class WelcomePage extends Component {
     static props = ["data?", "proceed?"];
@@ -124,5 +126,8 @@ export class WelcomePage extends Component {
             "discuss_call_preview_join_video",
             Boolean(this.state.videoStream)
         );
+    }
+    getLoggedInAsText() {
+        return sprintf(_t("Logged in as %s"), this.store.user.name);
     }
 }
