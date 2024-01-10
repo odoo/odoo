@@ -369,14 +369,8 @@ Andrew</p>]]></field>
             <field name="color">7</field>
             <field name="expected_revenue">24000</field>
             <field name="probability">10.0</field>
-            <field name="partner_name">Deco Addict</field>
             <field name="email_from">info@agrolait.com</field>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="city">Wavre</field>
-            <field name="zip">1300</field>
-            <field name="street">Rue de Namur 69</field>
-            <field name="phone">+32 10 588 558</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="priority">2</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -396,10 +390,6 @@ Andrew</p>]]></field>
             <field name="probability">30.0</field>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="email_from">virginie@agrolait.com</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="city">Wavre</field>
-            <field name="street">Rue de Namur 69</field>
-            <field name="phone">+32 10 588 558</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -739,13 +729,8 @@ Andrew</p>]]></field>
             <field name="name">Open Space Design</field>
             <field name="expected_revenue">11000</field>
             <field name="probability">45</field>
-            <field name="partner_name">Deco Addict</field>
             <field name="email_from">info@agrolait.com</field>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="street">Rue de Namur 69</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="city">Wavre</field>
-            <field name="zip">1300</field>
             <field name="priority">2</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
@@ -762,13 +747,8 @@ Andrew</p>]]></field>
             <field name="name">Interest in your products</field>
             <field name="expected_revenue">2000</field>
             <field name="probability">80</field>
-            <field name="partner_name">Deco Addict</field>
             <field name="email_from">info@agrolait.com</field>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="city">Wavre</field>
-            <field name="zip">1300</field>
-            <field name="street">Rue de Namur 69</field>
             <field name="priority">2</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
@@ -786,13 +766,8 @@ Andrew</p>]]></field>
             <field name="name">Furnish a 60m² office</field>
             <field name="expected_revenue">7500</field>
             <field name="probability">20</field>
-            <field name="partner_name">Deco Addict</field>
             <field name="email_from">info@agrolait.com</field>
             <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="country_id" ref="base.be"/>
-            <field name="city">Wavre</field>
-            <field name="zip">1300</field>
-            <field name="street">Rue de Namur 69</field>
             <field name="priority">0</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1'), ref('sales_team.categ_oppor5')])]"/>
             <field name="date_deadline" eval="DateTime.today() + relativedelta(days=12)"/>
@@ -852,14 +827,12 @@ Andrew</p>]]></field>
         <record id="crm_case_31" model="crm.lead">
             <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
             <field name="type">opportunity</field>
-            <field name="name">Quote for 150 carpets</field>
+            <field name="name">Devis pour 150 tapis</field>
+            <field name="partner_id" ref="base.res_partner_5"/>
             <field name="expected_revenue">40000</field>
             <field name="probability">10.0</field>
             <field name="contact_name">Erik N. French</field>
             <field name="email_from">ErikNFrench@armyspy.com</field>
-            <field name="country_id" ref="base.au"/>
-            <field name="city">Chevy Chase</field>
-            <field name="street">1920 Del Dew Drive</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -870,6 +843,22 @@ Andrew</p>]]></field>
             <field name="medium_id" ref="utm.utm_medium_email"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
+
+        <record id="msg_case31_1" model="mail.message">
+            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="body" type="html"><p>Bonjour,</p>
+                <p>J'ai eu le plaisir de découvrir votre catalogue et je dois dire que vos produits m'ont vraiment impressionné.</p>
+                <p>Pourriez-vous me fournir un devis pour une commande de 150 tapis de différentes couleurs?</p>
+                <p>Merci de m'envoyer cela avant la fin de la semaine car nous sommes en phase finale de nos travaux de rénovation
+                    et prévoyons d'emménager dans nos nouveaux locaux dans 15 jours.</p>
+                <p>Je vous remercie par avance pour votre réactivité et vous souhaite une agréable fin de journée.</p>
+                <p>Cordialement,</p></field>
+            <field name="message_type">email</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_31"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
 
         <record id="crm_case_32" model="crm.lead">
             <field name="create_date" eval="datetime.now() - relativedelta(months=2)"/>
