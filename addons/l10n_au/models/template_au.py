@@ -10,7 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_au_template_data(self):
         return {
             'code_digits': '5',
-            'use_anglo_saxon': True,
             'property_account_receivable_id': 'au_11200',
             'property_stock_account_production_cost_id': 'au_11350',
             'property_account_payable_id': 'au_21200',
@@ -27,6 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_au_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.au',
                 'bank_account_code_prefix': '1111',
                 'cash_account_code_prefix': '1113',
