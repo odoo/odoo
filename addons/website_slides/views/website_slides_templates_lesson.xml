@@ -19,7 +19,7 @@
                     <div class="container o_wslides_lesson_header_container mt-5 mt-md-3 mt-xl-4">
                         <div class="row align-items-md-stretch">
                             <div t-attf-class="col-12 col-sm-9 d-flex flex-column #{'col-lg-6 offset-lg-3' if slide.channel_id.channel_type == 'training' else ''}">
-                                <h2 class="fw-medium w-100">
+                                <h2 class="fw-medium w-100 text-truncate overflow-hidden">
                                     <a t-att-href="'/slides/%s' % (slug(slide.channel_id))" class="text-white text-decoration-none" t-field="slide.channel_id.name"/>
                                 </h2>
                                 <div t-if="slide.channel_id.channel_type == 'documentation'" class="mb-3 small">
