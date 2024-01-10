@@ -20,9 +20,9 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     trigger: '#oe_snippets .o_panel_body > .oe_snippet',
     run: function () {
         // Tests done here as all these are not visible on the page
-        const draggableSnippets = document.querySelectorAll('#oe_snippets .o_panel_body > .oe_snippet.o_draggable > :nth-child(2)');
-        if (![...draggableSnippets].every(el => el.dataset.snippet)) {
-            console.error("error Some t-snippet are missing their template name");
+        const draggableSnippets = [...document.querySelectorAll('#oe_snippets .o_panel_body > .oe_snippet:not([data-module-id]) > :nth-child(2)')];
+        if (draggableSnippets.length && !draggableSnippets.every(el => el.dataset.snippet)) {
+            console.error("error Some t-snippet are missing their template name or there are no snippets to drop");
         }
         if (!document.querySelector('#oe_snippets [data-snippet="s_test_snip"] [data-snippet="s_share"]')) {
             console.error("error s_share t-called inside s_test_snip is missing template name");
