@@ -14,7 +14,7 @@ from psycopg2.extras import Json
 from odoo import Command, _, models, api
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.account import SYSCOHADA_LIST
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import file_open, groupby
 from odoo.tools.translate import TranslationImporter
 
@@ -958,7 +958,21 @@ class AccountChartTemplate(models.AbstractModel):
             ('applicability', '=', 'taxes'),
             ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
         ])}
-        return lambda *args: [tags[re.sub(r'\s+', ' ', x.strip())] if not re.match(r"^\w+\.\w+$", x) else x for x in args]
+
+        def mapping_getter(*args):
+            res = []
+            for tag in args:
+                if re.match(r"^\w+\.\w+$", tag):
+                    # xml_id => explicit data, doesn't need to be mapped
+                    res.append(tag)
+                else:
+                    format_tag = re.sub(r'\s+', ' ', tag.strip())
+                    mapped_tag = tags.get(format_tag)
+                    if not mapped_tag:
+                        raise UserError(_('Error while loading the localization. You should probably update your localization app first.'))
+                    res.append(mapped_tag)
+            return res
+        return mapping_getter
 
     def _deref_account_tags(self, template_code, tax_data):
         mapper = self._get_tag_mapper(template_code)
