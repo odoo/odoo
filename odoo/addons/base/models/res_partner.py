@@ -26,7 +26,7 @@ WARNING_MESSAGE = [
 WARNING_HELP = 'Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.'
 
 
-ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id', 'partner_latitude', 'partner_longitude')
 @api.model
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
@@ -572,7 +572,7 @@ class Partner(models.Model):
     @api.model
     def _formatting_address_fields(self):
         """Returns the list of address fields usable to format addresses."""
-        return self._address_fields()
+        return [field for field in self._address_fields() if field not in ['partner_latitude', 'partner_longitude']]
 
     def update_address(self, vals):
         addr_vals = {key: vals[key] for key in self._address_fields() if key in vals}
