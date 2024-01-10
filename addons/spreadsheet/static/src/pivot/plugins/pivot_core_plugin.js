@@ -106,7 +106,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                const def = this._convertPivotDefinition(id, definition);
+                const def = this._convertPivotDefinition(definition);
                 this._addPivot(id, def);
                 this._insertPivot(sheetId, position, id, table);
                 this.history.update("nextId", parseInt(id, 10) + 1);
@@ -134,7 +134,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
             case "DUPLICATE_PIVOT": {
                 const { pivotId, newPivotId } = cmd;
                 const definition = deepCopy(this.pivots[pivotId].definition);
-                definition.id = newPivotId;
                 this._addPivot(newPivotId, definition);
                 this.history.update("nextId", parseInt(newPivotId, 10) + 1);
                 break;
@@ -281,12 +280,11 @@ export class PivotCorePlugin extends OdooCorePlugin {
     }
 
     /**
-     * @param {string} id
      * @param {PivotRuntime} runtimeDefinition
      *
      * @returns {PivotDefinition}
      */
-    _convertPivotDefinition(id, runtimeDefinition) {
+    _convertPivotDefinition(runtimeDefinition) {
         return {
             colGroupBys: runtimeDefinition.metaData.colGroupBys,
             rowGroupBys: runtimeDefinition.metaData.rowGroupBys,
@@ -295,7 +293,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
             domain: runtimeDefinition.searchParams.domain,
             context: runtimeDefinition.searchParams.context,
             name: runtimeDefinition.name,
-            id,
             sortedColumn: runtimeDefinition.metaData.sortedColumn || null,
         };
     }

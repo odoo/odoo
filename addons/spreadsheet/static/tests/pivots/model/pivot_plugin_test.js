@@ -877,13 +877,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         const pivotIds = model.getters.getPivotIds();
         assert.equal(model.getters.getPivotIds().length, 2);
 
-        const expectedDuplicatedDefinition = {
-            ...model.getters.getPivotDefinition(pivotId),
-            id: "2",
-        };
         assert.deepEqual(
             model.getters.getPivotDefinition(pivotIds[1]),
-            expectedDuplicatedDefinition
+            model.getters.getPivotDefinition(pivotId)
         );
 
         assert.deepEqual(model.getters.getPivotFieldMatching(pivotId, "42"), matching);

@@ -13,7 +13,6 @@ declare module "@spreadsheet" {
         domain: Array;
         context: Object;
         name: string;
-        id: string;
         sortedColumn: SortedColumn | null;
     }
 
