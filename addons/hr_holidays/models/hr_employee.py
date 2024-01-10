@@ -318,11 +318,11 @@ class HrEmployee(models.Model):
     def _get_public_holidays(self, date_start, date_end):
         domain = [
             ('resource_id', '=', False),
-            ('company_id', 'in', self.env.companies.ids),
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
         ]
-
+        domain_company = self.company_id or self.env.company
+        domain += ['|', ('company_id', '=', False), ('company_id', '=', domain_company.id)]
         # a user with hr_holidays permissions will be able to see all public holidays from his calendar
         if not self._is_leave_user():
             domain += [
@@ -352,9 +352,9 @@ class HrEmployee(models.Model):
         domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
-            ('company_id', 'in', self.env.companies.ids),
         ]
-
+        domain_company = self.company_id or self.env.company
+        domain += [('company_id', '=', domain_company.id)]
         # a user with hr_holidays permissions will be able to see all stress days from his calendar
         if not self._is_leave_user():
             domain += [
