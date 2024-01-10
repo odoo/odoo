@@ -5,6 +5,9 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { click } from "@web/../tests/helpers/utils";
 import { contains } from "@web/../tests/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
+import { getOrigin } from "@web/core/utils/urls";
+
+const { DateTime } = luxon;
 
 
 QUnit.module("M2OAvatarResourceWidgetTests", {
@@ -100,6 +103,7 @@ QUnit.module("M2OAvatarResourceWidgetTests", {
     });
 
     QUnit.test("many2one_avatar_resource widget in kanban view", async function (assert) {
+        const pyEnv = await startServer();
         this.serverData.views = {
             "resource.task,false,kanban": `
                     <kanban>
@@ -130,13 +134,15 @@ QUnit.module("M2OAvatarResourceWidgetTests", {
             ".o_field_many2one_avatar_resource img",
             2,
         );
+        const marie = pyEnv["resource.resource"].searchRead([["id", "=", this.data.resourceMarieId]])[0];
         assert.strictEqual(
             document.querySelector(".o_kanban_record:nth-of-type(2) .o_field_many2one_avatar_resource img").getAttribute("data-src"),
-            "/web/image/resource.resource/" + this.data.resourceMarieId + "/avatar_128",
+            `${getOrigin()}/web/image/resource.resource/${this.data.resourceMarieId}/avatar_128?unique=${DateTime.fromSQL(marie.write_date).ts}`,
         );
+        const pierre = pyEnv["resource.resource"].searchRead([["id", "=", this.data.resourcePierreId]])[0];
         assert.strictEqual(
             document.querySelector(".o_kanban_record:nth-of-type(3) .o_field_many2one_avatar_resource img").getAttribute("data-src"),
-            "/web/image/resource.resource/" + this.data.resourcePierreId + "/avatar_128",
+            `${getOrigin()}/web/image/resource.resource/${this.data.resourcePierreId}/avatar_128?unique=${DateTime.fromSQL(pierre.write_date).ts}`,
         );
 
         // 1. Clicking on material resource's icon

@@ -6,6 +6,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
+import { imageUrl } from "@web/core/utils/urls";
 
 export class Many2OneAvatarField extends Many2OneField {
     static template = "web.Many2OneAvatarField";
@@ -13,11 +14,17 @@ export class Many2OneAvatarField extends Many2OneField {
         ...Many2OneField.components,
         Many2XAutocomplete: AvatarMany2XAutocomplete,
     };
+    get img() {
+        return imageUrl(this.relation, this.props.record.data[this.props.name][0], "avatar_128", {
+            unique: this.props.record.data[this.props.name][2]?.write_date,
+        });
+    }
 }
 
 export const many2OneAvatarField = {
     ...many2OneField,
     component: Many2OneAvatarField,
+    fieldsTofetch: ["write_date"],
     extractProps(fieldInfo) {
         const props = many2OneField.extractProps(...arguments);
         props.canOpen = fieldInfo.viewType === "form";

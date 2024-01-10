@@ -6,7 +6,7 @@
             <span class="o_avatar o_m2o_avatar">
                 <span t-if="props.record.data[props.name] === false and !props.readonly" class="o_avatar_empty o_m2o_avatar_empty"></span>
                 <img t-if="props.record.data[props.name] !== false"
-                     t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name][0]}}/avatar_128"
+                     t-att-src="img"
                      class="rounded"
                 />
             </span>

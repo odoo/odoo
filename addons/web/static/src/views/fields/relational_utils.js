@@ -48,6 +48,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { imageUrl } from "@web/core/utils/urls";
 
 //
 // Commons
@@ -296,6 +297,9 @@ export class Many2XAutocomplete extends Component {
             id: option.value,
             display_name: option.displayName,
         };
+        if (option.write_date) {
+            record.write_date = option.write_date;
+        }
         this.props.update([record], params);
     }
 
@@ -306,6 +310,7 @@ export class Many2XAutocomplete extends Component {
             args: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
+            extra_fields: ["write_date"],
         });
     }
     mapRecordToOption(result) {
@@ -402,6 +407,7 @@ export class Many2XAutocomplete extends Component {
                 operator: "ilike",
                 limit: this.props.searchMoreLimit,
                 context,
+                extra_fields: ["write_date"],
             });
 
             dynamicFilters = [
@@ -433,6 +439,10 @@ export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
         return {
             ...super.mapRecordToOption(result),
             resModel: this.props.resModel,
+            write_date: result[2]?.write_date,
+            img: imageUrl(this.props.resModel, result[0], "avatar_128", {
+                unique: result[2]?.write_date,
+            }),
         };
     }
     get optionsSource() {

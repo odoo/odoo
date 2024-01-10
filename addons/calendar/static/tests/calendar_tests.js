@@ -32,15 +32,18 @@ QUnit.module(
                     partner: {
                         fields: {
                             name: { string: "Name", type: "char" },
+                            write_date: { string: "Name", type: "char" },
                         },
                         records: [
                             {
                                 id: 1,
                                 name: "Jesus",
+                                write_date: "2024-01-01 12:00:00",
                             },
                             {
                                 id: 2,
                                 name: "Mahomet",
+                                write_date: "2024-01-01 12:00:00",
                             },
                         ],
                     },
@@ -121,7 +124,7 @@ QUnit.module(
             assert.hasAttrValue(
                 badges[0].querySelector("img"),
                 "data-src",
-                `${getOrigin()}/web/image/partner/1/avatar_128`,
+                `${getOrigin()}/web/image/partner/1/avatar_128?unique=1704106800000`,
                 "should have correct avatar image"
             );
             assert.verifySteps(["get_attendee_detail"]);

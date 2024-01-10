@@ -996,9 +996,12 @@ QUnit.module("test_mail", {}, function () {
             await doAction(webClient, 1);
 
             await contains(".o_m2o_avatar", { count: 2 });
+            const user = pyEnv["res.users"].searchRead([["id", "=", resUsersId1]])[0];
             assert.containsOnce(
                 document.body,
-                `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`,
+                `tr:nth-child(2) .o_m2o_avatar > img[data-src="${getOrigin()}/web/image/res.users/${resUsersId1}/avatar_128?unique=${
+                    DateTime.fromSQL(user.write_date).ts
+                }"]`,
                 "should have m2o avatar image"
             );
             // "should not have text on many2one_avatar_user if onlyImage node option is passed"

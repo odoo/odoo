@@ -844,9 +844,21 @@ export class MockServer {
         const { records } = this.models[model];
         const result = [];
         for (const r of records) {
+            const extra = {};
+            if (kwargs.extra_fields) {
+                for (const field of kwargs.extra_fields) {
+                    if (r[field]) {
+                        extra[field] = r[field];
+                    }
+                }
+            }
             const isInDomain = this.evaluateDomain(domain, r);
             if (isInDomain && (!str.length || (r.display_name && r.display_name.includes(str)))) {
-                result.push([r.id, r.display_name]);
+                if (kwargs.extra_fields && Object.keys(extra).length > 0) {
+                    result.push([r.id, r.display_name, extra]);
+                } else {
+                    result.push([r.id, r.display_name]);
+                }
             }
         }
         return result.slice(0, limit);

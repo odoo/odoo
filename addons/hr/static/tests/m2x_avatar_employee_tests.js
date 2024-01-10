@@ -9,6 +9,8 @@ import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_p
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { getOrigin } from "@web/core/utils/urls";
 
+const { DateTime } = luxon;
+
 /* The widgets M2XAVatarEmployee inherits from M2XAvatarUser. Those tests therefore allows
    to test the opening of popover employee cards for both widgets type. If the widgets
    M2XAvatarEmployee are removed in the future, the tests related to opening of popover
@@ -147,6 +149,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             user_id: userId,
             user_partner_id: partnerId,
         });
+        const employee = pyEnv["hr.employee.public"].searchRead([["id", "=", employeeId]])[0];
         pyEnv["m2x.avatar.employee"].create({
             employee_id: employeeId,
             employee_ids: [employeeId],
@@ -171,7 +174,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o_m2o_avatar");
         assert.strictEqual(
             document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
-            `/web/image/hr.employee.public/${employeeId}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId}/avatar_128?unique=${
+                DateTime.fromSQL(employee.write_date).ts
+            }`
         );
     });
 
@@ -194,6 +199,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                             employee_id: {
                                 fields: {
                                     display_name: {},
+                                    write_date: {},
                                 },
                             },
                         });
@@ -223,6 +229,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 user_id: userId,
                 user_partner_id: partnerId,
             });
+            const employee = pyEnv["hr.employee.public"].searchRead([["id", "=", employeeId]])[0];
             pyEnv["m2x.avatar.employee"].create({
                 employee_id: employeeId,
                 employee_ids: [employeeId],
@@ -251,7 +258,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             await contains(".o_m2o_avatar");
             assert.strictEqual(
                 document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
-                `/web/image/hr.employee/${employeeId}/avatar_128`
+                `${getOrigin()}/web/image/hr.employee/${employeeId}/avatar_128?unique=${
+                    DateTime.fromSQL(employee.write_date).ts
+                }`
             );
         }
     );
@@ -264,6 +273,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             user_id: userId,
             user_partner_id: partnerId,
         });
+        const employee = pyEnv["hr.employee.public"].searchRead([["id", "=", employeeId]])[0];
         pyEnv["m2x.avatar.employee"].create({
             employee_id: employeeId,
             employee_ids: [employeeId],
@@ -292,7 +302,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         await contains(".o_m2o_avatar");
         assert.strictEqual(
             document.querySelector(".o_m2o_avatar > img").getAttribute("data-src"),
-            `/web/image/hr.employee.public/${employeeId}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId}/avatar_128?unique=${
+                DateTime.fromSQL(employee.write_date).ts
+            }`
         );
     });
 
@@ -320,6 +332,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 user_partner_id: partnerId_2,
             },
         ]);
+        const employee_1 = pyEnv["hr.employee.public"].searchRead([["id", "=", employeeId_1]])[0];
         const avatarId_1 = pyEnv["m2x.avatar.employee"].create({
             employee_ids: [employeeId_1, employeeId_2],
         });
@@ -345,7 +358,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             document
                 .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                 .getAttribute("data-src"),
-            `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=${
+                DateTime.fromSQL(employee_1.write_date).ts
+            }`
         );
 
         // Clicking on first employee's avatar
@@ -412,6 +427,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 { ...employeeData_1 },
                 { ...employeeData_2 },
             ]);
+            const employee_1 = pyEnv["hr.employee.public"].searchRead([
+                ["id", "=", employeeId_1],
+            ])[0];
             const avatarId_1 = pyEnv["m2x.avatar.employee"].create({
                 employee_ids: [employeeId_1, employeeId_2],
             });
@@ -450,7 +468,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 document
                     .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                     .getAttribute("data-src"),
-                `${getOrigin()}/web/image/hr.employee/${employeeId_1}/avatar_128`
+                `${getOrigin()}/web/image/hr.employee/${employeeId_1}/avatar_128?unique=${
+                    DateTime.fromSQL(employee_1.write_date).ts
+                }`
             );
 
             await click(
@@ -579,6 +599,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 user_partner_id: partnerId_2,
             },
         ]);
+        const employee_1 = pyEnv["hr.employee.public"].searchRead([["id", "=", employeeId_1]])[0];
+        const employee_2 = pyEnv["hr.employee.public"].searchRead([["id", "=", employeeId_2]])[0];
         pyEnv["m2x.avatar.employee"].create({
             employee_ids: [employeeId_1, employeeId_2],
         });
@@ -618,7 +640,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
                 )
                 .getAttribute("data-src"),
-            `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128?unique=${
+                DateTime.fromSQL(employee_2.write_date).ts
+            }`
         );
         assert.strictEqual(
             document
@@ -626,7 +650,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar"
                 )[1]
                 .getAttribute("data-src"),
-            `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+            `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=${
+                DateTime.fromSQL(employee_1.write_date).ts
+            }`
         );
 
         // Clicking on first employee's avatar
@@ -687,6 +713,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     user_partner_id: partnerId,
                 },
             ]);
+            const employee_1 = pyEnv["hr.employee.public"].searchRead([
+                ["id", "=", employeeId_1],
+            ])[0];
             const avatarId = pyEnv["m2x.avatar.employee"].create({
                 employee_ids: [employeeId_1, employeeId_2],
             });
@@ -707,7 +736,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 document
                     .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                     .getAttribute("data-src"),
-                `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+                `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=${
+                    DateTime.fromSQL(employee_1.write_date).ts
+                }`
             );
 
             // Clicking on first employee's avatar (employee with no user)

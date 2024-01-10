@@ -43,11 +43,18 @@ class CreateConfirmationDialog extends Component {
 export function m2oTupleFromData(data) {
     const id = data.id;
     let name;
+    let extra;
     if ("display_name" in data) {
         name = data.display_name;
     } else {
         const _name = data.name;
         name = Array.isArray(_name) ? _name[1] : _name;
+    }
+    if ("write_date" in data) {
+        extra = { write_date: data.write_date };
+    }
+    if (extra) {
+        return [id, name, extra];
     }
     return [id, name];
 }

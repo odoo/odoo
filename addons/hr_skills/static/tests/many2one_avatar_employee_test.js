@@ -10,6 +10,9 @@ import { patchAvatarCardPopover } from "@hr/components/avatar_card/avatar_card_p
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { patchAvatarCardResourcePopover } from "@hr_skills/components/avatar_card_resource/avatar_card_resource_popover_patch";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
+import { getOrigin } from "@web/core/utils/urls";
+
+const { DateTime } = luxon;
 
 
 QUnit.module("M2OAvatarEmployeeWidgetTestsSkills", {
@@ -74,6 +77,7 @@ QUnit.module("M2OAvatarEmployeeWidgetTestsSkills", {
     },
 }, () => {
     QUnit.test("many2one_avatar_employee widget in kanban view with skills on avatar card", async function (assert) {
+        const pyEnv = await startServer();
         this.serverData.views = {
             "m2o.avatar.employee,false,kanban": `
                     <kanban>
@@ -100,9 +104,10 @@ QUnit.module("M2OAvatarEmployeeWidgetTestsSkills", {
             ".o_field_many2one_avatar_employee img",
             1,
         );
+        const pierre = pyEnv["hr.employee.public"].searchRead([["id", "=", this.data.employeePierreId]])[0];
         assert.strictEqual(
             document.querySelector(".o_kanban_record .o_field_many2one_avatar_employee img").getAttribute("data-src"),
-            `/web/image/hr.employee.public/${this.data.employeePierreId}/avatar_128`,
+            `${getOrigin()}/web/image/hr.employee.public/${this.data.employeePierreId}/avatar_128?unique=${DateTime.fromSQL(pierre.write_date).ts}`,
         );
 
         // Clicking on employee avatar to display avatar card
