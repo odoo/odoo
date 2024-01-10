@@ -741,6 +741,8 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
+            if vals.get('name') and not vals['name'][0].isalnum():
+                raise UserError(_("The name cannot start with a symbol."))
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):
