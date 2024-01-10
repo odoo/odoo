@@ -484,7 +484,7 @@ export class StaticList extends DataPoint {
 
     _applyCommands(commands, { canAddOverLimit, reload } = {}) {
         const isOnLastPage = this.limit + this.offset >= this.count;
-        const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET } = x2ManyCommands;
+        const { CREATE, UPDATE, DELETE, UNLINK, LINK, SET, CLEAR } = x2ManyCommands;
 
         const recordsToLoad = [];
         for (const command of commands) {
@@ -606,6 +606,13 @@ export class StaticList extends DataPoint {
                     this._currentIds.push(record.resId);
                     this._commands.push([command[0], command[1]]);
                     this.count++;
+                    break;
+                }
+                case CLEAR: {
+                    this.records = [];
+                    this._currentIds = [];
+                    this._commands = [];
+                    this.count = 0;
                     break;
                 }
             }
