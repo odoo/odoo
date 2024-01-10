@@ -10,7 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_nz_template_data(self):
         return {
             'code_digits': '5',
-            'use_anglo_saxon': True,
             'property_account_receivable_id': 'nz_11200',
             'property_account_payable_id': 'nz_21200',
             'property_account_expense_categ_id': 'nz_51110',
@@ -24,6 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_nz_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.nz',
                 'bank_account_code_prefix': '1111',
                 'cash_account_code_prefix': '1113',
