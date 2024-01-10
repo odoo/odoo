@@ -139,7 +139,7 @@
                                 <span invisible="allday" style="white-space: pre;"> or </span>
                                 <div class="d-flex gap-2">
                                     <label for="allday" class=""/>
-                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" readonly="not user_can_edit"/>
+                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
                                 </div>
                             </div>
                             <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
