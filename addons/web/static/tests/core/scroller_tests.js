@@ -1,21 +1,17 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
-import { scrollerService } from "@web/core/scroller_service";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mount, nextTick } from "../helpers/utils";
 
 import { Component, xml } from "@odoo/owl";
-const serviceRegistry = registry.category("services");
 
 let env;
 let target;
 
-QUnit.module("ScrollerService", {
+QUnit.module("ScrollerTests", {
     async beforeEach() {
-        serviceRegistry.add("scroller", scrollerService);
         env = await makeTestEnv();
         target = getFixture();
     },

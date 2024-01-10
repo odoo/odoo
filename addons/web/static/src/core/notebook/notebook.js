@@ -4,12 +4,13 @@ import { scrollTo } from "@web/core/utils/scrolling";
 
 import {
     Component,
-    onWillDestroy,
     onWillUpdateProps,
     useEffect,
+    useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * A notebook component that will render only the current page and allow
@@ -85,8 +86,7 @@ export class Notebook extends Component {
         this.pages = this.computePages(this.props);
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
-        const onAnchorClicked = this.onAnchorClicked.bind(this);
-        this.env.bus.addEventListener("SCROLLER:ANCHOR_LINK_CLICKED", onAnchorClicked);
+        useExternalListener(browser, "click", this.onAnchorClicked);
         useEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
@@ -104,9 +104,6 @@ export class Notebook extends Component {
             this.pages = this.computePages(nextProps);
             this.state.currentPage = this.computeActivePage(nextProps.defaultPage, activateDefault);
         });
-        onWillDestroy(() => {
-            this.env.bus.removeEventListener("SCROLLER:ANCHOR_LINK_CLICKED", onAnchorClicked);
-        });
     }
 
     get navItems() {
@@ -122,11 +119,14 @@ export class Notebook extends Component {
         if (!this.props.anchors) {
             return;
         }
-        const id = ev.detail.detail.id.substring(1);
+        const href = ev.target.closest("a")?.getAttribute("href");
+        if (!href) {
+            return;
+        }
+        const id = href.substring(1);
         if (this.props.anchors[id]) {
             if (this.state.currentPage !== this.props.anchors[id].target) {
                 ev.preventDefault();
-                ev.detail.detail.originalEv.preventDefault();
                 this.anchorTarget = id;
                 this.state.currentPage = this.props.anchors[id].target;
             }
