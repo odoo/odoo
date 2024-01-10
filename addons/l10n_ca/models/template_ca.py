@@ -16,13 +16,13 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'chart2171_en',
             'property_stock_account_output_categ_id': 'chart1145_en',
             'property_stock_valuation_account_id': 'chart1141_en',
-            'use_anglo_saxon': True,
         }
 
     @template('ca', 'res.company')
     def _get_ca_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.ca',
                 'bank_account_code_prefix': '112',
                 'cash_account_code_prefix': '111',
