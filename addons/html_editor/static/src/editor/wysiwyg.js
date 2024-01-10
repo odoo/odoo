@@ -10,6 +10,23 @@ import { PowerboxPlugin } from "./powerbox/powerbox_plugin";
 import { ToolbarPlugin } from "./toolbar/toolbar_plugin";
 import { TablePlugin } from "./table/table_plugin";
 
+export function wysiwyg(el, env, config) {
+    const Plugins = [
+        HistoryPlugin,
+        HintPlugin,
+        DomPlugin,
+        OverlayPlugin,
+        ToolbarPlugin,
+        PowerboxPlugin,
+        TablePlugin,
+    ];
+
+    // const env = useEnv();
+    const editor = new Editor(Plugins, config, env.services);
+    return editor;
+
+}
+
 export function useWysiwyg(refName, config = {}) {
     const Plugins = [
         HistoryPlugin,

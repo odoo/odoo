@@ -20,13 +20,30 @@ test("one plus one equals two", () => {
     expect(1 + 1).toBe(2);
 });
 
-test("one plus one equals sstwo", async () => {
-    const fixture = getFixture();
-    const testEditor = await mountWithCleanup(TestEditor, {
-        props: { innerHTML: "hello" }
-    });
-    expect(fixture.innerHTML).toBe('sss');
+
+/**
+ * setupEditor
+ *      el
+ *      editor (class Editor)
+ *      content (function => return html avec range "ab[cd]ef")
+ *      setContent(htmlwithrange)
+ *      setSelection(???)
+ *      
+ */
+test("one plus one equals sstwo", () => {
+    const { editor, content, setSelection } = setupEditor("hel[]lo", {});
+    expect(content()).toBe("<div>a[ddd]b</div>");
+    setSelection("<div>a[dddb]</div>");
+    editor.dispatch("SET_BOLD")
+    expect(content()).toBe("<div>a<b>[dddb]</b></div>");
 });
+
+
+    // const fixture = getFixture();
+    // const testEditor = await mountWithCleanup(TestEditor, {
+    //     props: { innerHTML: "hello" }
+    // });
+    // expect(fixture.innerHTML).toBe('sss');
 
 /**
  * To write:
