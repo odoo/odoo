@@ -641,7 +641,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) => order.date_order.toFormat("yyyy-MM-dd HH:mm a"),
+                repr: (order) => formatDateTime(order.date_order),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },
