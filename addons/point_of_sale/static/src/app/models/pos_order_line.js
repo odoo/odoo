@@ -621,7 +621,7 @@ export class PosOrderline extends Base {
                 ? formatCurrency(this.get_old_unit_display_price(), this.currency)
                 : "",
             discount: this.get_discount_str(),
-            customerNote: this.get_customer_note(),
+            customerNote: this.get_customer_note() || "",
             internalNote: this.getNote(),
             comboParent: this.combo_parent_id?.get_full_product_name?.() || "",
             packLotLines: this.pack_lot_ids.map(

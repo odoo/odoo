@@ -11,6 +11,7 @@ from . import pos_bus_mixin
 from . import barcode_rule
 from . import chart_template
 from . import digest
+from . import ir_binary
 from . import pos_category
 from . import pos_config
 from . import pos_order

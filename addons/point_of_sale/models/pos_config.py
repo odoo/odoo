@@ -4,6 +4,7 @@
 from datetime import datetime
 from uuid import uuid4
 import pytz
+import secrets
 
 from odoo import api, fields, models, _, Command
 from odoo.osv.expression import OR, AND
@@ -62,6 +63,9 @@ class PosConfig(models.Model):
             tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
         return tip_product_id
 
+    def _get_customer_display_types(self):
+        return [('none', 'None'), ('local', 'The same device'), ('remote', 'Another device'), ('proxy', 'An IOT-connected screen')]
+
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_order_printer = fields.Boolean('Order Printer')
@@ -90,10 +94,6 @@ class PosConfig(models.Model):
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', compute_sudo=True, string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
-    iface_customer_facing_display = fields.Boolean(compute='_compute_customer_facing_display')
-    iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
-    iface_customer_facing_display_local = fields.Boolean(string='Local Customer Facing Display', help="Show checkout to customers.")
-    iface_customer_facing_display_background_image_1920 = fields.Image(string='Background Image', max_width=1920, max_height=1920, compute='_compute_iface_customer_facing_display_background_image_1920', store=True)
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.")
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
@@ -106,6 +106,9 @@ class PosConfig(models.Model):
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
+    customer_display_type = fields.Selection(selection=lambda self: self._get_customer_display_types(), string='Customer Facing Display', help="Show checkout to customers.", default='local')
+    customer_display_bg_img = fields.Image(string='Background Image', max_width=1920, max_height=1920)
+    customer_display_bg_img_name = fields.Char(string='Background Image Name')
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
         help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
     is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs', default=False,
@@ -275,17 +278,6 @@ class PosConfig(models.Model):
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
                 pos_config.current_user_id = False
-
-    @api.depends('iface_customer_facing_display_via_proxy', 'iface_customer_facing_display_local')
-    def _compute_customer_facing_display(self):
-        for config in self:
-            config.iface_customer_facing_display = config.iface_customer_facing_display_via_proxy or config.iface_customer_facing_display_local
-
-    @api.depends('iface_customer_facing_display')
-    def _compute_iface_customer_facing_display_background_image_1920(self):
-        for config in self:
-            if not config.iface_customer_facing_display:
-                config.iface_customer_facing_display_background_image_1920 = False
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
@@ -947,3 +939,20 @@ class PosConfig(models.Model):
 
     def _get_special_products(self):
         return self.env.ref('point_of_sale.product_product_tip', raise_if_not_found=False) or self.env['product.product']
+
+    def update_customer_display(self, order, access_token):
+        self.ensure_one()
+        if not access_token or not secrets.compare_digest(self.access_token, access_token):
+            return
+        self._notify("UPDATE_CUSTOMER_DISPLAY", order)
+
+    def _get_customer_display_data(self):
+        self.ensure_one()
+        return {
+            'config_id': self.id,
+            'access_token': self.access_token,
+            'type': self.customer_display_type,
+            'has_bg_img': bool(self.customer_display_bg_img),
+            'company_id': self.company_id.id,
+            **({'proxy_ip': self.proxy_ip} if self.customer_display_type == 'proxy' else {}),
+        }

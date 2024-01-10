@@ -2,7 +2,6 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
 import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
-import { CustomerFacingDisplayButton } from "@point_of_sale/app/navbar/customer_facing_display_button/customer_facing_display_button";
 import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
 import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
 import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
@@ -17,13 +16,13 @@ import { Input } from "@point_of_sale/app/generic_components/inputs/input/input"
 import { isBarcodeScannerSupported } from "@web/webclient/barcode/barcode_scanner";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { deduceUrl } from "@point_of_sale/utils";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
     static components = {
         // FIXME POSREF remove some of these components
         CashierName,
-        CustomerFacingDisplayButton,
         ProxyStatus,
         SaleDetailsButton,
         SyncNotification,
@@ -41,9 +40,6 @@ export class Navbar extends Component {
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
-    }
-    get customerFacingDisplayButtonIsShown() {
-        return this.pos.config.iface_customer_facing_display;
     }
     onClickScan() {
         if (!this.pos.scanning) {
@@ -119,5 +115,39 @@ export class Navbar extends Component {
 
     get showToggleProductView() {
         return this.pos.mainScreen.component === ProductScreen && this.ui.isSmall;
+    }
+    openCustomerDisplay() {
+        if (this.pos.config.customer_display_type === "local") {
+            window.open(
+                `/pos_customer_display/${this.pos.config.id}/${this.pos.config.access_token}`,
+                "newWindow",
+                "width=800,height=600,left=200,top=200"
+            );
+            this.notification.add("Connected");
+        }
+        if (this.pos.config.customer_display_type === "remote") {
+            this.notification.add("Navigate to your POS Customer Display on the other computer");
+        }
+        if (this.pos.config.customer_display_type === "proxy") {
+            this.notification.add("Connecting to the IoT Box");
+            fetch(`${deduceUrl(this.pos.config.proxy_ip)}/hw_proxy/customer_facing_display`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    action: "open",
+                    access_token: this.pos.config.access_token,
+                    id: this.pos.config.id,
+                }),
+            })
+                .then(() => {
+                    this.notification.add("Connection successful");
+                })
+                .catch(() => {
+                    this.notification.add("Connection failed", { type: "danger" });
+                });
+        }
     }
 }

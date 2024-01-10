@@ -61,6 +61,7 @@
                 <field name="name"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
+                <field name="access_token"/>
                 <field name="last_session_closing_date"/>
                 <field name="pos_session_username"/>
                 <field name="pos_session_state"/>
@@ -80,6 +81,9 @@
                                     </div>
                                     <div role="menuitem">
                                         <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
+                                    </div>
+                                    <div role="menuitem" invisible="customer_display_type != 'remote'">
+                                        <a t-attf-href="/pos_customer_display/#{record.id.value}/#{record.access_token.value}" target="_blank" style="white-space: nowrap;">Customer Display</a>
                                     </div>
                                 </div>
                                 <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">

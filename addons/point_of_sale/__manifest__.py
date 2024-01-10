@@ -47,6 +47,7 @@
         'views/pos_printer_view.xml',
         'views/pos_ticket_view.xml',
         'views/res_config_settings_views.xml',
+        'views/customer_display_index.xml',
     ],
     'demo': [
         'data/point_of_sale_demo.xml',
@@ -148,6 +149,7 @@
             # PoS files
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
+            ('remove', 'point_of_sale/static/src/customer_display/**/*'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
             # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
@@ -247,6 +249,16 @@
             ## END copy of web.tests_assets
             # pos unit tests
             'point_of_sale/static/tests/unit/**/*',
+        ],
+        'point_of_sale.customer_display_assets': [
+            ('include', 'point_of_sale.base_app'),
+            "point_of_sale/static/src/app/generic_components/**/*",
+            "point_of_sale/static/src/utils.js",
+            "point_of_sale/static/src/customer_display/**/*",
+        ],
+        'point_of_sale.customer_display_assets_test': [
+            ('include', 'point_of_sale.base_tests'),
+            "point_of_sale/static/tests/tours/**/*",
         ],
     },
     'license': 'LGPL-3',

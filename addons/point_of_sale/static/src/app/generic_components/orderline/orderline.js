@@ -7,6 +7,7 @@ export class Orderline extends Component {
         line: {
             type: Object,
             shape: {
+                isSelected: { type: Boolean, optional: true },
                 productName: String,
                 price: String,
                 qty: String,
@@ -22,11 +23,11 @@ export class Orderline extends Component {
                 price_without_discount: { type: String, optional: true },
             },
         },
+        infoListClasses: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
     static defaultProps = {
         class: {},
         infoListClasses: "",
-        imgSize: "7rem",
     };
 }

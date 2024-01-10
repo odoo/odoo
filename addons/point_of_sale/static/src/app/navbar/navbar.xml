@@ -23,7 +23,7 @@
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
                     <ProxyStatus t-if="pos.config.use_proxy" />
-                    <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
+                    <button t-if="pos.config.customer_display_type !== 'none'" t-on-click="openCustomerDisplay" class="btn btn-light fa fa-fw fa-desktop text-success pe-4" title="Customer Display" />
                     <SyncNotification />
                 </div>
                 <Dropdown>

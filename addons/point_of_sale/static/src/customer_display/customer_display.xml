@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CustomerDisplay">
+        <t t-set="bgImgSrc" t-value="session.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
+        <div class="d-flex flex-column flex-md-row-reverse h-100">
+            <div class="o_customer_display_sidebar d-flex flex-column flex-basis-md-25 align-items-center justify-content-between gap-2 p-4 bg-700" t-att-style="session.has_bg_img ? `background-image: url(/web/image/pos.config/${session.config_id}/customer_display_bg_img); min-width: 30%;` : ``">
+                <div class="o_customer_display_logo d-flex mw-50 mw-md-100 p-2 rounded-3 bg-white">
+                    <img class="img-fluid" t-attf-src="/logo?company={{session.company_id}}"/>
+                </div>
+                <div class="d-flex align-items-center ps-3 pe-2 py-1 rounded-3 text-bg-dark small">Powered by <OdooLogo style="'width: 3rem;'" monochrome="true"/></div>
+            </div>
+            <div class="o_customer_display_main d-flex flex-column flex-grow-1 overflow-auto">
+                <div t-if="!order.finalized and order.lines?.length" class="d-flex px-4 py-1 text-bg-dark">
+                    <h3 class="text-reset pt-2">Your Order</h3>
+                </div>
+                <OrderWidget t-if="!order.finalized" lines="order.lines" t-slot-scope="scope" class="'bg-300'" style="'scroll-snap-type: y mandatory;'">
+                    <Orderline line="scope.line" infoListClasses="''" class="{
+                            'mx-2 my-1 ps-1 pe-3 rounded-3 bg-white fs-3': true,
+                            'selected': scope.line.isSelected
+                        }"/>
+                </OrderWidget>
+                <CenteredIcon t-else="" icon="'fa-smile-o fa-5x'" text="'Thank you'"/>
+                <div t-if="order.amount" class="py-3 px-4 text-bg-dark">
+                    <div class="d-flex flex-column justify-content-center gap-1 w-100 w-sm-50 ms-auto">
+                        <div class="row fs-3 fw-bold">
+                            <div class="col text-end">Total</div>
+                            <div class="col text-end" t-esc="order.amount"/>
+                        </div>
+                        <div t-foreach="order.paymentLines or []" t-as="line" t-key="line_index" class="row">
+                            <div class="col text-end" t-esc="line.name" />
+                            <div class="col text-end" t-esc="line.amount"/>
+                        </div>
+                        <div class="row" t-if="order.change">
+                            <div class="col text-end">Change</div>
+                            <div class="col text-end" t-esc="order.change"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <MainComponentsContainer />
+    </t>
+</templates>

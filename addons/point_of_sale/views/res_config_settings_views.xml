@@ -327,11 +327,13 @@
                             <setting id="pos_other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box">
                                 <field name="pos_other_devices"/>
                             </setting>
-                            <setting id="customer_display" string="Customer Display" help="Show checkout to customers through a second display">
-                                <field name="pos_iface_customer_facing_display_local"/>
-                                <div invisible="not pos_iface_customer_facing_display_local">
-                                    <label for="pos_iface_customer_facing_display_background_image_1920" />
-                                    <field name="pos_iface_customer_facing_display_background_image_1920" widget="image" style="width: max(min(min(30vw, 30vh), 100%), 10rem); display: block; margin-top: .3rem;"/>
+                            <setting id="customer_display" string="Customer Display" help="Show checkout to customers through a second display" invisible="pos_customer_display_type == 'none'" documentation="/applications/sales/point_of_sale/shop/customer_display.html" >
+                                <div>
+                                    <field name="pos_customer_display_type"/>
+                                    <div class="mt-1" invisible="pos_customer_display_type == 'none'">
+                                        <label for="pos_customer_display_bg_img" />
+                                        <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
+                                    </div>
                                 </div>
                             </setting>
                             <setting string="IoT Box" help="Connect devices using an IoT Box">
@@ -356,14 +358,6 @@
                                     <div class="row" invisible="not pos_iface_print_via_proxy">
                                         <label string="Cashdrawer" for="pos_iface_cashdrawer" class="col-lg-4 o_light_label"/>
                                         <field name="pos_iface_cashdrawer"/>
-                                    </div>
-                                    <div class="row">
-                                        <label string="Customer Display" for="pos_iface_customer_facing_display_via_proxy" class="col-lg-4 o_light_label"/>
-                                        <field name="pos_iface_customer_facing_display_via_proxy"/>
-                                        <div invisible="not pos_iface_customer_facing_display_via_proxy">
-                                            <label for="pos_iface_customer_facing_display_background_image_1920" />
-                                            <field name="pos_iface_customer_facing_display_background_image_1920" widget="image" style="width: max(min(min(30vw, 30vh), 100%), 10rem); display: block; margin-top: .3rem;" />
-                                        </div>
                                     </div>
                                 </div>
                             </setting>
