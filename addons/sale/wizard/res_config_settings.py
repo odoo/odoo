@@ -35,11 +35,6 @@ class ResConfigSettings(models.TransientModel):
              "and not after the delivery.",
         config_parameter='sale.automatic_invoice',
     )
-    deposit_default_product_id = fields.Many2one(
-        related='company_id.sale_down_payment_product_id',
-        readonly=False,
-        # previously config_parameter='sale.default_deposit_product_id',
-    )
 
     invoice_mail_template_id = fields.Many2one(
         comodel_name='mail.template',
