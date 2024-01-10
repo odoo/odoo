@@ -108,8 +108,17 @@ export class PartnerEditor extends Component {
             });
         }
         processedChanges.id = this.props.partner.id || false;
-        await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
-        await this.pos.load_new_partners();
+
+        if (processedChanges.image_1920) {
+            processedChanges.image_1920 = processedChanges.image_1920.split(",")[1];
+        }
+
+        if (processedChanges.id) {
+            this.pos.data.write("res.partner", [processedChanges.id], processedChanges);
+        } else {
+            await this.pos.data.create("res.partner", [processedChanges]);
+        }
+
         this.props.close();
     }
     async uploadImage(event) {
