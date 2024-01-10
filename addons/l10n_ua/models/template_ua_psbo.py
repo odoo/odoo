@@ -13,7 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'ua_psbp_631',
             'property_account_expense_categ_id': 'ua_psbp_901',
             'property_account_income_categ_id': 'ua_psbp_701',
-            'use_anglo_saxon': True,
             'property_stock_account_input_categ_id': 'ua_psbp_2812',
             'property_stock_account_output_categ_id': 'ua_psbp_2811',
             'property_stock_valuation_account_id': 'ua_psbp_281',
@@ -27,6 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ua_psbo_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.ua',
                 'bank_account_code_prefix': '311',
                 'cash_account_code_prefix': '301',
