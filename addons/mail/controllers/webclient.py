@@ -22,6 +22,14 @@ class WebclientController(http.Controller):
 
     @http.route("/mail/load_message_failures", methods=["POST"], type="json", auth="user", readonly=True)
     def mail_load_message_failures(self):
+        domain = [
+            ("author_id", "=", request.env.user.partner_id.id),
+            ("notification_status", "in", ("bounce", "exception")),
+            ("mail_message_id.message_type", "!=", "user_notification"),
+            ("mail_message_id.model", "!=", False),
+            ("mail_message_id.res_id", "!=", 0),
+        ]
         # sudo as to not check ACL, which is far too costly
-        # sudo: res.users - return only failures of current user as author
-        return request.env.user.partner_id._message_fetch_failed()
+        # sudo: mail.notification - return only failures of current user as author
+        notifications = self.env["mail.notification"].sudo().search(domain, limit=100)
+        return {"Message": notifications.mail_message_id._message_notification_format()}

@@ -333,36 +333,6 @@ patch(MockServer.prototype, {
         };
     },
     /**
-     * Simulates `_message_fetch_failed` on `res.partner`.
-     *
-     * @private
-     * @param {integer} id
-     * @returns {Object[]}
-     */
-    _mockResPartner_MessageFetchFailed(id) {
-        const partner = this.getRecords("res.partner", [["id", "=", id]], {
-            active_test: false,
-        })[0];
-        const messages = this.getRecords("mail.message", [
-            ["author_id", "=", partner.id],
-            ["res_id", "!=", 0],
-            ["model", "!=", false],
-            ["message_type", "!=", "user_notification"],
-        ]).filter((message) => {
-            // Purpose is to simulate the following domain on mail.message:
-            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-            // But it's not supported by getRecords domain to follow a relation.
-            const notifications = this.getRecords("mail.notification", [
-                ["mail_message_id", "=", message.id],
-                ["notification_status", "in", ["bounce", "exception"]],
-            ]);
-            return notifications.length > 0;
-        });
-        return this._mockMailMessage_MessageNotificationFormat(
-            messages.map((message) => message.id)
-        );
-    },
-    /**
      * Simulates `_get_current_persona` on `res.partner`.
      *
      */
