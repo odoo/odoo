@@ -449,14 +449,10 @@ export class Wysiwyg extends Component {
                     if (record.type === 'attributes'
                             && record.attributeName === 'aria-describedby') {
                         const value = (record.oldValue || record.target.getAttribute(record.attributeName));
-                        if (value && value.startsWith('popover')) {
-                            // TODO maybe we should just always return false at
-                            // this point: never considering the
-                            // aria-describedby attribute for any tooltip?
-                            const popoverData = Popover.getInstance(record.target);
-                            return !popoverData
-                                || popoverData.tip.id !== value
-                                || !popoverData.tip.classList.contains('o_edit_menu_popover');
+                        if (value && ['popover', 'tooltip'].some(type => value.startsWith(type))) {
+                            // E.g. prevents to consider the mutation due to
+                            // the 'o_edit_menu_popover' popover being shown.
+                            return false;
                         }
                     }
                     return !(
