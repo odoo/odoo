@@ -5,7 +5,7 @@ import * as Utils from "../helpers/utils";
 import * as CartPage from "../helpers/cart_page";
 import * as LandingPage from "../helpers/landing_page";
 import * as ProductPage from "../helpers/product_page";
-import * as StandNumberPage from "../helpers/stand_number_page";
+import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
     test: true,
@@ -17,7 +17,8 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.clickBtn("Order"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Pay"),
-        ...StandNumberPage.selectStandNumber("3"),
+        Numpad.click("3"),
+        Utils.clickBtn("Pay"),
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),

@@ -85,6 +85,7 @@
             "web_tour/static/src/tour_pointer/**/*.js",
             "web_tour/static/src/tour_service/**/*",
             "pos_self_order/static/tests/**/*",
+            "point_of_sale/static/tests/tours/helpers/NumpadTourMethods.js",
         ],
     },
     'post_init_hook': '_post_self_order_post_init',
