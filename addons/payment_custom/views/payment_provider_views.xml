@@ -9,6 +9,12 @@
             <field name="code" invisible="1" position="after">
                 <field name="custom_mode" invisible="1"/>
             </field>
+            <field name="payment_method_ids" position="attributes">
+                <attribute name="invisible">state == 'disabled' or code == 'custom'</attribute>
+            </field>
+            <a name="action_view_payment_methods" position="attributes">
+                <attribute name="invisible">state == 'disabled' or code == 'custom'</attribute>
+            </a>
             <field name="capture_manually" position="after">
                 <field name="qr_code" invisible="code != 'custom'" />
             </field>
