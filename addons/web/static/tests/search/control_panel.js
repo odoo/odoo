@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { click, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
+import { createWebClient, doAction } from "../webclient/helpers";
 
 let target;
 let serverData;
@@ -135,5 +136,31 @@ QUnit.module("Search", (hooks) => {
         controlPanel.render();
         await nextTick();
         assert.containsNone(target, ".o_pager");
+    });
+
+    QUnit.test("view switcher hotkey cycles through views", async (assert) => {
+        serverData.views = {
+            "foo,false,search": `<search />`,
+            "foo,false,list": `<list></list>`,
+            "foo,false,kanban": `<kanban><t t-name="kanban-box"></t></kanban>`,
+        };
+
+        const wc = await createWebClient({ serverData });
+        await doAction(wc, {
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "kanban"],
+            ],
+        });
+
+        assert.containsOnce(target, ".o_list_view");
+        triggerHotkey("alt+shift+v");
+        await nextTick();
+        assert.containsOnce(target, ".o_kanban_view");
+        triggerHotkey("alt+shift+v");
+        await nextTick();
+        assert.containsOnce(target, ".o_list_view");
     });
 });

@@ -9,6 +9,7 @@ import { SearchBar } from "../search_bar/search_bar";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useCommand } from "@web/core/commands/command_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
 
@@ -46,10 +47,23 @@ export class ControlPanel extends Component {
 
         const { viewSwitcherEntries, viewType } = this.env.config;
         for (const view of viewSwitcherEntries || []) {
-            useCommand(_t("Show %s view", view.name), () => this.onViewClicked(view.type), {
+            useCommand(_t("Show %s view", view.name), () => this.switchView(view.type), {
                 category: "view_switcher",
                 isAvailable: () => view.type !== viewType,
             });
+        }
+
+        if (viewSwitcherEntries?.length > 1) {
+            useHotkey(
+                "alt+shift+v",
+                () => {
+                    this.cycleThroughViews();
+                },
+                {
+                    bypassEditableProtection: true,
+                    withOverlay: () => this.root.el.querySelector("nav.o_cp_switch_buttons"),
+                }
+            );
         }
 
         useExternalListener(window, "click", this.onWindowClick);
@@ -179,14 +193,25 @@ export class ControlPanel extends Component {
     }
 
     /**
+     * Allow to switch from the current view to another.
      * Called when a view is clicked in the view switcher
      * and reset mobile search state on switch view.
      *
      * @param {ViewType} viewType
      */
-    onViewClicked(viewType) {
+    switchView(viewType) {
         this.resetSearchState();
         this.actionService.switchView(viewType);
+    }
+
+    cycleThroughViews() {
+        const currentViewType = this.env.config.viewType;
+        const viewSwitcherEntries = this.env.config.viewSwitcherEntries;
+        const currentIndex = viewSwitcherEntries.findIndex(
+            (entry) => entry.type === currentViewType
+        );
+        const nextIndex = (currentIndex + 1) % viewSwitcherEntries.length;
+        this.switchView(viewSwitcherEntries[nextIndex].type);
     }
 
     /**
