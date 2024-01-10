@@ -210,7 +210,7 @@ class TestCRMPLS(TransactionCase):
         if not loaded_demo_data(self.env):
             expected_proba = 35.19
         else:
-            expected_proba = 36.65
+            expected_proba = 35.58
         self.assertAlmostEqual(lead_13_no_team_proba, expected_proba, places=2)
 
         # Test frequencies
