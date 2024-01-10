@@ -207,11 +207,13 @@ class AccountPayment(models.Model):
         return lines
 
     def _get_valid_liquidity_accounts(self):
+        journal_comp = self.journal_id.company_id
+        accessible_branches = journal_comp.with_company(journal_comp)._accessible_branches()
         return (
             self.journal_id.default_account_id |
             self.payment_method_line_id.payment_account_id |
-            self.journal_id.company_id.account_journal_payment_debit_account_id |
-            self.journal_id.company_id.account_journal_payment_credit_account_id |
+            accessible_branches.account_journal_payment_debit_account_id |
+            accessible_branches.account_journal_payment_credit_account_id |
             self.journal_id.inbound_payment_method_line_ids.payment_account_id |
             self.journal_id.outbound_payment_method_line_ids.payment_account_id
         )
