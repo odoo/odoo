@@ -289,7 +289,6 @@ class TestSaleRefund(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
             'advance_payment_method': 'percentage',
             'amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         downpayment.create_invoices()
         # order_line[1] is the down payment section
@@ -308,9 +307,7 @@ class TestSaleRefund(TestSaleCommon):
             'qty_to_invoice': -1.0,
         }])
 
-        payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
-            'deposit_account_id': self.company_data['default_account_revenue'].id
-        })
+        payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
         payment.create_invoices()
 
         so_invoice = max(sale_order_refund.invoice_ids)
