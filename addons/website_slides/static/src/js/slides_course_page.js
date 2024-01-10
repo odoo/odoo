@@ -48,7 +48,7 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         const newButton = renderToElement('website.slides.sidebar.done.button', {
             slideId: slide.id,
             uncompletedIcon: $button.data('uncompletedIcon') ?? 'fa-circle-thin',
-            slideCompleted: completed,
+            slideCompleted: completed ? 1 : 0,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
             isMember: slide.isMember,
