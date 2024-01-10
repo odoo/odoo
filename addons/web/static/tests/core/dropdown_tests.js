@@ -266,6 +266,36 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(menuBox3.top - menuBox1.top, 100);
     });
 
+    QUnit.test("unlock position after close", async (assert) => {
+        class Parent extends Component {
+            static template = xml`
+                <div style="margin-left: 200px;">
+                    <Dropdown holdOnHover="true" position="'bottom-end'">
+                    </Dropdown>
+                </div>
+            `;
+            static components = { Dropdown };
+        }
+        env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.containsNone(target, ".dropdown-menu");
+        await click(target, "button.dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+        const menuBox1 = target.querySelector(".dropdown-menu").getBoundingClientRect();
+
+        // Pointer enter the dropdown menu to lock the menu
+        await mouseEnter(target, ".dropdown-menu");
+        // close the menu
+        await click(target);
+        assert.containsNone(target, ".dropdown-menu");
+
+        // and reopen it
+        await click(target, "button.dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+        const menuBox2 = target.querySelector(".dropdown-menu").getBoundingClientRect();
+        assert.strictEqual(menuBox2.left - menuBox1.left, 0);
+    });
+
     QUnit.test("payload received on item selection", async (assert) => {
         class Parent extends Component {
             onItemSelected(value) {
