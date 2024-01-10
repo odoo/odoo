@@ -32,15 +32,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     deduct_down_payments = fields.Boolean(string="Deduct down payments", default=True)
 
     # New Down Payment
-    product_id = fields.Many2one(
-        comodel_name='product.product',
-        string="Down Payment Product",
-        domain=[('type', '=', 'service')],
-        compute='_compute_product_id',
-        readonly=False,
-        store=True)
     amount = fields.Float(
-        string="Down Payment Amount",
+        string="Down Payment",
         help="The percentage of amount to be invoiced in advance.")
     fixed_amount = fields.Monetary(
         string="Down Payment Amount (Fixed)",
@@ -61,21 +54,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
         string="Amount to invoice",
         compute="_compute_invoice_amounts",
         help="The amount to invoice = Sale Order Total - Confirmed Down Payments.")
-
-    # Only used when there is no down payment product available
-    #  to setup the down payment product
-    deposit_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string="Income Account",
-        domain=[('deprecated', '=', False)],
-        check_company=True,
-        help="Account used for deposits")
-    deposit_taxes_id = fields.Many2many(
-        comodel_name='account.tax',
-        string="Customer Taxes",
-        domain=[('type_tax_use', '=', 'sale')],
-        check_company=True,
-        help="Taxes used for deposits")
 
     # UI
     display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
@@ -115,13 +93,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if wizard.count == 1:
                 wizard.company_id = wizard.sale_order_ids.company_id
 
-    @api.depends('company_id')
-    def _compute_product_id(self):
-        self.product_id = False
-        for wizard in self:
-            if wizard.count == 1:
-                wizard.product_id = wizard.company_id.sale_down_payment_product_id
-
     @api.depends('amount', 'fixed_amount', 'advance_payment_method', 'amount_to_invoice')
     def _compute_display_invoice_amount_warning(self):
         for wizard in self:
@@ -158,21 +129,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             elif wizard.advance_payment_method == 'fixed' and wizard.fixed_amount <= 0.00:
                 raise UserError(_('The value of the down payment amount must be positive.'))
 
-    @api.constrains('product_id')
-    def _check_down_payment_product_is_valid(self):
-        for wizard in self:
-            if wizard.count > 1 or not wizard.product_id:
-                continue
-            if wizard.product_id.invoice_policy != 'order':
-                raise UserError(_(
-                    "The product used to invoice a down payment should have an invoice policy"
-                    "set to \"Ordered quantities\"."
-                    " Please update your deposit product to be able to create a deposit invoice."))
-            if wizard.product_id.type != 'service':
-                raise UserError(_(
-                    "The product used to invoice a down payment should be of type 'Service'."
-                    " Please use another product or update this product."))
-
     #=== ACTION METHODS ===#
 
     def create_invoices(self):
@@ -200,13 +156,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             self.sale_order_ids.ensure_one()
             self = self.with_company(self.company_id)
             order = self.sale_order_ids
-
-            # Create deposit product if necessary
-            if not self.product_id:
-                self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
-                    self._prepare_down_payment_product_values()
-                )
-                self._compute_product_id()
 
             # Create down payment section if necessary
             SaleOrderline = self.env['sale.order.line'].with_context(sale_no_log_for_new_lines=True)
@@ -374,7 +323,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'product_uom_qty': 0.0,
             'order_id': order.id,
             'discount': 0.0,
-            'product_id': self.product_id.id,
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }

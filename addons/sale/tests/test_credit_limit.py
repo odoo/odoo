@@ -69,7 +69,6 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         }).create({
             'advance_payment_method': 'percentage',
             'amount': 50,
-            'deposit_account_id': self.company_data['default_account_revenue'].id,
         }).create_invoices()
 
         invoice = sale_order.invoice_ids

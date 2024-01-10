@@ -94,7 +94,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         payment_params = {
             'advance_payment_method': 'percentage',
             'amount': 50,
-            'deposit_account_id': cls.revenue_account.id,
             **kwargs,
         }
         downpayment = cls.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
@@ -442,7 +441,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         payment_params = {
             'advance_payment_method': 'fixed',
             'fixed_amount': 550.0,
-            'deposit_account_id': self.revenue_account.id,
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         downpayment.create_invoices()
@@ -496,7 +494,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         payment_params = {
             'advance_payment_method': 'fixed',
             'fixed_amount': 200.0,
-            'deposit_account_id': self.revenue_account.id,
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         action = downpayment.create_invoices()
@@ -521,7 +518,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         # final invoice which is a credit note as there ar no deliveries to invoice and there already is 200 paid
         payment_params = {
             'advance_payment_method': 'delivered',
-            'deposit_account_id': self.revenue_account.id,
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context({**so_context, 'raise_if_nothing_to_invoice': False}).create(payment_params)
         action = downpayment.create_invoices()
@@ -604,7 +600,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         payment_params = {
             'advance_payment_method': 'fixed',
             'fixed_amount': 200.0,
-            'deposit_account_id': self.revenue_account.id,
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         action = downpayment.create_invoices()
@@ -627,10 +622,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         self.assertEqual(downpayment.amount_invoiced, 200.0, "Amount invoiced is not equal to downpayment amount")
 
         # final invoice which is a credit note as there ar no deliveries to invoice and there already is 200 paid
-        payment_params = {
-            'advance_payment_method': 'delivered',
-            'deposit_account_id': self.revenue_account.id,
-        }
+        payment_params = {'advance_payment_method': 'delivered'}
         downpayment = self.env['sale.advance.payment.inv'].with_context({**so_context, 'raise_if_nothing_to_invoice': False}).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])
@@ -735,7 +727,6 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         payment_params = {
             'advance_payment_method': 'fixed',
             'fixed_amount': 500.0,
-            'deposit_account_id': self.revenue_account.id,
         }
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         action = downpayment.create_invoices()
@@ -764,10 +755,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         self.assertEqual(downpayment.amount_invoiced, 500.0, "Amount invoiced is not equal to downpayment amount")
         # final invoice
-        payment_params = {
-            'advance_payment_method': 'delivered',
-            'deposit_account_id': self.revenue_account.id,
-        }
+        payment_params = {'advance_payment_method': 'delivered'}
         downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         action = downpayment.create_invoices()
         invoice = self.env['account.move'].browse(action['res_id'])

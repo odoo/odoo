@@ -425,7 +425,7 @@ class Project(models.Model):
             domain = []
         return expression.AND([
             [
-                ('product_id', '!=', False),
+                '|', ('product_id', '!=', False), ('is_downpayment', '=', True),
                 ('is_expense', '=', False),
                 ('state', '=', 'sale'),
                 '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
