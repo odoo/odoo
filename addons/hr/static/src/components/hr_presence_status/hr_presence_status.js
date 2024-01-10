@@ -18,14 +18,7 @@ export class HrPresenceStatus extends Component {
 
     get classNames() {
         const classNames = ["fa"];
-        classNames.push(
-            this.icon,
-            "fa-fw",
-            "o_button_icon",
-            "hr_presence",
-            "align-middle",
-            this.color,
-        )
+        classNames.push(this.icon, "fa-fw", "o_button_icon", "align-middle", this.color);
         return classNames.join(" ");
     }
 
