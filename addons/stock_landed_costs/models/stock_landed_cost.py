@@ -69,7 +69,7 @@ class StockLandedCost(models.Model):
         'account.journal', 'Account Journal',
         required=True, states={'done': [('readonly', True)]}, default=lambda self: self._default_account_journal_id())
     company_id = fields.Many2one('res.company', string="Company",
-        related='account_journal_id.company_id')
+        compute='_compute_company_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
     vendor_bill_id = fields.Many2one(
         'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')])
@@ -79,6 +79,11 @@ class StockLandedCost(models.Model):
     def _compute_total_amount(self):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
+
+    @api.depends('vendor_bill_id.company_id')
+    def _compute_company_id(self):
+        for cost in self:
+            cost.company_id = (cost.vendor_bill_id.company_id or self.env.company)._accessible_branches()[:1]
 
     @api.onchange('target_model')
     def _onchange_target_model(self):
