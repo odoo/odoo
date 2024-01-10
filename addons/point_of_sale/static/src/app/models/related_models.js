@@ -220,6 +220,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     function connect(field, ownerRecord, recordToConnect) {
         const inverse = inverseMap.get(field);
 
+        if (typeof ownerRecord !== "object") {
+            const model = field.model;
+            ownerRecord = records[model][ownerRecord];
+        }
+
+        if (typeof recordToConnect !== "object") {
+            const model = field.relation;
+            recordToConnect = records[model][recordToConnect];
+        }
+
         if (field.type === "many2one") {
             const prevConnectedRecord = ownerRecord[field.name];
             if (prevConnectedRecord === recordToConnect) {
@@ -436,10 +446,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 }
             } else if (field.type === "many2one") {
                 if (vals[name]) {
-                    if (vals[name] instanceof Base) {
-                        if (exists(comodelName, vals[name].id)) {
-                            connect(field, record, vals[name]);
-                        }
+                    const id = vals[name]?.id || vals[name];
+                    const exist = exists(comodelName, id);
+
+                    if (exist) {
+                        connect(field, record, vals[name]);
                     } else {
                         const newRecord = create(comodelName, vals[name]);
                         connect(field, record, newRecord);
