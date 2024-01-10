@@ -9,7 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('bo')
     def _get_bo_template_data(self):
         return {
-            'use_anglo_saxon': True,
             'code_digits': '6',
             'property_account_receivable_id': 'l10n_bo_1121',
             'property_account_payable_id': 'l10n_bo_2121',
@@ -24,6 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_bo_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.bo',
                 'bank_account_code_prefix': '11130',
                 'cash_account_code_prefix': '11110',
