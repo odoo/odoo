@@ -554,8 +554,8 @@ export class Link extends Component {
             'text-truncate',
         ];
         const keptClasses = this.state.iniClassName.split(' ').filter(className => classesToKeep.includes(className));
-        const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
-        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
+        const allBtnColorPrefixes = /(^|\s+)(bg|text|border)((-[a-z0-9_-]*)|\b)/gi;
+        const allBtnClassSuffixes = /(^|\s+)btn((-[a-z0-9_-]*)|\b)/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         const btnMarginBottom = /(^|\s+)mb-2(\s+|$)/i;
         this.state.className = this.state.iniClassName
