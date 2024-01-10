@@ -17,7 +17,6 @@
     'assets': {
         'point_of_sale.assets_prod': [
             'pos_online_payment/static/src/app/**/*',
-            'pos_online_payment/static/src/css/**/*',
         ],
         'web.assets_tests': [
             'pos_online_payment/static/tests/tours/**/*',
