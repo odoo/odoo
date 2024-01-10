@@ -167,6 +167,7 @@ class Partner(models.Model):
 
     # the partner types that must be added to a partner's complete name, like "Delivery"
     _complete_name_displayed_types = ('invoice', 'delivery', 'other')
+    _name_search_allowed_extra_fields = ['write_date']
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))

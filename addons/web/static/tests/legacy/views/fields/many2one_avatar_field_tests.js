@@ -15,6 +15,7 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { getOrigin } from "@web/core/utils/urls";
 
 let serverData;
 let target;
@@ -49,10 +50,12 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 17,
                             name: "Aline",
+                            write_date: "2024-01-17 12:00:00",
                         },
                         {
                             id: 19,
                             name: "Christine",
+                            write_date: "2024-01-17 12:00:00",
                         },
                     ],
                 },
@@ -86,7 +89,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
+            `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000"]`
         );
         assert.containsOnce(target, ".o_field_many2one_avatar > div");
 
@@ -95,7 +98,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_external_button");
         assert.containsOnce(
             target,
-            '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
+            `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000"]`
         );
 
         await clickDropdown(target, "user_id");
@@ -104,7 +107,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]'
+            `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/user/19/avatar_128?unique=1705489200000"]`
         );
         await clickSave(target);
 
@@ -114,7 +117,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]'
+            `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/user/19/avatar_128?unique=1705489200000"]`
         );
 
         await editInput(target, '.o_field_widget[name="user_id"] input', "");
@@ -131,11 +134,11 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 if (obj.int_field === 1) {
-                    obj.user_id = [19, "Christine"];
+                    obj.user_id = [19, "Christine", { write_date: "2024-01-17 12:00:00" }];
                 } else if (obj.int_field === 2) {
                     obj.user_id = false;
                 } else {
-                    obj.user_id = [17, "Aline"]; // default value
+                    obj.user_id = [17, "Aline", { write_date: "2024-01-17 12:00:00" }]; // default value
                 }
             },
         };
@@ -157,7 +160,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
+            `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000"]`
         );
 
         await editInput(target, "div[name=int_field] input", 1);
@@ -168,7 +171,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]'
+            `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/user/19/avatar_128?unique=1705489200000"]`
         );
 
         await editInput(target, "div[name=int_field] input", 2);
@@ -193,9 +196,18 @@ QUnit.module("Fields", (hooks) => {
             ["Aline", "Christine", "Aline", ""]
         );
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
-        assert.strictEqual(imgs[0].dataset.src, "/web/image/user/17/avatar_128");
-        assert.strictEqual(imgs[1].dataset.src, "/web/image/user/19/avatar_128");
-        assert.strictEqual(imgs[2].dataset.src, "/web/image/user/17/avatar_128");
+        assert.strictEqual(
+            imgs[0].dataset.src,
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`
+        );
+        assert.strictEqual(
+            imgs[1].dataset.src,
+            `${getOrigin()}/web/image/user/19/avatar_128?unique=1705489200000`
+        );
+        assert.strictEqual(
+            imgs[2].dataset.src,
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`
+        );
     });
 
     QUnit.test("basic flow in editable list view", async function (assert) {
@@ -212,15 +224,24 @@ QUnit.module("Fields", (hooks) => {
         );
 
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
-        assert.strictEqual(imgs[0].dataset.src, "/web/image/user/17/avatar_128");
-        assert.strictEqual(imgs[1].dataset.src, "/web/image/user/19/avatar_128");
-        assert.strictEqual(imgs[2].dataset.src, "/web/image/user/17/avatar_128");
+        assert.strictEqual(
+            imgs[0].dataset.src,
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`
+        );
+        assert.strictEqual(
+            imgs[1].dataset.src,
+            `${getOrigin()}/web/image/user/19/avatar_128?unique=1705489200000`
+        );
+        assert.strictEqual(
+            imgs[2].dataset.src,
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`
+        );
 
         await click(target.querySelectorAll(".o_data_row .o_data_cell")[0]);
 
         assert.strictEqual(
             target.querySelector(".o_m2o_avatar > img").dataset.src,
-            "/web/image/user/17/avatar_128"
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`
         );
     });
 
@@ -377,6 +398,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.user.records.push({
                 id,
                 display_name: `record ${id}`,
+                write_date: "2024-01-17 12:00:00",
             });
         }
 
@@ -422,7 +444,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(
                 ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
             ).dataset.src,
-            "/web/image/user/1/avatar_128",
+            `${getOrigin()}/web/image/user/1/avatar_128?unique=1705489200000`,
             "should have correct avatar image"
         );
     });
@@ -455,7 +477,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(
                 ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
             ).dataset.src,
-            "/web/image/user/17/avatar_128",
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`,
             "should have correct avatar image"
         );
         assert.containsOnce(
@@ -481,7 +503,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(
                 ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
             ).dataset.src,
-            "/web/image/user/17/avatar_128",
+            `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`,
             "should have correct avatar image"
         );
         assert.containsNone(
@@ -520,7 +542,7 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(
                     ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
                 ).dataset.src,
-                "/web/image/user/17/avatar_128",
+                `${getOrigin()}/web/image/user/17/avatar_128?unique=1705489200000`,
                 "should have correct avatar image"
             );
             assert.containsNone(

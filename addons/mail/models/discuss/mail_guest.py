@@ -48,6 +48,7 @@ class MailGuest(models.Model):
     _avatar_name_field = "name"
     _cookie_name = 'dgid'
     _cookie_separator = '|'
+    _name_search_allowed_extra_fields = ['write_date']
 
     @api.model
     def _lang_get(self):

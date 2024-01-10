@@ -278,6 +278,7 @@ class Users(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
     _allow_sudo_commands = False
+    _name_search_allowed_extra_fields = ['write_date']
 
     def _check_company_domain(self, companies):
         if not companies:

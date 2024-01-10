@@ -639,6 +639,8 @@ class BaseModel(metaclass=MetaModel):
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
     "maximum idle lifetime (in hours), unlimited if ``0``"
 
+    _name_search_allowed_extra_fields = []
+
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
         return name == 'related_sudo'
@@ -1736,7 +1738,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', args=None, operator='ilike', limit=100, extra_fields=None):
         """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
         Search for records that have a display name matching the given
@@ -1761,15 +1763,22 @@ class BaseModel(metaclass=MetaModel):
         :return: list of pairs ``(id, display_name)`` for all matching records.
         """
         ids = self._name_search(name, args, operator, limit=limit, order=self._order)
-
+        extra_fields = extra_fields or []
+        extra_fields = [field for field in extra_fields if field in self._fields and field in self._name_search_allowed_extra_fields]
         if isinstance(ids, Query):
-            records = self._fetch_query(ids, self._determine_fields_to_fetch(['display_name']))
+            records = self._fetch_query(ids, self._determine_fields_to_fetch(['display_name', *extra_fields]))
         else:
             # Some override of `_name_search` return list of ids.
             records = self.browse(ids)
-            records.fetch(['display_name'])
-
-        return [(record.id, record.display_name) for record in records.sudo()]
+            records.fetch(['display_name', *extra_fields])
+        res = []
+        for record in records.sudo():
+            extra = ({field: record[field] for field in extra_fields})
+            if extra:
+                res.append((record.id, record.display_name, extra))
+            else:
+                res.append((record.id, record.display_name))
+        return res
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

@@ -67,7 +67,7 @@
 <t t-name="web.AvatarMany2XAutocomplete">
     <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
         <img t-if="option.value" class="rounded me-1"
-             t-attf-src="/web/image/{{option.resModel}}/{{option.value}}/avatar_128" />
+             t-att-src="option.img" />
         <t t-esc="option.label" />
     </span>
 </t>

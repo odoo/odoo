@@ -9,6 +9,7 @@ import {
 } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
@@ -161,6 +162,7 @@ export function patchActiveFields(activeField, patch) {
     activeField.onChange = activeField.onChange || patch.onChange;
     activeField.forceSave = activeField.forceSave || patch.forceSave;
     activeField.isHandle = activeField.isHandle || patch.isHandle;
+    activeField.fieldsTofetch = activeField.fieldsTofetch || patch.fieldsTofetch;
     // x2manys
     if (patch.related) {
         const related = activeField.related;
@@ -188,6 +190,9 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
     const activeFields = {};
     for (const fieldNode of Object.values(fieldNodes)) {
         const fieldName = fieldNode.name;
+        const widget = fieldNode.widget
+            ? registry.category("fields").get(fieldNode.widget)
+            : undefined;
         const activeField = makeActiveField({
             context: fieldNode.context,
             invisible: combineModifiers(fieldNode.invisible, fieldNode.column_invisible, "OR"),
@@ -197,6 +202,9 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
             forceSave: fieldNode.forceSave,
             isHandle: fieldNode.isHandle,
         });
+        if (widget?.fieldsTofetch) {
+            activeField.fieldsTofetch = widget.fieldsTofetch;
+        }
         if (["one2many", "many2many"].includes(fields[fieldName].type)) {
             activeField.related = {
                 activeFields: {},
@@ -364,6 +372,11 @@ export function getFieldsSpec(
             if (invisible !== "True" && invisible !== "1") {
                 fieldsSpec[fieldName].fields.display_name = {};
             }
+            if (activeFields[fieldName].fieldsTofetch) {
+                for (const fieldToFetch of activeFields[fieldName].fieldsTofetch) {
+                    fieldsSpec[fieldName].fields[fieldToFetch] = {};
+                }
+            }
         }
         if (["many2one", "one2many", "many2many"].includes(fields[fieldName].type)) {
             let context = activeFields[fieldName].context;
@@ -447,7 +460,13 @@ export function parseServerValue(field, value) {
                 // Used for web_read_group, where the value is an array of [id, display_name]
                 return value;
             }
-            return value ? [value.id, value.display_name] : false;
+            const extra = {};
+            for (const key in value) {
+                if (key !== "id" && key !== "display_name") {
+                    extra[key] = value[key];
+                }
+            }
+            return value ? [value.id, value.display_name, extra] : false;
         }
         case "properties": {
             return value

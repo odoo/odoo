@@ -14,6 +14,8 @@ import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
 
+const { DateTime } = luxon;
+
 const fakeMultiTab = {
     start() {
         const bus = new EventBus();
@@ -362,6 +364,7 @@ QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to m
 QUnit.test("avatar_user widget displays the appropriate user image in list view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Mario" });
+    const user = pyEnv["res.users"].searchRead([["id", "=", userId]])[0];
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     const views = {
         "m2x.avatar.user,false,list":
@@ -373,12 +376,17 @@ QUnit.test("avatar_user widget displays the appropriate user image in list view"
         res_id: avatarUserId,
         views: [[false, "list"]],
     });
-    await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
+    await contains(
+        `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128?unique=${
+            DateTime.fromSQL(user.write_date).ts
+        }"]`
+    );
 });
 
 QUnit.test("avatar_user widget displays the appropriate user image in kanban view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Mario" });
+    const user = pyEnv["res.users"].searchRead([["id", "=", userId]])[0];
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     const views = {
         "m2x.avatar.user,false,kanban": `
@@ -398,7 +406,11 @@ QUnit.test("avatar_user widget displays the appropriate user image in kanban vie
         res_id: avatarUserId,
         views: [[false, "kanban"]],
     });
-    await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
+    await contains(
+        `.o_m2o_avatar > img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128?unique=${
+            DateTime.fromSQL(user.write_date).ts
+        }"]`
+    );
 });
 
 QUnit.test("avatar card preview", async (assert) => {
@@ -458,6 +470,7 @@ QUnit.test("avatar card preview", async (assert) => {
 QUnit.test("avatar_user widget displays the appropriate user image in form view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Mario" });
+    const user = pyEnv["res.users"].searchRead([["id", "=", userId]])[0];
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
     const views = {
         "m2x.avatar.user,false,form":
@@ -472,7 +485,9 @@ QUnit.test("avatar_user widget displays the appropriate user image in form view"
         views: [[false, "form"]],
     });
     await contains(
-        `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128"]`
+        `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128?unique=${
+            DateTime.fromSQL(user.write_date).ts
+        }"]`
     );
 });
 
