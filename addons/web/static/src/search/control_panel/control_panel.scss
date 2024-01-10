@@ -28,6 +28,14 @@
             min-width: MIN(600px, 33%);
         }
     }
+
+    .o_cp_switch_buttons {
+        .btn, .btn:focus {
+            // Boostrap plays around with the z-index of buttons, but this is not needed here
+            // It was causing issues with the hotkey overlay
+            z-index: 0;
+        }
+    }
 }
 
 .o_x2m_control_panel {

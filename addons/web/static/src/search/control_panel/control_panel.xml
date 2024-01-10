@@ -52,7 +52,7 @@
                                 <i class="oi-fw" t-att-class="activeView.icon"/>
                             </t>
                             <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                <DropdownItem onSelected="() => this.onViewClicked(view.type)" class="view.active ? 'selected' : ''">
+                                <DropdownItem onSelected="() => this.switchView(view.type)" class="view.active ? 'selected' : ''">
                                     <i class="oi-fw" t-att-class="view.icon"/>
                                     <span class="ms-1" t-out="view.name"/>
                                 </DropdownItem>
@@ -63,7 +63,7 @@
                                 <button class="btn btn-secondary o_switch_view "
                                     t-attf-class="o_{{view.type}} {{view.active ? 'active' : ''}}"
                                     t-att-data-tooltip="view.name"
-                                    t-on-click="() => this.onViewClicked(view.type)"
+                                    t-on-click="() => this.switchView(view.type)"
                                 >
                                     <i t-att-class="view.icon" />
                                 </button>
