@@ -37,16 +37,6 @@ class ResCompany(models.Model):
         help="Default product used for discounts",
         check_company=True,
     )
-    sale_down_payment_product_id = fields.Many2one(
-        comodel_name='product.product',
-        string="Deposit Product",
-        domain=[
-            ('type', '=', 'service'),
-            ('invoice_policy', '=', 'order'),
-        ],
-        help="Default product used for down payments",
-        check_company=True,
-    )
 
     # sale onboarding
     sale_onboarding_payment_method = fields.Selection(
