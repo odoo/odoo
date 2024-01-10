@@ -141,13 +141,18 @@ patch(PaymentScreen.prototype, {
 
                     onlinePaymentLine.set_payment_status("waiting");
                     this.currentOrder.select_paymentline(onlinePaymentLine);
-                    const qrCodePopupCloser = this.dialog.add(OnlinePaymentPopup, {
-                        amount: onlinePaymentLineAmount,
+                    const onlinePaymentData = {
+                        formattedAmount: this.env.utils.formatCurrency(onlinePaymentLineAmount),
                         qrCode: qrCodeSrc(
                             `${this.pos.base_url}/pos/pay/${this.currentOrder.server_id}?access_token=${this.currentOrder.access_token}`
                         ),
                         order: this.currentOrder,
-                    });
+                    };
+                    this.currentOrder.onlinePaymentData = onlinePaymentData;
+                    const qrCodePopupCloser = this.dialog.add(
+                        OnlinePaymentPopup,
+                        onlinePaymentData
+                    );
                     await new Promise((r) => (onlinePaymentLine.onlinePaymentResolver = r));
                     qrCodePopupCloser();
                     if (onlinePaymentLine.get_payment_status() === "waiting") {
