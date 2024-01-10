@@ -10,15 +10,19 @@ export class Numpad extends Component {
         onClick: { type: Function, optional: true },
         buttons: {
             type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    value: String,
-                    text: { type: String, optional: true },
-                    class: { type: String, optional: true },
-                    disabled: { type: Boolean, optional: true },
+            element: [
+                {
+                    type: Object,
+                    shape: {
+                        value: String,
+                        text: { type: String, optional: true },
+                        class: { type: String, optional: true },
+                        disabled: { type: Boolean, optional: true },
+                    },
                 },
-            },
+                Number,
+                String,
+            ],
         },
     };
     static defaultProps = {
