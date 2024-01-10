@@ -23,12 +23,17 @@ export class HrPresenceStatus extends Component {
     }
 
     get color() {
-        switch (this.value) {
+        switch (this.status) {
+            case "online":
+            case "bot":
             case "presence_present":
             case "presence_absent_active":
                 return "text-success";
+            case "offline":
+                return "text-700";
             case "presence_absent":
                 return "text-muted";
+            case "away":
             case "presence_to_define":
                 return "text-warning";
             default:
@@ -37,13 +42,40 @@ export class HrPresenceStatus extends Component {
     }
 
     get icon() {
-        return `fa-circle${this.value.startsWith("presence_absent") ? "-o" : ""}`;
+        switch (this.status) {
+            case "online":
+            case "presence_present":
+            case "presence_to_define":
+                return "fa-circle";
+            case "offline":
+            case "presence_absent":
+            case "presence_absent_active":
+                return "fa-circle-o";
+            case "bot":
+                return "fa-heart";
+            default:
+                return "fa-question-circle";
+        }
     }
 
     get label() {
-        return this.value !== false
-            ? this.options.find(([value, label]) => value === this.value)[1]
-            : "";
+        if (!this.im_status) {
+            return this.value !== false
+                ? this.options.find(([value, label]) => value === this.value)[1]
+                : "";
+        }
+        switch (this.status) {
+            case "online":
+                return "User is online";
+            case "away":
+                return "User is idle";
+            case "offline":
+                return "User is offline";
+            case "bot":
+                return "User is a bot";
+            default:
+                return "No IM status available";
+        }
     }
 
     get options() {
@@ -54,6 +86,14 @@ export class HrPresenceStatus extends Component {
 
     get value() {
         return this.props.record.data[this.props.name];
+    }
+
+    get im_status() {
+        return this.props.record.data.im_status;
+    }
+
+    get status() {
+        return this.im_status || this.value;
     }
 }
 
