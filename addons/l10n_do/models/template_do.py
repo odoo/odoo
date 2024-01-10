@@ -10,7 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_do_template_data(self):
         return {
             'code_digits': '8',
-            'use_anglo_saxon': True,
             'property_account_receivable_id': 'l10n_do_11030201',
             'property_account_payable_id': 'l10n_do_21010200',
             'property_account_income_categ_id': 'l10n_do_41010100',
@@ -24,6 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_do_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.do',
                 'bank_account_code_prefix': '110102',
                 'cash_account_code_prefix': '110101',
