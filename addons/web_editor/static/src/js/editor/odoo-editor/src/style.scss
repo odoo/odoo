@@ -1,4 +1,26 @@
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+    // -webkit-animation: blink-animation 3s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+    // 0% {
+    //     visibility: visible;
+    // }
+    100% {
+        visibility: hidden;
+    }
+    // 0% {
+    //     visibility: visible;
+    // }
+}
+// @-webkit-keyframes blink-animation {
+//     50% {
+//         visibility: hidden;
+//     }
+// }
 .odoo-editor-editable {
+    // caret-color: transparent;
     ::selection {
         /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
             X = converted color component (R, G, B) (0 <= X <= 255)
@@ -6,7 +28,7 @@
             P = opacity (0 <= P <=1)
             (limitation: Y + 255P >= 255)
         */
-        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+        background-color: rgba(255, 0, 0, 0) !important; /* #bad3fc equivalent when over white*/
     }
     &.o_col_resize {
         cursor: col-resize;
@@ -491,6 +513,10 @@ $oe-dropzone-size: $oe-dropzone-size-outside + $oe-dropzone-size-inside;
     width: 0;
     z-index: 1;
 }
+.oe-collaboration-caret {
+    pointer-events: none;
+    user-select: none;
+}
 .oe-collaboration-caret-top-square {
     min-height: 5px;
     min-width: 5px;
@@ -498,8 +524,12 @@ $oe-dropzone-size: $oe-dropzone-size-outside + $oe-dropzone-size-inside;
     text-shadow: 0 0 5px #000;
     position: absolute;
     bottom: 100%;
-    left: -4px;
+    // left: -4px;
+    transform: translateX(-3.5px);
     white-space: nowrap;
+    user-select: none;
+    pointer-events: auto;
+
 
     &:hover {
         border-radius: 2px;
