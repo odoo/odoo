@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.addons.account.models.chart_template import AccountChartTemplate
 from odoo.addons.account.models.chart_template import TEMPLATE_MODELS
 from odoo.addons.account.tests.common import instantiate_accountman
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -467,3 +468,23 @@ class TestChartTemplate(TransactionCase):
         for model in TEMPLATE_MODELS + sub_models:
             data_after = self.env[model].search(get_domain(model))
             self.assertEqual(data_before[model], data_after)
+
+    def test_update_tax_with_non_existent_tag(self):
+        """ Tests that when we update the CoA with a tax that has a tag that does not exist yet we raise an error.
+        Typical use case is when the code got updated but the module haven't been updated (-u).
+        """
+        tax_to_load = {
+            'name': 'Mixed Tags Tax',
+            'amount': 30,
+            'amount_type': 'percent',
+            'tax_group_id': 'tax_group_taxes',
+            'active': True,
+            'repartition_line_ids': [
+                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': '+SIGNED_TAG'}),
+                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
+                Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
+                Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
+            ]
+        }
+        with self.assertRaisesRegex(UserError, 'update your localization'):
+            self.env['account.chart.template']._deref_account_tags('test', {'tax1': tax_to_load})
