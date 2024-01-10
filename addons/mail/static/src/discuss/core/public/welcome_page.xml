@@ -32,7 +32,7 @@
                     <label class="text-center fs-4" >What's your name?</label>
                     <input class="form-control mb-3 bg-white rounded" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
                 </t>
-                <p t-if="store.self?.type === 'partner'" class="fs-4">Logged as <span t-esc="store.self.name"/></p>
+                <p t-if="store.self?.type === 'partner'" class="fs-4" t-esc="getLoggedInAsText"/>
                 <button class="btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="store.self?.type === 'guest' and state.userName.trim() === ''" t-on-click="joinChannel">
                     <i class="oi oi-arrow-right"/>
                 </button>
