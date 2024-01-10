@@ -14,7 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'rs_435',
             'property_account_receivable_id': 'rs_204',
             'code_digits': '4',
-            'use_anglo_saxon': True,
             'use_storno_accounting': True,
         }
 
@@ -22,6 +21,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_rs_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.rs',
                 'bank_account_code_prefix': '241',
                 'cash_account_code_prefix': '243',

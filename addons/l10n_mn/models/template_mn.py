@@ -19,13 +19,13 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_payable_account_id': 'account_template_3401_9902',
             'property_tax_receivable_account_id': 'account_template_1204_9902',
             'code_digits': '8',
-            'use_anglo_saxon': True,
         }
 
     @template('mn', 'res.company')
     def _get_mn_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.mn',
                 'bank_account_code_prefix': '11',
                 'cash_account_code_prefix': '10',
