@@ -560,6 +560,13 @@ class Users(models.Model):
                 user.partner_id.toggle_active()
         super(Users, self).toggle_active()
 
+    def onchange(self, values, field_names, fields_spec):
+        # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
+        # Put field values in the cache.
+        if self == self.env.user:
+            [self.sudo()[field_name] for field_name in self.SELF_READABLE_FIELDS]
+        return super().onchange(values, field_names, fields_spec)
+
     def read(self, fields=None, load='_classic_read'):
         readable = self.SELF_READABLE_FIELDS
         if fields and self == self.env.user and all(key in readable or key.startswith('context_') for key in fields):
