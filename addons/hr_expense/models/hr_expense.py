@@ -138,11 +138,11 @@ class HrExpense(models.Model):
         compute='_compute_total_amount', inverse='_inverse_total_amount', precompute=True, store=True, readonly=False,
         tracking=True,
     )
-    price_unit = fields.Monetary(
+    price_unit = fields.Float(
         string="Unit Price",
-        currency_field='company_currency_id',
         compute='_compute_price_unit', precompute=True, store=True, required=True, readonly=True,
         copy=True,
+        digits='Product Price',
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -398,8 +398,13 @@ class HrExpense(models.Model):
            when edited after creation.
         """
         for expense in self:
-            if expense.product_id and expense.product_has_cost and not expense.nb_attachment:
-                expense.price_unit = expense.product_id._price_compute('standard_price', currency=expense.company_currency_id)[expense.product_id.id]
+            product_id = expense.product_id
+            if product_id and expense.product_has_cost and not expense.nb_attachment:
+                expense.price_unit = product_id._price_compute(
+                    'standard_price',
+                    uom=expense.product_uom_id,
+                    company=expense.company_id,
+                )[product_id.id]
             else:
                 expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
 
