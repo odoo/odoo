@@ -80,7 +80,7 @@ class CrmFormController extends formView.Controller {
 
     async onRecordSaved(record) {
         if (this.changedStage) {
-            await checkRainbowmanMessage(this.orm, this.effect, record.resId);
+            checkRainbowmanMessage(this.orm, this.effect, record.resId);
         }
     }
 }
