@@ -161,10 +161,10 @@ class PosOrder(models.Model):
         return orders
 
     @api.model
-    def export_for_ui_shared_order(self, config_id):
-        orders = super().export_for_ui_shared_order(config_id)
-        self_orders = self.get_standalone_self_order().export_for_ui()
-        return orders + self_orders
+    def _get_shared_orders(self, config_id):
+        orders = super()._get_shared_orders(config_id)
+        self_orders = self.get_standalone_self_order()
+        return orders | self_orders
 
     @api.model
     def export_for_ui_table_draft(self, table_ids):
