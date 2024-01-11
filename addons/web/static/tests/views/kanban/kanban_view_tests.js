@@ -10265,7 +10265,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("set cover image", async (assert) => {
-        assert.expect(10);
+        assert.expect(11);
 
         serviceRegistry.add("dialog", dialogService, { force: true });
         serviceRegistry.add("http", {
@@ -10336,6 +10336,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
         assert.containsOnce(document.body, ".modal .btn:contains(Select)");
         assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+        assert.containsNone(document.body, ".modal .btn:contains(Remove Cover Image)");
 
         await triggerEvent(
             document.body,
@@ -10348,6 +10349,79 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, 'img[data-src*="/web/image/2"]');
 
         await click(target, ".o_kanban_record:first-child .o_attachment_image");
+
+        assert.verifySteps(["1", "2"], "should writes on both kanban records");
+    });
+
+    QUnit.test("unset cover image", async (assert) => {
+        serverData.models.partner.records[0].displayed_image_id = 1;
+        serverData.models.partner.records[1].displayed_image_id = 2;
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        serviceRegistry.add("http", {
+            start: () => ({}),
+        });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                `<kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="name"/>
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#">
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <field name="displayed_image_id" widget="attachment_image"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(_route, { model, method, args }) {
+                if (model === "partner" && method === "write") {
+                    assert.step(String(args[0][0]));
+                    assert.strictEqual(args[1].displayed_image_id, false);
+                }
+            },
+        });
+
+        await toggleRecordDropdown(0);
+        await click(getCard(0), ".oe_kanban_action");
+
+        assert.containsOnce(getCard(0), 'img[data-src*="/web/image/1"]');
+        assert.containsOnce(getCard(1), 'img[data-src*="/web/image/2"]');
+
+        assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
+        assert.containsOnce(document.body, ".modal .btn:contains(Select)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Remove Cover Image)");
+
+        await click(document.querySelector(".modal .modal-footer .btn-secondary")); // click on "Remove Cover Image" button
+
+        assert.containsNone(getCard(0), "img", "The cover image should be removed.");
+
+        await toggleRecordDropdown(1);
+        const coverButton = getCard(1).querySelector("a");
+        assert.strictEqual(coverButton.innerText.trim(), "Set Cover Image");
+        await click(coverButton);
+
+        await triggerEvent(
+            document.body,
+            ".modal .o_kanban_cover_image img",
+            "dblclick",
+            { bubbles: true },
+            { skipVisibilityCheck: true }
+        );
+
+        assert.containsNone(getCard(1), "img", "The cover image should be removed.");
 
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
     });

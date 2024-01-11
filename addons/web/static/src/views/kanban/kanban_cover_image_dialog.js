@@ -33,6 +33,10 @@ export class KanbanCoverImageDialog extends Component {
         });
     }
 
+    get hasCoverImage() {
+        return Boolean(this.props.record.data[this.props.fieldName]);
+    }
+
     onUpload([attachment]) {
         if (!attachment) {
             return;
