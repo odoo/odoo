@@ -148,6 +148,10 @@ var dom = {
         }
         const isTopOrBottomHidden = (el === '#top' || el === '#bottom');
         const $scrollable = isTopOrBottomHidden ? $().getScrollingElement() : (options.$scrollable || $el.parent().closestScrollable());
+        // If $scrollable becomes unavailable, stop trying to scroll.
+        if (!$scrollable.length) {
+            return Promise.resolve();
+        }
         // If $scrollable and $el are not in the same document, we can safely
         // assume $el is in an $iframe. We retrieve it by filtering the list of
         // iframes in $scrollable to keep only the one that contains $el.
