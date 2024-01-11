@@ -6,7 +6,6 @@ import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
-import {useService} from "@web/core/utils/hooks";
 import {DeletePageDialog, DuplicatePageDialog} from '@website/components/dialog/page_properties';
 import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
 
@@ -17,7 +16,6 @@ export class PageListController extends PageControllerMixin(listView.Controller)
      */
     setup() {
         super.setup();
-        this.orm = useService('orm');
         if (this.props.resModel === "website.page") {
             this.archiveEnabled = false;
         }
