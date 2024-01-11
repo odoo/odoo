@@ -18,6 +18,9 @@ import {
 
 Text.prototype.oEnter = function (offset) {
     this.parentElement.oEnter(splitTextNode(this, offset), true);
+    if (this.textContent === '\u200B') {
+        this.remove();
+    }
 };
 /**
  * The whole logic can pretty much be described by this example:

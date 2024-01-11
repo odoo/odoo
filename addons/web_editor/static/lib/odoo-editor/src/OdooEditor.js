@@ -62,6 +62,7 @@ import {
     boundariesOut,
     rightLeafOnlyNotBlockPath,
     getAdjacentPreviousSiblings,
+    childNodeIndex,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -346,7 +347,8 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'dragstart', this._onDragStart);
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
-        this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
+        const debouncedOnSelectionChange = _.debounce(this._onSelectionChange.bind(this), 10); // (mutex?)
+        this.addDomListener(this.document, 'selectionchange', debouncedOnSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
@@ -1427,6 +1429,20 @@ export class OdooEditor extends EventTarget {
                 }
             }
             this._resetLinkZws(this.editable, zwsToPreserve, linkInSelection);
+            // if (getInSelection(this.document, ['data-o-link-zws'])) {
+            //     let { anchorNode, anchorOffset, focusNode, focusOffset } = this.document.getSelection();
+            //     while (closestElement(anchorNode, '[data-o-link-zws]')) {
+            //         anchorOffset = childNodeIndex(anchorNode);
+            //         anchorNode = anchorNode.parentElement;
+            //     }
+            //     while (closestElement(focusNode, '[data-o-link-zws]')) {
+            //         focusOffset = childNodeIndex(focusNode);
+            //         focusNode = focusNode.parentElement;
+            //     }
+            //     this._latestComputedSelection = { anchorNode, anchorOffset, focusNode, focusOffset };
+            //     this._latestComputedSelectionInEditable = this._latestComputedSelection;
+            //     this._currentStep.selection = serializeSelection(this._latestComputedSelection);
+            // }
             if (isLinkSelection && offset && didAddZwsInLinkInSelection) {
                 // Correct the offset if the link is in selection, to account
                 // for the added ZWS.
@@ -1794,21 +1810,37 @@ export class OdooEditor extends EventTarget {
         }
     }
     _resetLinkZws(element = this.editable, zwsToPreserve = [], linkInSelection) {
-        this.observerUnactive('_resetLinkZws');
+        const zwsInSelection = getInSelection(this.document, '[data-o-link-zws]');
+        // const restoreCursor = zwsInSelection && preserveCursor(this.document);
         for (const zws of element.querySelectorAll('[data-o-link-zws]')) {
-            if (zws.textContent.replaceAll('\u200B', '')) {
-                // The zws has text in it -> don't remove it.
+            if (zws.innerHTML.replaceAll('\u200B', '')) {
+                // The zws span has more than just a zws -> don't remove it.
                 zws.removeAttribute('data-o-link-zws');
+                zws.setAttribute('oe-zws-empty-inline', '');
             } else if (!zwsToPreserve.includes(zws)) {
+                // const restoreUpdate = prepareUpdate(
+                //     ...boundariesOut(zws.parentElement),
+                //     { allowReenter: false, label: '_resetLinkZws' }
+                // );
+                this.observerUnactive('_resetLinkZws');
                 zws.remove();
+                this.observerActive('_resetLinkZws');
+                // restoreUpdate();
+            } else if (zws === zwsInSelection) {
+                // setSelection(zws, 1);
             }
         }
+        // const { anchorNode, focusNode } = this.document.getSelection();
+        // anchorNode && fillEmpty(anchorNode);
+        // focusNode && fillEmpty(focusNode);
         for (const link of element.querySelectorAll('.o_link_in_selection')) {
             if (link !== linkInSelection) {
+                this.observerUnactive('_resetLinkZws');
                 link.classList.remove('o_link_in_selection');
+                this.observerActive('_resetLinkZws');
             }
         }
-        this.observerActive('_resetLinkZws');
+        // restoreCursor && restoreCursor();
     }
     _activateContenteditable() {
         this.observerUnactive('_activateContenteditable');
@@ -1857,12 +1889,15 @@ export class OdooEditor extends EventTarget {
         if (!sel.anchorNode) {
             return this._latestComputedSelection;
         }
-        this._latestComputedSelection = {
-            anchorNode: sel.anchorNode,
-            anchorOffset: sel.anchorOffset,
-            focusNode: sel.focusNode,
-            focusOffset: sel.focusOffset,
-        };
+        let { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
+        const zws = getInSelection(this.document, '[data-o-link-zws]');
+        if (sel.isCollapsed && zws) {
+            anchorNode = focusNode = zws.parentElement;
+            anchorOffset = focusOffset = childNodeIndex(zws);
+            console.log('fix fix');
+        }
+        this._latestComputedSelection = { anchorNode, anchorOffset, focusNode, focusOffset };
+        console.warn('compute', serializeSelection(this._latestComputedSelection), (anchorNode.outerHTML || anchorNode.textContent).replaceAll('\u200B', 'ZWS'));
         if (!sel.isCollapsed && this.isSelectionInEditable(sel)) {
             this._latestComputedSelectionInEditable = this._latestComputedSelection;
         }
@@ -1873,6 +1908,7 @@ export class OdooEditor extends EventTarget {
      * @param {boolean} [useCache=false]
      */
     _recordHistorySelection(useCache = false) {
+        console.warn('set sel');
         this._currentStep.selection =
             serializeSelection(
                 useCache ? this._latestComputedSelection : this._computeHistorySelection(),
@@ -2570,6 +2606,10 @@ export class OdooEditor extends EventTarget {
         linkZws.setAttribute('data-o-link-zws', side);
         linkZws.textContent = '\u200B';
         link[side === 'start' ? 'prepend' : side](linkZws);
+        // Since their insertion is not observed, we must add the oid manually
+        // so the selection can be restored when in them.
+        // linkZws.oid = linkZws.parentElement.oid;
+        // linkZws.firstChild.oid = linkZws.parentElement.oid;
         this.observerActive('_insertLinkZws');
         return linkZws;
     }
@@ -2608,7 +2648,6 @@ export class OdooEditor extends EventTarget {
             ev.inputType === 'insertText' &&
             ev.data === null &&
             this._lastBeforeInputType === 'insertParagraph';
-        this._resetLinkZws();
         if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
             if (ev.inputType === 'deleteContentBackward') {
                 this._compositionStep();
@@ -2622,7 +2661,10 @@ export class OdooEditor extends EventTarget {
                 this._applyCommand('oDeleteForward');
             } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
                 this._compositionStep();
+                // const restore = preserveCursor(this.document);
                 this.historyRollback();
+                // restore();
+                // getDeepRange(this.editable, { select: true });
                 ev.preventDefault();
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
                     const brs = this._applyRawCommand('oShiftEnter');
@@ -2665,6 +2707,7 @@ export class OdooEditor extends EventTarget {
                     }
                     // When the spellcheck of Safari modify text, ev.data is
                     // null and the string can be found within ev.dataTranser.
+                    this._resetLinkZws();
                     insertText(selection, ev.data === null ? ev.dataTransfer.getData('text/plain') : ev.data);
                     selection.collapseToEnd();
                 }
@@ -2860,9 +2903,6 @@ export class OdooEditor extends EventTarget {
             // re-trigger the _onSelectionChange.
             return;
         }
-        // Compute the current selection on selectionchange but do not record it. Leave
-        // that to the command execution or the 'input' event handler.
-        this._computeHistorySelection();
 
         this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
@@ -2879,13 +2919,19 @@ export class OdooEditor extends EventTarget {
                 !selection.anchorOffset
             ) {
                 // Move next to link zws.
-                setSelection(selection.anchorNode, 1);
+                // setSelection(selection.anchorNode, 1);
             }
 
             if (this.options.onCollaborativeSelectionChange) {
                 this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
             }
+            // if (getInSelection(this.document, '[data-o-link-zws]')) {
+            //     this._recordHistorySelection();
+            // }
         }
+        // Compute the current selection on selectionchange but do not record it. Leave
+        // that to the command execution or the 'input' event handler.
+        this._computeHistorySelection();
     }
 
     /**

@@ -507,6 +507,7 @@ export function setSelection(
     focusOffset = anchorOffset,
     normalize = true,
 ) {
+    console.warn('setSelection');
     if (
         !anchorNode ||
         !anchorNode.parentElement ||
