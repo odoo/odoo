@@ -23,8 +23,8 @@ export class PageSearchModel extends SearchModel {
             // Before the searchModel performs its DB search call, append the
             // website domain to the search domain.
             await this.website.fetchWebsites();
-            const website = this.website.currentWebsite || this.website.websites[0];
-            this.notifyWebsiteChange(website.id);
+            const website = await this.getCurrentWebsite();
+            await this.notifyWebsiteChange(website.id);
         });
     }
 
@@ -88,5 +88,18 @@ export class PageSearchModel extends SearchModel {
         }
         this.pagesState.websiteDomain = websiteDomain;
         this._notify();
+    }
+
+    /**
+     * Retrieves the current website.
+     *
+     * @returns {Object} The current website.
+     */
+    async getCurrentWebsite() {
+        const currentWebsite = (await this.orm.call('website', 'get_current_website')).match(/\d+/);
+        if (currentWebsite) {
+            return this.website.websites.find(w => w.id === parseInt(currentWebsite[0]));
+        }
+        return this.website.websites[0];
     }
 }
