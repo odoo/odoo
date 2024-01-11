@@ -26,14 +26,9 @@ QUnit.test("list activity widget with no activity", async (assert) => {
         mockRPC(route, args) {
             if (
                 args.method !== "get_views" &&
-                ![
-                    "/mail/init_messaging",
-                    "/mail/load_message_failures",
-                    "/bus/im_status",
-                    ...ROUTES_TO_IGNORE,
-                ].includes(route)
+                !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(route);
+                assert.step(`${route} - ${JSON.stringify(args)}`);
             }
         },
         serverData: { views },
@@ -45,7 +40,32 @@ QUnit.test("list activity widget with no activity", async (assert) => {
     });
     await contains(".o-mail-ActivityButton i.text-muted");
     await contains(".o-mail-ListActivity-summary", { text: "" });
-    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
+    assert.verifySteps([
+        "/mail/init_messaging - {}",
+        '/mail/data - {"failures":true}',
+        `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
+            model: "res.users",
+            method: "web_search_read",
+            args: [],
+            kwargs: {
+                specification: {
+                    activity_ids: { fields: {} },
+                    activity_exception_decoration: {},
+                    activity_exception_icon: {},
+                    activity_state: {},
+                    activity_summary: {},
+                    activity_type_icon: {},
+                    activity_type_id: { fields: { display_name: {} } },
+                },
+                offset: 0,
+                order: "",
+                limit: 80,
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                count_limit: 10001,
+                domain: [],
+            },
+        })}`,
+    ]);
 });
 
 QUnit.test("list activity widget with activities", async (assert) => {
@@ -79,14 +99,9 @@ QUnit.test("list activity widget with activities", async (assert) => {
         mockRPC(route, args) {
             if (
                 args.method !== "get_views" &&
-                ![
-                    "/mail/init_messaging",
-                    "/mail/load_message_failures",
-                    "/bus/im_status",
-                    ...ROUTES_TO_IGNORE,
-                ].includes(route)
+                !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(route);
+                assert.step(`${route} - ${JSON.stringify(args)}`);
             }
         },
         serverData: { views },
@@ -107,7 +122,32 @@ QUnit.test("list activity widget with activities", async (assert) => {
             [".o-mail-ListActivity-summary", { text: "Type 2" }],
         ],
     });
-    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
+    assert.verifySteps([
+        "/mail/init_messaging - {}",
+        '/mail/data - {"failures":true}',
+        `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
+            model: "res.users",
+            method: "web_search_read",
+            args: [],
+            kwargs: {
+                specification: {
+                    activity_ids: { fields: {} },
+                    activity_exception_decoration: {},
+                    activity_exception_icon: {},
+                    activity_state: {},
+                    activity_summary: {},
+                    activity_type_icon: {},
+                    activity_type_id: { fields: { display_name: {} } },
+                },
+                offset: 0,
+                order: "",
+                limit: 80,
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                count_limit: 10001,
+                domain: [],
+            },
+        })}`,
+    ]);
 });
 
 QUnit.test("list activity widget with exception", async (assert) => {
@@ -132,14 +172,9 @@ QUnit.test("list activity widget with exception", async (assert) => {
         mockRPC(route, args) {
             if (
                 args.method !== "get_views" &&
-                ![
-                    "/mail/init_messaging",
-                    "/mail/load_message_failures",
-                    "/bus/im_status",
-                    ...ROUTES_TO_IGNORE,
-                ].includes(route)
+                !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(route);
+                assert.step(`${route} - ${JSON.stringify(args)}`);
             }
         },
         serverData: { views },
@@ -150,7 +185,32 @@ QUnit.test("list activity widget with exception", async (assert) => {
     });
     await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
     await contains(".o-mail-ListActivity-summary", { text: "Warning" });
-    assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
+    assert.verifySteps([
+        "/mail/init_messaging - {}",
+        '/mail/data - {"failures":true}',
+        `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
+            model: "res.users",
+            method: "web_search_read",
+            args: [],
+            kwargs: {
+                specification: {
+                    activity_ids: { fields: {} },
+                    activity_exception_decoration: {},
+                    activity_exception_icon: {},
+                    activity_state: {},
+                    activity_summary: {},
+                    activity_type_icon: {},
+                    activity_type_id: { fields: { display_name: {} } },
+                },
+                offset: 0,
+                order: "",
+                limit: 80,
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                count_limit: 10001,
+                domain: [],
+            },
+        })}`,
+    ]);
 });
 
 QUnit.test("list activity widget: open dropdown", async (assert) => {
@@ -192,14 +252,9 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
         mockRPC(route, args) {
             if (
                 args.method !== "get_views" &&
-                ![
-                    "/mail/init_messaging",
-                    "/mail/load_message_failures",
-                    "/bus/im_status",
-                    ...ROUTES_TO_IGNORE,
-                ].includes(route)
+                !["/mail/", "/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(args.method || route);
+                assert.step(`${route} - ${JSON.stringify(args)}`);
             }
             if (args.method === "action_feedback") {
                 pyEnv["res.users"].write([pyEnv.currentUserId], {
@@ -235,17 +290,79 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
-    assert.verifySteps(["web_search_read", "activity_format", "action_feedback", "web_read"]);
+    assert.verifySteps([
+        "/mail/init_messaging - {}",
+        '/mail/data - {"failures":true}',
+        `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
+            model: "res.users",
+            method: "web_search_read",
+            args: [],
+            kwargs: {
+                specification: {
+                    activity_ids: { fields: {} },
+                    activity_exception_decoration: {},
+                    activity_exception_icon: {},
+                    activity_state: {},
+                    activity_summary: {},
+                    activity_type_icon: {},
+                    activity_type_id: { fields: { display_name: {} } },
+                },
+                offset: 0,
+                order: "",
+                limit: 80,
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                count_limit: 10001,
+                domain: [],
+            },
+        })}`,
+        `/web/dataset/call_kw/mail.activity/activity_format - ${JSON.stringify({
+            model: "mail.activity",
+            method: "activity_format",
+            args: [[activityId_1, activityId_2]],
+            kwargs: { context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId } },
+        })}`,
+        `/web/dataset/call_kw/mail.activity/action_feedback - ${JSON.stringify({
+            model: "mail.activity",
+            method: "action_feedback",
+            args: [[activityId_1]],
+            kwargs: {
+                attachment_ids: [],
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            },
+        })}`,
+        `/web/dataset/call_kw/res.users/web_read - ${JSON.stringify({
+            model: "res.users",
+            method: "web_read",
+            args: [[activityId_2]],
+            kwargs: {
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, bin_size: true },
+                specification: {
+                    activity_ids: { fields: {} },
+                    activity_exception_decoration: {},
+                    activity_exception_icon: {},
+                    activity_state: {},
+                    activity_summary: {},
+                    activity_type_icon: {},
+                    activity_type_id: { fields: { display_name: {} } },
+                },
+            },
+        })}`,
+    ]);
 });
 
 QUnit.test("list activity widget: batch selection from list", async (assert) => {
     function selectContaining(domElement, selector, containing) {
-        return Array.from(domElement.querySelectorAll(selector)).filter((sel) => sel.textContent.includes(containing));
+        return Array.from(domElement.querySelectorAll(selector)).filter((sel) =>
+            sel.textContent.includes(containing)
+        );
     }
 
     const pyEnv = await startServer();
     const [marioId, matildeId, alexanderId] = pyEnv["res.partner"].create([
-        { name: "Mario" }, { name: "Matilde" }, { name: "Alexander" }]);
+        { name: "Mario" },
+        { name: "Matilde" },
+        { name: "Alexander" },
+    ]);
     const views = {
         "res.partner,false,list": `
             <tree>
@@ -274,76 +391,72 @@ QUnit.test("list activity widget: batch selection from list", async (assert) => 
         res_model: "res.partner",
         views: [[false, "list"]],
     });
-    const marioRow = selectContaining(document.body, '.o_data_row', 'Mario')[0];
-    const matildeRow = selectContaining(document.body, '.o_data_row', 'Matilde')[0];
-    const alexanderRow = selectContaining(document.body, '.o_data_row', 'Alexander')[0];
+    const marioRow = selectContaining(document.body, ".o_data_row", "Mario")[0];
+    const matildeRow = selectContaining(document.body, ".o_data_row", "Matilde")[0];
+    const alexanderRow = selectContaining(document.body, ".o_data_row", "Alexander")[0];
     assert.ok(marioRow);
     assert.ok(matildeRow);
     assert.ok(alexanderRow);
 
     // Clicking on the clock of a partner without selection, open the wizard for that record only
     await click(".o-mail-ActivityButton", { target: matildeRow });
-    await click('.o-mail-ActivityListPopover button');
+    await click(".o-mail-ActivityListPopover button");
     await wizardOpened;
-    assert.deepEqual(
-        scheduleWizardContext,
-        {
-            active_ids: [matildeId],
-            active_id: matildeId,
-            active_model: "res.partner",
-        }
-    );
+    assert.deepEqual(scheduleWizardContext, {
+        active_ids: [matildeId],
+        active_id: matildeId,
+        active_model: "res.partner",
+    });
 
     // We select 2 among the 3 partners created above and click on the clock of one of them
-    await click('.o_list_record_selector .o-checkbox', { target: matildeRow });
-    await click('.o_list_record_selector .o-checkbox', { target: marioRow });
+    await click(".o_list_record_selector .o-checkbox", { target: matildeRow });
+    await click(".o_list_record_selector .o-checkbox", { target: marioRow });
     await contains(".o_list_selection_box", { text: "2 selected" });
     await click(".o-mail-ActivityButton", { target: matildeRow });
-    await contains(".o-mail-ActivityListPopover button", { text: 'Schedule an activity on selected records' });
-    assert.equal(document.body.querySelector(".o-mail-ActivityListPopover button").textContent,
-        'Schedule an activity on selected records');
-    await click('.o-mail-ActivityListPopover button');
-    await wizardOpened;
-    assert.deepEqual(
-        scheduleWizardContext,
-        {
-            active_ids: [marioId, matildeId],
-            active_id: marioId,
-            active_model: "res.partner",
-        }
+    await contains(".o-mail-ActivityListPopover button", {
+        text: "Schedule an activity on selected records",
+    });
+    assert.equal(
+        document.body.querySelector(".o-mail-ActivityListPopover button").textContent,
+        "Schedule an activity on selected records"
     );
+    await click(".o-mail-ActivityListPopover button");
+    await wizardOpened;
+    assert.deepEqual(scheduleWizardContext, {
+        active_ids: [marioId, matildeId],
+        active_id: marioId,
+        active_model: "res.partner",
+    });
     // But when clicking on the clock of one of the non-selected row, it applies to only that row
     wizardOpened = makeDeferred();
     await click(".o-mail-ActivityButton", { target: alexanderRow });
     await contains(".o-mail-ActivityListPopover button", { text: "Schedule an activity" });
     // await contains(".o-mail-ActivityListPopover button:not(:contains('Schedule an activity on selected records'))");
-    await click('.o-mail-ActivityListPopover button');
+    await click(".o-mail-ActivityListPopover button");
     await wizardOpened;
-    assert.deepEqual(
-        scheduleWizardContext,
-        {
-            active_ids: [alexanderId],
-            active_id: alexanderId,
-            active_model: "res.partner",
-        }
-    );
+    assert.deepEqual(scheduleWizardContext, {
+        active_ids: [alexanderId],
+        active_id: alexanderId,
+        active_model: "res.partner",
+    });
     // We now check that when clicking on the clock of the other selected row, it applies to both row
     wizardOpened = makeDeferred();
     await click(".o-mail-ActivityButton", { target: marioRow });
-    await contains(".o-mail-ActivityListPopover", { text: 'Schedule an activity on selected records' });
-    assert.equal(document.body.querySelector(".o-mail-ActivityListPopover button").textContent,
-        'Schedule an activity on selected records');
-    await click('.o-mail-ActivityListPopover button');
-    await wizardOpened;
-    assert.deepEqual(
-        scheduleWizardContext,
-        {
-            active_ids: [marioId, matildeId],
-            active_id: marioId,
-            active_model: "res.partner",
-        }
+    await contains(".o-mail-ActivityListPopover", {
+        text: "Schedule an activity on selected records",
+    });
+    assert.equal(
+        document.body.querySelector(".o-mail-ActivityListPopover button").textContent,
+        "Schedule an activity on selected records"
     );
-    assert.verifySteps(Array(4).fill('do_action_activity'));
+    await click(".o-mail-ActivityListPopover button");
+    await wizardOpened;
+    assert.deepEqual(scheduleWizardContext, {
+        active_ids: [marioId, matildeId],
+        active_id: marioId,
+        active_model: "res.partner",
+    });
+    assert.verifySteps(Array(4).fill("do_action_activity"));
 });
 
 QUnit.test("list activity exception widget with activity", async () => {
