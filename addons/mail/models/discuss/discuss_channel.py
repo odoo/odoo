@@ -592,6 +592,21 @@ class Channel(models.Model):
         self.env["bus.bus"].sudo()._sendmany(bus_notifications)
         return rdata
 
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload['options']['data']['action'] = 'mail.action_discuss'
+        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
+        if self.channel_type == 'chat':
+            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
+            payload['title'] = self.env['res.partner'].browse(author_id).name
+        elif self.channel_type == 'channel':
+            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
+            author_name = self.env['res.partner'].browse(author_id).name
+            payload['title'] = "#%s - %s" % (record_name, author_name)
+        else:
+            payload['title'] = "#%s" % (record_name)
+        return payload
+
     def _message_receive_bounce(self, email, partner):
         """ Override bounce management to unsubscribe bouncing addresses """
         for p in partner:
@@ -1278,18 +1293,3 @@ class Channel(models.Model):
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(self.env.user.partner_id, msg)
-
-    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
-        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
-        payload['options']['data']['action'] = 'mail.action_discuss'
-        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
-        if self.channel_type == 'chat':
-            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
-            payload['title'] = self.env['res.partner'].browse(author_id).name
-        elif self.channel_type == 'channel':
-            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
-            author_name = self.env['res.partner'].browse(author_id).name
-            payload['title'] = "#%s - %s" % (record_name, author_name)
-        else:
-            payload['title'] = "#%s" % (record_name)
-        return payload
