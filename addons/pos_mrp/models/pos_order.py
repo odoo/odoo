@@ -7,8 +7,7 @@ class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
     def _get_stock_moves_to_consider(self, stock_moves, product):
-        self.ensure_one()
-        bom = product.env['mrp.bom']._bom_find(product, company_id=stock_moves.company_id.id, bom_type='phantom')[product]
+        bom = product.env['mrp.bom']._bom_find(product, company_ids=stock_moves.company_id.ids, bom_type='phantom')[(product, stock_moves.company_id.id)]
         if not bom:
             return super()._get_stock_moves_to_consider(stock_moves, product)
         _dummy, components = bom.explode(product, self.qty)
@@ -19,7 +18,8 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        bom = product.env['mrp.bom']._bom_find(product, company_id=self.mapped('picking_ids.move_line_ids').company_id.id, bom_type='phantom')[product]
+        company = self.mapped('picking_ids.move_line_ids').company_id
+        bom = product.env['mrp.bom']._bom_find(product, company_ids=company.ids, bom_type='phantom')[(product, company.id)]
         if not bom:
             return super()._get_pos_anglo_saxon_price_unit(product, partner_id, quantity)
         dummy, components = bom.explode(product, quantity)
