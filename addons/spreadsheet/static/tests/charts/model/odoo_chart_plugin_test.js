@@ -12,6 +12,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "../../utils/global_filter";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { session } from "@web/session";
+import { getBasicServerData } from "../../utils/data";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -520,6 +521,52 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 3]
+        );
+    });
+
+    QUnit.test("cumulative line chart with past data before domain period", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            { date: "2020-01-01", probability: 10 },
+            { date: "2021-01-01", probability: 2 },
+            { date: "2022-01-01", probability: 3 },
+            { date: "2022-03-01", probability: 4 },
+            { date: "2022-06-01", probability: 5 },
+        ];
+        const { model } = await createSpreadsheetWithChart({
+            type: "odoo_line",
+            serverData,
+            definition: {
+                type: "odoo_line",
+                metaData: {
+                    groupBy: ["date"],
+                    measure: "probability",
+                    order: null,
+                    resModel: "partner",
+                },
+                searchParams: {
+                    comparison: null,
+                    context: {},
+                    domain: [
+                        ["date", ">=", "2022-01-01"],
+                        ["date", "<=", "2022-12-31"],
+                    ],
+                    groupBy: [],
+                    orderBy: [],
+                },
+                cumulative: true,
+                title: "Partners",
+                dataSourceId: "42",
+                id: "42",
+            },
+        });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        await waitForDataSourcesLoaded(model);
+
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [15, 19, 24]
         );
     });
 
