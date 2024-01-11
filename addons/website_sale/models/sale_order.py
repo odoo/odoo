@@ -598,7 +598,7 @@ class SaleOrder(models.Model):
                 force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
 
             carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
-            available_carriers = self._get_delivery_methods()
+            available_carriers, rates = self._get_delivery_methods()
             if carrier:
                 if carrier not in available_carriers:
                     carrier = DeliveryCarrier
@@ -607,37 +607,43 @@ class SaleOrder(models.Model):
                     available_carriers -= carrier
                     available_carriers = carrier + available_carriers
             if force_carrier_id or not carrier or carrier not in available_carriers:
-                for delivery in available_carriers:
-                    verified_carrier = delivery._match_address(self.partner_shipping_id)
-                    if verified_carrier:
-                        carrier = delivery
-                        break
+                if available_carriers:
+                    carrier = available_carriers[0]
                 self.write({'carrier_id': carrier.id})
             self._remove_delivery_line()
             if carrier:
-                res = carrier.rate_shipment(self)
-                if res.get('success'):
-                    self.set_delivery_line(carrier, res['price'])
-                    self.delivery_rating_success = True
-                    self.delivery_message = res['warning_message']
-                else:
-                    self.set_delivery_line(carrier, 0.0)
-                    self.delivery_rating_success = False
-                    self.delivery_message = res['error_message']
+                rate = rates[carrier.id]
+                self.set_delivery_line(carrier, rate['price'])
+                self.delivery_rating_success = True
+                self.delivery_message = rate['warning_message']
 
         return bool(carrier)
 
-    def _get_delivery_methods(self):
-        def _is_carrier_available(carrier):
-            # Drop carriers where price computation fails (no price rule available/matching request)
-            res = carrier.rate_shipment(self)
-            return res['success']
+    def _get_delivery_methods(self, is_express_checkout_flow=False):
         # searching on website_published will also search for available website (_search method on computed field)
-        return self.env['delivery.carrier'].sudo().search([
+        carriers = self.env['delivery.carrier'].search([
             ('website_published', '=', True),
+            ('company_id', 'in', (self.company_id.id, False)),
         ]).available_carriers(
             self.partner_shipping_id
-        ).filtered(_is_carrier_available)
+        )
+        rates = {
+            carrier.id: carrier.rate_shipment(self.with_context(
+                # Some delivery carriers check if all the required fields are available before
+                # computing the rate, even if those fields aren't required for computing the rate
+                # (although they are for delivering the goods). If we only have partial information
+                # about the delivery address but still want to compute the rate, this context key
+                # will ensure that we only check the required fields for a partial delivery address
+                # (city, zip, country_code, state_code).
+                express_checkout_partial_delivery_address=is_express_checkout_flow
+            ))
+            for carrier in carriers
+        }
+
+        return (
+            carriers.filtered(lambda carrier: rates[carrier.id]['success']),
+            {carrier_id: rate for carrier_id, rate in rates.items() if rate['success']},
+        )
 
     #=== TOOLING ===#
 

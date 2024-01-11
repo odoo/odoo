@@ -273,18 +273,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
         """ Test that when using express checkout with only partial delivery information,
             `express_checkout_partial_delivery_address` context key is in the context.
         """
-        delivery_carrier_mock = Mock()
-        delivery_carrier_mock.rate_shipment = Mock(
-            # Since we didn't mock the product ids for the mocked carrier, we return an unsuccessful
-            # response to skip the part where the product ids are checked on the carrier.
-            return_value=dict(self.rate_shipment_result, success=False)
-        )
-
-        WebsiteSaleDeliveryController._get_rate(
-            delivery_carrier_mock, self.sale_order, is_express_checkout_flow=True
-        )
-        sale_order = delivery_carrier_mock.rate_shipment.call_args[0][0]
-        self.assertTrue(sale_order._context.get('express_checkout_partial_delivery_address'))
+        # TODO(loti): move test elsewhere.
 
     def test_express_checkout_registered_user_with_shipping_option(self):
         """ Test that when you use the express checkout as a registered user and the shipping

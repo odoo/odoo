@@ -25,29 +25,6 @@ class WebsiteSaleDelivery(WebsiteSale):
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
 
-    @route('/shop/carrier_rate_shipment', type='json', auth='public', methods=['POST'], website=True)
-    def cart_carrier_rate_shipment(self, carrier_id, **kw):
-        order = request.website.sale_get_order(force_create=True)
-
-        if int(carrier_id) not in order._get_delivery_methods().ids:
-            raise UserError(_('It seems that a delivery method is not compatible with your address. Please refresh the page and try again.'))
-
-        Monetary = request.env['ir.qweb.field.monetary']
-
-        res = {'carrier_id': carrier_id}
-        carrier = request.env['delivery.carrier'].sudo().browse(int(carrier_id))
-        rate = WebsiteSaleDelivery._get_rate(carrier, order)
-        if rate.get('success'):
-            res['status'] = True
-            res['new_amount_delivery'] = Monetary.value_to_html(rate['price'], {'display_currency': order.currency_id})
-            res['is_free_delivery'] = not bool(rate['price'])
-            res['error_message'] = rate['warning_message']
-        else:
-            res['status'] = False
-            res['new_amount_delivery'] = Monetary.value_to_html(0.0, {'display_currency': order.currency_id})
-            res['error_message'] = rate['error_message']
-        return res
-
     @route(
         _express_checkout_shipping_route, type='json', auth='public', methods=['POST'],
         website=True, sitemap=False
@@ -103,15 +80,18 @@ class WebsiteSaleDelivery(WebsiteSale):
             )
 
         # Returns the list of develivery carrier available for the sale order.
+        carriers, rates = order_sudo._get_delivery_methods(is_express_checkout_flow=True)
         return sorted([{
             'id': carrier.id,
             'name': carrier.name,
             'description': carrier.website_description,
             'minorAmount': payment_utils.to_minor_currency_units(
-                WebsiteSaleDelivery._get_rate(carrier, order_sudo, is_express_checkout_flow=True)['price'],
+                self._get_price(
+                    carrier, rates[carrier.id], order_sudo, is_express_checkout_flow=True
+                ),
                 order_sudo.currency_id,
             ),
-        } for carrier in order_sudo._get_delivery_methods()],
+        } for carrier in carriers],
         key=lambda carrier: carrier['minorAmount'])
 
     @route('/shop/access_point/set', type='json', auth='public', methods=['POST'], website=True, sitemap=False)
@@ -152,42 +132,60 @@ class WebsiteSaleDelivery(WebsiteSale):
         except UserError as e:
             return {'error': str(e)}
 
-    @staticmethod
-    def _get_rate(carrier, order, is_express_checkout_flow=False):
+    def _get_price(self, carrier, rate, order, is_express_checkout_flow=False):
         """ Compute the price of the order shipment and apply the taxes if relevant
 
         :param recordset carrier: the carrier for which the rate is to be recovered
+        :param dict rate: the rate, as returned by `rate_shipment()`
         :param recordset order: the order for which the rate is to be recovered
         :param boolean is_express_checkout_flow: Whether the flow is express checkout or not
-        :return dict: the rate, as returned in `rate_shipment()`
+        :return float: the price, with taxes applied if relevant`
         """
-        # Some delivery carriers check if all the required fields are available before computing the
-        # rate, even if those fields aren't required for computing the rate (although they are for
-        # delivering the goods). If we only have partial information about the delivery address but
-        # still want to compute the rate, this context key will ensure that we only check the
-        # required fields for a partial delivery address (city, zip, country_code, state_code).
-        rate = carrier.rate_shipment(order.with_context(
-            express_checkout_partial_delivery_address=is_express_checkout_flow
-        ))
-        if rate.get('success'):
-            tax_ids = carrier.product_id.taxes_id.filtered(
-                lambda t: t.company_id == order.company_id
+        tax_ids = carrier.product_id.taxes_id.filtered(
+            lambda t: t.company_id == order.company_id
+        )
+        if tax_ids:
+            fpos = order.fiscal_position_id
+            tax_ids = fpos.map_tax(tax_ids)
+            taxes = tax_ids.compute_all(
+                rate['price'],
+                currency=order.currency_id,
+                quantity=1.0,
+                product=carrier.product_id,
+                partner=order.partner_shipping_id,
             )
-            if tax_ids:
-                fpos = order.fiscal_position_id
-                tax_ids = fpos.map_tax(tax_ids)
-                taxes = tax_ids.compute_all(
-                    rate['price'],
-                    currency=order.currency_id,
-                    quantity=1.0,
-                    product=carrier.product_id,
-                    partner=order.partner_shipping_id,
-                )
-                if not is_express_checkout_flow and request.website.show_line_subtotals_tax_selection == 'tax_excluded':
-                    rate['price'] = taxes['total_excluded']
-                else:
-                    rate['price'] = taxes['total_included']
-        return rate
+            if (
+                not is_express_checkout_flow
+                and order.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
+            ):
+                return taxes['total_excluded']
+            else:
+                return taxes['total_included']
+        return rate['price']
+
+    def _get_shop_payment_values(self, order, **kwargs):
+        values = super()._get_shop_payment_values(order, **kwargs)
+        if request.website.enabled_delivery:
+            has_storable_products = any(
+                line.product_id.type in ['consu', 'product'] for line in order.order_line
+            )
+            if has_storable_products:
+                if order.carrier_id and not order.delivery_rating_success:
+                    order._remove_delivery_line()
+                    order._check_carrier_quotation()
+                carriers_sudo, rates = order._get_delivery_methods()
+                values['carriers'] = carriers_sudo
+                values['prices'] = {
+                    carrier.id: self._get_price(carrier, rates[carrier.id], order)
+                    for carrier in carriers_sudo
+                }
+
+            values['delivery_has_storable'] = has_storable_products
+            values['delivery_action_id'] = request.env.ref(
+                'delivery.action_delivery_carrier_form'
+            ).id
+
+        return values
 
     def _update_website_sale_delivery_return(self, order, **post):
         Monetary = request.env['ir.qweb.field.monetary']

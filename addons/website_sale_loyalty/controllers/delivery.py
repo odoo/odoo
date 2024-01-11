@@ -24,20 +24,10 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
                 })
         return result
 
-    @route()
-    def cart_carrier_rate_shipment(self, carrier_id, **kw):
-        Monetary = request.env['ir.qweb.field.monetary']
-        order = request.website.sale_get_order(force_create=True)
-        free_shipping_lines = order._get_free_shipping_lines()
+    def _get_price(self, carrier, rate, order, is_express_checkout_flow=False):
         # Avoid computing carrier price delivery is free (coupon). It means if
         # the carrier has error (eg 'delivery only for Belgium') it will show
         # Free until the user clicks on it.
-        if free_shipping_lines:
-            return {
-                'carrier_id': carrier_id,
-                'status': True,
-                'is_free_delivery': True,
-                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': order.currency_id}),
-                'error_message': None,
-            }
-        return super().cart_carrier_rate_shipment(carrier_id, **kw)
+        if order._get_free_shipping_lines():
+            return 0.0
+        return super()._get_price(carrier, rate, order, is_express_checkout_flow)

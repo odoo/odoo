@@ -1633,23 +1633,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'landing_route': '/shop/payment/validate',
             'sale_order_id': order.id,  # Allow Stripe to check if tokenization is required.
         }
-        values = {**checkout_page_values, **payment_form_values}
-        if request.website.enabled_delivery:
-            has_storable_products = any(
-                line.product_id.type in ['consu', 'product'] for line in order.order_line
-            )
-            if has_storable_products:
-                if order.carrier_id and not order.delivery_rating_success:
-                    order._remove_delivery_line()
-                    order._check_carrier_quotation()
-                values['deliveries'] = order._get_delivery_methods().sudo()
-
-            values['delivery_has_storable'] = has_storable_products
-            values['delivery_action_id'] = request.env.ref(
-                'delivery.action_delivery_carrier_form'
-            ).id
-
-        return values
+        return {**checkout_page_values, **payment_form_values}
 
     def _get_shop_payment_errors(self, order):
         """ Check that there is no error that should block the payment.
@@ -1661,7 +1645,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
         errors = []
 
-        if not order._get_delivery_methods() and has_storable_products:
+        carriers, rates = order._get_delivery_methods()
+        if not carriers and has_storable_products:
             errors.append((
                 _('Sorry, we are unable to ship your order'),
                 _('No shipping method is available for your current order and shipping address. '

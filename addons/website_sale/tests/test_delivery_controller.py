@@ -107,9 +107,8 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
             },
         ])
 
-        self.assertEqual(
-            self.empty_order._get_delivery_methods().mapped('name'), ['Under 300', 'Fixed']
-        )
+        carriers, rates = self.empty_order._get_delivery_methods()
+        self.assertEqual(carriers.mapped('name'), ['Under 300', 'Fixed'])
 
     def test_validate_payment_with_no_available_delivery_method(self):
         """

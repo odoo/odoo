@@ -19,10 +19,21 @@
     </template>
 
     <template id="payment_delivery_methods">
-        <input class="pe-none" t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" t-att-delivery_type="delivery.delivery_type" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
-        <label class="label-optional" t-field="delivery.name"/>
-        <span class="o_wsale_delivery_badge_price float-end fw-bold" name="price">Select to compute delivery rate</span>
-        <t t-set='delivery_method' t-value="delivery.delivery_type+'_use_locations'" />
+        <input class="pe-none"
+               t-att-value="carrier.id"
+               t-att-id="'delivery_%i' % carrier.id"
+               t-att-delivery_type="carrier.delivery_type"
+               type="radio"
+               name="delivery_type"
+               t-att-checked="order.carrier_id and order.carrier_id.id == carrier.id and 'checked' or False"/>
+        <label class="label-optional" t-field="carrier.name"/>
+        <span class="o_wsale_delivery_badge_price float-end fw-bold" name="price">
+            <t t-if="prices[carrier.id]">
+                <t t-out="prices[carrier.id]" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+            </t>
+            <t t-else="">Free</t>
+        </span>
+        <t t-set='delivery_method' t-value="carrier.delivery_type+'_use_locations'" />
         <div class="small">
             <div class="d-none">
                 <span class="o_order_location">
@@ -32,24 +43,24 @@
                 </span>
                 <span class="fa fa-times ms-2 o_remove_order_location" aria-label="Remove this location" title="Remove this location"/>
             </div>
-            <t t-if="delivery_method in delivery.fields_get() and delivery[delivery_method]">
+            <t t-if="delivery_method in carrier.fields_get() and carrier[delivery_method]">
                 <div class="o_show_pickup_locations"/>
                 <div class="o_list_pickup_locations"/>
             </t>
         </div>
-        <t t-if="delivery.website_description">
-            <div t-field="delivery.website_description" class="text-muted mt8"/>
+        <t t-if="carrier.website_description">
+            <div t-field="carrier.website_description" class="text-muted mt8"/>
         </t>
     </template>
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//t[@name='website_sale_non_free_cart']" position="before">
-            <div t-if="deliveries" id="delivery_carrier">
-                <t t-set="delivery_nb" t-value="len(deliveries)"/>
+            <div t-if="carriers" id="delivery_carrier">
+                <t t-set="delivery_nb" t-value="len(carriers)"/>
                 <h4>Choose a delivery method</h4>
                 <div class="card border-0" id="delivery_method">
                     <ul class="list-group">
-                    <t t-foreach="deliveries" t-as="delivery">
+                    <t t-foreach="carriers" t-as="carrier">
                         <li class="list-group-item o_delivery_carrier_select">
                             <t t-call="website_sale.payment_delivery_methods"/>
                         </li>
