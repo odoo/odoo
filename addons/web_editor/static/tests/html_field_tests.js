@@ -941,4 +941,39 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
             "The link's label should be updated");
     });
+
+    QUnit.module("isDirty");
+
+    QUnit.test("isDirty should be false when the content is being transformed by the wysiwyg", async (assert) => {
+        assert.expect(2);
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: "<p>a<span>b</span>c</p>",
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+
+        assert.strictEqual(htmlField.wysiwyg.getValue(), '<p>abc</p>', 'the value should be sanitized by the wysiwyg');
+        assert.strictEqual(htmlField._isDirty(), false, 'should not be dirty as the content has not changed');
+
+    });
 });
