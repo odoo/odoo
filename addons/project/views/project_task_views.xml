@@ -332,6 +332,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="display_in_project" invisible="1" force_save="1"/>
                             <field name="project_id"
                                    domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
                                    widget="project"
