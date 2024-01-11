@@ -51,7 +51,7 @@ function createOdooChartRuntime(chart, getters) {
     const locale = getters.getLocale();
     const chartJsConfig = getLineConfiguration(chart, labels, locale);
     const colors = new ChartColors();
-    for (let [index, { label, data }] of datasets.entries()) {
+    for (let [index, { label, data, cumulatedStart }] of datasets.entries()) {
         const color = colors.next();
         const backgroundRGBA = colorToRGBA(color);
         if (chart.stacked) {
@@ -59,7 +59,7 @@ function createOdooChartRuntime(chart, getters) {
             backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
         }
         if (chart.cumulative) {
-            let accumulator = 0;
+            let accumulator = cumulatedStart;
             data = data.map((value) => {
                 accumulator += value;
                 return accumulator;
