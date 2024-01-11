@@ -399,6 +399,21 @@ class AccountEdiFormat(models.Model):
         invoices = self.env['account.move']
         first_run = True
 
+        buyer_seller_info = {
+            'buyer': {
+                'section_xpath': './/CessionarioCommittente',
+                'vat_xpath': '//CessionarioCommittente//IdCodice',
+                'codice_fiscale_xpath': '//CessionarioCommittente//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'purchase')],
+            },
+            'seller': {
+                'section_xpath': './/CedentePrestatore',
+                'vat_xpath': '//CedentePrestatore//IdCodice',
+                'codice_fiscale_xpath': '//CedentePrestatore//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'sale')],
+            },
+        }
+
         # possible to have multiple invoices in the case of an invoice batch, the batch itself is repeated for every invoice of the batch
         for body_tree in tree.xpath('//FatturaElettronicaBody'):
             if not first_run or not invoice:
@@ -406,17 +421,48 @@ class AccountEdiFormat(models.Model):
                 invoice = self.env['account.move']
             first_run = False
 
-            # Type must be present in the context to get the right behavior of the _default_journal method (account.move).
-            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
-            elements = tree.xpath('//CessionarioCommittente//IdCodice')
-            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
-            if not company:
-                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
+            # There are 2 cases:
+            # - cron:
+            #     * Move direction (incoming / outgoing) flexible (no 'default_move_type')
+            #     * All companies are possible (no 'allowed_company_ids')
+            #     * I.e. used for import from tax agency
+            # - "Upload" button (invoices / bills view)
+            #     * Fixed move direction; the button sets the 'default_move_type'
+            #     * Companies are restricted to 'allowed_company_ids'.
+
+            default_move_type = self.env.context.get('default_move_type')
+            if default_move_type is None:
+                incoming_possibilities = [True, False]
+            elif default_move_type in invoice.get_purchase_types(include_receipts=True):
+                incoming_possibilities = [True]
+            elif default_move_type in invoice.get_sale_types(include_receipts=True):
+                incoming_possibilities = [False]
+            else:
+                _logger.warning("Cannot handle default_move_type '%s'.", default_move_type)
+                continue
+
+            allowed_company_ids = self.env.context.get('allowed_company_ids')
+            allowed_company_domain = [('id', 'in', allowed_company_ids)] if allowed_company_ids else []
+
+            for incoming in incoming_possibilities:
+                company_role, partner_role = ('buyer', 'seller') if incoming else ('seller', 'buyer')
+                company_info = buyer_seller_info[company_role]
+                elements = tree.xpath(company_info['vat_xpath'])
+                company = elements and self.env['res.company'].search([
+                    ('vat', 'ilike', elements[0].text),
+                    *allowed_company_domain
+                ], limit=1)
                 if not company:
-                    # Only invoices with a correct VAT or Codice Fiscale can be imported
-                    _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
-                    continue
+                    elements = tree.xpath(company_info['codice_fiscale_xpath'])
+                    company = elements and self.env['res.company'].search([
+                        ('l10n_it_codice_fiscale', 'ilike', elements[0].text),
+                        *allowed_company_domain
+                    ], limit=1)
+                if company:
+                    break
+            else:
+                _logger.warning('Could not determine company (by looking at the VAT and codice fiscale in the buyer and/or seller section).')
+                continue
 
             # Refund type.
             # TD01 == invoice
@@ -435,22 +481,22 @@ class AccountEdiFormat(models.Model):
             if not move_type:
                 move_type = "in_invoice"
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
+            if not incoming and move_type.startswith('in_'):
+                move_type = 'out' + move_type[2:]
 
             simplified = self._l10n_it_is_simplified_document_type(document_type)
 
-            # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
                                  .with_context(default_move_type=move_type)
 
             # move could be a single record (editing) or be empty (new).
             with Form(invoice_ctx) as invoice_form:
                 message_to_log = []
-
-                # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
-                elements = tree.xpath('//CedentePrestatore//IdCodice')
+                partner_info = buyer_seller_info[partner_role]
+                elements = tree.xpath(partner_info['vat_xpath'])
                 partner = elements and self.env['res.partner'].search(['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if not partner:
-                    elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
+                    elements = tree.xpath(partner_info['codice_fiscale_xpath'])
                     if elements:
                         codice = elements[0].text
                         domains = [[('l10n_it_codice_fiscale', '=', codice)]]
@@ -460,16 +506,16 @@ class AccountEdiFormat(models.Model):
                             domains.append([('l10n_it_codice_fiscale', '=', self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
                         partner = elements and self.env['res.partner'].search(
                             AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
-                if not partner:
+                if incoming and not partner:
                     elements = tree.xpath('//DatiTrasmissione//Email')
                     partner = elements and self.env['res.partner'].search(['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
                 if partner:
                     invoice_form.partner_id = partner
                 else:
                     message_to_log.append("%s<br/>%s" % (
-                        _("Vendor not found, useful informations from XML file:"),
+                        _("Partner not found, useful informations from XML file:"),
                         invoice._compose_info_message(
-                            tree, './/CedentePrestatore')))
+                            tree, partner_info['section_xpath'])))
 
                 # Numbering attributed by the transmitter. <1.1.2>
                 elements = tree.xpath('//ProgressivoInvio')
@@ -661,23 +707,15 @@ class AccountEdiFormat(models.Model):
                             natura_element = element.xpath('.//Natura')
                             invoice_line_form.tax_ids.clear()
                             if percentage is not None:
-                                if natura_element and natura_element[0].text:
-                                    l10n_it_kind_exoneration = natura_element[0].text
-                                    tax = self.env['account.tax'].search([
-                                        ('company_id', '=', invoice_form.company_id.id),
-                                        ('amount_type', '=', 'percent'),
-                                        ('type_tax_use', '=', 'purchase'),
-                                        ('amount', '=', percentage),
-                                        ('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration),
-                                    ], limit=1)
-                                else:
-                                    tax = self.env['account.tax'].search([
-                                        ('company_id', '=', invoice_form.company_id.id),
-                                        ('amount_type', '=', 'percent'),
-                                        ('type_tax_use', '=', 'purchase'),
-                                        ('amount', '=', percentage),
-                                    ], limit=1)
-                                    l10n_it_kind_exoneration = ''
+                                l10n_it_kind_exoneration = natura_element and natura_element[0].text
+                                tax = self.env['account.tax'].search([
+                                    ('company_id', '=', invoice_form.company_id.id),
+                                    ('amount_type', '=', 'percent'),
+                                    ('amount', '=', percentage)]
+                                    + company_info['type_tax_use_domain']
+                                    + ([('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration)] if l10n_it_kind_exoneration else []),
+                                    limit=1
+                                )
 
                                 if tax:
                                     invoice_line_form.tax_ids.add(tax)
