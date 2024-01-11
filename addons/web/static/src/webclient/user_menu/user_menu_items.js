@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component, markup } from "@odoo/owl";
-import { isMacOS } from "@web/core/browser/feature_detection";
+import { isBrowserChrome, isBrowserSafari, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { escape } from "@web/core/utils/strings";
@@ -105,6 +105,19 @@ function odooAccountItem(env) {
     };
 }
 
+function appInstallItem(env) {
+    return {
+        type: "item",
+        id: "app_install",
+        description: _t("Install the app"),
+        callback: () => {
+            console.log("Install the app");
+        },
+        show: () => isBrowserChrome() || isBrowserSafari(),
+        sequence: 65,
+    };
+}
+
 function logOutItem(env) {
     const route = "/web/session/logout";
     return {
@@ -127,4 +140,5 @@ registry
     .add("separator", separator)
     .add("profile", preferencesItem)
     .add("odoo_account", odooAccountItem)
+    .add("app_install", appInstallItem)
     .add("log_out", logOutItem);
