@@ -58,6 +58,14 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
         product_unavailable.removeClass('d-flex').addClass('d-none')
     }
     originalOnChangeCombination.apply(this, [ev, $parent, combination]);
+
+    const $variantsContainer = ev.target.closest('.js_add_cart_variants');
+    if(ev.target.tagName === 'INPUT' && $variantsContainer){
+        $variantsContainer.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+        });
+    }
 };
 
 const originalToggleDisable = VariantMixin._toggleDisable;
