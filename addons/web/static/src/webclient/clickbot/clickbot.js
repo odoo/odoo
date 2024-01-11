@@ -165,7 +165,7 @@ async function waitForCondition(stopCondition) {
  * Make sure the home menu is open (enterprise only)
  */
 async function ensureHomeMenu() {
-    const homeMenu = document.querySelector(".o_home_menu");
+    const homeMenu = document.querySelector("div.o_home_menu");
     if (!homeMenu) {
         let menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle");
         if (!menuToggle) {
@@ -175,7 +175,7 @@ async function ensureHomeMenu() {
             menuToggle = document.querySelector(".o_stock_barcode_menu");
         }
         await triggerClick(menuToggle, "home menu toggle button");
-        await waitForCondition(() => document.querySelector(".o_home_menu"));
+        await waitForCondition(() => document.querySelector("div.o_home_menu"));
     }
 }
 
@@ -246,9 +246,6 @@ async function getNextApp() {
     } else {
         await ensureAppsMenu();
         apps = document.querySelectorAll(".o_navbar_apps_menu .dropdown-item");
-    }
-    if (apps.length === 0) {
-        throw new Error("No app found, it's possible that we are not on the home menu/app menu");
     }
     const app = apps[appIndex];
     appIndex++;
