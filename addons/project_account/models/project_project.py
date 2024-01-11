@@ -11,10 +11,12 @@ class Project(models.Model):
     _inherit = 'project.project'
 
     def _add_purchase_items(self, profitability_items, with_action=True):
+        purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
         domain = [
             ('move_type', 'in', ['in_invoice', 'in_refund']),
             ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0)
+            ('price_subtotal', '>', 0),
+            ('id', 'not in', purchase_order_line_invoice_line_ids),
         ]
         with_action = with_action and self.user_has_groups('account.group_account_invoice, account.group_account_readonly')
         self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
