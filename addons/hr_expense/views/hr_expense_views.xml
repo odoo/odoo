@@ -66,7 +66,7 @@
                            options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="1"/>
-                    <field name="unit_amount_display" string="Unit Price" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                    <field name="unit_amount" string="Unit Price" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id', 'field_digits': True}"/>
                     <field name="quantity" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="amount_tax_company" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
@@ -520,7 +520,8 @@
                             <group string="General Information">
                                 <field name="active" invisible="1"/>
                                 <field name="type" invisible="1"/>
-                                <field name="standard_price" help="When the cost of an expense product is different than 0, then the user using this product won't be able to change the amount of the expense, only the quantity. Use a cost different than 0 for expense categories funded by the company at fixed cost like allowances for mileage, per diem, accommodation or meal."/>
+                                <field name="standard_price"  widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                       help="When the cost of an expense product is different than 0, then the user using this product won't be able to change the amount of the expense, only the quantity. Use a cost different than 0 for expense categories funded by the company at fixed cost like allowances for mileage, per diem, accommodation or meal."/>
                                 <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 <field name="uom_po_id" invisible="1"/>
                                 <label for="default_code"/>
@@ -780,7 +781,7 @@
                                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"/>
                                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
                                     <field name="product_has_cost" invisible="True"/>
-                                    <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'company_currency_id'}"/>
+                                    <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'company_currency_id', 'field_digits': True}"/>
                                     <field name="currency_id" optional="hide" readonly="True"/>
                                     <field name="quantity" optional="hide" attrs="{'readonly': [('product_has_cost', '=', False)]}"/>
                                     <field name="company_id" invisible="1"/>
