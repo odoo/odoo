@@ -46,8 +46,8 @@
                         <field name="resource_id"/>
                     </group>
                     <group name="leave_dates">
-                       <field name="date_from"/>
-                       <field name="date_to"/>
+                       <field name="date_from" string="Dates" widget="daterange" options="{'end_date_field': 'date_to'}"/>
+                       <field name="date_to" invisible="1"/>
                     </group>
                 </group>
             </sheet>
