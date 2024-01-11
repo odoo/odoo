@@ -183,7 +183,7 @@ class ProductProduct(models.Model):
         """ Return the components list ids in case of kit product.
         Return the product itself otherwise"""
         self.ensure_one()
-        bom_kit = self.env['mrp.bom']._bom_find(self, bom_type='phantom')[self]
+        bom_kit = self.env['mrp.bom']._bom_find(self, bom_type='phantom')[(self, False)]
         if bom_kit:
             boms, bom_sub_lines = bom_kit.explode(self, 1)
             return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.is_storable]
@@ -220,7 +220,7 @@ class ProductProduct(models.Model):
         with 'phantom' as BoM type.
         """
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
-        kits = self.filtered(lambda p: bom_kits.get(p))
+        kits = self.filtered(lambda p: bom_kits.get((p, False)))
         regular_products = self - kits
         res = (
             super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
@@ -232,14 +232,14 @@ class ProductProduct(models.Model):
         # pre-compute bom lines and identify missing kit components to prefetch
         bom_sub_lines_per_kit = {}
         prefetch_component_ids = set()
-        for product in bom_kits:
-            __, bom_sub_lines = bom_kits[product].explode(product, 1)
+        for (product, dummy) in bom_kits:
+            __, bom_sub_lines = bom_kits[(product, False)].explode(product, 1)
             bom_sub_lines_per_kit[product] = bom_sub_lines
             for bom_line, __ in bom_sub_lines:
                 if bom_line.product_id.id not in qties:
                     prefetch_component_ids.add(bom_line.product_id.id)
         # compute kit quantities
-        for product in bom_kits:
+        for (product, dummy) in bom_kits:
             bom_sub_lines = bom_sub_lines_per_kit[product]
             # group lines by component
             bom_sub_lines_grouped = collections.defaultdict(list)
@@ -282,12 +282,13 @@ class ProductProduct(models.Model):
                 ratios_outgoing_qty.append(component_res["outgoing_qty"] / qty_per_kit)
                 ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
+                qty = bom_kits[(product, False)].product_qty
                 res[product.id] = {
-                    'virtual_available': min(ratios_virtual_available) * bom_kits[product].product_qty // 1,
-                    'qty_available': min(ratios_qty_available) * bom_kits[product].product_qty // 1,
-                    'incoming_qty': min(ratios_incoming_qty) * bom_kits[product].product_qty // 1,
-                    'outgoing_qty': min(ratios_outgoing_qty) * bom_kits[product].product_qty // 1,
-                    'free_qty': min(ratios_free_qty) * bom_kits[product].product_qty // 1,
+                    'virtual_available': min(ratios_virtual_available) * qty // 1,
+                    'qty_available': min(ratios_qty_available) * qty // 1,
+                    'incoming_qty': min(ratios_incoming_qty) * qty // 1,
+                    'outgoing_qty': min(ratios_outgoing_qty) * qty // 1,
+                    'free_qty': min(ratios_free_qty) * qty // 1,
                 }
             else:
                 res[product.id] = {
@@ -319,8 +320,8 @@ class ProductProduct(models.Model):
     def action_open_quants(self):
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
         components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
-        for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+        for (product, dummy) in bom_kits:
+            _dummy, bom_sub_lines = bom_kits[(product, False)].explode(product, 1)
             components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
         res = super(ProductProduct, components).action_open_quants()
         if bom_kits:

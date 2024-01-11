@@ -14,9 +14,10 @@ class AccountMoveLine(models.Model):
         qties = defaultdict(float)
         res = super()._get_invoiced_qty_per_product()
         invoiced_products = self.env['product.product'].concat(*res.keys())
-        bom_kits = self.env['mrp.bom']._bom_find(invoiced_products, company_id=self.company_id[:1].id, bom_type='phantom')
+        company_id = self.company_id[:1]
+        bom_kits = self.env['mrp.bom']._bom_find(invoiced_products, company_ids=company_id.ids, bom_type='phantom')
         for product, qty in res.items():
-            bom_kit = bom_kits[product]
+            bom_kit = bom_kits[(product, company_id.id)]
             if bom_kit:
                 invoiced_qty = product.uom_id._compute_quantity(qty, bom_kit.product_uom_id, round=False)
                 factor = invoiced_qty / bom_kit.product_qty

@@ -254,7 +254,7 @@ class StockMove(models.Model):
         bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
             self.product_id,
             picking_type=self.picking_type_id,
-            company_id=self.company_id.id,
+            company_ids=self.company_id.ids,
             bom_type='subcontract',
             subcontractor=self.picking_id.partner_id,
         )

@@ -42,7 +42,7 @@ class ProductProduct(models.Model):
 
     def _set_price_from_bom(self, boms_to_recompute=False):
         self.ensure_one()
-        bom = self.env['mrp.bom']._bom_find(self)[self]
+        bom = self.env['mrp.bom']._bom_find(self)[(self, False)]
         if bom:
             self.standard_price = self._compute_bom_price(bom, boms_to_recompute=boms_to_recompute)
         else:
@@ -56,7 +56,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if stock_moves.product_id == self:
             return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_returned)
-        bom = self.env['mrp.bom']._bom_find(self, company_id=stock_moves.company_id.id, bom_type='phantom')[self]
+        bom = self.env['mrp.bom']._bom_find(self, company_ids=stock_moves.company_id.ids, bom_type='phantom')[(self, stock_moves.company_id.id)]
         if not bom:
             return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_returned)
         value = 0
