@@ -9,15 +9,7 @@ from odoo import tools
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    l10n_in_hsn_code = fields.Char(string="HSN/SAC Code", compute="_compute_l10n_in_hsn_code", store=True, readonly=False, copy=False)
-
-    @api.depends('product_id')
-    def _compute_l10n_in_hsn_code(self):
-        indian_lines = self.filtered(lambda line: line.company_id.account_fiscal_country_id.code == 'IN')
-        (self - indian_lines).l10n_in_hsn_code = False
-        for line in indian_lines:
-            if line.product_id:
-                line.l10n_in_hsn_code = line.product_id.l10n_in_hsn_code
+    l10n_in_hsn_code = fields.Char("HSN")
 
     def init(self):
         tools.create_index(self._cr, 'account_move_line_move_product_index', self._table, ['move_id', 'product_id'])
@@ -31,6 +23,7 @@ class AccountMoveLine(models.Model):
         remaining_aml = self - aml
         if remaining_aml:
             return super(AccountMoveLine, remaining_aml)._compute_tax_base_amount()
+
 
 
 class AccountTax(models.Model):
