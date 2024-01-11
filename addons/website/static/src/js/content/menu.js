@@ -37,7 +37,6 @@ const BaseAnimatedHeader = animations.Animation.extend({
     start: function () {
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
-        this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
         this.hiddenOnScrollEl = this.el.querySelector(".o_header_hide_on_scroll");
 
         // While scrolling through navbar menus on medium devices, body should
@@ -252,12 +251,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
 
         if (this.closeOpenedMenus) {
-            // TODO master: make this.$dropdowns the .dropdown-toggle directly.
-            for (const dropdownMenuEl of this.$dropdowns) {
-                Dropdown.getOrCreateInstance(
-                    dropdownMenuEl.closest('.dropdown').querySelector('.dropdown-toggle')
-                ).hide();
-            }
+            // Hide only the open dropdowns.
+            this.el.querySelectorAll(".dropdown-toggle.show").forEach(dropdownToggleEl => {
+                Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
+            });
         }
     },
     /**
@@ -767,6 +764,117 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             return;
         }
         this._hideDropdowns();
+    },
+});
+
+publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
+    selector: "header#top",
+    disabledInEditableMode: false,
+    events: {
+        "mousedown .o_mega_menu_toggle": "_onMegaMenuClick",
+        "mouseenter .o_mega_menu_toggle": "_onMegaMenuHover",
+        "mousedown .o_extra_menu_items": "_onExtraMenuClick",
+        "keyup .o_mega_menu_toggle": "_onMegaMenuClick",
+        "keyup .o_extra_menu_items": "_onExtraMenuClick",
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        const toggleEls = this.el.querySelectorAll(".o_mega_menu_toggle");
+        this.desktopMegaMenuToggleEls = [];
+        this.mobileMegaMenuToggleEls = [];
+        for (const el of toggleEls) {
+            if (el.closest(".o_header_mobile")) {
+                this.mobileMegaMenuToggleEls.push(el);
+            } else {
+                this.desktopMegaMenuToggleEls.push(el);
+            }
+        }
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * If the mega menu dropdown on which we are clicking/hovering does not have
+     * a mega menu (i.e. it is in the other navbar), brings the corresponding
+     * mega menu into it.
+     *
+     * @private
+     * @param {Element} megaMenuToggleEl the clicked/hovered mega menu dropdown
+     */
+    _moveMegaMenu(megaMenuToggleEl) {
+        const hasMegaMenu = !!megaMenuToggleEl.parentElement.querySelector(".o_mega_menu");
+        if (hasMegaMenu) {
+            return;
+        }
+        this.options.wysiwyg?.odooEditor.observerUnactive("moveMegaMenu");
+        const isMobileNavbar = !!megaMenuToggleEl.closest(".o_header_mobile");
+        const currentNavbarToggleEls = isMobileNavbar ?
+            this.mobileMegaMenuToggleEls : this.desktopMegaMenuToggleEls;
+        const otherNavbarToggleEls = isMobileNavbar ?
+            this.desktopMegaMenuToggleEls : this.mobileMegaMenuToggleEls;
+        const megaMenuToggleIndex = currentNavbarToggleEls.indexOf(megaMenuToggleEl);
+        const previousMegaMenuToggleEl = otherNavbarToggleEls[megaMenuToggleIndex];
+        const megaMenuEl = previousMegaMenuToggleEl.parentElement.querySelector(".o_mega_menu");
+        // Hiding the dropdown where the mega menu comes from before moving it,
+        // so everything is in a consistent state.
+        Dropdown.getOrCreateInstance(previousMegaMenuToggleEl).hide();
+        megaMenuToggleEl.insertAdjacentElement("afterend", megaMenuEl);
+        this.options.wysiwyg?.odooEditor.observerActive("moveMegaMenu");
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when a mega menu dropdown is clicked/key pressed.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMegaMenuClick(ev) {
+        const megaMenuToggleEl = ev.currentTarget;
+        // Ignore the event if the menus are hoverable and in desktop view (the
+        // hoverable menus are clicked on mobile view), but not if we used the
+        // keyboard.
+        if (this.el.classList.contains("o_hoverable_dropdown")
+                && !megaMenuToggleEl.closest(".o_header_mobile") && ev.type !== "keyup") {
+            return;
+        }
+        this._moveMegaMenu(megaMenuToggleEl);
+    },
+    /**
+     * Called when a mega menu dropdown is hovered.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMegaMenuHover(ev) {
+        const megaMenuToggleEl = ev.currentTarget;
+        // Ignore the event if the menus are not hoverable or if we are in
+        // mobile view (again, the hoverable menus are clicked on mobile view).
+        if (!this.el.classList.contains("o_hoverable_dropdown")
+                || megaMenuToggleEl.closest(".o_header_mobile") && uiUtils.getSize() <= SIZES.SM) {
+            return;
+        }
+        this._moveMegaMenu(megaMenuToggleEl);
+    },
+    /**
+     * Called when the extra menu (+) dropdown is clicked/key pressed.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onExtraMenuClick(ev) {
+        const megaMenuToggleEls = ev.currentTarget.querySelectorAll(".o_mega_menu_toggle");
+        megaMenuToggleEls.forEach(megaMenuToggleEl => this._moveMegaMenu(megaMenuToggleEl));
     },
 });
 

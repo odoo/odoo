@@ -17,10 +17,12 @@
            data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None">
             <span t-field="submenu.name"/>
         </a>
-        <div t-if="submenu.is_mega_menu"
-             t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
-             data-name="Mega Menu"
-             t-field="submenu.mega_menu_content"/>
+        <t t-if="submenu.is_mega_menu">
+            <div t-if="not is_mobile"
+                 t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
+                 data-name="Mega Menu"
+                 t-field="submenu.mega_menu_content"/>
+        </t>
         <ul t-else="" t-attf-class="dropdown-menu #{dropdown_menu_classes}" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
