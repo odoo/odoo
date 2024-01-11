@@ -125,3 +125,41 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project_profitability_items_empty,
             'No data should be found since the sheets are not approved yet.',
         )
+
+    def test_project_profitability_after_expense_sheet_actions(self):
+        expense = self.env["hr.expense"].create(
+            {
+                "name": "Car Travel Expenses",
+                "employee_id": self.expense_employee.id,
+                "product_id": self.product_c.id,
+                "total_amount": 50.00,
+                "company_id": self.project.company_id.id,
+                "analytic_distribution": {self.project.analytic_account_id.id: 100},
+            }
+        )
+        expense_sheet = self.env["hr.expense.sheet"].create(
+            {
+                "name": "Expense for Jannette",
+                "employee_id": self.expense_employee.id,
+                "expense_line_ids": expense,
+            }
+        )
+
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
+        self.assertIn('expenses', sequence_per_invoice_type)
+        expense_sequence = sequence_per_invoice_type['expenses']
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False),
+            {
+                'costs': {
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency}],
+                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency},
+                },
+                'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
+            },
+        )
