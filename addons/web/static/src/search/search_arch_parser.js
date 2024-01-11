@@ -130,8 +130,8 @@ export class SearchArchParser extends XMLParser {
             preField.fieldType = this.fields[name].type;
             if (name in this.searchDefaults) {
                 preField.isDefault = true;
-                let value = this.searchDefaults[name];
-                value = Array.isArray(value) ? value[0] : value;
+                const val = this.searchDefaults[name];
+                const value = Array.isArray(val) ? val[0] : val;
                 let operator = preField.operator;
                 if (!operator) {
                     let type = preField.fieldType;
@@ -159,9 +159,21 @@ export class SearchArchParser extends XMLParser {
                     preField.defaultAutocompleteValue.label = option[1];
                 } else if (fieldType === "many2one") {
                     this.labels.push((orm) => {
-                        return orm.call(relation, "name_get", [value], { context }).then((results) => {
-                            preField.defaultAutocompleteValue.label = results[0][1];
-                        });
+                        return orm
+                            .call(relation, "name_get", [value], { context })
+                            .then((results) => {
+                                preField.defaultAutocompleteValue.label = results[0][1];
+                            });
+                    });
+                } else if (["many2many", "one2many"].includes(fieldType) && Array.isArray(val) && val.every((v) => Number.isInteger(v) && v >0)) {
+                    preField.defaultAutocompleteValue.operator = "in";
+                    preField.defaultAutocompleteValue.value = val;
+                    this.labels.push((orm) => {
+                        return orm
+                            .call(relation, "name_get", [val], { context })
+                            .then((results) => {
+                                preField.defaultAutocompleteValue.label = `${results.map((r) => r[1] || "''").join(" or ")}`;
+                            });
                     });
                 }
             }
