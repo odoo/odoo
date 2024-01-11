@@ -1191,9 +1191,14 @@ class PosOrder(models.Model):
 
     @api.model
     def export_for_ui_shared_order(self, config_id):
+        orders = self._get_shared_orders(config_id)
+        return orders.export_for_ui()
+
+    @api.model
+    def _get_shared_orders(self, config_id):
         config = self.env['pos.config'].browse(config_id)
         orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', config_id), ('config_id', 'in', config.trusted_config_ids.ids)])
-        return orders.export_for_ui()
+        return orders
 
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
