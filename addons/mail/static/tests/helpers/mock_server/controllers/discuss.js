@@ -99,8 +99,8 @@ patch(MockServer.prototype, {
             }
             return args;
         }
-        if (route === "/mail/load_message_failures") {
-            return this._mockRouteMailLoadMessageFailures();
+        if (route === "/mail/data") {
+            return this._mockRouteMailData(args);
         }
         if (route === "/mail/message/post") {
             const finalData = {};
@@ -314,36 +314,42 @@ patch(MockServer.prototype, {
         this._mockDiscussChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
     /**
-     * Simulates the `/mail/load_message_failures` route.
+     * Simulates the `/mail/date` route.
      *
      * @private
      * @returns {Object[]}
      */
-    _mockRouteMailLoadMessageFailures() {
-        const partner = this.getRecords("res.partner", [["id", "=", this.pyEnv.currentPartnerId]], {
-            active_test: false,
-        })[0];
-        const messages = this.getRecords("mail.message", [
-            ["author_id", "=", partner.id],
-            ["res_id", "!=", 0],
-            ["model", "!=", false],
-            ["message_type", "!=", "user_notification"],
-        ]).filter((message) => {
-            // Purpose is to simulate the following domain on mail.message:
-            // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-            // But it's not supported by getRecords domain to follow a relation.
-            const notifications = this.getRecords("mail.notification", [
-                ["mail_message_id", "=", message.id],
-                ["notification_status", "in", ["bounce", "exception"]],
-            ]);
-            return notifications.length > 0;
-        });
-        messages.length = Math.min(messages.length, 100);
-        return {
-            Message: this._mockMailMessage_MessageNotificationFormat(
+    _mockRouteMailData(failures = false) {
+        const res = {};
+        if (failures && this.pyEnv.currentPartnerId) {
+            const partner = this.getRecords(
+                "res.partner",
+                [["id", "=", this.pyEnv.currentPartnerId]],
+                {
+                    active_test: false,
+                }
+            )[0];
+            const messages = this.getRecords("mail.message", [
+                ["author_id", "=", partner.id],
+                ["res_id", "!=", 0],
+                ["model", "!=", false],
+                ["message_type", "!=", "user_notification"],
+            ]).filter((message) => {
+                // Purpose is to simulate the following domain on mail.message:
+                // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
+                // But it's not supported by getRecords domain to follow a relation.
+                const notifications = this.getRecords("mail.notification", [
+                    ["mail_message_id", "=", message.id],
+                    ["notification_status", "in", ["bounce", "exception"]],
+                ]);
+                return notifications.length > 0;
+            });
+            messages.length = Math.min(messages.length, 100);
+            res.Message = this._mockMailMessage_MessageNotificationFormat(
                 messages.map((message) => message.id)
-            ),
-        };
+            );
+        }
+        return res;
     },
     /**
      * Simulates `/mail/link_preview` route.

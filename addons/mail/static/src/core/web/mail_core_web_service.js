@@ -21,7 +21,7 @@ export class MailCoreWeb {
 
     setup() {
         this.messagingService.isReady.then(() => {
-            rpc("/mail/load_message_failures", {}, { silent: true }).then((data) => {
+            rpc("/mail/data", { failures: true }, { silent: true }).then((data) => {
                 this.store.insert(data, { html: true });
             });
             this.busService.subscribe("mail.activity/updated", (payload) => {

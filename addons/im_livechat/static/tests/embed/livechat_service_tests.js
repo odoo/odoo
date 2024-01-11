@@ -58,13 +58,13 @@ QUnit.test("previous operator prioritized", async () => {
 });
 
 QUnit.test("Only necessary requests are made when creating a new chat", async () => {
-    await startServer();
-    await loadDefaultConfig();
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultConfig();
     const linkPreviewDeferred = new Deferred();
     await start({
-        mockRPC(route) {
+        mockRPC(route, args) {
             if (!route.includes("assets")) {
-                step(route);
+                step(`${route} - ${JSON.stringify(args)}`);
             }
             if (route === "/mail/link_preview") {
                 linkPreviewDeferred.resolve();
@@ -73,23 +73,50 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
     });
     await contains(".o-livechat-LivechatButton");
     await assertSteps([
-        "/im_livechat/init",
-        "/web/webclient/load_menus", // called because menu_service is loaded in qunit bundle
-        "/mail/load_message_failures", // called because mail/core/web is loaded in qunit bundle
+        `/im_livechat/init - {"channel_id":${livechatChannelId}}`,
+        '/web/webclient/load_menus - {"hash":"161803"}', // called because menu_service is loaded in qunit bundle
+        '/mail/data - {"failures":true}', // called because mail/core/web is loaded in qunit bundle
     ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
-    await assertSteps(["/im_livechat/get_session"]);
+    await assertSteps([
+        `/im_livechat/get_session - ${JSON.stringify({
+            channel_id: livechatChannelId,
+            anonymous_name: "Visitor",
+            persisted: false,
+        })}`,
+    ]);
     await insertText(".o-mail-Composer-input", "Hello!");
     await assertSteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
     await linkPreviewDeferred;
+    const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
+    const [messageId] = pyEnv["mail.message"].search([["body", "=", "Hello!"]]);
     await assertSteps([
-        "/im_livechat/get_session",
+        `/im_livechat/get_session - ${JSON.stringify({
+            channel_id: livechatChannelId,
+            anonymous_name: "Visitor",
+            previous_operator_id: `${pyEnv.adminPartnerId}`,
+            temporary_id: -1,
+            persisted: true,
+        })}`,
         "/discuss/channel/fold",
-        "/mail/init_messaging",
-        "/mail/message/post",
-        "/mail/link_preview",
+        '/mail/init_messaging - {"context":{"is_for_livechat":true}}',
+        `/mail/message/post - ${JSON.stringify({
+            context: { lang: "en", tz: "taht", uid: 7, temporary_id: 0.81 },
+            post_data: {
+                body: "Hello!",
+                attachment_ids: [],
+                attachment_tokens: [],
+                canned_response_ids: [],
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+                partner_emails: [],
+            },
+            thread_id: threadId,
+            thread_model: "discuss.channel",
+        })}`,
+        `/mail/link_preview - {"message_id":${messageId}}`,
     ]);
 });
