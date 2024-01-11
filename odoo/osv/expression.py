@@ -123,6 +123,7 @@ from datetime import date, datetime, time
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
+from odoo.modules.db import FunctionStatus
 from ..models import BaseModel
 from odoo.tools import pycompat, Query, _generate_table_alias, sql
 
@@ -406,7 +407,7 @@ def _unaccent_wrapper(x):
     return 'unaccent({})'.format(x)
 
 def get_unaccent_wrapper(cr):
-    if odoo.registry(cr.dbname).has_unaccent:
+    if odoo.registry(cr.dbname).has_unaccent == FunctionStatus.INDEXABLE:
         return _unaccent_wrapper
     return lambda x: x
 
