@@ -71,3 +71,16 @@ class StockScrap(models.Model):
 
     def _should_check_available_qty(self):
         return super()._should_check_available_qty() or self.product_is_kit
+
+    def do_replenish(self, values=False):
+        self.ensure_one()
+        values = values or {}
+        if self.production_id and self.production_id.procurement_group_id:
+            values.update({
+                'group_id': self.production_id.procurement_group_id,
+                'move_dest_ids': self.production_id.procurement_group_id.stock_move_ids.filtered(
+                    lambda m: m.location_id == self.location_id
+                              and m.product_id == self.product_id
+                              and m.state not in ('assigned', 'done', 'cancel'))
+            })
+        super().do_replenish(values)
