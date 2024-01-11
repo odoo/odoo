@@ -63,13 +63,13 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).action_post()
         down_payment_lines = self.line_ids.filtered('is_downpayment')
         for line in down_payment_lines:
+            if not any(sol.display_type for sol in line.sale_line_ids):
+                line.sale_line_ids._compute_name()
+
             if any(order.locked for order in line.sale_line_ids.order_id):
                 # We cannot change lines content on locked SO, changes on invoices are not
                 # forwarded to the SO if the SO is locked.
                 continue
-
-            if not line.sale_line_ids.display_type:
-                line.sale_line_ids._compute_name()
 
             line.sale_line_ids.tax_id = line.tax_ids
             line.sale_line_ids.price_unit = line.price_unit
