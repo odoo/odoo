@@ -98,3 +98,17 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
         Utils.checkIsDisabledBtn("Order"),
     ],
 });
+
+registry.category("web_tour.tours").add("self_simple_order", {
+    test: true,
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Close"),
+        Utils.checkIsNoBtn("My Order"),
+    ],
+});

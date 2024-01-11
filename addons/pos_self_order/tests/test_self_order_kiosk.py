@@ -32,3 +32,15 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
         # Cancel behavior
         self.start_tour(self_route, "self_order_kiosk_cancel")
+
+    def test_duplicate_order_kiosk(self):
+        self.pos_config.write({
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_simple_order")
+        orders = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(orders.export_for_ui_shared_order(self.pos_config.id)), 1)
