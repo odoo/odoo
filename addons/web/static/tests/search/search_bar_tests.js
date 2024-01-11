@@ -998,7 +998,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), [["company", "=", 5]]);
     });
 
-    QUnit.test("should wait label promises for one2many search defaults", async function (assert) {
+    QUnit.test("should wait label promises for many2one search defaults", async function (assert) {
         assert.expect(3);
 
         const target = getFixture();
@@ -1027,5 +1027,48 @@ QUnit.module("Search", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_control_panel");
         assert.strictEqual(getFacetTexts(target)[0].replace("\n", ""), "CompanyFirst record");
+    });
+
+    QUnit.test("should wait label promises for many2many search defaults", async function (assert) {
+        serverData.models.partner.fields.m2m = {
+            string: "M2M",
+            type: "many2many",
+            relation: "partner",
+        };
+
+        const target = getFixture();
+
+        const def = makeDeferred();
+        const mockRPC = async (_, args) => {
+            if (args.method === "name_get") {
+                await def;
+            }
+        };
+
+        makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <field name="m2m"/>
+                    </search>
+                `,
+            context: { search_default_m2m: [1, 2] },
+        });
+
+        await nextTick();
+        assert.containsNone(target, ".o_control_panel");
+
+        def.resolve();
+        await nextTick();
+        assert.containsOnce(target, ".o_control_panel");
+        assert.strictEqual(
+            getFacetTexts(target)[0].replace("\n", ""),
+            "M2MFirst record or Second record"
+        );
     });
 });
