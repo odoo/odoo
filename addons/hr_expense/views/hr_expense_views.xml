@@ -69,7 +69,7 @@
                            readonly="not is_editable"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="True"/>
                     <field name="price_unit" string="Unit Price" optional="hide" widget="monetary"
-                           options="{'currency_field': 'company_currency_id'}" readonly="True"/>
+                           options="{'currency_field': 'company_currency_id', 'field_digits': True}" readonly="True"/>
                     <field name="quantity" optional="hide" readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"
                            groups="account.group_account_invoice,account.group_account_readonly"
@@ -903,7 +903,7 @@
                                            optional="show"
                                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"/>
                                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
-                                    <field name="price_unit" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                                    <field name="price_unit" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id', 'field_digits': True}"/>
                                     <field name="currency_id" optional="hide" readonly="True" groups="base.group_multi_currency"/>
                                     <field name="quantity" optional="hide" readonly="not product_has_cost"/>
                                     <field name="tax_ids" string="Taxes" optional="show" widget="many2many_tags"
