@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import wTourUtils from '@website/js/tours/tour_utils';
+import { registry } from "@web/core/registry";
 
 // TODO: This part should be moved in a QUnit test
 const checkKanbanGroupBy = [{
@@ -107,3 +108,43 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
         run: () => null,
     },
 ]);
+
+wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
+    test: true,
+    url: '/',
+}, () => [...wTourUtils.switchWebsite(2, 'My Website 2'), {
+    content: "Click on Site",
+    trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
+}, {
+    content: "Click on Pages",
+    trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
+}, {
+    content: "Check that the homepage is the one of My Website 2",
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
+             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+    run: () => null, // it's a check
+}, {
+	content: "Click on the search options",
+	trigger: ".o_searchview_dropdown_toggler",
+}, {
+	content: "Check that the selected website is My Website 2",
+	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+    run: () => null, // it's a check
+}]);
+
+registry.category("web_tour.tours").add('website_page_manager_direct_access', {
+    test: true,
+    url: '/web#action=website.action_website_pages_list',
+    steps: () => [{
+    content: "Check that the homepage is the one of My Website 2",
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
+             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+    run: () => null, // it's a check
+}, {
+	content: "Click on the search options",
+	trigger: ".o_searchview_dropdown_toggler",
+}, {
+	content: "Check that the selected website is My Website 2",
+	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+    run: () => null, // it's a check
+}]});
