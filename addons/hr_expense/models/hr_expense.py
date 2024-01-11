@@ -71,7 +71,7 @@ class HrExpense(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
     unit_amount = fields.Float("Unit Price", compute='_compute_unit_amount', store=True, required=True, copy=True,
         states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'approved': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Price')
-    unit_amount_display = fields.Float("Unit Price Display", compute='_compute_unit_amount_display')
+    unit_amount_display = fields.Float("Unit Price Display", compute='_compute_unit_amount_display', digits='Product Price')
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'approved': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
@@ -256,12 +256,14 @@ class HrExpense(models.Model):
     @api.depends('product_id', 'company_id')
     def _compute_unit_amount(self):
         for expense in self:
-            if not expense.product_id or not expense.product_has_cost or expense.attachment_number or (not expense.attachment_number and expense.unit_amount):
+            product = expense.product_id
+            if not product or not expense.product_has_cost or expense.attachment_number or (not expense.attachment_number and expense.unit_amount):
                 continue
-            expense.unit_amount = expense.product_id.price_compute(
+            expense.unit_amount = product.price_compute(
                 'standard_price',
                 uom=expense.product_uom_id,
-                currency=expense.currency_id)[expense.product_id.id]
+                company=expense.company_id
+            )[product.id]
 
     @api.depends('unit_amount', 'total_amount_company', 'product_has_cost')
     def _compute_unit_amount_display(self):
