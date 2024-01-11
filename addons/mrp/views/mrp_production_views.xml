@@ -157,7 +157,6 @@
                     <button name="action_toggle_is_locked" invisible="not show_lock or not is_locked" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock to adjust component demand during production, or consumed quantities once the manufacturing order is done." data-hotkey="l"/>
                     <button name="action_toggle_is_locked" invisible="not show_lock or is_locked" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced." data-hotkey="l"/>
                     <field name="show_serial_mass_produce" invisible="1"/>
-                    <button name="action_serial_mass_produce_wizard" invisible="not show_serial_mass_produce" string="Mass Produce" type="object"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel') or confirm_cancel"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"

@@ -196,7 +196,7 @@ class StockGenerateCommon(TransactionCase):
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
             default_next_serial_number='code-xxx',
-        ))
+        ), view='stock.view_assign_serial_numbers')
 
         form_wizard.next_serial_count = 0
         # Must raise an exception because `next_serial_count` must be greater than 0.
@@ -218,7 +218,7 @@ class StockGenerateCommon(TransactionCase):
         move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
-        ))
+        ), view='stock.view_assign_serial_numbers')
         # First assignment
         form_wizard.next_serial_count = 3
         form_wizard.next_serial_number = '001'
@@ -267,7 +267,7 @@ class StockGenerateCommon(TransactionCase):
         move = self.get_new_move(nbre_of_lines)
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
-        ))
+        ), view='stock.view_assign_serial_numbers')
         form_wizard.next_serial_count = nbre_of_lines
         form_wizard.next_serial_number = '001'
         wiz = form_wizard.save()
@@ -293,7 +293,7 @@ class StockGenerateCommon(TransactionCase):
         move._do_unreserve()
         form_wizard = Form(self.env['stock.assign.serial'].with_context(
             default_move_id=move.id,
-        ))
+        ), view='stock.view_assign_serial_numbers')
         form_wizard.next_serial_count = nbre_of_lines
         form_wizard.next_serial_number = '001'
         wiz = form_wizard.save()
@@ -367,7 +367,7 @@ class StockGenerateCommon(TransactionCase):
             default_move_id=move.id,
             default_next_serial_number='001',
             default_next_serial_count=4,
-        ))
+        ), view='stock.view_assign_serial_numbers')
         wiz = form_wizard.save()
         wiz.generate_serial_numbers()
 

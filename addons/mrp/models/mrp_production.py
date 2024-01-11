@@ -1919,19 +1919,20 @@ class MrpProduction(models.Model):
         # reserve new backorder moves depending on the picking type
         self.env['stock.move'].browse(assigned_moves).write({'state': 'assigned'})
         self.env['stock.move'].browse(partially_assigned_moves).write({'state': 'partially_available'})
-        move_to_assign = move_to_assign.filtered(
-            lambda move: move.state in ('confirmed', 'partially_available')
-            and (move._should_bypass_reservation()
-                or move.picking_type_id.reservation_method == 'at_confirm'
-                or (move.reservation_date and move.reservation_date <= fields.Date.today())))
-        move_to_assign._action_assign()
-
+        if not self._context.get('sml_create'):
+            move_to_assign = move_to_assign.filtered(
+                lambda move: move.state in ('confirmed', 'partially_available')
+                and (move._should_bypass_reservation()
+                    or move.picking_type_id.reservation_method == 'at_confirm'
+                    or (move.reservation_date and move.reservation_date <= fields.Date.today())))
+            move_to_assign._action_assign()
         # Avoid triggering a useless _recompute_state
         self.env['stock.move.line'].browse(move_lines_to_unlink).write({'move_id': False})
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
         self.env['stock.move.line'].create(move_lines_vals)
 
-        moves_to_consume.write({'picked': True})
+        if not self._context.get('sml_create'):
+            moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
         for production in self:
@@ -1964,6 +1965,12 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
+        for production in self:
+            if production.show_serial_mass_produce and production.state == 'confirmed':
+                return production.action_serial_mass_produce_wizard()
+
+        self._button_mark_done_sanity_checks()
+
         res = self.pre_button_mark_done()
         if res is not True:
             return res
@@ -2215,10 +2222,6 @@ class MrpProduction(models.Model):
     def action_serial_mass_produce_wizard(self, mark_as_done=False):
         self.ensure_one()
         self._check_company()
-        if self.state not in ['confirmed', 'progress', 'to_close']:
-            return
-        if self.product_id.tracking != 'serial':
-            return
         if self.state == 'confirmed' and self.reservation_state != 'assigned':
             missing_components = {move.product_id for move in self.move_raw_ids if float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0}
             message = _("Make sure enough quantities of these components are reserved to do the production:\n")
@@ -2235,6 +2238,12 @@ class MrpProduction(models.Model):
             lot_components.setdefault(move.product_id, set()).update(lot_ids)
         multiple_lot_components = set([p for p, l in lot_components.items() if len(l) != 1])
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
+
+        tracking_product_ids = (self.product_id + self.move_raw_ids.product_id).filtered(lambda p: p.tracking != 'none')
+        list_of_component = "<strong>" + ",".join(tracking_product_ids.mapped('name')) + "</strong>"
+        if self.move_raw_ids.product_id.filtered(lambda p: p.tracking == 'lot'):
+            list_of_component += "<br>To force a specifc quantity for a lot, use a semi-column: LOT001;3<br>To pick a component from multiple lots, use a pipe LOT1;2|LOT2;8"
+
         action['context'] = {
             'default_production_id': self.id,
             'default_expected_qty': self.product_qty,
@@ -2242,6 +2251,7 @@ class MrpProduction(models.Model):
             'default_next_serial_count': self.product_qty - self.qty_produced,
             'default_multiple_lot_components_names': ",".join(c.display_name for c in multiple_lot_components) if multiple_lot_components else None,
             'default_mark_as_done': mark_as_done,
+            'default_list_of_component': list_of_component,
         }
         return action
 
@@ -2762,3 +2772,11 @@ class MrpProduction(models.Model):
                 'context': {'default_production_ids': self.ids},
             }
         return self.action_open_label_layout()
+    def get_placeholder_value(self):
+        if self.product_id.tracking == 'serial':
+            placeholder_value = "SN123,LOT001;3|LOT002;3,SN0120\nSN456,LOT002;3|LOT002;3,SN0121"
+        elif self.product_id.tracking == 'lot':
+            placeholder_value = "LOT123,5,LOT001;3|LOT002;3,SN0120\nLOT124,5,LOT002;3|LOT002;3,SN0121"
+        else:
+            placeholder_value = ""
+        return placeholder_value
