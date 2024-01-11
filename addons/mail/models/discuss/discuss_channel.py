@@ -1155,11 +1155,6 @@ class Channel(models.Model):
             'name': channel.name,
         } for channel in channels]
 
-    def channel_fetch_preview(self):
-        """ Return the last message of the given channels """
-        return {"Message": self._get_last_messages().message_format()}
-
-
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
         if not self:
@@ -1170,6 +1165,7 @@ class Channel(models.Model):
             FROM mail_message
             WHERE model = 'discuss.channel' AND res_id IN %s
             GROUP BY res_id
+            ORDER BY res_id ASC
             """, (tuple(self.ids),))
         message_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env["mail.message"].browse(message_ids)

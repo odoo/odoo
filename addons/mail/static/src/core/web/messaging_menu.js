@@ -38,7 +38,6 @@ export class MessagingMenu extends Component {
     }
 
     async beforeOpen() {
-        this.threadService.fetchPreviews();
         if (
             !this.store.discuss.inbox.isLoaded &&
             this.store.discuss.inbox.status !== "loading" &&
