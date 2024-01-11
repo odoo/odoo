@@ -42,7 +42,10 @@ QUnit.test("sanity check", async () => {
     });
     await assertSteps(["/mail/init_messaging - {}", '/mail/data - {"failures":true}']);
     await openDiscuss();
-    await assertSteps(["/discuss/channels - {}", '/mail/inbox/messages - {"limit":30}']);
+    await assertSteps([
+        '/mail/data - {"channels_as_member":true}',
+        '/mail/inbox/messages - {"limit":30}',
+    ]);
     await contains(".o-mail-DiscussSidebar");
     await contains("h4", { text: "Your inbox is empty" });
 });
