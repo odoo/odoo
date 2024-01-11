@@ -1844,7 +1844,7 @@ class IrModelConstraint(models.Model):
                             write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
             cr.execute(query, (self.env.uid, type, definition, Json({'en_US': message}), cons_id))
-            return self.browse(cons_id)
+        return self.browse(cons_id)
 
     def _reflect_constraints(self, model_names):
         """ Reflect the SQL constraints of the given models. """
