@@ -143,8 +143,11 @@ def handle_demo(func, self, *args, **kwargs):
     """
     def get_demo_mode_account_edi_proxy_client_user(self, args, kwargs):
         if self.id:
-            return self.edi_mode == 'demo'
-        return self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
+            return self.edi_mode == 'demo' and self.proxy_type == 'peppol'
+        demo_param = self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
+        if len(args) > 1 and 'proxy_type' in args[1]:
+            return demo_param and args[1]['proxy_type'] == 'peppol'
+        return demo_param
 
     def get_demo_mode_res_config_settings(self, args, kwargs):
         if self.account_peppol_edi_user:
@@ -155,7 +158,7 @@ def handle_demo(func, self, *args, **kwargs):
         peppol_user = self.env.company.account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
         if peppol_user:
             return peppol_user.edi_mode == 'demo'
-        return self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
+        return False
 
     get_demo_mode = {
         'account_edi_proxy_client.user': get_demo_mode_account_edi_proxy_client_user,
