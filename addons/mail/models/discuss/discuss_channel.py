@@ -556,8 +556,6 @@ class Channel(models.Model):
         ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)
         self.env["bus.bus"].sudo()._sendmany(bus_notifications)
-        if self.is_chat or self.channel_type == "group":
-            self._notify_thread_by_web_push(message, rdata, msg_vals, **kwargs)
         return rdata
 
     def _message_receive_bounce(self, email, partner):
