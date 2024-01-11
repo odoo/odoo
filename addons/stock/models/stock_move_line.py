@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter, defaultdict
+from operator import itemgetter
 
 from odoo import _, api, fields, tools, models
 from odoo.exceptions import UserError, ValidationError
@@ -588,31 +589,36 @@ class StockMoveLine(models.Model):
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
-        for ml in mls_todo:
-            if ml.product_id.type == 'product':
-                rounding = ml.product_uom_id.rounding
+        key = itemgetter('product_id', 'location_id', 'location_dest_id', 'lot_id', 'package_id', 'result_package_id', 'owner_id', 'product_uom_id')
+        for (product_id, location_id, location_dest_id, lot_id, package_id, result_package_id, owner_id, uom_id), move_lines_list in groupby(mls_todo, key=key):
+            mls = self.env['stock.move.line'].concat(*move_lines_list)
+            rounding = uom_id.rounding
+            if product_id.type == 'product':
+                mls_no_bypass = mls.filtered(lambda ml: not ml.move_id._should_bypass_reservation(location_id))
+                for ml in mls_no_bypass:
+                    # if this move line is force assigned, unreserve elsewhere if needed
+                    if float_compare(ml.qty_done, ml.reserved_uom_qty, precision_rounding=rounding) > 0:
+                        qty_done_product_uom = uom_id._compute_quantity(ml.qty_done, product_id.uom_id, rounding_method='HALF-UP')
+                        extra_qty = qty_done_product_uom - ml.reserved_qty
+                        ml._free_reservation(product_id, location_id, extra_qty, lot_id=lot_id, package_id=package_id, owner_id=owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
 
-                # if this move line is force assigned, unreserve elsewhere if needed
-                if not ml.move_id._should_bypass_reservation(ml.location_id) and float_compare(ml.qty_done, ml.reserved_uom_qty, precision_rounding=rounding) > 0:
-                    qty_done_product_uom = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id, rounding_method='HALF-UP')
-                    extra_qty = qty_done_product_uom - ml.reserved_qty
-                    ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
                 # unreserve what's been reserved
-                if not ml.move_id._should_bypass_reservation(ml.location_id) and ml.product_id.type == 'product' and ml.reserved_qty:
-                    Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                reserved_move_line_ids = mls_no_bypass.filtered(lambda ml: ml.reserved_qty)
+                if reserved_move_line_ids:
+                    Quant._update_reserved_quantity(product_id, location_id, -sum(reserved_move_line_ids.mapped('reserved_qty')), lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
 
                 # move what's been actually done
-                quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
-                available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
-                if available_qty < 0 and ml.lot_id:
+                quantity = uom_id._compute_quantity(sum(mls.mapped('qty_done')), product_id.uom_id, rounding_method='HALF-UP')
+                available_qty, in_date = Quant._update_available_quantity(product_id, location_id, -quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
+                if available_qty < 0 and lot_id:
                     # see if we can compensate the negative quants with some untracked quants
-                    untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    untracked_qty = Quant._get_available_quantity(product_id, location_id, lot_id=False, package_id=package_id, owner_id=owner_id, strict=True)
                     if untracked_qty:
                         taken_from_untracked_qty = min(untracked_qty, abs(quantity))
-                        Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
-                        Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
-                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
-            ml_ids_to_ignore.add(ml.id)
+                        Quant._update_available_quantity(product_id, location_id, -taken_from_untracked_qty, lot_id=False, package_id=package_id, owner_id=owner_id)
+                        Quant._update_available_quantity(product_id, location_id, taken_from_untracked_qty, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
+                Quant._update_available_quantity(product_id, location_dest_id, quantity, lot_id=lot_id, package_id=result_package_id, owner_id=owner_id, in_date=in_date)
+            ml_ids_to_ignore |= ml.ids
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.with_context(bypass_reservation_update=True).write({
             'reserved_uom_qty': 0.00,
