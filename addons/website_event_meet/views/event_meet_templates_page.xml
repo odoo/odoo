@@ -12,7 +12,7 @@
             <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
-                <div t-att-class="'row %s mb-5 mx-0' % ('justify-content-center' if not meeting_rooms_other else 'flex-column-reverse flex-md-row')">
+                <div t-att-class="'row %s mb-5 mx-0' % ('justify-content-center' if not meeting_rooms_other else 'flex-column-reverse flex-lg-row')">
                     <t t-call="website_event_meet.meeting_room_main"/>
                     <t t-if="meeting_rooms_other">
                         <t t-call="website_event_meet.meeting_room_aside"/>
@@ -103,29 +103,26 @@
 <template id="meeting_room_aside" name="Meeting Room: Aside">
     <div t-att-class="'o_wevent_online_page_aside col-12 mt-3 ps-0 pe-0 %s' % ('col-lg-3 col-xl-2' if option_widescreen else 'col-lg-4 col-xl-3')">
         <div class="o_wevent_online_page_aside_content">
-            <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="o_wevent_online_page_aside_collapse collapsed d-flex align-items-center justify-content-between d-md-none border p-2 text-decoration-none text-reset">
-                <h5 class="m-3">Other Rooms</h5> 
+            <a href="#collapse_meet_room_aside" data-bs-toggle="collapse" class="o_wevent_online_page_aside_collapse collapsed d-flex align-items-center justify-content-between d-lg-none border p-2 text-decoration-none text-reset">
+                <p class="mb-0">Other Rooms</p> 
                 <i class="oi oi-chevron-down d-lg-none"/>
             </a>
-            <ul id="collapse_meet_room_aside" class="list-group list-group-flush collapse d-md-block border mx-md-3">
-                <li class="list-group-item list-group-item-action" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
+            <div id="collapse_meet_room_aside" class="list-group collapse d-lg-block mx-lg-3">
+                <div class="list-group-item list-group-item-action" t-foreach="meeting_rooms_other" t-as="meeting_room_other">
                     <a class="text-decoration-none text-dark"
                         t-att-href="'/event/%s/meeting_room/%s' % (slug(event), slug(meeting_room_other))">
                         <div class="flex-grow-1 mw-100">
-                            <div class="text-truncate fw-bold" t-out="meeting_room_other.name"/>
-                            <span class="text-muted" t-out="meeting_room_other.summary"></span>
-                            <div class="d-flex flex-column flex-xl-row flex-wrap justify-content-between align-items-start align-items-xl-center">
-                                <p class="d-flex justify-content-between align-items-center gap-2 m-0 text-muted small">
-                                    <i class="fa fa-user"></i>
-                                    <t t-out="meeting_room_other.room_participant_count"/>
-                                    <t t-out="meeting_room_other.target_audience"/>
-                                </p>
-                                <small t-if="meeting_room_other.room_lang_id" class="badge text-bg-secondary"> <t t-out="meeting_room_other.room_lang_id.name"/></small>
-                            </div>
+                            <div class="fw-bold" t-out="meeting_room_other.name"/>
+                            <p class="d-flex align-items-center gap-2 m-0 text-muted small">
+                                <i class="fa fa-user"></i>
+                                <t t-out="meeting_room_other.room_participant_count"/>
+                                <t t-out="meeting_room_other.target_audience"/>
+                            </p>
+                            <small t-if="meeting_room_other.room_lang_id" class="badge text-bg-secondary"> <t t-out="meeting_room_other.room_lang_id.name"/></small>
                         </div>
                     </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 </template>
