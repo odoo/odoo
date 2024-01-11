@@ -34,6 +34,7 @@
         ],
         'web.qunit_suite_tests': [
             'project_todo/static/tests/helpers/**/*',
+            'project_todo/static/tests/**/*',
         ],
     },
     'license': 'LGPL-3',
