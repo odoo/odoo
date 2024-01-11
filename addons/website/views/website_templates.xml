@@ -17,7 +17,19 @@
            data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None">
             <span t-field="submenu.name"/>
         </a>
-        <div t-if="submenu.is_mega_menu"
+        <div t-if="submenu.is_mega_menu and not is_mobile"
+             t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
+             data-name="Mega Menu"
+             t-field="submenu.mega_menu_content"/>
+        <!--
+            TODO remove the next two if elements in master, this was made to not
+            have to change the "else" element in stable and prevent xpath fails
+            on the existing elements.
+            -> The first one render nothing (case submenu.is_mega_menu and is_mobile)
+            -> The second one is never considered (t-elif evaluated first)
+        -->
+        <t t-elif="submenu.is_mega_menu"/>
+        <div t-if="submenu.is_mega_menu" t-elif="False"
              t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
              data-name="Mega Menu"
              t-field="submenu.mega_menu_content"/>
