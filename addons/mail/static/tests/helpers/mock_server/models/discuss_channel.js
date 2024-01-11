@@ -55,10 +55,6 @@ patch(MockServer.prototype, {
             const ids = args.args[0];
             return this._mockDiscussChannelChannelFetched(ids);
         }
-        if (args.model === "discuss.channel" && args.method === "channel_fetch_preview") {
-            const ids = args.args[0];
-            return this._mockDiscussChannelChannelFetchPreview(ids);
-        }
         if (args.model === "discuss.channel" && args.method === "channel_create") {
             const name = args.args[0];
             const groupId = args.args[1];
@@ -452,35 +448,6 @@ patch(MockServer.prototype, {
                 partner_id: this.pyEnv.currentPartnerId,
             });
         }
-    },
-    /**
-     * Simulates `channel_fetch_preview` on `discuss.channel`.
-     *
-     * @private
-     * @param {integer[]} ids
-     * @returns {Object[]} list of channels previews
-     */
-    _mockDiscussChannelChannelFetchPreview(ids) {
-        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
-        return {
-            Message: channels
-                .map((channel) => {
-                    const channelMessages = this.getRecords("mail.message", [
-                        ["model", "=", "discuss.channel"],
-                        ["res_id", "=", channel.id],
-                    ]);
-                    const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                        if (message.id > lastMessage.id) {
-                            return message;
-                        }
-                        return lastMessage;
-                    }, channelMessages[0]);
-                    return lastMessage
-                        ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
-                        : false;
-                })
-                .filter((lastMessage) => lastMessage),
-        };
     },
     /**
      * Simulates 'channel_create' on 'discuss.channel'.

@@ -10,7 +10,6 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { memoize } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
 
 const FETCH_LIMIT = 30;
@@ -301,26 +300,6 @@ export class ThreadService {
             this._enrichMessagesWithTransient(thread);
         }
     }
-
-    // This function is like fetchNewMessages but just for a single message at most on all pinned threads
-    fetchPreviews = memoize(async () => {
-        const ids = [];
-        for (const thread of Object.values(this.store.Thread.records)) {
-            if (["channel", "group", "chat"].includes(thread.type)) {
-                ids.push(thread.id);
-            }
-        }
-        if (ids.length) {
-            /** @type {{ Message: Object[] }} */
-            const data = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
-            const { Message: messages } = this.store.insert(data, { html: true });
-            for (const message of messages) {
-                if (message.isNeedaction) {
-                    message.originThread.needactionMessages.add(message);
-                }
-            }
-        }
-    });
 
     /**
      * @param {import("models").Thread} thread

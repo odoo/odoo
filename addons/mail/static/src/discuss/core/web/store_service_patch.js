@@ -21,8 +21,16 @@ const StorePatch = {
         this.fetchChannelsState = "fetching";
         this.fetchChannelsDeferred = new Deferred();
         rpc("/discuss/channels").then(
+            /**
+             * @param {{ Message: Object[], Thread: Object[] }} data
+             */
             (data) => {
-                this.insert(data);
+                const { Message: messages } = this.insert(data, { html: true });
+                for (const message of messages) {
+                    if (message.isNeedaction) {
+                        message.originThread.needactionMessages.add(message);
+                    }
+                }
                 this.fetchChannelsState = "fetched";
                 this.fetchChannelsDeferred.resolve();
             },

@@ -10,7 +10,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
     _query_count = 66
-    _query_count_discuss_channels = 53
+    _query_count_discuss_channels = 69
 
     def setUp(self):
         super().setUp()
@@ -246,6 +246,14 @@ class TestDiscussFullPerformance(HttpCase):
         The point of having a separate getter is to allow it to be overriden.
         """
         return {
+            "Message": [
+                self._expected_result_for_message(self.channel_channel_public_1),
+                self._expected_result_for_message(self.channel_channel_public_2),
+                self._expected_result_for_message(self.channel_channel_group_1),
+                self._expected_result_for_message(self.channel_channel_group_2),
+                self._expected_result_for_message(self.channel_livechat_1),
+                self._expected_result_for_message(self.channel_livechat_2),
+            ],
             "Thread": [
                 self._expected_result_for_channel(self.channel_general),
                 self._expected_result_for_channel(self.channel_channel_public_1),
@@ -1284,5 +1292,305 @@ class TestDiscussFullPerformance(HttpCase):
                 "seen_message_id": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+            }
+        return {}
+
+    def _expected_result_for_message(self, channel):
+        last_message = channel._get_last_messages()
+        create_date = fields.Datetime.to_string(last_message.create_date)
+        date = fields.Datetime.to_string(last_message.date)
+        write_date = fields.Datetime.to_string(last_message.write_date)
+        user_0 = self.users[0]
+        write_date_0 = fields.Datetime.to_string(user_0.partner_id.write_date)
+        user_1 = self.users[1]
+        write_date_1 = fields.Datetime.to_string(user_1.partner_id.write_date)
+        user_2 = self.users[2]
+        write_date_2 = fields.Datetime.to_string(user_2.partner_id.write_date)
+        user_9 = self.users[9]
+        user_12 = self.users[12]
+        user_13 = self.users[13]
+        members = channel.channel_member_ids
+        member_g = members.filtered(lambda m: m.guest_id)
+        guest = member_g.guest_id
+        mt_note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
+        mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+        if channel == self.channel_channel_public_1:
+            return {
+                "attachments": [],
+                "author": {
+                    "id": user_2.partner_id.id,
+                    "is_company": False,
+                    "name": "test2",
+                    "notification_preference": "email",
+                    "type": "partner",
+                    "user": {"id": user_2.id, "isInternalUser": True},
+                    "write_date": write_date_2,
+                },
+                "body": "<p>test</p>",
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "public channel 1",
+                "email_from": '"test2" <test2@example.com>',
+                "history_partner_ids": [],
+                "id": last_message.id,
+                "is_discussion": False,
+                "is_note": True,
+                "linkPreviews": [],
+                "message_type": "comment",
+                "model": "discuss.channel",
+                "needaction_partner_ids": [self.users[0].partner_id.id],
+                "notifications": [
+                    {
+                        "failure_type": False,
+                        "id": last_message.notification_ids.id,
+                        "notification_status": "sent",
+                        "notification_type": "inbox",
+                        "persona": {
+                            "displayName": "Ernest Employee",
+                            "id": self.users[0].partner_id.id,
+                            "type": "partner",
+                        },
+                    },
+                ],
+                "originThread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                },
+                "pinned_at": False,
+                "reactions": [],
+                "recipients": [
+                    {
+                        "id": self.users[0].partner_id.id,
+                        "name": "Ernest Employee",
+                        "type": "partner",
+                    },
+                ],
+                "record_name": "public channel 1",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "sms_ids": [],
+                "starredPersonas": [{"id": self.users[0].partner_id.id, "type": "partner"}],
+                "subject": False,
+                "subtype_description": False,
+                "subtype_id": [mt_note_id, "Note"],
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_channel_public_2:
+            return {
+                "attachments": [],
+                "author": {
+                    "id": user_0.partner_id.id,
+                    "is_company": False,
+                    "name": "Ernest Employee",
+                    "notification_preference": "inbox",
+                    "type": "partner",
+                    "user": {"id": user_0.id, "isInternalUser": True},
+                    "write_date": write_date_0,
+                },
+                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">test9</a> to the channel</div>',
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "public channel 2",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "history_partner_ids": [],
+                "id": last_message.id,
+                "is_discussion": True,
+                "is_note": False,
+                "linkPreviews": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction_partner_ids": [],
+                "notifications": [],
+                "originThread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                },
+                "pinned_at": False,
+                "reactions": [],
+                "recipients": [],
+                "record_name": "public channel 2",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "sms_ids": [],
+                "starredPersonas": [],
+                "subject": False,
+                "subtype_description": False,
+                "subtype_id": [mt_comment_id, "Discussions"],
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_channel_group_1:
+            return {
+                "attachments": [],
+                "author": {
+                    "id": user_0.partner_id.id,
+                    "is_company": False,
+                    "name": "Ernest Employee",
+                    "notification_preference": "inbox",
+                    "type": "partner",
+                    "user": {"id": user_0.id, "isInternalUser": True},
+                    "write_date": write_date_0,
+                },
+                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">test12</a> to the channel</div>',
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "group restricted channel 1",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "history_partner_ids": [],
+                "id": last_message.id,
+                "is_discussion": True,
+                "is_note": False,
+                "linkPreviews": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction_partner_ids": [],
+                "notifications": [],
+                "originThread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                },
+                "pinned_at": False,
+                "reactions": [],
+                "recipients": [],
+                "record_name": "group restricted channel 1",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "sms_ids": [],
+                "starredPersonas": [],
+                "subject": False,
+                "subtype_description": False,
+                "subtype_id": [mt_comment_id, "Discussions"],
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_channel_group_2:
+            return {
+                "attachments": [],
+                "author": {
+                    "id": user_0.partner_id.id,
+                    "is_company": False,
+                    "name": "Ernest Employee",
+                    "notification_preference": "inbox",
+                    "type": "partner",
+                    "user": {"id": user_0.id, "isInternalUser": True},
+                    "write_date": write_date_0,
+                },
+                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">test13</a> to the channel</div>',
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "group restricted channel 2",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "history_partner_ids": [],
+                "id": last_message.id,
+                "is_discussion": True,
+                "is_note": False,
+                "linkPreviews": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction_partner_ids": [],
+                "notifications": [],
+                "originThread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                },
+                "pinned_at": False,
+                "reactions": [],
+                "recipients": [],
+                "record_name": "group restricted channel 2",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "sms_ids": [],
+                "starredPersonas": [],
+                "subject": False,
+                "subtype_description": False,
+                "subtype_id": [mt_comment_id, "Discussions"],
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_livechat_1:
+            return {
+                "attachments": [],
+                "author": {
+                    "id": user_1.partner_id.id,
+                    "is_company": False,
+                    "name": "test1",
+                    "notification_preference": "email",
+                    "type": "partner",
+                    "user": {"id": user_1.id, "isInternalUser": True},
+                    "write_date": write_date_1,
+                },
+                "body": "<p>test</p>",
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "test1 Ernest Employee",
+                "history_partner_ids": [],
+                "id": last_message.id,
+                "is_discussion": False,
+                "is_note": True,
+                "linkPreviews": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction_partner_ids": [],
+                "notifications": [],
+                "originThread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                },
+                "pinned_at": False,
+                "reactions": [],
+                "recipients": [],
+                "record_name": "test1 Ernest Employee",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "sms_ids": [],
+                "starredPersonas": [],
+                "subject": False,
+                "subtype_description": False,
+                "subtype_id": [mt_note_id, "Note"],
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_livechat_2:
+            return {
+                "attachments": [],
+                "author": {"id": guest.id, "name": "Visitor", "type": "guest"},
+                "body": "<p>test</p>",
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "anon 2 Ernest Employee",
+                "email_from": False,
+                "history_partner_ids": [],
+                "id": last_message.id,
+                "is_discussion": False,
+                "is_note": True,
+                "linkPreviews": [],
+                "message_type": "comment",
+                "model": "discuss.channel",
+                "needaction_partner_ids": [],
+                "notifications": [],
+                "originThread": {
+                    "id": channel.id,
+                    "model": "discuss.channel",
+                    "module_icon": "/mail/static/description/icon.png",
+                },
+                "pinned_at": False,
+                "reactions": [],
+                "recipients": [],
+                "record_name": "anon 2 Ernest Employee",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "sms_ids": [],
+                "starredPersonas": [],
+                "subject": False,
+                "subtype_description": False,
+                "subtype_id": [mt_note_id, "Note"],
+                "trackingValues": [],
+                "write_date": write_date,
             }
         return {}

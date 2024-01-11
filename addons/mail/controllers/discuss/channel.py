@@ -15,8 +15,12 @@ class ChannelController(http.Controller):
     def discuss_channels(self):
         """Returns the list of channels the current user is a member of."""
         channels = request.env["discuss.channel"]._get_channels_as_member()
+        # fetch channels data before messages to benefit from prefetching (channel info might
+        # prefetch a lot of data that message format could use)
+        channels_info = channels._channel_info()
         return {
-            "Thread": channels._channel_info(),
+            "Message": channels._get_last_messages().message_format(),
+            "Thread": channels_info,
         }
 
     @http.route("/discuss/channel/members", methods=["POST"], type="json", auth="public")
