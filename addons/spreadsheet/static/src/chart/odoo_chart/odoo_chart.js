@@ -22,6 +22,7 @@ import { ChartDataSource } from "../data_source/chart_data_source";
  * @property {string} title
  * @property {string} background
  * @property {string} legendPosition
+ * @property {boolean} cumulative
  *
  * @typedef OdooChartDefinitionDataSource
  * @property {MetaData} metaData
@@ -38,7 +39,14 @@ export class OdooChart extends AbstractChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.type = definition.type;
-        this.metaData = definition.metaData;
+        this.metaData = {
+            ...definition.metaData,
+            mode: this.type.replace("odoo_", ""),
+            cumulated: definition.cumulative,
+            // if a chart is cumulated, the first data point should take into
+            // account past data, even if a domain on a specific period is applied
+            cumulatedStart: definition.cumulative,
+        };
         this.searchParams = definition.searchParams;
         this.legendPosition = definition.legendPosition;
         this.background = definition.background;
@@ -62,10 +70,7 @@ export class OdooChart extends AbstractChart {
      */
     getDefinitionForDataSource() {
         return {
-            metaData: {
-                ...this.metaData,
-                mode: this.type.replace("odoo_", ""),
-            },
+            metaData: this.metaData,
             searchParams: this.searchParams,
         };
     }
