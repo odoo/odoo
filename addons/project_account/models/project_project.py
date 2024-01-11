@@ -17,10 +17,12 @@ class Project(models.Model):
         self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
 
     def _get_add_purchase_items_domain(self):
+        purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
         return [
             ('move_type', 'in', ['in_invoice', 'in_refund']),
             ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0)
+            ('price_subtotal', '>', 0),
+            ('id', 'not in', purchase_order_line_invoice_line_ids),
         ]
 
     def _get_costs_items_from_purchase(self, domain, profitability_items, with_action=True):
