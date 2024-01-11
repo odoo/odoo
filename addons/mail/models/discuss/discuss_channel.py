@@ -1301,7 +1301,6 @@ class Channel(models.Model):
         if self.channel_type == 'chat':
             author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
             payload['title'] = self.env['res.partner'].browse(author_id).name
-            payload['options']['icon'] = '/web/image?field=avatar_128&id=%d&model=res.partner' % (author_id[0])
         elif self.channel_type == 'channel':
             author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
             author_name = self.env['res.partner'].browse(author_id).name
