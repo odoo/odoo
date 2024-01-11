@@ -5,20 +5,11 @@ import {PageSearchModel} from "./page_search_model";
 import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
-import {useService} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
 import {DeletePageDialog} from '@website/components/dialog/page_properties';
 
 
 export class PageListController extends PageControllerMixin(listView.Controller) {
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        this.orm = useService('orm');
-    }
-
     /**
      * @override
      */
