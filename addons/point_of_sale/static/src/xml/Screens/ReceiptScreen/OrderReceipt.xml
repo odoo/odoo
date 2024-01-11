@@ -212,7 +212,7 @@
                         Discount: <t t-esc="line.discount" />%
                     </div>
                 </t>
-                <div class="pos-receipt-left-padding">
+                <div class="pos-receipt-qty-per-price pos-receipt-left-padding">
                     <t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/>
                     <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                     x
