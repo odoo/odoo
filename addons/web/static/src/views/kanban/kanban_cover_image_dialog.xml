@@ -31,7 +31,7 @@
                             Upload and Set
                         </button>
                 </FileInput>
-                <button t-if="coverId" class="btn btn-secondary" t-on-click="removeCover">
+                <button t-if="hasCoverImage" class="btn btn-secondary" t-on-click="removeCover">
                     Remove Cover Image
                 </button>
                 <button class="btn btn-secondary" t-on-click="dialog.close">
