@@ -484,15 +484,11 @@ class Channel(models.Model):
         # notify only user input (comment or incoming / outgoing emails)
         if message_type not in ('comment', 'email', 'email_outgoing'):
             return []
-        # notify only mailing lists or if mentioning recipients
-        if not pids:
-            return []
-
-        email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
-        author_id = msg_vals.get('author_id') or message.author_id.id
 
         recipients_data = []
         if pids:
+            email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
+            author_id = msg_vals.get('author_id') or message.author_id.id
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = """
@@ -524,6 +520,28 @@ class Channel(models.Model):
                     'uid': False,
                     'ushare': ushare,
                 })
+
+        if self.is_chat or self.channel_type == "group":
+            already_in_ids = [r['id'] for r in recipients_data]
+            recipients_data += [
+                {
+                    'active': partner.active,
+                    'groups': [],
+                    'id': partner.id,
+                    'is_follower': False,
+                    'lang': partner.lang,
+                    'notif': 'web_push',
+                    'share': partner.partner_share,
+                    'type': 'customer',
+                    'uid': False,
+                    'ushare': False,
+                } for partner in self.channel_member_ids.filtered(
+                    lambda member: (
+                        not member.mute_until_dt and
+                        member.partner_id.id not in already_in_ids
+                    )
+                ).partner_id
+            ]
 
         return recipients_data
 
@@ -1268,33 +1286,6 @@ class Channel(models.Model):
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(self.env.user.partner_id, msg)
-
-    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
-        """ Specifically handle channel members. """
-        chat_channels = self.filtered(lambda channel: channel.channel_type == 'chat')
-        if chat_channels:
-            # modify rdata only for calling super. Do not deep copy as we only
-            # add data into list but we do not modify item content
-            channel_rdata = recipients_data.copy()
-            channel_rdata += [
-                {
-                    'active': partner.active,
-                    'id': partner.id,
-                    'is_follower': False,
-                    'groups': [],
-                    'lang': partner.lang,
-                    'notif': 'web_push',
-                    'share': partner.partner_share,
-                    'type': 'customer',
-                    'uid': False,
-                    'ushare': False,
-                 }
-                for partner in chat_channels.channel_member_ids.filtered(lambda member: not member.mute_until_dt).partner_id
-            ]
-        else:
-            channel_rdata = recipients_data
-
-        return super()._notify_thread_by_web_push(message, channel_rdata, msg_vals=msg_vals, **kwargs)
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
         payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)

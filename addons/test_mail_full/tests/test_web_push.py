@@ -16,7 +16,7 @@ from unittest.mock import patch
 from types import SimpleNamespace
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_push')
 class TestWebPushNotification(SMSCommon):
 
     @classmethod
