@@ -24,7 +24,7 @@
                     All
                 </t>
                 <t t-else="">
-                    <t t-foreach="categories" t-as="category" t-key="category.id">
+                    <t t-foreach="categories" t-as="category" t-key="category_index">
                         <span class="o_search_panel_category mb-2">
                             <i t-if="category.icon"
                                 t-attf-class="o_search_panel_section_icon fa {{ category.icon }} fa-rotate-90 mb-2"
@@ -33,8 +33,8 @@
                             <t t-esc="category.values.join('/')" />
                         </span>
                     </t>
-                    <t t-foreach="filters" t-as="filter" t-key="filter.id">
-                        <span class="o_search_panel_filter  mb-2">
+                    <t t-foreach="filters" t-as="filter" t-key="filter_index">
+                        <span class="o_search_panel_filter mb-2">
                             <i t-if="filter.icon"
                                 t-attf-class="o_search_panel_section_icon fa {{ filter.icon }} fa-rotate-90 mb-2"
                                 t-att-style="filter.color and ('color: ' + filter.color)"
@@ -179,7 +179,7 @@
                 <div class="o_search_panel_current_selection text-truncate ms-2 me-auto">
                     <t t-if="!categories.length and !filters.length">All</t>
                     <t t-else="">
-                        <t t-foreach="categories" t-as="category" t-key="category.id">
+                        <t t-foreach="categories" t-as="category" t-key="category_index">
                             <span class="o_search_panel_category me-1">
                                 <i t-if="category.icon"
                                     t-attf-class="o_search_panel_section_icon fa {{ category.icon }} me-1"
@@ -188,7 +188,7 @@
                                 <t t-esc="category.values.join('/')" />
                             </span>
                         </t>
-                        <t t-foreach="filters" t-as="filter" t-key="filter.id">
+                        <t t-foreach="filters" t-as="filter" t-key="filter_index">
                             <span class="o_search_panel_filter me-1">
                                 <i t-if="filter.icon"
                                     t-attf-class="o_search_panel_section_icon fa {{ filter.icon }} me-1"
