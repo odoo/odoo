@@ -589,6 +589,25 @@ class AccountMove(models.Model):
         mapping = self._l10n_it_edi_document_type_mapping()
         return mapping.get(document_type, {}).get('simplified', False)
 
+    @api.model
+    def _l10n_it_buyer_seller_info(self):
+        return {
+            'buyer': {
+                'role': 'buyer',
+                'section_xpath': '//CessionarioCommittente',
+                'vat_xpath': '//CessionarioCommittente//IdCodice',
+                'codice_fiscale_xpath': '//CessionarioCommittente//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'purchase')],
+            },
+            'seller': {
+                'role': 'seller',
+                'section_xpath': '//CedentePrestatore',
+                'vat_xpath': '//CedentePrestatore//IdCodice',
+                'codice_fiscale_xpath': '//CedentePrestatore//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'sale')],
+            },
+        }
+
     # -------------------------------------------------------------------------
     # EDI: Import
     # -------------------------------------------------------------------------
@@ -738,7 +757,6 @@ class AccountMove(models.Model):
         domain = [
             *self.env['account.tax']._check_company_domain(company),
             ('amount_type', '=', 'percent'),
-            ('type_tax_use', '=', 'purchase'),
         ] + (extra_domain or [])
 
         # We suppose we're importing a file that comes in as a customer invoice where the sale tax will be 0%.
@@ -758,10 +776,13 @@ class AccountMove(models.Model):
 
         return taxes[0] if taxes else taxes
 
-    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
+    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree, incoming=True):
         """ This function is meant to collect other information that has to be inserted on the invoice lines by submodules.
             :return extra_info, messages_to_log"""
-        return {'simplified': self.env['account.move']._l10n_it_edi_is_simplified_document_type(document_type)}, []
+        return {
+            'simplified': self.env['account.move']._l10n_it_edi_is_simplified_document_type(document_type),
+            'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
+        }, []
 
     def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
         """ Decodes a l10n_it_edi move into an Odoo move.
@@ -771,8 +792,40 @@ class AccountMove(models.Model):
         :param is_new: whether the move is newly created or to be updated
         :returns:      the imported move
         """
+        buyer_seller_info = self._l10n_it_buyer_seller_info()
+
         tree = data['xml_tree']
         company = self.company_id
+
+        # There are 2 cases:
+        # - cron:
+        #     * Move direction (incoming / outgoing) flexible (no 'default_move_type')
+        #     * I.e. used for import from tax agency
+        # - "Upload" button (invoices / bills view)
+        #     * Fixed move direction; the button sets the 'default_move_type'
+        default_move_type = self.env.context.get('default_move_type')
+        if default_move_type is None:
+            incoming_possibilities = [True, False]
+        elif default_move_type in invoice.get_purchase_types(include_receipts=True):
+            incoming_possibilities = [True]
+        elif default_move_type in invoice.get_sale_types(include_receipts=True):
+            incoming_possibilities = [False]
+        else:
+            _logger.warning("Cannot handle default_move_type '%s'.", default_move_type)
+            return
+
+        for incoming in incoming_possibilities:
+            company_role, partner_role = ('buyer', 'seller') if incoming else ('seller', 'buyer')
+            company_info = buyer_seller_info[company_role]
+            vat = get_text(tree, company_info['vat_xpath'])
+            if vat and vat .casefold() in (company.vat or '').casefold():
+                break
+            codice_fiscale = get_text(tree, company_info['codice_fiscale_xpath'])
+            if codice_fiscale and codice_fiscale.casefold() in (company.l10n_it_codice_fiscale or '').casefold():
+                break
+        else:
+            invoice.message_post(body=_("Your company's VAT number and Fiscal Code haven't been found in the buyer and/or seller sections inside the document."))
+            return
 
         # For unsupported document types, just assume in_invoice, and log that the type is unsupported
         document_type = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
@@ -780,6 +833,8 @@ class AccountMove(models.Model):
         if not move_type:
             move_type = "in_invoice"
             _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
+        if not incoming and move_type.startswith('in_'):
+            move_type = 'out' + move_type[2:]
 
         self.move_type = move_type
 
@@ -789,18 +844,19 @@ class AccountMove(models.Model):
             self._compute_name()
 
         # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
-        extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree)
+        extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree, incoming=incoming)
 
         # Partner
-        vat = get_text(tree, '//CedentePrestatore//IdCodice')
-        codice_fiscale = get_text(tree, '//CedentePrestatore//CodiceFiscale')
-        email = get_text(tree, '//DatiTrasmissione//Email')
+        partner_info = buyer_seller_info[partner_role]
+        vat = get_text(tree, partner_info['vat_xpath'])
+        codice_fiscale = get_text(tree, partner_info['codice_fiscale_xpath'])
+        email = get_text(tree, '//DatiTrasmissione//Email') if partner_info['role'] == 'seller' else ''
         if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email):
             self.partner_id = partner
         else:
             message = Markup("<br/>").join((
-                _("Vendor not found, useful informations from XML file:"),
-                self._compose_info_message(tree, '//CedentePrestatore')
+                _("Partner not found, useful informations from XML file:"),
+                self._compose_info_message(tree, partner_info['section_xpath'])
             ))
             message_to_log.append(message)
 
@@ -1023,7 +1079,8 @@ class AccountMove(models.Model):
         move_line.tax_ids = []
         if percentage is not None:
             l10n_it_exempt_reason = get_text(element, './/Natura').upper() or False
-            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, None, l10n_it_exempt_reason=l10n_it_exempt_reason):
+            extra_domain = extra_info.get('type_tax_use_domain', [('type_tax_use', '=', 'purchase')])
+            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
                 move_line.tax_ids += tax
             else:
                 message = Markup("<br/>").join((
