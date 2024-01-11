@@ -22,8 +22,8 @@ QUnit.module("chatter");
 QUnit.test("simple chatter on a record", async (assert) => {
     const { openFormView, pyEnv } = await start({
         mockRPC(route, args) {
-            if (route.startsWith("/mail")) {
-                assert.step(route);
+            if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+                assert.step(`${route} - ${JSON.stringify(args)}`);
             }
         },
     });
@@ -32,10 +32,10 @@ QUnit.test("simple chatter on a record", async (assert) => {
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
     assert.verifySteps([
-        "/mail/init_messaging",
-        "/mail/load_message_failures",
-        "/mail/thread/data",
-        "/mail/thread/messages",
+        "/mail/init_messaging - {}",
+        '/mail/data - {"failures":true}',
+        `/mail/thread/data - {"request_list":["followers","attachments","suggestedRecipients","activities"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
+        `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","limit":30}`,
     ]);
 });
 
