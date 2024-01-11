@@ -317,11 +317,10 @@ patch(MockServer.prototype, {
      * Simulates the `/mail/date` route.
      *
      * @private
-     * @returns {Object[]}
      */
-    _mockRouteMailData(failures = false) {
+    _mockRouteMailData(args) {
         const res = {};
-        if (failures && this.pyEnv.currentPartnerId) {
+        if (args.failures && this.pyEnv.currentPartnerId) {
             const partner = this.getRecords(
                 "res.partner",
                 [["id", "=", this.pyEnv.currentPartnerId]],

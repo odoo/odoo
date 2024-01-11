@@ -8,9 +8,6 @@ patch(MockServer.prototype, {
      * @override
      */
     async _performRPC(route, args) {
-        if (route === "/discuss/channels") {
-            return this._mockRouteDiscussChannels();
-        }
         if (route === "/discuss/channel/attachments") {
             return this._mockRouteDiscussChannelAttachments(
                 args.channel_id,
@@ -22,32 +19,6 @@ patch(MockServer.prototype, {
             return this._mockRouteDiscussChannelFold(args.channel_id, args.state, args.state_count);
         }
         return super._performRPC(route, args);
-    },
-    /**
-     * Simulates the `/discuss/channels` route.
-     */
-    _mockRouteDiscussChannels() {
-        const channels = this._mockDiscussChannel__get_channels_as_member();
-        return {
-            Message: channels
-                .map((channel) => {
-                    const channelMessages = this.getRecords("mail.message", [
-                        ["model", "=", "discuss.channel"],
-                        ["res_id", "=", channel.id],
-                    ]);
-                    const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                        if (message.id > lastMessage.id) {
-                            return message;
-                        }
-                        return lastMessage;
-                    }, channelMessages[0]);
-                    return lastMessage
-                        ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
-                        : false;
-                })
-                .filter((lastMessage) => lastMessage),
-            Thread: this._mockDiscussChannelChannelInfo(channels.map((channel) => channel.id)),
-        };
     },
     /**
      * Simulates the `/discuss/channel/attachments` route.

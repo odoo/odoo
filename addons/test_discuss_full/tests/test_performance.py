@@ -213,18 +213,18 @@ class TestDiscussFullPerformance(HttpCase):
     @users("emp")
     @warmup
     def test_discuss_channels(self):
-        """Test performance of `/discuss/channels`."""
+        """Test performance of `/mail/data` with `channels_as_member=True`."""
         self._setup_test()
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
         self.authenticate(self.users[0].login, self.password)
         with self.assertQueryCount(emp=self._query_count_discuss_channels):
-            discuss_channels = self.make_jsonrpc_request("/discuss/channels")
+            discuss_channels = self.make_jsonrpc_request("/mail/data", {"channels_as_member": True})
         self.assertEqual(discuss_channels, self._get_discuss_channels_result())
 
     def _get_discuss_channels_result(self):
-        """Returns the result of a call to discuss/channels.
+        """Returns the result of a call to `/mail/data` with `channels_as_member=True`.
         The point of having a separate getter is to allow it to be overriden.
         """
         return {
