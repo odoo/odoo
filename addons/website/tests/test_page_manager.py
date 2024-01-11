@@ -3,6 +3,10 @@
 
 import odoo.tests
 
+from odoo.tests.common import HOST
+from odoo.tools import config
+
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsitePageManager(odoo.tests.HttpCase):
 
@@ -13,4 +17,10 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
                 'domain': '',
                 'sequence': 20,
             })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_page_manager', login="admin")
+        url = self.env['website'].get_client_action_url('/')
+        self.start_tour(url, 'website_page_manager', login="admin")
+        self.start_tour(url, 'website_page_manager_session_forced', login="admin")
+
+        alternate_website = self.env['website'].search([], limit=2)[1]
+        alternate_website.domain = f'http://{HOST}:{config["http_port"]}'
+        self.start_tour('/web#action=website.action_website_pages_list', 'website_page_manager_direct_access', login='admin')
