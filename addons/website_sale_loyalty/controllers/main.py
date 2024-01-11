@@ -38,12 +38,12 @@ class WebsiteSale(main.WebsiteSale):
 
     @http.route()
     def cart(self, **post):
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order() # this returns 2 (order + delivery) (BUG)
+        res = super().cart(**post) # When going back to "Confirm Order" -> "Review Order") Delivery must be removed first, before calculating coupons. Otherwise couponse include delivery into calculation
         if order:
             order._update_programs_and_rewards()
             order._auto_apply_rewards()
 
-        res = super().cart(**post)
 
         # TODO in master: remove and pass delete=True to the methods fetching the error/success
         # messages in _get_website_sale_extra_values
