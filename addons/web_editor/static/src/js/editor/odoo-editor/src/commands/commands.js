@@ -600,7 +600,7 @@ export const editorCommands = {
                     }
                 } else if (
                     (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
-                    (isEmptyBlock(node.parentNode)) ||
+                    (node.nodeName === 'BR' && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                     node.nodeName !== 'FIGURE' &&
                     ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
