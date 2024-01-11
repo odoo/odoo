@@ -20,7 +20,7 @@ const StorePatch = {
         }
         this.fetchChannelsState = "fetching";
         this.fetchChannelsDeferred = new Deferred();
-        rpc("/discuss/channels").then(
+        rpc("/mail/data", { channels_as_member: true }).then(
             /**
              * @param {{ Message: Object[], Thread: Object[] }} data
              */
