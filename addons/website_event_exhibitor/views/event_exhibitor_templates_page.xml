@@ -173,8 +173,8 @@
                 <span class="h5 m-3">Other exhibitors</span>
                 <i class="oi oi-chevron-down"/>
             </a>
-            <ul id="collapse_exhibitor_aside" class="list-group list-group-flush collapse d-xl-block border mx-xl-3">
-                <li class="list-group-item list-group-item-action" t-foreach="sponsors_other" t-as="sponsor_other">
+            <div id="collapse_exhibitor_aside" class="list-group collapse d-xl-block mx-xl-3">
+                <div class="list-group-item list-group-item-action" t-foreach="sponsors_other" t-as="sponsor_other">
                     <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-dark"
                         t-att-href="sponsor_other.website_url"
                         t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
@@ -199,8 +199,8 @@
                             </div>
                         </div>
                     </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 </template>

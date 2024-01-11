@@ -10,7 +10,7 @@
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->
-            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'container-fluid pb-3')">
                 <div t-att-class="'row %s mb-5 mx-0' % ('justify-content-center' if not tracks_other else 'flex-column-reverse flex-md-row')">
                     <t t-call="website_event_track.event_track_content"/>
                     <t t-if="tracks_other">
@@ -164,7 +164,7 @@
 <!-- ============================================================ -->
 
 <template id="event_track_aside" name="Track: Aside">
-    <div name="o_wevent_online_page_aside" t-attf-class="o_wevent_online_page_aside o_wesession_track_aside col-12 ps-0 pe-0 border {{'col-md-3 col-xl-2' if option_widescreen else 'col-md-4 col-xl-3'}}">
+    <div name="o_wevent_online_page_aside" t-attf-class="o_wevent_online_page_aside o_wesession_track_aside col-12 ps-0 pe-0 {{'col-md-3 col-xl-2' if option_widescreen else 'col-md-4 col-xl-3'}}">
         <div class="o_wevent_online_page_aside_content">
             <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
@@ -191,8 +191,8 @@
             <div id="collapse_track_aside"
                 class="tab-content collapse d-md-block o_wesession_track_aside_tabs">
                 <div class="tab-pane fade show active" id="track_list" role="tabpanel">
-                    <ul class="list-group list-group-flush">
-                        <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
+                    <div class="list-group">
+                        <div t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
                             <a t-if="is_event_user or track_other.is_published"
                                 t-att-data-publish="track_other.website_published and 'on' or 'off'"
                                 class="row text-decoration-none text-dark"
@@ -204,8 +204,8 @@
                                     <t t-call="website_event_track.event_track_aside_other_track"/>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,7 +214,7 @@
 
 <template id="event_track_aside_other_track">
     <span t-out="track_other.name" class="fw-bold"/>
-    <div class="d-flex flex-column flex-lg-row flex-wrap justify-content-between align-items-start align-items-lg-end">
+    <div class="d-flex flex-column flex-xxl-row flex-wrap justify-content-between align-items-start align-items-xxl-end">
         <small class="text-muted" t-out="track_other.partner_name"/>
         <div class="d-inline-block o_wesession_track_aside_info text-truncate">
             <small t-if="not track_other.website_published and user_event_manager"
