@@ -170,7 +170,7 @@
         <div class="o_wevent_online_page_aside_content">
             <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"
                 class="o_wevent_online_page_aside_collapse collapsed d-flex d-xl-none align-items-center justify-content-between border p-2 text-decoration-none text-reset">
-                <span class="h5 m-3">Other exhibitors</span>
+                <p class="mb-0">Other exhibitors</p>
                 <i class="oi oi-chevron-down"/>
             </a>
             <div id="collapse_exhibitor_aside" class="list-group collapse d-xl-block mx-xl-3">
@@ -178,25 +178,25 @@
                     <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-dark"
                         t-att-href="sponsor_other.website_url"
                         t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
-                        <div class="d-flex flex-column align-items-center">
-                            <img t-if="sponsor_other.partner_id.country_id"
-                            class="o_wesponsor_aside_logo mb-1"
-                            t-att-src="sponsor_other.partner_id.country_id.image_url"
-                            t-att-alt="sponsor_other.partner_id.country_id.name"/>
+                        <div class="flex-grow-1 overflow-auto">
+                            <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
+                                <span class="d-inline-block text-truncate" t-out="sponsor_other.name"/>
+                            </span>
                             <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
                                 t-att-class="'badge text-bg-light ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
                                 t-out="sponsor_other.sponsor_type_id.name"/>
                             <span t-else="" class="badge text-bg-light"
                                 t-out="sponsor_other.sponsor_type_id.name"/>
-                        </div>
-                        <div class="flex-grow-1 overflow-auto px-2">
-                            <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
-                                <span class="d-inline-block text-truncate" t-out="sponsor_other.name"/>
-                            </span>
-                            <small class="text-muted" t-out="sponsor_other.subtitle"/>
+                            <!-- <small class="text-muted" t-out="sponsor_other.subtitle"/> -->
                             <div class="d-inline-block float-end" t-if="not sponsor_other.website_published">
                                 <small class="badge text-bg-danger">Unpublished</small>
                             </div>
+                        </div>
+                        <div class="d-flex align-items-baseline">
+                            <img t-if="sponsor_other.partner_id.country_id"
+                            class="o_wesponsor_aside_logo"
+                            t-att-src="sponsor_other.partner_id.country_id.image_url"
+                            t-att-alt="sponsor_other.partner_id.country_id.name"/>
                         </div>
                     </a>
                 </div>
