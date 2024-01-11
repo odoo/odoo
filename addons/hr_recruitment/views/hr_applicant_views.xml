@@ -71,7 +71,7 @@
                         class="o_create_employee" invisible="emp_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active" data-hotkey="d"/>
                 <button string="Restore" name="toggle_active" type="object" invisible="active" data-hotkey="x"/>
-                <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not active and not emp_id"/>
+                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not active and not emp_id"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">

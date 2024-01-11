@@ -28,9 +28,12 @@ class Applicant(models.Model):
                'mail.thread.blacklist',
                'mail.thread.phone',
                'mail.activity.mixin',
-               'utm.mixin']
+               'utm.mixin',
+               'mail.tracking.duration.mixin',
+    ]
     _mailing_enabled = True
     _primary_email = 'email_from'
+    _track_duration_field = 'stage_id'
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
