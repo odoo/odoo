@@ -187,7 +187,7 @@ class IrQWeb(models.AbstractModel):
                 _, _, _, id_unique, name = bundle_url.split('/')
                 attachment_id, unique = id_unique.split('-')
                 url_pattern = f'/web/assets/%s-%s/{website.id}/{name}'
-                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))])
+                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))], limit=1)
                 if existing:
                     if f'-{unique}/' in existing.url:
                         continue
