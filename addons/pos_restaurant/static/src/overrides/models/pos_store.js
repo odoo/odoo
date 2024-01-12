@@ -300,6 +300,9 @@ patch(PosStore.prototype, {
             "id",
             this.orderToTransfer.tableId
         );
+        if (table.id === originalTable.id) {
+            return;
+        }
         if (
             this.orderToTransfer.tableId !== table.id &&
             this.tableHasOrders(table) &&
@@ -312,8 +315,6 @@ patch(PosStore.prototype, {
                 ),
             });
             if (!confirm) {
-                this.isTableToMerge = false;
-                this.orderToTransfer = null;
                 return;
             }
         }
