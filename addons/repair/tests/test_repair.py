@@ -303,8 +303,13 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(lineD.state, 'assigned')
         num_of_lines = len(repair.move_ids)
         self.assertFalse(repair.move_id)
-        repair.action_repair_end()
-
+        end_action = repair.action_repair_end()
+        self.assertEqual(end_action.get("res_model"), "repair.warn.uncomplete.move")
+        warn_uncomplete_wizard = Form(
+            self.env['repair.warn.uncomplete.move']
+            .with_context(**end_action['context'])
+            ).save()
+        warn_uncomplete_wizard.action_validate()
         self.assertEqual(repair.state, "done")
         done_moves = repair.move_ids - lineD
         #line a,b,c are 'done', line d is 'cancel'
