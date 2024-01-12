@@ -14,6 +14,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onMounted, useRef, useState, onWillStart } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { unique } from "@web/core/utils/arrays";
 
 export class FloorScreen extends Component {
     static components = { Table };
@@ -428,6 +429,25 @@ export class FloorScreen extends Component {
         }
         this.pos.updateTables(...this.selectedTables);
     }
+    linkTables() {
+        const parentTable =
+            this.selectedTables.filter((t) => t.parent_id)?.[0] || this.selectedTables[0];
+        const childrenTables = this.selectedTables.filter((t) => t.id !== parentTable.id);
+        for (const table of childrenTables) {
+            table.update({ parent_id: parentTable });
+        }
+        this.pos.updateTables(...this.childrenTables);
+    }
+    isLinkingDisabled() {
+        return (
+            this.selectedTables.length < 2 ||
+            // all the selected tables must have the same parent or no parent
+            unique(this.selectedTables.filter((t) => t.parent_id).map((t) => t.parent_id)).length >
+                1 ||
+            // among the tables there can only be one that has children
+            this.selectedTables.filter((t) => this.getChildren(t).length).length > 1
+        );
+    }
     setColor(color) {
         if (this.selectedTables.length > 0) {
             this.selectedTables.forEach((selectedTable) => {
@@ -583,6 +603,9 @@ export class FloorScreen extends Component {
         }
 
         return changeCount;
+    }
+    getChildren(table) {
+        return this.pos.models["restaurant.table"].filter((t) => t.parent_id?.id === table.id);
     }
 }
 
