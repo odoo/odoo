@@ -63,6 +63,7 @@ import {
     rightLeafOnlyNotBlockPath,
     getAdjacentPreviousSiblings,
     childNodeIndex,
+    descendants,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1404,7 +1405,7 @@ export class OdooEditor extends EventTarget {
                     let startZws = this._getLinkZws('start', link);
                     if (!startZws) {
                         startZws = this._insertLinkZws('start', link);
-                        didAddZwsInLinkInSelection = true;
+                        didAddZwsInLinkInSelection = link === linkInSelection;
                     }
                     zwsToPreserve.push(startZws);
                     if (link === linkInSelection) {
@@ -1415,7 +1416,10 @@ export class OdooEditor extends EventTarget {
                     // Only add the ZWS before if there is nothing before the
                     // link.
                     const zwsBefore = this._getLinkZws('before', link) ||
-                        (!getAdjacentPreviousSiblings(link, isVisible).length && this._insertLinkZws('before', link));
+                        (
+                            !getAdjacentPreviousSiblings(link).find(node => isVisible(node)) &&
+                            this._insertLinkZws('before', link)
+                        );
                     const zwsAfter = this._getLinkZws('after', link) || this._insertLinkZws('after', link);
                     for (const [zws, side] of [[zwsBefore, 'Before'], [zwsAfter, 'After']]) {
                         if (zws && (!zws.parentElement || !zws.parentElement.isContentEditable)) {
@@ -1816,6 +1820,21 @@ export class OdooEditor extends EventTarget {
             if (zws.innerHTML.replaceAll('\u200B', '')) {
                 // The zws span has more than just a zws -> don't remove it.
                 zws.removeAttribute('data-o-link-zws');
+                // Remove the zws characters anyway and fix the selection accordingly.
+                const { anchorNode, anchorOffset, isCollapsed } = this.document.getSelection();
+                let newOffset = anchorOffset;
+                for (const textNode of descendants(zws).filter(descendant => descendant.nodeType === Node.TEXT_NODE)) {
+                    while (textNode.textContent.includes('\u200B')) {
+                        const indexOfZws = textNode.textContent.indexOf('\u200B');
+                        textNode.textContent = textNode.textContent.replace('\u200B', '');
+                        if (anchorNode === textNode && indexOfZws < newOffset) {
+                            newOffset -= 1;
+                        }
+                    }
+                }
+                if (isCollapsed && anchorOffset !== newOffset) {
+                    setSelection(anchorNode, newOffset);
+                }
             } else if (!zwsToPreserve.includes(zws)) {
                 // const restoreUpdate = prepareUpdate(
                 //     ...boundariesOut(zws.parentElement),
