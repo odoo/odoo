@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { ServerData } from "../data_sources/server_data";
 import { toServerDateString } from "../helpers/helpers";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 
 /**
  * @typedef Currency
@@ -34,7 +35,7 @@ export class CurrencyDataSource {
         });
         const rate = data !== undefined ? data.rate : undefined;
         if (rate === false) {
-            throw new Error(_t("Currency rate unavailable."));
+            throw new EvaluationError(_t("Currency rate unavailable."));
         }
         return rate;
     }
@@ -49,7 +50,7 @@ export class CurrencyDataSource {
             companyId,
         ]);
         if (result === false) {
-            throw new Error(_t("Currency not available for this company."));
+            throw new EvaluationError(_t("Currency not available for this company."));
         }
         return result;
     }
