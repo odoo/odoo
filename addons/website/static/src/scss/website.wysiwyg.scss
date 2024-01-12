@@ -151,6 +151,41 @@ html[data-edit_translations="1"] {
         }
     }
 
+    // A modifier applied on `<we-select/>` to give it a grid appearance.
+    we-select.o_we_select_grid {
+        we-selection-items {
+            we-button {
+                padding: $o-we-sidebar-content-padding-base * 2 $o-we-sidebar-content-padding-base / 2;
+                border: $o-we-item-border-width solid $o-we-bg-darkest;
+                border-radius: 2px;
+                justify-content: center;
+
+                &.active {
+                    border: 2px solid $o-we-color-success !important;
+                }
+                // Text highlight related style.
+                &[data-set-text-highlight] {
+                    --text-highlight-width: .15em;
+                    --text-highlight-color: #{$o-we-fg-light};
+
+                    > div {
+                        flex: none;
+                        position: relative;
+                        width: 60%;
+                        font-size: $o-we-sidebar-font-size * 1.3;
+                        font-weight: bold;
+                        overflow: visible;
+                        isolation: isolate;
+
+                        svg {
+                            z-index: -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     //----------------------------------------------------------------------
     // 'Options' Tab Specific Components
     //----------------------------------------------------------------------
