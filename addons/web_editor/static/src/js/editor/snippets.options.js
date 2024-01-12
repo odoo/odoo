@@ -4105,6 +4105,11 @@ const SnippetOptionWidget = Widget.extend({
                         }
                     }
                 }
+                // When the default color is the target's "currentColor", the
+                // value should be handled correctly by the option.
+                if (value === "currentColor") {
+                    return styles.color;
+                }
 
                 return value;
             }
