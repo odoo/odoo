@@ -803,6 +803,7 @@ class PaymentTransaction(models.Model):
             'state': target_state,
             'state_message': state_message,
             'last_state_change': fields.Datetime.now(),
+            'is_post_processed': False,  # Reset to allow post-processing again for other states.
         })
         return txs_to_process
 
@@ -830,8 +831,9 @@ class PaymentTransaction(models.Model):
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
-    def _cron_finalize_post_processing(self):
-        """ Finalize the post-processing of recently done transactions not handled by the client.
+    def _cron_post_process(self):
+        """ Trigger the post-processing of the transactions that were not handled by the client in
+        the `poll_status` controller method.
 
         :return: None
         """
@@ -841,14 +843,12 @@ class PaymentTransaction(models.Model):
             # to 4 days because some providers (PayPal) need that much for the payment verification.
             retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
-            txs_to_post_process = self.search([
-                ('state', '=', 'done'),
-                ('is_post_processed', '=', False),
-                ('last_state_change', '>=', retry_limit_date),
-            ])
+            txs_to_post_process = self.search(
+                [('is_post_processed', '=', False), ('last_state_change', '>=', retry_limit_date)]
+            )
         for tx in txs_to_post_process:
             try:
-                tx._finalize_post_processing()
+                tx._post_process()
                 self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
@@ -859,23 +859,17 @@ class PaymentTransaction(models.Model):
                 )
                 self.env.cr.rollback()
 
-    def _finalize_post_processing(self):
-        """ Trigger the final post-processing tasks and mark the transactions as post-processed.
+    def _post_process(self):
+        """ Post-process the transactions.
+
+        The generic post-processing only consists in flagging the transactions as post-processed.
+        For a module to add its own logic to the post-processing, it must overwrite this method and
+        apply its specific logic to the transactions, optionally after filtering them based on their
+        state.
 
         :return: None
         """
-        self.filtered(lambda tx: tx.operation != 'validation')._reconcile_after_done()
         self.is_post_processed = True
-
-    def _reconcile_after_done(self):
-        """ Perform compute-intensive operations on related documents.
-
-        For a provider to handle transaction post-processing, it must overwrite this method and
-        execute its compute-intensive operations on documents linked to confirmed transactions.
-
-        :return: None
-        """
-        return
 
     #=== BUSINESS METHODS - LOGGING ===#
 
