@@ -303,6 +303,17 @@ class PosConfig(models.Model):
             )
         )
 
+    def _get_kitchen_printer(self):
+        self.ensure_one()
+        printerData = {}
+        for printer in self.printer_ids:
+            printerData[printer.id] = {
+                "printer_type": printer.printer_type,
+                "proxy_ip": printer.proxy_ip,
+                "product_categories_ids": printer.product_categories_ids.ids,
+            }
+        return printerData
+
     def _get_self_ordering_data(self):
         self.ensure_one()
         params = self.current_session_id._load_data_params(self)
@@ -340,6 +351,7 @@ class PosConfig(models.Model):
                 "receipt_header": self.receipt_header,
                 "receipt_footer": self.receipt_footer,
             },
+            "kitchen_printers": self._get_kitchen_printer(),
         }
 
     def _get_combos_data(self):

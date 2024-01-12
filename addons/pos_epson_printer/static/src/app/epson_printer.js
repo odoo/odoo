@@ -15,7 +15,7 @@ function ePOSPrint(children) {
     append(eposPrintEl, children);
     // IMPORTANT: Need to remove `xmlns=""` in the image and cut elements.
     // > Otherwise, the print request will succeed but it the printer device won't actually do the printing.
-    return ePOSLayout.outerHTML.replaceAll(`xmlns=""`, "");
+    return ePOSLayout.innerHTML.replaceAll(`xmlns=""`, "");
 }
 
 /**

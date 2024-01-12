@@ -16,4 +16,10 @@ patch(SelfOrder.prototype, {
             })
         );
     },
+    create_printer(printer) {
+        if (printer.printer_type === "epson_epos") {
+            return new EpsonPrinter({ ip: printer.epson_printer_ip });
+        }
+        return super.create_printer(...arguments);
+    },
 });
