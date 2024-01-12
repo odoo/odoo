@@ -8,6 +8,7 @@ import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
+import { AppInstallDialog } from "./app_install_dialog";
 
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/master";
@@ -111,7 +112,7 @@ function appInstallItem(env) {
         id: "app_install",
         description: _t("Install the app"),
         callback: () => {
-            console.log("Install the app");
+            env.services.dialog.add(AppInstallDialog, {});
         },
         show: () => isBrowserChrome() || isBrowserSafari(),
         sequence: 65,
