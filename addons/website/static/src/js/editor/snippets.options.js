@@ -25,7 +25,6 @@ import {
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { browser } from "@web/core/browser/browser";
 import {
-    applyTextHighlight,
     removeTextHighlight,
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
@@ -3742,6 +3741,16 @@ options.registry.TextHighlight = options.Class.extend({
     onBlur() {
         this.leftPanelEl.appendChild(this.el);
     },
+    /**
+    * @override
+    */
+    notify(name, data) {
+        // Apply the highlight effect DOM structure when added for the first time.
+        if (name === "new_text_highlight") {
+            this._autoAdaptHighlights();
+        }
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -3781,8 +3790,19 @@ options.registry.TextHighlight = options.Class.extend({
                 svg.remove();
             });
         } else {
-            applyTextHighlight(this.$target[0], highlightID);
+            this._autoAdaptHighlights();
         }
+    },
+    /**
+     * Used to set the highlight effect DOM structure on the targeted text
+     * content.
+     *
+     * @private
+     */
+    _autoAdaptHighlights() {
+        this.trigger_up("snippet_edition_request", { exec: async () =>
+            await this._refreshPublicWidgets($(this.options.wysiwyg.odooEditor.editable))
+        });
     },
 
     //--------------------------------------------------------------------------
