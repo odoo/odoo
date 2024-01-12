@@ -798,6 +798,9 @@ class SaleOrder(models.Model):
         if point_entries_to_unlink:
             point_entries_to_unlink.sudo().unlink()
 
+    def _get_not_rewarded_order_lines(self):
+        return self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
+
     def _program_check_compute_points(self, programs):
         """
         Checks the program validity from the order lines aswell as computing the number of points to add.
@@ -807,7 +810,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         # Prepare quantities
-        order_lines = self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
+        order_lines = self._get_not_rewarded_order_lines()
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
