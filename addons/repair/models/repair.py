@@ -430,7 +430,7 @@ class Repair(models.Model):
             if move_id:
                 repair.move_id = move_id
         all_moves = self.move_ids + product_moves
-        all_moves._action_done()
+        all_moves._action_done(cancel_backorder=True)
 
         for sale_line in self.move_ids.sale_line_id:
             price_unit = sale_line.price_unit
@@ -445,7 +445,14 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
-        if any(float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in self.move_ids):
+        partial_moves = set()
+        picked_moves = set()
+        for move in self.move_ids:
+            if float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0:
+                partial_moves.add(move.id)
+            if move.picked:
+                picked_moves.add(move.id)
+        if partial_moves or picked_moves and len(picked_moves) < len(self.move_ids):
             ctx = dict(self.env.context or {})
             ctx['default_repair_ids'] = self.ids
             return {
