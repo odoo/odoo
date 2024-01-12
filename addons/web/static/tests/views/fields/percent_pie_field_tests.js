@@ -26,10 +26,17 @@ QUnit.module("Fields", (hooks) => {
                             sortable: true,
                             searchable: true,
                         },
+                        float_field: {
+                            string: "float_field",
+                            type: "float",
+                            sortable: true,
+                            searchable: true,
+                        },
                     },
                     records: [
                         { id: 1, foo: "yop", int_field: 10 },
                         { id: 2, foo: "gnap", int_field: 80 },
+                        { id: 3, foo: "blip", float_field: 33.3333 },
                     ],
                     onchanges: {},
                 },
@@ -110,6 +117,42 @@ QUnit.module("Fields", (hooks) => {
                 .style.background.replaceAll(/\s+/g, " "),
             "conic-gradient( var(--PercentPieField-color-active) 0% 80%, var(--PercentPieField-color-static) 0% 100% )",
             "pie should have a background computed for its value of 80%"
+        );
+    });
+
+    QUnit.test("PercentPieField in form view with float value", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="float_field" widget="percentpie"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 3,
+        });
+
+        assert.containsOnce(
+            target,
+            ".o_field_percent_pie.o_field_widget .o_pie",
+            "should have a pie chart"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value")
+                .textContent,
+            "33.33%",
+            "should have 33.33% as pie value since float_field=33.3333 and its value is rounded to 2 decimals"
+        );
+        assert.strictEqual(
+            target
+                .querySelector(".o_field_percent_pie.o_field_widget .o_pie")
+                .style.background.replaceAll(/\s+/g, " "),
+            "conic-gradient( var(--PercentPieField-color-active) 0% 33.3333%, var(--PercentPieField-color-static) 0% 100% )",
+            "pie should have a background computed for its value of 33.3333%"
         );
     });
 });
