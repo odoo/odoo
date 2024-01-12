@@ -776,7 +776,7 @@
                         <div class="oe_title">
                             <!-- Invoice draft header -->
                             <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
-                            <h1 attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', '/')]}">
+                            <h1 attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('posted_before', '=', True)]}">
                                 <span>Draft</span>
                             </h1>
 
