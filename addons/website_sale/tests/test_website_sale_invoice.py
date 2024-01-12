@@ -29,7 +29,7 @@ class TestWebsiteSaleInvoice(AccountPaymentCommon, SaleCommon):
         self.amount = self.sale_order.amount_total
         tx = self._create_transaction(flow='redirect', sale_order_ids=[self.sale_order.id], state='done')
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
-            tx._reconcile_after_done()
+            tx._post_process()
 
         self.assertEqual(self.sale_order.website_id.id, self.website.id)
         self.assertEqual(self.sale_order.invoice_ids.website_id.id, self.website.id)

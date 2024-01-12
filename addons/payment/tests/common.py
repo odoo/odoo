@@ -106,17 +106,17 @@ class PaymentCommon(BaseCommon):
 
         account_payment_module = cls.env['ir.module.module']._get('account_payment')
         cls.account_payment_installed = account_payment_module.state in ('installed', 'to upgrade')
-        cls.enable_reconcile_after_done_patcher = True
+        cls.enable_post_process_patcher = True
 
     def setUp(self):
         super().setUp()
-        if self.account_payment_installed and self.enable_reconcile_after_done_patcher:
+        if self.account_payment_installed and self.enable_post_process_patcher:
             # disable account payment generation if account_payment is installed
             # because the accounting setup of providers is not managed in this common
-            self.reconcile_after_done_patcher = patch(
-                'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._reconcile_after_done',
+            self.post_process_patcher = patch(
+                'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._post_process',
             )
-            self.startPatcher(self.reconcile_after_done_patcher)
+            self.startPatcher(self.post_process_patcher)
 
     #=== Utils ===#
 

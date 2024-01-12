@@ -14,7 +14,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_no_amount_available_for_refund_when_not_supported(self):
         self.provider.support_refund = False
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
         self.assertEqual(
             tx.payment_id.amount_available_for_refund,
             0,
@@ -25,7 +25,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_full_amount_available_for_refund_when_not_yet_refunded(self):
         self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
         self.assertAlmostEqual(
             tx.payment_id.amount_available_for_refund,
             tx.amount,
@@ -40,7 +40,7 @@ class TestAccountPayment(AccountPaymentCommon):
             'support_manual_capture': 'partial',  # To create transaction in the 'authorized' state
         })
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
         for reference_index, state in enumerate(('draft', 'pending', 'authorized')):
             self._create_transaction(
                 'dummy',
@@ -61,7 +61,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_no_amount_available_for_refund_when_fully_refunded(self):
         self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
         self._create_transaction(
             'dummy',
             amount=-tx.amount,
@@ -69,7 +69,7 @@ class TestAccountPayment(AccountPaymentCommon):
             state='done',
             operation='refund',  # Override the computed flow
             source_transaction_id=tx.id,
-        )._reconcile_after_done()
+        )._post_process()
         self.assertEqual(
             tx.payment_id.amount_available_for_refund,
             0,
@@ -80,7 +80,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_no_full_amount_available_for_refund_when_partially_refunded(self):
         self.provider.support_refund = 'partial'
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
         self._create_transaction(
             'dummy',
             amount=-(tx.amount / 10),
@@ -88,7 +88,7 @@ class TestAccountPayment(AccountPaymentCommon):
             state='done',
             operation='refund',  # Override the computed flow
             source_transaction_id=tx.id,
-        )._reconcile_after_done()
+        )._post_process()
         self.assertAlmostEqual(
             tx.payment_id.amount_available_for_refund,
             tx.payment_id.amount - (tx.amount / 10),
@@ -101,7 +101,7 @@ class TestAccountPayment(AccountPaymentCommon):
     def test_refunds_count(self):
         self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
         for reference_index, operation in enumerate(
             ('online_redirect', 'online_direct', 'online_token', 'validation', 'refund')
         ):
@@ -111,7 +111,7 @@ class TestAccountPayment(AccountPaymentCommon):
                 state='done',
                 operation=operation,  # Override the computed flow
                 source_transaction_id=tx.id,
-            )._reconcile_after_done()
+            )._post_process()
 
         self.assertEqual(
             tx.payment_id.refunds_count,
@@ -145,7 +145,7 @@ class TestAccountPayment(AccountPaymentCommon):
 
     def test_no_payment_for_validations(self):
         tx = self._create_transaction(flow='dummy', operation='validation')  # Overwrite the flow
-        tx._reconcile_after_done()
+        tx._post_process()
         payment_count = self.env['account.payment'].search_count(
             [('payment_transaction_id', '=', tx.id)]
         )
@@ -170,9 +170,9 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="The source transaction should be done when the total processed amount of its"
                 " children is equal to the source amount.",
         )
-        child_tx_2._reconcile_after_done()
-        self.assertTrue(child_tx_2.payment_id, msg="Child transactions should create payments.")
-        source_tx._reconcile_after_done()
+        child_tx_1._post_process()
+        self.assertTrue(child_tx_1.payment_id, msg="Child transactions should create payments.")
+        source_tx._post_process()
         self.assertFalse(
             source_tx.payment_id,
             msg="source transactions with done or cancel children should not create payments.",

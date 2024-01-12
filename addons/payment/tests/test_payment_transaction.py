@@ -23,7 +23,7 @@ class TestPaymentTransaction(PaymentCommon):
                 state='done',
                 operation=operation,  # Override the computed flow
                 source_transaction_id=tx.id,
-            )._reconcile_after_done()
+            )._post_process()
 
         self.assertEqual(
             tx.refunds_count,
@@ -189,3 +189,16 @@ class TestPaymentTransaction(PaymentCommon):
             ['draft', 'pending', 'authorized', 'done'], 'cancel', None
         )
         self.assertEqual(tx.state, 'cancel')
+
+    def test_updating_state_resets_post_processing_status(self):
+        if self.account_payment_installed:
+            self.skipTest("This test should not be run after account_payment is installed.")
+
+        tx = self._create_transaction('redirect', state='draft')
+        tx._set_pending()
+        self.assertFalse(tx.is_post_processed)
+        tx._post_process()
+        self.assertTrue(tx.is_post_processed)
+
+        tx._set_done()
+        self.assertFalse(tx.is_post_processed)
