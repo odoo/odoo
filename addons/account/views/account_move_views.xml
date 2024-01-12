@@ -761,7 +761,7 @@
                                 <field name="name" attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
                                 'readonly': [('state', '!=', 'draft')]}" placeholder="Draft"/>
 
-                                <span attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('quick_edit_mode', '=', True)]}">Draft</span>
+                                <span attrs="{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', True)]}">Draft</span>
                             </h1>
                         </div>
                         <group>
