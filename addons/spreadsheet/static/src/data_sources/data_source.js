@@ -3,6 +3,7 @@
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 
 /**
  * DataSource is an abstract class that contains the logic of fetching and
@@ -85,7 +86,7 @@ export class LoadableDataSource {
             throw LOADING_ERROR;
         }
         if (!this._isValid) {
-            throw new Error(this._loadErrorMessage);
+            throw new EvaluationError(this._loadErrorMessage);
         }
     }
 

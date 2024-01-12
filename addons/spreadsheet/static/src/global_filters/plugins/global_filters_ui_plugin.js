@@ -13,7 +13,7 @@ import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import { EvaluationError, helpers, UIPlugin } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { isEmpty } from "@spreadsheet/helpers/helpers";
@@ -41,10 +41,10 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
-const { UuidGenerator, createEmptyExcelSheet } = spreadsheet.helpers;
+const { UuidGenerator, createEmptyExcelSheet } = helpers;
 const uuidGenerator = new UuidGenerator();
 
-export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
+export class GlobalFiltersUIPlugin extends UIPlugin {
     constructor(config) {
         super(config);
         this.orm = config.custom.env?.services.orm;
@@ -224,7 +224,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
     getFilterDisplayValue(filterName) {
         const filter = this.getters.getGlobalFilterLabel(filterName);
         if (!filter) {
-            throw new Error(sprintf(_t(`Filter "%s" not found`), filterName));
+            throw new EvaluationError(sprintf(_t(`Filter "%s" not found`), filterName));
         }
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {

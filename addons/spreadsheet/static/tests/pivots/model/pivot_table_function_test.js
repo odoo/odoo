@@ -73,7 +73,7 @@ QUnit.test("ODOO.PIVOT.TABLE(negative row_count)", async function (assert) {
     setCellContent(model, "A1", `=ODOO.PIVOT.TABLE("1", -1)`, "42");
     assert.strictEqual(getEvaluatedCell(model, "A1", "42").value, "#ERROR");
     assert.strictEqual(
-        getEvaluatedCell(model, "A1", "42").error.message,
+        getEvaluatedCell(model, "A1", "42").message,
         "The number of rows must be positive."
     );
 });

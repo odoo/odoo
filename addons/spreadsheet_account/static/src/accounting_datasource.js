@@ -1,9 +1,9 @@
 /** @odoo-module */
 import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 
 import { ServerData } from "@spreadsheet/data_sources/server_data";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 
 /**
  * @typedef {import("./accounting_functions").DateRange} DateRange
@@ -87,7 +87,7 @@ export class AccountingDataSource {
         // Unfortunately, this check needs to be done right before the server
         // call as a date to low (year <= 1) can raise an error server side.
         if (dateRange.year < 1900) {
-            throw new Error(sprintf(_t("%s is not a valid year."), dateRange.year));
+            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
         }
         return this.serverData.batch.get(
             "account.account",
@@ -110,7 +110,7 @@ export class AccountingDataSource {
             company_id: companyId,
         });
         if (result === false) {
-            throw new Error(_t("The company fiscal year could not be found."));
+            throw new EvaluationError(_t("The company fiscal year could not be found."));
         }
         return result;
     }

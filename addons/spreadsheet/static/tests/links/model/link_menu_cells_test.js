@@ -68,7 +68,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
         );
         assert.equal(getEvaluatedCell(model, "A1").value, "#LINK");
         assert.equal(
-            getEvaluatedCell(model, "A1").error.message,
+            getEvaluatedCell(model, "A1").message,
             "Menu does_not_exists not found. You may not have the required access rights."
         );
     });
@@ -80,7 +80,7 @@ QUnit.module("spreadsheet > menu link cells", { beforeEach }, () => {
         assert.equal(getCell(model, "A1").content, "[label](odoo://ir_menu_id/9999)");
         assert.equal(getEvaluatedCell(model, "A1").value, "#LINK");
         assert.equal(
-            getEvaluatedCell(model, "A1").error.message,
+            getEvaluatedCell(model, "A1").message,
             "Menu 9999 not found. You may not have the required access rights."
         );
     });

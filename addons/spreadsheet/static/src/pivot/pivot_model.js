@@ -5,13 +5,13 @@ import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
+import {helpers, constants, EvaluationError} from "@odoo/o-spreadsheet";
 import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
 
-const { toString, toNumber, toBoolean } = spreadsheet.helpers;
-const { DEFAULT_LOCALE } = spreadsheet.constants;
+const { toString, toNumber, toBoolean } = helpers;
+const { DEFAULT_LOCALE } = constants;
 
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
@@ -52,7 +52,7 @@ function parseGroupField(allFields, groupFieldString) {
     fieldName = isPositional ? fieldName.substring(1) : fieldName;
     const field = allFields[fieldName];
     if (field === undefined) {
-        throw new Error(sprintf(_t("Field %s does not exist"), fieldName));
+        throw new EvaluationError(sprintf(_t("Field %s does not exist"), fieldName));
     }
     if (["date", "datetime"].includes(field.type)) {
         aggregateOperator = aggregateOperator || "month";
@@ -72,7 +72,7 @@ function isNotSupported(fieldType) {
 }
 
 function throwUnsupportedFieldError(field) {
-    throw new Error(
+    throw new EvaluationError(
         sprintf(_t("Field %s is not supported because of its type (%s)"), field.string, field.type)
     );
 }
