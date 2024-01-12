@@ -31,6 +31,9 @@ $o-attachment-margin: 5px;
         border-radius: 2px;
         padding: 4px 6px 0 4px;
         background-color: rgba($o-black, 0.05);
+        min-width:12rem;
+        max-width: 25rem;
+        width: 100%;
 
         .o_attachment_delete_cross {
             float: right;
@@ -60,6 +63,10 @@ $o-attachment-margin: 5px;
 
         a {
             @include o-hover-text-color($default-color: $o-main-text-color, $hover-color: $headings-color);
+            display: inline-block;
+            overflow: hidden;
+            width: 100%;
+            text-overflow: ellipsis;
         }
     }
 
