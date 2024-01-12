@@ -3793,19 +3793,6 @@ options.registry.TextHighlight = options.Class.extend({
             applyTextHighlight(this.$target[0], highlightID);
         }
     },
-    /**
-     * @override
-     */
-    async _computeWidgetState(methodName, params) {
-        const value = await this._super(...arguments);
-        if (methodName === "selectStyle" && value === "currentColor") {
-            const style = window.getComputedStyle(this.$target[0]);
-            // The highlight default color is the text's "currentColor".
-            // This value should be handled correctly by the option.
-            return style.color;
-        }
-        return value;
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
