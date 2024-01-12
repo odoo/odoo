@@ -84,6 +84,7 @@ class ResPartnerBank(models.Model):
     sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', related='partner_id.company_id', store=True, readonly=True)
+    country_code = fields.Char(related='partner_id.country_code', string="Country Code")
 
     _sql_constraints = [(
         'unique_number',
