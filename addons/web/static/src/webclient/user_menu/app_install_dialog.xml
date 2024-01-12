@@ -2,7 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-name="web.AppInstallDialog">
-        <div>Coucou</div>
+        <Dialog title="'Get the app'">
+            <div>Install the Odoo application for fast access from your home screen, notifications and more!</div>
+            <div t-if="!isIOS">One-click install, no download needed:</div>
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="() => this.launchInstallProcess()">
+                    Install
+                </button>   
+                <button class="btn btn-primary o-default-button" t-on-click="() => this.props.close()">
+                    Discard
+                </button>
+            </t>
+
+        </Dialog>
     </t>
 
 </templates>

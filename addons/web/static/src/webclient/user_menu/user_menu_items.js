@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component, markup } from "@odoo/owl";
-import { isBrowserChrome, isBrowserSafari, isMacOS } from "@web/core/browser/feature_detection";
+import { isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { escape } from "@web/core/utils/strings";
@@ -114,7 +114,7 @@ function appInstallItem(env) {
         callback: () => {
             env.services.dialog.add(AppInstallDialog, {});
         },
-        show: () => isBrowserChrome() || isBrowserSafari(),
+        show: () => true, // env.services.installPrompt.canPromptToInstall, // isBrowserChrome() || isBrowserSafari(),
         sequence: 65,
     };
 }
