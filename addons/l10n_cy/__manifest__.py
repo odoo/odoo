@@ -16,4 +16,7 @@ Basic package for Cyprus that contains the chart of accounts, taxes, tax reports
         'data/menuitem_data.xml',
         'data/account_tax_report_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
 }
