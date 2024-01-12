@@ -644,14 +644,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         const target = ev.currentTarget;
         this._handleTextOptions(target, [
             this._getOptionTextClass(target),
-            "o_text_highlight_underline",
+            "o_text_highlight_freehand_1",
             "o_text_highlight_disabled"
         ], selectedTextEl => {
             const style = window.getComputedStyle(selectedTextEl);
             // The default value for `--text-highlight-width` is 0.1em.
             const widthPxValue = `${Math.round(parseFloat(style.fontSize) * 0.1)}px`;
             selectedTextEl.style.setProperty("--text-highlight-width", widthPxValue);
-            applyTextHighlight(selectedTextEl, "underline");
+            applyTextHighlight(selectedTextEl, "freehand_1");
             selectedTextEl.classList.remove("o_text_highlight_disabled");
         });
     },
