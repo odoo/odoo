@@ -6,6 +6,7 @@ import { useService } from '@web/core/utils/hooks';
 import { memoize } from '@web/core/utils/functions';
 import { Component, onMounted, useState, markup } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -89,7 +90,7 @@ class HistoryDialog extends Component {
      * Getters
      **/
     getRevisionDate(revision) {
-        return formatDateTime(DateTime.fromISO(revision['create_date']));
+        return formatDateTime(DateTime.fromISO(revision['create_date'], { zone: 'utc' }).setZone(user.tz));
     }
 }
 
