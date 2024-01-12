@@ -1,4 +1,5 @@
 import { useBus } from "@web/core/utils/hooks";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 import { Component, onMounted, onWillUpdateProps, onWillStart, useRef, useState } from "@odoo/owl";
 
@@ -37,7 +38,11 @@ export class SearchPanel extends Component {
     static props = {
         importedState: { type: String, optional: true },
     };
+    static components = {
+        Dropdown,
+    };
     static subTemplates = {
+        section: "web.SearchPanel.Section",
         category: "web.SearchPanel.Category",
         filtersGroup: "web.SearchPanel.FiltersGroup",
     };
@@ -190,6 +195,32 @@ export class SearchPanel extends Component {
     }
 
     /**
+     * Checks if the section matching the provided id has at least one active selection.
+     * If no id is provided, checks if at least one section has an active selection.
+     * @param {Number} sectionId
+     */
+    hasSelection(sectionId = 0) {
+        if (sectionId) {
+            const sectionState = this.state.active[sectionId];
+            if (sectionState instanceof Object) {
+                return Object.values(sectionState).some((val) => val);
+            }
+            return Boolean(sectionState);
+        }
+        return Object.keys(this.state.active).some((key) => this.hasSelection(key));
+    }
+
+    /**
+     * Clears all active selection in the section which id was provided.
+     * If no id is provided, clears the selection of all sections.
+     * @param {Number} sectionId
+     */
+    clearSelection(sectionId = 0) {
+        const sectionIds = sectionId ? [sectionId] : Object.keys(this.state.active).map(Number);
+        this.env.searchModel.clearSections(sectionIds);
+    }
+
+    /**
      * Prevent unnecessary calls to the model by ensuring a different category
      * is clicked.
      * @param {Object} category
@@ -268,7 +299,7 @@ export class SearchPanel extends Component {
      * headers according to the state of their values.
      */
     updateGroupHeadersChecked() {
-        const groups = this.root.el.querySelectorAll(":scope .o_search_panel_filter_group");
+        const groups = document.querySelectorAll(".o_search_panel_filter_group");
         for (const group of groups) {
             const header = group.querySelector(":scope .o_search_panel_group_header input");
             const vals = [...group.querySelectorAll(":scope .o_search_panel_filter_value input")];

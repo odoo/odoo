@@ -896,6 +896,24 @@ export class SearchModel extends EventBus {
     }
 
     /**
+     * Clears all values from the provided sections
+     * @param {array} sectionIds
+     */
+    clearSections(sectionIds) {
+        for (const sectionId of sectionIds) {
+            const section = this.sections.get(sectionId);
+            if (section.type === "category") {
+                section.activeValueId = false;
+            } else {
+                for (const [, value] of section.values) {
+                    value.checked = false;
+                }
+            }
+        }
+        this._notify();
+    }
+
+    /**
      * Activate or deactivate the simple filter with given filterId, i.e.
      * add or remove a corresponding query element.
      */

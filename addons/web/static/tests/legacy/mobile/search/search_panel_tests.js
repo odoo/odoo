@@ -68,10 +68,22 @@ QUnit.module("Search", (hooks) => {
                     </searchpanel>
                 </search>`,
         });
-        assert.containsOnce(target, ".o_search_panel.o_search_panel_summary");
+        assert.containsOnce(target, ".o_search_panel .o-dropdown");
+        assert.strictEqual(target.querySelector(".o_search_panel .o-dropdown").innerText, "Tags");
 
-        await click(target, ".o_search_panel .o_search_panel_current_selection");
-        assert.containsOnce(document.body, ".o_search_panel.o_mobile_search");
-        assert.containsN(document.body, ".o_search_panel_category_value", 3); // All, Gold, Silver
+        await click(target, ".o_search_panel .o-dropdown");
+        assert.containsOnce(
+            document.body,
+            ".o_search_panel_section.o_search_panel_category"
+        );
+        assert.containsN(target, ".o_search_panel_category_value", 3);
+        assert.strictEqual(target.querySelector(".o_search_panel_field").innerText, "All\nGold\nSilver");
+        await click(target, ".o_search_panel_category_value:nth-of-type(2) header");
+        assert.strictEqual(target.querySelector(".o_search_panel .o-dropdown").innerText, "Gold");
+        assert.containsOnce(target, ".o_search_panel .o-dropdown .fa-circle");
+        assert.containsOnce(target, ".o_search_panel a");
+        await click(target, ".o_search_panel a");
+        assert.strictEqual(target.querySelector(".o_search_panel .o-dropdown").innerText, "Tags");
+        assert.containsNone(target, ".o_search_panel .o-dropdown .fa-circle");
     });
 });
