@@ -40,6 +40,8 @@ class PosSelfKiosk(http.Controller):
                 .sudo()
                 .search([("identifier", "=", table_identifier), ("active", "=", True)], limit=1)
             )
+            if table_sudo and table_sudo.parent_id:
+                table_sudo = table_sudo.parent_id
         elif pos_config.self_ordering_mode == 'kiosk':
             if config_access_token:
                 config_access_token = pos_config.access_token
