@@ -5,7 +5,7 @@
         <div t-attf-class="oe_fileupload {{props.className ? props.className : ''}}" aria-atomic="true">
             <div class="o_attachments">
                 <t t-foreach="files" t-as="file" t-key="file_index">
-                   <t t-call="Many2ManyBinaryField.attachment_preview"/>
+                   <t t-call="web.Many2ManyBinaryField.attachment_preview"/>
                 </t>
             </div>
             <div t-if="!props.readonly" class="oe_add">
@@ -24,7 +24,7 @@
         </div>
     </t>
 
-<t t-name="Many2ManyBinaryField.attachment_preview">
+<t t-name="web.Many2ManyBinaryField.attachment_preview">
     <t t-set="editable" t-value="!props.readonly"/>
     <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
         <div class="o_attachment_wrap">
