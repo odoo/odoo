@@ -771,6 +771,7 @@ export class OdooEditor extends EventTarget {
 
     // One step completed: apply to vDOM, setup next history step
     historyStep(skipRollback = false, { stepId } = {}) {
+        console.warn('step');
         if (!this._historyStepsActive) {
             return;
         }
@@ -1833,7 +1834,9 @@ export class OdooEditor extends EventTarget {
                     }
                 }
                 if (isCollapsed && anchorOffset !== newOffset) {
+                    this._pauseSetLinkZws = true;
                     setSelection(anchorNode, newOffset);
+                    this._pauseSetLinkZws = false;
                 }
             } else if (!zwsToPreserve.includes(zws)) {
                 // const restoreUpdate = prepareUpdate(
@@ -1845,7 +1848,9 @@ export class OdooEditor extends EventTarget {
                 this.observerActive('_resetLinkZws');
                 // restoreUpdate();
             } else if (zws === zwsInSelection) {
+                this._pauseSetLinkZws = true;
                 setSelection(zws, 1);
+                this._pauseSetLinkZws = false;
             }
         }
         // const { anchorNode, focusNode } = this.document.getSelection();
@@ -2921,6 +2926,13 @@ export class OdooEditor extends EventTarget {
             // re-trigger the _onSelectionChange.
             return;
         }
+        const previousSelection = this._latestComputedSelection;
+        // Compute the current selection on selectionchange but do not record it. Leave
+        // that to the command execution or the 'input' event handler.
+        this._computeHistorySelection();
+        if (previousSelection && Object.entries(previousSelection).every(([k, v]) => this._latestComputedSelection[k] === v)) {
+            return;
+        }
 
         this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
@@ -2947,9 +2959,6 @@ export class OdooEditor extends EventTarget {
             //     this._recordHistorySelection();
             // }
         }
-        // Compute the current selection on selectionchange but do not record it. Leave
-        // that to the command execution or the 'input' event handler.
-        this._computeHistorySelection();
     }
 
     /**
