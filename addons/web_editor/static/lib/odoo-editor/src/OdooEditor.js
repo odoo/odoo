@@ -1819,8 +1819,10 @@ export class OdooEditor extends EventTarget {
         // const restoreCursor = zwsInSelection && preserveCursor(this.document);
         for (const zws of element.querySelectorAll('[data-o-link-zws]')) {
             if (zws.innerHTML.replaceAll('\u200B', '')) {
+                this.observerUnactive('_resetLinkZwsRemoveZws');
                 // The zws span has more than just a zws -> don't remove it.
                 zws.removeAttribute('data-o-link-zws');
+                // TODO: DO THIS PART IN "ON_INPUT > INSERT" INSTEAD:
                 // Remove the zws characters anyway and fix the selection accordingly.
                 const { anchorNode, anchorOffset, isCollapsed } = this.document.getSelection();
                 let newOffset = anchorOffset;
@@ -1834,23 +1836,20 @@ export class OdooEditor extends EventTarget {
                     }
                 }
                 if (isCollapsed && anchorOffset !== newOffset) {
-                    this._pauseSetLinkZws = true;
                     setSelection(anchorNode, newOffset);
-                    this._pauseSetLinkZws = false;
                 }
+                this.observerActive('_resetLinkZwsRemoveZws');
             } else if (!zwsToPreserve.includes(zws)) {
                 // const restoreUpdate = prepareUpdate(
                 //     ...boundariesOut(zws.parentElement),
                 //     { allowReenter: false, label: '_resetLinkZws' }
                 // );
-                this.observerUnactive('_resetLinkZws');
+                this.observerUnactive('_resetLinkZwsRemoveZwsSpan');
                 zws.remove();
-                this.observerActive('_resetLinkZws');
+                this.observerActive('_resetLinkZwsRemoveZwsSpan');
                 // restoreUpdate();
             } else if (zws === zwsInSelection) {
-                this._pauseSetLinkZws = true;
                 setSelection(zws, 1);
-                this._pauseSetLinkZws = false;
             }
         }
         // const { anchorNode, focusNode } = this.document.getSelection();
@@ -1858,9 +1857,9 @@ export class OdooEditor extends EventTarget {
         // focusNode && fillEmpty(focusNode);
         for (const link of element.querySelectorAll('.o_link_in_selection')) {
             if (link !== linkInSelection) {
-                this.observerUnactive('_resetLinkZws');
+                this.observerUnactive('_resetLinkZwsLinkInSelection');
                 link.classList.remove('o_link_in_selection');
-                this.observerActive('_resetLinkZws');
+                this.observerActive('_resetLinkZwsLinkInSelection');
             }
         }
         // restoreCursor && restoreCursor();
