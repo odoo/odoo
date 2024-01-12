@@ -3,12 +3,8 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { Composer } from "@mail/core/common/composer";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { Thread } from "@mail/core/common/thread";
-import { Activity } from "@mail/core/web/activity";
-import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
-import { RecipientList } from "@mail/core/web/recipient_list";
-import { FollowerList } from "@mail/core/web/follower_list";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 
 import {
@@ -27,7 +23,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -47,17 +42,13 @@ export class Chatter extends Component {
         Dropdown,
         Thread,
         Composer,
-        Activity,
         FileUploader,
-        FollowerList,
-        SuggestedRecipientsList,
         SearchMessagesPanel,
     };
     static props = [
         "close?",
         "compactHeight?",
         "displayName?",
-        "has_activities?",
         "isChatterAside?",
         "hasParentReloadOnAttachmentsChanged?",
         "hasParentReloadOnFollowersUpdate?",
@@ -71,7 +62,6 @@ export class Chatter extends Component {
     ];
     static defaultProps = {
         compactHeight: false,
-        has_activities: true,
         isChatterAside: false,
         hasParentReloadOnAttachmentsChanged: false,
         hasParentReloadOnFollowersUpdate: false,
@@ -86,7 +76,6 @@ export class Chatter extends Component {
     setup() {
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
-        this.activityService = useState(useService("mail.activity"));
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
@@ -107,7 +96,6 @@ export class Chatter extends Component {
         );
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
-        this.recipientsPopover = usePopover(RecipientList);
         this.messageHighlight = useMessageHighlight();
         this.followerListDropdown = useDropdownState();
         useChildSubEnv({
