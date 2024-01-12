@@ -32,6 +32,7 @@ class HistoryDialog extends Component {
         this.size = 'xl';
         this.title = _t('History');
         this.orm = useService('orm');
+        this.userService = useService('user');
 
         onMounted(() => this.init());
     }
@@ -90,7 +91,7 @@ class HistoryDialog extends Component {
      * Getters
      **/
     getRevisionDate(revision) {
-        return formatDateTime(DateTime.fromISO(revision['create_date']));
+        return formatDateTime(DateTime.fromISO(revision['create_date'], { zone: 'utc' }).setZone(this.userService.tz));
     }
 }
 
