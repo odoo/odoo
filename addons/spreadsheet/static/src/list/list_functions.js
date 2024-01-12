@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { sprintf } from "@web/core/utils/strings";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 
 const { arg, toString, toNumber } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
@@ -13,7 +14,7 @@ const { functionRegistry } = spreadsheet.registries;
 
 function assertListsExists(listId, getters) {
     if (!getters.isExistingList(listId)) {
-        throw new Error(sprintf(_t('There is no list with id "%s"'), listId));
+        throw new EvaluationError(sprintf(_t('There is no list with id "%s"'), listId));
     }
 }
 
@@ -28,37 +29,36 @@ const ODOO_LIST = {
     compute: function (listId, index, fieldName) {
         const id = toString(listId);
         const position = toNumber(index, this.locale) - 1;
-        const field = toString(fieldName);
+        const _fieldName = toString(fieldName);
         assertListsExists(id, this.getters);
-        return this.getters.getListCellValue(id, position, field);
-    },
-    computeFormat: function (listId, index, fieldName) {
-        const id = toString(listId.value);
-        const position = toNumber(index.value, this.locale) - 1;
-        const field = this.getters.getListDataSource(id).getField(toString(fieldName.value));
-        switch (field.type) {
-            case "integer":
-                return "0";
-            case "float":
-                return "#,##0.00";
-            case "monetary": {
-                const currencyName = this.getters.getListCellValue(
-                    id,
-                    position,
-                    field.currency_field
-                );
-                return this.getters.getCurrencyFormat(currencyName);
-            }
-            case "date":
-                return this.locale.dateFormat;
-            case "datetime":
-                return this.locale.dateFormat + " " + this.locale.timeFormat;
-            default:
-                return undefined;
-        }
+        const value = this.getters.getListCellValue(id, position, _fieldName);
+        const field = this.getters.getListDataSource(id).getField(_fieldName);
+        return {
+            value,
+            format: odooListFormat(id, position, field, this.getters, this.locale),
+        };
     },
     returns: ["NUMBER", "STRING"],
 };
+
+function odooListFormat(id, position, field, getters, locale) {
+    switch (field?.type) {
+        case "integer":
+            return "0";
+        case "float":
+            return "#,##0.00";
+        case "monetary": {
+            const currencyName = getters.getListCellValue(id, position, field.currency_field);
+            return getters.getCurrencyFormat(currencyName);
+        }
+        case "date":
+            return locale.dateFormat;
+        case "datetime":
+            return locale.dateFormat + " " + locale.timeFormat;
+        default:
+            return undefined;
+    }
+}
 
 const ODOO_LIST_HEADER = {
     description: _t("Get the header of a list."),

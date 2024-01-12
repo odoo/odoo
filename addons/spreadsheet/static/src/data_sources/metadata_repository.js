@@ -4,9 +4,10 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { ServerData } from "../data_sources/server_data";
 
-import { LoadingDataError } from "../o_spreadsheet/errors";
+import { isLoadingError } from "../o_spreadsheet/errors";
 import { DisplayNameRepository } from "./display_name_repository";
 import { LabelsRepository } from "./labels_repository";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 
 import { EventBus } from "@odoo/owl";
 
@@ -121,10 +122,10 @@ export class MetadataRepository extends EventBus {
         try {
             return this.displayNameRepository.getDisplayName(model, id);
         } catch (e) {
-            if (e instanceof LoadingDataError) {
+            if (isLoadingError(e)) {
                 throw e;
             }
-            throw new Error(sprintf(_t("Unable to fetch the label of %s of model %s"), id, model));
+            throw new EvaluationError(sprintf(_t("Unable to fetch the label of %s of model %s"), id, model));
         }
     }
 }
