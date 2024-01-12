@@ -35,23 +35,4 @@ patch(OdooEditor.prototype, {
             e.clipboardData.setData("text/odoo-editor", html);
         }
     },
-    /**
-     * @override
-     */
-    execCommand() {
-        const sel = this.document.getSelection();
-        const range = sel.getRangeAt(0);
-        const startContainer = range.startContainer;
-        const textEl = (startContainer.nodeType === Node.ELEMENT_NODE ?
-            startContainer : startContainer.parentElement).closest(".o_text_highlight");
-        if (textEl) {
-            // In the same way as for `oEnter()`, some other editor commands
-            // may lead to split the content of text highlight lines. We need to
-            // keep track of them to make sure the update is done correctly.
-            [...textEl.querySelectorAll(".o_text_highlight_item")].forEach(line => {
-                line.classList.add("o_text_highlight_item_dirty");
-            });
-        }
-        return super.execCommand(...arguments);
-    }
 });
