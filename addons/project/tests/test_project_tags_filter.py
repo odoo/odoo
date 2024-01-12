@@ -11,27 +11,23 @@ class TestProjectTags(HttpCase, TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['project.tags'].create([
-            {'name': 'Corkscrew tailed', 'project_ids': [Command.link(cls.project_pigs.id)]},
-            {'name': 'Horned', 'project_ids': [Command.link(cls.project_goats.id)]},
-            {
-                'name': '4 Legged',
-                'project_ids': [
-                    Command.link(cls.project_goats.id),
-                    Command.link(cls.project_pigs.id),
-                ],
-            },
+        tag_corkscrew, tag_horn, tag_legged = cls.env['project.tags'].create([
+            {'name': 'Corkscrew tailed'},
+            {'name': 'Horned'},
+            {'name': '4 Legged'},
         ])
 
         cls.project_pigs.write({
             'stage_id': cls.env['project.project.stage'].create({
                 'name': 'pig stage',
             }).id,
+            'tag_ids': [Command.link(tag_corkscrew.id), Command.link(tag_legged.id)],
         })
         cls.project_goats.write({
             'stage_id': cls.env['project.project.stage'].create({
                 'name': 'goat stage',
             }).id,
+            'tag_ids': [Command.link(tag_horn.id), Command.link(tag_legged.id)],
         })
 
         cls.env["res.config.settings"].create({'group_project_stages': True}).execute()
