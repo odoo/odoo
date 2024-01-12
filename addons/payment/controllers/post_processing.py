@@ -38,7 +38,7 @@ class PaymentPostProcessing(http.Controller):
 
     @http.route('/payment/status/poll', type='json', auth='public')
     def poll_status(self, **_kwargs):
-        """ Fetch the transaction and finalize its post-processing.
+        """ Fetch the transaction and trigger its post-processing.
 
         :return: The post-processing values of the transaction.
         :rtype: dict
@@ -46,11 +46,11 @@ class PaymentPostProcessing(http.Controller):
         # We only poll the payment status if a payment was found, so the transaction should exist.
         monitored_tx = self._get_monitored_transaction()
 
-        # Finalize the post-processing of the transaction before redirecting the user to the landing
-        # route and its document.
-        if monitored_tx.state == 'done' and not monitored_tx.is_post_processed:
+        # Post-process the transaction before redirecting the user to the landing route and its
+        # document.
+        if not monitored_tx.is_post_processed:
             try:
-                monitored_tx._finalize_post_processing()
+                monitored_tx._post_process()
             except psycopg2.OperationalError:  # The database cursor could not be committed.
                 request.env.cr.rollback()  # Rollback and try later.
                 raise Exception('retry')

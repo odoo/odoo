@@ -46,7 +46,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction(
             'redirect', state='done', provider_reference='source_reference'
         )
-        tx._reconcile_after_done()  # Create the payment
+        tx._post_process()  # Create the payment
 
         # Send the refund request
         with patch(
