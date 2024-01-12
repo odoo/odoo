@@ -311,8 +311,6 @@ class WebsiteForum(WebsiteProfile):
             'filters': filters,
             'reversed': reversed,
         })
-        if (request.httprequest.referrer or "").startswith(request.httprequest.url_root):
-            values['has_back_button_url'] = True
 
         # increment view counter
         question.sudo()._set_viewed()
