@@ -27,7 +27,7 @@
                     t-att-style="'width: 1.5rem; height: 1.5rem; ' + badgeStyle"/>
                 <div t-esc="pos.getCustomerCount(props.table.id) + '/' + this.props.table.seats" style="height: 2rem;" class="table-seats mb-1 position-absolute d-flex align-items-center justify-content-center bottom-0 start-50 translate-middle-x px-2 py-1 rounded text-bg-dark bg-opacity-25 fs-4" />
             </div>
-            <t t-if="isSelected and !isKanban()" t-foreach="handles" t-as="handle" t-key="handle">
+            <t t-if="pos.isEditMode and isSelected and !isKanban()" t-foreach="handles" t-as="handle" t-key="handle">
                 <span class="table-handle" t-ref="{{handle}}" t-att-style="computeHandleStyle(handle)"/>
             </t>
         </div>
