@@ -6,11 +6,16 @@
             <div class="oe_login_form">
                 <h5 class="card-title">Two-factor Authentication</h5>
                 <form method="POST" action="" class="">
-                    <div class="mb-2 mt-2 text-muted">
+                    <div class="mb-2 mt-2 text-muted" t-if="user._mfa_type() == 'totp'">
                         To login, enter below the six-digit authentication code provided by your Authenticator app.
                         <br/>
                         <a href="https://www.odoo.com/documentation/master/applications/general/auth/2fa.html"
                            title="Learn More" target="_blank">Learn More</a>
+                    </div>
+                    <div t-if="user._mfa_type() == 'totp_mail'" class="mb-2 mt-2 text-muted">
+                        <i class="fa fa-envelope-o"/>
+                        To login, enter below the six-digit authentication code just sent via email to <t t-out="user.email"/>.
+                        <br/>
                     </div>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
@@ -18,6 +23,11 @@
                         <label class="fw-bold" for="totp_token">Authentication Code</label>
                         <input id="totp_token" name="totp_token" class="form-control mb-2"
                                 autocomplete="off" inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"/>
+                    </div>
+                    <div class="mb-2" t-if="user._mfa_type() == 'totp_mail'">
+                        We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.
+                        <br/>
+                        <a href="https://www.odoo.com/documentation/master/applications/general/auth/2fa.html" title="Learn More" target="_blank">Learn More</a>
                     </div>
                     <div class="text-center py-2 border-top">
                         <p class="alert alert-danger" t-if="error" role="alert">
@@ -34,6 +44,12 @@
                         </div>
 
                     </div>
+                </form>
+
+                <form method="POST" t-if="user._mfa_type() == 'totp_mail'">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="send_email" value="1"/>
+                    <button type="submit" class="btn btn-secondary btn-block">Re-send email</button>
                 </form>
 
                 <form method="POST" action="/web/session/logout">
