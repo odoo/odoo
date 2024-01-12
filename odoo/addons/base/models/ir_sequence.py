@@ -268,6 +268,8 @@ class IrSequence(models.Model):
     def next_by_id(self, sequence_date=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_access_rights('read')
+        if self.env.context.get('dryrun'):
+            return False
         return self._next(sequence_date=sequence_date)
 
     @api.model
@@ -282,6 +284,8 @@ class IrSequence(models.Model):
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
+            return False
+        if self.env.context.get('dryrun'):
             return False
         seq_id = seq_ids[0]
         return seq_id._next(sequence_date=sequence_date)
