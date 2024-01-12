@@ -235,6 +235,7 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
+    qty_to_value = fields.Float(compute='_compute_qty_to_value')
     cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
         "account.move.line", copy=False,
     )
@@ -289,3 +290,8 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    @api.depends('quantity', 'stock_valuation_layer_ids.qty_valued_already_out', 'stock_valuation_layer_ids.qty_valued_in_stock')
+    def _compute_qty_to_value(self):
+        for aml in self:
+            aml.qty_to_value = aml.quantity - sum(aml.stock_valuation_layer_ids.mapped('qty_valued_already_out')) - sum(aml.stock_valuation_layer_ids.mapped('qty_valued_in_stock'))

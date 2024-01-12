@@ -382,6 +382,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         cls.startClassPatcher(post_patch)
         cls.startClassPatcher(create_patch)
 
+    def product1_real_svls(self):
+        return self.product1.stock_valuation_layer_ids.filtered(lambda svl: not svl.is_dummy)
+
     def _bill(self, po, qty=None, price=None):
         action = po.action_create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
@@ -793,7 +796,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.button_validate()
 
         self._bill(po)
-        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        layers = self.product1_real_svls()
         self.assertEqual(len(layers), 1)
         self.assertEqual(layers.quantity, 1500)
         self.assertEqual(layers.value, 4951.88)
@@ -827,7 +830,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.button_validate()
 
         self._bill(po, price=3.31125)
-        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)])
+        layers = self.product1_real_svls()
         self.assertEqual(len(layers), 2)
         self.assertEqual(layers[0].quantity, 1500)
         self.assertEqual(layers[1].quantity, 0)
@@ -1914,7 +1917,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         backorder_wizard.process()
 
         expected_svl_values += [7 * 50]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
 
         # Receive 3 Hundred
         receipt02 = receipt01.backorder_ids
@@ -1922,7 +1925,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt02.button_validate()
 
         expected_svl_values += [3 * 50]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
 
         # Delivery 5 Hundred
         delivery01 = self.env['stock.picking'].create({
@@ -1944,7 +1947,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         delivery01.button_validate()
 
         expected_svl_values += [-5 * 50]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
 
         # We will create a price diff SVL only for the remaining quantities not yet billed
         # On the bill, price unit is 120€, i.e. $60 -> price diff equal to $10
@@ -1975,7 +1978,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
             # stock side
             expected_svl_values += new_svl_expected
-            self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values, err_msg)
+            self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values, err_msg)
 
             # account side
             new_valuation_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id), ('id', 'not in', valuation_amls.ids)])
@@ -2016,9 +2019,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         delivery02.button_validate()
 
         expected_svl_values += [-2 * 50 + -2 * 10]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
 
-        svl_r01, svl_r02, _svl_d01, svl_diff_01, svl_diff_02, svl_diff_03, _svl_d02 = self.product1.stock_valuation_layer_ids
+        svl_r01, svl_r02, _svl_d01, svl_diff_01, svl_diff_02, svl_diff_03, _svl_d02 = self.product1_real_svls()
         self.assertEqual(svl_diff_01.stock_valuation_layer_id, svl_r01)
         self.assertEqual(svl_diff_02.stock_valuation_layer_id, svl_r01)
         self.assertEqual(svl_diff_03.stock_valuation_layer_id, svl_r02)
@@ -2140,8 +2143,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt03.button_validate()
 
         expected_svl_values = [40, 30, 50]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
 
         # pylint: disable=bad-whitespace
         for qty,    price,  expected_svl_values,                                expected_svl_remaining_values in [
@@ -2152,8 +2155,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             (2.0,   10.0,   [40.0, 30.0, 50.0, 6.0, 1.0, 1.0, 5.0, -1.0, -3.0], [47.0, 35.0, 47.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
         ]:
             self._bill(po, qty, price)
-            self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values, 'Err while invoicing %s @ %s' % (qty, price))
-            self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values, 'Err while invoicing %s @ %s' % (qty, price))
+            self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values, 'Err while invoicing %s @ %s' % (qty, price))
+            self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values, 'Err while invoicing %s @ %s' % (qty, price))
 
         bill01, bill02, _bill03, bill04, bill05 = po.invoice_ids.sorted('id')
 
@@ -2162,8 +2165,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_remaining_values += [0.0]
         # should impact the first layer
         expected_svl_remaining_values[0] -= 2.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._refund(bill02)
         expected_svl_values += [-1.0, -1.0]
@@ -2171,8 +2174,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # should impact the two first layers
         expected_svl_remaining_values[0] -= 1.0
         expected_svl_remaining_values[1] -= 1.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._refund(bill04, 2.0)
         expected_svl_values += [1.0, 1.0]
@@ -2180,12 +2183,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # should impact the two last layers
         expected_svl_remaining_values[1] += 1.0
         expected_svl_remaining_values[2] += 1.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._refund(bill05, 1.0)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._bill(po, price=18.0)
         expected_svl_values += [16.0, 16.0, 16.0]
@@ -2194,8 +2197,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_remaining_values[0] += 16.0
         expected_svl_remaining_values[1] += 16.0
         expected_svl_remaining_values[2] += 16.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         accounts = self.product1.product_tmpl_id._get_product_accounts()
         stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)], order='id')
@@ -2277,15 +2280,15 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.button_validate()
         expected_svl_values += [100.0]
         expected_svl_remaining_values += [100.0]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         bill01 = self._bill(po, price=12)
         expected_svl_values += [20.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] += 20.0  # should impact the layer of the receipt
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         delivery = self.env['stock.picking'].create({
             'location_id': stock_location.id,
@@ -2307,22 +2310,22 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_values += [-36.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 36.0  # should impact the layer of the receipt
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._refund(bill01)
         expected_svl_values += [-14.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 14.0  # should impact the layer of the receipt
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         bill02 = self._bill(po, price=9)
         expected_svl_values += [-7.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 7.0  # should impact the layer of the receipt
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         delivery = self.env['stock.picking'].create({
             'location_id': stock_location.id,
@@ -2344,8 +2347,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_values += [-9.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 9.0  # should impact the layer of the receipt
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         ctx = {'active_ids': bill02.ids, 'active_model': 'account.move'}
         credit_note_wizard = self.env['account.move.reversal'].with_context(ctx).create({
@@ -2360,8 +2363,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_values += [6.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] += 6.0  # should impact the layer of the receipt
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         accounts = self.product1.product_tmpl_id._get_product_accounts()
         stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)], order='id')
@@ -2433,21 +2436,21 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt.button_validate()
         expected_svl_values += [100.0]
         expected_svl_remaining_values += [100.0]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         return01 = self._return(receipt, qty=3)
         expected_svl_values += [-30.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 30
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._return(return01)
         expected_svl_values += [30.0]
         expected_svl_remaining_values += [30.0]
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         bill = self._bill(po, price=12)
         # two new layers because we have 7 remaining products in the first in-layer and 3 in the second one
@@ -2456,8 +2459,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_remaining_values[0] += 14.0
         # `expected_svl_remaining_values[1]` is the return, it does not change
         expected_svl_remaining_values[2] += 6.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
         stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)])
         self.assertTrue(stock_in_amls)
         self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
@@ -2466,8 +2469,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_values += [-12.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 12.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         refund = self._bill(po, price=12)
         self.assertEqual(refund.move_type, 'in_refund')
@@ -2479,12 +2482,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         expected_svl_values += [-60.0]
         expected_svl_remaining_values += [0.0]
         expected_svl_remaining_values[0] -= 60.0
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
 
         self._refund(bill, qty=5)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
-        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        self.assertEqual(self.product1_real_svls().mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1_real_svls().mapped('remaining_value'), expected_svl_remaining_values)
         stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)], order='id')
         self.assertRecordValues(stock_in_amls, [
             # IN 10 @ 10
@@ -2606,7 +2609,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill02.action_post()
         self._bill(po, price=13)
 
-        svls = self.product1.stock_valuation_layer_ids
+        svls = self.product1_real_svls()
         self.assertEqual(svls.mapped('remaining_value'), [12.0, 13.0, 0.0, 0.0, 0.0, 0.0])
         self.assertEqual(svls.mapped('value'), [10.0, 10.0, 1.0, -1.0, 2.0, 3.0])
 
@@ -2630,7 +2633,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         refund.action_post()
         self._bill(po, price=13)
 
-        svls = self.product1.stock_valuation_layer_ids
+        svls = self.product1_real_svls()
         self.assertEqual(svls.mapped('remaining_value'), [13.0, 12.0, 0.0, 0.0, 0.0, 0.0])
         self.assertEqual(svls.mapped('value'), [10.0, 10.0, 1.0, 2.0, -1.0, 3.0])
 

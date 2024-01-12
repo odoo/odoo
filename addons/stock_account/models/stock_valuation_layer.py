@@ -34,6 +34,12 @@ class StockValuationLayer(models.Model):
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
     warehouse_id = fields.Many2one('stock.warehouse', string="Receipt WH", compute='_compute_warehouse_id', search='_search_warehouse_id')
+    qty_valued_already_out = fields.Float(default=0) # Only for child layers
+    qty_valued_in_stock = fields.Float(default=0) # Only for child layers
+    qty_to_value_in_stock = fields.Float(compute='_compute_qty_to_value') # Only for parent layers
+    qty_to_value_already_out = fields.Float(compute='_compute_qty_to_value') # Only for parent layers
+    qty_overvalued = fields.Float(compute='_compute_qty_to_value') # Only for parent layers
+    is_dummy = fields.Boolean(default=False)
 
     def init(self):
         tools.create_index(
@@ -192,3 +198,74 @@ class StockValuationLayer(models.Model):
             new_valuation = unit_cost * new_valued_qty
 
         return new_valued_qty, new_valuation
+
+    @api.depends('quantity', 'remaining_qty',
+                 'stock_valuation_layer_ids.qty_valued_already_out',
+                 'stock_valuation_layer_ids.qty_valued_in_stock',
+                 'stock_move_id.returned_move_ids.stock_valuation_layer_ids.quantity')
+    def _compute_qty_to_value(self):
+        """
+        qty_to_value_in_stock: quantity pending definitive valuation that is still in stock
+        qty_to_value_already_out: quantity pending definitive valuation that has already moved out-of-stock
+        qty_overvalued: excess quantity valued due to some return of stock to vendor after definitively valuing it
+
+        !!! Returns linked to the move are taken into account.
+            If the move for this SVL has a (partial) return, then the returned qty is not included in the qty_to_value.
+            Example: 10 items, return 3, then the total qty_to_value on the original SVL is 7.
+        """
+        for svl in self:
+            # The total quantity that is returned in the move chain (as negative value, ex. 3 returned -> -3)
+            return_qty = sum(svl.stock_move_id.returned_move_ids.stock_valuation_layer_ids.filtered(lambda move: move.quantity < 0).mapped('quantity'))
+            real_qty = svl.quantity + return_qty
+            qty_already_out = real_qty - svl.remaining_qty
+            to_value_in = svl.remaining_qty - sum(svl.stock_valuation_layer_ids.mapped('qty_valued_in_stock'))
+            to_value_out = qty_already_out - sum(svl.stock_valuation_layer_ids.mapped('qty_valued_already_out'))
+            to_value_total = to_value_in + to_value_out
+
+            # First, we check if this layer is overvalued (due to a vendor return) and compensate
+            qty_overvalued = 0
+            if float_compare(to_value_total, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
+                qty_overvalued = -to_value_total
+                to_value_in = 0
+                to_value_out = 0
+
+            # Some might have shipped out in the meanwhile
+            if float_compare(to_value_in, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
+                to_value_out += to_value_in
+                to_value_in = 0
+
+            svl.qty_to_value_in_stock = to_value_in
+            svl.qty_to_value_already_out = to_value_out
+            svl.qty_overvalued = qty_overvalued
+
+    def calculate_refund_quantities(self, qty_to_refund):
+        """
+            Calculate the different quantities to refund from this correction svl,
+            refunding only maximally the remaining_qty provided.
+            :param remaining_qty:  The (maximal) amount to refund from the original bill.
+            :return:               A tuple containing the different refund quantities to take:
+                                   overvalued qty, in stock qty, meanwhile out qty, already out qty
+        """
+        parent_layer = self.stock_valuation_layer_id
+
+        # 1. Calculate the quantity that was in stock when posting but has been returned to the vendor
+        common_overvalued = min(qty_to_refund, parent_layer.qty_overvalued)
+        qty_to_refund -= common_overvalued
+
+        # 2. Calculate the quantity that was in stock when posting and still is in stock
+        meanwhile_out_qty = max(self.qty_valued_in_stock - parent_layer.remaining_qty, 0)
+        amount_still_in = self.qty_valued_in_stock - meanwhile_out_qty
+        common_still_in_qty = min(qty_to_refund, amount_still_in)
+        qty_to_refund -= common_still_in_qty
+
+        # 3. Calculate the quantity that was in stock when posting but went out in the meanwhile
+        common_meanwhile_out_qty = min(qty_to_refund, meanwhile_out_qty)
+        qty_to_refund -= common_meanwhile_out_qty
+        self.qty_valued_in_stock -= common_meanwhile_out_qty
+        self.qty_valued_already_out += common_meanwhile_out_qty
+
+        # 4. Calculate the quantity that was already out when posting the original invoice
+        common_out_qty = min(qty_to_refund, self.qty_valued_already_out)
+        qty_to_refund -= common_out_qty
+
+        return common_overvalued, common_still_in_qty, common_meanwhile_out_qty, common_out_qty
