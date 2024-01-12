@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-# call with ESSID and optionally a password
-# when called without an ESSID, it will attempt
-# to reconnect to a previously chosen network
 function connect () {
+	NV_FS=/root_bypass_ramdisks
+	HOSTNAME="$(hostname)"
+	CURRENT_SERVER_FILE=/home/pi/odoo-remote-server.conf
+	HOSTS=${NV_FS}/etc/hosts
+	HOST_FILE=${NV_FS}/etc/hostname
+	TOKEN_FILE=/home/pi/token
 	WPA_PASS_FILE="/tmp/wpa_pass.txt"
 	PERSISTENT_WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
 	CURRENT_WIFI_NETWORK_FILE="/tmp/current_wifi_network.txt" # used to repair connection when we lose it
@@ -11,7 +14,20 @@ function connect () {
 	ESSID="${1}"
 	PASSWORD="${2}"
 	PERSIST="${3}"
-	NO_AP="${4}"
+	SERVER="${4}"
+	TOKEN="${5}"
+	IOT_NAME="${6}"
+	NO_AP="${7}"
+
+	if [ ! -z "${SERVER}" ]
+	then
+		logger -t posbox_connect_to_wifi "Creating/Saving ${CURRENT_SERVER_FILE} for ${SERVER}"
+		logger -t posbox_connect_to_wifi "Creating/Saving ${TOKEN_FILE} file for ${TOKEN}"
+		sudo mount -o remount,rw /
+		echo "${SERVER}" > ${CURRENT_SERVER_FILE}
+		echo "${TOKEN}" > ${TOKEN_FILE}
+		sudo mount -o remount,ro /
+	fi
 
 	sleep 3
 
@@ -38,27 +54,19 @@ function connect () {
 
 	logger -t posbox_connect_to_wifi "Connecting to ${ESSID}"
 	sudo service hostapd stop
+	# Necessary when comming from the access point
+	sudo ip address del 10.11.12.1/24 dev wlan0
 	sudo killall nginx
-	sudo service nginx restart
-	sudo service dnsmasq stop
 
-	sudo pkill wpa_supplicant
-	sudo ifconfig wlan0 down
-	sudo ifconfig wlan0 0.0.0.0  # this is how you clear the interface's configuration
-	sudo ifconfig wlan0 up
+	sudo nmcli g reload
 
 	if [ -z "${PASSWORD}" ] ; then
-		sudo iwconfig wlan0 essid "${ESSID}"
+		sudo nmcli d wifi connect "${ESSID}"
 	else
-		# Necessary in stretch: https://www.raspberrypi.org/forums/viewtopic.php?t=196927
-		sudo cp /etc/wpa_supplicant/wpa_supplicant.conf "${WPA_PASS_FILE}"
-		sudo chmod 777 "${WPA_PASS_FILE}"
-		sudo wpa_passphrase "${ESSID}" "${PASSWORD}" >> "${WPA_PASS_FILE}"
-		sudo wpa_supplicant -B -i wlan0 -c "${WPA_PASS_FILE}"
+		sudo nmcli d wifi connect "${ESSID}" password "${PASSWORD}"
 	fi
 
-	sudo systemctl daemon-reload
-	sudo service dhcpcd restart
+	sudo service nginx restart
 
 	# give dhcp some time
 	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet " ; do sleep 0.1 ; done'
@@ -85,6 +93,19 @@ function connect () {
 		logger -t posbox_connect_to_wifi "Starting wifi keep alive script"
 		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/keep_wifi_alive.sh &
 	fi
+
+	if [ -n "${IOT_NAME}" ] && [ "${IOT_NAME}" != "${HOSTNAME}" ];
+	then
+		logger -t posbox_connect_to_wifi "Changing hostname from ${HOSTNAME} to ${IOT_NAME}"
+		sudo nmcli g hostname ${IOT_NAME}
+		sudo mount -o remount,rw ${NV_FS}
+		sudo cp /etc/hostname "${HOST_FILE}"
+		logger -t posbox_connect_to_wifi "REBOOT ..."
+		sudo reboot
+	else
+		logger -t posbox_connect_to_wifi "Restarting odoo service"
+		sudo service odoo restart
+	fi
 }
 
-connect "${1}" "${2}" "${3}" "${4}" &
+connect "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" &

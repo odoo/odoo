@@ -279,12 +279,17 @@ def get_version():
 
 def get_wifi_essid():
     wifi_options = []
-    process_iwlist = subprocess.Popen(['sudo', 'iwlist', 'wlan0', 'scan'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwlist.stdout, stdout=subprocess.PIPE).stdout.readlines()
-    for ssid in process_grep:
-        essid = ssid.decode('utf-8').split('"')[1]
-        if essid not in wifi_options:
-            wifi_options.append(essid)
+    process_iwlist = subprocess.Popen(['sudo', 'nmcli', 'device', 'wifi', 'list'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout_data, stderr_data = process_iwlist.communicate()
+    if stdout_data:
+        lines = [line.strip() for line in stdout_data.decode('utf-8').split('\n')]
+        lines = lines[1:]
+        for line in lines:
+            elements = line.split()
+            if len(elements) >= 3:
+                ssid = elements[1 if elements[0] != '*' else 2]
+                if ssid != '--' and ssid not in wifi_options:
+                    wifi_options.append(ssid)
     return wifi_options
 
 def load_certificate():

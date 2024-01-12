@@ -204,7 +204,7 @@ class IoTboxHomepage(Home):
         else:
                 persistent = ""
 
-        subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent])
+        subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent, "", "", ""])
         server = helpers.get_odoo_server_url()
         res_payload = {
             'message': 'Connecting to ' + essid,
@@ -275,7 +275,7 @@ class IoTboxHomepage(Home):
             token = token.split('|')[1]
         else:
             url = ''
-        subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/connect_to_server_wifi.sh'), url, iotname, token, essid, password, persistent])
+        subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent, url, token, iotname])
         return url
 
     # Set server address
