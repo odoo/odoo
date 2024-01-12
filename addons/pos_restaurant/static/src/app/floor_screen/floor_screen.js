@@ -28,7 +28,7 @@ export class FloorScreen extends Component {
         const floor = this.pos.currentFloor;
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
-            selectedTableIds: this.pos.orderToTransfer ? [this.pos.orderToTransfer.tableId] : [],
+            selectedTableIds: this.getTablesSelectedByDefault(),
             isColorPicker: false,
         });
         this.floorMapRef = useRef("floor-map-ref");
@@ -38,6 +38,9 @@ export class FloorScreen extends Component {
         this.map = useRef("map");
         onMounted(() => this.pos.openCashControl());
         onWillStart(this.onWillStart);
+    }
+    getTablesSelectedByDefault() {
+        return this.pos.orderToTransfer ? [this.pos.orderToTransfer.tableId] : [];
     }
     async onWillStart() {
         const table = this.pos.selectedTable;
@@ -65,7 +68,7 @@ export class FloorScreen extends Component {
         await this.pos.unsetTable();
     }
     onClickFloorMap() {
-        this.state.selectedTableIds = [];
+        this.state.selectedTableIds = this.getTablesSelectedByDefault();
         this.state.isColorPicker = false;
     }
     _computePinchHypo(ev, callbackFunction) {
@@ -414,6 +417,8 @@ export class FloorScreen extends Component {
         });
     }
     stopOrderTransfer() {
+        this.pos.set_order(this.pos.orderToTransfer);
+        this.pos.showScreen("ProductScreen");
         this.pos.isTableToMerge = false;
         this.pos.orderToTransfer = null;
     }
