@@ -2,7 +2,7 @@
 
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { Loader } from "@point_of_sale/app/loader/loader";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { App, mount, reactive, whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -15,7 +15,7 @@ const loader = reactive({ isShown: true });
 whenReady(() => {
     // Show loader as soon as the page is ready, do not wait for services to be started
     // as some services load data over RPC and this is why we want to show a loader.
-    mount(Loader, document.body, { templates, translateFn: _t, props: { loader } });
+    mount(Loader, document.body, { getTemplate, translateFn: _t, props: { loader } });
 });
 // The following is mostly a copy of startWebclient but without any of the legacy stuff
 (async function startPosApp() {
@@ -34,7 +34,7 @@ whenReady(() => {
     const app = new App(Chrome, {
         name: "Odoo Point of Sale",
         env,
-        templates,
+        getTemplate,
         dev: env.debug,
         warnIfNoStaticProps: true,
         translatableAttributes: ["data-tooltip"],

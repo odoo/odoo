@@ -7,7 +7,7 @@ import { serverUrl } from "@im_livechat/embed/common/livechat_data";
 import { mount, whenReady } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
@@ -24,7 +24,7 @@ import { session } from "@web/session";
     const target = await makeShadow(makeRoot(document.body));
     await mount(MainComponentsContainer, target, {
         env,
-        templates,
+        getTemplate,
         translateFn: _t,
         dev: env.debug,
     });

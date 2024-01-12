@@ -4,7 +4,7 @@ import {App, whenReady, Component, useState} from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { rpc } from "@web/core/network/rpc";
@@ -124,7 +124,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
     const env = makeEnv();
     await startServices(env);
     const app = new App(kioskAttendanceApp, {
-        templates,
+        getTemplate,
         env: env,
         props:
             {

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
@@ -765,7 +765,7 @@ export async function mount(Comp, target, config = {}) {
     env = env || {};
     const configuration = {
         env,
-        templates,
+        getTemplate,
         test: true,
         props,
     };
