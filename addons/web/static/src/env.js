@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "./core/registry";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { App, EventBus } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
@@ -190,7 +190,7 @@ export async function mountComponent(component, target, appConfig = {}) {
     }
     const app = new App(component, {
         env,
-        templates,
+        getTemplate,
         dev: env.debug,
         warnIfNoStaticProps: true,
         name: component.constructor.name,

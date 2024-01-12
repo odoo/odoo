@@ -5,7 +5,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { loadBundle } from "@web/core/assets";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
 
 import { App } from "@odoo/owl";
@@ -22,7 +22,7 @@ export async function mountSpreadsheet(model) {
     await loadBundle("web.chartjs_lib");
     const app = new App(Spreadsheet, {
         props: { model },
-        templates: templates,
+        getTemplate,
         env: model.config.custom.env,
         test: true,
     });
@@ -54,7 +54,7 @@ export async function mountPublicSpreadsheet(data, dataUrl, mode) {
     const env = await makeTestEnv();
     const app = new App(PublicReadonlySpreadsheet, {
         props: { dataUrl, downloadExcelUrl: "downloadUrl", mode },
-        templates,
+        getTemplate,
         env,
         test: true,
     });

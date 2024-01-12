@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { App, Component, useState, xml } from "@odoo/owl";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 
 const rootTemplate = xml`<SubComp t-props="state"/>`;
@@ -15,7 +15,7 @@ export async function attachComponent(parent, element, componentClass, props = {
     const env = Component.env;
     const app = new App(Root, {
         env,
-        templates,
+        getTemplate,
         dev: env.debug,
         translatableAttributes: ["data-tooltip"],
         translateFn: _t,
