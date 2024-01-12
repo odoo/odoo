@@ -3,7 +3,7 @@ import { Component } from "@odoo/owl";
 import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 
 export class ProductCatalogOrderLine extends Component {
-    static template = "ProductCatalogOrderLine";
+    static template = "product.ProductCatalogOrderLine";
     static props = {
         productId: Number,
         quantity: Number,
