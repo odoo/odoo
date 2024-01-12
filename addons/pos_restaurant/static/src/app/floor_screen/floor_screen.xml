@@ -26,8 +26,10 @@
                     <i class="fa fa-pencil-square-o" role="img" aria-label="Rename" title="Rename" />Rename</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="duplicateTableOrFloor">
                     <i class="fa fa-clone" role="img" aria-label="Copy" title="Copy" />Copy</button>
-                <button t-attf-class="{{editButtonClass}}" t-if="activeTables.some(t=>t.parent_id)" t-att-disabled="!selectedTables.some(t=>t.parent_id)" t-on-click="unlinkTables">
+                <button t-attf-class="{{editButtonClass}}" t-if="selectedTables.length and selectedTables.every(t=>t.parent_id)" t-on-click="unlinkTables">
                     <i class="fa fa-unlink" role="img" aria-label="Unlink" title="Unlink" />Unlink</button>
+                <button t-attf-class="{{editButtonClass}}" t-else="" t-att-disabled="isLinkingDisabled()" t-on-click="linkTables">
+                    <i class="fa fa-link" role="img" aria-label="Link" title="Link" />Link</button>
                 <button t-attf-class="{{editButtonClass}}" t-on-click.stop="deleteFloorOrTable">
                     <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete" />Delete</button>
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="closeEditMode">
