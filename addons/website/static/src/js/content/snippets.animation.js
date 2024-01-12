@@ -19,8 +19,8 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import {
     applyTextHighlight,
+    removeTextHighlight,
     switchTextHighlight,
-    getCurrentTextHighlight,
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
 
@@ -1886,7 +1886,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
         // information to build the effects, So we need to make the adaptation
         // here to show the SVGs.
         for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
-            applyTextHighlight(textEl, getCurrentTextHighlight(textEl));
+            applyTextHighlight(textEl);
         }
         // We need to adapt the text highlights on resize, mainly to take in
         // consideration the rendered line breaks in text nodes...
@@ -1894,7 +1894,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
             this.options.wysiwyg?.odooEditor.observerUnactive("textHighlightResize");
             for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
                 // Remove old effect, normalize content, redraw SVGs...
-                switchTextHighlight(textEl, getCurrentTextHighlight(textEl));
+                switchTextHighlight(textEl);
             }
             this.options.wysiwyg?.odooEditor.observerActive("textHighlightResize");
         });
@@ -1913,6 +1913,12 @@ registry.TextHighlight = publicWidget.Widget.extend({
         if (!this.editableMode) {
             this.resizeObserver.disconnect();
             this.observerLocked.clear();
+        } else {
+            // We only save the highlight information on the main text wrapper,
+            // the full structure will be restored on page load.
+            for (const textHighlightEl of this.el.querySelectorAll(".o_text_highlight")) {
+                removeTextHighlight(textHighlightEl);
+            }
         }
     },
 
@@ -1967,7 +1973,7 @@ registry.TextHighlight = publicWidget.Widget.extend({
                         this.observerLocked.delete(unit);
                     });
                     // Adapt the highlight, lock new items and observe them.
-                    switchTextHighlight(topTextEl, getCurrentTextHighlight(topTextEl));
+                    switchTextHighlight(topTextEl);
                     this._lockHighlightObserver(topTextEl);
                     this._observeHighlightResize(topTextEl);
                 });
