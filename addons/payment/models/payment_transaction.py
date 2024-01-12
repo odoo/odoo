@@ -800,6 +800,7 @@ class PaymentTransaction(models.Model):
                 },
             )
         txs_to_process.write({
+            'is_post_processed': False,
             'state': target_state,
             'state_message': state_message,
             'last_state_change': fields.Datetime.now(),
@@ -896,7 +897,6 @@ class PaymentTransaction(models.Model):
             retry_limit_date = datetime.now() - relativedelta.relativedelta(days=4)
             # Retrieve all transactions matching the criteria for post-processing
             txs_to_post_process = self.search([
-                ('state', '=', 'done'),
                 ('is_post_processed', '=', False),
                 ('last_state_change', '>=', retry_limit_date),
             ])
@@ -918,7 +918,7 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
-        self.filtered(lambda tx: tx.operation != 'validation')._reconcile_after_done()
+        self.filtered(lambda tx: tx.operation != 'validation' and tx.state == 'done')._reconcile_after_done()
         self.is_post_processed = True
 
     def _reconcile_after_done(self):

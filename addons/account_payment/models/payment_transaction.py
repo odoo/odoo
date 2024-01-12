@@ -91,18 +91,6 @@ class PaymentTransaction(models.Model):
                 return separator.join(invoices.mapped('name'))
         return super()._compute_reference_prefix(provider_code, separator, **values)
 
-    def _set_canceled(self, state_message=None, **kwargs):
-        """ Update the transactions' state to 'cancel'.
-
-        :param str state_message: The reason for which the transaction is set in 'cancel' state
-        :return: updated transactions
-        :rtype: `payment.transaction` recordset
-        """
-        processed_txs = super()._set_canceled(state_message, **kwargs)
-        # Cancel the existing payments
-        processed_txs.payment_id.action_cancel()
-        return processed_txs
-
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
     def _reconcile_after_done(self):
@@ -209,14 +197,21 @@ class PaymentTransaction(models.Model):
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
     def _finalize_post_processing(self):
-        """ Override of `payment` to write a message in the chatter with the payment and transaction
-        references.
+        """ Override of `payment`. Write a message in the chatter with the
+        payment and transaction references for done transactions or cancel invoice for canceled
+        transactions.
 
         :return: None
         """
         super()._finalize_post_processing()
         for tx in self.filtered('payment_id'):
-            message = _("The payment related to the transaction with reference %(ref)s has been posted: %(link)s",
-                ref=tx.reference, link=tx.payment_id._get_html_link(),
-            )
-            tx._log_message_on_linked_documents(message)
+            if tx.state == 'done':
+                message = _(
+                    "The payment related to the transaction with reference %(ref)s has been"
+                    " posted: %(link)s",
+                    ref=tx.reference,
+                    link=tx.payment_id._get_html_link(),
+                )
+                tx._log_message_on_linked_documents(message)
+            elif tx.state == 'cancel':
+                tx.payment_id.action_cancel()
