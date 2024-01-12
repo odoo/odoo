@@ -2,20 +2,20 @@
 
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 
 function ePOSPrint(children) {
-    const ePOSLayoutString = templates["pos_epson_printer.ePOSLayout"];
-    if (!ePOSLayoutString) {
+    let ePOSLayout = getTemplate("pos_epson_printer.ePOSLayout");
+    if (!ePOSLayout) {
         throw new Error("'ePOSLayout' not loaded");
     }
-    const ePOSLayout = new DOMParser().parseFromString(ePOSLayoutString, "text/xml");
+    ePOSLayout = ePOSLayout.cloneNode(true);
     const [eposPrintEl] = ePOSLayout.getElementsByTagName("epos-print");
     append(eposPrintEl, children);
     // IMPORTANT: Need to remove `xmlns=""` in the image and cut elements.
     // > Otherwise, the print request will succeed but it the printer device won't actually do the printing.
-    return ePOSLayout.documentElement.outerHTML.replaceAll(`xmlns=""`, "");
+    return ePOSLayout.outerHTML.replaceAll(`xmlns=""`, "");
 }
 
 /**

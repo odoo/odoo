@@ -74,6 +74,7 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/core/registry.js',
             'web/static/src/core/templates.js',
+            'web/static/src/core/template_inheritance.js',
 
             # odoo-editor
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',

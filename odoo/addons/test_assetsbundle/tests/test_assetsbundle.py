@@ -655,17 +655,6 @@ class TestXMLAssetsBundle(FileTouchable):
             with self.assertRaisesRegex(XMLAssetError, "Invalid XML template: Opening and ending tag mismatch: SomeComponent line 4 and t, line 5, column 7\' in file \'/test_assetsbundle/static/invalid_src/xml/invalid_xml.xml"):
                 self.bundle.xml()
 
-    def test_03_multiple_xml_same_name(self):
-        """ Checks that a bundle with multiple templates with the same name returns a comprehensive error message.
-        """
-        with mute_logger('odoo.addons.base.models.assetsbundle'):
-            self.bundle = self._get_asset('test_assetsbundle.multiple_same_name')
-
-            # there shouldn't be raise a ValueError, there should a parsing_error template with
-            # the error message.
-            with self.assertRaisesRegex(XMLAssetError, "\"Template \'multiple_name_xml\' already exists in module \'test_assetsbundle\'\" in file \'/test_assetsbundle/static/invalid_src/xml/multiple_same_name.xml\'"):
-                self.bundle.xml()
-
     def test_04_template_wo_name(self):
         """ Checks that a bundle with template without name returns a comprehensive error message.
         """

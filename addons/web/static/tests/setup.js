@@ -2,7 +2,6 @@
 
 import { assets } from "@web/core/assets";
 import { user, _makeUser } from "@web/core/user";
-import { templates } from "@web/core/templates";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
@@ -20,6 +19,7 @@ import { currencies } from "@web/core/currency";
 import { cookie } from "@web/core/browser/cookie";
 import { router, routerBus } from "@web/core/browser/router";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
+import { registry } from "@web/core/registry";
 
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
@@ -263,34 +263,29 @@ function patchSessionInfo() {
     });
 }
 
-/**
- * Remove all given attributes from the templates and replace them by
- * data attributes (e.g. `src` to `data-src`, `alt` to `data-alt`).
- *
- * @param {string[]} attrs Attributes to replace by data-attributes.
- * @param {Document} templates Document containing the templates to
- * process.
- */
-function removeUnwantedAttrsFromTemplates(attrs) {
-    function replaceAttr(attrName, prefix, element) {
-        const attrKey = `${prefix}${attrName}`;
-        const attrValue = element.getAttribute(attrKey);
-        element.removeAttribute(attrKey);
-        element.setAttribute(`${prefix}data-${attrName}`, attrValue);
-    }
-    const attrPrefixes = ["", "t-att-", "t-attf-"];
-    for (const attrName of attrs) {
-        for (const prefix of attrPrefixes) {
-            for (const [name, template] of Object.entries(templates)) {
-                const parsedTemplate = new DOMParser().parseFromString(template, "text/xml");
-                for (const element of parsedTemplate.querySelectorAll(`*[${prefix}${attrName}]`)) {
-                    replaceAttr(attrName, prefix, element);
-                }
-                templates[name] = parsedTemplate.documentElement.outerHTML;
+function replaceAttr(attrName, prefix, element) {
+    const attrKey = `${prefix}${attrName}`;
+    const attrValue = element.getAttribute(attrKey);
+    element.removeAttribute(attrKey);
+    element.setAttribute(`${prefix}data-${attrName}`, attrValue);
+}
+
+registry.category("template_processors").add("removeUnwantedAttrs", (template) => {
+    // We remove all the attributes `src` and `alt` from the template and replace them by
+    // data attributes (e.g. `src` to `data-src`, `alt` to `data-alt`).
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll programmatically and the time
+    // we assert for the scroll position. The src attribute is removed
+    // as well to make sure images won't trigger a GET request on the
+    // server.
+    for (const attrName of ["alt", "src"]) {
+        for (const prefix of ["", "t-att-", "t-attf-"]) {
+            for (const element of template.querySelectorAll(`*[${prefix}${attrName}]`)) {
+                replaceAttr(attrName, prefix, element);
             }
         }
     }
-}
+});
 
 function patchAssets() {
     const { getBundle, loadJS, loadCSS } = assets;
@@ -381,14 +376,6 @@ export async function setupTests() {
     });
 
     await whenReady();
-
-    // alt attribute causes issues with scroll tests. Indeed, alt is
-    // displayed between the time we scroll programmatically and the time
-    // we assert for the scroll position. The src attribute is removed
-    // as well to make sure images won't trigger a GET request on the
-    // server.
-    // Clean up templates that have already been added.
-    removeUnwantedAttrsFromTemplates(["alt", "src"]);
     patchAssets();
 
     // make sure images do not trigger a GET on the server

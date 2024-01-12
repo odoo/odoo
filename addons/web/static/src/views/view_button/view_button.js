@@ -37,7 +37,7 @@ function iconFromString(iconString) {
 }
 
 export class ViewButton extends Component {
-    static template = "views.ViewButton";
+    static template = "web.views.ViewButton";
     static props = [
         "id?",
         "tag?",

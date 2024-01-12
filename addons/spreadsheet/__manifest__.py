@@ -56,6 +56,7 @@
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
             'web/static/src/core/templates.js',
+            'web/static/src/core/template_inheritance.js',
             'web/static/src/session.js',
             'web/static/src/env.js',
             'web/static/src/core/network/http_service.js',
