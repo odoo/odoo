@@ -42,7 +42,7 @@ class SnailmailLetter(models.Model):
         default=lambda self: self.env.company.id)
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
 
-    attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade')
+    attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade', index='btree_not_null')
     attachment_datas = fields.Binary('Document', related='attachment_id.datas')
     attachment_fname = fields.Char('Attachment Filename', related='attachment_id.name')
     color = fields.Boolean(string='Color', default=lambda self: self.env.company.snailmail_color)
@@ -63,7 +63,7 @@ class SnailmailLetter(models.Model):
 
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 
-    message_id = fields.Many2one('mail.message', string="Snailmail Status Message")
+    message_id = fields.Many2one('mail.message', string="Snailmail Status Message", index='btree_not_null')
     notification_ids = fields.One2many('mail.notification', 'letter_id', "Notifications")
 
     street = fields.Char('Street')
