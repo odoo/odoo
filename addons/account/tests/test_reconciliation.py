@@ -1192,3 +1192,29 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(move_balance_receiv.full_reconcile_id, inv1_receivable.full_reconcile_id)
 
         self.assertTrue(inv1.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
+
+    def test_reconciliation_with_old_oustanding_account(self):
+        """
+        Test the reconciliation of an invoice with a payment after changing the outstanding account of the journal.
+        """
+        outstanding_account_1 = self.company_data['company'].account_journal_payment_debit_account_id.copy()
+        outstanding_account_2 = outstanding_account_1.copy()
+
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = outstanding_account_1
+
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'amount': 1150,
+        })
+        payment.action_post()
+
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = outstanding_account_2
+        invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=self.env['account.tax'])
+
+        credit_line = payment.line_ids.filtered(lambda l: l.credit and l.account_id == self.account_rcv)
+
+        invoice.js_assign_outstanding_line(credit_line.id)
+        self.assertTrue(invoice.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
