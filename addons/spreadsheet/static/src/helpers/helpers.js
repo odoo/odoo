@@ -1,9 +1,6 @@
 /** @odoo-module */
 
-import { serializeDate } from "@web/core/l10n/dates";
 import { loadJS } from "@web/core/assets";
-
-const { DateTime } = luxon;
 
 /**
  * Get the intersection of two arrays
@@ -45,8 +42,7 @@ export function getMaxObjectId(o) {
  * @returns {string}
  */
 export function toServerDateString(value) {
-    const date = DateTime.fromJSDate(value);
-    return serializeDate(date);
+    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
 }
 
 /**
