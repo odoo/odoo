@@ -2393,8 +2393,8 @@ class AccountMove(models.Model):
             # both fields, sometimes one field can be explicitely empty while the other
             # one is not, sometimes not...
             update_vals = {
-                line_id: line_vals
-                for command, line_id, line_vals in vals['invoice_line_ids']
+                line_id: line_vals[0]
+                for command, line_id, *line_vals in vals['invoice_line_ids']
                 if command == Command.UPDATE
             }
             for command, line_id, line_vals in vals['line_ids']:
@@ -2402,10 +2402,10 @@ class AccountMove(models.Model):
                     line_vals.update(update_vals.pop(line_id))
             for line_id, line_vals in update_vals.items():
                 vals['line_ids'] += [Command.update(line_id, line_vals)]
-            for command, line_id, line_vals in vals['invoice_line_ids']:
+            for command, line_id, *line_vals in vals['invoice_line_ids']:
                 assert command not in (Command.SET, Command.CLEAR)
-                if [command, line_id, line_vals] not in vals['line_ids']:
-                    vals['line_ids'] += [(command, line_id, line_vals)]
+                if [command, line_id, *line_vals] not in vals['line_ids']:
+                    vals['line_ids'] += [(command, line_id, *line_vals)]
             del vals['invoice_line_ids']
         return vals
 
