@@ -497,8 +497,10 @@ class Channel(models.Model):
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id,
+                       partner.lang,
                        partner.partner_share,
-                       users.notification_type
+                       COALESCE(users.notification_type, 'email') as notif,
+                       COALESCE(users.share, FALSE) as ushare
                   FROM res_partner partner
              LEFT JOIN res_users users on partner.id = users.partner_id
                  WHERE partner.active IS TRUE
@@ -508,15 +510,19 @@ class Channel(models.Model):
                 sql_query,
                 (email_from or '', list(pids), [author_id] if author_id else [], )
             )
-            for partner_id, partner_share, notif in self._cr.fetchall():
+            for partner_id, lang, partner_share, notif, ushare in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
-                    'id': partner_id,
-                    'share': partner_share,
                     'active': True,
-                    'notif': notif or 'email',
-                    'type': 'user' if not partner_share and notif else 'customer',
                     'groups': [],
+                    'id': partner_id,
+                    'is_follower': False,
+                    'lang': lang,
+                    'notif': notif,
+                    'share': partner_share,
+                    'type': 'user' if not partner_share and notif else 'customer',
+                    'uid': False,
+                    'ushare': ushare,
                 })
 
         return recipients_data
@@ -1273,12 +1279,17 @@ class Channel(models.Model):
             # add data into list but we do not modify item content
             channel_rdata = recipients_data.copy()
             channel_rdata += [
-                {'id': partner.id,
-                 'share': partner.partner_share,
-                 'active': partner.active,
-                 'notif': 'web_push',
-                 'type': 'customer',
-                 'groups': [],
+                {
+                    'active': partner.active,
+                    'id': partner.id,
+                    'is_follower': False,
+                    'groups': [],
+                    'lang': partner.lang,
+                    'notif': 'web_push',
+                    'share': partner.partner_share,
+                    'type': 'customer',
+                    'uid': False,
+                    'ushare': False,
                  }
                 for partner in chat_channels.channel_member_ids.filtered(lambda member: not member.mute_until_dt).partner_id
             ]
