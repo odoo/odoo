@@ -105,15 +105,6 @@ class PaymentTransaction(models.Model):
     landing_route = fields.Char(
         string="Landing Route",
         help="The route the user is redirected to after the transaction")
-    callback_model_id = fields.Many2one(
-        string="Callback Document Model", comodel_name='ir.model', groups='base.group_system')
-    callback_res_id = fields.Integer(string="Callback Record ID", groups='base.group_system')
-    callback_method = fields.Char(string="Callback Method", groups='base.group_system')
-    # Hash for extra security on top of the callback fields' group in case a bug exposes a sudo.
-    callback_hash = fields.Char(string="Callback Hash", groups='base.group_system')
-    callback_is_done = fields.Boolean(
-        string="Callback Done", help="Whether the callback has already been executed",
-        groups="base.group_system", readonly=True)
 
     # Duplicated partner values allowing to keep a record of them, should they be later updated.
     partner_id = fields.Many2one(
@@ -194,13 +185,6 @@ class PaymentTransaction(models.Model):
 
             # Include provider-specific create values
             values.update(self._get_specific_create_values(provider.code, values))
-
-            # Generate the hash for the callback if one has be configured on the tx.
-            values['callback_hash'] = self._generate_callback_hash(
-                values.get('callback_model_id'),
-                values.get('callback_res_id'),
-                values.get('callback_method'),
-            )
 
         txs = super().create(values_list)
 
@@ -411,25 +395,6 @@ class PaymentTransaction(models.Model):
         :rtype: str
         """
         return ''
-
-    @api.model
-    def _generate_callback_hash(self, callback_model_id, callback_res_id, callback_method):
-        """ Return the hash for the callback on the transaction.
-
-        :param int callback_model_id: The model on which the callback method is defined, as a
-                                      `res.model` id.
-        :param int callback_res_id: The record on which the callback method must be called, as an id
-                                    of the callback method's model.
-        :param str callback_method: The name of the callback method.
-        :return: The callback hash.
-        :rtype: str
-        """
-        if callback_model_id and callback_res_id and callback_method:
-            model_name = self.env['ir.model'].sudo().browse(callback_model_id).model
-            token = f'{model_name}|{callback_res_id}|{callback_method}'
-            callback_hash = hmac_tool(self.env(su=True), 'generate_callback_hash', token)
-            return callback_hash
-        return None
 
     def _get_processing_values(self):
         """ Return the values used to process the transaction.
@@ -664,7 +629,6 @@ class PaymentTransaction(models.Model):
         """
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
         tx._process_notification_data(notification_data)
-        tx._execute_callback()
         return tx
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
@@ -863,50 +827,6 @@ class PaymentTransaction(models.Model):
                 )
                 # Call `_update_state` directly instead of `_set_authorized` to avoid looping.
                 child_tx.source_transaction_id._update_state(('authorized',), 'done', state_message)
-
-    def _execute_callback(self):
-        """ Execute the callbacks defined on the transactions.
-
-        Callbacks that have already been executed are silently ignored. For example, the callback is
-        called twice when a transaction is first authorized then confirmed.
-
-        Only successful callbacks are marked as done. This allows callbacks to reschedule
-        themselves, should the conditions be unmet in the present call.
-
-        :return: None
-        """
-        for tx in self.filtered(lambda t: not t.sudo().callback_is_done):
-            # Only use sudo to check, not to execute.
-            tx_sudo = tx.sudo()
-            model_sudo = tx_sudo.callback_model_id
-            res_id = tx_sudo.callback_res_id
-            method = tx_sudo.callback_method
-            callback_hash = tx_sudo.callback_hash
-            if not (model_sudo and res_id and method):
-                continue  # Skip transactions with unset (or not properly defined) callbacks.
-
-            valid_callback_hash = self._generate_callback_hash(model_sudo.id, res_id, method)
-            if not consteq(ustr(valid_callback_hash), callback_hash):
-                _logger.warning(
-                    "invalid callback signature for transaction with reference %s", tx.reference
-                )
-                continue  # Ignore tampered callbacks.
-
-            record = self.env[model_sudo.model].browse(res_id).exists()
-            if not record:
-                _logger.warning(
-                    "invalid callback record %(model)s.%(record_id)s for transaction with "
-                    "reference %(ref)s",
-                    {
-                        'model': model_sudo.model,
-                        'record_id': res_id,
-                        'ref': tx.reference,
-                    }
-                )
-                continue  # Ignore invalidated callbacks.
-
-            success = getattr(record, method)(tx)  # Execute the callback.
-            tx_sudo.callback_is_done = success or success is None  # Missing returns are successful.
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
