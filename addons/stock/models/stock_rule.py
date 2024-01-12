@@ -488,7 +488,7 @@ class ProcurementGroup(models.Model):
             if packaging_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res:
-            product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
+            product_routes = product_id['route_ids'] | product_id['categ_id'].total_route_ids
             if product_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:
@@ -504,6 +504,13 @@ class ProcurementGroup(models.Model):
         """
         result = self.env['stock.rule']
         location = location_id
+
+        if values.get('company_id'):
+            product_id = {
+                'route_ids': product_id.route_ids.filtered(lambda route: not route.company_id or route.company_id == values.get('company_id')),
+                'categ_id': product_id.categ_id,
+            }
+
         while (not result) and location:
             domain = self._get_rule_domain(location, values)
             result = self._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', False), domain)
