@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_form_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_post_job" string="Post Job" type="object" class="oe_highlight"/>
+            </header>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    icon="fa-globe"
+                    name="action_open_job_posts"
+                    invisible="job_post_count == 0"
+                    type="object">
+                    <field name="job_post_count" widget="statinfo" string="Job Posts"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
