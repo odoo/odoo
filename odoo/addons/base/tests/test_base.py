@@ -853,11 +853,11 @@ class TestGroups(TransactionCase):
         assertUsersEqual([u2, p, default], c)
         assertUsersEqual([u2, default], d)
 
-        # When adding the template user to a new group, it should add it to existing internal users
+        # When adding the template user to a new group, it should not be assigned to existing internal users
         e = self.env['res.groups'].create({'name': 'E'})
         default.write({'groups_id': [Command.link(e.id)]})
-        self.assertIn(u1, e.users)
-        self.assertIn(u2, e.users)
+        self.assertNotIn(u1, e.users)
+        self.assertNotIn(u2, e.users)
         self.assertIn(default, e.with_context(active_test=False).users)
         self.assertNotIn(p, e.users)
 
