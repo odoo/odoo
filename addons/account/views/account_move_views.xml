@@ -878,7 +878,7 @@
                             <h1>
                                 <field name="name" invisible="name == '/' and not posted_before and not quick_edit_mode" readonly="state != 'draft'" placeholder="Draft"/>
 
-                                <span invisible="state != 'draft' or name != '/' or quick_edit_mode">Draft</span>
+                                <span invisible="state != 'draft' or name != '/' or posted_before or quick_edit_mode">Draft</span>
                             </h1>
                         </div>
                         <group>
