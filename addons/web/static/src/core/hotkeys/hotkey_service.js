@@ -20,6 +20,8 @@ import { getVisibleElements } from "../utils/ui";
  *  adds a restricted operating area for this hotkey
  * @property {() => boolean} [isAvailable]
  *  adds a validation before calling the hotkey registration's callback
+ *  @property {() => HTMLElement} [withOverlay]
+ *  provides the element on which the overlay should be displayed
  *
  * @typedef {HotkeyOptions & {
  *  hotkey: string,
@@ -298,8 +300,30 @@ export const hotkeyService = {
          * @param {HTMLElement} activeElement
          */
         function addHotkeyOverlays(activeElement) {
-            for (const el of getVisibleElements(activeElement, "[data-hotkey]:not(:disabled)")) {
-                const hotkey = el.dataset.hotkey;
+            // Gather the hotkeys to overlay registered through the useHotkey hook.
+            const hotkeysFromHookToHighlight = [];
+            for (const [, registration] of registrations) {
+                const overlayElement = registration.withOverlay?.();
+                if (overlayElement) {
+                    hotkeysFromHookToHighlight.push({
+                        hotkey: registration.hotkey.replace(
+                            `${hotkeyService.overlayModifier}+`,
+                            ""
+                        ),
+                        el: overlayElement,
+                    });
+                }
+            }
+
+            // Gather the hotkeys to overlay registered through the DOM datasets.
+            const hotkeysFromDomToHighlight = getVisibleElements(
+                activeElement,
+                "[data-hotkey]:not(:disabled)"
+            ).map((el) => ({ hotkey: el.dataset.hotkey, el }));
+
+            const items = [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight];
+            for (const item of items) {
+                const hotkey = item.hotkey;
                 const overlay = document.createElement("div");
                 overlay.classList.add(
                     "o_web_hotkey_overlay",
@@ -321,13 +345,13 @@ export const hotkeyService = {
                 overlay.appendChild(overlayKbd);
 
                 let overlayParent;
-                if (el.tagName.toUpperCase() === "INPUT") {
+                if (item.el.tagName.toUpperCase() === "INPUT") {
                     // special case for the search input that has an access key
                     // defined. We cannot set the overlay on the input itself,
                     // only on its parent.
-                    overlayParent = el.parentElement;
+                    overlayParent = item.el.parentElement;
                 } else {
-                    overlayParent = el;
+                    overlayParent = item.el;
                 }
 
                 if (overlayParent.style.position !== "absolute") {
@@ -402,6 +426,7 @@ export const hotkeyService = {
                 global: options && options.global,
                 area: options && options.area,
                 isAvailable: options && options.isAvailable,
+                withOverlay: options && options.withOverlay,
             };
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),

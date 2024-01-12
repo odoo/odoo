@@ -1181,3 +1181,37 @@ QUnit.test("native browser space key ' ' is correctly translated to 'space' ", a
     await triggerHotkey(" "); // event key triggered by the browser
     assert.verifySteps(["space"]);
 });
+
+QUnit.test("useHotkey can display an overlay over a DOM element ", async (assert) => {
+    const displayHotkeysOverlay = () =>
+        window.dispatchEvent(new KeyboardEvent("keydown", { key: "alt", altKey: true }));
+
+    const getOverlays = () =>
+        [...target.querySelectorAll(".o_web_hotkey_overlay")].map((el) => el.innerText);
+
+    class A extends Component {
+        static template = xml`<div><button class="target">Should be overlayed</button></div>`;
+        setup() {
+            useHotkey(
+                "alt+a",
+                () => {
+                    assert.step("hotkey alt+a has been triggered");
+                },
+                {
+                    withOverlay: () => target.querySelector(".target"),
+                }
+            );
+        }
+    }
+
+    await mount(A, target, { env });
+
+    assert.deepEqual(getOverlays(), [], "There is no overlay");
+
+    displayHotkeysOverlay();
+    assert.deepEqual(getOverlays(), ["A"], "should display the overlay");
+
+    await triggerHotkey("alt+a");
+    await nextTick();
+    assert.verifySteps(["hotkey alt+a has been triggered"]);
+});
