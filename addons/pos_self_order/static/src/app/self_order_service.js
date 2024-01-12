@@ -17,9 +17,10 @@ import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/printer/printer_service";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { constructFullProductName, qrCodeSrc } from "@point_of_sale/utils";
+import { constructFullProductName, qrCodeSrc, deduceUrl } from "@point_of_sale/utils";
 import { Line } from "./models/line";
-
+import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
+import { renderToElement } from "@web/core/utils/render";
 export class SelfOrder extends Reactive {
     constructor(...args) {
         super();
@@ -56,6 +57,7 @@ export class SelfOrder extends Reactive {
         this.ordering = false;
         this.orders = [];
         this.color = getColor(this.company.color);
+        this.kitchenPrinters = [];
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -133,6 +135,15 @@ export class SelfOrder extends Reactive {
         // If a command line does not have a quantity greater than 0, we consider it deleted
         this.currentOrder.lines = this.currentOrder.lines.filter((o) => o.qty > 0);
     }
+    async confirmationPage(screen_mode, device) {
+        this.router.navigate("confirmation", {
+            orderAccessToken: this.currentOrder.access_token,
+            screenMode: screen_mode,
+        });
+        if (device === "kiosk") {
+            this.printKioskChanges();
+        }
+    }
 
     async confirmOrder() {
         const payAfter = this.config.self_ordering_pay_after; // each, meal
@@ -156,10 +167,7 @@ export class SelfOrder extends Reactive {
         // this directive works for both mode each and meal
         if (order.amount_total === 0 && order.lines.length > 0) {
             await this.sendDraftOrderToServer();
-            this.router.navigate("confirmation", {
-                orderAccessToken: order.access_token,
-                screenMode: "order",
-            });
+            this.confirmationPage("order", device);
             return;
         }
 
@@ -172,11 +180,7 @@ export class SelfOrder extends Reactive {
                 await this.sendDraftOrderToServer();
                 screenMode = payAfter === "meal" ? "order" : "pay";
             }
-
-            this.router.navigate("confirmation", {
-                orderAccessToken: order.access_token,
-                screenMode: screenMode,
-            });
+            this.confirmationPage(screenMode, device);
         } else {
             // In meal mode, first time the customer validate his order, we send it to the server
             // and we redirect him to the confirmation page, the next time he validate his order
@@ -184,10 +188,7 @@ export class SelfOrder extends Reactive {
             // In each mode, we redirect the customer to the payment page directly
             if (payAfter === "meal" && !order.isSavedOnServer) {
                 await this.sendDraftOrderToServer();
-                this.router.navigate("confirmation", {
-                    orderAccessToken: order.access_token,
-                    screenMode: "order",
-                });
+                this.confirmationPage("order", device);
             } else {
                 this.router.navigate("payment");
             }
@@ -276,6 +277,58 @@ export class SelfOrder extends Reactive {
         }
 
         this.updateCategoryList();
+
+        for (const printerConfig of Object.values(this.kitchen_printers)) {
+            const printer = this.create_printer(printerConfig);
+            if (printer) {
+                printer.config = printerConfig;
+                this.kitchenPrinters.push(printer);
+            }
+        }
+    }
+
+    create_printer(printer) {
+        const url = deduceUrl(printer.proxy_ip || "");
+        return new HWPrinter({ url });
+    }
+
+    _getKioskPrintingCategoriesChanges(categories) {
+        return this.currentOrder.lines.filter((orderline) =>
+            categories.some((categId) =>
+                this.productByIds[orderline["product_id"]].pos_categ_ids
+                    .map((categ) => categ.id)
+                    .includes(categId)
+            )
+        );
+    }
+
+    async printKioskChanges() {
+        const d = new Date();
+        let hours = "" + d.getHours();
+        hours = hours.length < 2 ? "0" + hours : hours;
+        let minutes = "" + d.getMinutes();
+        minutes = minutes.length < 2 ? "0" + minutes : minutes;
+        for (const printer of this.kitchenPrinters) {
+            const orderlines = this._getKioskPrintingCategoriesChanges(
+                Object.values(printer.config.product_categories_ids)
+            );
+            if (orderlines) {
+                const printingChanges = {
+                    new: orderlines,
+                    tracker: this.currentOrder.table_stand_number,
+                    trackingNumber: this.currentOrder.trackingNumber || "unknown number",
+                    name: this.currentOrder.pos_reference || "unknown order",
+                    time: {
+                        hours,
+                        minutes,
+                    },
+                };
+                const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
+                    changes: printingChanges,
+                });
+                await printer.printReceipt(receipt);
+            }
+        }
     }
 
     initKioskData() {
@@ -698,8 +751,8 @@ export class SelfOrder extends Reactive {
 
 export const selfOrderService = {
     dependencies: ["notification", "router", "printer", "renderer", "barcode"],
-    async start(env, { notification, router, printer, renderer, barcode }) {
-        return new SelfOrder(env, { notification, router, printer, renderer, barcode }).ready;
+    async start(env, services) {
+        return new SelfOrder(env, services).ready;
     },
 };
 
