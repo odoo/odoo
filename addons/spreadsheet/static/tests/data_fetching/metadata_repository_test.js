@@ -4,8 +4,9 @@ import { nextTick } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { ormService } from "@web/core/orm_service";
-import { MetadataRepository } from "@spreadsheet/data_sources/metadata_repository";
 import { nameService } from "@web/core/name_service";
+import { MetadataRepository } from "@spreadsheet/data_sources/metadata_repository";
+import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 
 function beforeEach() {
     registry
@@ -90,10 +91,10 @@ QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
             assert.step("labels-fetched");
         });
 
-        assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), /Data is loading/);
-        assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), /Data is loading/);
-        assert.throws(() => metadataRepository.getRecordDisplayName("A", 2), /Data is loading/);
-        assert.throws(() => metadataRepository.getRecordDisplayName("B", 1), /Data is loading/);
+        assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), LoadingDataError);
+        assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), LoadingDataError);
+        assert.throws(() => metadataRepository.getRecordDisplayName("A", 2), LoadingDataError);
+        assert.throws(() => metadataRepository.getRecordDisplayName("B", 1), LoadingDataError);
         assert.verifySteps([]);
 
         await nextTick();
@@ -172,9 +173,9 @@ QUnit.module("spreadsheet > Metadata Repository", { beforeEach }, () => {
 
             const metadataRepository = new MetadataRepository(env);
 
-            assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), /Data is loading/);
-            assert.throws(() => metadataRepository.getRecordDisplayName("B", 1), /Data is loading/);
-            assert.throws(() => metadataRepository.getRecordDisplayName("B", 2), /Data is loading/);
+            assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), LoadingDataError);
+            assert.throws(() => metadataRepository.getRecordDisplayName("B", 1), LoadingDataError);
+            assert.throws(() => metadataRepository.getRecordDisplayName("B", 2), LoadingDataError);
             assert.verifySteps([]);
 
             await nextTick();
