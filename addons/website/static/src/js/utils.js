@@ -4,7 +4,7 @@ import { intersection } from "@web/core/utils/arrays";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { App, Component } from "@odoo/owl";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 
 /**
@@ -53,7 +53,7 @@ function autocompleteWithPages(input, options= {}) {
     const owlApp = new App(UrlAutoComplete, {
         env: Component.env,
         dev: Component.env.debug,
-        templates,
+        getTemplate,
         props: {
             options,
             loadAnchors,

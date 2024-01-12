@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { App, whenReady } from "@odoo/owl";
 import { PublicReadonlySpreadsheet } from "./public_readonly";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
@@ -20,7 +20,7 @@ import { _t } from "@web/core/l10n/translation";
     const app = new App(PublicReadonlySpreadsheet, {
         env,
         props: session.spreadsheet_public_props,
-        templates,
+        getTemplate,
         translateFn: _t,
         dev: env.debug,
         warnIfNoStaticProps: env.debug,

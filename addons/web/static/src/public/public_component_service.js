@@ -2,14 +2,14 @@
 
 import { App } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 
 class ComponentManager {
     constructor(env) {
         this.env = env;
         this.appConfig = {
-            templates,
+            getTemplate,
             env: env,
             dev: env.debug,
             translateFn: _t,

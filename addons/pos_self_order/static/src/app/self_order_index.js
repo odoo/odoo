@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { Component, whenReady, App } from "@odoo/owl";
 import { makeEnv, startServices } from "@web/env";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
@@ -50,7 +50,7 @@ export async function createPublicRoot() {
     const env = makeEnv();
     await startServices(env);
     const app = new App(selfOrderIndex, {
-        templates,
+        getTemplate,
         env: env,
         dev: env.debug,
         translateFn: _t,

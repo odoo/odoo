@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { App, Component, useState, xml } from "@odoo/owl";
-import { templates } from "@web/core/templates";
+import { getTemplate } from "@web/core/templates";
 import { browser } from "@web/core/browser/browser";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -77,7 +77,7 @@ export async function makeParent(Child, options = {}) {
     const app = new App(Parent, {
         env,
         target,
-        templates,
+        getTemplate,
         test: true,
     });
     registerCleanup(() => app.destroy());
