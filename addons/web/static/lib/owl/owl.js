@@ -1853,8 +1853,9 @@
     };
     const objectToString = Object.prototype.toString;
     const objectHasOwnProperty = Object.prototype.hasOwnProperty;
-    const SUPPORTED_RAW_TYPES = new Set(["Object", "Array", "Set", "Map", "WeakMap"]);
-    const COLLECTION_RAWTYPES = new Set(["Set", "Map", "WeakMap"]);
+    // Use arrays because Array.includes is faster than Set.has for small arrays
+    const SUPPORTED_RAW_TYPES = ["Object", "Array", "Set", "Map", "WeakMap"];
+    const COLLECTION_RAW_TYPES = ["Set", "Map", "WeakMap"];
     /**
      * extract "RawType" from strings like "[object RawType]" => this lets us ignore
      * many native objects such as Promise (whose toString is [object Promise])
@@ -1877,7 +1878,7 @@
         if (typeof value !== "object") {
             return false;
         }
-        return SUPPORTED_RAW_TYPES.has(rawType(value));
+        return SUPPORTED_RAW_TYPES.includes(rawType(value));
     }
     /**
      * Creates a reactive from the given object/callback if possible and returns it,
@@ -2047,7 +2048,7 @@
         const reactivesForTarget = reactiveCache.get(target);
         if (!reactivesForTarget.has(callback)) {
             const targetRawType = rawType(target);
-            const handler = COLLECTION_RAWTYPES.has(targetRawType)
+            const handler = COLLECTION_RAW_TYPES.includes(targetRawType)
                 ? collectionsProxyHandler(target, callback, targetRawType)
                 : basicProxyHandler(callback);
             const proxy = new Proxy(target, handler);
@@ -3162,8 +3163,14 @@
         makeRefWrapper,
     };
 
-    const bdom = { text, createBlock, list, multi, html, toggler, comment };
-    function parseXML$1(xml) {
+    /**
+     * Parses an XML string into an XML document, throwing errors on parser errors
+     * instead of returning an XML document containing the parseerror.
+     *
+     * @param xml the string to parse
+     * @returns an XML document corresponding to the content of the string
+     */
+    function parseXML(xml) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(xml, "text/xml");
         if (doc.getElementsByTagName("parsererror").length) {
@@ -3191,6 +3198,8 @@
         }
         return doc;
     }
+
+    const bdom = { text, createBlock, list, multi, html, toggler, comment };
     class TemplateSet {
         constructor(config = {}) {
             this.rawTemplates = Object.create(globalTemplates);
@@ -3209,6 +3218,7 @@
                     }
                 }
             }
+            this.getRawTemplate = config.getTemplate;
         }
         static registerTemplate(name, fn) {
             globalTemplates[name] = fn;
@@ -3238,15 +3248,16 @@
                 // empty string
                 return;
             }
-            xml = xml instanceof Document ? xml : parseXML$1(xml);
+            xml = xml instanceof Document ? xml : parseXML(xml);
             for (const template of xml.querySelectorAll("[t-name]")) {
                 const name = template.getAttribute("t-name");
                 this.addTemplate(name, template);
             }
         }
         getTemplate(name) {
+            var _a;
             if (!(name in this.templates)) {
-                const rawTemplate = this.rawTemplates[name];
+                const rawTemplate = ((_a = this.getRawTemplate) === null || _a === void 0 ? void 0 : _a.call(this, name)) || this.rawTemplates[name];
                 if (rawTemplate === undefined) {
                     let extraInfo = "";
                     try {
@@ -4956,9 +4967,9 @@
                 const isSelect = tagName === "select";
                 const isCheckboxInput = isInput && typeAttr === "checkbox";
                 const isRadioInput = isInput && typeAttr === "radio";
-                const hasLazyMod = attr.includes(".lazy");
-                const hasNumberMod = attr.includes(".number");
                 const hasTrimMod = attr.includes(".trim");
+                const hasLazyMod = hasTrimMod || attr.includes(".lazy");
+                const hasNumberMod = attr.includes(".number");
                 const eventType = isRadioInput ? "click" : isSelect || hasLazyMod ? "change" : "input";
                 model = {
                     baseExpr,
@@ -5505,41 +5516,6 @@
         normalizeTIf(el);
         normalizeTEscTOut(el);
     }
-    /**
-     * Parses an XML string into an XML document, throwing errors on parser errors
-     * instead of returning an XML document containing the parseerror.
-     *
-     * @param xml the string to parse
-     * @returns an XML document corresponding to the content of the string
-     */
-    function parseXML(xml) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(xml, "text/xml");
-        if (doc.getElementsByTagName("parsererror").length) {
-            let msg = "Invalid XML in template.";
-            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
-            if (parsererrorText) {
-                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
-                const re = /\d+/g;
-                const firstMatch = re.exec(parsererrorText);
-                if (firstMatch) {
-                    const lineNumber = Number(firstMatch[0]);
-                    const line = xml.split("\n")[lineNumber - 1];
-                    const secondMatch = re.exec(parsererrorText);
-                    if (line && secondMatch) {
-                        const columnIndex = Number(secondMatch[0]) - 1;
-                        if (line[columnIndex]) {
-                            msg +=
-                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
-                        }
-                    }
-                }
-            }
-            throw new OwlError(msg);
-        }
-        return doc;
-    }
 
     function compile(template, options = {}) {
         // parsing
@@ -5565,7 +5541,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.2.7";
+    const version = "2.2.9";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -6030,8 +6006,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2023-12-06T13:56:01.636Z';
-    __info__.hash = 'e94428a';
+    __info__.date = '2024-01-12T14:43:56.804Z';
+    __info__.hash = '7b3e39b';
     __info__.url = 'https://github.com/odoo/owl';
 
 
