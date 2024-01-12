@@ -1816,7 +1816,6 @@ export class OdooEditor extends EventTarget {
             if (zws.innerHTML.replaceAll('\u200B', '')) {
                 // The zws span has more than just a zws -> don't remove it.
                 zws.removeAttribute('data-o-link-zws');
-                zws.setAttribute('oe-zws-empty-inline', '');
             } else if (!zwsToPreserve.includes(zws)) {
                 // const restoreUpdate = prepareUpdate(
                 //     ...boundariesOut(zws.parentElement),
@@ -1827,7 +1826,7 @@ export class OdooEditor extends EventTarget {
                 this.observerActive('_resetLinkZws');
                 // restoreUpdate();
             } else if (zws === zwsInSelection) {
-                // setSelection(zws, 1);
+                setSelection(zws, 1);
             }
         }
         // const { anchorNode, focusNode } = this.document.getSelection();
