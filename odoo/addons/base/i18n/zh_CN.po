@@ -6,12 +6,12 @@
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Chloe Wang, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
 # keecome <7017511@qq.com>, 2024
 # Emily Jia <eji@odoo.com>, 2024
 # Maie <m@maie.name>, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 13:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3111,6 +3111,10 @@ msgid ""
 "========================\n"
 "Provides electronic invoicing for Brazil through Avatax.\n"
 msgstr ""
+"\n"
+"Brazilian Accounting EDI\n"
+"========================\n"
+"Provides electronic invoicing for Brazil through Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_sale
@@ -3120,6 +3124,10 @@ msgid ""
 "=================================\n"
 "Adds some fields to sale orders that will be carried over the invoice.\n"
 msgstr ""
+"\n"
+"Brazilian Accounting EDI for Sale\n"
+"=================================\n"
+"Adds some fields to sale orders that will be carried over the invoice.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -3967,6 +3975,10 @@ msgid ""
 "========================\n"
 "This is help to show case the documents OCR for India.\n"
 msgstr ""
+"\n"
+"Demo Documents for India\n"
+"========================\n"
+"This is help to show case the documents OCR for India.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -29529,7 +29541,7 @@ msgstr "此数据库未启用剖析功能。请联系管理员。"
 #. module: base
 #: model:ir.model,name:base.model_ir_profile
 msgid "Profiling results"
-msgstr "搜索结果 \"%s\""
+msgstr "性能分析结果"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_project
@@ -36717,7 +36729,7 @@ msgstr "网站 活动 CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_generator
 msgid "Website Generator"
-msgstr ""
+msgstr "网站生成器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
@@ -36932,7 +36944,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
-"当使用每个日期范围的子序列时，您可以使用'range_'作为变量前缀，以使用范围的开头而不是当前日期。 ％（range_year）s而不是％（年）。"
+"当使用每个日期范围的子序列时，可以在变量前加'range_'\n"
+"                                                                                                  使用范围的开始而不是当前日期，例如 %(range_year)s 而不是 %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
@@ -37305,6 +37318,14 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."

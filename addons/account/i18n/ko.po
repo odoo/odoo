@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Sarah Park, 2024
 # Daye Jeong, 2024
+# Sarah Park, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,7 +256,7 @@ msgstr ").<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(company)s %(name)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1520,7 +1520,7 @@ msgstr "세금 재정 위치는 동일한 세금 항목에 대해서 한 번만 
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr ""
+msgstr "임시 번호는 실제 매칭에 사용할 수 없습니다."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4145,7 +4145,7 @@ msgstr "이 전표와 관련된 회사"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr ""
+msgstr "이메일로 협력사 데이터 입력을 완료합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6219,6 +6219,15 @@ msgid "Epd Needed"
 msgstr "Epd 필요"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
@@ -6919,12 +6928,12 @@ msgstr "차이"
 msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
-msgstr ""
+msgstr "청구서 취소나 항목 삭제 또는 미결 기간으로 인한 수기 오류로 인한 차이입니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr ""
+msgstr "순서 상의 공백"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -9959,7 +9968,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "청구서가 준비되면 확정을 클릭하세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10533,14 +10542,14 @@ msgstr "협력사"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "해시 항목에 사용되는 협력사는 병합할 수 없습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "이메일이 없는 협력사"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10971,7 +10980,7 @@ msgstr "협력사를 매핑하려면 관련 검색어를 하나 이상 설정하
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "이메일 정보를 입력하세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -14322,6 +14331,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"순서는 회계연도가 시작할 때마다 1부터 다시 시작됩니다.\n"
+"확인된 회계연도 시작 연도는 '%(year)s'년입니다.\n"
+"확인된 회계연도 종료 연도는 '%(year_end)s'년입니다.\n"
+"이 경우 증 '%(formatted_seq)s'만큼 숫자가 증가합니다."
 
 #. module: account
 #. odoo-python
@@ -15781,7 +15794,7 @@ msgstr "청구서 주의 사항"
 msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
-msgstr ""
+msgstr "이 문서는 회사가 있어야 합니다. 문서에 대해 회사를 선택하세요."
 
 #. module: account
 #. odoo-python
@@ -16397,7 +16410,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "계정을 합칠 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -16844,7 +16857,7 @@ msgstr "예: domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "다음의 협력사입니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

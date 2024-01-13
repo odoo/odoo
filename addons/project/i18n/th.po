@@ -194,13 +194,11 @@ msgstr "<b>ลาก &amp; วาง</b> การ์ดเพื่อเปล
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
-"    or # <b>mentions</b> to reach an entire team."
+"<b>Log notes</b> for internal communications <i>(the people following this "
+"task won't be notified of the note you are logging unless you specifically "
+"tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
+"<b>mentions</b> to reach an entire team."
 msgstr ""
-"<b>บันทึกโน๊ต</b> สำหรับการสื่อสารภายใน <i>(บุคคลที่ติดตามงานนี้จะไม่ได้รับแจ้งเตือนถึง \n"
-"    โน๊ตที่คุณกำลังบันทึก เว้นแต่คุณจะแท็กพวกเขาโดยเฉพาะ)</i> ใช้ @ <b>mentions</b> เพื่อส่งแจ้งเตือนไปยังเพื่อนร่วมงาน \n"
-"    หรือ # <b>mentions</b> เพื่อเข้าถึงทั้งทีม"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1251,11 +1249,10 @@ msgstr "คำขอการเปลี่ยนแปลง"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
-"     of a product, of a team, of a construction site, etc.</i>"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the "
+"name of a customer, of a product, of a team, of a construction site, "
+"etc.</i>"
 msgstr ""
-"เลือก <b>ชื่อ</b> สำหรับโปรเจ็กต์ของคุณ <i>อาจเป็นอะไรก็ได้ที่คุณต้องการ: ชื่อลูกค้า\n"
-"     ของสินค้า ทีมงาน สถานที่ก่อสร้าง ฯลฯ</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3087,13 +3084,6 @@ msgid "Next Activity"
 msgstr "กิจกรรมถัดไป"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3403,14 +3393,14 @@ msgstr ""
 #, python-format
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "บริษัทพาร์ทเนอร์ต้องไม่แตกต่างจากบริษัทของโปรเจ็กต์ที่ได้รับมอบหมาย"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "บริษัทพาร์ทเนอร์ต้องไม่แตกต่างจากบริษัทที่ได้รับมอบหมายงาน"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5375,32 +5365,22 @@ msgstr "ใช้"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
-"    Add new people to the followers' list to make them aware of the main changes about this task."
+"Use the chatter to <b>send emails</b> and communicate efficiently with your "
+"customers. Add new people to the followers' list to make them aware of the "
+"main changes about this task."
 msgstr ""
-"ใช้แชทเพื่อ<b>ส่งอีเมล</b>และสื่อสารกับลูกค้าของคุณอย่างมีประสิทธิภาพ\n"
-"   เพิ่มคนใหม่ลงในรายชื่อผู้ติดตาม เพื่อให้พวกเขาทราบถึงการเปลี่ยนแปลงหลักเกี่ยวกับงานนี้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"        30h Allocate 30 hours to the task\n"
-"        #tags Set tags on the task\n"
-"        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"            #tags Set tags on the task\n"
+"            @user Assign the task to a user\n"
+"            ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
-"ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
-"\n"
-"        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
-"        #แท็ก ตั้งค่าแท็กในงาน\n"
-"        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
-"        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
-"\n"
-"        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 ชม #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

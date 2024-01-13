@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,13 +196,11 @@ msgstr "<b>Versleep </b> de kaart om je taak van fase te veranderen."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
-"    or # <b>mentions</b> to reach an entire team."
+"<b>Log notes</b> for internal communications <i>(the people following this "
+"task won't be notified of the note you are logging unless you specifically "
+"tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
+"<b>mentions</b> to reach an entire team."
 msgstr ""
-"<b>Log notities</b> voor interne communicatie <i>(de mensen die deze taak volgen, worden niet op de hoogte gesteld\n"
-"     van de notitie die je aan het loggen bent, maar niet als je ze specifiek tagt)</i>. Gebruik @<b>vermeldingen</b> om een collega te pingen\n"
-"     of # <b></b>om een heel team te bereiken."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -875,12 +873,12 @@ msgstr "Klantbeoordelingen toestaan"
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
-msgstr "Kostenplaats"
+msgstr "Analytische rekening"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Analytic Plan"
-msgstr "Analytisch plan"
+msgstr "Analytische dimensie"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -890,10 +888,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Kostenplaats waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
-"Volg de kosten en inkomsten van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"De kostenplaats kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
-"Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
+"Analytische rekening waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
+"Volg de kosten en inkomsten van je project door deze analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"De analytische rekening kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
+"Om gebruik te kunnen maken van urenstaten is een analytische rekening vereist."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -902,9 +900,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"Kostenplaats waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
-"Houd de kosten en inkomsten van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"Standaard is de kostenplaats van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
+"Analytische rekening waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
+"Houd de kosten en inkomsten van je taak bij door de analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Standaard is de analytische rekening van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1257,11 +1255,10 @@ msgstr "Wijzigingen gevraagd"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
-"     of a product, of a team, of a construction site, etc.</i>"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the "
+"name of a customer, of a product, of a team, of a construction site, "
+"etc.</i>"
 msgstr ""
-"Kies een <b>naam</b> voor het project. <i>Het kan van alles zijn: de naam van een klant,\n"
-"      van een product, van een team, van een bouwplaats, enz.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3118,13 +3115,6 @@ msgid "Next Activity"
 msgstr "Volgende activiteit"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenafspraak"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
@@ -3445,6 +3435,8 @@ msgstr ""
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
+"Het relatiebedrijf mag niet anders zijn dan het bedrijf van de toegewezen "
+"taken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -4946,8 +4938,9 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
-"Het bedrijf van een project kan niet worden gewijzigd als de kostenplaats, "
-"kostenplaatsregels heeft of als meer dan één project eraan gekoppeld is."
+"Het bedrijf van een project kan niet worden gewijzigd als de analytische "
+"rekening, analytische rekeningregels heeft of als meer dan één project eraan"
+" gekoppeld is."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5242,8 +5235,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
-"Volg de kosten, inkomsten en marge van het project door de kostenplaats die "
-"bij het project hoort in te stellen op relevante documenten."
+"Volg de kosten, inkomsten en marge van het project door de analytische "
+"rekening die bij het project hoort in te stellen op relevante documenten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5251,8 +5244,8 @@ msgid ""
 "Track the profitability of your project with analytic accounting. Select the"
 " analytic plan for new projects:"
 msgstr ""
-"Houd de winstgevendheid van je project bij dankzij de kostenplaats "
-"boekhouding. Selecteer het kostenplaatsplan voor nieuwe projecten:"
+"Houd de winstgevendheid van je project bij dankzij de analytische "
+"boekhouding. Selecteer de analytische dimensie voor nieuwe projecten:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5262,8 +5255,8 @@ msgid ""
 "belongs to a plan."
 msgstr ""
 "Volg de winstgevendheid van je projecten. Elk project, zijn taken en "
-"urenstaten zijn gekoppeld aan een kostenplaats en elke kostenplaats hoort "
-"bij een plan."
+"urenstaten zijn gekoppeld aan een analytsiche rekening en elke analytische "
+"rekening hoort bij een plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5332,7 +5325,7 @@ msgstr "Niet toegewezen"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr "Onbekende kostenplaats"
+msgstr "Onbekende analytische rekening"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -5431,32 +5424,22 @@ msgstr "Gebruik de"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
-"    Add new people to the followers' list to make them aware of the main changes about this task."
+"Use the chatter to <b>send emails</b> and communicate efficiently with your "
+"customers. Add new people to the followers' list to make them aware of the "
+"main changes about this task."
 msgstr ""
-"Gebruik de chatter om <b>e-mails te verzenden</b> en efficiënt met je klanten te communiceren.\n"
-"     Voeg nieuwe mensen toe aan de lijst met volgers om hen op de hoogte te stellen van de belangrijkste wijzigingen met betrekking tot deze taak."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"        30h Allocate 30 hours to the task\n"
-"        #tags Set tags on the task\n"
-"        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"            #tags Set tags on the task\n"
+"            @user Assign the task to a user\n"
+"            ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
-"Gebruik deze trefwoorden in de titel om nieuwe taken in te stellen:\n"
-"\n"
-"        30h Wijs 30 uur toe aan de taak\n"
-"        #tags Stel labels in op de taak\n"
-"        @user Wijs de taak toe aan een gebruiker\n"
-"        ! Geef de taak een hoge prioriteit\n"
-"\n"
-"        Zorg voor het juiste formaat en volgorde bijv. Verbeter het configuratiescherm 5u #functie #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

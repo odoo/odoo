@@ -3,10 +3,10 @@
 # 	* account
 # 
 # Translators:
-# Junko Augias, 2023
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,7 +256,7 @@ msgstr ").<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(name)s 所属 %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -521,7 +521,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>早期支払値引が適用されます。</b>"
+msgstr "<b>早期支払割引が適用されます。</b>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1031,7 +1031,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
-"                                        仕訳先の仕訳帳に2回目の支払が作成されます。\n"
+"                                        移動先の仕訳帳に2回目の支払が作成されます。\n"
 "                                    </span>"
 
 #. module: account
@@ -1359,7 +1359,7 @@ msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
-msgstr "キャッシュレジスターは現金出納帳で現金の記入を管理できるようにします。この機能によって、毎日の現金支払は簡単にフォローできます。"
+msgstr "キャッシュレジスタは現金出納帳で現金の記入を管理できるようにします。この機能によって、毎日の現金支払を簡単にフォローできます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -1509,7 +1509,7 @@ msgstr "税会計ポジションは、同じ税に対して1回のみ定義で�
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr ""
+msgstr "仮番号は実際の突合では使用できません。"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1889,7 +1889,7 @@ msgstr "仕訳のある勘定科目"
 msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
-msgstr "勘定科目: auto_postを有効にし、記帳日を「今日まで」と設定して、下書き仕訳を記入します"
+msgstr "勘定科目: auto_postを有効にし、記帳日を「今日まで」と設定して、仕訳ドラフトを記入します"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3281,7 +3281,7 @@ msgstr "支払いに基づく"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr "一括支払"
+msgstr "バッチ支払"
 
 #. module: account
 #. odoo-javascript
@@ -3341,7 +3341,7 @@ msgstr "請求管理者"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Bills"
-msgstr "請求書"
+msgstr "仕入先請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4127,7 +4127,7 @@ msgstr "この仕訳と関係する会社"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr ""
+msgstr "Eメールで取引先データを完成させる"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5460,7 +5460,7 @@ msgstr "移動先の勘定科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__destination_journal_id
 msgid "Destination Journal"
-msgstr "移動先の仕訳"
+msgstr "移動先の仕訳帳"
 
 #. module: account
 #. odoo-python
@@ -5813,7 +5813,7 @@ msgstr "この口座に計上された前払金は、税決算仕訳により考
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Draft"
-msgstr "下書き"
+msgstr "ドラフト"
 
 #. module: account
 #. odoo-python
@@ -5828,7 +5828,7 @@ msgstr "ドラフト仕入先請求書"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Credit Note"
-msgstr "クレジットノートの下書き"
+msgstr "クレジットノート ドラフト"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
@@ -5840,7 +5840,7 @@ msgstr "ドラフト仕訳"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Entry"
-msgstr "下書き入力"
+msgstr "ドラフト仕訳"
 
 #. module: account
 #. odoo-python
@@ -5849,12 +5849,12 @@ msgstr "下書き入力"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Invoice"
-msgstr "請求書の下書き"
+msgstr "ドラフト請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Draft Invoices"
-msgstr "請求書の下書き"
+msgstr "ドラフト請求書"
 
 #. module: account
 #. odoo-python
@@ -5868,21 +5868,21 @@ msgstr "ドラフトの支払"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Purchase Receipt"
-msgstr "購買領収書の下書き"
+msgstr "ドラフト購買領収書"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Sales Receipt"
-msgstr "販売領収書の下書き"
+msgstr "ドラフト販売領収書"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "仕入先クレジットノートの下書き"
+msgstr "ドラフト仕入先クレジットノート"
 
 #. module: account
 #. odoo-python
@@ -5978,7 +5978,7 @@ msgstr "EXCH"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_discount
 msgid "Early Discount"
-msgstr "早期値引"
+msgstr "早期割引"
 
 #. module: account
 #. odoo-python
@@ -5987,7 +5987,7 @@ msgstr "早期値引"
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
 #, python-format
 msgid "Early Payment Discount"
-msgstr "早期支払値引"
+msgstr "早期支払割引"
 
 #. module: account
 #. odoo-python
@@ -5996,24 +5996,24 @@ msgstr "早期支払値引"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Early Payment Discount (%s)"
-msgstr "早期支払値引 (%s)"
+msgstr "早期支払割引 (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Early Payment Discount (Exchange Difference)"
-msgstr "早期支払値引 (為替差)"
+msgstr "早期支払割引 (為替差)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__early_payment_discount_mode
 msgid "Early Payment Discount Mode"
-msgstr "早期支払値引モード"
+msgstr "早期支払割引モード"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_percentage
 msgid "Early Payment Discount granted for this payment term"
-msgstr "この支払期間中に適用される早期支払値引"
+msgstr "この支払期間中に適用される早期支払割引"
 
 #. module: account
 #. odoo-python
@@ -6021,7 +6021,7 @@ msgstr "この支払期間中に適用される早期支払値引"
 #, python-format
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
-msgstr "早期支払値引： <b>%(amount)s</b>、<b>%(date)s</b>より前に支払われた場合"
+msgstr "早期支払割引： <b>%(amount)s</b>、<b>%(date)s</b>より前に支払われた場合"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -6192,6 +6192,15 @@ msgstr "Epd キー"
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_needed
 msgid "Epd Needed"
 msgstr "必要なEpd"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -6639,12 +6648,12 @@ msgstr "顧客の支払いをフォロー"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay our invoices"
-msgstr "請求書のフォロー、ダウンロードまたは支払を行いましょう"
+msgstr "請求書のフォロー、ダウンロード、お支払いができます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Follow, download or pay your invoices"
-msgstr "請求書のフォロー、ダウンロードまたは支払を行いましょう"
+msgstr "請求書のフォロー、ダウンロード、お支払いができます。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_follower_ids
@@ -6890,12 +6899,12 @@ msgstr "差異"
 msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
-msgstr ""
+msgstr "キャンセルされた請求書、削除された項目、または未決済期間の手動エラーによる差異。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr ""
+msgstr "付番内のギャップ"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -8015,7 +8024,7 @@ msgstr "請求済"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #, python-format
 msgid "Invoices"
-msgstr "請求書"
+msgstr "顧客請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -8292,7 +8301,7 @@ msgstr "仕訳"
 msgid ""
 "Journal Entry %s is not valid. In order to proceed, the journal items must "
 "include one and only one outstanding payments/receipts account."
-msgstr "仕訳%sは無効です。続けるには、仕訳項目は一つのみの未払・未回収勘定科目を含める必要があります。"
+msgstr "仕訳%sは無効です。続けるには、仕訳項目は一つのみの未消込支払/入金勘定科目を含める必要があります。"
 
 #. module: account
 #. odoo-python
@@ -8702,7 +8711,7 @@ msgstr "昨年"
 msgid ""
 "Last date at which the discounted amount must be paid in order for the Early"
 " Payment Discount to be granted"
-msgstr "早期支払値引適用のための値引額支払期限日"
+msgstr "早期支払割引適用のための割引額支払期限日"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__last_time_entries_checked
@@ -9916,7 +9925,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "請求書が準備できたら、確定して下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10220,7 +10229,7 @@ msgstr "未消込支払"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr "確認待ち支払勘定科目"
+msgstr "未消込支払勘定科目"
 
 #. module: account
 #. odoo-python
@@ -10233,7 +10242,7 @@ msgstr "未消込入金"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr "未消込入金勘定"
+msgstr "未消込入金勘定科目"
 
 #. module: account
 #. odoo-python
@@ -10488,14 +10497,14 @@ msgstr "取引先"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "ハッシュ化された記帳で使用されている取引先はマージできません。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "Eメールなしの取引先"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10739,7 +10748,7 @@ msgstr "支払条件: 30日以内"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
-msgstr "支払条件：30日、7日未満2％早期支払値引"
+msgstr "支払条件：30日、7日未満2％早期支払割引"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
@@ -10927,7 +10936,7 @@ msgstr "取引先マッピングを作成するには、少なくとも一つの
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "以下にEメールアドレスを指定して下さい。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11434,7 +11443,7 @@ msgstr "税%rにて再帰が見つかりました。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Reduced tax:"
-msgstr "減額された税："
+msgstr "減額される税："
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
@@ -11626,12 +11635,12 @@ msgstr "再順序付け"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Reset To Draft"
-msgstr "下書きにリセット"
+msgstr "ドラフトにリセット"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset to Draft"
-msgstr "下書きにリセット"
+msgstr "ドラフトにリセット"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -11858,12 +11867,12 @@ msgstr "顧客請求書・仕入先請求書の照合ルール"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr "相手勘定エントリを提案するルール"
+msgstr "相手勘定仕訳を提案する規則"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "消込モデルのルール"
+msgstr "消込モデルの規則"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
@@ -13458,7 +13467,7 @@ msgstr "この書類を認証するには、請求・返金日が必要です。
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The Early Payment Discount days must be strictly positive."
-msgstr "早期支払値引の日数は、必ず正の値である必要があります。"
+msgstr "早期支払割引の日数は、必ず正の値である必要があります。"
 
 #. module: account
 #. odoo-python
@@ -13467,14 +13476,14 @@ msgstr "早期支払値引の日数は、必ず正の値である必要があり
 msgid ""
 "The Early Payment Discount functionality can only be used with payment terms"
 " using a single 100% line. "
-msgstr "早期支払値引機能は、100％1行を使用する支払条件でのみ使用可能です。"
+msgstr "早期支払割引機能は、100％の単一明細を使用する支払条件でのみ使用できます。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The Early Payment Discount must be strictly positive."
-msgstr "早期値引は必ず正の値である必要があります。"
+msgstr "早期支払割引は必ず正の値である必要があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -13759,7 +13768,7 @@ msgstr "請求書を生成した文書。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) must be in draft."
-msgstr "仕訳 %s (id %s) は下書きである必要があります。"
+msgstr "仕訳 %s (id %s) はドラフトである必要があります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -13881,7 +13890,7 @@ msgstr "請求書にはすでに明細がありました。添付ファイルか
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr "請求書は下書きではありません。添付ファイルから更新されたものではありません。"
+msgstr "請求書はドラフトではありません。添付ファイルから更新されたものではありません。"
 
 #. module: account
 #. odoo-python
@@ -14256,6 +14265,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"この付番は、会計年度が始まるたびに1から始まります。\n"
+"ここで検出される会計年度開始は '%(year)s'.\n"
+"ここで検出された会計年度決算期は '%(year_end)s'.\n"
+"この場合のインクリメント数は '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -14384,7 +14397,7 @@ msgstr "アカウントには請求書や支払はありません。"
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "記入できる下書き状態の仕訳項目はありません。"
+msgstr "記入できるドラフト状態の仕訳項目はありません。"
 
 #. module: account
 #. odoo-python
@@ -14789,7 +14802,7 @@ msgstr "終了日"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Check"
-msgstr "要チェック"
+msgstr "未確認"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -15376,7 +15389,7 @@ msgstr "アングロサクソン会計を使用"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr "一括支払を使用"
+msgstr "バッチ支払を使用"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15703,7 +15716,7 @@ msgstr "請求書の警告"
 msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
-msgstr ""
+msgstr "このドキュメントを会社なしにすることはできません。このドキュメントを作成する会社を選択して下さい。"
 
 #. module: account
 #. odoo-python
@@ -16013,7 +16026,7 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "account set either on the company or the %s payment method in the %s "
 "journal."
-msgstr " 会社または%s支払方法（仕訳帳 %s 内）に未払/受領勘定が設定されていないと新しい支払は作成できません。"
+msgstr " 会社または%s支払方法（仕訳帳 %s 内）に未消込支払/入金勘定が設定されていないと新しい支払は作成できません。"
 
 #. module: account
 #. odoo-python
@@ -16040,7 +16053,7 @@ msgstr "別の会社に属するエントリの支払いを作成することは
 msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
-msgstr "計上した仕訳項目を削除することはできません。仕訳を下書きに戻してから削除して下さい。"
+msgstr "計上した仕訳項目を削除することはできません。仕訳をドラフトに戻してから削除して下さい。"
 
 #. module: account
 #. odoo-python
@@ -16185,7 +16198,7 @@ msgstr "税法上の所在国に、会社の単一の主要設定と同じ納税
 msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
-msgstr "すでに投稿された状態のムーブを作成することはできません。下書きを作成して、後で投稿してください。"
+msgstr "すでに投稿された状態のムーブを作成することはできません。ドラフトを作成して、後で投稿してください。"
 
 #. module: account
 #. odoo-python
@@ -16298,14 +16311,14 @@ msgid ""
 "to modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
 "開始仕訳（%s）がすでに記帳されている場合は「開始残高opening_balance」をインポートすることはできません。"
-"                         どうしても口座の開始残高を変更したい場合は、仕訳を下書きに設定し直して下さい。"
+"                         どうしても口座の開始残高を変更したい場合は、仕訳をドラフトに設定し直して下さい。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "アカウントをマージできません。"
 
 #. module: account
 #. odoo-python
@@ -16399,14 +16412,14 @@ msgstr "会計ポジションの勘定科目マッピングに設定された勘
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "現金基準税仕訳帳を下書きにリセットすることはできません。"
+msgstr "現金基準税仕訳帳をドラフトにリセットすることはできません。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
-msgstr "為替差仕訳を下書きにリセットすることはできません。"
+msgstr "為替差仕訳をドラフトにリセットすることはできません。"
 
 #. module: account
 #. odoo-python
@@ -16573,7 +16586,7 @@ msgstr "お客様の取引条件を反映させるために、このドキュメ
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Your Invoices"
-msgstr "あなたの請求書"
+msgstr "自分の請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16752,7 +16765,7 @@ msgstr "例: domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "以下の取引先"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

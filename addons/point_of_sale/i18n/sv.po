@@ -6,6 +6,7 @@
 # Anto Nilsson <anton.nilsson@vertel.se>, 2023
 # Patrik Lermon <patrik.lermon@gmail.com>, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
+# Björn Hayer, 2023
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2023
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # Daniel Löfgren, 2023
@@ -14,7 +15,6 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Robert Frykelius <robert.frykelius@linserv.se>, 2023
-# Björn Hayer, 2023
 # Robin Calvin, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
@@ -3788,11 +3788,6 @@ msgid "Newspaper Rack"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Nästa Kalenderhändelse för Aktivitet"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nästa slutdatum för aktivitet"
@@ -5175,6 +5170,7 @@ msgstr "Drivs med"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr ""
@@ -6940,8 +6936,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                    Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
 
 #. module: point_of_sale

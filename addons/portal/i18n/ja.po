@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgstr "<i class=\"fa fa-fw fa-th me-1 small text-primary\"/> アプリ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "<i class=\"fa fa-pencil\"/> Edit information"
-msgstr "<i class=\"fa fa-pencil\"/>情報を編集 "
+msgstr "<i class=\"fa fa-pencil\"/>アカウント情報を変更 "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -109,6 +109,10 @@ msgid ""
 "                <br/>Please contact us directly for that operation.\n"
 "            </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                会社名、VAT番号、国名は、アカウント用に一度発行されたドキュメントで変更することはできません。\n"
+"                <br/>この操作については直接お問合せ下さい。\n"
+"            </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -116,11 +120,13 @@ msgid ""
 "<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -135,7 +141,7 @@ msgstr "<span class=\"small me-1 navbar-text\">以下でグループ化:</span>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr "<span class=\"small me-1 navbar-text\">以下でソート:</span>"
+msgstr "<span class=\"small me-1 navbar-text\">並べ替え:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -354,7 +360,7 @@ msgstr "メールに表示するコンテンツを追加する"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Add, remove or modify your addresses"
-msgstr "住所を追加、削除または変更する"
+msgstr "住所の追加、削除、変更ができます"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -416,7 +422,7 @@ msgstr "アカウントに書類を発行されると、会社名の変更はで
 msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "アカウントにドキュメントを発行されると、国の変更はできなくなります。変更したい場合は直接当社にご連絡下さい。"
 
 #. module: portal
 #. odoo-javascript
@@ -461,7 +467,7 @@ msgstr "コンフィグ設定"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr "接続パラメータの設定"
+msgstr "パスワード変更、２要素認証など、接続パラメータの設定ができます"
 
 #. module: portal
 #. odoo-javascript

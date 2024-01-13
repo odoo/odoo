@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2023
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +121,10 @@ msgid ""
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
+"%(new_line)s%(new_line)sพิมพ์ %(bold_start)s@username%(bold_end)s "
+"กล่าวถึงใครบางคนและดึงดูดความสนใจของพวกเขา%(new_line)sพิมพ์ "
+"%(bold_start)s#channel%(bold_end)s เพื่อกล่าวถึงช่อง %(new_line)sพิมพ์ "
+"%(bold_start)s/command%(bold_end)s เพื่อดำเนินการคำสั่ง"
 
 #. module: mail
 #. odoo-javascript
@@ -246,7 +250,7 @@ msgstr "%s ข้อความที่พบ"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "%s raised their hand"
-msgstr ""
+msgstr "%s ยกมือขึ้น"
 
 #. module: mail
 #. odoo-python
@@ -1913,7 +1917,7 @@ msgstr "ประเภทช่อง"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Channel full"
-msgstr ""
+msgstr "ช่องเต็ม"
 
 #. module: mail
 #. odoo-python
@@ -2237,7 +2241,7 @@ msgstr "การทดสอบการเชื่อมต่อล้มเ
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Connection to SFU server closed by the server"
-msgstr ""
+msgstr "การเชื่อมต่อกับเซิร์ฟเวอร์ SFU ที่ปิดโดยเซิร์ฟเวอร์"
 
 #. module: mail
 #. odoo-javascript
@@ -2245,7 +2249,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Connection type:"
-msgstr ""
+msgstr "ประเภทการเชื่อมต่อ:"
 
 #. module: mail
 #. odoo-javascript
@@ -3066,7 +3070,7 @@ msgstr "ดาวน์โหลดบันทึก"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Download:"
-msgstr ""
+msgstr "ดาวน์โหลด:"
 
 #. module: mail
 #. odoo-javascript
@@ -3603,7 +3607,7 @@ msgstr "ไม่สามารถโหลด GIFs..."
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr ""
+msgstr "โหลดเซิร์ฟเวอร์ SFU ไม่สำเร็จ กำลังถอยกลับไปเป็นแบบ P2P"
 
 #. module: mail
 #. odoo-python
@@ -4675,7 +4679,7 @@ msgstr "ที่อยู่แบบอินไลน์ที่สมบู
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Input device"
-msgstr "อุปกรณ์อินพุต"
+msgstr "อุปกรณ์การป้อนข้อมูล"
 
 #. module: mail
 #. odoo-javascript
@@ -4741,7 +4745,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
+msgstr "ช่อง “%(field_name)s” ไม่ถูกต้องเมื่อสร้างช่องกับสมาชิก"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5407,10 +5411,10 @@ msgstr "ขั้นตอนการบันทึก:"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
-msgid "Logged as"
-msgstr "เข้าสู่ระบบเป็น"
+msgid "Logged in as"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -5715,7 +5719,7 @@ msgstr "ไม่สามารถรับอุปกรณ์สื่อไ
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__medium
 msgid "Medium"
-msgstr "สื่อกลาง"
+msgstr "วิธีที่เข้ามา"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -6851,7 +6855,7 @@ msgstr "ข้อความต้นฉบับถูกลบแล้ว"
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 #, python-format
 msgid "Other activities"
-msgstr ""
+msgstr "กิจกรรมอื่นๆ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7488,7 +7492,7 @@ msgstr "เซสชัน RTC"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "RTC Session ID:"
-msgstr ""
+msgstr "รหัสเซสชัน RTC:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
@@ -7983,7 +7987,7 @@ msgstr "รหัสเซิร์ฟเวอร์ SFU"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "SFU server"
-msgstr ""
+msgstr "เซิร์ฟเวอร์ SFU"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -9955,7 +9959,7 @@ msgstr "อัปโหลดไฟล์"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Upload:"
-msgstr ""
+msgstr "การอัปโหลด:"
 
 #. module: mail
 #. odoo-javascript
@@ -10502,7 +10506,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "คุณอยู่คนเดียวในการสนทนาส่วนตัว"
 
 #. module: mail
 #. odoo-python
@@ -10516,14 +10520,14 @@ msgstr "คุณอยู่คนเดียวในช่องนี้"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in a private conversation with %(member_names)s."
-msgstr ""
+msgstr "คุณกำลังสนทนาส่วนตัวกับ %(member_names)s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "คุณอยู่ในช่อง %(bold_start)s#%(channel_name)s%(bold_end)s"
 
 #. module: mail
 #. odoo-javascript
@@ -10812,7 +10816,7 @@ msgstr "ไฟล์แนบของอีเมลนี้"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "available bitrate:"
-msgstr ""
+msgstr "บิตเรตที่ใช้ได้:"
 
 #. module: mail
 #. odoo-javascript
@@ -10847,7 +10851,7 @@ msgstr "โดย"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "camera"
-msgstr ""
+msgstr "กล้อง"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -10872,7 +10876,7 @@ msgstr "ช่อง"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
-msgstr ""
+msgstr "อัตราความเร็วนาฬิกา:"
 
 #. module: mail
 #. odoo-javascript
@@ -10888,7 +10892,7 @@ msgstr "ปิด"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "codec:"
-msgstr ""
+msgstr "ตัวแปลงสัญญาณ:"
 
 #. module: mail
 #. odoo-python
@@ -10949,14 +10953,14 @@ msgstr "เสร็จสิ้น"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down DTLS:"
-msgstr ""
+msgstr "ดาวน์โหลด DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down ICE:"
-msgstr ""
+msgstr "ดาวน์โหลด ICE:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -11146,7 +11150,7 @@ msgstr "ข้อผิดพลาดของเครื่องเล่น
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "microphone"
-msgstr ""
+msgstr "ไมโครโฟน"
 
 #. module: mail
 #. odoo-python
@@ -11338,14 +11342,14 @@ msgstr "ไม่ทราบโมเดลเป้าหมาย %s"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up DTLS:"
-msgstr ""
+msgstr "อัปโหลด DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up ICE:"
-msgstr ""
+msgstr "อัปโหลด ICE:"
 
 #. module: mail
 #. odoo-javascript
@@ -11389,3 +11393,10 @@ msgstr "{{ object.partner_id.lang }}"
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” ใน “%(channel_name)s”"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/chatter.js:0
+#, python-format
+msgid "No recipient"
+msgstr ""

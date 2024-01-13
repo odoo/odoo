@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Lucia Pacheco, 2023
-# Martin Trigaux, 2023
 # Ana Sanjuán, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,6 +124,10 @@ msgid ""
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
+"%(new_line)s%(new_line)sEscriba %(bold_start)s@nombredeusuario%(bold_end)s "
+"para mencionar a alguien.%(new_line)sEscriba "
+"%(bold_start)s#canal%(bold_end)s para mencionar un canal.%(new_line)sEscriba"
+" %(bold_start)s/comando%(bold_end)s para ejecutar un comando."
 
 #. module: mail
 #. odoo-javascript
@@ -173,7 +177,7 @@ msgstr "%s (copia)"
 #: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
 #, python-format
 msgid "%s Message"
-msgstr ""
+msgstr "%s Mensaje"
 
 #. module: mail
 #. odoo-javascript
@@ -250,7 +254,7 @@ msgstr "%s mensajes encontrados"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "%s raised their hand"
-msgstr ""
+msgstr "%s alzó la mano"
 
 #. module: mail
 #. odoo-python
@@ -1941,7 +1945,7 @@ msgstr "Tipo de canal"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Channel full"
-msgstr ""
+msgstr "Canal lleno"
 
 #. module: mail
 #. odoo-python
@@ -2266,7 +2270,7 @@ msgstr "La prueba de conexión ha fallado: %s"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Connection to SFU server closed by the server"
-msgstr ""
+msgstr "Conexión con el servidor SFU cerrada por el servidor"
 
 #. module: mail
 #. odoo-javascript
@@ -2274,7 +2278,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Connection type:"
-msgstr ""
+msgstr "Tipo de conexión:"
 
 #. module: mail
 #. odoo-javascript
@@ -3103,7 +3107,7 @@ msgstr "Descargar registros"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Download:"
-msgstr ""
+msgstr "Descargar:"
 
 #. module: mail
 #. odoo-javascript
@@ -3647,6 +3651,8 @@ msgstr "Error al cargar gifs..."
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
 msgstr ""
+"No se pudo cargar el servidor SFU, se está utilizando la red de pares como "
+"alternativa."
 
 #. module: mail
 #. odoo-python
@@ -4474,7 +4480,7 @@ msgstr "Si se requiere SSL."
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_has_error
@@ -4486,7 +4492,7 @@ msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+msgstr "Si está marcada, algunos mensajes tienen error de envío."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4796,7 +4802,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
+msgstr "Campo \"%(field_name)s\" no válido al crear un canal con miembros."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5464,9 +5470,9 @@ msgstr "Registrar paso:"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
-msgid "Logged as"
+msgid "Logged in as"
 msgstr "Registrado como"
 
 #. module: mail
@@ -5692,7 +5698,7 @@ msgstr "Correos"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: mail
 #. odoo-javascript
@@ -5883,7 +5889,7 @@ msgstr "Mensaje %(thread name)s…"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -6858,7 +6864,7 @@ msgstr "Abrir en Conversaciones"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no permitida"
+msgstr "Operación no admitida"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
@@ -6933,7 +6939,7 @@ msgstr "Se eliminó el mensaje original"
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 #, python-format
 msgid "Other activities"
-msgstr ""
+msgstr "Otras actividades"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7578,7 +7584,7 @@ msgstr "Sesión de comunicación en tiempo real"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "RTC Session ID:"
-msgstr ""
+msgstr "ID de la sesión RTC:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
@@ -8082,7 +8088,7 @@ msgstr "Clave del servidor SFU"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "SFU server"
-msgstr ""
+msgstr "Servidor SFU"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -10086,7 +10092,7 @@ msgstr "Subir archivo"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Upload:"
-msgstr ""
+msgstr "Subir:"
 
 #. module: mail
 #. odoo-javascript
@@ -10646,7 +10652,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "Se encuentra solo en una conversación privada."
 
 #. module: mail
 #. odoo-python
@@ -10660,14 +10666,14 @@ msgstr "Está solo en este canal."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in a private conversation with %(member_names)s."
-msgstr ""
+msgstr "Se encuentra en una conversación privada con %(member_names)s."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "Se encuentra en el canal %(bold_start)s#%(channel_name)s%(bold_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -10960,7 +10966,7 @@ msgstr "archivo(s) adjunto(s) en este correo electrónico."
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "available bitrate:"
-msgstr ""
+msgstr "tasa de bits disponible:"
 
 #. module: mail
 #. odoo-javascript
@@ -11020,7 +11026,7 @@ msgstr "canales"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
-msgstr ""
+msgstr "frecuencia de reloj:"
 
 #. module: mail
 #. odoo-javascript
@@ -11036,7 +11042,7 @@ msgstr "cerrar"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "codec:"
-msgstr ""
+msgstr "codec:"
 
 #. module: mail
 #. odoo-python
@@ -11097,14 +11103,14 @@ msgstr "hecho"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down DTLS:"
-msgstr ""
+msgstr "DTLS caído:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down ICE:"
-msgstr ""
+msgstr "ICE caído:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -11488,14 +11494,14 @@ msgstr "modelo de destino desconocido %s"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up DTLS:"
-msgstr ""
+msgstr "DTLS en funcionamiento:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up ICE:"
-msgstr ""
+msgstr "ICE en funcionamiento:"
 
 #. module: mail
 #. odoo-javascript
@@ -11539,3 +11545,10 @@ msgstr "{{ object.partner_id.lang }}"
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” en “%(channel_name)s”"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/chatter.js:0
+#, python-format
+msgid "No recipient"
+msgstr ""

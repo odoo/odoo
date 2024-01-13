@@ -8,8 +8,8 @@
 # Wil Odoo, 2023
 # Jakub Smolka, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Tomáš Píšek, 2024
 # Jiří Podhorecký, 2024
+# Tomáš Píšek, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 13:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jiří Podhorecký, 2024\n"
+"Last-Translator: Tomáš Píšek, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4147,6 +4147,9 @@ msgid ""
 "Employment Hero Payroll Integration\n"
 "This Module will synchronise all payrun journals from Employment Hero to Odoo.\n"
 msgstr ""
+"\n"
+"Integrace mezd Employment Hero\n"
+"Tento modul synchronizuje všechny mzdové deníky z Employment Hero do Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_utm
@@ -4163,6 +4166,8 @@ msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
+"\n"
+"Povolí průvodce DPH při zaúčtování vratky daně.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -4171,6 +4176,9 @@ msgid ""
 "Enrich lead created automatically through an appointment with gathered website visitor information such as language,\n"
 "country and detailed information like pages browsed by the lead (through a link to website visitor).\n"
 msgstr ""
+"\n"
+"Obohaťte prospekty vytvořené pomocí schůzek o další informace získané z návštěvy webových stránek, jako jsou jazyk,\n"
+"země a detailní informace, jako jsou stránky navštívené prospektem (skrze odkaz na návštěvníka stránek).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -4178,6 +4186,8 @@ msgid ""
 "\n"
 "Enterprise digest data\n"
 msgstr ""
+"\n"
+"Enterprise digest data\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_exports
@@ -4195,6 +4205,8 @@ msgid ""
 "\n"
 "Expense documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Doklady o výdajích budou automaticky integrovány do aplikace Dokument.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_payment_nacha
@@ -4202,6 +4214,8 @@ msgid ""
 "\n"
 "Export payments as NACHA files for use in the United States.\n"
 msgstr ""
+"\n"
+"Exportujte platby jako NACHA soubory pro použití ve Spojených Státech.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -4214,6 +4228,13 @@ msgid ""
 "\n"
 "It is primarily used for EDIs that might need a special city code.\n"
 msgstr ""
+"\n"
+"Rozšířená správa adres\n"
+"=========================\n"
+"\n"
+"Tento modul poskytuje možnost vybrat město ze seznamu (pro vybrané země).\n"
+"\n"
+"Primárně určeno pro EDI zprávy, které mohou vyžadovat PSČ. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail_account_followup
@@ -4221,6 +4242,8 @@ msgid ""
 "\n"
 "Extension to send follow-up documents by post\n"
 msgstr ""
+"\n"
+"Rozšíření pro posílání upomínek poštou\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm
@@ -4239,6 +4262,19 @@ msgid ""
 "- add products on tasks\n"
 "\n"
 msgstr ""
+"\n"
+"Správa služeb v terénu\n"
+"==========================\n"
+"Tento modul přidává funkce potřebné pro moderní správu služeb v terénu.\n"
+"Nainstaluje následující aplikace:\n"
+"- Projekt\n"
+"- Pracovní výkazy\n"
+"\n"
+"Přidá následující možnosti:\n"
+"- zprávy o úkolech\n"
+"- Aplikace FSM s vlastním pohledem pro pracovníka na místě\n"
+"- přidávat produkty na úkoly\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_accountant
@@ -4246,6 +4282,8 @@ msgid ""
 "\n"
 "Filters the stock lines out of the reconciliation widget\n"
 msgstr ""
+"\n"
+"Odfiltruje řádky týkající se účtování zásob z nástroje pro párování\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -4269,6 +4307,21 @@ msgid ""
 "    - The payslip.line with appears_in_payslip = False should appears in the\n"
 "      payslip interface, but not in the payslip report\n"
 msgstr ""
+"\n"
+"Francouzská mzdová pravidla.\n"
+"======================\n"
+"\n"
+"- Konfigurace hr_payroll pro francouzskou lokalizaci\n"
+"- Všechna hlavní pravidla příspěvků pro francouzskou výplatní pásku, pro „cadre“ a „non-cadre“\n"
+"- Nová zpráva o výplatě\n"
+"\n"
+"Zbývá vyřešit:\n"
+"-----\n"
+"- Integrace s modulem dovolené pro odpočet a příspěvek\n"
+"- Integrace s hr_payroll_account pro automatický účet_move_line vytvoření z výplatní pásky\n"
+"- Pokračovat v integraci příspěvku. Pouze hlavní příspěvek je aktuálně implementován\n"
+"- Přepracovat zprávu pod webkitem\n"
+"- payslip.line s looks_in_payslip = False by se měl objevit v rozhraní payslip, ale ne v reportu payslip\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp_workorder_quality
@@ -4353,6 +4406,73 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Funkční\n"
+"----------\n"
+"\n"
+"Schopnost vytvářet deníky v Odoo pro vytváření elektronických faktur pro zákazníky a jejich vykazování do AFIP (prostřednictvím webových faktur).\n"
+"K dispozici jsou tyto možnosti:\n"
+"\n"
+"    * Elektronická faktura - webová služba\n"
+"    * Export poukazu - webová služba\n"
+"    * Elektronický daňový doklad - webová služba\n"
+"\n"
+"Pokud v elektronických denících potvrdíte fakturu, bude tato potvrzena jak v Odoo, tak v AFIP. Tato validace je\n"
+"provedena okamžitě a z AFIPu obdržíme stav \"schváleno/schváleno s připomínkou/zamítnuto\". Pokud vaše faktura byla zamítnuta AFIPem, nebude v systému zaúčtována a zobrazí se vyskakovací zpráva s detailem chyby (důvody zamítnutí),\n"
+"které jsme obdrželi, a nápovědu o tom, v čem by mohl být problém.\n"
+"\n"
+"Pro účely kontroly a řešení problémů jsme také přidali nabídku \"Konzultační faktura v AFIP\", která nám umožňuje nahlížet do dříve vystavených faktur. odeslané\n"
+"do AFIP a poslední použité číslo jako podporu pro případné problémy se synchronizací sekvencí mezi Odoo a AFIP.\n"
+"\n"
+"    POZNÁMKA: Z pohledu formuláře deníku jsme schopni vynutit synchronizaci mezi sekvencemi Odoo ke každému z typů dokladů v sekci\n"
+"    s posledními čísly registrovanými v AFIP.\n"
+"\n"
+"Z dodavatelských účtů jsme přidali funkci, kterou lze nakonfigurovat v nastavení účetnictví, aby bylo možné ověřit\n"
+"dodavatelské účty v AFIP, aby bylo možné zkontrolovat, zda jsou dodavatelské účty skutečné (více informací naleznete v popisu nastavení).\n"
+"\n"
+"Konfigurace:\n"
+"\n"
+"1. Přejděte do sekce Nastavení účetnictví > Argentinská lokalizace.\n"
+"\n"
+"    1.1. Nakonfigurujte režim webových služeb AFIP:\n"
+"\n"
+"* Testovací prostředí pro použití demo certifikátů, které budou použity k testování instance a k provedení NOT\n"
+"skutečné faktury do AFIP. slouží pouze k testování. Pro demo instaces je již předdefinováno, nebudete muset konfigurovat.\n"
+"    (v AFIP se to běžně nazývá Homologační prostředí).\n"
+"     * Produkční prostředí pro generování skutečných certifikátů a legálních faktur do AFIP,\n"
+"\n"
+"    1.2. Nakonfigurujte svůj certifikát AFIP: Pokud se nacházíte v demonstrační instanci, bude tento nastaven jako výchozí. Pokud jste\n"
+"v produkční instanci, stačí přejít k nahrání certifikátu AFIP.\n"
+"\n"
+"    1.3. Volitelně můžete definovat, zda chcete mít možnost ověřovat účty dodavatelů v AFIP.\n"
+"\n"
+"2. Vytvořte prodejní deníky, které budou reprezentovat každou vaši AFIP pokladnu (k dispozici na Portálu AFIP), kterou chcete v Odoo používat.\n"
+"\n"
+"    2.1. Pole Používat doklady je nastaveno jako výchozí, neměňte ho prosím.\n"
+"    2.2. Nastavte systém AFIP POS na jeden z elektronických.\n"
+"\n"
+"        * Elektronická faktura - webová služba'\n"
+"        * Elektronický daňový doklad - webová služba'\n"
+"        * Export voucheru - webová služba'\n"
+"\n"
+"    2.3. Nastavte číslo AFIP POS a adresu AFIP POS s přihlédnutím k tomu, co máte nastaveno na portálu AFIP.\n"
+"\n"
+"    POZNÁMKA: Pro potvrzení můžete použít tlačítko \"Zkontrolovat dostupný AFIP POS\" ve formuláři deníku, které se má použít pro vytvoření deníků.\n"
+"\n"
+"Další informace o argentinské elektronické fakturaci naleznete na adrese http://www.afip.gob.ar/fe/ayuda.asp.\n"
+"\n"
+"Technická podpora\n"
+"---------\n"
+"\n"
+"Implementované webové služby jsou ty nejběžnější:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (Elektronická faktura)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Elektronický daňový doklad)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Elektronická faktura za export - stejná jako export poukaz).\n"
+"* wscdc - \"Constatación de Comprobantes\" (Ověření faktur)\n"
+"\n"
+"Informace o exportu naleznete na adrese http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -4553,6 +4673,34 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Funkce\n"
+"----------\n"
+"\n"
+"Tento modul přidá účetní funkce pro ekvádorskou lokalizaci, které \n"
+"představují minimální požadavky pro vedení společnosti v Ekvádoru, v souladu\n"
+"místními regulačními orgány jako je ekvádorský daňový úřad -SRI- a \n"
+"Superintendency of Companies -Super Intendencia de Compañías\n"
+"\n"
+"Proveďte následující konfigurační kroky:\n"
+"1. Přejděte na společnost a nastavte zemi na Ekvádor\n"
+"2. Instalujte fakturační a účetní modul, vše bdue provedeno automaticky\n"
+"\n"
+"Zdůrazňujeme:\n"
+"* Bude nainstalována ekvádorská účtová osnova, na základě vzoru poskytnutého Super Intendencia de Compañías\n"
+"* Bude také nainstalován seznam daní, můžete smazat ty, které vaše poslečnost nepoužívá\n"
+"* Také budou nainstalovány fiskální pozice, typy dokumentů, seznam místních bank, seznam místních států atd.\n"
+"\n"
+"Technické\n"
+"---------\n"
+"Základní data:\n"
+"* Účtová osnova na základě doporučení Super Cías\n"
+"* Ekvádorské daně, daňové štítky a skupiny daní\n"
+"* Ekvádorské fiskální pozice\n"
+"* Typy dokladů (v Ekvádoru existuje cirka 41 typů nákupních dokladů)\n"
+"* Identifikační typy\n"
+"* Ekvádorské banky\n"
+"* Partneři: Consumidor Final, SRI, IESS, a také základní ověření DPH\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -4561,6 +4709,9 @@ msgid ""
 "GCC POS Localization\n"
 "=======================================================\n"
 msgstr ""
+"\n"
+"GCC POS lokalizace\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr
@@ -4573,6 +4724,13 @@ msgid ""
 "** GSTR-2B: matching\n"
 "** GSTR-3B: view report\n"
 msgstr ""
+"\n"
+"Vyplnění GST vratky pomocí IAP\n"
+"================================\n"
+"\n"
+"** GSTR-1: Odeslat a zobrazit souhrnný výkaz\n"
+"** GSTR-2B: párování\n"
+"** GSTR-3B: zobrazit výkaz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr_pos
@@ -4580,6 +4738,8 @@ msgid ""
 "\n"
 "GSTR-1 return data set as per point of sale orders\n"
 msgstr ""
+"\n"
+"Datová sada GSTR-1 vratky za zaždou objednávku v Místě prodeje\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -4614,6 +4774,8 @@ msgid ""
 "\n"
 "Gantt view for Attendance\n"
 msgstr ""
+"\n"
+"Gantt zobrazení pro Docházku\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -4621,6 +4783,8 @@ msgid ""
 "\n"
 "Gantt view for Time Off Dashboard\n"
 msgstr ""
+"\n"
+"Ganttův pohled pro nástěnku volných dnů\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_contract_gantt
@@ -4628,6 +4792,8 @@ msgid ""
 "\n"
 "Gantt view for Time Off Dashboard with Contracts\n"
 msgstr ""
+"\n"
+"Ganttův pohled pro nástěnku volných dnů a smlouvy\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -4666,6 +4832,8 @@ msgid ""
 "\n"
 "Generate Coupons from Helpdesks tickets\n"
 msgstr ""
+"\n"
+"Vygenerujte kupóny z tiketů Helpdesku\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -4676,6 +4844,11 @@ msgid ""
 "This module follow the implementation guidelines issued by the European Payment Council.\n"
 "For more information about the SEPA standards: http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 msgstr ""
+"\n"
+"Díky zprávám pain.001 generujte platební příkazy podle doporučení normy SEPA. Podporovaná verze pain (země) jsou pain.001.001.03 (obecná), pain.001.001.03.ch.02 (Švýcarsko) a pain.001.003.03 (Německo). Vygenerovaný soubor XML lze poté nahrát do vaší banky.\n"
+"\n"
+"Tento modul se řídí prováděcími pokyny vydanými Evropskou radou pro platby.\n"
+"Další informace o standardech SEPA: http://www.iso20022.org/ a http://www.europeanpaymentscouncil.eu/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_links
@@ -4684,6 +4857,9 @@ msgid ""
 "Generate short links with analytics trackers (UTM) to share your pages through marketing campaigns.\n"
 "Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to analyze the efficiency of those campaigns in terms of lead generation, related revenues (sales orders), recruitment, etc.\n"
 msgstr ""
+"\n"
+"Vytvářejte krátké odkazy s analytickými měřiči (UTM) a sdílejte své stránky prostřednictvím marketingových kampaní.\n"
+"Tyto sledovače lze použít v Google Analytics ke sledování kliknutí a návštěvníků, nebo v přehledech Odoo k analýze účinnosti těchto kampaní z hlediska generování prospektů, souvisejících výnosů (prodejních objednávek), náboru atd.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_project
@@ -4691,6 +4867,8 @@ msgid ""
 "\n"
 "Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module (available in Odoo Enterprise) in order to build the form.\n"
 msgstr ""
+"\n"
+"Generujte úkoly v aplikaci Projekt z formuláře zveřejněného na vašem webu. Tento modul vyžaduje k vytvoření formuláře použití modulu *Tvůrce formulářů* (k dispozici v Odoo Enterprise).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -4700,6 +4878,10 @@ msgid ""
 "Based on invoices.\n"
 "Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 msgstr ""
+"\n"
+"Generuje Intrastat XML výkaz\n"
+"Na základě faktur.\n"
+"Přidá možnost specifikovat zemi původu zboží a DIČ partnera v XML výkazu Intrastat.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -4707,6 +4889,8 @@ msgid ""
 "\n"
 "Generates Netherlands Intrastat report for declaration based on invoices.\n"
 msgstr ""
+"\n"
+"Generuje nizozemský Intrastat výkaz na základě faktur.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator
@@ -4726,6 +4910,13 @@ msgid ""
 "    * Payment Encoding\n"
 "    * Company Contribution Management\n"
 msgstr ""
+"\n"
+"Obecný systém mezd integrovaný s účetnictvím.\n"
+"=================================================\n"
+"\n"
+"* Zadávání výdajů\n"
+"* Zadávání plateb\n"
+"* Správa příspěvků společnosti\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -4735,6 +4926,10 @@ msgid ""
 "\n"
 "So this module is to get the warehouse address if the bill is created from Purchase Order\n"
 msgstr ""
+"\n"
+"Získejte adresu skladu, pokud je faktura vytvořena z Nákupní objednávky\n"
+"\n"
+"Účelem modulu je získat adresu skladu, je-li faktura vytvořena z Nákupní objednávky\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -4745,6 +4940,11 @@ msgid ""
 "\n"
 "So this module is to get the warehouse address if the invoice is created from Sale Order\n"
 msgstr ""
+"\n"
+"Získejte adresu skladu, pokud je faktura vytvořena z Prodejní objednávky\n"
+"V indickém EDI posíláme, jsou-li dostupné, detaily dodávky\n"
+"\n"
+"Účelem modulu je získat adresu skladu, je-li faktura vytvořena z Prodejní objednávky\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_drivers
@@ -4788,6 +4988,23 @@ msgid ""
 "    - Install additional features easily using your team form view.\n"
 "\n"
 msgstr ""
+"\n"
+"Helpdesk - aplikace pro správu tiketů\n"
+"=================================\n"
+"\n"
+"Funkce:\n"
+"\n"
+"- Zpracovávejte tikety v různých fázích a řešte je.\n"
+"- Přidejte priority, typy, popisy a značky a definujte své tikety.\n"
+"- Pomocí chatování sdělte další informace a vyzkoušejte spolupracovníky na tiketech.\n"
+"- Užijte si používání přizpůsobeného ovládacího panelu a snadno použitelného zobrazení kanbanu pro zpracování vašich tiketů.\n"
+"- Proveďte hloubkovou analýzu svých tiketů prostřednictvím otočného pohledu v nabídce přehledů.\n"
+"- Vytvořte tým a definujte jeho členy. Pokud chcete, použijte metodu automatického přiřazení.\n"
+"- Použijte e-mailový alias k automatickému vytváření tiketů a komunikaci se svými zákazníky.\n"
+"- Automaticky přidávejte termíny dohod o úrovni služeb k vašim tiketům.\n"
+"- Získejte zpětnou vazbu od zákazníků pomocí hodnocení.\n"
+"- Nainstalujte si snadno další funkce pomocí týmového formuláře.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_knowledge
@@ -4795,6 +5012,8 @@ msgid ""
 "\n"
 "Helpdesk integration with knowledge\n"
 msgstr ""
+"\n"
+"Integrace Helpdesku a Znalosti\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_holidays
@@ -4802,6 +5021,8 @@ msgid ""
 "\n"
 "Helpdesk integration with time off\n"
 msgstr ""
+"\n"
+"Integrace Helpdesku a Volného času\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
@@ -4810,6 +5031,9 @@ msgid ""
 "Hong Kong Payroll Rules.\n"
 "========================\n"
 msgstr ""
+"\n"
+"Mzdová pravidla Hong Kongu.\n"
+"==========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -4817,6 +5041,8 @@ msgid ""
 "\n"
 "Import Data From Winbooks\n"
 msgstr ""
+"\n"
+"Importujte data z Winbooks\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -4916,6 +5142,12 @@ msgid ""
 "City Data/城市数据\n"
 "\n"
 msgstr ""
+"\n"
+"Obsahuje následující data pro čínskou lokalizaci\n"
+"========================================================\n"
+"\n"
+"Data měst/城市数据\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi
@@ -4933,6 +5165,18 @@ msgid ""
 "\n"
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 msgstr ""
+"\n"
+"Indie – elektronická fakturace\n"
+"======================\n"
+"Odešle úřadům fakturaci prostřednictvím API.\n"
+"Jako GSP používáme \"Tera Software Limited\".\n"
+"\n"
+"Krok 1: Nejprve musíte vytvořit uživatelské jméno a heslo API na portálu elektronické faktury.\n"
+"Krok 2: Přepněte na společnost související s tímto číslem GST\n"
+"Krok 3: Nastavte toto uživatelské jméno a heslo v Odoo (Přejděte na: Fakturace/Účetnictví -> Konfigurace -> Nastavení -> Zákaznické faktury nebo najděte \"E-faktura\" ve vyhledávací liště)\n"
+"Krok 4: Opakujte kroky 1, 2, 3 pro všechny GSTIN, které máte v Odoo. Pokud máte více společností se stejným číslem GST, proveďte krok 1 pouze pro první společnost.\n"
+"\n"
+"Pro vytvoření uživatelského jména a hesla API si přečtěte tento dokument: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
@@ -4948,6 +5192,16 @@ msgid ""
 "Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Indian Electronic WayBill or find \"E-waybill\" in search bar)\n"
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 msgstr ""
+"\n"
+"Indie - E-nákladní list\n"
+"=====================================\n"
+"Odeslat úřadům e-nákladní list prostřednictvím API.\n"
+"Jako GSP používáme \"Tera Software Limited\".\n"
+"\n"
+"Krok 1: Nejprve musíte vytvořit uživatelské jméno a heslo API na portálu E-waybill.\n"
+"Krok 2: Přepněte na společnost související s tímto číslem GST\n"
+"Krok 3: Nastavte toto uživatelské jméno a heslo v Odoo (Přejděte na: Fakturace/Účetnictví -> Konfigurace -> Nastavení -> Indický elektronický nákladní list nebo najděte „E-nákladní list“ ve vyhledávací liště)\n"
+"Krok 4: Opakujte kroky 1, 2, 3 pro všechny GSTIN, které máte v odoo. Pokud máte více společností se stejným číslem GST, proveďte krok 1 pouze pro první společnost.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -4964,6 +5218,15 @@ msgid ""
 "31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 msgstr ""
+"\n"
+"Indické účetnictví: Účtová osnova.\n"
+"===================================\n"
+"\n"
+"Indická účtová osnova a lokalizace.\n"
+"\n"
+"Odoo umožňuje spravovat indické účetnictví poskytováním dvou formátů účtové osnovy, tj. Indické účtové osnovy - standardní a indické účtové osnovy - plán VI.\n"
+"\n"
+"Poznámka: Plán VI byl revidován MCA a je použitelný pro všechny rozvahy vyhotovené po 31. březnu 2011. Formát ukončil dřívější dvě možnosti formátu rozvahy, nyní byl povolen pouze vertikální formát, který je podporován Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -4984,6 +5247,21 @@ msgid ""
 "    - Payroll Advice and Report\n"
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 msgstr ""
+"\n"
+"Indická pravidla pro mzdy.\n"
+"============================\n"
+"\n"
+"- Konfigurace hr_payrol pro lokalizaci v Indii\n"
+"- Všechna hlavní pravidla pro příspěvky na výplatní pásku v Indii.\n"
+"* Nová sestava výplatní pásky\n"
+"* Zaměstnanecké smlouvy\n"
+"* Povolit konfiguraci základního / hrubého / čistého platu\n"
+"* Zaměstnanec PaySlip\n"
+"* Příspěvek / odpočet\n"
+"* Integrováno s řízením dovolených\n"
+"* Zdravotní příspěvek, cestovní příspěvek, přídavek na dítě...\n"
+"- Mzdové poradenství a hlášení\n"
+"- Výkazy Roční mzda podle hlavy a Roční mzda podle zaměstnance\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_intrastat
@@ -5008,6 +5286,13 @@ msgid ""
 "product A, 2 shipped from warehouse #1 and 8 from warehouse #2). In this case the sale orders should be\n"
 "split per delivery.\n"
 msgstr ""
+"\n"
+"Řízení skladů pro Avatax\n"
+"=======================================\n"
+"Tento modul umožňuje adresy na úrovni řádků pro získání daní z avatax.\n"
+"\n"
+"Aktuální omezení je jeden řádek objednávky s více než jedním řádkem skladového pohybu (např. 10\n"
+"jednotek produktu A, 2 odeslány ze skladu č. 1 a 8 ze skladu č. 2). V takovém případě by prodejní objednávka měla být rozdělena podle jednotlivých dodávek.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -5019,6 +5304,12 @@ msgid ""
 "\n"
 "You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.\n"
 msgstr ""
+"\n"
+"Fakturace a platby\n"
+"=====================\n"
+"Specifický a snadno použitelný fakturační systém v Odoo vám umožňuje sledovat vaše účetnictví, i když nejste účetní. Poskytuje snadný způsob sledování vašich dodavatelů a zákazníků.\n"
+"\n"
+"Toto zjednodušené účetnictví byste mohli použít v případě, že účtujete v (externím) účetním programu, a přesto chcete sledovat platby. Tento modul také nabízí snadný způsob zaznamenání plateb, aniž byste museli nastavit kompletní účtovou osnovu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -5049,6 +5340,8 @@ msgid ""
 "\n"
 "It allows for comparing products from the wishlist\n"
 msgstr ""
+"\n"
+"Umožní porovnat produkty ze seznamu přání\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
@@ -5057,6 +5350,9 @@ msgid ""
 "K.S.A. POS Localization\n"
 "=======================================================\n"
 msgstr ""
+"\n"
+"Lokalizace PoS pro Spojené arabské emiráty\n"
+"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -5064,6 +5360,8 @@ msgid ""
 "\n"
 "Keeps track of all appointments related to applicants.\n"
 msgstr ""
+"\n"
+"Uchovává záznamy o všech schůzkách spojených s uchazeči o zaměstnání.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
@@ -5079,6 +5377,16 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"Mzdová pravidla Keni.\n"
+"===========================\n"
+"\n"
+"* Údaje o zaměstnanci\n"
+"* Zaměstnanecké smlouvy\n"
+"* Povolenky / odpočty\n"
+"* Povolit konfiguraci základního / hrubého / čistého platu\n"
+"* Výplatní páska zaměstnance\n"
+"* Integrováno s řízením dovolených\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
@@ -5088,6 +5396,9 @@ msgid ""
 "===========================================================\n"
 "\n"
 msgstr ""
+"\n"
+"Mzdová pravidla a pravidla ukončení služby pro Království saudské Arábie.\n"
+"====================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -5097,6 +5408,10 @@ msgid ""
 "=======================\n"
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 msgstr ""
+"\n"
+"Správa dodatečných nákladů\n"
+"=============================\n"
+"Tento modul vám umožňuje snadno přidat další náklady k skladovým příjemkám a rozhodnout o rozdělení těchto nákladů mezi jejich skladové pohyby, abyste je mohli započítat do ocenění zásob.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -5107,6 +5422,11 @@ msgid ""
 "\n"
 "Allows users to create custom dashboard.\n"
 msgstr ""
+"\n"
+"Umožňuje uživateli vytvořit si vlastní ovládací panel.\n"
+"=============================================\n"
+"\n"
+"Umožňuje uživatelům vytvořit si vlastní ovládací panel.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_hr_payroll
@@ -5123,6 +5443,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"Litevská mzdová pravidla.\n"
+"===========================\n"
+"\n"
+"* Údaje o zaměstnanci\n"
+"* Zaměstnanecké smlouvy\n"
+"* Smlouvy na základě pasu\n"
+"* Povolenky / odpočty\n"
+"* Povolit konfiguraci základního / hrubého / čistého platu\n"
+"* Výplatní páska zaměstnance\n"
+"* Integrováno s řízením dovolených\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_saft
@@ -13868,7 +14199,7 @@ msgstr "Zavřít"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -35369,6 +35700,14 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
