@@ -3061,11 +3061,11 @@ class MailThread(models.AbstractModel):
             })
         else:
             # generate immediately the <mail.notification>
-            # and send the <mail.mail> and the <bus.bus> notifications
+            # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
             self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            self._notify_thread_by_web_push(message, recipients_data, msg_vals, **kwargs)
 
-        self._notify_thread_by_web_push(message, recipients_data, msg_vals, **kwargs)
         return recipients_data
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
@@ -3586,7 +3586,7 @@ class MailThread(models.AbstractModel):
         if not partner_ids:
             return
 
-        partner_devices_sudo = self.env['mail.partner.device'].sudo()
+        partner_devices_sudo = self.env['mail.push.device'].sudo()
         devices = partner_devices_sudo.search([
             ('partner_id', 'in', partner_ids)
         ])
@@ -3628,11 +3628,11 @@ class MailThread(models.AbstractModel):
             # clean up obsolete devices
             if devices_to_unlink:
                 devices_list = list(devices_to_unlink)
-                self.env['mail.partner.device'].sudo().browse(devices_list).unlink()
+                self.env['mail.push.device'].sudo().browse(devices_list).unlink()
 
         else:
-            self.env['mail.notification.web.push'].sudo().create([{
-                'user_device': device.id,
+            self.env['mail.push'].sudo().create([{
+                'mail_push_device_id': device.id,
                 'payload': json.dumps(payload),
             } for device in devices])
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()
@@ -3663,7 +3663,7 @@ class MailThread(models.AbstractModel):
 
         if author_name:
             title = "%s: %s" % (author_name, title)
-            icon = "/web/image/res.users/%d/avatar_128" % author_id[0]
+            icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
 
         payload = {
             'title': title,

@@ -1,24 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import json
 import logging as logger
 
 from odoo import api, fields, models
-from ..tools.jwt import generate_vapid_keys
+from ..tools.jwt import generate_vapid_keys, InvalidVapidError
 
 _logger = logger.getLogger(__name__)
 
 
-class InvalidVapidError(Exception):
-    pass
+class MailPushDevice(models.Model):
+    _name = 'mail.push.device'
+    _description = "Push Notification Device"
 
-
-class MailPartnerDevice(models.Model):
-    _name = 'mail.partner.device'
-    _description = 'Partner Web Push Device'
-
-    partner_id = fields.Many2one('res.partner', string='Partner', index=True, required=True,
-                                 default=lambda self: self.env.user.partner_id)
+    partner_id = fields.Many2one(
+        'res.partner', string='Partner', index=True, required=True,
+        default=lambda self: self.env.user.partner_id)
     endpoint = fields.Char(string='Browser endpoint', required=True)
     keys = fields.Char(string='Browser keys', required=True,
                        help=("It's refer to browser keys used by the notification: \n"
@@ -54,10 +52,10 @@ class MailPartnerDevice(models.Model):
         if not endpoint or not browser_keys:
             return
         search_endpoint = kw.get('previousEndpoint', endpoint)
-        user_device = self.sudo().search([('endpoint', '=', search_endpoint)])
-        if user_device:
-            if user_device.partner_id is not self.env.user.partner_id:
-                user_device.write({
+        mail_push_device = self.sudo().search([('endpoint', '=', search_endpoint)])
+        if mail_push_device:
+            if mail_push_device.partner_id is not self.env.user.partner_id:
+                mail_push_device.write({
                     'endpoint': endpoint,
                     'expiration_time': kw.get('expirationTime'),
                     'keys': json.dumps(browser_keys),
@@ -76,11 +74,11 @@ class MailPartnerDevice(models.Model):
         endpoint = kw.get('endpoint')
         if not endpoint:
             return
-        user_device = self.sudo().search([
+        mail_push_device = self.sudo().search([
             ('endpoint', '=', endpoint)
         ])
-        if user_device:
-            user_device.unlink()
+        if mail_push_device:
+            mail_push_device.unlink()
 
     def _verify_vapid_public_key(self, sw_public_key):
         ir_params_sudo = self.env['ir.config_parameter'].sudo()
