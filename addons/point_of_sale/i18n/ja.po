@@ -3,10 +3,10 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Junko Augias, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -281,12 +281,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">現金レジスタ</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">仕訳項目</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1059,7 +1059,7 @@ msgstr "違いを閉じる前に"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Billing address:"
-msgstr "請求住所:"
+msgstr "請求先住所:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
@@ -3737,11 +3737,6 @@ msgid "Newspaper Rack"
 msgstr "新聞ラック"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "次の活動カレンダーイベント"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "次の活動期限"
@@ -3894,7 +3889,7 @@ msgstr "なし"
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 #, python-format
 msgid "Not Categorized"
-msgstr ""
+msgstr "未分類"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5126,6 +5121,7 @@ msgstr "Powered by"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "準備画面"
@@ -6894,12 +6890,8 @@ msgstr "請求書仕訳帳は、販売仕訳帳と同じ通貨であるか、設
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                    Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
-"許可されている差異の最大は%sです。\n"
-"\n"
-"                    クロージング差異を承認するにはマネジャーに連絡して下さい。"
 
 #. module: point_of_sale
 #. odoo-python

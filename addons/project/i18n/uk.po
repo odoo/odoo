@@ -195,13 +195,11 @@ msgstr "<b>Перетягніть</b> картку, щоби змінити за
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
-"    or # <b>mentions</b> to reach an entire team."
+"<b>Log notes</b> for internal communications <i>(the people following this "
+"task won't be notified of the note you are logging unless you specifically "
+"tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
+"<b>mentions</b> to reach an entire team."
 msgstr ""
-"<b>Запишіть примітки</b> для внутршіньої комунікації <i>(люди, підписані під цим завданням, не будуть сповіщені \n"
-"    про примітку, яку ви пишете, якщо ви не позначите їх тегом)</i>. Використовуйте @ <b>згадування</b> , щоби позначити колегу \n"
-"    або # <b>згадування</b>, щоб охопити всю команду."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -419,6 +417,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"Satisfied\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -467,7 +468,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Клієнт</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1245,11 +1246,10 @@ msgstr "Надіслано запит на зміни"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
-"     of a product, of a team, of a construction site, etc.</i>"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the "
+"name of a customer, of a product, of a team, of a construction site, "
+"etc.</i>"
 msgstr ""
-"Оберіть <b>назву</b> вашого проекту. <i>Це може бути що завгодно: ім’я клієнта,\n"
-"     назва товару, команди, сайту тощо.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3099,13 +3099,6 @@ msgstr "Наступний"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Next Activity"
 msgstr "Наступна дія"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Наступна подія календаря дій"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -5389,32 +5382,22 @@ msgstr "Використовуйте"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
-"    Add new people to the followers' list to make them aware of the main changes about this task."
+"Use the chatter to <b>send emails</b> and communicate efficiently with your "
+"customers. Add new people to the followers' list to make them aware of the "
+"main changes about this task."
 msgstr ""
-"Використовуйте чаттер для <b>надсилання електронного листа</b> та ефективно комунікуйте з вашими клієнтами. \n"
-"    Додайте нових людей до списку підписників, щоб вони дізналися про основні зміни цього завдання."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"        30h Allocate 30 hours to the task\n"
-"        #tags Set tags on the task\n"
-"        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"            #tags Set tags on the task\n"
+"            @user Assign the task to a user\n"
+"            ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
-"Використовуйте ці ключові слова в назві, щоб поставити нові завдання:\n"
-"\n"
-"        30h Призначте 30 годин на завдання\n"
-"        #tags Вкажіть теги на завданні\n"
-"        @user Призначте користувача на завданні\n"
-"        ! Встановіть на завданні високий пріоритет\n"
-"\n"
-"        Переконайтеся, що ви використовуєте правильний формат і замовляєте, наприклад, Покращення конфігурації екрану 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

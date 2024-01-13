@@ -3,9 +3,9 @@
 # 	* mail
 # 
 # Translators:
-# Larissa Manderfeld, 2023
 # Michael Hofer, 2023
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +121,11 @@ msgid ""
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
+"%(new_line)s%(new_line)sTippen Sie %(bold_start)s@Benutzername%(bold_end)s, "
+"um jemanden zu erwähnen und die Aufmerksamkeit zu erregen.%(new_line)sTippen"
+" Sie %(bold_start)s#Kanal%(bold_end)s, um einen Kanal zu erwähnen. "
+"%(new_line)sTippen Sie%(bold_start)s/Befehl%(bold_end)s, um einen Befehl "
+"auszuführen."
 
 #. module: mail
 #. odoo-javascript
@@ -250,7 +255,7 @@ msgstr "%s Nachrichten gefunden"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "%s raised their hand"
-msgstr ""
+msgstr "%s hat die Hand gehoben"
 
 #. module: mail
 #. odoo-python
@@ -1954,7 +1959,7 @@ msgstr "Kanaltyp"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Channel full"
-msgstr ""
+msgstr "Kanal voll"
 
 #. module: mail
 #. odoo-python
@@ -2281,7 +2286,7 @@ msgstr "Verbindungstest fehlgeschlagen: %s"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Connection to SFU server closed by the server"
-msgstr ""
+msgstr "Verbindung zum SFU-Server vom Server geschlossen"
 
 #. module: mail
 #. odoo-javascript
@@ -2289,7 +2294,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Connection type:"
-msgstr ""
+msgstr "Verbindungstyp:"
 
 #. module: mail
 #. odoo-javascript
@@ -3117,7 +3122,7 @@ msgstr "Protokolle herunterladen"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Download:"
-msgstr ""
+msgstr "Herunterladen:"
 
 #. module: mail
 #. odoo-javascript
@@ -3661,6 +3666,7 @@ msgstr "GIFs konnten nicht geladen werden ..."
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
 msgstr ""
+"Der SFU-Server konnte nicht geladen werden und fällt auf Peer-to-Peer zurück"
 
 #. module: mail
 #. odoo-python
@@ -4816,6 +4822,8 @@ msgstr ""
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
 msgstr ""
+"Ungültiges Feld „%(field_name)s“ beim Erstellen eines Kanals mit "
+"Mitgliedern."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5487,10 +5495,10 @@ msgstr "Schritt protokollieren:"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
-msgid "Logged as"
-msgstr "Registriert als"
+msgid "Logged in as"
+msgstr "Angemeldet als"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -6953,7 +6961,7 @@ msgstr "Originalnachricht wurde gelöscht"
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 #, python-format
 msgid "Other activities"
-msgstr ""
+msgstr "Andere Aktivitäten"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7601,7 +7609,7 @@ msgstr "RTC-Sitzung"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "RTC Session ID:"
-msgstr ""
+msgstr "RTC-Sitzungs-ID"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
@@ -8105,7 +8113,7 @@ msgstr "SFU-Server-Schlüssel"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "SFU server"
-msgstr ""
+msgstr "SFU-Server"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -10110,7 +10118,7 @@ msgstr "Datei hochladen"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Upload:"
-msgstr ""
+msgstr "Hochladen:"
 
 #. module: mail
 #. odoo-javascript
@@ -10668,7 +10676,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "Sie sind alleine in einer privaten Unterhaltung."
 
 #. module: mail
 #. odoo-python
@@ -10683,6 +10691,7 @@ msgstr "Sie sind allein in diesem Kanal."
 #, python-format
 msgid "You are in a private conversation with %(member_names)s."
 msgstr ""
+"Sie befinden sich in einer privaten Unterhaltung mit %(member_names)s."
 
 #. module: mail
 #. odoo-python
@@ -10690,6 +10699,7 @@ msgstr ""
 #, python-format
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr ""
+"Sie befinden sich im Kanal %(bold_start)s#%(channel_name)s%(bold_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -10984,7 +10994,7 @@ msgstr "Anhänge dieser E-Mail."
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "available bitrate:"
-msgstr ""
+msgstr "verfügbare Bitrate:"
 
 #. module: mail
 #. odoo-javascript
@@ -11044,7 +11054,7 @@ msgstr "Kanäle"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "clock rate:"
-msgstr ""
+msgstr "Schaltfrequenz:"
 
 #. module: mail
 #. odoo-javascript
@@ -11060,7 +11070,7 @@ msgstr "Schließen"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "codec:"
-msgstr ""
+msgstr "Codec:"
 
 #. module: mail
 #. odoo-python
@@ -11121,14 +11131,14 @@ msgstr "erledigt"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down DTLS:"
-msgstr ""
+msgstr "DTLS runter:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "down ICE:"
-msgstr ""
+msgstr "ICE runter:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -11512,14 +11522,14 @@ msgstr "unbekanntes Zielmodell %s"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up DTLS:"
-msgstr ""
+msgstr "DTLS hoch:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "up ICE:"
-msgstr ""
+msgstr "ICE hoch:"
 
 #. module: mail
 #. odoo-javascript
@@ -11563,3 +11573,10 @@ msgstr "{{ object.partner_id.lang }}"
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "„%(member_name)s“ in „%(channel_name)s“"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/chatter.js:0
+#, python-format
+msgid "No recipient"
+msgstr ""

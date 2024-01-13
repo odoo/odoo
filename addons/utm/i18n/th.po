@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s สร้างเมื่อวันที่ %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
@@ -89,7 +89,7 @@ msgstr "แคมเปญ"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr ""
+msgstr "ตัวระบุแคมเปญ"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
@@ -126,7 +126,7 @@ msgstr "แคมเปญใช้เพื่อรวมศูนย์กา
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "แคมเปญที่มอบหมายให้ฉัน"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -156,7 +156,7 @@ msgstr "การเขียนโฆษณา"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Create a Medium"
-msgstr "สร้างสื่อกลาง"
+msgstr "สร้างวิธีที่เข้ามา"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
@@ -357,24 +357,24 @@ msgstr "การตลาด"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "สื่อกลาง"
+msgstr "วิธีที่เข้ามา"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr "ชื่อกลาง"
+msgstr "ชื่อวิธีที่เข้ามา"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "Mediums"
-msgstr "สื่อกลาง"
+msgstr "วิธีที่เข้ามา"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "แคมเปญของฉัน"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -465,7 +465,7 @@ msgstr "กำหนดเวลา"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr "ค้นหาสื่อกลาง UTM"
+msgstr "ค้นหาวิธีที่เข้ามา UTM"
 
 #. module: utm
 #. odoo-javascript
@@ -572,13 +572,16 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the recruitment and the mass mailing."
 msgstr ""
+"ไม่สามารถลบวิธีที่เข้ามา UTM '%s' ได้ "
+"เนื่องจากถูกใช้ในขั้นตอนการทำงานหลักบางอย่าง เช่น "
+"การสรรหาบุคลากรและการส่งไปรษณีย์จำนวนมาก"
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "ชื่อต้องไม่ซ้ำกัน"
 
 #. module: utm
 #. odoo-javascript
@@ -606,7 +609,7 @@ msgstr ""
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือโฆษณาแบนเนอร์"
+msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือป้ายโฆษณา"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
@@ -649,7 +652,7 @@ msgstr "แคมเปญ UTM "
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr "สื่อกลาง UTM"
+msgstr "วิธีที่เข้ามา UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
@@ -657,8 +660,8 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"Twitter\", ...)."
 msgstr ""
-"สื่อกลาง UTM ติดตามค่าเฉลี่ยที่ใช้ในการดึงดูดการเข้าชม (เช่น \"เว็บไซต์\", "
-"\"Twitter\", ...)"
+"วิธีที่เข้ามา UTM ติดตามค่าเฉลี่ยที่ใช้ในการดึงดูดการเข้าชม (เช่น "
+"\"เว็บไซต์\", \"Twitter\", ...)"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -673,7 +676,7 @@ msgstr "แหล่งที่มา UTM"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "มิกซ์อินแหล่งที่มา UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action

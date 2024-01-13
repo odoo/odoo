@@ -3,7 +3,7 @@
 # 	* project
 # 
 # Translators:
-# Aurelija, 2023
+# Aurelija Vitkauskiene, 2023
 # Rolandas <info@paninfo.lt>, 2023
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2023
 # Donatas <donatasvaliulis16@gmail.com>, 2023
@@ -13,6 +13,7 @@
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2023
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2023
 # Darius Ribinskas <dahius@gmail.com>, 2023
+# Arunas V. <arunas@devoro.com>, 2023
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2023
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2023
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2023
@@ -23,15 +24,14 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Silvija Butko <silvija.butko@gmail.com>, 2023
-# Arunas V. <arunas@devoro.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Arunas V. <arunas@devoro.com>, 2023\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2023\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,9 +202,10 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
-"    or # <b>mentions</b> to reach an entire team."
+"<b>Log notes</b> for internal communications <i>(the people following this "
+"task won't be notified of the note you are logging unless you specifically "
+"tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
+"<b>mentions</b> to reach an entire team."
 msgstr ""
 
 #. module: project
@@ -585,8 +586,9 @@ msgid "Activity Exception Decoration"
 msgstr "Veiklos Išimties Dekoravimas"
 
 #. module: project
-#: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_task
-msgid "Activity Plan"
+#: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
+#: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_project
+msgid "Activity Plans"
 msgstr ""
 
 #. module: project
@@ -617,6 +619,7 @@ msgid "Add Milestone"
 msgstr "Pridėti projekto gairę"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Add a new plan"
 msgstr ""
@@ -740,7 +743,7 @@ msgid "Allocated Time"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr ""
 
@@ -1088,8 +1091,8 @@ msgid "Can Be Marked As Done"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
@@ -1121,8 +1124,9 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
-"     of a product, of a team, of a construction site, etc.</i>"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the "
+"name of a customer, of a product, of a team, of a construction site, "
+"etc.</i>"
 msgstr ""
 
 #. module: project
@@ -1810,8 +1814,8 @@ msgstr ""
 "paštui"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
@@ -2702,8 +2706,8 @@ msgid "Messages"
 msgstr "Žinutės"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -2828,8 +2832,8 @@ msgid "Neutral face"
 msgstr "Neutralus veidas"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
@@ -2907,13 +2911,6 @@ msgstr "Kitas"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Next Activity"
 msgstr "Kitas veiksmas"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Kitas veiklos kalendoriaus įvykis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3218,6 +3215,21 @@ msgstr ""
 "(parent_model) ir užduotis (model))"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid ""
+"Partner company cannot be different from its assigned projects' company"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid "Partner company cannot be different from its assigned tasks' company"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
@@ -3411,8 +3423,8 @@ msgid "Progress Percentage"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/project_rating_graph/project_rating_graph_view.js:0
@@ -4188,8 +4200,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5126,8 +5138,9 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
-"    Add new people to the followers' list to make them aware of the main changes about this task."
+"Use the chatter to <b>send emails</b> and communicate efficiently with your "
+"customers. Add new people to the followers' list to make them aware of the "
+"main changes about this task."
 msgstr ""
 
 #. module: project
@@ -5135,17 +5148,17 @@ msgstr ""
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"        30h Allocate 30 hours to the task\n"
-"        #tags Set tags on the task\n"
-"        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"            #tags Set tags on the task\n"
+"            @user Assign the task to a user\n"
+"            ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
 #: model:res.groups,name:project.group_project_user
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "Vartotojas"
 
@@ -5521,11 +5534,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "fs-4"
 msgstr ""
 
 #. module: project

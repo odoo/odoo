@@ -26,11 +26,11 @@
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2023
 # Halil, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-# Ediz Duman <neps1192@gmail.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # abc Def <hdogan1974@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Ediz Duman <neps1192@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,6 +225,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Ekstra Fiyatlar\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                       Ekstra Fiyat\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -239,7 +245,7 @@ msgstr "<span class=\"o_stat_text\">İlgili Ürünler</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arşivlendi</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -416,7 +422,7 @@ msgstr "Miktar ekleyin"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tags"
-msgstr ""
+msgstr "Ek Ürün Etiketleri"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -818,7 +824,7 @@ msgstr "Yapılandır"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "Etiketleri yapılandırma"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -923,7 +929,7 @@ msgstr "Yeni bir ürün varyantı oluştur"
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "Create a product"
-msgstr ""
+msgstr "Bir ürün oluşturun"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1021,12 +1027,12 @@ msgstr "Ondalık Hassasiyeti"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Varsayılan %s Fiyat Listesi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "Varsayılan Ekstra Fiyat"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1133,7 +1139,7 @@ msgstr "Satış Satırında İndirim"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "İndirimli Fiyat"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1195,7 +1201,7 @@ msgstr "Belgeler"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Belge Sayısı"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -2376,7 +2382,7 @@ msgstr "Ürün Kategorisi"
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Ürün Dokümanı"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
@@ -3284,7 +3290,7 @@ msgstr "Ölçü Birim Adı"
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "Birim Fiyat:"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3310,7 +3316,7 @@ msgstr "Yükle"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Ürününüze dosya yükleyin"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view

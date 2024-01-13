@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,8 +31,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Automático: Los clientes serán elegibles para una recompensa automáticamente en su carrito.\n"
-"        Use un código: Los clientes serán elegibles para una recompensa si ingresan un código.\n"
+"        Automático: los clientes serán elegibles para obtener una recompensa automáticamente en su carrito.\n"
+"        Con un código: los clientes serán elegibles para obtener una recompensa si ingresan un código.\n"
 "        "
 
 #. module: loyalty
@@ -139,7 +140,7 @@ msgstr "1000"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
-msgstr "Gratis 2+1"
+msgstr "2+1 gratis"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -208,12 +209,12 @@ msgstr ""
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
 "                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                        <strong>Código de Tarjeta de regalo</strong>\n"
+"                        <strong>Código de la tarjeta de regalo</strong>\n"
 "                    </p>\n"
 "                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
 "                </div>\n"
 "                <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
-"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">La tarjeta tiene vigencia hasta el <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">La tarjeta es vigente hasta el <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
 "                </div>\n"
 "                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
 "                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
@@ -330,7 +331,7 @@ msgid ""
 " of coupon points defined as the coupon value</span>"
 msgstr ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Otrogar la "
-"cantidaad de puntos de cupón que están definidos como el valor del "
+"cantidad de puntos de cupón que están definidos como el valor del "
 "cupón</span>"
 
 #. module: loyalty
@@ -368,7 +369,7 @@ msgstr "<span>Compra mínima de</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Valid for purchase above</span>"
-msgstr "<span>Válido para la compra de arriba</span>"
+msgstr "<span>Válido para compras superiores a</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -527,7 +528,7 @@ msgstr "ABCDE12345"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__active
@@ -907,7 +908,7 @@ msgid ""
 " for rewards."
 msgstr ""
 "Defina códigos de descuento en reglas condicionales y después compártalo con"
-" sus clientes para obtener recompensas."
+" sus clientes para que ellos puedan obtener recompensas."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
@@ -1153,8 +1154,8 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
-"Genere y comparta cupones manualmente. Se puede usar en comercio "
-"electrónico, punto de venta u órdenes regulares para obtener la recompensa. "
+"Genere y comparta cupones de forma manual. Se puede usar en Comercio "
+"electrónico, Punto de venta u órdenes regulares para obtener la recompensa. "
 "Puede definir limitaciones sobre el uso con una regla condicional."
 
 #. module: loyalty
@@ -1236,7 +1237,7 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, Gift Cards can be used to pay orders."
 msgstr ""
-"Las tarjetas de regalo se crean manualmente o se envían automáticamente por correo cuando el cliente ordena un producto de tarjeta de regalo.\n"
+"Las tarjetas de regalo se crean de forma manual o se envían en automático por correo cuando el cliente ordena un producto de tarjeta de regalo.\n"
 "                                    <br/>\n"
 "                                    Después, las tarjetas de regalo se pueden usar para pagar órdenes."
 
@@ -1737,7 +1738,7 @@ msgstr "Modo de puntos de recompensa"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr "Dominio del prodcuto de recompensa"
+msgstr "Dominio del producto de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
@@ -2032,7 +2033,7 @@ msgid ""
 msgstr ""
 "Si separar los cupones de recompensa por unidad emparejada solo se aplica "
 "para programas 'futuros' y activar el modo por dinero gastado o unidad "
-"pagada.."
+"pagada."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
