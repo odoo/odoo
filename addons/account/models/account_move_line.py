@@ -261,6 +261,7 @@ class AccountMoveLine(models.Model):
     matching_number = fields.Char(
         string="Matching #",
         copy=False,
+        index='btree',
         help="Matching number for this line, 'P' if it is only partially reconcile, or the name of "
              "the full reconcile if it exists.",
     )  # can also start with `I` for imports: see `_reconcile_marked`
@@ -3052,23 +3053,11 @@ class AccountMoveLine(models.Model):
         return ids
 
     def _all_reconciled_lines(self):
-        reconciliation_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
-        self.env['account.partial.reconcile'].flush_model()
-        self.env.cr.execute("""
-            WITH RECURSIVE partials (current_id) AS (
-                    SELECT line.id
-                      FROM account_move_line line
-                     WHERE id = ANY(%s)
-
-                                                UNION
-
-                    SELECT CASE WHEN partial.debit_move_id = p.current_id THEN partial.credit_move_id ELSE partial.debit_move_id END
-                      FROM partials p
-                      JOIN account_partial_reconcile partial ON partial.debit_move_id = p.current_id OR partial.credit_move_id = p.current_id
-            )
-            SELECT current_id FROM partials;
-        """, [reconciliation_lines.ids])
-        return self.browse(r[0] for r in self.env.cr.fetchall())
+        reconciled = self
+        matching_numbers = [n for n in set(self.mapped('matching_number')) if n]
+        if matching_numbers:
+            reconciled |= self.search([('matching_number', 'in', matching_numbers)])
+        return reconciled
 
     def _get_attachment_domains(self):
         self.ensure_one()

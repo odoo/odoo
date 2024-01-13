@@ -138,44 +138,47 @@ class AccountPartialReconcile(models.Model):
     @api.model
     def _update_matching_number(self, amls):
         amls = amls._all_reconciled_lines()
-        self.env['account.partial.reconcile'].flush_model()
-        amls.flush_recordset(['full_reconcile_id'])
-        self.env.cr.execute("""
-            WITH RECURSIVE partials (line_id, current_id) AS (
-                    SELECT id, id 
-                      FROM account_move_line
-                     WHERE id = ANY(%s)
-                       AND full_reconcile_id IS NULL
+        all_partials = amls.matched_debit_ids | amls.matched_credit_ids
 
-                                                UNION
-                                                
-                    SELECT p.line_id,
-                           CASE WHEN partial.debit_move_id = p.current_id THEN partial.credit_move_id
-                                ELSE partial.debit_move_id
-                           END
-                      FROM partials p
-                      JOIN account_partial_reconcile partial ON p.current_id = partial.debit_move_id
-                                                             OR p.current_id = partial.credit_move_id
-            )
-              SELECT line_id, 'P' || MIN(partial.id) AS matching_number
-                FROM partials
-                JOIN account_partial_reconcile partial ON current_id = partial.debit_move_id
-                                                       OR current_id = partial.credit_move_id
-            GROUP BY line_id
-        """, [
-            amls.ids,
-        ])
+        # The matchings form a set of graphs, which can be numbered: this is the matching number.
+        # We iterate on each edge of the graphs, giving it a number (min of its edge ids).
+        # By iterating, we either simply add a node (move line) to the graph and asign the number to
+        # it or we merge the two graphs.
+        # At the end, we have an index for the number to assign of all lines.
+        number2lines = {}
+        line2number = {}
+        for partial in all_partials.sorted('id'):
+            debit_min_id = line2number.get(partial.debit_move_id.id)
+            credit_min_id = line2number.get(partial.credit_move_id.id)
+            if debit_min_id and credit_min_id:  # merging the 2 graph into the one with smalles number
+                if debit_min_id != credit_min_id:
+                    min_min_id = min(debit_min_id, credit_min_id)
+                    max_min_id = max(debit_min_id, credit_min_id)
+                    for line_id in number2lines[max_min_id]:
+                        line2number[line_id] = min_min_id
+                    number2lines[min_min_id].extend(number2lines.pop(max_min_id))
+            elif debit_min_id:  # adding a new node to a graph
+                number2lines[debit_min_id].append(partial.credit_move_id.id)
+                line2number[partial.credit_move_id.id] = debit_min_id
+            elif credit_min_id:  # adding a new node to a graph
+                number2lines[credit_min_id].append(partial.debit_move_id.id)
+                line2number[partial.debit_move_id.id] = credit_min_id
+            else:  # creating a new graph
+                number2lines[partial.id] = [partial.debit_move_id.id, partial.credit_move_id.id]
+                line2number[partial.debit_move_id.id] = partial.id
+                line2number[partial.credit_move_id.id] = partial.id
 
-        line_matching_number = dict(self.env.cr.fetchall())
-
-        for line in amls.with_context(skip_invoice_sync=True):
-            if line.full_reconcile_id:
-                line.matching_number = str(line.full_reconcile_id.id)
-            elif line.matched_debit_ids or line.matched_credit_ids:
-                line.matching_number = line_matching_number[line.id]
-            else:
-                line.matching_number = False
-
+        processed_aml_ids = []
+        with amls.move_id._check_balanced({'records': amls.move_id}):  # avoid checking the consistency for each individual write
+            for min_partial_id, line_ids in number2lines.items():
+                min_partial = self.browse(min_partial_id)
+                self.env['account.move.line'].browse(line_ids).matching_number = (
+                    str(min_partial.full_reconcile_id.id)
+                    if min_partial.full_reconcile_id else
+                    f"P{min_partial.id}"
+                )
+                processed_aml_ids.extend(line_ids)
+            self.env['account.move.line'].browse(set(amls.ids) - set(processed_aml_ids)).matching_number = False
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
