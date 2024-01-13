@@ -21,6 +21,18 @@ MAX_PAYLOAD_SIZE = 4096
 
 _logger = logger.getLogger(__name__)
 
+
+# ------------------------------------------------------------
+# Errors specific to web push
+# ------------------------------------------------------------
+
+class DeviceUnreachableError(Exception):
+    pass
+
+# ------------------------------------------------------------
+# Web Push
+# ------------------------------------------------------------
+
 def _iv(base, counter):
     mask = int.from_bytes(base[4:], 'big')
     return base[:4] + (counter ^ mask).to_bytes(8, 'big')
@@ -144,7 +156,3 @@ def push_to_end_point(base_url, device, payload, vapid_private_key, vapid_public
         # Invalid subscription
         if response.status_code == 404 or response.status_code == 410:
             raise DeviceUnreachableError("Device Unreachable")
-
-
-class DeviceUnreachableError(Exception):
-    pass

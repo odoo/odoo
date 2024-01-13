@@ -497,21 +497,19 @@ class Channel(models.Model):
         # notify only user input (comment or incoming / outgoing emails)
         if message_type not in ('comment', 'email', 'email_outgoing'):
             return []
-        # notify only mailing lists or if mentioning recipients
-        if not pids:
-            return []
-
-        email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
-        author_id = msg_vals.get('author_id') or message.author_id.id
 
         recipients_data = []
         if pids:
+            email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
+            author_id = msg_vals.get('author_id') or message.author_id.id
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id,
+                       partner.lang,
                        partner.partner_share,
-                       users.notification_type
+                       COALESCE(users.notification_type, 'email') as notif,
+                       COALESCE(users.share, FALSE) as ushare
                   FROM res_partner partner
              LEFT JOIN res_users users on partner.id = users.partner_id
                  WHERE partner.active IS TRUE
@@ -521,16 +519,38 @@ class Channel(models.Model):
                 sql_query,
                 (email_from or '', list(pids), [author_id] if author_id else [], )
             )
-            for partner_id, partner_share, notif in self._cr.fetchall():
+            for partner_id, lang, partner_share, notif, ushare in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
-                    'id': partner_id,
-                    'share': partner_share,
                     'active': True,
-                    'notif': notif or 'email',
-                    'type': 'user' if not partner_share and notif else 'customer',
                     'groups': [],
+                    'id': partner_id,
+                    'is_follower': False,
+                    'lang': lang,
+                    'notif': notif,
+                    'share': partner_share,
+                    'type': 'user' if not partner_share and notif else 'customer',
+                    'uid': False,
+                    'ushare': ushare,
                 })
+
+        if self.channel_type == 'chat':
+            recipients_data += [
+                {
+                    'active': partner.active,
+                    'groups': [],
+                    'id': partner.id,
+                    'is_follower': False,
+                    'lang': partner.lang,
+                    'notif': 'web_push',
+                    'share': partner.partner_share,
+                    'type': 'customer',
+                    'uid': False,
+                    'ushare': False,
+                } for partner in self.channel_member_ids.filtered(
+                    lambda member: not member.mute_until_dt
+                ).partner_id
+            ]
 
         return recipients_data
 
@@ -570,9 +590,22 @@ class Channel(models.Model):
         ]
         # sudo: bus.bus - sending on safe channel (discuss.channel)
         self.env["bus.bus"].sudo()._sendmany(bus_notifications)
-        if self.is_chat or self.channel_type == "group":
-            self._notify_thread_by_web_push(message, rdata, msg_vals, **kwargs)
         return rdata
+
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
+        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+        payload['options']['data']['action'] = 'mail.action_discuss'
+        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
+        if self.channel_type == 'chat':
+            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
+            payload['title'] = self.env['res.partner'].browse(author_id).name
+        elif self.channel_type == 'channel':
+            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
+            author_name = self.env['res.partner'].browse(author_id).name
+            payload['title'] = "#%s - %s" % (record_name, author_name)
+        else:
+            payload['title'] = "#%s" % (record_name)
+        return payload
 
     def _message_receive_bounce(self, email, partner):
         """ Override bounce management to unsubscribe bouncing addresses """
@@ -1260,41 +1293,3 @@ class Channel(models.Model):
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(self.env.user.partner_id, msg)
-
-    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
-        """ Specifically handle channel members. """
-        chat_channels = self.filtered(lambda channel: channel.channel_type == 'chat')
-        if chat_channels:
-            # modify rdata only for calling super. Do not deep copy as we only
-            # add data into list but we do not modify item content
-            channel_rdata = recipients_data.copy()
-            channel_rdata += [
-                {'id': partner.id,
-                 'share': partner.partner_share,
-                 'active': partner.active,
-                 'notif': 'web_push',
-                 'type': 'customer',
-                 'groups': [],
-                 }
-                for partner in chat_channels.channel_member_ids.filtered(lambda member: not member.mute_until_dt).partner_id
-            ]
-        else:
-            channel_rdata = recipients_data
-
-        return super()._notify_thread_by_web_push(message, channel_rdata, msg_vals=msg_vals, **kwargs)
-
-    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
-        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
-        payload['options']['data']['action'] = 'mail.action_discuss'
-        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
-        if self.channel_type == 'chat':
-            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
-            payload['title'] = self.env['res.partner'].browse(author_id).name
-            payload['options']['icon'] = '/web/image?field=avatar_128&id=%d&model=res.partner' % (author_id[0])
-        elif self.channel_type == 'channel':
-            author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else message.author_id.ids
-            author_name = self.env['res.partner'].browse(author_id).name
-            payload['title'] = "#%s - %s" % (record_name, author_name)
-        else:
-            payload['title'] = "#%s" % (record_name)
-        return payload

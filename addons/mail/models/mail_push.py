@@ -11,17 +11,17 @@ from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachable
 _logger = logging.getLogger(__name__)
 
 
-class MailNotificationWebPush(models.Model):
-    _name = 'mail.notification.web.push'
-    _description = 'Cron data used for web push notification'
+class MailPush(models.Model):
+    _name = 'mail.push'
+    _description = "Push Notifications"
 
-    user_device = fields.Many2one('mail.partner.device', string='devices', required=True, ondelete="cascade")
+    mail_push_device_id = fields.Many2one('mail.push.device', string='devices', required=True, ondelete="cascade")
     payload = fields.Text()
 
     @api.model
     def _push_notification_to_endpoint(self, batch_size=50):
         """Send to web browser endpoint computed notification"""
-        web_push_notifications_sudo = self.sudo().search_fetch([], ['user_device', 'payload'], limit=batch_size)
+        web_push_notifications_sudo = self.sudo().search_fetch([], ['mail_push_device_id', 'payload'], limit=batch_size)
         if not web_push_notifications_sudo:
             return
 
@@ -35,9 +35,9 @@ class MailNotificationWebPush(models.Model):
         devices_to_unlink = set()
 
         # process send notif
-        devices = web_push_notifications_sudo.user_device.grouped('id')
+        devices = web_push_notifications_sudo.mail_push_device_id.grouped('id')
         for web_push_notification_sudo in web_push_notifications_sudo:
-            device = devices.get(web_push_notification_sudo.user_device.id)
+            device = devices.get(web_push_notification_sudo.mail_push_device_id.id)
             if device.id in devices_to_unlink:
                 continue
             try:
@@ -61,7 +61,7 @@ class MailNotificationWebPush(models.Model):
 
         # clean up obsolete devices
         if devices_to_unlink:
-            self.env['mail.partner.device'].sudo().browse(devices_to_unlink).unlink()
+            self.env['mail.push.device'].sudo().browse(devices_to_unlink).unlink()
 
         # restart the cron if needed
         if self.search_count([]) > 0:
