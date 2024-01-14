@@ -126,6 +126,7 @@ class AccountBalance(models.Model):
             'narration': narration,
             'invoice_line_ids': bill_lines,
         })
+        
         bill.action_post()
 
         return {
