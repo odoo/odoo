@@ -4668,7 +4668,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
 msgid "# Access Rights"
-msgstr ""
+msgstr "Pravice dostopa"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_aps
@@ -6379,7 +6379,7 @@ msgstr "Aktivno"
 #: model:ir.model.fields,field_description:base.field_res_partner__active_lang_count
 #: model:ir.model.fields,field_description:base.field_res_users__active_lang_count
 msgid "Active Lang Count"
-msgstr ""
+msgstr "Število aktivnih jezikov"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
@@ -7374,12 +7374,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr ""
+msgstr "Preverjanje pristnosti z"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_authentication_info
 msgid "Authentication Info"
-msgstr ""
+msgstr "Informacije o preverjanje pristnosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -8815,7 +8815,7 @@ msgstr "Podatki o družbi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "Podrobnosti o podjetju"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
@@ -8894,7 +8894,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
 msgid "Compare To View"
-msgstr ""
+msgstr "Primerjaj za ogled"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
@@ -9038,7 +9038,7 @@ msgstr "Povezava"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_encryption
 msgid "Connection Encryption"
-msgstr ""
+msgstr "Šifriranje povezave"
 
 #. module: base
 #. odoo-python
@@ -9371,7 +9371,7 @@ msgstr "Čarovnik za ustvarjanje menijev"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Ustvari Uid"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
@@ -11102,7 +11102,7 @@ msgstr "Zabavna"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
-msgstr ""
+msgstr "Število vnosov"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer_restaurant
@@ -11372,7 +11372,7 @@ msgstr "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__group_expand
 msgid "Expand Groups"
-msgstr ""
+msgstr "Razširi skupine"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_expenses
@@ -14570,7 +14570,7 @@ msgstr "Laos"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__lastcall
 msgid "Last Execution Date"
-msgstr ""
+msgstr "Zadnji datum izvedbe"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard____last_update
@@ -19637,7 +19637,7 @@ msgstr "Opozorila o kakovosti, kontrolne točke"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql_count
 msgid "Queries Count"
-msgstr ""
+msgstr "Število poizvedb"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -19978,7 +19978,7 @@ msgstr "Povezano polje"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
 msgid "Related Model"
-msgstr ""
+msgstr "Povezani model"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
@@ -20186,7 +20186,7 @@ msgstr "Preprodajalci"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
 msgid "Reset Mode"
-msgstr ""
+msgstr "Način ponastavitve"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -20904,7 +20904,7 @@ msgstr "Možnosti izbire"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selection
 msgid "Selection Options (Deprecated)"
-msgstr ""
+msgstr "Možnosti izbire (zastarelo)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_selection_selection_field_uniq
@@ -25298,6 +25298,14 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."

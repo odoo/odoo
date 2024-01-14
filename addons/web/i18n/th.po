@@ -174,7 +174,7 @@ msgstr "'%s' ไม่ซิงโครไนซ์กับ '%s'."
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "(%s/%sMB)"
-msgstr ""
+msgstr "(%s/%sMB)"
 
 #. module: web
 #. odoo-javascript
@@ -202,7 +202,7 @@ msgstr "(จำนวน)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(create)"
-msgstr ""
+msgstr "(สร้า)"
 
 #. module: web
 #. odoo-javascript
@@ -244,13 +244,17 @@ msgid ""
 "                        font-style: normal;\n"
 "                    }"
 msgstr ""
+") format(\"woff\");\n"
+"                        font-weight: normal;\n"
+"                        font-style: normal;\n"
+"                    }"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "+ KEY"
-msgstr ""
+msgstr "+ คีย์"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -327,7 +331,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">ภาษี 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -360,6 +364,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2023/00003</span>"
 msgstr ""
+"<span>ใบแจ้งหนี้</span>\n"
+"                           <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -417,21 +423,21 @@ msgstr "<strong>ทั้งหมด</strong>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Untaxed Amount</strong>"
-msgstr ""
+msgstr "<strong>จำนวนเงินที่ไม่ต้องเสียภาษี</strong>"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=ilike"
-msgstr ""
+msgstr "=ilike"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=like"
-msgstr ""
+msgstr "=like"
 
 #. module: web
 #. odoo-javascript
@@ -442,6 +448,9 @@ msgid ""
 "                        font-family: \"font\";\n"
 "                        src: url(data:font/ttf;base64,"
 msgstr ""
+"@font-face {\n"
+"                        font-family: \"font\";\n"
+"                        src: url(data:font/ttf;base64,"
 
 #. module: web
 #. odoo-javascript
@@ -509,7 +518,7 @@ msgstr "เข้าถึงแอปทั้งหมดสำหรับอ
 #: code:addons/web/static/src/views/fields/ace/ace_field.js:0
 #, python-format
 msgid "Ace Editor"
-msgstr ""
+msgstr "ผู้แก้ไข Ace"
 
 #. module: web
 #. odoo-javascript
@@ -553,7 +562,7 @@ msgstr "เปิดใช้งานการทดสอบการดีบ
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
-msgstr ""
+msgstr "เปิดใช้งานโหมดแก้ไขข้อบกพร่อง (พร้อมเนื้อหา)"
 
 #. module: web
 #. odoo-javascript
@@ -607,14 +616,14 @@ msgstr "เพิ่มกลุ่มกำหนดเอง"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "Add a Property"
-msgstr ""
+msgstr "เพิ่มคุณสมบัติ"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Add a Value"
-msgstr ""
+msgstr "เพิ่มค่า"
 
 #. module: web
 #. odoo-javascript
@@ -717,7 +726,7 @@ msgstr "เพิ่ม: "
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Add: %s"
-msgstr ""
+msgstr "เพิ่ม: %s"
 
 #. module: web
 #. odoo-javascript
@@ -732,7 +741,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt & Sign"
-msgstr ""
+msgstr "ยอมรับและลงนาม"
 
 #. module: web
 #. odoo-javascript
@@ -914,7 +923,7 @@ msgstr "คุณแน่ใจหรือไม่ว่าต้องกา
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Are you sure you want to delete this column?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบคอลัมน์นี้"
 
 #. module: web
 #. odoo-javascript
@@ -924,6 +933,8 @@ msgid ""
 "Are you sure you want to delete this property field? It will be removed for "
 "everyone using the \"%s\" %s."
 msgstr ""
+"คุณแน่ใจหรือไม่ว่าต้องการลบฟิลด์คุณสมบัตินี้ มันจะถูกลบออกสำหรับทุกคนที่ใช้ "
+"\"%s\" %s."
 
 #. module: web
 #. odoo-javascript
@@ -956,7 +967,7 @@ msgstr "คุณแน่ใจหรือว่าต้องการทำ
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "As a default text when no value are set"
-msgstr ""
+msgstr "เป็นข้อความเริ่มต้นเมื่อไม่ได้ตั้งค่าใดๆ"
 
 #. module: web
 #. odoo-javascript
@@ -989,7 +1000,7 @@ msgstr "การแนบ"
 #: code:addons/web/static/src/views/fields/attachment_image/attachment_image_field.js:0
 #, python-format
 msgid "Attachment Image"
-msgstr ""
+msgstr "รูปภาพที่แนบมา"
 
 #. module: web
 #. odoo-javascript
@@ -1119,6 +1130,9 @@ msgid ""
 " all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"เมื่อคลิกยอมรับและลงนาม "
+"ฉันยอมรับว่าลายเซ็น/ชื่อย่อที่เลือกจะเป็นลายเซ็น/ชื่อย่อที่เขียนด้วยลายมือของฉันทางอิเล็กทรอนิกส์ที่ถูกต้องสำหรับวัตถุประสงค์ทั้งหมดเมื่อใช้กับเอกสาร"
+" รวมถึงสัญญาที่มีผลผูกพันทางกฎหมาย"
 
 #. module: web
 #. odoo-javascript
@@ -1146,14 +1160,14 @@ msgstr "ล้าง"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CMD"
-msgstr ""
+msgstr "CMD"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #. module: web
 #. odoo-javascript
@@ -1470,21 +1484,21 @@ msgstr "คัดลอก"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Multiline Text to Clipboard"
-msgstr ""
+msgstr "คัดลอกข้อความหลายบรรทัดไปยังคลิปบอร์ด"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Text to Clipboard"
-msgstr ""
+msgstr "คัดลอกข้อความไปยังคลิปบอร์ด"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy URL to Clipboard"
-msgstr ""
+msgstr "คัดลอก URL ไปยังคลิปบอร์ด"
 
 #. module: web
 #. odoo-javascript
@@ -1538,7 +1552,7 @@ msgstr "ไม่สามารถแสดงภาพที่เลือก
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 #, python-format
 msgid "Could not display the selected pdf"
-msgstr ""
+msgstr "ไม่สามารถแสดงไฟล์ PDF ที่เลือกได้"
 
 #. module: web
 #. odoo-javascript
@@ -1631,14 +1645,14 @@ msgstr "สร้าง \"<strong>%s</strong>\""
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create %s"
-msgstr ""
+msgstr "สร้าง %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Create <strong>%s</strong> as a new %s?"
-msgstr ""
+msgstr "สร้าง <strong>%s</strong> เป็น %s ใหม่ใช่ไหม?"
 
 #. module: web
 #. odoo-javascript
@@ -1652,7 +1666,7 @@ msgstr "สร้างและแก้ไข ..."
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create and edit..."
-msgstr ""
+msgstr "สร้างและแก้ไข..."
 
 #. module: web
 #. odoo-javascript
@@ -1700,7 +1714,7 @@ msgstr "ผู้ใช้ที่สร้าง:"
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
-msgstr ""
+msgstr "สะสม"
 
 #. module: web
 #. odoo-javascript
@@ -1808,7 +1822,7 @@ msgstr "เริ่มต้น"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Default State"
-msgstr ""
+msgstr "สถานะเริ่มต้น"
 
 #. module: web
 #. odoo-javascript
@@ -1823,7 +1837,7 @@ msgstr "ตั้งค่าเริ่มต้น"
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default text is used when no values are set"
-msgstr ""
+msgstr "ข้อความเริ่มต้นจะใช้เมื่อไม่ได้ตั้งค่า"
 
 #. module: web
 #. odoo-javascript
@@ -1874,7 +1888,7 @@ msgstr "ลบ"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Delete Property Field"
-msgstr ""
+msgstr "ลบฟิลด์คุณสมบัติ"
 
 #. module: web
 #. odoo-javascript
@@ -1929,7 +1943,7 @@ msgstr "เครื่องมือของนักพัฒนา"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr ""
+msgstr "ไม่สามารถรวมสกุลเงินที่แตกต่างกันได้"
 
 #. module: web
 #. odoo-javascript
@@ -1959,7 +1973,7 @@ msgstr "ละทิ้ง"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
-msgstr ""
+msgstr "ยกเลิกการเปลี่ยนแปลง"
 
 #. module: web
 #. odoo-javascript
@@ -2196,7 +2210,7 @@ msgstr "อีเมล"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Empty email address"
-msgstr ""
+msgstr "ที่อยู่อีเมลว่างเปล่า"
 
 #. module: web
 #. odoo-javascript
@@ -2459,7 +2473,7 @@ msgstr "ฟอนต์"
 #: code:addons/web/static/src/views/fields/font_selection/font_selection_field.js:0
 #, python-format
 msgid "Font Selection"
-msgstr ""
+msgstr "การเลือกแบบฟ้อนต์"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -2542,7 +2556,7 @@ msgstr "GNU LGPL Licensed"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Get View"
-msgstr ""
+msgstr "รับมุมมอง"
 
 #. module: web
 #. odoo-javascript
@@ -2556,7 +2570,7 @@ msgstr "รับฟีเจอร์นี้และฟีเจอร์อ
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
-msgstr ""
+msgstr "ไปที่ URL"
 
 #. module: web
 #. odoo-javascript
@@ -2612,7 +2626,7 @@ msgstr "ซ่อนในคัมบัง"
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr ""
+msgstr "ซ่อนในคัมบัง"
 
 #. module: web
 #. odoo-javascript
@@ -2723,7 +2737,7 @@ msgstr "ตัวเลขจำนวนเต็ม"
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
-msgstr ""
+msgstr "ลิงค์ภายใน"
 
 #. module: web
 #. odoo-javascript
@@ -2786,7 +2800,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 #, python-format
 msgid "Invalid fields"
-msgstr ""
+msgstr "ฟิลด์ไม่ถูกต้อง"
 
 #. module: web
 #. odoo-javascript
@@ -2802,14 +2816,14 @@ msgstr "ฟิลด์ไม่ถูกต้อง:"
 #: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Invalid fields: "
-msgstr ""
+msgstr "ฟิลด์ไม่ถูกต้อง:"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/domain.py:0
 #, python-format
 msgid "Invalid model: %s"
-msgstr ""
+msgstr "โมเดลไม่ถูกต้อง: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2830,7 +2844,7 @@ msgstr "เชิญผู้ใช้งานใหม่"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Inviting..."
-msgstr ""
+msgstr "กำลังเชิญ..."
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
@@ -2883,7 +2897,7 @@ msgstr "คัมบัง: ไม่มีการดำเนินการ�
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Label Selection"
-msgstr ""
+msgstr "การเลือกป้ายกำกับ"
 
 #. module: web
 #. odoo-python
@@ -3108,7 +3122,7 @@ msgstr "จัดการตัวกรอง"
 #: code:addons/web/static/src/views/fields/many2one_barcode/many2one_barcode_field.js:0
 #, python-format
 msgid "Many2OneBarcode"
-msgstr ""
+msgstr "Many2OneBarcode"
 
 #. module: web
 #. odoo-javascript
@@ -3297,7 +3311,7 @@ msgstr "เพิ่มเติม"
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 #, python-format
 msgid "Move to %s..."
-msgstr ""
+msgstr "ย้ายไปที่ %s..."
 
 #. module: web
 #. odoo-javascript
@@ -3746,7 +3760,7 @@ msgstr "เฉพาะ %d บันทึกถูกลบแล้ว (จา
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %s records have been deleted (out of %s selected)"
-msgstr ""
+msgstr "ลบเฉพาะ %s บันทึกแรกเท่านั้น (จาก %s ที่เลือก)"
 
 #. module: web
 #. odoo-python
@@ -3788,7 +3802,7 @@ msgstr "เปิดมุมมอง"
 #: code:addons/web/static/src/core/debug/debug_menu.xml:0
 #, python-format
 msgid "Open developer tools"
-msgstr ""
+msgstr "เปิดเครื่องมือสำหรับนักพัฒนา"
 
 #. module: web
 #. odoo-javascript
@@ -3820,7 +3834,7 @@ msgstr "เปิด: %s"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Option Name"
-msgstr ""
+msgstr "ชื่อตัวเลือก"
 
 #. module: web
 #. odoo-javascript
@@ -4019,7 +4033,7 @@ msgstr "กรุณาคลิกที่ปุ่ม \"บันทึก\" 
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Please complete your properties before adding a new one"
-msgstr ""
+msgstr "กรุณากรอกคุณสมบัติของคุณให้ครบถ้วนก่อนที่จะเพิ่มคุณสมบัติใหม่"
 
 #. module: web
 #. odoo-javascript
