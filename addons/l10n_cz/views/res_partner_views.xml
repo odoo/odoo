@@ -8,7 +8,7 @@
              <xpath expr="//field[@name='company_registry']" position="replace">
                 <field name="company_registry" invisible="'CZ' not in fiscal_country_codes"/>
             </xpath>
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//field[@name='vat']" position="before">
                 <field name="company_registry" invisible="'CZ' not in fiscal_country_codes"/>
             </xpath>
         </field>
