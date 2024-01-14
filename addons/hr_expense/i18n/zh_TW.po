@@ -7,7 +7,7 @@
 # Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Pak Wai Ho, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-26 14:21+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -537,7 +537,7 @@ msgstr "費用的預設別名"
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_journal_id
 msgid "Default Company Expense Journal"
-msgstr ""
+msgstr "預設公司開支日記賬"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
@@ -558,7 +558,7 @@ msgstr "員工已付費用的預設會計日記帳"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by the company."
-msgstr ""
+msgstr "公司支付開支的預設會計日記賬。"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -1877,7 +1877,7 @@ msgstr "團隊審批人"
 #: model:ir.model.fields,help:hr_expense.field_res_company__company_expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__company_expense_journal_id
 msgid "The company's default journal used when a company expense is created."
-msgstr ""
+msgstr "建立公司開支時，使用的公司預設日記賬。"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -1948,6 +1948,15 @@ msgstr "分拆關閉後的總和保持不變"
 #, python-format
 msgid "There are no expense reports to approve."
 msgstr "沒有要審批的費用報告。"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
