@@ -100,7 +100,7 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills
     @api.model
-    def create_bill(self, invoice_vals, partner_id, invoice_date, invoice_date_due, reference, narration):
+    def create_bill(self, bill_vals, partner_id, invoice_date, invoice_date_due, reference, narration):
         """
         Create an AR invoice and corresponding analytic lines based on the provided data.
         """
