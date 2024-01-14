@@ -7549,13 +7549,6 @@ msgid "Sequence return"
 msgstr "Secuencia de devolución"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Las secuencias %s ya existen."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Números de serie"
@@ -8825,6 +8818,21 @@ msgstr "Este registro ya existe."
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "No se puede usar este reporte para %s hechos y no hechos al mismo tiempo"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Otro tipo de operación ya utiliza este prefijo de secuencia. Le recomendamos"
+" que seleccione un prefijo único para evitar errores y valores de referencia"
+" repetidos o que asigne la secuencia de referencia existente a este tipo de "
+"operación."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10271,6 +10279,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Ha procesado menos productos que la demanda inicial."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Algunos productos en sus existencias tienen el número de lote o serie de seguimiento habilitado. \n"
+"Deshabilite el seguimiento de todos los productos antes de desactivar este ajuste."
 
 #. module: stock
 #. odoo-python

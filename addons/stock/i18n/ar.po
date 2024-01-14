@@ -8,7 +8,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
 # Martin Trigaux, 2023
 # Niyas Raphy, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7432,13 +7432,6 @@ msgid "Sequence return"
 msgstr "تسلسل الإرجاع "
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "التسلسلات %s موجودة بالفعل. "
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "الأرقام التسلسلية "
@@ -8653,6 +8646,20 @@ msgstr "هذا السجل موجود بالفعل. "
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "لا يمكن استخدام هذا التقرير للـ%s المنتهية وغير المنتهية في الوقت ذاته. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"بادئة هذا التسلسل قيد الاستخدام بالفعل من قِبَل نوع عملية آخر. نوصي بتحديد "
+"بادئة فريدة لتجنب المشاكل و/أو القيم المرجعية المتكررة، أو قم بتعيين التسلسل"
+" المرجعي الموجود بالفعل لنوع العملية هذا. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10066,6 +10073,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "لقد قمت بمعالجة كمية منتجات أقل من الطلب المبدئي."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"توجد منتجات في المخزون تم تمكين تتبع رقم المجموعة/الرقم التسلسلي لها.\n"
+"قم بإيقاف تشغيل التتبع لكافة المنتجات قبل إيقاف تشغيل هذا الإعداد. "
 
 #. module: stock
 #. odoo-python

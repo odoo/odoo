@@ -14,10 +14,10 @@
 # Michal Veselý <michal@veselyberanek.net>, 2023
 # Martin Trigaux, 2023
 # Tomáš Píšek, 2023
-# Wil Odoo, 2023
 # Jakub Smolka, 2023
 # Jakub Krkoška, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1593,6 +1593,11 @@ msgid "Default (1/1)"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr "SEM PŘETÁHNĚTE STAVEBNÍ BLOKY, ABY BYLY DOSTUPNÉ U VŠECH PRODUKTŮ"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
 msgid "Default Currency"
 msgstr "Výchozí měna"
@@ -2619,8 +2624,8 @@ msgstr "Není definován žádný produkt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
-msgstr "Není definován žádný produkt v kategorii \""
+msgid "No product defined in this category."
+msgstr "V této kategorii není definován žádný produkt."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -4065,8 +4070,8 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "TIN / VAT"
-msgstr "DIČ / DPH"
+msgid "VAT"
+msgstr "DIČ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options

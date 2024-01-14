@@ -5,8 +5,8 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Daye Jeong, 2023
 # Sarah Park, 2023
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7324,13 +7324,6 @@ msgid "Sequence return"
 msgstr "순서 반환"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "해당하는 %s 순서가 이미 존재합니다."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "일련번호"
@@ -8515,6 +8508,17 @@ msgstr "이 레코드는 이미 존재합니다."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "이 보고서는 %s 항목을 동시에 완료 및 미완료로 사용할 수 없습니다. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9875,6 +9879,17 @@ msgstr "아직 <i>완료</i> 수량을 기록하지 않았습니다. <i>적용</
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "요청 수량보다 적은 수의 품목을 처리했습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"재고 추적이 활성화된 Lot/일련번호 품목이 존재합니다.\n"
+"이 설정을 해제하기 전에 모든 품목에서 추적 기능을 해제해 주십시오."
 
 #. module: stock
 #. odoo-python

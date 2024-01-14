@@ -7,7 +7,7 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Martin Trigaux, 2023
-# Chloe Wang, 2023
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -205,6 +205,15 @@ msgstr ""
 "为了在Odoo和Outlook日历之间实现正确的同步，所有与会者必须有一个电子邮件地址。然而，有些事件并不尊重这个条件。只要事件不正确，日历就不会被同步。\n"
 "要么更新事件/与会者，要么将这些事件存档%s。\n"
 "%s"
+
+#. module: microsoft_calendar
+#. odoo-python
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"For having a different organizer in your event, it is necessary that the "
+"organizer have its Odoo Calendar synced with Outlook Calendar."
+msgstr "要在活动中使用不同的组织者，组织者必须将 Odoo 日历与 Outlook 日历同步。"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id

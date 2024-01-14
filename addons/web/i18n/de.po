@@ -11,8 +11,8 @@
 # Friederike Fasterling-Nesselbosch, 2023
 # Philipp Fürstos <pfu@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2501,7 +2501,7 @@ msgstr "Fußzeile"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "Fußzeilentext, der am Ende aller Berichten angezeigt wird."
+msgstr "Fußzeilentext, der unten in allen Berichten angezeigt wird."
 
 #. module: web
 #. odoo-javascript
@@ -2607,7 +2607,7 @@ msgstr "Ziehpunkt"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr "Kopfzeilentext, der am Anfang aller Berichte angezeigt wird."
+msgstr "Kopfzeilentext, der oben in allen Berichten angezeigt wird."
 
 #. module: web
 #. odoo-javascript
@@ -3866,6 +3866,13 @@ msgstr "Ansicht öffnen"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr "Entwicklertools öffnen"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Open:"
@@ -4097,6 +4104,11 @@ msgid ""
 msgstr ""
 "Bitte verwenden Sie für Ihre Zahlung den folgenden Verwendungszweck <b><span>\n"
 "                           INV/2020/07/0003</span></b>"
+
+#. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr "Zahlungsmitteilung: <b><span>INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
