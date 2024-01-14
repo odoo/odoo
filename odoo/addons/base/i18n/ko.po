@@ -10,10 +10,10 @@
 # Linkup <link-up@naver.com>, 2021
 # Martin Trigaux, 2021
 # Heesoo Choi, 2021
-# Sarah Park, 2023
 # Wil Odoo, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Daye Jeong, 2023
+# Sarah Park, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32102,7 +32102,7 @@ msgstr "UNSPSC 상품 코드"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping (Legacy)"
-msgstr ""
+msgstr "UPS 배송 (이전)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
@@ -33700,6 +33700,14 @@ msgstr ""
 "먼저 연결된 사용자를 보관 처리하십시오.\n"
 "\n"
 "연결되어 있는 활성화 된 사용자: %(names)s"
+
+#. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

@@ -17,6 +17,7 @@
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # Manuela Silva <mmsrs@sky.com>, 2023
+# Arxi, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
+"Last-Translator: Arxi, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7491,6 +7492,9 @@ msgid ""
 "\n"
 "Is this expected? For example this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"O número de série (%s) já está a ser usado nestas localizações: %s.\n"
+"\n"
+"Isso é esperado? Por exemplo, isso pode ocorrer se uma operação de entrega for validada antes da validação da operação de recebimento correspondente. Nesse caso, o problema será resolvido automaticamente quando todas as etapas forem concluídas. Caso contrário, o número de série deve ser corrigido para evitar dados inconsistentes."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9058,6 +9062,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Processou menos artigos do que o pedido inicial."
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
