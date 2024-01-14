@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s สร้างเมื่อวันที่ %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
@@ -89,7 +89,7 @@ msgstr "แคมเปญ"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr ""
+msgstr "ตัวระบุแคมเปญ"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
@@ -126,7 +126,7 @@ msgstr "แคมเปญใช้เพื่อรวมศูนย์กา
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "แคมเปญที่มอบหมายให้ฉัน"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -374,7 +374,7 @@ msgstr "สื่อกลาง"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "แคมเปญของฉัน"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -572,13 +572,16 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the recruitment and the mass mailing."
 msgstr ""
+"ไม่สามารถลบวิธีที่เข้ามา UTM '%s' ได้ "
+"เนื่องจากถูกใช้ในขั้นตอนการทำงานหลักบางอย่าง เช่น "
+"การสรรหาบุคลากรและการส่งไปรษณีย์จำนวนมาก"
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "ชื่อต้องไม่ซ้ำกัน"
 
 #. module: utm
 #. odoo-javascript
@@ -673,7 +676,7 @@ msgstr "แหล่งที่มา UTM"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "มิกซ์อินแหล่งที่มา UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action

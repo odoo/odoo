@@ -7485,13 +7485,6 @@ msgid "Sequence picking"
 msgstr "揀貨序列"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "序列 %s 已存在。"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "序號"
@@ -8692,6 +8685,17 @@ msgstr "此記錄已存在."
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "此報表不能同時用於 %s 已完成和未完成"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10060,6 +10064,15 @@ msgstr "您已經處理了初始需求的部分產品."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -10105,6 +10118,13 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr "您需要啟動儲存位置才能執行內部操作類型."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "You need to select a route to replenish your products"
+msgstr ""
 
 #. module: stock
 #. odoo-python

@@ -6,7 +6,7 @@
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7659,13 +7659,6 @@ msgid "Sequence picking"
 msgstr "Trình tự lấy hàng"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Số thứ tự %s đã tồn tại."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Số sê-ri"
@@ -8954,6 +8947,17 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Không thể đồng thời sử dụng báo cáo này cho %s đã hoàn tất hoặc chưa hoàn "
 "tất."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10419,6 +10423,17 @@ msgstr "Bạn đã xử lý ít sản phẩm hơn nhu cầu ban đầu."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Bạn có (các) sản phẩm trong kho đã bật tính năng theo dõi số lô/sê-ri.\n"
+"Hãy tắt tính năng theo dõi trên tất cả sản phẩm trước khi tắt cài đặt này."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -10470,6 +10485,13 @@ msgid ""
 msgstr ""
 "Bạn cần kích hoạt các vị trí lưu kho để có thể thực hiện các loại hoạt động "
 "nội bộ."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "You need to select a route to replenish your products"
+msgstr ""
 
 #. module: stock
 #. odoo-python

@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7731,13 +7731,6 @@ msgid "Sequence picking"
 msgstr "Sequenz Kommissionierung"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Sequenzen %s bestehen bereits."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Seriennummern"
@@ -9056,6 +9049,21 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Dieser Bericht kann nicht gleichzeitig für erledigte und nichterledigte %s "
 "verwendet werden."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Dieses Sequenzpräfix wird bereits von einer anderen Vorgangsart verwendet. "
+"Es wird empfohlen, ein eindeutiges Präfix zu wählen, um Probleme und/oder "
+"wiederholte Referenzwerte zu vermeiden, oder die vorhandene Referenzfolge "
+"dieser Vorgangsart zuzuweisen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10541,6 +10549,17 @@ msgstr "Sie haben weniger Produkte verarbeitet als ursprünglich angefragt:"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sie haben Produkte auf Lager, für die die Nachverfolgung der Los-/Seriennummer aktiviert ist. \n"
+"Schalten Sie die Nachverfolgung bei allen Produkten aus, bevor Sie diese Einstellung deaktivieren."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -10595,6 +10614,13 @@ msgid ""
 msgstr ""
 "Um interne Vorgangsarten durchführen zu können, müssen Sie Lagerorte "
 "aktivieren."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "You need to select a route to replenish your products"
+msgstr "Sie müssen eine Route auswählen, um Ihre Produkte aufzufüllen"
 
 #. module: stock
 #. odoo-python

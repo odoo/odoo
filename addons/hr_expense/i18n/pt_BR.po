@@ -6,8 +6,8 @@
 # Wil Odoo, 2023
 # Adriano Prado <adrianojprado@gmail.com>, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
-# Layna Nascimento, 2023
-# Maitê Dietze, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Maitê Dietze, 2023\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1863,6 +1863,13 @@ msgstr ""
 "Mostrar todos os registros cuja próxima data de ação seja anterior a hoje"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Show missing work email employees"
+msgstr "Mostrar funcionários com e-mail de trabalho ausente"
+
+#. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
@@ -2064,12 +2071,20 @@ msgstr "A soma após o fechamento da divisão deve permanecer a mesma"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"The work email of the employee is required to post the expense report. "
-"Please add it on the employee form."
+msgid "There are no expense reports to approve."
 msgstr ""
-"O e-mail profissional do funcionário é obrigatório para lançar o relatório "
-"de despesas. Adicione-o no formulário do funcionário."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
+msgstr ""
+"Há despesas não lançadas vinculadas a essa categoria. A atualização do custo"
+" da categoria alterará os valores das despesas. Certifique-se de que é isso "
+"que você pretende fazer."
 
 #. module: hr_expense
 #. odoo-javascript

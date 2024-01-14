@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -558,7 +559,7 @@ msgstr "Catégorie par défaut"
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_test__expense_product_id
 msgid "Default Expense Category"
-msgstr "Catégorie de notes de frais par défaut"
+msgstr "Catégorie de dépenses par défaut"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
@@ -577,7 +578,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default expense categories for uploaded expenses"
-msgstr "Catégories de notes de frais par défaut pour des dépenses chargées"
+msgstr "Catégories de dépenses par défaut pour des dépenses chargées"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -746,7 +747,7 @@ msgstr "Approbateur des notes de frais"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Categories"
-msgstr "Catégories de notes de frais"
+msgstr "Catégories de dépenses"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -846,8 +847,7 @@ msgstr "Note de frais dupliquée"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense categories can be reinvoiced to your customers."
-msgstr ""
-"Les catégories de notes de frais peuvent être refacturées à vos clients."
+msgstr "Les catégories de dépenses peuvent être refacturées à vos clients."
 
 #. module: hr_expense
 #. odoo-python
@@ -1098,7 +1098,7 @@ msgstr "En paiement"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr "Toutes taxes comprises"
+msgstr "Taxes comprises"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1382,7 +1382,7 @@ msgstr "Pas encore de données !"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense categories found. Let's create one!"
-msgstr "Aucune catégorie de notes de frais trouvée. Créons-en un !"
+msgstr "Aucune catégorie de dépenses trouvée. Créons-en un !"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
@@ -1872,6 +1872,13 @@ msgstr ""
 "actions est pour aujourd'hui ou avant. "
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Show missing work email employees"
+msgstr "Afficher les employés dont l'email professionnel manque"
+
+#. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
@@ -2076,12 +2083,20 @@ msgstr "La somme après le fractionnement reste identique"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "There are no expense reports to approve."
+msgstr "Il n'y a aucun rapport de notes de frais à approuver."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
 msgid ""
-"The work email of the employee is required to post the expense report. "
-"Please add it on the employee form."
+"There are unposted expenses linked to this category. Updating the category "
+"cost will change expense amounts. Make sure it is what you want to do."
 msgstr ""
-"L'adresse professionnelle de l'employé est requise pour enregistrer la note "
-"de frais. Veuillez l'ajouter à la fiche de l'employé."
+"Des dépenses non comptabilisées sont liées à cette catégorie. La mise à jour"
+" du coût de la catégorie modifiera les montants des dépenses. Assurez-vous "
+"que c'est bien ce que vous voulez faire."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2272,9 +2287,9 @@ msgstr ""
 "Lorsque le coût d'un produit de note de frais est différent de 0, alors "
 "l'utilisateur utilisant ce produit ne pourra pas modifier le montant de la "
 "note de frais, seulement la quantité. Utilisez un coût différent de 0 pour "
-"les catégories de notes de frais financées par l'entreprise à coût fixe "
-"comme les indemnités de kilométrage, les indemnités journalières, "
-"l'hébergement ou les repas."
+"les catégories de dépenses financées par l'entreprise à coût fixe comme les "
+"indemnités de kilométrage, les indemnités journalières, l'hébergement ou les"
+" repas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax

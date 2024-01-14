@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Abe Manyo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7657,13 +7657,6 @@ msgid "Sequence picking"
 msgstr "Sequence picking"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Sequence %s sudah tersedia."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Nomor Seri"
@@ -8957,6 +8950,21 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Laporan ini tidak dapat digunakan untuk selesai dan tidak selesai %s pada "
 "saat yang sama"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Urutan awalan ini sudah digunakan oleh tipe operasi lain. Disarankan bagi "
+"Anda untuk memilih awalan yang unik untuk mencegah masalah dan/atau "
+"referensi value yang berulang atau berikan urutan referensi yang tersedia ke"
+" tipe operasi ini."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10424,6 +10432,17 @@ msgstr "Anda telah memproses produk lebih sedikit daripada permintaan awal."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Anda memiliki produk dalam stok dengan pelacakan nomor seri/lot yang diaktifkan.\n"
+"Nonaktifkan pelacakan pada semua produk sebelum menonaktifkan pengaturan ini. "
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -10475,6 +10494,13 @@ msgid ""
 msgstr ""
 "Anda harus mengaktifkan lokasi storage agar dapat melakukan tipe operasi "
 "internal."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "You need to select a route to replenish your products"
+msgstr "Anda harus memilih rute untuk memulihkan produk-produk Anda"
 
 #. module: stock
 #. odoo-python

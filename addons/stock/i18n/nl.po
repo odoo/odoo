@@ -6,7 +6,7 @@
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7703,13 +7703,6 @@ msgid "Sequence picking"
 msgstr "Reeks picking"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "Volgnummers %s bestaan reeds."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "Serienummers"
@@ -9010,6 +9003,21 @@ msgid "This report cannot be used for done and not done %s at the same time"
 msgstr ""
 "Dit rapport kan niet tegelijkertijd worden gebruikt voor gedaan en niet "
 "gedaan %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"Het voorvoegsel van deze reeks wordt reeds gebruikt door een andere "
+"bewerkingstype. Het wordt aanbevolen om een uniek voorvoegsel te selecteren "
+"om problemen en/of herhaalde referentiewaarden te voorkomen of om de "
+"bestaande referentiereeks toe te wijzen aan dit type bewerking."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10490,6 +10498,17 @@ msgstr "Je hebt minder producten verwerkt dan de initiële aanvraag."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Je hebt producten in voorraad waarvoor het traceren via partij/serienummer is ingeschakeld.\n"
+"Schakel het traceren uit voor alle producten voordat je deze instelling uitschakelt."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -10543,6 +10562,13 @@ msgid ""
 msgstr ""
 "Je moet opslaglocaties activeren om interne bewerkingstypes te kunnen "
 "uitvoeren."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "You need to select a route to replenish your products"
+msgstr "Je moet een route kiezen om je producten aan te vullen"
 
 #. module: stock
 #. odoo-python

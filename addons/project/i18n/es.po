@@ -11,7 +11,7 @@
 # Jolien De Paepe, 2023
 # Josep Anton Belchi, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3339,6 +3339,25 @@ msgstr ""
 "Modelo padre que contiene el alias. El modelo que contiene la referencia "
 "alias no es necesariamente el modelo dado por alias_model_id (example: "
 "project (parent_model) and task (model))"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid ""
+"Partner company cannot be different from its assigned projects' company"
+msgstr ""
+"La empresa del contacto no puede ser diferente a la empresa de sus proyectos"
+" asignados."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid "Partner company cannot be different from its assigned tasks' company"
+msgstr ""
+"La empresa del contacto no puede ser diferente a la empresa de sus tareas "
+"asignadas."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
