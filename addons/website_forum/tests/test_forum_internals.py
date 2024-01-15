@@ -59,6 +59,24 @@ class TestForumInternals(TestForumCommon):
         self.assertEqual(website_2.forum_count, 6,
                          '6 global forums')
 
+    def test_website_forum_last_post_id(self):
+        """Check that each forum's last post is computed correctly and efficiently."""
+        test_forums = self.base_forum | self.forum
+        new_posts = self.env["forum.post"].create([{
+            'name': f'New Post {forum_post_idx}',
+            'forum_id': forum.id,
+        } for forum_post_idx, forum in enumerate(test_forums)])
+
+        with self.assertQueryCount(1):
+            self.assertEqual(test_forums.last_post_id.ids, new_posts.ids)
+
+        another_post = self.env["forum.post"].create([{
+            'name': 'Another New Post',
+            'forum_id': self.base_forum.id,
+        }])
+        with self.assertQueryCount(1):
+            self.assertEqual(test_forums.last_post_id.ids, (another_post | new_posts[1]).ids)
+
 
 @tagged('forum_internals')
 class TestPostInternals(TestForumCommon):
