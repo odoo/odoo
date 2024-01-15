@@ -4,6 +4,8 @@
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 import logging
+from freezegun import freeze_time
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -640,3 +642,19 @@ class TestTraceability(TestMrpCommon):
         mo.action_generate_serial()
         lot_2 = mo.lot_producing_id.name
         self.assertEqual(lot_2, str(int(lot_1) + 1).zfill(7))
+
+    def test_assign_stock_move_date_on_mark_done(self):
+        product_final = self.env['product.product'].create({
+            'name': 'Finished Product',
+            'type': 'product',
+        })
+        with freeze_time('2024-01-15'):
+            production = self.env['mrp.production'].create({
+                'product_id': product_final.id,
+                'product_qty': 1,
+                'date_planned_start': datetime(2024, 1, 10)
+            })
+            production.action_confirm()
+            production.qty_producing = 1
+            production.button_mark_done()
+            self.assertEqual(production.move_finished_ids.date, datetime(2024, 1, 15), "Stock move should be availbale after the production is done.")
