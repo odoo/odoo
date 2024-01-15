@@ -7,7 +7,7 @@ from werkzeug.urls import url_quote
 from markupsafe import Markup
 
 from odoo import api, models, fields
-from odoo.tools import pycompat
+from odoo.tools import format_duration, pycompat
 from odoo.tools import html_escape as escape
 
 
