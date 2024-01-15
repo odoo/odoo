@@ -261,7 +261,8 @@ class ProductConfiguratorController(Controller):
         currency = request.env['res.currency'].browse(currency_id)
         product = product_template._get_variant_for_combination(combination)
         attribute_exclusions = product_template._get_attribute_exclusions(
-            parent_combination=parent_combination
+            parent_combination=parent_combination,
+            combination_ids=combination.ids,
         )
 
         return dict(
@@ -289,7 +290,7 @@ class ProductConfiguratorController(Controller):
                             datetime.fromisoformat(so_date).date(),
                         ),
                     ) for ptav in ptal.product_template_value_ids
-                    if ptav.ptav_active
+                    if ptav.ptav_active or combination and ptav.id in combination.ids
                 ],
                 selected_attribute_value_ids=combination.filtered(
                     lambda c: ptal in c.attribute_line_id
