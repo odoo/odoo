@@ -1210,7 +1210,7 @@ var BasicModel = AbstractModel.extend({
 
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record, { viewType: options.viewType }).then(function () {
+                                self._fetchRecord(record, { viewType: options.viewType }).finally(function () {
                                     resolve(changedFields);
                                 });
                             } else {
