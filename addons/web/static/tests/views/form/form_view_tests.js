@@ -13747,4 +13747,28 @@ QUnit.module("Views", (hooks) => {
             "o_field_invalid"
         );
     });
+
+    QUnit.test("form view not freezed when record is deleted during save", async function (assert) {
+        serverData.models.partner.records[0].display_name = "test";
+        const mockRPC = (route, { method, args }) => {
+            if (method === "write") {
+                serverData.models.partner.records = [];
+                return true;
+            }
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            mockRPC,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+            resId: 1,
+        });
+        await editInput(target, ".o_field_widget[name=display_name] input", "new");
+        await click(target, ".o_form_button_save");
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+    });
 });
