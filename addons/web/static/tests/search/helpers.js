@@ -10,6 +10,7 @@ import {
     mouseEnter,
     nextTick,
     triggerEvent,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -320,7 +321,7 @@ export async function editFavoriteName(el, name) {
         `.o_favorite_menu .o_add_favorite + .o_accordion_values input[type="text"]`
     );
     input.value = name;
-    await triggerEvent(input, null, "input");
+    await triggerEvents(input, null, ["input", "change"]);
 }
 
 export async function saveFavorite(el) {
