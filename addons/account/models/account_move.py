@@ -1411,7 +1411,8 @@ class AccountMove(models.Model):
     def _compute_duplicated_ref_ids(self):
         move_to_duplicate_move = self._fetch_duplicate_supplier_reference()
         for move in self:
-            move.duplicated_ref_ids = move_to_duplicate_move.get(move, self.env['account.move'])
+            # Uses move._origin.id to handle records in edition/existing records and 0 for new records
+            move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
     def _fetch_duplicate_supplier_reference(self, only_posted=False):
         moves = self.filtered(lambda m: m.is_purchase_document() and m.ref)
@@ -1423,10 +1424,11 @@ class AccountMove(models.Model):
 
         move_table_and_alias = "account_move AS move"
         place_holders = {}
-        if not moves.ids:
-            # This handles the special case of a record creation in the UI which isn't searchable in the DB
+        if not moves[0].id:  # check if record is under creation/edition in UI
+            # New record aren't searchable in the DB and record in edition aren't up to date yet
+            # Replace the table by safely injecting the values in the query
             place_holders = {
-                "id": 0,
+                "id": moves._origin.id or 0,
                 **{
                     field_name: moves._fields[field_name].convert_to_write(moves[field_name], moves) or None
                     for field_name in used_fields
