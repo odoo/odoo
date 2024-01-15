@@ -160,7 +160,7 @@ class Base(models.AbstractModel):
         def adapt(value):
             if field_type == 'selection':
                 value = selection_labels.get(value, False)
-            if type(value) == tuple:
+            if isinstance(value, tuple):
                 value = value[1]  # FIXME should use technical value (0)
             return value
 

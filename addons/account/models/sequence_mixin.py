@@ -46,7 +46,7 @@ class SequenceMixin(models.AbstractModel):
                 ))
 
     def __init__(self, pool, cr):
-        api.constrains(self._sequence_field, self._sequence_date_field)(type(self)._constrains_date_sequence)
+        api.constrains(self._sequence_field, self._sequence_date_field)(pool[self._name]._constrains_date_sequence)
         return super().__init__(pool, cr)
 
     def _constrains_date_sequence(self):

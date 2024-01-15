@@ -163,7 +163,7 @@ class WebsiteProfile(http.Controller):
         else:
             user = request.env.user
         values = self._profile_edition_preprocess_values(user, **kwargs)
-        whitelisted_values = {key: values[key] for key in type(user).SELF_WRITEABLE_FIELDS if key in values}
+        whitelisted_values = {key: values[key] for key in request.env.registry['res.users'].SELF_WRITEABLE_FIELDS if key in values}
         user.write(whitelisted_values)
         if kwargs.get('url_param'):
             return werkzeug.utils.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))

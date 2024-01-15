@@ -950,7 +950,7 @@ actual arch.
                 # the node has been removed, stop processing here
                 return
 
-        elif tag in {item[0] for item in type(self.env['ir.ui.view']).type.selection}:
+        elif tag in {item[0] for item in self.env['ir.ui.view']._fields['type'].selection}:
             node_info['editable'] = False
 
         if name_manager.validate:
@@ -1125,7 +1125,7 @@ actual arch.
             elif not name:
                 self.handle_view_error(_("Button must have a name"))
             elif type_ == 'object':
-                func = getattr(type(name_manager.Model), name, None)
+                func = getattr(name_manager.Model, name, None)
                 if not func:
                     msg = _(
                         "%(action_name)s is not a valid action on %(model_name)s",
@@ -1141,7 +1141,7 @@ actual arch.
                     )
                     self.handle_view_error(msg)
                 try:
-                    inspect.signature(func).bind(self=name_manager.Model)
+                    inspect.signature(func).bind()
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self.handle_view_error(msg % (name, name_manager.Model._name), raise_exception=False)

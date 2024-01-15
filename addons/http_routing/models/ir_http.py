@@ -581,7 +581,7 @@ class IrHttp(models.AbstractModel):
         elif isinstance(exception, QWebException):
             values.update(qweb_exception=exception)
 
-            if type(exception.error) == exceptions.AccessError:
+            if isinstance(exception.error, exceptions.AccessError):
                 code = 403
 
         elif isinstance(exception, werkzeug.exceptions.HTTPException):

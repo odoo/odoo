@@ -288,7 +288,7 @@ class MailComposer(models.TransientModel):
                     reply_to_value[res_id] = rendered_values.get(res_id, {}).get('email_from', False)
 
         blacklisted_rec_ids = set()
-        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
+        if mass_mail_mode and isinstance(self.env[self.model], self.pool['mail.thread.blacklist']):
             self.env['mail.blacklist'].flush(['email'])
             self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
             blacklist = {x[0] for x in self._cr.fetchall()}

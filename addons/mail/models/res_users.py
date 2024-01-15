@@ -66,11 +66,11 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         """
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        type(self).SELF_WRITEABLE_FIELDS.extend(['notification_type'])
+        pool[self._name].SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        pool[self._name].SELF_WRITEABLE_FIELDS.extend(['notification_type'])
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
+        pool[self._name].SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        pool[self._name].SELF_READABLE_FIELDS.extend(['notification_type'])
         return init_res
 
     @api.model_create_multi

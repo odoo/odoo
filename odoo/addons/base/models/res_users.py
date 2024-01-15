@@ -1083,7 +1083,7 @@ class UsersImplied(models.Model):
                 user = self.new(values)
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
+                values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     def write(self, values):
@@ -1594,8 +1594,8 @@ class APIKeysUser(models.Model):
     def __init__(self, pool, cr):
         init_res = super().__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_key_ids']
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['api_key_ids']
+        pool[self._name].SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_key_ids']
+        pool[self._name].SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['api_key_ids']
         return init_res
 
     def _rpc_api_keys_only(self):

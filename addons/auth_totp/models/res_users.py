@@ -35,7 +35,7 @@ class Users(models.Model):
         init_res = super().__init__(pool, cr)
         if not sql.column_exists(cr, self._table, "totp_secret"):
             cr.execute("ALTER TABLE res_users ADD COLUMN totp_secret varchar")
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
+        pool[self._name].SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
         return init_res
 
     def _mfa_type(self):

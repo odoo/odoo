@@ -19,9 +19,9 @@ class Users(models.Model):
         """
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        type(self).SELF_WRITEABLE_FIELDS.extend(['livechat_username'])
+        pool[self._name].SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        pool[self._name].SELF_WRITEABLE_FIELDS.extend(['livechat_username'])
         # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['livechat_username'])
+        pool[self._name].SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        pool[self._name].SELF_READABLE_FIELDS.extend(['livechat_username'])
         return init_res
