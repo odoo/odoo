@@ -615,6 +615,35 @@ QUnit.test("popper as child of another", async (assert) => {
     assert.strictEqual(childPopBox2.left, childPopBox1.left + spacer.offsetWidth * 0.5);
 });
 
+QUnit.test("batch update call", async (assert) => {
+    const target = document.createElement("div");
+    target.id = "target";
+    Object.assign(target.style, TARGET_STYLE);
+    container.appendChild(target);
+
+    let position = null;
+
+    class TestComponent extends Component {
+        static template = xml`<div class="popper" t-ref="popper">Popper</div>`;
+        setup() {
+            position = usePosition("popper", () => target, {
+                onPositioned: () => {
+                    assert.step("positioned");
+                },
+            });
+        }
+    }
+
+    await mount(TestComponent, container);
+    assert.verifySteps(["positioned"]);
+
+    position.unlock();
+    position.unlock();
+    position.unlock();
+    await nextTick();
+    assert.verifySteps(["positioned"]);
+});
+
 function getPositionTest(position, positionToCheck) {
     return async (assert) => {
         assert.expect(2);
