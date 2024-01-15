@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 odoo.loader.bus.addEventListener("module-started", (e) => {
-    if (e.detail.moduleName === "@web_editor/js/editor/snippets.options"){
+    if (e.detail.moduleName === "@web_editor/js/editor/snippets.options") {
         const options = e.detail.module[Symbol.for("default")];
         const FocusBlur = options.Class.extend({
             onFocus() {
