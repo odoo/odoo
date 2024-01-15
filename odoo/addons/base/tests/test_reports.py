@@ -3,6 +3,7 @@
 import io
 import logging
 from base64 import b64decode
+from collections import namedtuple
 
 import odoo
 import odoo.tests
@@ -438,6 +439,46 @@ class TestReportsRendering(TestReportsRenderingCommon):
             ])
         pages_contents = [[elem[1] for elem in page] for page in pages]
         self.assertEqual(pages_contents, expected_pages_contents)
+
+    def test_report_pdf_duplicate_ids(self):
+        PartnerType = namedtuple('PartnerType', ['ids', 'names'])
+        partner_id = self.partners[0].id
+        partner_name = self.partners[0].name
+        partners = PartnerType([partner_id, partner_id], [partner_name, partner_name])
+        page_content = '''
+                <div class="page">
+                    <div style="background-color:red">
+                        Name: <t t-esc="o.name"/>
+                    </div>
+                    <div style="page-break-before:always;background-color:blue">
+                        Last page for <t t-esc="o.name"/>
+                    </div>
+                </div>
+            '''
+
+        pdf_content = self.create_pdf(partners=partners, page_content=page_content)
+
+        pages = self._parse_pdf(pdf_content)
+
+        self.assertEqual(len(pages), 4, "Expecting 2 pages * 2 partners")
+
+        expected_pages_contents = []
+        for partner_name in partners.names:
+            expected_pages_contents.append([
+                'LTFigure', #logo
+                'Some header Text',
+                f'Name: {partner_name}',
+                f'Footer for {partner_name} Page: 1 / 2',
+            ])
+            expected_pages_contents.append([
+                'LTFigure', #logo
+                'Some header Text',
+                f'Last page for {partner_name}',
+                f'Footer for {partner_name} Page: 2 / 2',
+            ])
+        pages_contents = [[elem[1] for elem in page] for page in pages]
+        self.assertEqual(pages_contents, expected_pages_contents)
+
 
     def test_pdf_render_page_overflow(self):
         nb_lines = 80
