@@ -93,6 +93,15 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         useHotkey('control+k', () => {});
 
         onWillStart(() => {
+            // Destroy the widgets before instantiating the wysiwyg.
+            // grep: RESTART_WIDGETS_EDIT_MODE
+            // TODO ideally this should be done as close as the restart as
+            // as possible to avoid long flickering when entering edit mode. At
+            // moment some RPC are awaited before the restart so it is not
+            // ideal. But this has to be done before adding o_editable classes
+            // in the DOM. To review once everything is OWLified.
+            this._websiteRootEvent("widgets_stop_request");
+
             const pageOptionEls = this.websiteService.pageDocument.querySelectorAll('.o_page_option_data');
             for (const pageOptionEl of pageOptionEls) {
                 const optionName = pageOptionEl.name;
@@ -200,6 +209,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         }
         // The jquery instance inside the iframe needs to be aware of the wysiwyg.
         this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
+        // grep: RESTART_WIDGETS_EDIT_MODE
         await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
             editableMode: true,
             onSuccess: resolve,
