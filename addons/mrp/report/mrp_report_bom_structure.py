@@ -196,7 +196,7 @@ class ReportBomStructure(models.AbstractModel):
         is_minimized = self.env.context.get('minimized', False)
         if not product:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
-        if not line_qty:
+        if line_qty is False:
             line_qty = bom.product_qty
 
         if not product_info:
