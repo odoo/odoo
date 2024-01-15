@@ -123,7 +123,7 @@
                         <t t-else="">
                             <strong class="o_label_price_small" t-field="product.list_price" t-options="{'widget': 'monetary', 'label_price': True}"/>
                         </t>
-                        <div class="o_label_extra_data">
+                        <div t-if="False" class="o_label_extra_data">
                             <t t-out="extra_html"/>
                         </div>
                     </div>
