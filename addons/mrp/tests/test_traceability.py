@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 from datetime import datetime
 import logging
+from freezegun import freeze_time
 
 _logger = logging.getLogger(__name__)
 
@@ -665,3 +666,19 @@ class TestTraceability(TestMrpCommon):
         # generate serial lot_3 from the MO (next from sequence)
         mo.action_generate_serial()
         self.assertIn(datetime.now().strftime('%j'), mo.lot_producing_id.name)
+
+    def test_assign_stock_move_date_on_mark_done(self):
+        product_final = self.env['product.product'].create({
+            'name': 'Finished Product',
+            'type': 'product',
+        })
+        with freeze_time('2024-01-15'):
+            production = self.env['mrp.production'].create({
+                'product_id': product_final.id,
+                'product_qty': 1,
+                'date_start': datetime(2024, 1, 10)
+            })
+            production.action_confirm()
+            production.qty_producing = 1
+            production.button_mark_done()
+            self.assertEqual(production.move_finished_ids.date, datetime(2024, 1, 15), "Stock move should be availbale after the production is done.")
