@@ -89,6 +89,12 @@ class ThemePreviewFormControlPanel extends ControlPanel {
     onDesktopClick() {
         this.env.bus.trigger('THEME_PREVIEW:SWITCH_MODE', {mode: 'desktop'});
     }
+    /**
+     * Handler called when user click on Go Back button.
+     */
+    back() {
+        this.env.config.historyBack();
+    }
 }
 
 const ThemePreviewFormView = {
