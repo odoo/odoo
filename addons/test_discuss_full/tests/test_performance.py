@@ -165,7 +165,6 @@ class TestDiscussFullPerformance(HttpCase):
             ],
             "Store": {
                 "companyName": "YourCompany",
-                "current_user_id": self.users[0].id,
                 "discuss": {
                     "inbox": {"counter": 1, "id": "inbox", "model": "mail.box"},
                     "starred": {"counter": 1, "id": "starred", "model": "mail.box"},

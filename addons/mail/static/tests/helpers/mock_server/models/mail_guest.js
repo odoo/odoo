@@ -18,7 +18,6 @@ patch(MockServer.prototype, {
         ]);
         return {
             Store: {
-                current_user_id: false,
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 initBusId: this.lastBusNotificationId,
