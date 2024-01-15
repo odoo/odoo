@@ -178,6 +178,10 @@ export class Record extends DataPoint {
         return !this.resId;
     }
 
+    get __isDeleted() {
+        return this.model.__bm__.localData[this.__bm_handle__].__isDeleted;
+    }
+
     get isValid() {
         return !this._invalidFields.size;
     }
