@@ -250,7 +250,7 @@ class MailController(mail.MailController):
         if not model or not res_id or model not in request.env:
             return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 
-        if issubclass(type(request.env[model]), request.env.registry['portal.mixin']):
+        if isinstance(request.env[model], request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
             try:

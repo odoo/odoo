@@ -28,7 +28,7 @@ class GoogleAuth(http.Controller):
             )
             service_field = f'google_{service}_account_id'
             if service_field in request.env.user:
-                getattr(request.env.user, service_field)._set_auth_tokens(access_token, refresh_token, ttl)
+                request.env.user[service_field]._set_auth_tokens(access_token, refresh_token, ttl)
             else:
                 raise Warning('No callback field for service <%s>' % service)
             return request.redirect(url_return)

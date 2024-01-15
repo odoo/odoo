@@ -796,7 +796,7 @@ class QwebView(models.AbstractModel):
 
     @api.model
     def record_to_html(self, record, field_name, options):
-        view = getattr(record, field_name)
+        view = record[field_name]
         if not view:
             return ''
 

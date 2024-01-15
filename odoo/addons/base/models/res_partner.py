@@ -1060,7 +1060,7 @@ class Partner(models.Model):
             'company_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
-            args[field] = getattr(self, field) or ''
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
         elif self.commercial_company_name:

@@ -663,8 +663,8 @@ class Registry(Mapping):
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         table2model = {
             model._table: name
-            for name, model in env.items()
-            if not model._abstract and model.__class__._table_query is None
+            for name, model in env.registry.items()
+            if not model._abstract and model._table_query is None
         }
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
 

@@ -115,6 +115,17 @@ class DeliveryCarrier(models.Model):
                 </p>'''),
         }
 
+    def _is_available_for_order(self, order):
+        self.ensure_one()
+        order.ensure_one()
+        if not self._match_address(order.partner_shipping_id):
+            return False
+
+        if self.delivery_type == 'base_on_rule':
+            return self.rate_shipment(order).get('success')
+
+        return True
+
     def available_carriers(self, partner):
         return self.filtered(lambda c: c._match_address(partner))
 

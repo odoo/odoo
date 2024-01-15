@@ -39,7 +39,7 @@ class Image(models.AbstractModel):
         sha = hashlib.sha512(str(getattr(record, '__last_update')).encode('utf-8')).hexdigest()[:7]
         max_size = '' if max_size is None else '/%s' % max_size
 
-        if options.get('filename-field') and getattr(record, options['filename-field'], None):
+        if options.get('filename-field') and options['filename-field'] in record and record[options['filename-field']]:
             filename = record[options['filename-field']]
         elif options.get('filename'):
             filename = options['filename']
@@ -73,7 +73,7 @@ class Image(models.AbstractModel):
 
         src, src_zoom = self._get_src_urls(record, field_name, options)
 
-        if options.get('alt-field') and getattr(record, options['alt-field'], None):
+        if options.get('alt-field') and options['alt-field'] in record and record[options['alt-field']]:
             alt = escape(record[options['alt-field']])
         elif options.get('alt'):
             alt = options['alt']

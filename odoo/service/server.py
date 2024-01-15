@@ -362,7 +362,7 @@ class CommonServer(object):
         cls._on_stop_funcs.append(func)
 
     def stop(self):
-        for func in type(self)._on_stop_funcs:
+        for func in self._on_stop_funcs:
             try:
                 _logger.debug("on_close call %s", func)
                 func()

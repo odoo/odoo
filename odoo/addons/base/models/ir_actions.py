@@ -160,7 +160,7 @@ class IrActions(models.Model):
         :return: A read() view of the ir.actions.action safe for web use
         """
         record = self.env.ref(full_xml_id)
-        assert isinstance(self.env[record._name], type(self))
+        assert isinstance(self.env[record._name], self.env.registry[self._name])
         return record._get_action_dict()
 
     def _get_action_dict(self):
@@ -499,7 +499,7 @@ class IrActionsServer(models.Model):
 
     def _get_runner(self):
         multi = True
-        t = type(self)
+        t = self.env.registry[self._name]
         fn = getattr(t, f'_run_action_{self.state}_multi', None)\
           or getattr(t, f'run_action_{self.state}_multi', None)
         if not fn:
@@ -513,7 +513,7 @@ class IrActionsServer(models.Model):
     def _register_hook(self):
         super()._register_hook()
 
-        for cls in type(self).mro():
+        for cls in self.env.registry[self._name].mro():
             for symbol in vars(cls).keys():
                 if symbol.startswith('run_action_'):
                     _logger.warning(

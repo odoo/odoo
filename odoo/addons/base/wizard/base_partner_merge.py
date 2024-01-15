@@ -384,7 +384,7 @@ class MergePartnerAutomatic(models.TransientModel):
 
         for field_name in self._fields:
             if field_name.startswith(group_by_prefix):
-                if getattr(self, field_name, False):
+                if field_name in self and self[field_name]:
                     groups.append(field_name[len(group_by_prefix):])
 
         if not groups:

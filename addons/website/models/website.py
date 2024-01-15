@@ -1237,6 +1237,25 @@ class Website(models.Model):
                 record['lastmod'] = page['write_date'].date()
             yield record
 
+    def get_website_page_ids(self):
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            # Note that `website.pages` have `0,0,0,0` ACL rights by default for
+            # everyone except for the website designer which receive `1,0,0,0`.
+            # So the "Website/Site/Content/Pages" menu to reach the page manager
+            # is not shown to the restricted users, as the action linked model
+            # (website.page) can't be access. It's how the Odoo framework works.
+            # Still, we let the restricted editor access this resource for
+            # custos granting them read and/or write access on page.
+            raise AccessError(_("Access Denied"))
+
+        domain = [('url', '!=', False)]
+        if self:
+            domain = AND([domain, self.website_domain()])
+        pages = self.env['website.page'].sudo().search(domain)
+        if self:
+            pages = pages._get_most_specific_pages()
+        return pages.ids
+
     def _get_website_pages(self, domain=None, order='name', limit=None):
         if domain is None:
             domain = []
