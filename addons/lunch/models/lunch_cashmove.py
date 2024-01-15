@@ -20,7 +20,7 @@ class LunchCashMove(models.Model):
 
     def _compute_display_name(self):
         for cashmove in self:
-            cashmove.display_name = '{} {}'.format(_('Lunch Cashmove'), '#%d' % cashmove.id)
+            cashmove.display_name = '{} #{}'.format(_('Lunch Cashmove'), cashmove.id or 'new')
 
     @api.model
     def get_wallet_balance(self, user, include_config=True):

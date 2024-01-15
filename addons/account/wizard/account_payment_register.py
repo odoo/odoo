@@ -115,7 +115,6 @@ class AccountPaymentRegister(models.TransientModel):
         copy=False,
         domain="[('deprecated', '=', False)]",
         check_company=True,
-        compute='_compute_writeoff_account_id',
         store=True,
         readonly=False,
     )

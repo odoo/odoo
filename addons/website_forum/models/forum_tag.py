@@ -33,7 +33,8 @@ class Tags(models.Model):
 
     @api.depends("forum_id", "forum_id.name", "name")
     def _compute_website_url(self):
-        for tag in self:
+        super()._compute_website_url()
+        for tag in self.filtered('id'):
             tag.website_url = f'/forum/{slug(tag.forum_id)}/tag/{slug(tag)}/questions'
 
     @api.model_create_multi

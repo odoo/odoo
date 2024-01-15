@@ -53,9 +53,11 @@ class ResPartner(models.Model):
             partner.signup_url = result.get(partner.id, False)
 
     def _compute_token(self):
+        self.signup_token = False
         for partner in self:
-            self.env.cr.execute('SELECT signup_token FROM res_partner WHERE id=%s', (partner._origin.id,))
-            partner.signup_token = self.env.cr.fetchone()[0]
+            if partner._origin:
+                self.env.cr.execute('SELECT signup_token FROM res_partner WHERE id=%s', (partner._origin.id,))
+                partner.signup_token = self.env.cr.fetchone()[0]
 
     def _inverse_token(self):
         for partner in self:
