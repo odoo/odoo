@@ -32,6 +32,7 @@ class AccountReport(models.Model):
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
+    inherited_report_id = fields.Many2one(string="Inherited Report", comodel_name='account.report', help="The report this report is inheriting the lines from.")
     root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
     section_report_ids = fields.Many2many(string="Sections", comodel_name='account.report', relation="account_report_section_rel", column1="main_report_id", column2="sub_report_id")
@@ -191,6 +192,17 @@ class AccountReport(models.Model):
             if any(section.section_report_ids for section in record.section_report_ids):
                 raise ValidationError(_("The sections defined on a report cannot have sections themselves."))
 
+    @api.constrains('inherited_report_id')
+    def _validate_inherited_report_id(self):
+        for report in self:
+            if report.inherited_report_id == report:
+                raise ValidationError(_("A report can not inherit lines from itself."))
+            current_report = report
+            while current_report.inherited_report_id:
+                current_report = current_report.inherited_report_id
+                if current_report == report:
+                    raise ValidationError(_("A report can not inherit lines from another report that causes a circular dependency."))
+
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):
         if self.availability_condition != 'country':
@@ -272,6 +284,34 @@ class AccountReport(models.Model):
                 report.display_name = report.name + (f' ({report.country_id.code})' if report.country_id else '')
             else:
                 report.display_name = False
+
+    def _get_line_ids(self, include_inherited=True):
+        """ Get all the lines of this report, by default including the inherited lines as well.
+
+        :param include_inherited: Include all inherited lines as well (default: True)
+
+        :return: All lines for this report
+        """
+        self.ensure_one()
+        if not include_inherited:
+            return self.line_ids
+        lines = self.line_ids
+        report = self
+        while report.inherited_report_id:
+            report = report.inherited_report_id
+            lines |= report.line_ids
+        # The lines are sorted again to make sure the inherited lines appear at the right place
+        return lines.sorted(key=lambda l: (l.sequence, l.id))
+
+    def _get_report_ids(self):
+        """ Get the current report and all reports it inherits the lines from.
+        """
+        self.ensure_one()
+        reports = report = self
+        while report.inherited_report_id:
+            report = report.inherited_report_id
+            reports |= report
+        return reports
 
 
 class AccountReportLine(models.Model):
@@ -685,7 +725,7 @@ class AccountReportExpression(models.Model):
 
                     cross_report_domain = []
                     if candidate_expr.subformula != 'cross_report':
-                        cross_report_domain = [('report_line_id.report_id', '=', candidate_expr.report_line_id.report_id.id)]
+                        cross_report_domain = [('report_line_id.report_id', 'in', candidate_expr.report_line_id.report_id._get_report_ids().ids)]
 
                     for line_code, expr_labels in labels_by_code.items():
                         dependency_domain = [('report_line_id.code', '=', line_code), ('label', 'in', tuple(expr_labels))] + cross_report_domain
