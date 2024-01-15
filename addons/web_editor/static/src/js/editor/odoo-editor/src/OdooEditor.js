@@ -755,7 +755,7 @@ export class OdooEditor extends EventTarget {
             if (fontSizeInput && !fontSizeInput.readOnly && ev.target.closest('#font-size .dropdown-toggle')) {
                 // If the click opened the font size dropdown, select the input content.
                 fontSizeInput.select();
-            } else if (!this.isSelectionInEditable()) {
+            } else if (!this.isSelectionInEditable() && ev.target.nodeName !== 'INPUT') {
                 // Otherwise, if we lost the selection in the editable, restore it.
                 this.historyResetLatestComputedSelection(true);
             }
