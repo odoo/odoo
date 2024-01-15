@@ -1538,19 +1538,21 @@ class AccountMove(models.Model):
         for move in self:
             move.quick_encoding_vals = move._get_quick_edit_suggestions()
 
-    @api.depends('ref', 'move_type', 'partner_id', 'invoice_date')
+    @api.depends('ref', 'move_type', 'partner_id', 'invoice_date', 'tax_totals')
     def _compute_duplicated_ref_ids(self):
-        move_to_duplicate_move = self._fetch_duplicate_supplier_reference()
+        move_to_duplicate_move = self._fetch_duplicate_reference()
         for move in self:
             # Uses move._origin.id to handle records in edition/existing records and 0 for new records
             move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
-    def _fetch_duplicate_supplier_reference(self, matching_states=('draft', 'posted')):
-        moves = self.filtered(lambda m: m.is_purchase_document() and m.ref)
+    def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
+        moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document() and m.ref)
+
         if not moves:
             return {}
 
-        used_fields = ("company_id", "partner_id", "commercial_partner_id", "ref", "move_type", "invoice_date", "state")
+        used_fields = ("company_id", "partner_id", "commercial_partner_id", "ref", "move_type", "invoice_date", "state", "amount_total")
+
         self.env["account.move"].flush_model(used_fields)
 
         move_table_and_alias = "account_move AS move"
@@ -1565,6 +1567,9 @@ class AccountMove(models.Model):
                     for field_name in used_fields
                 },
             }
+            # The amount total depends on the field line_ids and is calculated upon saving, we needed a way to get it even when the
+            # invoices has not been saved yet.
+            place_holders['amount_total'] = self.tax_totals.get('amount_total', 0)
             casted_values = ", ".join([f"%({field_name})s::{moves._fields[field_name].column_type[0]}" for field_name in place_holders])
             move_table_and_alias = f'(VALUES ({casted_values})) AS move({", ".join(place_holders)})'
 
@@ -1575,19 +1580,32 @@ class AccountMove(models.Model):
               FROM {move_table_and_alias}
               JOIN account_move AS duplicate_move ON
                    move.company_id = duplicate_move.company_id
+               AND move.id != duplicate_move.id
+               AND duplicate_move.state IN %(matching_states)s
+               AND move.move_type = duplicate_move.move_type
                AND (
                    move.commercial_partner_id = duplicate_move.commercial_partner_id
                    OR (move.commercial_partner_id IS NULL AND duplicate_move.state = 'draft')
-               )
-               AND move.ref = duplicate_move.ref
-               AND move.move_type = duplicate_move.move_type
-               AND move.id != duplicate_move.id
-               AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
-               AND duplicate_move.state IN %(matching_states)s
+                )
+               AND (
+                   -- For out moves
+                   move.move_type in ('out_invoice', 'out_refund')
+                   AND (
+                       move.amount_total = duplicate_move.amount_total
+                       AND move.invoice_date = duplicate_move.invoice_date
+                   )
+                   OR
+                   -- For in moves
+                   move.move_type in ('in_invoice', 'in_refund')
+                   AND (
+                       move.ref = duplicate_move.ref
+                       AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
+                   )
+               ) 
              WHERE move.id IN %(moves)s
              GROUP BY move.id
         """, {
-            "matching_states": matching_states,
+            "matching_states": tuple(matching_states),
             "moves": tuple(moves.ids or [0]),
             **place_holders
         })
@@ -2031,7 +2049,7 @@ class AccountMove(models.Model):
     @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date', 'state')
     def _check_duplicate_supplier_reference(self):
         """ Assert the move which is about to be posted isn't a duplicated move from another posted entry"""
-        move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted')._fetch_duplicate_supplier_reference(matching_states=('posted',))
+        move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted' and m.is_purchase_document())._fetch_duplicate_reference(matching_states=('posted',))
         if any(duplicate_move for duplicate_move in move_to_duplicate_moves.values()):
             duplicate_move_ids = list(set(
                 move_id
@@ -3745,7 +3763,7 @@ class AccountMove(models.Model):
         if self.env.context.get('name_as_amount_total'):
             currency_amount = self.currency_id.format(self.amount_total)
             if self.state == 'posted':
-                return _("%(ref)s (%(currency_amount)s)", ref=self.ref, currency_amount=currency_amount)
+                return _("%(ref)s (%(currency_amount)s)", ref=(self.ref or self.name), currency_amount=currency_amount)
             else:
                 return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
         name = ''
@@ -4179,12 +4197,6 @@ class AccountMove(models.Model):
             'domain': [('id', 'in', self.tax_cash_basis_created_move_ids.ids)],
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
         }
-
-    def open_duplicated_ref_bill_view(self):
-        moves = self + self.duplicated_ref_ids
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_line_form")
-        action['domain'] = [('id', 'in', moves.ids)]
-        return action
 
     def action_switch_move_type(self):
         if any(move.posted_before for move in self):
