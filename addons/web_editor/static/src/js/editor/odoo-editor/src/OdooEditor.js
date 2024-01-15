@@ -83,6 +83,7 @@ import {
     prepareUpdate,
     boundariesOut,
     rightLeafOnlyNotBlockPath,
+    isColorPickerInput,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -731,7 +732,7 @@ export class OdooEditor extends EventTarget {
             if (fontSizeInput && ev.target.closest('#font-size .dropdown-toggle')) {
                 // If the click opened the font size dropdown, select the input content.
                 fontSizeInput.select();
-            } else if (!this.isSelectionInEditable()) {
+            } else if (!this.isSelectionInEditable() && ! isColorPickerInput(ev.target)) {
                 // Otherwise, if we lost the selection in the editable, restore it.
                 this.historyResetLatestComputedSelection(true);
             }

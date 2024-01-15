@@ -1808,6 +1808,26 @@ export function isColorGradient(value) {
     return value && value.includes('-gradient(');
 }
 
+
+/**
+ * Returns whether or not the given node is an input in colorpicker
+ *
+ * @param {HTMLBRElement} inputEl
+ * @returns {boolean}
+ */
+export function isInColorPicker(inputEl){
+    if (!(inputEl instanceof HTMLInputElement)){
+        return false;
+    }
+    let parent = closestElement(inputEl);
+    while (parent) {
+        if (parent.classList.contains('colorpicker')) {
+            return true;
+        }
+        parent = parent.parentElement;
+    }
+    return false;
+}
 //------------------------------------------------------------------------------
 // DOM Modification
 //------------------------------------------------------------------------------
