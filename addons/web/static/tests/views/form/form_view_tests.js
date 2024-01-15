@@ -6053,7 +6053,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
         assert.strictEqual(router.current.hash.id, 2);
     });
-
+    
     QUnit.test("switching to non-existing record", async function (assert) {
         patchWithCleanup(browser, {
             setTimeout(fn) {
@@ -6074,6 +6074,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "3");
         assert.strictEqual(router.current.hash.id, 1);
         await click(target.querySelector(".o_pager_next"));
+        await nextTick();
 
         assert.containsOnce(target, ".o_notification_bar.bg-danger");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
