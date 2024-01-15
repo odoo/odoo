@@ -1542,8 +1542,8 @@ class AccountMove(models.Model):
     def _compute_duplicated_ref_ids(self):
         move_to_duplicate_move = self._fetch_duplicate_supplier_reference()
         for move in self:
-            # Uses move._origin.id to handle records in edition/existing records and 0 for new records, for duplicated reference ID assignment.
-            move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin.id or 0, self.env['account.move'])
+            # Uses move._origin.id to handle records in edition/existing records and 0 for new records
+            move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
     def _fetch_duplicate_supplier_reference(self, matching_states=('draft', 'posted')):
         moves = self.filtered(lambda m: m.is_purchase_document() and m.ref)
@@ -1555,9 +1555,9 @@ class AccountMove(models.Model):
 
         move_table_and_alias = "account_move AS move"
         place_holders = {}
-        if not moves[0].id: # check if record is in creation/edition in UI
-            # Inject the values of the record directly in the query as a record under creation isn't searchable
-            # in the DB and a record under edition isn't up to date in the db before saving it
+        if not moves[0].id:  # check if record is under creation/edition in UI
+            # New record aren't searchable in the DB and record in edition aren't up to date yet
+            # Replace the table by safely injecting the values in the query
             place_holders = {
                 "id": moves._origin.id or 0,
                 **{
@@ -1592,7 +1592,7 @@ class AccountMove(models.Model):
             **place_holders
         })
         return {
-            res['move_id']: self.env['account.move'].browse(res['duplicate_ids'])
+            self.env['account.move'].browse(res['move_id']): self.env['account.move'].browse(res['duplicate_ids'])
             for res in self.env.cr.dictfetchall()
         }
 
