@@ -22,6 +22,9 @@
             'iap_mail/static/src/js/**/*',
             'iap_mail/static/src/scss/iap_mail.scss',
         ],
+        "web.dark_mode_assets_backend": [
+            'iap_mail/static/src/scss/iap_mail.dark.scss',
+        ],
     },
     'license': 'LGPL-3',
 }
