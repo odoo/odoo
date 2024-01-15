@@ -127,6 +127,59 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         # exclude combinations that are not even available
         self.assertFalse(result['products'][0]['archived_combinations'])
 
+    def test_dropped_attribute_value(self):
+        product_template = self.create_product_template_with_2_attributes()
+        self.assertEqual(len(product_template.product_variant_ids), 4)
+
+        # Use variants s.t. they are archived and not deleted when value is removed
+        self.empty_order.order_line = [
+            Command.create(
+                {
+                    'product_id': product.id
+                }
+            )
+            for product in product_template.product_variant_ids
+        ]
+        self.empty_order.action_confirm()
+
+        # Remove attribute value red
+        product_template.attribute_line_ids.filtered(
+            lambda ptal: ptal.attribute_id == self.color_attribute
+        ).value_ids = [Command.unlink(self.color_attribute_red.id)]
+        self.assertEqual(len(product_template.product_variant_ids), 2)
+        archived_variants = product_template.with_context(
+            active_test=False
+        ).product_variant_ids - product_template.product_variant_ids
+        self.assertEqual(len(archived_variants), 2)
+
+        archived_ptav = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
+        )
+        # Choose the variant (red, L)
+        variant_ptav_ids = [
+            archived_ptav.id,
+            product_template.attribute_line_ids.product_template_value_ids.filtered(
+                lambda ptav: ptav.product_attribute_value_id == self.size_attribute_l
+            ).id,
+        ]
+        self.authenticate('demo', 'demo')
+        result = self.request_get_values(product_template, variant_ptav_ids)
+        archived_ptav = archived_variants.product_template_attribute_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
+        )
+
+        # When requested combination contains inactive ptav
+        # check that archived combinations are loaded
+        self.assertEqual(
+            len(result['products'][0]['archived_combinations']),
+            2
+        )
+        for combination in result['products'][0]['archived_combinations']:
+            self.assertIn(archived_ptav.id, combination)
+
+        # When requested combination contains inactive ptav check that exclusions contains it
+        self.assertIn(str(archived_ptav.id), result['products'][0]['exclusions'])
+
     def test_excluded_inactive_ptav(self):
         product_template = self.create_product_template_with_2_attributes()
         self.assertEqual(len(product_template.product_variant_ids), 4)
