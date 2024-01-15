@@ -40,7 +40,7 @@ export class ProductTemplateAttributeLine extends Component {
             type: String,
             validate: type => ["always", "dynamic", "no_variant"].includes(type),
         },
-        customValue: { type: String, optional: true },
+        customValue: {type: [{value: false}, String], optional: true},
     };
 
     //--------------------------------------------------------------------------
