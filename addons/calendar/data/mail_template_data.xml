@@ -22,7 +22,12 @@
         Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
 
         <t t-if="not target_responsible">
-            <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> invited you for the <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> meeting.
+            <t t-if="not object.event_id.user_id.active">
+                You have been invited by Customer to the <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> meeting.
+            </t>
+            <t t-else="">
+                <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> invited you for the <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> meeting.
+            </t>
         </t>
         <t t-else="">
             Your meeting <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> has been booked.
