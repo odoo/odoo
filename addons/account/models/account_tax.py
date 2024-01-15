@@ -721,19 +721,29 @@ class AccountTax(models.Model):
         # || tax_3 |   ..   |          |
         # ||  ...  |   ..   |    ..    |
         #    ----------------------------
-        def recompute_base(base_amount, fixed_amount, percent_amount, division_amount):
-            # Recompute the new base amount based on included fixed/percent amounts and the current base amount.
-            # Example:
-            #  tax  |  amount  |   type   |  price_include  |
-            # -----------------------------------------------
-            # tax_1 |   10%    | percent  |  t
-            # tax_2 |   15     |   fix    |  t
-            # tax_3 |   20%    | percent  |  t
-            # tax_4 |   10%    | division |  t
-            # -----------------------------------------------
+        def recompute_base(base_amount, incl_tax_amounts):
+            """ Recompute the new base amount based on included fixed/percent amounts and the current base amount. """
+            fixed_amount = incl_tax_amounts['fixed_amount']
+            division_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['division_taxes'])
+            percent_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['percent_taxes'])
 
-            # if base_amount = 145, the new base is computed as:
-            # (145 - 15) / (1.0 + 30%) * 90% = 130 / 1.3 * 90% = 90
+            if company.country_code == 'IN':
+                # For the indian case, when facing two percent price-included taxes having the same percentage,
+                # both need to produce the same tax amounts. To do that, the tax amount of those taxes are computed
+                # directly during the first traveling in reversed order.
+                total_percentage = sum(tax_factor for _i, tax_factor in incl_tax_amounts['percent_taxes'])
+                for i, tax_factor in incl_tax_amounts['percent_taxes']:
+                    tax_amount = float_round(base * tax_factor / (100 + total_percentage), precision_rounding=prec)
+                    cached_tax_amounts[i] = tax_amount
+                    fixed_amount += tax_amount
+                percent_amount = 0.0
+
+            incl_tax_amounts.update({
+                'percent_taxes': [],
+                'division_taxes': [],
+                'fixed_amount': 0.0,
+            })
+
             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100
 
         # The first/last base must absolutely be rounded to work in round globally.
@@ -780,7 +790,11 @@ class AccountTax(models.Model):
         i = len(taxes) - 1
         store_included_tax_total = True
         # Keep track of the accumulated included fixed/percent amount.
-        incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+        incl_tax_amounts = {
+            'percent_taxes': [],
+            'division_taxes': [],
+            'fixed_amount': 0.0,
+        }
         # Store the tax amounts we compute while searching for the total_excluded
         cached_tax_amounts = {}
         if handle_price_include:
@@ -793,20 +807,19 @@ class AccountTax(models.Model):
                 sum_repartition_factor = sum(tax_repartition_lines.mapped("factor"))
 
                 if tax.include_base_amount:
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
-                    incl_fixed_amount = incl_percent_amount = incl_division_amount = 0
+                    base = recompute_base(base, incl_tax_amounts)
                     store_included_tax_total = True
                 if tax.price_include or self._context.get('force_price_include'):
                     if tax.amount_type == 'percent':
-                        incl_percent_amount += tax.amount * sum_repartition_factor
+                        incl_tax_amounts['percent_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'division':
-                        incl_division_amount += tax.amount * sum_repartition_factor
+                        incl_tax_amounts['division_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'fixed':
-                        incl_fixed_amount += abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
+                        incl_tax_amounts['fixed_amount'] = abs(quantity) * tax.amount * sum_repartition_factor * abs(fixed_multiplicator)
                     else:
                         # tax.amount_type == other (python)
                         tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, fixed_multiplicator) * sum_repartition_factor
-                        incl_fixed_amount += tax_amount
+                        incl_tax_amounts['fixed_amount'] += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
                     # In case of a zero tax, do not store the base amount since the tax amount will
@@ -819,7 +832,7 @@ class AccountTax(models.Model):
                         store_included_tax_total = False
                 i -= 1
 
-        total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount)
+        total_excluded = recompute_base(base, incl_tax_amounts)
         if self._context.get('round_base', True):
             total_excluded = currency.round(total_excluded)
 
@@ -855,6 +868,8 @@ class AccountTax(models.Model):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
+            elif price_include and i in cached_tax_amounts:
+                tax_amount = cached_tax_amounts[i]
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
                     tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
