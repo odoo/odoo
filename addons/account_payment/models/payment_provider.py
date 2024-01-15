@@ -13,6 +13,7 @@ class Paymentprovider(models.Model):
         compute='_compute_journal_id',
         inverse='_inverse_journal_id',
         domain='[("type", "=", "bank"), ("company_id", "=", company_id)]',
+        copy=False,
     )
 
     #=== COMPUTE METHODS ===#
