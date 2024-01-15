@@ -189,13 +189,16 @@ async function autoHideMenu(el, options) {
 
         dropdownMenu.className = 'dropdown-menu';
         extraItemsToggle.className = 'nav-item dropdown o_extra_menu_items';
+        extraItemsToggle.setAttribute("role", "presentation");
         extraItemsToggleIcon.className = 'fa fa-plus';
+        const ariaLabel = el.closest("[data-extra-items-toggle-aria-label]").dataset.extraItemsToggleAriaLabel;
         Object.entries({
             role: 'button',
             href: '#',
             class: 'nav-link dropdown-toggle o-no-caret',
             'data-bs-toggle': 'dropdown',
             'aria-expanded': false,
+            'aria-label': ariaLabel,
         }).forEach(([key, value]) => {
             extraItemsToggleLink.setAttribute(key, value);
         });
