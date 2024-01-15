@@ -892,7 +892,11 @@ class Registry(Mapping):
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
-                self.registry_sequence = cr.fetchone()[0]
+                # If another process concurrently updates the registry,
+                # self.registry_sequence will actually be out-of-date,
+                # and the next call to check_signaling() will detect that and trigger a registry reload.
+                # otherwise, self.registry_sequence should be equal to cr.fetchone()[0]
+                self.registry_sequence += 1
 
         # no need to notify cache invalidation in case of registry invalidation,
         # because reloading the registry implies starting with an empty cache
@@ -901,7 +905,11 @@ class Registry(Mapping):
             with closing(self.cursor()) as cr:
                 for cache_name in self.cache_invalidated:
                     cr.execute("select nextval(%s)", [f'base_cache_signaling_{cache_name}'])
-                    self.cache_sequences[cache_name] = cr.fetchone()[0]
+                    # If another process concurrently updates the cache,
+                    # self.cache_sequences[cache_name] will actually be out-of-date,
+                    # and the next call to check_signaling() will detect that and trigger cache invalidation.
+                    # otherwise, self.cache_sequences[cache_name] should be equal to cr.fetchone()[0]
+                    self.cache_sequences[cache_name] += 1
 
         self.registry_invalidated = False
         self.cache_invalidated.clear()
