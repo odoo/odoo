@@ -469,7 +469,8 @@
                     <field name="journal_id"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="amount_total_signed" sum="Total Amount" string="Total" decoration-bf="1"/>
-                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+                    <field name="state" column_invisible="True"/>
+                    <field name="visualization_state" string="Status" widget="badge" decoration-primary="visualization_state == 'draft'" decoration-info="visualization_state == 'posted'" decoration-success="visualization_state == 'sent'"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/>
                     <field name="to_check" optional="hide" widget="boolean_toggle"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
@@ -483,8 +484,8 @@
             <field name="arch" type="xml">
                 <tree string="Invoices"
                       js_class="account_tree"
-                      decoration-info="state == 'draft'"
-                      decoration-muted="state == 'cancel'"
+                      decoration-primary="visualization_state == 'draft'"
+                      decoration-muted="visualization_state == 'cancel'"
                       expand="context.get('expand', False)"
                       sample="1">
                     <header>
@@ -524,7 +525,8 @@
                            decoration-success="payment_state in ('paid', 'reversed')"
                            invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
                            optional="show"/>
-                    <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+                           <field name="state" column_invisible="1"/>
+                           <field name="visualization_state" string="Status" widget="badge" decoration-primary="visualization_state == 'draft'" decoration-info="visualization_state == 'posted'" decoration-success="visualization_state == 'sent'" optional="show"/>
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
                     <field name="abnormal_amount_warning" column_invisible="1"/>
                     <field name="abnormal_date_warning" column_invisible="1"/>
@@ -646,7 +648,7 @@
                                     </div>
                                     <div class="col-6">
                                         <span class="float-end">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
+                                            <field name="visualization_state" widget="label_selection" options="{'classes': {'draft': 'primary', 'posted': 'info', 'sent': 'success', 'cancel': 'default'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -719,7 +721,8 @@
                         <!-- Set as Checked -->
                         <button name="button_set_checked" string="Set as Checked" type="object" groups="account.group_account_invoice"
                                 invisible="not to_check" data-hotkey="k" />
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" invisible="is_move_sent"/>
+                        <field name="visualization_state" widget="statusbar" statusbar_visible="draft,posted,sent" invisible="not is_move_sent"/>
                     </header>
                     <div class="alert alert-warning mb-0 w-100 d-flex align-items-center gap-1" invisible="state != 'draft' or not duplicated_ref_ids"  role="alert">
                         <span>Warning: this bill might be a duplicate of</span>
@@ -1393,7 +1396,7 @@
                             <div class="d-flex justify-content-between">
                                 <field name="commercial_partner_id" string="Commercial Entity" class="o_text_block"/>
                                 <div class="m-1"/>
-                                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+                                <field name="visualization_state" string="Status" widget="badge" decoration-primary="visualization_state == 'draft'" decoration-info="visualization_state == 'posted'" decoration-success="visualization_state == 'sent'"/>
                             </div>
                         </div>
                     </templates>

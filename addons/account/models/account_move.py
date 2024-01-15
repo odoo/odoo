@@ -117,6 +117,21 @@ class AccountMove(models.Model):
         tracking=True,
         default='draft',
     )
+
+    visualization_state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('posted', 'Posted'),
+            ('sent', 'Sent'),
+            ('cancel', 'Cancelled'),
+        ],
+        required=True,
+        readonly=True,
+        copy=False,
+        tracking=True,
+        compute='_compute_visualization_state'
+    )
+
     move_type = fields.Selection(
         selection=[
             ('entry', 'Journal Entry'),
@@ -624,6 +639,16 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('is_move_sent', 'state')
+    def _compute_visualization_state(self):
+        # We want to add the state 'Sent' to moves, but it serves only visualization purposes, as a 'sent' move is also a 'posted' move.
+        # For that, a new selection field is added and used in the Views. It is the same as the field state, except when the move is sent.
+        for move in self:
+            if move.is_move_sent and move.state == 'posted':
+                move.visualization_state = 'sent'
+            else:
+                move.visualization_state = move.state
 
     @api.depends('move_type')
     def _compute_invoice_default_sale_person(self):
