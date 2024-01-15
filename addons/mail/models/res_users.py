@@ -262,7 +262,6 @@ class Users(models.Model):
             "CannedResponse": self.env["mail.shortcode"].sudo().search_read([], ["source", "substitution"]),
             "Store": {
                 "companyName": self.env.company.name,
-                "current_user_id": self.id,
                 "discuss": {
                     "inbox": {"counter": self.partner_id._get_needaction_count(), "id": "inbox", "model": "mail.box"},
                     "starred": {"counter": self.env["mail.message"].search_count([("starred_partner_ids", "in", self.partner_id.ids)]), "id": "starred", "model": "mail.box"},
