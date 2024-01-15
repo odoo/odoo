@@ -1456,7 +1456,7 @@ class StockMove(models.Model):
         return self.env['stock.quant']._get_available_quantity(self.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative)
 
     def _get_available_move_lines_in(self):
-        move_lines_in = self.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
+        move_lines_in = self.move_orig_ids.move_dest_ids.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
         keys_in_groupby = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
 
         def _keys_in_sorted(ml):
