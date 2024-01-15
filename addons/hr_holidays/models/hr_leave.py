@@ -1028,7 +1028,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
 
-        self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
+        self.filtered(lambda hol: hol.validation_type != 'both').action_validate(check_state)
         if not self.env.context.get('leave_fast_create'):
             self.activity_update()
         return True
@@ -1118,13 +1118,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         split_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
 
-    def action_validate(self):
+    def action_validate(self, check_state=True):
         current_employee = self.env.user.employee_id
         leaves = self._get_leaves_on_public_holiday()
         if leaves:
             raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
-
-        if any(holiday.state not in ['confirm', 'validate1'] and holiday.validation_type != 'no_validation' for holiday in self):
+        if check_state and any(holiday.state not in ['confirm', 'validate1'] and holiday.validation_type != 'no_validation' for holiday in self):
             raise UserError(_('Time off request must be confirmed in order to approve it.'))
 
         self.write({'state': 'validate'})
