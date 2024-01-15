@@ -778,7 +778,9 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.product_variant_ids.filtered(lambda p: p._is_variant_possible(parent_combination))
 
-    def _get_attribute_exclusions(self, parent_combination=None, parent_name=None):
+    def _get_attribute_exclusions(
+        self, parent_combination=None, parent_name=None, combination_ids=None
+    ):
         """Return the list of attribute exclusions of a product.
 
         :param parent_combination: the combination from which
@@ -787,6 +789,8 @@ class ProductTemplate(models.Model):
         :type parent_combination: recordset `product.template.attribute.value`
         :param parent_name: the name of the parent product combination.
         :type parent_name: str
+        :param list combination: The combination of the product, as a
+            list of `product.template.attribute.value` ids.
 
         :return: dict of exclusions
             - exclusions: from this product itself
@@ -805,12 +809,14 @@ class ProductTemplate(models.Model):
         archived_products = self.with_context(active_test=False).product_variant_ids.filtered(lambda l: not l.active)
         active_combinations = set(tuple(product.product_template_attribute_value_ids.ids) for product in self.product_variant_ids)
         return {
-            'exclusions': self._complete_inverse_exclusions(self._get_own_attribute_exclusions()),
+            'exclusions': self._complete_inverse_exclusions(
+                self._get_own_attribute_exclusions(combination_ids=combination_ids)
+            ),
             'archived_combinations': list(set(
                 tuple(product.product_template_attribute_value_ids.ids)
                 for product in archived_products
                 if product.product_template_attribute_value_ids and all(
-                    ptav.ptav_active
+                    ptav.ptav_active or combination_ids and ptav.id in combination_ids
                     for ptav in product.product_template_attribute_value_ids
                 )
             ) - active_combinations),
@@ -836,9 +842,11 @@ class ProductTemplate(models.Model):
 
         return result
 
-    def _get_own_attribute_exclusions(self):
+    def _get_own_attribute_exclusions(self, combination_ids=None):
         """Get exclusions coming from the current template.
 
+        :param list combination: The combination of the product, as a
+            list of `product.template.attribute.value` ids.
         Dictionnary, each product template attribute value is a key, and for each of them
         the value is an array with the other ptav that they exclude (empty if no exclusion).
         """
@@ -851,7 +859,9 @@ class ProductTemplate(models.Model):
                     lambda filter_line: filter_line.product_tmpl_id == self
                 ) for value in filter_line.value_ids if value.ptav_active
             ]
-            for ptav in product_template_attribute_values if ptav.ptav_active
+            for ptav in product_template_attribute_values if (
+                ptav.ptav_active or combination_ids and ptav.id in combination_ids
+            )
         }
 
     def _get_parent_attribute_exclusions(self, parent_combination):
