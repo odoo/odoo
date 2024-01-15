@@ -551,13 +551,10 @@ class AccountTax(models.Model):
     @api.depends_context('append_type_to_tax_name')
     def _compute_display_name(self):
         type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
-        tax_scope = dict(self._fields['tax_scope']._description_selection(self.env))
         for record in self:
             if name := record.name:
                 if self._context.get('append_type_to_tax_name'):
                     name += ' (%s)' % type_tax_use.get(record.type_tax_use)
-                if record.tax_scope:
-                    name += ' (%s)' % tax_scope.get(record.tax_scope)
                 if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
                     name += ' (%s)' % record.company_id.display_name
                 if record.country_id != record.company_id.account_fiscal_country_id:

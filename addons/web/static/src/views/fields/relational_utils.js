@@ -300,6 +300,13 @@ export class Many2XAutocomplete extends Component {
         this.props.update([record], params);
     }
 
+    abortableSearch(name) {
+        const originalPromise = this.search(name);
+        return {
+            promise: originalPromise,
+            abort: originalPromise.abort ? originalPromise.abort.bind(originalPromise) : () => {},
+        };
+    }
     search(name) {
         return this.orm.call(this.props.resModel, "name_search", [], {
             name: name,
@@ -320,8 +327,8 @@ export class Many2XAutocomplete extends Component {
         if (this.lastProm) {
             this.lastProm.abort(false);
         }
-        this.lastProm = this.search(request);
-        const records = await this.lastProm;
+        this.lastProm = this.abortableSearch(request);
+        const records = await this.lastProm.promise;
 
         const options = records.map((result) => this.mapRecordToOption(result));
 
@@ -348,7 +355,7 @@ export class Many2XAutocomplete extends Component {
 
         if (!this.props.noSearchMore && records.length > 0) {
             options.push({
-                label: _t("Search More..."),
+                label: this.SearchMoreButtonLabel,
                 action: this.onSearchMore.bind(this, request),
                 classList: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
             });
@@ -384,6 +391,10 @@ export class Many2XAutocomplete extends Component {
         }
 
         return options;
+    }
+
+    get SearchMoreButtonLabel() {
+        return _t("Search More...");
     }
 
     async onBarcodeSearch() {
