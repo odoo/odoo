@@ -1225,7 +1225,7 @@ var BasicModel = AbstractModel.extend({
 
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record, { viewType: options.viewType }).then(
+                                self._fetchRecord(record, { viewType: options.viewType }).finally(
                                     function () {
                                         resolve(changedFields);
                                     },
@@ -2592,6 +2592,7 @@ var BasicModel = AbstractModel.extend({
             })
             .then(function (result) {
                 if (result.length === 0) {
+                    record.__isDeleted = true;
                     return Promise.reject();
                 }
                 result = result[0];
