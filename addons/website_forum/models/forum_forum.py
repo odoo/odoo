@@ -198,11 +198,13 @@ class Forum(models.Model):
 
     @api.depends('post_ids')
     def _compute_last_post_id(self):
+        last_forums_posts = self.env['forum.post']._read_group(
+            [('forum_id', 'in', self.ids), ('parent_id', '=', False), ('state', '=', 'active')],
+            groupby=['forum_id'], aggregates=['id:max'],
+        )
+        forum_to_last_post_id = {forum.id: last_post_id for forum, last_post_id in last_forums_posts}
         for forum in self:
-            forum.last_post_id = forum.post_ids.search(
-                [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')],
-                order='create_date desc', limit=1,
-            )
+            forum.last_post_id = forum_to_last_post_id.get(forum.id, False)
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
