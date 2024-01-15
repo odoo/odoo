@@ -82,6 +82,13 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     _updateAmount(newAmount, newMinorAmount) {
         this.paymentContext.amount = parseFloat(newAmount);
         this.paymentContext.minorAmount = parseInt(newMinorAmount);
+        this._getExpressCheckoutForms().forEach(form => {
+            if (newAmount == 0) {
+                form.classList.add('d-none')}
+            else {
+                form.classList.remove('d-none')
+            }
+        })
     },
 
 });
