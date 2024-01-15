@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -35,12 +34,16 @@ class LeaveReportCalendar(models.Model):
     is_striked = fields.Boolean('Striked', readonly=True)
 
     is_absent = fields.Boolean(related='employee_id.is_absent')
+    leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
+    leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True)
+    is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report_calendar')
         self._cr.execute("""CREATE OR REPLACE VIEW hr_leave_report_calendar AS
         (SELECT 
             hl.id AS id,
+            hl.id AS leave_id,
             CONCAT(em.name, ': ', hl.duration_display) AS name,
             hl.date_from AS start_datetime,
             hl.date_to AS stop_datetime,
@@ -71,7 +74,7 @@ class LeaveReportCalendar(models.Model):
             LEFT JOIN resource_calendar cc
                 ON cc.id = co.resource_calendar_id
         WHERE 
-            hl.state IN ('confirm', 'validate', 'validate1')
+            hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
         );
         """)
 
@@ -87,3 +90,17 @@ class LeaveReportCalendar(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+
+    @api.depends('leave_manager_id')
+    def _compute_is_manager(self):
+        for leave in self:
+            leave.is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or leave.leave_manager_id == self.env.user
+
+    def action_approve(self):
+        self.leave_id.action_approve(check_state=False)
+
+    def action_validate(self):
+        self.leave_id.action_validate()
+
+    def action_refuse(self):
+        self.leave_id.action_refuse()

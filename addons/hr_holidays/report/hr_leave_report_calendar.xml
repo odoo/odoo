@@ -17,6 +17,8 @@
                 <field name="name"/>
                 <field name="employee_id" filters="1" invisible="1"/>
                 <field name="is_hatched" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="leave_manager_id" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -26,13 +28,23 @@
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
             <form string="Time Off">
-                <group>
-                    <field name="name"/>
-                    <field name="start_datetime"/>
-                    <field name="stop_datetime"/>
-                    <field name="employee_id" />
-                    <field name="description"/>
-                </group>
+                <sheet class="py-0 pe-0 overflow-hidden">
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
+                    <widget name="web_ribbon" title="Refused" bg_color="bg-danger" invisible="state != 'refuse'"/>
+                    <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="start_datetime"/>
+                        <field name="stop_datetime"/>
+                        <field name="employee_id" />
+                        <field name="description"/>
+                    </group>
+                    <footer class="d-flex justify-content-end gap-1">
+                        <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
+                        <button name="action_validate" string="Validate" type="object" close="1" invisible="state != 'validate1' or not is_manager"/>
+                        <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
+                    </footer>
+                </sheet>
             </form>
         </field>
     </record>
@@ -54,6 +66,7 @@
                 <filter string="Off Today" name="off_today" domain="[('is_absent', '=', True)]" help="Employees Off Today"/>
                 <separator/>
                 <filter string="Approved" name="validate" domain="[('state', '=', 'validate')]" help="validate"/>
+                <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
                 <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
                 <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
