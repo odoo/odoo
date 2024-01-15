@@ -1087,6 +1087,19 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(line1_values['availability_state'], 'available', 'The first component should be available.')
         self.assertEqual(line2_values['availability_state'], 'unavailable', 'The second component should be marked as unavailable')
 
+    def test_report_data_bom_with_0_qty(self):
+        """
+        Test that a bom with a child-bom set with a zero qty will still have have 0 qty for the child-bom on the report.
+        """
+        self.bom_4.bom_line_ids = [(0, 0, {
+            'product_id': self.bom_2.product_id.id,
+            'product_qty': 1.0,
+        })]
+        self.bom_4.bom_line_ids.product_qty = 0
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=self.bom_4.id, searchQty=1, searchVariant=False)
+
+        self.assertEqual(sum([value['quantity'] for value in report_values['lines']['components'][:2]]), 0, 'The quantity should be set to 0 for all components of the bom.')
+
     def test_validate_no_bom_line_with_same_product(self):
         """
         Cannot set a BOM line on a BOM with the same product as the BOM itself
