@@ -236,7 +236,9 @@ class AccountMoveLine(models.Model):
 
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
     cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
-        "account.move.line", copy=False,
+        comodel_name="account.move.line",
+        copy=False,
+        index="btree_not_null",
     )
 
     def _compute_account_id(self):
