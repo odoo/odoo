@@ -78,6 +78,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 }
                 // The jquery instance inside the iframe needs to be aware of the wysiwyg.
                 this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
+                // grep: RESTART_WIDGETS_EDIT_MODE
                 await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
                     editableMode: true,
                     onSuccess: resolve,
@@ -138,6 +139,9 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @override
      */
     onWillStart() {
+        // Destroy the widgets before instantiating the wysiwyg.
+        // grep: RESTART_WIDGETS_EDIT_MODE
+        this._websiteRootEvent("widgets_stop_request");
         this.props.removeWelcomeMessage();
         return super.onWillStart();
     }
