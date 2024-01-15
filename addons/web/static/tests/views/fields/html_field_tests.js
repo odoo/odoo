@@ -188,7 +188,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
                 <form string="Partner">
                     <sheet>
                         <group>
-                            <field name="txt" widget="html"/>
+                            <field name="txt"/>
                         </group>
                     </sheet>
                 </form>`,

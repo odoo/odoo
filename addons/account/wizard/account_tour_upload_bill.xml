@@ -14,7 +14,7 @@
                                 <field name="selection" widget="radio" nolabel="1" colspan="2"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('selection', '!=', 'sample')]}">
-                                <field name="preview_invoice" widget="html" nolabel="1" colspan="2"/>
+                                <field name="preview_invoice" nolabel="1" colspan="2"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('selection', '!=', 'upload')]}">
                                 <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>

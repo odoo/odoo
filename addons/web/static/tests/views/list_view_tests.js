@@ -11874,7 +11874,7 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: `
                     <form>
-                        <field name="text" widget="html"/>
+                        <field name="text"/>
                         <field name="o2m">
                             <tree editable="bottom">
                                 <field name="display_name"/>

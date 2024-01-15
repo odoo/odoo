@@ -37,7 +37,7 @@
                         <field name="reply_to" attrs="{'invisible':[('reply_to','=', False)]}"/>
                         <field name="scheduled_date" attrs="{'invisible':[('scheduled_date','=', False)]}"/>
                     </group>
-                    <field name="body_html" widget="html" nolabel="1" options='{"safe": True}'/>
+                    <field name="body_html" nolabel="1" options='{"safe": True}'/>
                     <field name="attachment_ids" widget="many2many_binary"/>
                     <footer>
                         <button string="Close" class="btn-secondary" special="cancel" data-hotkey="z"/>

@@ -87,7 +87,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         <a href="http://test.external.link/link">x</a>
         <a href="http://test.cdn/web/content/local_link">x</a>
         <span style="background-image: url(&#39;http://test.cdn/web/image/2&#39;)">xxx</span>
-        <div widget="html"><span class="toto">
+        <div><span class="toto">
                 span<span class="fa"></span><img src="http://test.cdn/web/image/1" loading="lazy">
             </span></div>
         <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/avatar_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
