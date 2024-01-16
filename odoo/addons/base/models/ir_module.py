@@ -773,11 +773,14 @@ class Module(models.Model):
                 mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
-            mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
-            mod._update_exclusions(terp.get('excludes', []))
-            mod._update_category(terp.get('category', 'Uncategorized'))
+            mod._update_from_terp(terp)
 
         return res
+
+    def _update_from_terp(self, terp):
+        self._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
+        self._update_exclusions(terp.get('excludes', []))
+        self._update_category(terp.get('category', 'Uncategorized'))
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
         self.env['ir.module.module.dependency'].flush_model()
