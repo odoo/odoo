@@ -141,3 +141,14 @@ class TestSeller(TransactionCase):
 
         # Assert: The set value is kept
         self.assertEqual(supplier_info.min_qty, precise_value)
+
+    def test_50_seller_ids(self):
+        vendors = self.env['product.supplierinfo'].create([{
+            'partner_id': self.asustec.id,
+            'product_tmpl_id': self.product_consu.product_tmpl_id.id,
+        }, {
+            'partner_id': self.camptocamp.id,
+            'product_id': self.product_consu.id,
+        }])
+        self.assertEqual(vendors, self.product_consu.seller_ids,
+            "Sellers of a product should be listed in the product's seller_ids")
