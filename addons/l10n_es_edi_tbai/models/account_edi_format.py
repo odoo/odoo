@@ -24,7 +24,7 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     cleanup_xml_signature, fill_signature, int_as_bytes)
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import get_lang
-from odoo.tools.float_utils import float_repr
+from odoo.tools.float_utils import float_repr, float_round
 from odoo.tools.xml_utils import cleanup_xml_node, validate_xml_from_attachment
 
 
@@ -228,6 +228,10 @@ class AccountEdiFormat(models.Model):
         return xml_str
 
     def _get_l10n_es_tbai_invoice_xml(self, invoice, cancel=False):
+        def format_float(value, precision_digits=2):
+            rounded_value = float_round(value, precision_digits=precision_digits)
+            return float_repr(rounded_value, precision_digits=precision_digits)
+
         # If previously generated XML was posted and not rejected (success or timeout), reuse it
         doc = invoice._get_l10n_es_tbai_submitted_xml(cancel)
         if doc is not None:
@@ -244,7 +248,7 @@ class AccountEdiFormat(models.Model):
             'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
             'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
             'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
-            'format_float': lambda f: float_repr(f, precision_digits=2),
+            'format_float': format_float,
         }
         template_name = 'l10n_es_edi_tbai.template_invoice_main' + ('_cancel' if cancel else '_post')
         xml_str = self.env['ir.qweb']._render(template_name, values)
