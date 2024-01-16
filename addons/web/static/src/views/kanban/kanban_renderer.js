@@ -491,10 +491,6 @@ export class KanbanRenderer extends Component {
             } finally {
                 this.toggleProcessing(dataRecordId, false);
             }
-            if (dataGroupId !== targetGroupId) {
-                const group = this.props.list.groups.find((g) => g.id === dataGroupId);
-                this.props.progressBarState?.updateAggreagteGroup(group);
-            }
         }
     }
 
