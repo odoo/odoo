@@ -690,7 +690,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'name': 'Additional Warehouse',
             'code': 'ADD'
         })
-        company_subcontracting_locations_rules_count = self.env['stock.rule'].search_count(['&', ('company_id', '=', warehouse.company_id.id), '|', ('location_src_id.is_subcontracting_location', '=', 'True'), ('location_dest_id.is_subcontracting_location', '=', 'True')])
+        company_subcontracting_locations_rules_count = self.env['stock.rule'].search_count(['&', ('company_id', '=', warehouse.company_id.id), '|', ('location_src_id.is_subcontracting_location', '=', True), ('location_dest_id.is_subcontracting_location', '=', True)])
         self.assertEqual(len(warehouse_related_rules) * 4 + len(company_rules) * 2, company_subcontracting_locations_rules_count)
         # Custom location no longer a subcontracting one
         custom_subcontracting_location.is_subcontracting_location = False

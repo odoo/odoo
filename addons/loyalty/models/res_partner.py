@@ -17,7 +17,7 @@ class ResPartner(models.Model):
                 '|', ('company_id', '=', False), ('company_id', 'in', self.env.companies.ids),
                 ('partner_id', 'in', self.with_context(active_test=False)._search([('id', 'child_of', self.ids)])),
                 ('points', '>', '0'),
-                ('program_id.active', '=', 'True'),
+                ('program_id.active', '=', True),
                 '|',
                     ('expiration_date', '>=', fields.Date().context_today(self)),
                     ('expiration_date', '=', False),

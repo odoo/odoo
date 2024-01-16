@@ -426,7 +426,7 @@ class Channel(models.Model):
                 }))
         if invite_to_rtc_call:
             for channel in self:
-                current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', 'True')])
+                current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
                 # sudo: discuss.channel.rtc.session - reading rtc sessions of current user
                 if current_channel_member and current_channel_member.sudo().rtc_session_ids:
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
