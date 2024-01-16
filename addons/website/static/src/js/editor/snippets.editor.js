@@ -799,25 +799,6 @@ wSnippetMenu.include({
         this._super(...arguments);
         this._notActivableElementsSelector += ', .o_mega_menu_toggle';
     },
-    /**
-     * @override
-     */
-    start() {
-        const _super = this._super(...arguments);
-        if (this.options.enableTranslation) {
-            return _super;
-        }
-        return _super;
-    },
-    /**
-    * @override
-    */
-    destroy() {
-        if (this.$body[0].ownerDocument !== this.ownerDocument) {
-            this.$body.off('.snippets_menu');
-        }
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Public
