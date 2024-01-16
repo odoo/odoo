@@ -154,6 +154,21 @@ class TestMailTemplate(MailCommon):
 
         employee_template.with_context(lang='fr_FR').sudo().subject = '{{ object.foo }}'
 
+    def test_mail_template_parse_partner_to(self):
+        for partner_to, expected in [
+            ('1', [1]),
+            ('1,2,3', [1, 2, 3]),
+            ('1, 2,  3', [1, 2, 3]),  # remove spaces
+            ('[1, 2, 3]', [1, 2, 3]),  # %r of a list
+            ('(1, 2, 3)', [1, 2, 3]),  # %r of a tuple
+            ('1,[],2,"3"', [1, 2, 3]),  # type tolerant
+            ('(1, "wrong", 2, "partner_name", "3")', [1, 2, 3]),  # fault tolerant
+            ('res.partner(1, 2, 3)', [2]),  # invalid input but avoid crash
+        ]:
+            with self.subTest(partner_to=partner_to):
+                parsed = self.mail_template._parse_partner_to(partner_to)
+                self.assertListEqual(parsed, expected)
+
     def test_server_archived_usage_protection(self):
         """ Test the protection against using archived server (servers used cannot be archived) """
         IrMailServer = self.env['ir.mail_server']
