@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.urls import iri_to_uri
+
 from odoo import api, fields, models
 from odoo.http import request
 
@@ -34,5 +36,9 @@ class PaymentProvider(models.Model):
     def get_base_url(self):
         # Give priority to url_root to handle multi-website cases
         if request and request.httprequest.url_root:
-            return request.httprequest.url_root
+            # Some domain names can use non-Latin script or alphabet or the Latin
+            # alphabet-based characters with diacritics or ligatures. They are
+            # stored as ASCII strings using Punycode transcription in the DNS
+            # system and need to be converted to send to external APIs.
+            return iri_to_uri(request.httprequest.url_root)
         return super().get_base_url()
