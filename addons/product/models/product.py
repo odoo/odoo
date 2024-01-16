@@ -880,3 +880,25 @@ class SupplierInfo(models.Model):
         for supplier in self:
             if supplier.product_id and supplier.product_tmpl_id and supplier.product_id.product_tmpl_id != supplier.product_tmpl_id:
                 raise ValidationError(_('The product variant must be a variant of the product template.'))
+
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id(self):
+        """Clear product variant if it no longer matches the product template."""
+        if self.product_id and self.product_id not in self.product_tmpl_id.product_variant_ids:
+            self.product_id = False
+
+    def _sanitize_vals(self, vals):
+        """Sanitize vals to sync product variant & template on read/write."""
+        if 'product_id' in vals and 'product_tmpl_id' not in vals:
+            product = self.env['product.product'].browse(vals['product_id'])
+            vals['product_tmpl_id'] = product.product_tmpl_id.id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._sanitize_vals(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._sanitize_vals(vals)
+        return super().write(vals)
