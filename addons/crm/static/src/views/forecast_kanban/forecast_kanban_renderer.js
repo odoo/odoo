@@ -48,6 +48,5 @@ export class ForecastKanbanRenderer extends CrmKanbanRenderer {
             })
             .expand();
         await this.props.list.load();
-        await this.props.progressBarState?._updateProgressBar();
     }
 }
