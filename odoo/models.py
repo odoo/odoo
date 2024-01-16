@@ -5326,9 +5326,6 @@ class BaseModel(metaclass=MetaModel):
             # figure out the applicable order_by for the m2o
             comodel = self.env[field.comodel_name]
             coorder = comodel._order
-            if not regex_order.match(coorder):
-                # _order is complex, can't use it here, so we default to _rec_name
-                coorder = comodel._rec_name
 
             if coorder == 'id':
                 sql_field = self._field_to_sql(alias, field_name, query)
