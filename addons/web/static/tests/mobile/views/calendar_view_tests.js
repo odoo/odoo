@@ -345,7 +345,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.verifySteps(["select"]);
     });
 
-    QUnit.test("calendar (month/year): tap on date switch to day scale", async function (assert) {
+    QUnit.test("calendar (year): tap on date switch to day scale", async function (assert) {
         await makeView({
             type: "calendar",
             resModel: "event",
@@ -379,9 +379,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         await nextTick(); // await reload & render
         await nextTick(); // await breadcrumb update
 
-        assert.containsNone(target, ".fc-dayGridMonth-view");
-        assert.containsOnce(target, ".fc-timeGridDay-view");
-        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-10");
+        // should open a Quick create modal view in mobile on short tap on date in monthly view
+        assert.containsOnce(target, ".modal");
     });
 
     QUnit.test("calendar should show date information", async function (assert) {
