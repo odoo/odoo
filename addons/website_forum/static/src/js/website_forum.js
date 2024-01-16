@@ -346,7 +346,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             } else if (data.success) {
                 const child = elem.firstElementChild;
                 if (data.success === 'post_flagged_moderator') {
-                    const countFlaggedPosts = this.el.querySelector('#count_flagged_posts');
+                    const countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged');
                     elem.innerText = _t(' Flagged');
                     elem.prepend(child);
                     if (countFlaggedPosts) {
