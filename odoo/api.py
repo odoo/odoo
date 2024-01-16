@@ -905,6 +905,10 @@ class Cache(object):
         # in `_data`
         self._dirty = defaultdict(OrderedSet)
 
+        # {field: {record_id: ids}} record ids to be added to the values of
+        # x2many fields if they are not in cache yet
+        self._patches = defaultdict(lambda: defaultdict(list))
+
     def __repr__(self):
         # for debugging: show the cache content and dirty flags as stars
         data = {}
@@ -1094,6 +1098,34 @@ class Cache(object):
             for id_, val in zip(records._ids, values):
                 field_cache.setdefault(id_, val)
 
+    def patch(self, records, field, new_id):
+        """ Apply a patch to an x2many field on new records. The patch consists
+        in adding new_id to its value in cache. If the value is not in cache
+        yet, it will be applied once the value is put in cache with method
+        :meth:`patch_and_set`.
+        """
+        assert not new_id, "Cache.patch can only be called with a new id"
+        field_cache = self._set_field_cache(records, field)
+        for id_ in records._ids:
+            assert not id_, "Cache.patch can only be called with new records"
+            if id_ in field_cache:
+                field_cache[id_] = tuple(dict.fromkeys(field_cache[id_] + (new_id,)))
+            else:
+                self._patches[field][id_].append(new_id)
+
+    def patch_and_set(self, record, field, value):
+        """ Set the value of ``field`` for ``record``, like :meth:`set`, but
+        apply pending patches to ``value`` and return the value actually put
+        in cache.
+        """
+        field_patches = self._patches.get(field)
+        if field_patches:
+            ids = field_patches.pop(record.id, ())
+            if ids:
+                value = tuple(dict.fromkeys(value + tuple(ids)))
+        self.set(record, field, value)
+        return value
+
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
         assert record.id not in self._dirty.get(field, ())
@@ -1252,6 +1284,7 @@ class Cache(object):
         """ Invalidate the cache and its dirty flags. """
         self._data.clear()
         self._dirty.clear()
+        self._patches.clear()
 
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """

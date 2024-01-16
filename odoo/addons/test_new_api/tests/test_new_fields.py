@@ -2195,6 +2195,35 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(new_move.line_ids._origin, line)
         self.assertEqual(new_move.line_ids.move_id, new_move)
 
+    def test_41_new_many2many(self):
+        group = self.env['test_new_api.group'].create({})
+        user0 = self.env['test_new_api.user'].create({'group_ids': [Command.link(group.id)]})
+        new_user0 = user0.new(origin=user0)
+        new_group = group.new(origin=group)
+
+        self.env.invalidate_all()
+
+        # creating new_user1 shoud not fetch new_group.user_ids, which is the
+        # inverse of field new_user1.group_ids
+        with self.assertQueryCount(0):
+            new_user1 = self.env['test_new_api.user'].new({'group_ids': [Command.link(group.id)]})
+            self.assertEqual(new_user1.group_ids, new_group)
+
+        # accessing new_group.user_ids should fetch group.user_ids and patch
+        # new_group.user_ids
+        with self.assertQueryCount(1):
+            self.assertEqual(new_group.user_ids, new_user0 + new_user1)
+
+        # creating new_user2 should patch new_group.user_ids immediately, since
+        # it is in cache
+        with self.assertQueryCount(0):
+            new_user2 = self.env['test_new_api.user'].new({'group_ids': [Command.link(group.id)]})
+            self.assertEqual(new_user2.group_ids, new_group)
+            self.assertEqual(new_group.user_ids, new_user0 + new_user1 + new_user2)
+
+        # the patches on new_group.user_ids should not have changed group.user_ids
+        self.assertEqual(group.user_ids, user0)
+
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
