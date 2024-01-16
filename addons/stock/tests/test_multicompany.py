@@ -418,6 +418,7 @@ class TestMultiCompany(TransactionCase):
         intercom_location = self.env.ref('stock.stock_location_inter_wh')
         intercom_location.write({'active': True})
 
+        self.user_a.company_ids = [(6, 0, [self.company_a.id])]
         product_lot = self.env['product.product'].create({
             'type': 'product',
             'tracking': 'lot',
@@ -453,7 +454,7 @@ class TestMultiCompany(TransactionCase):
             })],
         })
 
-        move_from_supplier = self.env['stock.move'].create({
+        move_from_supplier = self.env['stock.move'].with_user(self.user_a).create({
             'company_id': self.company_a.id,
             'name': 'test_from_supplier',
             'location_id': supplier_location.id,
@@ -482,13 +483,13 @@ class TestMultiCompany(TransactionCase):
             'picking_type_id': picking_type_to_transit.id,
             'route_ids': [(4, route.id)],
         })
-        move_to_transit._action_confirm()
-        move_to_transit._action_assign()
+        move_to_transit.with_user(self.user_a)._action_confirm()
+        move_to_transit.with_user(self.user_a)._action_assign()
         move_line_2 = move_to_transit.move_line_ids[0]
         self.assertTrue(move_line_2.lot_id, move_line_1.lot_id)
         move_line_2.quantity = 1.0
         move_to_transit.picked = True
-        move_to_transit._action_done()
+        move_to_transit.with_user(self.user_a)._action_done()
 
         move_push = self.env['stock.move'].search([('location_id', '=', intercom_location.id),
                                                    ('product_id', '=', product_lot.id)])
