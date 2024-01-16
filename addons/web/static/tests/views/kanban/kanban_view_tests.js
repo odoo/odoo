@@ -6942,8 +6942,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "onchange",
                 "name_create",
                 "read",
@@ -9337,8 +9337,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
         ]);
@@ -9403,8 +9403,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["1", "1"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -9456,8 +9456,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["-4", "15"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -9531,8 +9531,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "name_create",
@@ -9577,8 +9577,8 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "onchange",
@@ -9618,8 +9618,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(0), ["1", "2", "3"], "intended records are loaded");
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -9663,8 +9663,8 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(), ["5", "6", "7"]);
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "web_search_read",
@@ -9720,15 +9720,14 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "action_archive",
-            "web_read_group",
-            "web_search_read",
             "read_progress_bar",
             "web_read_group",
+            "web_search_read",
         ]);
     });
 
@@ -9775,15 +9774,14 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(), ["1", "2", "3"]);
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "action_archive",
-                "web_read_group",
-                "web_search_read",
                 "read_progress_bar",
                 "web_read_group",
+                "web_search_read",
             ]);
         }
     );
@@ -9815,13 +9813,13 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             // initial load
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             // reload
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
         ]);
@@ -9858,8 +9856,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             // initial load
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -9921,8 +9919,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["0", "1", "3"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -9993,8 +9991,8 @@ QUnit.module("Views", (hooks) => {
 
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "write",
@@ -10033,8 +10031,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["1", "1"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -10075,8 +10073,8 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCounters(), ["2", "2"]);
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "write",
@@ -10127,8 +10125,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["1", "6"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
         ]);
@@ -10143,7 +10141,7 @@ QUnit.module("Views", (hooks) => {
         await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
         assert.deepEqual(getTooltips(), ["3 yop"]);
         assert.deepEqual(getCounters(), ["3"]);
-        assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
+        assert.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
     });
 
     QUnit.test("progress bar recompute after filter selection (aggregates)", async (assert) => {
@@ -10188,8 +10186,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["-4", "636"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
         ]);
@@ -10207,7 +10205,7 @@ QUnit.module("Views", (hooks) => {
         await reload(kanban, { domain: [["qux", "=", 100]], groupBy: ["bar"] });
         assert.deepEqual(getTooltips(), ["3 yop"]);
         assert.deepEqual(getCounters(), ["600"]);
-        assert.verifySteps(["web_read_group", "read_progress_bar", "web_search_read"]);
+        assert.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
     });
 
     QUnit.test(
@@ -10408,8 +10406,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "get_views",
@@ -10481,8 +10479,8 @@ QUnit.module("Views", (hooks) => {
             );
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "web_search_read",
@@ -11539,16 +11537,16 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
-                "web_search_read",
-                "web_search_read",
-                "web_search_read",
                 "web_read_group",
-                "read_progress_bar",
                 "web_search_read",
-                "web_read_group",
+                "web_search_read",
+                "web_search_read",
                 "read_progress_bar",
+                "web_read_group",
+                "web_search_read",
+                "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
             ]);
@@ -11635,18 +11633,18 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
-                "web_search_read",
-                "web_search_read",
-                "web_search_read",
                 "web_read_group",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "read_progress_bar",
-                "web_search_read",
-                "web_search_read",
-                "web_search_read",
                 "web_read_group",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
             ]);
@@ -11727,8 +11725,8 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(1), ["1yop", "4blip"]);
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "web_search_read",
@@ -11778,8 +11776,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
         ]);
@@ -12585,8 +12583,8 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
             assert.verifySteps([
                 "get_views",
-                "web_read_group",
                 "read_progress_bar",
+                "web_read_group",
                 "web_search_read",
                 "web_search_read",
                 "web_search_read",
@@ -12669,8 +12667,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "web_search_read",
@@ -13365,8 +13363,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCounters(), ["-4"]);
         assert.verifySteps([
             "get_views",
-            "web_read_group",
             "read_progress_bar",
+            "web_read_group",
             "web_search_read",
             "web_search_read",
             "write",
@@ -14025,7 +14023,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_read_group", "read_progress_bar", "web_search_read"]);
+        assert.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
         const content = target.querySelector(".o_content");
         content.scrollTo = (params) => {
             assert.step("scrolled");
@@ -14396,4 +14394,50 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_group", 3);
         }
     );
+
+    QUnit.test("Correct values for progress bar with toggling filter and slow RPC", async (assert) => {
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <field name="foo"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            searchViewArch: `
+                <search>
+                    <filter name="some_filter" string="Some Filter" domain="[['state', '!=', 'ghi']]"/>
+                </search>`,
+            async mockRPC(route, args) {
+                if (args.method === "read_progress_bar") {
+                    await def;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_kanban_record", 4);
+        assert.strictEqual(getProgressBars(0)[0].style.width, "50%"); // abc: 1
+        assert.strictEqual(getProgressBars(0)[1].style.width, "50%"); // ghi: 1
+
+        // toggle a filter, and slow down the read_progress_bar rpc
+        def = makeDeferred();
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Some Filter");
+        assert.strictEqual(getProgressBars(0)[0].style.width, "50%"); // abc: 1
+        assert.strictEqual(getProgressBars(0)[1].style.width, "50%"); // ghi: 1
+
+        def.resolve();
+        await nextTick();
+        // After the call to read_progress_bar has resolved, the values should be updated correctly
+        assert.containsN(target, ".o_kanban_record", 2);
+        assert.strictEqual(getProgressBars(0)[0].style.width, "100%"); // abc: 1
+    });
 });
