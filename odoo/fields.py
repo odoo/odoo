@@ -1180,7 +1180,7 @@ class Field(MetaField('DummyField', (object,), {})):
         elif self.store and record._origin and not (self.compute and self.readonly):
             # new record with origin: fetch from origin
             value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-            env.cache.set(record, self, value)
+            value = env.cache.patch_and_set(record, self, value)
 
         elif self.compute: #pylint: disable=using-constant-test
             # non-stored field or new record without origin: compute
@@ -1226,7 +1226,7 @@ class Field(MetaField('DummyField', (object,), {})):
         else:
             # non-stored field or stored field on new record: default value
             value = self.convert_to_cache(False, record, validate=False)
-            env.cache.set(record, self, value)
+            value = env.cache.patch_and_set(record, self, value)
             defaults = record.default_get([self.name])
             if self.name in defaults:
                 # The null value above is necessary to convert x2many field
@@ -4141,10 +4141,7 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        cache = records.env.cache
-        for record in records.with_context(active_test=False):
-            val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-            cache.set(record, self, val)
+        records.env.cache.patch(records, self, value.id)
         records.modified([self.name])
 
     def convert_to_cache(self, value, record, validate=True):
