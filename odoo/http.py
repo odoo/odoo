@@ -717,7 +717,7 @@ def serialize_exception(e):
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
         "message": ustr(e),
-        "arguments": e.args,
+        "arguments": [str(arg) for arg in e.args],
         "context": getattr(e, 'context', {}),
     }
 
