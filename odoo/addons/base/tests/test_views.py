@@ -12,6 +12,7 @@ from psycopg2 import IntegrityError
 
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
     transfer_field_to_modifiers, transfer_node_to_modifiers, simplify_modifiers,
@@ -28,7 +29,7 @@ class ViewXMLID(common.TransactionCase):
         self.assertTrue(view.model_data_id)
         self.assertEqual(view.model_data_id.complete_name, 'base.view_company_form')
 
-class ViewCase(common.TransactionCase):
+class ViewCase(TransactionCaseWithUserDemo):
     def setUp(self):
         super(ViewCase, self).setUp()
         self.View = self.env['ir.ui.view']
@@ -2635,6 +2636,8 @@ class TestViews(ViewCase):
                     </form>"""
 
     def test_address_view(self):
+        self.env.company.country_id = self.env.ref('base.us')
+
         # pe_partner_address_form
         address_arch = """<form><div class="o_address_format"><field name="parent_name"/></div></form>"""
         address_view = self.View.create({
@@ -3387,7 +3390,7 @@ class TestValidationTools(common.BaseCase):
             {'x', 'y', 'z'},
         )
 
-class TestAccessRights(common.TransactionCase):
+class TestAccessRights(TransactionCaseWithUserDemo):
 
     @common.users('demo')
     def test_access(self):
@@ -3413,7 +3416,7 @@ class TestAllViews(common.TransactionCase):
                 view._check_xml()
 
 @common.tagged('post_install', '-at_install', '-standard', 'render_all_views')
-class TestRenderAllViews(common.TransactionCase):
+class TestRenderAllViews(TransactionCaseWithUserDemo):
 
     @common.users('demo', 'admin')
     def test_render_all_views(self):

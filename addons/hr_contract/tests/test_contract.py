@@ -101,3 +101,8 @@ class TestHrContracts(TestContractCommon):
         # New contract, with gap
         self.create_contract('open', 'normal', date(2016, 1, 1), date(2016, 1, 31))
         self.assertEqual(self.employee.first_contract_date, date(2017, 1, 1))
+
+    def test_copy_employee_contract_create(self):
+        contract = self.create_contract('open', 'normal', date(2018, 1, 1), date(2018, 1, 2))
+        duplicate_employee = self.employee.copy()
+        self.assertNotEqual(duplicate_employee.contract_id, contract)

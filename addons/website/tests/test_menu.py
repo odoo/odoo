@@ -69,6 +69,13 @@ class TestMenu(common.TransactionCase):
         self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)")
 
     def test_04_specific_menu_translation(self):
+        if self.env['website'].search_count([]) == 1:
+            self.env['website'].create({
+                'name': 'My Website 2',
+                'domain': '',
+                'sequence': 20,
+            })
+
         Translation = self.env['ir.translation']
         Menu = self.env['website.menu']
         existing_menus = Menu.search([])

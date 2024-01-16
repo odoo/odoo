@@ -22,3 +22,9 @@ class StockPicking(models.Model):
                 if record.picking_type_id.code == 'outgoing' and record.move_ids_without_package and record.move_ids_without_package[0].partner_id \
                         and record.move_ids_without_package[0].partner_id.id != record.partner_id.id:
                     data.append((_('Customer Address:'), record.partner_id))
+
+    def check_field_access_rights(self, operation, field_names):
+        field_names = super().check_field_access_rights(operation, field_names)
+        return [field_name for field_name in field_names if field_name not in {
+            'l10n_de_addresses',
+        }]

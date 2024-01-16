@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,12 +38,12 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparazione</b>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Annullato</b>"
+msgstr "<i class=\"fa fa-fw fa-times\"/> <b>Annullati</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Spedito</b>"
+msgstr "<i class=\"fa fa-fw fa-truck\"/> <b>Spediti</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -53,8 +53,8 @@ msgid ""
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono "
-"specifici per azienda.\" role=\"img\" aria-label=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
+"specifici per azienda.\" role=\"img\" aria-label=\"I valori impostati qui "
+"sono specifici per azienda.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -123,7 +123,7 @@ msgstr "Post-vendita"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr "Tutte le operazioni pianificate incluse"
+msgstr "Incluse tutte le operazioni pianificate"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -169,7 +169,7 @@ msgstr "Aziende"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "Data di completamento del primo buono di consegna."
+msgstr "Data di completamento del primo ordine di consegna."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -194,7 +194,7 @@ msgstr "Consegna"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr "Avviso di Consegna"
+msgstr "Avviso di consegna"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -217,7 +217,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr "Widget Viaualizzazione Qta"
+msgstr "Widget visualizza q.tà"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -227,7 +227,7 @@ msgstr "Mostrare termini di resa su ordine di vendita e relative fatture"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr "Mostra i termini di resa su ordini e fatture"
+msgstr "Visualizza termini di resa su ordini e fatture"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -235,7 +235,7 @@ msgstr "Mostra i termini di resa su ordini e fatture"
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
-"Non dimenticare di cambiare il contatto nei seguenti ordini di consegna: %s"
+"Non dimenticarsi di cambiare il partner nei seguenti ordini di consegna: %s"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -309,7 +309,7 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Se i prodotti vengono consegnati tutti in una volta, il buono di consegna "
+"Se i prodotti vengono consegnati tutti in una volta, l'ordine di consegna "
 "viene programmato in base al tempo di risposta prodotto più lungo. In caso "
 "contrario, in base al più breve."
 
@@ -397,7 +397,7 @@ msgid ""
 "with unexpected delays in the supply chain."
 msgstr ""
 "Margine di errore per date promesse ai clienti. Per superare ritardi "
-"imprevisti nella catena di distribuzione, la consegna dei prodotti viene "
+"imprevisti nella catena di fornitura, la consegna dei prodotti viene "
 "programmata con alcuni giorni di anticipo sull'attuale data promessa."
 
 #. module: sale_stock
@@ -410,9 +410,9 @@ msgid ""
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Margine di errore per date promesse ai clienti. Per superare ritardi "
-"imprevisti nella catena di distribuzione, l'approvvigionamento e la consegna"
-" dei prodotti vengono programmate con alcuni giorni di anticipo sull'attuale"
-" data promessa."
+"imprevisti nella catena di fornitura, l'approvvigionamento e la consegna dei"
+" prodotti vengono programmate con alcuni giorni di anticipo sull'attuale "
+"data promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -429,7 +429,7 @@ msgstr "Anticipare le date di consegna attese di"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr "Disponibilità futura insufficiente"
+msgstr "Disponibilità futura non sufficiente"
 
 #. module: sale_stock
 #. openerp-web
@@ -443,13 +443,13 @@ msgstr "Nessuna disponibilità futura"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "On"
-msgstr "Attiva"
+msgstr "Il"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Quantità ordinata ridotta!"
+msgstr "È diminuita la quantità ordinata!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -480,7 +480,7 @@ msgstr "Q.tà disponibile oggi"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Quantità da consegnare"
+msgstr "Q.tà da consegnare"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
@@ -492,7 +492,7 @@ msgstr "Preventivi"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr "Domanda rimanente disponibile su"
+msgstr "Richiesta residua disponibile il"
 
 #. module: sale_stock
 #. openerp-web
@@ -560,7 +560,7 @@ msgstr "Ordini di vendita"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "Giorni di Sicurezza per la Vendita"
+msgstr "Giorni di sicurezza per vendite"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -613,8 +613,8 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
-"Alcuni prodotti sono già stati consegnati. Le restituzioni possono essere "
-"create dagli ordini di consegna."
+"Alcuni prodotti sono già stati consegnati. I resi possono essere creati "
+"dagli ordini di consegna."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -652,7 +652,7 @@ msgstr "Resoconto regola di giacenza"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "The delivery"
-msgstr "La consegna"
+msgstr "La consegna di"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -662,9 +662,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
-"L'indirizzo di consegna è stato cambiato sull'ordine di vendita<br/>\n"
-"Da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
-"Probabilmente dovresti aggiornare il partner su questo documento."
+"L'indirizzo di consegna dell'ordine di vendita è stato cambiato<br/>\n"
+"                        da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
+"                        È probabile che sia necessario aggiornare il partner nel documento."
 
 #. module: sale_stock
 #. openerp-web
@@ -730,23 +730,21 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"Hai ridotto la quantità ordinata! Non dimenticare di aggiornare il buono di "
-"consegna se è necessario. "
+"Dopo la riduzione della quantità ordinata non dimenticarsi, se necessario, "
+"di aggiornare manualmente l'ordine di consegna."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot decrease the ordered quantity below the delivered quantity.\n"
-"Create a return first."
+"You cannot decrease the ordered quantity of a sale order line below its delivered quantity.\n"
+"Create a return in your inventory first."
 msgstr ""
-"Impossibile ridurre la quantità ordinata al di sotto della quantità consegnata.\n"
-"Creare prima un reso."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr "annullato"
+msgstr "annullati"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -774,4 +772,4 @@ msgstr "elaborati al posto di"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "will be late."
-msgstr "sarà in ritardo"
+msgstr "è in ritardo."

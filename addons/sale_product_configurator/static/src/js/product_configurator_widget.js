@@ -102,6 +102,7 @@ ProductConfiguratorWidget.include({
                 context: self._productsToRecords(self.optionalProducts),
                 forceEditable: 'bottom',
                 allowWarning: true,
+                isDirty: true,
                 onSuccess: function () {
                     // Leave edit mode of one2many list.
                     unselectRow();

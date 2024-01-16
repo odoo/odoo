@@ -19,11 +19,18 @@ tour.register("snippet_images_wall", {
     content: "Click on third image",
     trigger: "#wrap .s_image_gallery img[data-index='2']",
 }, {
+    content: "Click on add a link",
+    trigger: ".snippet-option-ReplaceMedia we-button[data-set-link]",
+}, {
+    content: "Change the link of the image",
+    trigger: ".snippet-option-ReplaceMedia [data-set-url] input",
+    run: "text /contactus",
+}, {
     content: "Click on move to previous",
     trigger: ".snippet-option-gallery_img we-button[data-position='prev']",
 }, {
     content: "Click on move to first",
-    extra_trigger: "#wrap .s_image_gallery .o_masonry_col:nth-child(2):has(img[data-index='1'][data-original-src*='sign'])",
+    extra_trigger: "#wrap .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][data-original-src*='sign'])",
     trigger: ".snippet-option-gallery_img we-button[data-position='first']",
 }, {
     content: "Click on move to previous",

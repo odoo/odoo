@@ -78,7 +78,7 @@ var GraphView = AbstractView.extend({
 
         for (const name in this.fields) {
             const field = this.fields[name];
-            if (name !== 'id' && field.store === true) {
+            if (name !== 'id' && (field.type !== "many2many" && field.sortable || field.store) === true) {
                 if (
                     ['integer', 'float', 'monetary'].includes(field.type) ||
                     additionalMeasures.includes(name)

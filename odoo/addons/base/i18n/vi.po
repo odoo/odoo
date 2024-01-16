@@ -11,9 +11,9 @@
 # Vo Thanh Thuy, 2022
 # Hoàng Đình Hiếu, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
-# Thi Huong Nguyen, 2023
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17273,6 +17273,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Lỗi khi phân tích cú pháp chế độ xem:\n"
+"\n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -20600,10 +20603,16 @@ msgid "Invalid 'group by' parameter"
 msgstr "Tham số 'group by' không hợp lệ"
 
 #. module: base
+#: code:addons/template_inheritance.py:0
+#, python-format
+msgid "Invalid Expression while parsing xpath %r"
+msgstr "Biểu thức không hợp lệ khi phân tích cú pháp xpath %r"
+
+#. module: base
 #: code:addons/base/models/ir_default.py:0
 #, python-format
 msgid "Invalid JSON format in Default Value field."
-msgstr ""
+msgstr "Định dạng JSON không hợp lệ trong trường Giá trị mặc định."
 
 #. module: base
 #: code:addons/models.py:0
@@ -21102,7 +21111,7 @@ msgstr "LGPL Version 3"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
 msgid "Lithuania - Accounting Reports"
-msgstr ""
+msgstr "Lithuania - Báo cáo kế toán"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -29633,6 +29642,14 @@ msgstr "Giao hàng của bạn thông qua Fedex và theo dõi chúng trực tuy�
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Giao hàng của bạn thông qua UPS và theo dõi chúng trực tuyến"
 
@@ -32635,6 +32652,11 @@ msgstr "UNSPSC mã sản phẩm"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Vận chuyển UPS"
 

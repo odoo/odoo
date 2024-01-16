@@ -10,6 +10,7 @@ const _DialogLinkWidget = Link.extend({
     template: 'wysiwyg.widgets.link',
     events: _.extend({}, Link.prototype.events || {}, {
         'change [name="link_style_color"]': '_onTypeChange',
+        'input input[name="label"]': '_adaptPreview',
     }),
 
     /**

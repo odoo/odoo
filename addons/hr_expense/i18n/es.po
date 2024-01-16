@@ -218,7 +218,7 @@ msgstr "Administrador"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Alias"
-msgstr "Seudónimo"
+msgstr "Alias"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
@@ -1236,7 +1236,7 @@ msgstr "No se encontraron informes de gastos. ¡Vamos a crear uno!"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__not_paid
 msgid "Not Paid"
-msgstr "No pagadas"
+msgstr "No pagado"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
@@ -2083,13 +2083,19 @@ msgstr "No puedes eliminar un gasto contabilizado o aprobado."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot delete a posted or paid expense."
-msgstr "No puedes eliminar un gasto pagado o contabilizado."
+msgstr "No puede eliminar un gasto contabilizado o pagado."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot refuse your own expenses"
 msgstr "No puedes rechazar tus propios gastos."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr "No puede incluir gastos de diferentes compañías en el mismo informe."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

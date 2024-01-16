@@ -15,6 +15,7 @@ import {
     closestElement,
     getUrlsInfosInString,
     isVoidElement,
+    unwrapContents,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -76,6 +77,13 @@ export function areSimilarElements(node, node2) {
     );
 }
 
+function shouldPreserveCursor(node, root) {
+    const selection = root.ownerDocument.getSelection();
+    return node.isConnected && selection &&
+        selection.anchorNode && root.contains(selection.anchorNode) &&
+        selection.focusNode && root.contains(selection.focusNode);
+}
+
 class Sanitize {
     constructor(root) {
         this.root = root;
@@ -111,8 +119,7 @@ class Sanitize {
                 !isUnbreakable(node)
             ) {
                 getDeepRange(this.root, { select: true });
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 const nodeP = node.previousSibling;
                 moveNodes(...endPos(node.previousSibling), node);
                 if (restoreCursor) {
@@ -145,8 +152,7 @@ class Sanitize {
                 !isBlock(node.parentElement) &&
                 anchor !== node
             ) {
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("oe-zws-empty-inline");
                 if (restoreCursor) {
@@ -161,8 +167,7 @@ class Sanitize {
                 isEmptyBlock(node)
             ) {
                 const parent = node.parentElement;
-                const restoreCursor = node.isConnected &&
-                    preserveCursor(this.root.ownerDocument);
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
                 node.remove();
                 fillEmpty(parent);
                 if (restoreCursor) {
@@ -192,13 +197,31 @@ class Sanitize {
                 node.setAttribute('contenteditable', 'false');
             }
 
-            if (node.firstChild) {
-                this._parse(node.firstChild);
+            // Remove empty class/style attributes.
+            for (const attributeName of ['class', 'style']) {
+                if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attributeName) && !node.getAttribute(attributeName)) {
+                    node.removeAttribute(attributeName);
+                }
+            }
+
+            let firstChild = node.firstChild;
+            // Unwrap the contents of SPAN and FONT elements without attributes.
+            if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                firstChild = unwrapContents(node)[0];
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
+            if (firstChild) {
+                this._parse(firstChild);
             }
 
             // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
-                const linkLabel = node.innerText;
+                const linkLabel = node.innerText.replace(/\u200B/g, '');
                 const urlInfo = getUrlsInfosInString(linkLabel);
                 if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
                     node.setAttribute('href', urlInfo[0].url);

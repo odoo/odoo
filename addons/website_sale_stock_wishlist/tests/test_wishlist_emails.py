@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_sale_stock.tests.test_website_sale_stock_product_warehouse import TestWebsiteSaleStockProductWarehouse
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestWishlistEmail(TestWebsiteSaleStockProductWarehouse):
     @classmethod
     def setUpClass(cls):

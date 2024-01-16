@@ -21,6 +21,7 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Tatsuki Kanda, 2023
 # Junko Augias, 2023
 # 
 msgid ""
@@ -3064,6 +3065,13 @@ msgstr "ビューを開く"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr "開発者ツールを開く"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "Open the next record"
@@ -4182,7 +4190,7 @@ msgstr "ロード中です。<br />コーヒーでも飲んでお待ちくださ
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__vat
 msgid "Tax ID"
-msgstr "税ID"
+msgstr "登録番号"
 
 #. module: web
 #. openerp-web
@@ -4221,7 +4229,7 @@ msgstr "テキスト"
 msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
-msgstr "納税者番号。連絡が政府の税金の対象となる場合は、記入してください。一部の法的明細で使用されます。"
+msgstr "登録番号。連絡先が政府の税金の対象となる場合は、記入してください。一部の法的明細で使用されます。"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4959,7 +4967,7 @@ msgstr "Wkhtmltopdfのインストールに問題があるようです。レポ�
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Your name"
-msgstr ""
+msgstr "名前"
 
 #. module: web
 #. openerp-web

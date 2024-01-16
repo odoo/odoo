@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.fields import Command
 from datetime import datetime
 
 
@@ -151,3 +152,33 @@ class TestSaleMargin(common.TransactionCase):
         # Verify that margin field gets bind with the value.
         self.assertEqual(sale_order_so14.margin, 100.00, "Sales order profit should be 100.00")
         self.assertEqual(sale_order_so14.margin_percent, 0.4, "Sales order margin should be 40%")
+
+    def test_sale_margin_order_copy(self):
+        """When we copy a sales order, its margins should be update to meet the current costs"""
+        self.pricelist.currency_id = self.env.company.currency_id
+        # We buy at a specific price today and our margins go according to that
+        self.product.standard_price = 500.0
+        original_sale = self.SaleOrder.create({
+            'partner_id': self.partner_id,
+            'partner_invoice_id': self.partner_invoice_address_id,
+            'partner_shipping_id': self.partner_invoice_address_id,
+            'pricelist_id': self.pricelist_id,
+            'order_line': [
+                Command.create({
+                    'price_unit': 1000.0,
+                    'product_uom': self.product_uom_id,
+                    'product_uom_qty': 10.0,
+                    'product_id': self.product.id,
+                }),
+            ],
+        })
+        self.assertAlmostEqual(500.0, original_sale.order_line.purchase_price)
+        self.assertAlmostEqual(5000.0, original_sale.order_line.margin)
+        self.assertAlmostEqual(.5, original_sale.order_line.margin_percent)
+        # Later on, the cost of our product changes and so will the following sale
+        # margins do.
+        self.product.standard_price = 750.0
+        following_sale = original_sale.copy()
+        self.assertAlmostEqual(750.0, following_sale.order_line.purchase_price)
+        self.assertAlmostEqual(2500.0, following_sale.order_line.margin)
+        self.assertAlmostEqual(.25, following_sale.order_line.margin_percent)

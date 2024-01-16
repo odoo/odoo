@@ -1689,7 +1689,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urls.url_quote(filename, safe='')
+    escaped = urls.url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%')  # RFC6266
 
     return "attachment; filename*=UTF-8''%s" % escaped
 

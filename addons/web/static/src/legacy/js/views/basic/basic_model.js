@@ -2106,6 +2106,9 @@ var BasicModel = AbstractModel.extend({
                         if (command.data) {
                             return self._applyChange(id, command.data);
                         }
+                        if (command.isDirty) {
+                            self.setDirty(id);
+                        }
                     });
                 });
                 defs.push(def);
@@ -4227,7 +4230,7 @@ var BasicModel = AbstractModel.extend({
         // fetch additional data (special data and many2one namegets for "always_reload" fields)
         await this._postprocess(record);
         // save initial changes, so they can be restored later, if we need to discard
-        this.save(record.id, { savePoint: true });
+        await this.executeDirectly(() => this.save(record.id, { savePoint: true }));
         return record.id;
     },
     /**

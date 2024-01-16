@@ -103,7 +103,7 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_id
 msgid "Event"
-msgstr "Event"
+msgstr "Veranstaltung"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
@@ -128,7 +128,7 @@ msgstr "Veranstaltungs-Registrierung Antwort"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
 msgid "Event Template"
-msgstr "Event Vorlage"
+msgstr "Veranstaltungsvorlage"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -232,6 +232,14 @@ msgstr "Frage"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_type
 msgid "Question Type"
 msgstr "Fragentyp"
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid "Question cannot be linked to both an Event and an Event Type."
+msgstr ""
+"Eine Frage kann nicht sowohl mit einer Veranstaltung als auch mit einem "
+"Veranstaltungstyp verknüpft werden."
 
 #. module: website_event_questions
 #: code:addons/website_event_questions/models/event_question.py:0

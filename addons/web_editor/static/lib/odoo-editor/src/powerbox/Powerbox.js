@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { patienceDiff } from './patienceDiff.js';
-import { getRangePosition } from '../utils/utils.js';
+import { closestBlock, getRangePosition } from '../utils/utils.js';
 
 /**
  * Make `num` cycle from 0 to `max`.
@@ -184,8 +184,10 @@ export class Powerbox {
         const showOnceOnKeyup = () => {
             this.show();
             openOnKeyupTarget.removeEventListener('keyup', showOnceOnKeyup, true);
-            initialTarget = openOnKeyupTarget;
-            this._initialValue = openOnKeyupTarget.textContent;
+            const selection = this.options.document.getSelection();
+            const currentBlock = (selection && closestBlock(selection.anchorNode)) || this.options.editable;
+            initialTarget = currentBlock;
+            this._initialValue = currentBlock.textContent;
         };
         openOnKeyupTarget.addEventListener('keyup', showOnceOnKeyup, true);
 
@@ -207,7 +209,12 @@ export class Powerbox {
                 true,
             );
             this._lastText = diff.bMove.join('');
-            if (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) {
+            const selection = this.options.document.getSelection();
+            if (
+                (this._lastText.match(/\s/) && this._currentOpenOptions.closeOnSpace !== false) ||
+                !selection ||
+                initialTarget !== closestBlock(selection.anchorNode)
+            ) {
                 this._stop();
                 return;
             }

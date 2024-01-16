@@ -83,7 +83,7 @@ class HrEmployeePrivate(models.Model):
         help='Employee bank salary account')
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
-    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
+    visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_user", tracking=True)
     work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user", tracking=True)
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
@@ -153,7 +153,7 @@ class HrEmployeePrivate(models.Model):
             avatar = employee._origin[image_field]
             if not avatar:
                 if employee.user_id:
-                    avatar = employee.user_id[avatar_field]
+                    avatar = employee.user_id.sudo()[avatar_field]
                 else:
                     avatar = employee._avatar_get_placeholder()
             employee[avatar_field] = avatar

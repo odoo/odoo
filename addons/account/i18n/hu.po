@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2021
-# A . <tiboreu@protonmail.com>, 2021
 # Istvan <leki69@gmail.com>, 2021
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2021
 # Zsolt Godó <zsolttokio@gmail.com>, 2021
@@ -13,11 +12,14 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2021
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
-# Tamás Dombos, 2022
 # gezza <geza.nagy@oregional.hu>, 2023
 # Szabolcs Rádi, 2023
 # krnkris, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
+# Pammer József, 2023
+# Tamás Dombos, 2023
+# Szabolcs Máj, 2023
+# A . <tiboreu@protonmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
+"Last-Translator: A . <tiboreu@protonmail.com>, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +49,21 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Adó csoport: Az adó részadók halmaza.\n"
+"- Rögzített: Az adó összege ugyan az marad minden ár esetén.\n"
+"- Ár százaléka: Az adó összege az ár megadott százalékából:\n"
+"    pl.: 100 * (1 + 10%) = 110 (Az ár nem tartalmazza)\n"
+"    pl.: 110 / ( 1 + 10%) = 100 (Az ár tartalmazza)\n"
+"- Az ár százalékosan tartalmazza az adó-t: Az adó összege az ár hányada:\n"
+"    pl.: 180 / (1 - 10%) = 200 (Az ár nem tartalmazza)\n"
+"    pl.: 200 * (1 - 10%) = 180 (Az ár tartalmazza)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr "A(z) %(lock_type)s záró dátum beállítva a következőre: %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -77,7 +88,7 @@ msgstr "# tizedesjegy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
 msgid "#Coins/Bills"
-msgstr ""
+msgstr "# Pénzérmék/Papírpénz"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -89,7 +100,7 @@ msgstr "#Készítette: %s"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "%(action)s for journal %(journal)s"
-msgstr ""
+msgstr "%(action)s az alábbi naplónál: %(journal)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -127,13 +138,13 @@ msgstr "%s (kerekítve)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr ""
+msgstr "%s - %s; %s számlázva, %s megkapva, darabonként %s"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr ""
+msgstr "%s - %s; %s számlázva, %s kiszállítva, daraboként %s"
 
 #. module: account
 #: code:addons/account/models/product.py:0
@@ -151,7 +162,7 @@ msgstr "%s adóval"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr ""
+msgstr "%s egy nem tárolt mező"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -162,12 +173,12 @@ msgstr "(object._get_report_base_filename())"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted Entries Only"
-msgstr ""
+msgstr "- Kizárólag közzétett Bejegyzések"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "- Posted and Draft Entries"
-msgstr ""
+msgstr "- Közzétett és Vázlat Bejegyzések"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -180,27 +191,29 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
+". A naplóbejegyzéseket az Odoo-nak ki kell számítania, mielőtt azokat a "
+"vállalat pénznemében könyvelné el."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". Ide érdemes beírni egy magasabb számot."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr ""
+msgstr "... (%s egyéb)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Payment"
-msgstr ""
+msgstr "1 Fizetés"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Statement"
-msgstr ""
+msgstr "1 Nyilatkozat"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -230,7 +243,7 @@ msgstr "30% előleg a következő hónap végéig"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr ""
+msgstr "30% Most, Kiegyenlítés: 60 Nap"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -658,6 +671,9 @@ msgid ""
 "                                        Balance\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        Egyenleg\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -1038,7 +1054,7 @@ msgstr "<strong>Típus: </strong>"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: %(email)s"
-msgstr ""
+msgstr "@Feladó: %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -2197,6 +2213,7 @@ msgstr "Összeg pénzneme"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "Esedékes összeg"
@@ -2483,7 +2500,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__vat_required
 msgid "Apply only if partner has a VAT number."
-msgstr "Csak akkor alkalmazza, ha az ügyfél rendelkezik ADÓ számmal."
+msgstr "Csak akkor alkalmazza, ha az ügyfél rendelkezik adószámmal."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -2627,7 +2644,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
-msgstr ""
+msgstr "Automatikus sorrend"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
@@ -3466,8 +3483,8 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"ADÓ szám megváltoztatása nem megengedett számla létrehozás történt a "
-"főkönyvi számlán. Kérem vegye fel velünk közvetlenül a kapcsolatot ehhez a "
+"Adószám megváltoztatása nem megengedett számla létrehozás történt a főkönyvi"
+" számlán. Kérem vegye fel velünk közvetlenül a kapcsolatot ehhez a "
 "művelethez."
 
 #. module: account
@@ -9469,7 +9486,7 @@ msgstr "Fizetett számlák"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Paid on"
-msgstr "Rendezett ekkor"
+msgstr "Rendezve ekkor"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__both
@@ -12936,7 +12953,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Felhasználási feltételek\\: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration

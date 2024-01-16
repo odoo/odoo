@@ -470,8 +470,9 @@ class Partner(models.Model):
 
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
-        if self.barcode and self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
-            raise ValidationError('An other user already has this barcode')
+        for partner in self:
+            if partner.barcode and self.env['res.partner'].search_count([('barcode', '=', partner.barcode)]) > 1:
+                raise ValidationError(_('Another partner already has this barcode'))
 
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
@@ -1027,7 +1028,7 @@ class Partner(models.Model):
             'company_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
-            args[field] = getattr(self, field) or ''
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
         elif self.commercial_company_name:

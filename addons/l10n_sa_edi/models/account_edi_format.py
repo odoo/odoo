@@ -226,14 +226,16 @@ class AccountEdiFormat(models.Model):
         try:
             PCSID_data = invoice.journal_id._l10n_sa_api_get_pcsid()
         except UserError as e:
-            return {'error': _("Could not generate PCSID values: \n") + e.args[0], 'blocking_level': 'error'}
+            return ({'error': _("Could not generate PCSID values: \n") + e.args[0], 'blocking_level': 'error'},
+                    unsigned_xml)
         x509_cert = PCSID_data['binarySecurityToken']
 
         # Apply Signature/QR code on the generated XML document
         try:
             signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, x509_cert)
         except UserError as e:
-            return {'error': _("Could not generate signed XML values: \n") + e.args[0], 'blocking_level': 'error'}
+            return ({'error': _("Could not generate signed XML values: \n") + e.args[0], 'blocking_level': 'error'},
+                    unsigned_xml)
 
         # Once the XML content has been generated and signed, we submit it to ZATCA
         return self._l10n_sa_submit_einvoice(invoice, signed_xml, PCSID_data), signed_xml
@@ -314,6 +316,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'error'
             }
 
+        xml_content = None
         if not invoice.l10n_sa_chain_index:
             # If the Invoice doesn't have a chain index, it means it either has not been submitted before,
             # or it was submitted and rejected. Either way, we need to assign it a new Chain Index and regenerate

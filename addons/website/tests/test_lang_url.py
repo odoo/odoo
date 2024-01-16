@@ -63,6 +63,10 @@ class TestLangUrl(HttpCase):
         self.assertEqual(r.status_code, 200)
         self.assertTrue('lang="fr-FR"' in r.text, "Ensure contactus did not soft crash + loaded in correct lang")
 
+    def test_05_reroute_unicode(self):
+        res = self.url_open('/fr/привет')
+        self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of non latin-1 characters")
+
 
 @tagged('-at_install', 'post_install')
 class TestControllerRedirect(TestLangUrl):

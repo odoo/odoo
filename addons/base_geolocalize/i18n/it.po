@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,12 +39,12 @@ msgstr ""
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span>, Long: </span>"
-msgstr ""
+msgstr "<span>, Long: </span>"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span>Lat : </span>"
-msgstr ""
+msgstr "<span>Lat: </span>"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -57,8 +58,8 @@ msgid ""
 "API key for GeoCoding (Places) required.\n"
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
-"È richiesta la chiave API per il GeoCoding (Luoghi).\n"
-"Visita https://developers.google.com/maps/documentation/geocoding/get-api-key per maggiori informazioni."
+"È richiesta la chiave API per la geocodifica (luoghi).\n"
+"Visitare https://developers.google.com/maps/documentation/geocoding/get-api-key per maggiori informazioni."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -68,7 +69,7 @@ msgstr "API:"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
-msgstr "Impostazioni configurazione"
+msgstr "Impostazioni di configurazione"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -83,7 +84,7 @@ msgstr "Creato da"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
@@ -99,7 +100,7 @@ msgstr "Errore server di geolocalizzazione:"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
 msgid "Geo Coder"
-msgstr "Geo Coder"
+msgstr "Programmatore geo"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -125,7 +126,7 @@ msgstr "Data geolocalizzazione"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid "Google Map API Key"
-msgstr "Chiave API Google Map"
+msgstr "Chiave API per mappe Google"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
@@ -166,8 +167,7 @@ msgstr "Assegnazione partner"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
-msgstr ""
-"Il provider %s non è implementato per il servizio di geolocalizzazione."
+msgstr "Fornitore %s non implementato per il servizio di geolocalizzazione."
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
@@ -187,12 +187,12 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
-"Impossibile geolocalizzare, ha ricevuto il seguente errore:\n"
+"Impossibile geolocalizzare, ricevuto l'errore:\n"
 "%s\n"
 "\n"
-"Google ha reso questa funzione a pagamento.\n"
-"Dovresti prima attivare la fatturazione sul tuo account Google.\n"
-"Poi, vai su Developer Console e abilita le API:\n"
+"Google ha reso questa funzionalità a pagamento.\n"
+"Per prima cosa deve essere attivata la fatturazione sull'account Google.\n"
+"Andare quindi alla console per sviluppatori e abilitare le API:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize

@@ -815,3 +815,49 @@ class TestUnbuild(TestMrpCommon):
         mo2 = mo_form.save()
         mo2.button_mark_done()
         self.assertEqual(mo2.state, 'done', "Production order should be in done state.")
+
+    def test_unbuild_different_qty(self):
+        """
+        Test that the quantity to unbuild is the qty produced in the MO
+
+        BoM:
+        - 4x final product
+        components:
+        - 2 x (storable)
+        - 4 x (consumable)
+        - Create a MO with 4 final products to produce.
+        - Confirm and validate, then unlock the mo and update the qty produced to 10
+        - open the wizard to unbuild > the quantity proposed should be 10
+        - unbuild 4 units
+        - the move lines should be created with the correct quantity
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo_form.qty_producing = 4
+        action = mo.button_mark_done()
+        self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.process()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+        # unlock and update the qty produced
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 10
+        self.assertEqual(mo.qty_producing, 10)
+        #unbuild order
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        # check that the quantity to unbuild is the qty produced in the MO
+        self.assertEqual(unbuild_form.product_qty, 10)
+        unbuild_form.product_qty = 3
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+        self.assertRecordValues(unbuild_order.produce_line_ids.move_line_ids, [
+            # pylint: disable=bad-whitespace
+            {'product_id': self.bom_1.product_id.id, 'qty_done': 3},
+            {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'qty_done': 0.6},
+            {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'qty_done': 1.2},
+        ])

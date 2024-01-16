@@ -110,11 +110,10 @@ var BarcodeReader = core.Class.extend({
         const callbacks = Object.keys(this.exclusive_callbacks).length
             ? this.exclusive_callbacks
             : this.action_callbacks;
-        let parsed_results = this.barcode_parser.parse_barcode(code);
-        if (! Array.isArray(parsed_results)) {
-            parsed_results = [parsed_results];
-        }
-        for (const parsed_result of parsed_results) {
+        let parsed_result = this.barcode_parser.parse_barcode(code);
+        if (Array.isArray(parsed_result)) {
+            [...callbacks.gs1].map(cb => cb(parsed_result));
+        } else {
             if (callbacks[parsed_result.type]) {
                 for (const cb of callbacks[parsed_result.type]) {
                     await cb(parsed_result);

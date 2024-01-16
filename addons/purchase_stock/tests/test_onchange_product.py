@@ -7,6 +7,7 @@ from odoo import fields
 from odoo.tests.common import TransactionCase, Form
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+
 class TestOnchangeProductId(TransactionCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.
@@ -14,6 +15,7 @@ class TestOnchangeProductId(TransactionCase):
 
     def setUp(self):
         super(TestOnchangeProductId, self).setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         self.fiscal_position_model = self.env['account.fiscal.position']
         self.fiscal_position_tax_model = self.env['account.fiscal.position.tax']
         self.tax_model = self.env['account.tax']

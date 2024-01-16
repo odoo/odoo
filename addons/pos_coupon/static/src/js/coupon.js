@@ -1136,6 +1136,12 @@ odoo.define('pos_coupon.pos', function (require) {
                     amountsToDiscount[key] += reward.quantity * reward.unit_price;
                 }
             }
+            //Remove entries from amountsToDiscount that are 0
+            for (let key in amountsToDiscount) {
+                if (amountsToDiscount[key] === 0) {
+                    delete amountsToDiscount[key];
+                }
+            }
         },
         _getGroupKey: function (line) {
             return line

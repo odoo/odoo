@@ -24,6 +24,8 @@ class TestResPartner(TransactionCase):
         test_partner_3 = Partner.create({'name': 'test_partner_3', 'parent_id': test_partner_1.id})
         test_partner_4 = Partner.create({'name': 'test_partner_4', 'parent_id': test_partner_3.id})
         test_partner_5 = Partner.create({'name': 'test_partner_5'})
+        test_partner_6 = Partner.create({'name': 'test_partner_6'})
+        test_partner_7 = Partner.create({'name': 'test_partner_7', 'parent_id': test_partner_6.id})
 
         Event.create({'name': 'event_1',
                       'partner_ids': [(6, 0, [test_partner_1.id,
@@ -48,7 +50,8 @@ class TestResPartner(TransactionCase):
         Event.create({'name': 'event_7',
                       'partner_ids': [(6, 0, [test_partner_5.id])]})
         Event.create({'name': 'event_8',
-                      'partner_ids': [(6, 0, [test_partner_5.id])]})
+                      'partner_ids': [(6, 0, [test_partner_5.id,
+                                              test_partner_7.id])]})
 
         #Test rule to see if ir.rules are applied
         calendar_event_model_id = self.env['ir.model']._get('calendar.event').id
@@ -71,3 +74,5 @@ class TestResPartner(TransactionCase):
         self.assertEqual(test_partner_3.meeting_count, 6)
         self.assertEqual(test_partner_4.meeting_count, 3)
         self.assertEqual(test_partner_5.meeting_count, 2)
+        self.assertEqual(test_partner_6.meeting_count, 1)
+        self.assertEqual(test_partner_7.meeting_count, 1)

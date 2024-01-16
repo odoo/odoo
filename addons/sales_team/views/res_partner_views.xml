@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
-                <field name="team_id" groups="base.group_no_one" />
+                <field name="team_id" groups="base.group_no_one" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
             </xpath>
         </field>
     </record>

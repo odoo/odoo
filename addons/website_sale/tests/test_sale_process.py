@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 import odoo.tests
 
 from odoo import api
@@ -8,6 +10,8 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseW
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from odoo.addons.website.tools import MockRequest
+
+_logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -38,6 +42,8 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
         self.product_product_11_product_template = self.env['product.template'].create({
             'name': 'Conference Chair',
             'list_price': 16.50,
+            'website_published': True,
+            'sale_ok': True,
             'accessory_product_ids': [(4, product_product_7.id)],
         })
         self.env['product.template.attribute.line'].create({
@@ -50,6 +56,9 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
+        # Crappy hack: But otherwise the "Proceed To Checkout" modal button won't be displayed
+        if 'optional_product_ids' in self.env['product.template']:
+            self.product_product_11_product_template.optional_product_ids = [(6, 0, self.product_product_1_product_template.ids)]
 
         self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
@@ -74,6 +83,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
+        self.env.company.country_id = self.env.ref('base.us')
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',
@@ -101,6 +111,9 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
         self.start_tour("/", 'website_sale_tour')
 
     def test_05_google_analytics_tracking(self):
+        if not odoo.tests.loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour("/shop", 'google_analytics_view_item')
         self.start_tour("/shop", 'google_analytics_add_to_cart')
@@ -114,6 +127,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
 
     def setUp(self):
         super(TestWebsiteSaleCheckoutAddress, self).setUp()
+        self.partner_demo.company_id = self.env.ref('base.main_company')
         self.website = self.env.ref('website.default_website')
         self.country_id = self.env.ref('base.be').id
         self.WebsiteSaleController = WebsiteSale()
@@ -253,6 +267,11 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         self._setUp_multicompany_env()
         so = self._create_so(self.portal_partner.id)
 
+        self.env['sale.order'].create({
+            'partner_id': self.partner_portal.id,
+            'state': 'sent',
+        })
+
         env = api.Environment(self.env.cr, self.portal_user.id, {})
         # change also website env for `sale_get_order` to not change order partner_id
         with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
@@ -269,3 +288,32 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             self.WebsiteSaleController.address(**self.default_address_values)
             # Name cannot be changed if there are issued invoices
             self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
+
+    def test_06_payment_term_when_address_change(self):
+        ''' This test ensures that the payment term set when triggering
+            `onchange_partner_id` by changing the address of a website sale
+            order is computed by `sale_get_payment_term`.
+        '''
+        self._setUp_multicompany_env()
+        product_id = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'website_published': True,
+            'sale_ok': True}).id
+
+        env = api.Environment(self.env.cr, self.portal_user.id, {})
+        with MockRequest(env, website=self.website.with_env(env).with_context(website_id=self.website.id)) as req:
+            req.httprequest.method = "POST"
+
+            self.WebsiteSaleController.cart_update(product_id)
+            so = self.portal_user.sale_order_ids[0]
+            self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
+
+            self.default_address_values['partner_id'] = self.portal_partner.id
+            self.default_address_values['name'] = self.portal_partner.name
+            self.WebsiteSaleController.address(**self.default_address_values)
+            self.assertTrue(so.payment_term_id, "A payment term should still be set on the sale order")
+
+            so.website_id = False
+            self.WebsiteSaleController.address(**self.default_address_values)
+            self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")

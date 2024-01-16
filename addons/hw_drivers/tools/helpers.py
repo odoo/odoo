@@ -306,6 +306,11 @@ def download_iot_handlers(auto=True):
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
 
+def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
+    # TODO: replace with `removesuffix` (for Odoo version using an IoT image that use Python >= 3.9)
+    return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
+        format(handler_kind=handler_kind, handler_name=handler_file_name.replace('.py', ''))
+
 def load_iot_handlers():
     """
     This method loads local files: 'odoo/addons/hw_drivers/iot_handlers/drivers' and
@@ -317,7 +322,7 @@ def load_iot_handlers():
         filesList = os.listdir(path)
         for file in filesList:
             path_file = os.path.join(path, file)
-            spec = util.spec_from_file_location(file, path_file)
+            spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), path_file)
             if spec:
                 module = util.module_from_spec(spec)
                 spec.loader.exec_module(module)

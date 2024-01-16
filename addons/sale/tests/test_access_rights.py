@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
@@ -124,15 +126,20 @@ class TestAccessRights(TestSaleCommon):
             self.order.with_user(self.company_data['default_user_employee']).unlink()
 
 @tagged('post_install', '-at_install')
-class TestAccessRightsControllers(HttpCase):
+class TestAccessRightsControllers(HttpCaseWithUserPortal):
 
     def test_access_controller(self):
-
-        portal_so = self.env.ref("sale.portal_sale_order_2").sudo()
+        portal_so = self.env['sale.order'].create({
+            'partner_id': self.partner_portal.id,
+            'message_partner_ids': [(4, self.partner_portal.id)],
+        })
+        portal_so.action_confirm()
         portal_so._portal_ensure_token()
         token = portal_so.access_token
 
-        private_so = self.env.ref("sale.sale_order_1")
+        private_so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner 2'}).id,
+        })
 
         self.authenticate(None, None)
 

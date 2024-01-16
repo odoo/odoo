@@ -769,21 +769,6 @@ options.Class.include({
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
-        if (params.name === 'header_sidebar_opt') {
-            // When the user selects sidebar as header, make sure that the
-            // header position is regular.
-            // TODO we should avoid having that `if` in the generic option
-            // class (maybe simply use data-trigger but the header template
-            // option as no associated data-js to hack). To adapt in master.
-            await new Promise(resolve => {
-                this.trigger_up('action_demand', {
-                    actionName: 'toggle_page_option',
-                    params: [{name: 'header_overlay', value: false}],
-                    onSuccess: () => resolve(),
-                });
-            });
-        }
-
         return this._rpc({
             route: '/website/theme_customize_data',
             params: {
@@ -3359,6 +3344,9 @@ options.registry.WebsiteAnimate = options.Class.extend({
         await this._super(...arguments);
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
+        if (this.isAnimatedText) {
+            this.$overlay[0].querySelector(".o_handles").style.pointerEvents = "none";
+        }
     },
     /**
      * @override
@@ -3519,7 +3507,7 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
 });
 
 /**
- * Hides delete button for Mega Menu block.
+ * Hides delete and clone buttons for Mega Menu block.
  */
 options.registry.MegaMenuNoDelete = options.Class.extend({
     forceNoDeleteButton: true,

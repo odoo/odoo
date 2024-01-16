@@ -46,6 +46,7 @@ DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
     # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
     # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
     deprecated=['plaintext'],
+    pbkdf2_sha512__rounds=600_000,
 )
 
 concat = chain.from_iterable
@@ -183,11 +184,7 @@ class Groups(models.Model):
     def _search_full_name(self, operator, operand):
         lst = True
         if isinstance(operand, bool):
-            domains = [[('name', operator, operand)], [('category_id.name', operator, operand)]]
-            if operator in expression.NEGATIVE_TERM_OPERATORS == (not operand):
-                return expression.AND(domains)
-            else:
-                return expression.OR(domains)
+            return [('name', operator, operand)]
         if isinstance(operand, str):
             lst = False
             operand = [operand]
@@ -197,7 +194,9 @@ class Groups(models.Model):
             group_name = values.pop().strip()
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
-            category_domain = [('category_id.name', operator, lst and [category_name] or category_name)]
+            category_ids = self.env['ir.module.category'].sudo()._search(
+                [('name', operator, [category_name] if lst else category_name)])
+            category_domain = [('category_id', 'in', category_ids)]
             if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
                 category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
             if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
@@ -698,6 +697,10 @@ class Users(models.Model):
         return [('login', '=', login)]
 
     @api.model
+    def _get_email_domain(self, email):
+        return [('email', '=', email)]
+
+    @api.model
     def _get_login_order(self):
         return self._order
 
@@ -1145,7 +1148,7 @@ class UsersImplied(models.Model):
                 user = self.new(values)
                 gs = user.groups_id._origin
                 gs = gs | gs.trans_implied_ids
-                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user)
+                values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
         return super(UsersImplied, self).create(vals_list)
 
     def write(self, values):

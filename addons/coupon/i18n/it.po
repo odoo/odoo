@@ -3,13 +3,14 @@
 # 	* coupon
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Paolo Valier, 2021
 # David Minneci <david@numeko.it>, 2021
 # Léonie Bouchat <lbo@odoo.com>, 2021
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +141,7 @@ msgstr "<span>prodotti</span>"
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
-"<strong style=\"font-size: 55px; color: #875A7B\">ottieni spedizione "
+"<strong style=\"font-size: 55px; color: #875A7B\">ottieni la spedizione "
 "gratuita</strong>"
 
 #. module: coupon
@@ -179,12 +180,12 @@ msgid ""
 "                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
 "                order or create a coupon for a next order."
 msgstr ""
-"Un programma promozionale può essere un'offerta promozionale limitata senza codice (applicata automaticamente)\n"
-"                o con un codice (pubblicato in una rivista ad esempio) che genera uno sconto sull'ordine\n"
-"                attuale o crea un buono sconto per il prossimo ordine.\n"
+"Un programma promozionale può essere un'offerta limitata senza codice (applicata automaticamente)\n"
+"                oppure con codice (ad esempio pubblicato su una rivista) che può generare uno sconto sull'ordine attuale\n"
+"                oppure creare un buono sconto per un ordine successivo.\n"
 "\n"
-"                Un programma buono sconto consente di generare buoni sconto con un codice che può essere usato per generare uno sconto sull'ordine\n"
-"                attuale o creare un buono sconto per un prossimo ordine. "
+"                Un programma buono sconto genera buoni sconto con un codice che può essere utilizzato per creare uno sconto sull'ordine attuale\n"
+"                oppure un buono sconto per un ordine successivo."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__active
@@ -229,8 +230,8 @@ msgid ""
 "Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
 "Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
 msgstr ""
-"Applicato automaticamente - Non è richiesto alcun codice. Se le regole del programma sono rispettate, viene applicato il riconoscimento (ad eccezione degli sconti globali o delle spedizioni gratuite, che non sono cumulativi)\n"
-"Utilizzo di un codice - Se le regole del programma sono rispettate, per applicare il riconoscimento è obbligatorio un codice valido.\n"
+"Applicato automaticamente - Non è richiesto alcun codice. Se le regole del programma sono rispettate viene applicato il premio (ad eccezione degli sconti globali o delle spedizioni gratuite, che non sono cumulativi)\n"
+"Utilizzare un codice - Se le regole del programma sono rispettate, per applicare il premio è obbligatorio un codice valido.\n"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
@@ -242,7 +243,7 @@ msgstr "Basata su clienti"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
 msgid "Based on Products"
-msgstr "Basato su prodotti"
+msgstr "Basata su prodotti"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -250,8 +251,8 @@ msgid ""
 "Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
 "                You can share promotion codes or grant the promotions automatically if some conditions are met."
 msgstr ""
-"Costruisci programmi di promozione per attirare più clienti con sconti, prodotti gratuiti, consegna gratuita, ecc.\n"
-"                È possibile condividere i codici promozionali o concedere le promozioni automaticamente se alcune condizioni sono soddisfatte."
+"Per attirare più clienti sviluppa programmi di promozione con sconti, prodotti gratuiti, consegna gratuita, ecc.\n"
+"                È possibile condividere i codici promozionali o, se vengono soddisfatte alcune condizioni, assegnare le promozioni in modo automatico."
 
 #. module: coupon
 #: model:coupon.program,name:coupon.3_cabinets_plus_1_free
@@ -268,7 +269,7 @@ msgstr "Annulla"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__cancel
 msgid "Cancelled"
-msgstr "Annullata"
+msgstr "Annullato"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
@@ -331,7 +332,7 @@ msgstr "Programmi buoni sconto"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr "Riconoscimento buono sconto"
+msgstr "Premio buono sconto"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -386,7 +387,7 @@ msgstr "Buono sconto: scadenza buono sconto in base alla data"
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Coupons"
-msgstr "Buono sconto"
+msgstr "Buoni sconto"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
@@ -448,9 +449,9 @@ msgid ""
 "Free Product - Free product will be provide as reward \n"
 "Free Shipping - Free shipping will be provided as reward (Need delivery module)"
 msgstr ""
-"Sconto - Riconoscimento fornito come sconto.\n"
-"Prodotto gratuito - Come riconoscimento viene fornito un prodotto gratuito\n"
-"Spedizione gratuita - Come riconoscimento viene offerta la spedizione gratuita (richiesto modulo Consegna)"
+"Sconto - Premio fornito come sconto.\n"
+"Prodotto gratuito - Come premio viene fornito un prodotto gratuito\n"
+"Spedizione gratuita - Come premio viene offerta la spedizione gratuita (è richiesto il modulo Consegna)"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
@@ -582,12 +583,12 @@ msgstr "Tipo di generazione"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
 msgid "Has Partner Email"
-msgstr "Ha email del partner"
+msgstr "Contiene e-mail partner"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr "Ecco il tuo premio da"
+msgstr "Ecco il premio da parte di"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -644,7 +645,7 @@ msgstr "Importo massimo di sconto"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum Use Number"
-msgstr "Numero massimo di utilizzo"
+msgstr "Numero massimo di utilizzi"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_max_amount
@@ -656,8 +657,8 @@ msgstr "Importo massimo di sconti che possono essere offerti"
 #: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
 msgid "Maximum number of sales orders in which reward can be provided"
 msgstr ""
-"Numero massimo di ordini di vendita nei quali può essere messo a "
-"disposizione un riconoscimento"
+"Numero massimo di ordini di vendita per i quali può essere messo a "
+"disposizione un premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -686,13 +687,13 @@ msgstr "La quantità minima deve essere maggiore di 0"
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_minimum_amount
 msgid "Minimum required amount to get the reward"
-msgstr "Importo minimo richiesto per ottenere il riconoscimento"
+msgstr "Importo minimo richiesto per ottenere il premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
 msgid "Minimum required product quantity to get the reward"
-msgstr "Quantità minima di prodotto richiesta per ottenere il riconoscimento"
+msgstr "Quantità minima di prodotto richiesta per ottenere il premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__name
@@ -746,8 +747,7 @@ msgstr ""
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_products_domain
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_products_domain
 msgid "On Purchase of selected product, reward will be given"
-msgstr ""
-"Viene assegnato un riconoscimento all'acquisto del prodotto selezionato"
+msgstr "Viene assegnato un premio all'acquisto del prodotto selezionato"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
@@ -771,8 +771,8 @@ msgid ""
 "Percentage - Entered percentage discount will be provided\n"
 "Amount - Entered fixed amount discount will be provided"
 msgstr ""
-"Percentuale - La percentuale inserita verrà applicata come sconto.\n"
-"Importo - L'importo fisso inserito verrà applicato come sconto."
+"Percentuale - Viene fornito uno sconto pari alla percentuale inserita\n"
+"Importo - Viene fornito uno sconto pari all'importo fisso inserito"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
@@ -788,7 +788,7 @@ msgid ""
 msgstr ""
 "Prodotto utilizzato per applicare lo sconto nell'ordine di vendita. Ciascun "
 "programma buono sconto possiede, a scopo informativo, il proprio prodotto "
-"riconoscimento"
+"premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
@@ -858,32 +858,32 @@ msgstr "Premio"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
 msgid "Reward Description"
-msgstr "Descrizione riconoscimento"
+msgstr "Descrizione premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr "Prodotto riga riconoscimento"
+msgstr "Prodotto riga premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr "Prodotto riconoscimento"
+msgstr "Prodotto premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr "Tipo di riconoscimento"
+msgstr "Tipo di premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr "Quantità prodotto riconoscimento"
+msgstr "Quantità prodotto premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -900,7 +900,7 @@ msgstr "Importo minimo della regola"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount_tax_inclusion
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount_tax_inclusion
 msgid "Rule Minimum Amount Tax Inclusion"
-msgstr "Importo minimo della regola per inclusione imposte"
+msgstr "Aggiunta imposte nell'importo minimo della regola"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_report_coupon_report_coupon
@@ -930,7 +930,7 @@ msgstr "Seleziona prodotti"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select reward product"
-msgstr "Seleziona un prodotto premio"
+msgstr "Seleziona prodotto premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
@@ -950,7 +950,7 @@ msgstr "Invia con e-mail"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__sent
 msgid "Sent"
-msgstr "Invio effettuato"
+msgstr "Inviato"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__sequence
@@ -963,8 +963,8 @@ msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
 msgstr ""
-"Alcuni clienti selezionati non hanno un indirizzo e-mail e non riceveranno "
-"il coupon."
+"Alcuni clienti selezionati non possiedono un indirizzo e-mail e non "
+"riceveranno il buono sconto."
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -982,12 +982,12 @@ msgstr "Data inizio"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
 msgid "State"
-msgstr "Provincia"
+msgstr "Stato"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
 msgid "Tax Excluded"
-msgstr "Imposta esclusa"
+msgstr "Imponibile"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
@@ -1082,7 +1082,7 @@ msgstr "Unità"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
-msgstr "Usa un codice"
+msgstr "Utilizzare un codice"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__template_id
@@ -1092,7 +1092,7 @@ msgstr "Usare modello"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr "Usa questo codice promo prima"
+msgstr "Utilizza questo codice promozionale prima del"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
@@ -1113,7 +1113,7 @@ msgstr "Validità"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid "Validity Duration"
-msgstr "Durata della validità"
+msgstr "Durata validità"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__validity_duration
@@ -1133,6 +1133,8 @@ msgid ""
 "You cannot delete a product that is linked with Coupon or Promotion program."
 " Archive it instead."
 msgstr ""
+"Non è possibile eliminare un prodotto collegato ad un buono sconto o "
+"programma promozionale. È possibile archiviarlo."
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form

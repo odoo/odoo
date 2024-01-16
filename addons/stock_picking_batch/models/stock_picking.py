@@ -87,3 +87,6 @@ class StockPicking(models.Model):
         if len(self.batch_id) == 1 and self == self.batch_id.picking_ids:
             return False
         return super()._should_show_transfers()
+
+    def _package_move_lines(self):
+        return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines()

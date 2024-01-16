@@ -2939,7 +2939,7 @@
                 console.info(`Owl is running in 'dev' mode.
 
 This is not suitable for production use.
-See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`);
+See https://github.com/odoo/owl/blob/owl-1.x/doc/reference/config.md#mode for more information.`);
             }
         },
     });

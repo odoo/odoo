@@ -192,7 +192,7 @@ export async function initAutoMoreMenu(el, options) {
         Object.entries({
             role: 'button',
             href: '#',
-            class: 'nav-link dropdown-toggle o-no-caret',
+            class: 'nav-link dropdown-toggle o-no-caret o_extra_menu_items_toggle',
             'data-toggle': 'dropdown',
             'aria-expanded': false,
         }).forEach(([key, value]) => {

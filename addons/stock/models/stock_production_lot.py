@@ -4,9 +4,20 @@
 from re import findall as regex_findall
 from re import split as regex_split
 
+import operator as py_operator
+
 from odoo.tools.misc import attrgetter
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+OPERATORS = {
+    '<': py_operator.lt,
+    '>': py_operator.gt,
+    '<=': py_operator.le,
+    '>=': py_operator.ge,
+    '=': py_operator.eq,
+    '!=': py_operator.ne
+}
 
 
 class ProductionLot(models.Model):
@@ -27,7 +38,7 @@ class ProductionLot(models.Model):
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
-    product_qty = fields.Float('Quantity', compute='_product_qty')
+    product_qty = fields.Float('Quantity', compute='_product_qty', search='_search_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
@@ -183,6 +194,40 @@ class ProductionLot(models.Model):
             # We only care for the quants in internal or transit locations.
             quants = lot.quant_ids.filtered(lambda q: q.location_id.usage == 'internal' or (q.location_id.usage == 'transit' and q.location_id.company_id))
             lot.product_qty = sum(quants.mapped('quantity'))
+
+    def _search_product_qty(self, operator, value):
+        if operator not in OPERATORS:
+            raise UserError(_("Invalid domain operator %s", operator))
+        if not isinstance(value, (float, int)):
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+        domain = [
+            ('lot_id', '!=', False),
+            '|', ('location_id.usage', '=', 'internal'),
+            '&', ('location_id.usage', '=', 'transit'), ('location_id.company_id', '!=', False)
+        ]
+        lots_w_quants = self.env['stock.quant'].read_group(domain=domain, fields=['quantity:sum'], groupby=['lot_id'])
+        ids = []
+        lot_ids_w_qty = []
+        for lot_w_quants in lots_w_quants:
+            if OPERATORS['='](lot_w_quants['quantity'], 0.0):
+                continue
+            lot_id = lot_w_quants['lot_id'][0]
+            lot_ids_w_qty.append(lot_id)
+            if OPERATORS[operator](lot_w_quants['quantity'], value):
+                ids.append(lot_id)
+        if value == 0.0 and operator == '=':
+            return [('id', 'not in', lot_ids_w_qty)]
+        if value == 0.0 and operator == '!=':
+            return [('id', 'in', lot_ids_w_qty)]
+        # check if we need include zero values in result
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            value == 0.0 and operator in ('>=', '<=')
+        )
+        if include_zero:
+            return ['|', ('id', 'in', ids), ('id', 'not in', lot_ids_w_qty)]
+        return [('id', 'in', ids)]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)

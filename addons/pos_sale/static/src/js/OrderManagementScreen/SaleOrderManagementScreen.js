@@ -160,7 +160,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         pos: this.env.pos,
                         order: this.env.pos.get_order(),
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
-                        description: line.name,
+                        description: line.product_id[1],
                         price: line.price_unit,
                         tax_ids: orderFiscalPos ? undefined : line.tax_id,
                         price_manually_set: true,
@@ -168,6 +168,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         sale_order_line_id: line,
                         customer_note: line.customer_note,
                     });
+
+                    this.env.pos.get_order().set_orderline_options(new_line, line);
 
                     if (
                         new_line.get_product().tracking !== 'none' &&

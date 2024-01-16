@@ -3524,16 +3524,18 @@ msgid "Invalid domain left operand %s"
 msgstr "Toán hạng tên miền không hợp lệ còn lại %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Toán tử tên miền không hợp lệ %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Toán hạng tên miền không hợp lệ %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Toán hạng bên phải của miền không hợp lệ '%s'. Nó phải thuộc loại "
+"Integer/Float"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -9281,6 +9283,8 @@ msgstr ""
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Bạn không thể tách một dịch chuyển tồn kho đã được chuyển sang trạng thái "
+"'Hoàn tất' hoặc \"Huỷ\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9348,6 +9352,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Bạn đã xử lý ít sản phẩm hơn nhu cầu ban đầu."
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Bạn có (các) sản phẩm trong kho đã bật tính năng theo dõi số lô/sê-ri.\n"
+"Hãy tắt tính năng theo dõi trên tất cả sản phẩm trước khi tắt cài đặt này."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0

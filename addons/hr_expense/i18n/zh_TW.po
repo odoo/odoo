@@ -654,7 +654,7 @@ msgstr "費用明細"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "當前用戶可編輯開支項目"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -1649,7 +1649,7 @@ msgstr "為您的收據拍照並讓 Odoo<br>自動為您建立費用單據。"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "指定支出日記賬以生成會計分錄。"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1835,7 +1835,7 @@ msgstr "公司幣別總計"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "合計(公司貨幣)"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -2025,6 +2025,12 @@ msgstr "您無法刪除已過帳或者已支付的費用。"
 #, python-format
 msgid "You cannot refuse your own expenses"
 msgstr "您不能拒絕自己的費用。"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr "您不能在同一份報告中報告不同公司的支出。"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0

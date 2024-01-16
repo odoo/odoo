@@ -16,6 +16,7 @@ class TestStockCommon(common.TransactionCase):
         cls.StockQuantObj = cls.env['stock.quant']
         cls.PickingObj = cls.env['stock.picking']
         cls.MoveObj = cls.env['stock.move']
+        cls.StockLocationObj = cls.env['stock.location']
         cls.LotObj = cls.env['stock.production.lot']
 
         # Model Data
@@ -24,6 +25,15 @@ class TestStockCommon(common.TransactionCase):
         cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
         cls.supplier_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')
         cls.stock_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock')
+        location = cls.StockLocationObj.browse(cls.stock_location)
+        if not location.child_ids:
+            cls.StockLocationObj.create([{
+                'name': 'Shelf 1',
+                'location_id': location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': location.id,
+            }])
         pack_location = cls.env.ref('stock.location_pack_zone')
         pack_location.active = True
         cls.pack_location = pack_location.id

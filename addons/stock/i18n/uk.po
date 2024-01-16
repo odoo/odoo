@@ -3529,16 +3529,16 @@ msgid "Invalid domain left operand %s"
 msgstr "Невірний лівий операнд домену %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Невірний оператор домену %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Невірний правий операнд домену %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr "Недійсний операнд домену '%s'. Він має бути типу Integer/Float"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -9380,6 +9380,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Ви обробляли менше товарів, ніж початковий запит."
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"У вас на складі є товар(и), для якого ввімкнено відстеження за номером партії/серії.\n"
+"Перш ніж вимкнути це налаштування, вимкніть відстеження для всіх товарів."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0

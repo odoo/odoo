@@ -219,6 +219,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             let syncedOrderBackendIds = [];
 
             try {
+                this.env.services.ui.block()
                 if (this.currentOrder.is_to_invoice()) {
                     syncedOrderBackendIds = await this.env.pos.push_and_invoice_order(
                         this.currentOrder
@@ -247,6 +248,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         throw error;
                     }
                 }
+            } finally {
+                this.env.services.ui.unblock()
             }
             if (syncedOrderBackendIds.length && this.currentOrder.wait_for_push_order()) {
                 const result = await this._postPushOrderResolve(

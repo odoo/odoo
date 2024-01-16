@@ -153,6 +153,8 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
     return env['res.users'].with_context(**context).create(create_values)
 
+def loaded_demo_data(env):
+    return bool(env.ref('base.user_demo', raise_if_not_found=False))
 
 class RecordCapturer:
     def __init__(self, model, domain):
@@ -470,6 +472,9 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 if flush:
                     self.env.user.flush()
                     self.env.cr.flush()
+
+        if not self.warm:
+            return
 
         self.assertEqual(
             len(actual_queries), len(expected),

@@ -3535,16 +3535,18 @@ msgid "Invalid domain left operand %s"
 msgstr "Virheellinen verkkotunnuksen vasen operandi %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Virheellinen verkkotunnuksen operaattori %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:0
+#: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
 #, python-format
-msgid "Invalid domain right operand %s"
-msgstr "Virheellinen verkkotunnuksen oikea operandi %s"
+msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
+msgstr ""
+"Oikea operandi '%s' on virheellinen. Sen on oltava kokonaisluku tai "
+"liukuluku"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -9277,6 +9279,8 @@ msgstr "Et voi jakaa luonnossiirtoa. Se on vahvistettava ensin."
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Et voi jakaa varastosiirtoa, joka on asetettu tilaan \"Valmis\" tai "
+"\"Peruuta\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9340,6 +9344,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr "Olet käsittelemässä vähemmän tuotteita kuin alkuperäinen tarve on."
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You have product(s) in stock that have lot/serial number tracking enabled. \n"
+"Switch off tracking on all the products before switching off this setting."
+msgstr ""
+"Sinulla on varastossa tuote tai tuotteita, joiden erän tai sarjanumeron seuranta on käytössä.\n"
+"Ota seuranta pois käytöstä kaikista tuotteista ennen tämän asetuksen poistamista käytöstä."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0

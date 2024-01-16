@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Wichanon Jamwutthipreecha, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +24,12 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "API User ID"
-msgstr ""
+msgstr "รหัสผู้ใช้ API"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
 msgid "API User Password"
-msgstr ""
+msgstr "รหัสผู้ใช้ API"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
@@ -41,18 +41,18 @@ msgstr "ไม่สามารถสร้างการเชื่อมต
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "ไม่พบธุรกรรมที่ตรงกับการอ้างอิง %s"
 
 #. module: payment_ogone
 #: model:account.payment.method,name:payment_ogone.payment_method_ogone
 #: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "PSPID"
-msgstr ""
+msgstr "PSPID"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
@@ -83,7 +83,7 @@ msgstr "ผู้ให้บริการ"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "ได้รับข้อมูลที่มีสถานะการชำระเงินไม่ถูกต้อง: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/controllers/main.py:0
@@ -102,12 +102,12 @@ msgstr ""
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "SHA รหัส IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "SHA รหัสขาออก"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_token.py:0
@@ -120,16 +120,17 @@ msgstr ""
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"การจัดเก็บรายละเอียดการชำระเงินของคุณเป็นสิ่งจำเป็นสำหรับการใช้งานในอนาคต"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
+msgstr "ไอดีใช้เพื่อระบุผู้ใช้ API ด้วย Ogone เท่านั้น"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
-msgstr ""
+msgstr "ไอดีใช้เพื่อระบุบัญชีกับ Ogone เท่านั้น"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
@@ -146,10 +147,10 @@ msgstr "การสื่อสารกับ API ล้มเหลว"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
-msgstr ""
+msgstr "การชำระเงินถูกปฏิเสธ: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "ธุรกรรมไม่ได้เชื่อมโยงกับโทเค็น"

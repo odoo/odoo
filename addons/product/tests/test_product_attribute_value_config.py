@@ -14,6 +14,7 @@ class TestProductAttributeValueCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestProductAttributeValueCommon, cls).setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.computer = cls.env['product.template'].create({
             'name': 'Super Computer',

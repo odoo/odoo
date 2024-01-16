@@ -29,6 +29,12 @@ class TestSnippets(odoo.tests.HttpCase):
             's_map',  # avoid call to maps.google.com
         ]
         snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
+        if 'mail.group' in self.env and not self.env['mail.group'].search_count([]):
+            self.env['mail.group'].create({
+                'name': 'My Mail Group',
+                'alias_name': 'my_mail_group',
+            })
+
         self.start_tour("/?enable_editor=1&snippets_names=%s" % snippets_names, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
@@ -59,3 +65,6 @@ class TestSnippets(odoo.tests.HttpCase):
 
     def test_08_parallax(self):
         self.start_tour('/', 'test_parallax', login='admin')
+
+    def test_drag_and_drop_on_non_editable(self):
+        self.start_tour('/', 'test_drag_and_drop_on_non_editable', login='admin')

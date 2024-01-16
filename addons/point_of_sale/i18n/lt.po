@@ -11,7 +11,6 @@
 # Eimantas <eimantas@focusate.eu>, 2022
 # Gailius Kazlauskas <gailius@vialaurea.lt>, 2022
 # Anatolij, 2022
-# Arunas V. <arunas@devoro.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
@@ -27,14 +26,16 @@
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Arunas V. <arunas@devoro.com>, 2023
+# Aurelija Vitkauskiene, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-18 08:43+0000\n"
+"POT-Creation-Date: 2023-10-05 14:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Aurelija Vitkauskiene, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3170,7 +3171,7 @@ msgstr "Marža"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin_percent
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__margin_percent
 msgid "Margin (%)"
-msgstr ""
+msgstr "Marža, %"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3309,6 +3310,11 @@ msgstr "Nauja sesija"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Laikraščių lentyna"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kitas veiklos kalendoriaus įvykis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4283,6 +4289,7 @@ msgid "Point Of Sale"
 msgstr "Pardavimo taškas"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__name
@@ -4297,6 +4304,7 @@ msgstr "Pardavimo taškas"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_account_journal_pos_user_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Point of Sale"
 msgstr "Pardavimo taškas"
 

@@ -662,7 +662,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('toggle_button in form view with readonly modifiers', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         const form = await createView({
             View: FormView,
@@ -671,12 +671,6 @@ QUnit.module('basic_fields', {
             arch: `<form>
                     <field name="bar" widget="toggle_button" options="{'active': 'Active value', 'inactive': 'Inactive value'}" readonly="True"/>
                 </form>`,
-            mockRPC: function (route, args) {
-                if (args.method === 'write') {
-                    throw new Error("Should not do a write RPC with readonly toggle_button");
-                }
-                return this._super.apply(this, arguments);
-            },
             res_id: 2,
         });
 
@@ -685,8 +679,8 @@ QUnit.module('basic_fields', {
         assert.ok(form.$('.o_field_widget[name=bar]').prop('disabled'),
             "button should be disabled when readonly attribute is given");
 
-        // click on the button to check click doesn't call write as we throw error in write call
-        await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
+        // assert that the button has properly been disabled
+        assert.ok(form.$('.o_field_widget[name=bar]').get(0).disabled);
 
         assert.strictEqual(form.$('.o_field_widget[name=bar] i.o_toggle_button_success:not(.text-muted)').length,
             1, "should be green even after click");
@@ -5528,6 +5522,41 @@ QUnit.module('basic_fields', {
             "should have 'In 2 days' as date field value");
         assert.strictEqual(list.$('.o_data_row:nth(1) .o_data_cell').text(), "In 2 days",
             "should have 'In 2 days' as date field value");
+
+        list.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget, enter empty value manually in edit list view', async function (assert) {
+        assert.expect(4);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input', 'should have date picker input');
+        await testUtils.fields.editAndTrigger(list.$('.o_datepicker_input'), '', ['input', 'change']);
+        await testUtils.dom.click(list.$el);
+
+        assert.containsNone(document.body, '.modal');
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), '');
 
         list.destroy();
         unpatchDate();

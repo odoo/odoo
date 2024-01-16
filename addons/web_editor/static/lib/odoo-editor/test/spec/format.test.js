@@ -100,7 +100,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${strong(`b`)}</p><p>${strong(`c`)}d]e</p>`,
                 stepFunction: bold,
-                contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`cd]`)}e</p>`,
+                contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with bold text fully bold', async () => {
@@ -267,7 +267,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${em(`b`)}</p><p>${em(`c`)}d]e</p>`,
                 stepFunction: italic,
-                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`cd]`)}e</p>`,
+                contentAfter: `<p>${em(`[ab`)}</p><p>${em(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with italic text fully italic', async () => {
@@ -348,7 +348,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${u(`b`)}</p><p>${u(`c`)}d]e</p>`,
                 stepFunction: underline,
-                contentAfter: `<p>${u(`[ab`)}</p><p>${u(`cd]`)}e</p>`,
+                contentAfter: `<p>${u(`[ab`)}</p><p>${u(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with underline text fully underline', async () => {
@@ -485,7 +485,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>[a${s(`b`)}</p><p>${s(`c`)}d]e</p>`,
                 stepFunction: strikeThrough,
-                contentAfter: `<p>${s(`[ab`)}</p><p>${s(`cd]`)}e</p>`,
+                contentAfter: `<p>${s(`[ab`)}</p><p>${s(`cd`)}]e</p>`,
             });
         });
         it('should make a selection ending with strikeThrough text fully strikeThrough', async () => {
@@ -518,7 +518,7 @@ describe('Format', () => {
                 contentAfter: `<p style="text-decoration: line-through;">a[b]c</p>`,
             });
         });
-        it('should insert new character inside strikethrough at first position', async () => {
+        it('should insert before strikethrough', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>d[a${s('bc]<br><br>')}</p>`,
                 stepFunction: async editor => {
@@ -532,11 +532,6 @@ describe('Format', () => {
                     insertText(editor, 'A');
                 },
                 contentAfter: `<p>A[]${s(`<br><br>`)}</p>`,
-                // Note: In the browser, the actual result is the following:
-                // contentAfter: `<p>${s(`A[]<br><br>`)}</p>`,
-                // It is arguable which version is better than the other but in
-                // any case this is a trade-off because it matches the native
-                // behavior of contentEditable in that case.
             });
         });
     });
@@ -837,7 +832,7 @@ describe('Format', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
                 stepFunction: editor => editor.execCommand('removeFormat'),
-                contentAfter: '<div><p><span style="">[ab]</span></p></div>',
+                contentAfter: '<div><p>[ab]</p></div>',
             });
         });
     });

@@ -194,7 +194,7 @@ var PaymentAdyen = PaymentInterface.extend({
         return rpc.query({
             model: 'pos.payment.method',
             method: 'get_latest_adyen_status',
-            args: [[this.payment_method.id], this._adyen_get_sale_id()],
+            args: [[this.payment_method.id]],
         }, {
             timeout: 5000,
             shadow: true,

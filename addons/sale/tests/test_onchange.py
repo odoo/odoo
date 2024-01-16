@@ -11,7 +11,8 @@ class TestOnchangeProductId(TransactionCase):
     """
 
     def setUp(self):
-        super(TestOnchangeProductId, self).setUp()
+        super().setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         self.fiscal_position_model = self.env['account.fiscal.position']
         self.fiscal_position_tax_model = self.env['account.fiscal.position.tax']
         self.tax_model = self.env['account.tax']

@@ -5,6 +5,7 @@ var core = require('web.core');
 var _t = core._t;
 var FormController = require('web.FormController');
 var OptionalProductsModal = require('sale_product_configurator.OptionalProductsModal');
+var session = require('web.session');
 
 var ProductConfiguratorFormController = FormController.extend({
     custom_events: _.extend({}, FormController.prototype.custom_events, {
@@ -130,7 +131,8 @@ var ProductConfiguratorFormController = FormController.extend({
                 ),
                 product_no_variant_attribute_value_ids: changed ? [] : this._getAttributeValueIds(
                     data.product_no_variant_attribute_value_ids
-                )
+                ),
+                context: session.user_context,
             }
         }).then(function (configurator) {
             self.renderer.configuratorHtml = configurator;

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, loaded_demo_data
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -265,6 +269,10 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_coupon_change_pricelist(self):
         """Test coupon program with different pricelists."""
 
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
+
         product_1 = self.env["product.product"].create(
             {
                 "name": "Test Product 1",
@@ -482,5 +490,59 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosCouponTour5.1",
+            login="accountman",
+        )
+
+    def test_promo_with_free_product(self):
+        self.tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "15.00",
+        })
+        self.product_a = self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, self.tax01.ids)],
+            }
+        )
+        self.product_b = self.env["product.product"].create(
+            {
+                "name": "Product B",
+                "type": "product",
+                "list_price": 100,
+                "available_in_pos": True,
+                "taxes_id": False,
+            }
+        )
+        self.program_free_product = self.env["coupon.program"].create(
+            {
+                "name": "Free Product A",
+                "program_type": "promotion_program",
+                "reward_type": "product",
+                "reward_product_id": self.product_a.id,
+                "reward_product_quantity": 1,
+                "rule_min_quantity": 1,
+                "promo_code_usage": "no_code_needed",
+            }
+        )
+        self.promo_50 = self.env["coupon.program"].create(
+            {
+                "name": "Promo 50%",
+                "program_type": "promotion_program",
+                "promo_code_usage": "no_code_needed",
+                "discount_percentage": 50,
+            }
+        )
+        with Form(self.main_pos_config) as pos_config:
+            pos_config.use_coupon_programs = True
+            pos_config.coupon_program_ids.add(self.program_free_product)
+            pos_config.coupon_program_ids.add(self.promo_50)
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosCouponTour5.2",
             login="accountman",
         )

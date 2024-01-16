@@ -71,4 +71,4 @@ class FleetVehicleLogServices(models.Model):
             service.purchaser_id = service.vehicle_id.driver_id
 
     def _expand_states(self, states, domain, order):
-        return [key for key, dummy in type(self).state.selection]
+        return [key for key, dummy in self._fields['state'].selection]

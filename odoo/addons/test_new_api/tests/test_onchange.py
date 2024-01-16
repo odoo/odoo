@@ -599,6 +599,36 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.assertEqual(payment.tag_repeat, 3)
         self.assertEqual(payment.tag_string, 'BarBarBar')
 
+    @patch('odoo.fields.html_sanitize', return_value='<p>comment</p>')
+    def test_onchange_sanitize(self, patch):
+        self.assertTrue(self.registry['test_new_api.mixed'].comment2.sanitize)
+
+        record = self.env['test_new_api.mixed'].create({
+            'comment2': '<p>comment</p>',
+        })
+
+        # in a perfect world this should be 1, but at the moment the value is
+        # sanitized twice during creation of the record
+        self.assertEqual(patch.call_count, 2)
+
+        # new value needs to be validated, so it is sanitized once more
+        record.comment2 = '<p>comment</p>'
+        self.assertEqual(patch.call_count, 3)
+
+        # the value is already sanitized for flushing
+        record.flush()
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db does not need to be sanitized
+        record.invalidate_cache()
+        record.comment2
+        self.assertEqual(patch.call_count, 3)
+
+        # value coming from db during an onchange does not need to be sanitized
+        new_record = record.new(origin=record)
+        new_record.comment2
+        self.assertEqual(patch.call_count, 3)
+
 
 class TestComputeOnchange(common.TransactionCase):
 

@@ -890,7 +890,7 @@ class Picking(models.Model):
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
-        pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
+        pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.type == 'product')
         keys = ['product_id', 'lot_id']
         keys_ids = ["{}.id".format(fname) for fname in keys]
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -1113,24 +1113,10 @@ class Picking(models.Model):
         prec = self.env["decimal.precision"].precision_get("Product Unit of Measure")
         backorder_pickings = self.browse()
         for picking in self:
-            quantity_todo = {}
-            quantity_done = {}
-            for move in picking.mapped('move_lines').filtered(lambda m: m.state != "cancel"):
-                quantity_todo.setdefault(move.product_id.id, 0)
-                quantity_done.setdefault(move.product_id.id, 0)
-                quantity_todo[move.product_id.id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
-                quantity_done[move.product_id.id] += move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
-            # FIXME: the next block doesn't seem nor should be used.
-            for ops in picking.mapped('move_line_ids').filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
-                for quant in ops.package_id.quant_ids:
-                    quantity_done.setdefault(quant.product_id.id, 0)
-                    quantity_done[quant.product_id.id] += quant.qty
-            for pack in picking.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
-                quantity_done.setdefault(pack.product_id.id, 0)
-                quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
             if any(
-                float_compare(quantity_done[x], quantity_todo.get(x, 0), precision_digits=prec,) == -1
-                for x in quantity_done
+                    float_compare(move.quantity_done, move.product_uom_qty, precision_digits=prec) < 0
+                    for move in picking.move_lines
+                    if move.state != 'cancel'
             ):
                 backorder_pickings |= picking
         return backorder_pickings
@@ -1178,13 +1164,13 @@ class Picking(models.Model):
                     'move_line_ids': [],
                     'backorder_id': picking.id
                 })
-                picking.message_post(
-                    body=_('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created.') % (
-                        backorder_picking.id, backorder_picking.name))
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
+                picking.message_post(
+                    body=_('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created.') % (
+                        backorder_picking.id, backorder_picking.name))
                 if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
                     bo_to_assign |= backorder_picking
         if bo_to_assign:
@@ -1433,25 +1419,29 @@ class Picking(models.Model):
                 })
         return package
 
+    def _package_move_lines(self):
+        picking_move_lines = self.move_line_ids
+        if (
+            not self.picking_type_id.show_reserved
+            and not self.immediate_transfer
+            and not self.env.context.get('barcode_view')
+        ):
+            picking_move_lines = self.move_line_nosuggest_ids
+
+        move_line_ids = picking_move_lines.filtered(lambda ml:
+            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+            and not ml.result_package_id
+        )
+        if not move_line_ids:
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                    precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                    precision_rounding=ml.product_uom_id.rounding) == 0)
+        return move_line_ids
+
     def action_put_in_pack(self):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            picking_move_lines = self.move_line_ids
-            if (
-                not self.picking_type_id.show_reserved
-                and not self.immediate_transfer
-                and not self.env.context.get('barcode_view')
-            ):
-                picking_move_lines = self.move_line_nosuggest_ids
-
-            move_line_ids = picking_move_lines.filtered(lambda ml:
-                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
-                and not ml.result_package_id
-            )
-            if not move_line_ids:
-                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
-                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+            move_line_ids = self._package_move_lines()
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:

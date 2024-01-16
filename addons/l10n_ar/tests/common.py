@@ -322,6 +322,9 @@ class TestAr(AccountTestInvoicingCommon):
         invoice_user_id = self.env.user
         incoterm = self.env.ref("account.incoterm_EXW")
 
+        decimal_price = self.env.ref('product.decimal_price')
+        decimal_price.digits = 4
+
         invoices_to_create = {
             'test_invoice_1': {
                 "ref": "test_invoice_1: Invoice to gritti support service, vat 21",

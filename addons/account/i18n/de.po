@@ -11,11 +11,11 @@
 # jufeodoo, 2022
 # Robert Förster <hello@suppliot.eu>, 2022
 # qndi <andreas.brueckl@datenpol.at>, 2022
-# Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Chris Egal <sodaswed@web.de>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -1745,8 +1745,7 @@ msgstr "Konto mit Buchungen"
 #: model:ir.cron,cron_name:account.ir_cron_auto_post_draft_entry
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid "Account; Post draft entries with auto_post set to True up to today"
-msgstr ""
-"Konto; Buchung von Beitragsentwürfe mit auto_post bis heute auf True gesetzt"
+msgstr "Konto; Buchung von Entwürfen mit auto_post bis heute auf True gesetzt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2407,6 +2406,7 @@ msgstr "Währungsbetrag"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "Fälliger Betrag"
@@ -4969,7 +4969,7 @@ msgstr "Dashboard"
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
 msgid "Data Inalterability Check"
-msgstr "Unveränderbarkeitsprüfung von Daten"
+msgstr "Unveränderlichkeitsprüfung von Daten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -8430,9 +8430,7 @@ msgstr "Leer lassen, um den Vertriebsmitarbeiter der Rechnung zuzuordnen."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr ""
-"Leer lassen, um das Standardkonto für ausstehende Zahlungen/Eingänge zu "
-"verwenden"
+msgstr "Leer lassen, um das Standardkonto für offene Rechnungen zu verwenden"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -9885,13 +9883,13 @@ msgstr "Konten für ausstehende Eingänge"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding credits"
-msgstr "Ausstehende Forderungen"
+msgstr "Ausstehendes Haben"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding debits"
-msgstr "Ausstehende Verbindlichkeiten"
+msgstr "Ausstehendes Soll"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10305,7 +10303,7 @@ msgstr "Zahlungsbedingungen: Am Ende des Folgemonats"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Zahlungsbedindungen: Sofortige Zahlung"
+msgstr "Zahlungsbedingungen: Sofortige Zahlung"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -10427,9 +10425,10 @@ msgid ""
 "Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
 " country (%s) or the localization's country (%s)."
 msgstr ""
-"Bitte prüfen Sie das Steuerland des Unternehmen %s. (Einstellungen > "
+"Bitte prüfen Sie das Steuerland des Unternehmens %s. (Einstellungen > "
 "Buchhaltung > Steuerland) Steuern können nur aktualisiert werden, wenn sie "
-"im Steuerland des Unternehmen (%s) oder im Land der Lokalisierung (%s) sind."
+"im Steuerland des Unternehmens (%s) oder im Land der Lokalisierung (%s) "
+"sind."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -11601,7 +11600,7 @@ msgstr "Verkaufsbeleg"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Sales"
-msgstr "Verkäufe"
+msgstr "Verkauf"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -13816,7 +13815,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr "Die Kontenplanvorlage des Unternehmen (wenn verwendet)"
+msgstr "Die Kontenplanvorlage des Unternehmens (wenn verwendet)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14805,7 +14804,7 @@ msgid ""
 "journal."
 msgstr ""
 "Für dieses Journal gibt es noch keine Journalbuchung, die für die "
-"Unveränderbarkeit von Daten gekennzeichnet ist."
+"Unveränderlichkeit von Daten gekennzeichnet ist."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -15097,8 +15096,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Diese Zahlungsbedingung wird anstelle der Standardbedingung für "
-"Einkaufsaufträge und Lieferantenrechnungen verwendet"
+"Diese Zahlungsbedingung wird anstelle der Standardbedingung für Bestellungen"
+" und Lieferantenrechnungen verwendet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -16609,7 +16608,7 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
-"Sie können die Werte, die die Unveränderbarkeit der Buchhaltung "
+"Sie können die Werte, die die Unveränderlichkeit der Buchhaltung "
 "sicherstellen, nicht überschreiben."
 
 #. module: account
@@ -17115,12 +17114,12 @@ msgstr "am"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "ausstehende Verbindlichkeiten"
+msgstr "ausstehendes Haben"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "ausstehende Forderungen"
+msgstr "ausstehendes Soll"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

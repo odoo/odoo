@@ -1213,6 +1213,9 @@ header {
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
+        > li.nav-item {
+            align-self: center !important;
+        }
         @include media-breakpoint-up(lg) {
             width: 50%;
         }
@@ -1245,6 +1248,10 @@ header {
                 align-items: center !important;
             }
         }
+    }
+} @else if o-website-value('header-template') == 'slogan' {
+    #top_menu_container > ul.nav > li.nav-item {
+        align-self: center;
     }
 }
 
@@ -1304,7 +1311,7 @@ header {
 }
 
 #wrapwrap.o_header_overlay {
-    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown) {
+    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
 
@@ -1591,6 +1598,9 @@ $ribbon-padding: 100px;
 
 // Cookies Bar
 #website_cookies_bar {
+    min-height: 0px;
+    height: 0px;
+
     :not(.o_cookies_popup) {
         bottom: 0;
     }

@@ -3,17 +3,16 @@
 
 from odoo.fields import Date
 from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
-from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonValuationPurchaseMRP(TransactionCase):
+class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAngloSaxonValuationPurchaseMRP, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         cls.vendor01 = cls.env['res.partner'].create({'name': "Super Vendor"})
 
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)

@@ -175,19 +175,10 @@ var checkVATNumber = (function (){
     // Array holds the regular expressions for the valid VAT number
     var vatexp = new Array();
 
-    // To change the default country (e.g. from the UK to Germany - DE):
-    //    1.  Change the country code in the defCCode variable below to "DE".
-    //    2.  Remove the question mark from the regular expressions associated with the UK VAT number:
-    //        i.e. "(GB)?" -> "(GB)"
-    //    3.  Add a question mark into the regular expression associated with Germany's number
-    //        following the country code: i.e. "(DE)" -> "(DE)?"
-
-    var defCCode = "GB";
-
     // Note - VAT codes without the "**" in the comment do not have check digit checking.
 
     vatexp.push(/^(AT)U(\d{8})$/);                           //** Austria
-    vatexp.push(/^(BE)(0?\d{9})$/);                          //** Belgium
+    vatexp.push(/^(BE)(\d{9,10})$/);                         //** Belgium
     vatexp.push(/^(BG)(\d{9,10})$/);                         //** Bulgaria
     vatexp.push(/^(CHE)(\d{9})(MWST|TVA|IVA)?$/);            //** Switzerland
     vatexp.push(/^(CY)([0-59]\d{7}[A-Z])$/);                 //** Cyprus
@@ -206,10 +197,10 @@ var checkVATNumber = (function (){
     vatexp.push(/^(FR)([A-HJ-NP-Z]\d{10})$/);                // France (2)
     vatexp.push(/^(FR)(\d[A-HJ-NP-Z]\d{9})$/);               // France (3)
     vatexp.push(/^(FR)([A-HJ-NP-Z]{2}\d{9})$/);              // France (4)
-    vatexp.push(/^(GB)?(\d{9})$/);                           //** UK (Standard)
-    vatexp.push(/^(GB)?(\d{12})$/);                          //** UK (Branches)
-    vatexp.push(/^(GB)?(GD\d{3})$/);                         //** UK (Government)
-    vatexp.push(/^(GB)?(HA\d{3})$/);                         //** UK (Health authority)
+    vatexp.push(/^(GB|XI)(\d{9})$/);                         //** UK & Northern Ireland (Standard)
+    vatexp.push(/^(GB|XI)(\d{12})$/);                        //** UK & Northern Ireland (Branches)
+    vatexp.push(/^(GB)(GD\d{3})$/);                          //** UK (Government)
+    vatexp.push(/^(GB)(HA\d{3})$/);                          //** UK (Health authority)
     vatexp.push(/^(HR)(\d{11})$/);                           //** Croatia
     vatexp.push(/^(HU)(\d{8})$/);                            //** Hungary
     vatexp.push(/^(IE)(\d{7}[A-W])$/);                       //** Ireland (1)
@@ -250,7 +241,6 @@ var checkVATNumber = (function (){
                 // Yes - we have
                 var cCode = RegExp.$1;                             // Isolate country code
                 var cNumber = RegExp.$2;                           // Isolate the number
-                if (cCode.length == 0) cCode = defCCode;           // Set up default country code
 
                 // Call the appropriate country VAT validation routine depending on the country code
                 if (eval(cCode + "VATCheckDigit ('" + cNumber + "')")) valid = VATNumber;
@@ -298,8 +288,6 @@ var checkVATNumber = (function (){
 
         // Nine digit numbers have a 0 inserted at the front.
         if (vatnumber.length == 9) vatnumber = "0" + vatnumber;
-
-        if (vatnumber.slice(1, 2) == 0) return false;
 
         // Modulus 97 check on last nine digits
         if (97 - vatnumber.slice(0, 8) % 97 == vatnumber.slice(8, 10))
@@ -1333,6 +1321,8 @@ var checkVATNumber = (function (){
         else
             return false;
     }
+
+    XIVATCheckDigit = GBVATCheckDigit;  // Northern Ireland VAT numbers follow the same rules as GB
 
     return checkVATNumber;
 })();

@@ -6,7 +6,10 @@ from datetime import datetime, timedelta
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
 from odoo.fields import Date
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestProgramRules(TestSaleCouponCommon):
     # Test all the validity rules to allow a customer to have a reward.
     # The check based on the products is already done in the basic operations test
@@ -106,6 +109,66 @@ class TestProgramRules(TestSaleCouponCommon):
         self.immediate_promotion_program.rule_minimum_amount_tax_inclusion = 'tax_included'
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should be applied as the initial amount required is now tax included")
+
+    def test_program_rules_minimum_purchased_amount_and_free_product(self):
+        # Test cases: Based on the minimum purchased and free product
+        self.immediate_promotion_program.write({
+            'rule_minimum_amount': 10,
+            'rule_products_domain': "[]",
+            'rule_minimum_amount_tax_inclusion': 'tax_excluded',
+        })
+
+        # Case 1: price unit = 5, qty = 2, total = 10, no reward
+        order = self.empty_order
+        order.write({
+            'order_line': [(0, False, {
+                'product_id': self.product_B.id,
+                'name': '2 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 2.0,
+            })]
+        })
+        order.recompute_coupon_lines()
+        msg = """
+            The promo shouldn't have been applied as the order amount is not enough after 
+            applying promo with free product.
+        """
+        self.assertEqual(len(order.order_line.ids), 1, msg)
+        self.assertEqual(order.amount_untaxed, 10)
+
+        # Case 2: price unit = 5, qty = 5, total = 25-5, 1 reward (5)
+        order = self.env['sale.order'].create({'partner_id': self.steve.id})
+        order.write({
+            'order_line': [(0, False, {
+                'product_id': self.product_B.id,
+                'name': '5 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 5.0,
+                })]
+        })
+        order.recompute_coupon_lines()
+        promo_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        msg = "The promo offer should have been applied only once."
+        self.assertEqual(len(promo_lines), 1, msg)
+        self.assertEqual(promo_lines[0].product_uom_qty, 1, msg)
+        self.assertEqual(order.amount_untaxed, 20)
+
+        # Case 3: price unit = 5, qty = 6, total = 30-10, 2 rewards (2*5)
+        order = self.env['sale.order'].create({'partner_id': self.steve.id})
+        order.write({
+            'order_line': [(0, False, {
+                'product_id': self.product_B.id,
+                'name': '6 Product B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 6.0,
+                })]
+        })
+        order.recompute_coupon_lines()
+        promo_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        msg = "The promo offer should have been applied twice."
+        self.assertEqual(len(promo_lines), 1, msg)
+        self.assertEqual(promo_lines[0].product_uom_qty, 2, msg)
+        self.assertEqual(order.amount_untaxed, 20)
 
     def test_program_rules_validity_dates_and_uses(self):
         # Test case: Based on the validity dates and the number of allowed uses

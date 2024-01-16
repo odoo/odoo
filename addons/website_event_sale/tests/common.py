@@ -12,7 +12,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestWebsiteEventSaleCommon, cls).setUpClass()
-
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.zero_tax = cls.env['account.tax'].sudo().create({
             'name': 'Tax 0',
             'amount': 0,

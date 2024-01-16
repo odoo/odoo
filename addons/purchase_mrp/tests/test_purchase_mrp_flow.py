@@ -7,10 +7,10 @@ from odoo import fields
 
 
 @tagged('post_install', '-at_install')
-class TestSaleMrpFlow(TransactionCase):
+class TestPurchaseMrpFlow(TransactionCase):
 
     def setUp(self):
-        super(TestSaleMrpFlow, self).setUp()
+        super().setUp()
         # Useful models
         self.UoM = self.env['uom.uom']
         self.categ_unit = self.env.ref('uom.product_uom_categ_unit')
@@ -488,7 +488,7 @@ class TestSaleMrpFlow(TransactionCase):
         self.assertEqual(purchase.order_line.product_qty, 5)
 
     def test_01_purchase_mrp_kit_qty_change(self):
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
         # Create a PO with one unit of the kit product
         self.po = self.env['purchase.order'].create({

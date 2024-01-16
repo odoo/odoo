@@ -115,7 +115,7 @@ msgstr "Annulla"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "ID cliente"
+msgstr "ID client"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
@@ -197,8 +197,8 @@ msgid ""
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
-"Per una sincronizzazione corretta tra Odoo e il calendario Outlook, tutti i partecipanti devono avere un indirizzo e-mail. Tuttavia, alcuni eventi non rispettano questa condizione. Finché gli eventi non sono corretti, i calendari non saranno sincronizzati.\n"
-"O aggiorna gli eventi/partecipanti o archivia questi eventi %s:\n"
+"Per una corretta sincronizzazione tra Odoo e il calendario Outlook, tutti i partecipanti devono avere un indirizzo e-mail. Tuttavia, alcuni eventi non rispettano questa condizione. I calendari non verranno sincronizzati finché gli eventi non saranno corretti.\n"
+"Aggiornare gli eventi/partecipanti o archiviare questi eventi %s:\n"
 "%s"
 
 #. module: microsoft_calendar
@@ -274,22 +274,20 @@ msgstr "Prossimo token di sincronizzazione Microsoft"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_recurrence_master_id
 msgid "Microsoft Recurrence Master Id"
-msgstr "Microsoft Recurrence Master Id"
+msgstr "ID principale ricorrenza Microsoft"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr ""
-"L'occorrenza modificata si incrocia o si sovrappone all'occorrenza "
-"adiacente."
+msgstr "L'occorrenza modificata incrocia o si sovrappone a quella adiacente."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__need_sync_m
 msgid "Need Sync M"
-msgstr "Sync M richiesto"
+msgstr "Sincronizzazione M. richiesta"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -336,7 +334,7 @@ msgstr "Outlook: sincronizzazione"
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Redirection"
-msgstr "Redirezione"
+msgstr "Reindirizzamento"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -363,7 +361,7 @@ msgstr "Successo"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
-msgstr "Sincronizza un record con Microsoft Calendar"
+msgstr "Sincronizzazione di un record con Microsoft Calendar"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
@@ -403,7 +401,7 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Questo influenzerà solo gli eventi di cui l'utente è il proprietario"
+msgstr "Influirà solo sugli eventi di cui l'utente è proprietario"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -448,4 +446,5 @@ msgstr ""
 msgid ""
 "You will be redirected to Outlook to authorize the access to your calendar."
 msgstr ""
-"Sarai reindirizzato ad Outlook per autorizzare l'accesso al tuo calendario."
+"Per autorizzare l'accesso al calendario verrà effettuato un reindirizzamento"
+" a Outlook."

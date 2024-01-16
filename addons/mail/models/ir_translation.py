@@ -23,7 +23,7 @@ class IrTranslation(models.Model):
         # if we don't modify translation of at least a model that inherits from mail.render.mixin, we ignore it
         # translation.name can be a path, and so not in the pool, so type(None) will exclude these translations.
         translations_for_mail_render_mixin = self.filtered(
-            lambda translation: issubclass(type(self.env.get(translation.name.split(',')[0])), self.pool['mail.render.mixin'])
+            lambda translation: isinstance(self.env.get(translation.name.split(',')[0]), self.pool['mail.render.mixin'])
         )
         if not translations_for_mail_render_mixin:
             return

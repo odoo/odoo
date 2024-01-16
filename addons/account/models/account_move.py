@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, Command, _
+from odoo.addons.base.models.decimal_precision import DecimalPrecision
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, html_escape, is_html_empty
-from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.tools.misc import formatLang, format_date, get_lang, groupby
 from odoo.osv import expression
 
 from datetime import date, timedelta
@@ -12,6 +13,7 @@ from contextlib import contextmanager
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
+from unittest.mock import patch
 
 import ast
 import json
@@ -194,7 +196,7 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
         states={'draft': [('readonly', False)]},
         check_company=True,
-        string='Partner', change_default=True, ondelete='restrict')
+        string='Partner', index=True, change_default=True, ondelete='restrict')
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
         compute='_compute_commercial_partner_id', ondelete='restrict')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
@@ -1023,20 +1025,19 @@ class AccountMove(models.Model):
             if payment_terms_lines:
                 # Retrieve account from previous payment terms lines in order to allow the user to set a custom one.
                 return payment_terms_lines[0].account_id
-            elif self.partner_id:
-                # Retrieve account from partner.
-                if self.is_sale_document(include_receipts=True):
-                    return self.partner_id.property_account_receivable_id
-                else:
-                    return self.partner_id.property_account_payable_id
             else:
-                # Search new account.
-                domain = [
-                    ('company_id', '=', self.company_id.id),
-                    ('internal_type', '=', 'receivable' if self.move_type in ('out_invoice', 'out_refund', 'out_receipt') else 'payable'),
-                    ('deprecated', '=', False),
-                ]
-                return self.env['account.account'].search(domain, limit=1)
+                accounts = {
+                    account_type: acc or self.env['account.account'].search([
+                        ('company_id', '=', self.company_id.id),
+                        ('internal_type', '=', account_type),
+                        ('deprecated', '=', False),
+                    ], limit=1)
+                    for acc, account_type in [(self.partner_id.property_account_payable_id, 'payable'), (self.partner_id.property_account_receivable_id, 'receivable')]}
+                account_map = (self.fiscal_position_id or self.env['account.fiscal.position']).map_accounts(accounts)
+                if self.is_sale_document(include_receipts=True):
+                    return account_map['receivable']
+                elif self.is_purchase_document(include_receipts=True):
+                    return account_map['payable']
 
         def _compute_payment_terms(self, date, total_balance, total_amount_currency):
             ''' Compute the payment terms.
@@ -1634,7 +1635,7 @@ class AccountMove(models.Model):
                         res = True
             r.invoice_has_matching_suspense_amount = res
 
-    @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
+    @api.depends('partner_id', 'invoice_source_email', 'partner_id.display_name')
     def _compute_invoice_partner_display_info(self):
         for move in self:
             vendor_display_name = move.partner_id.display_name
@@ -1756,6 +1757,7 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = json.dumps(False)
 
+    @api.depends_context('lang')
     @api.depends('line_ids.amount_currency', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals_json(self):
         """ Computed field used for custom widget's rendering.
@@ -2041,11 +2043,11 @@ class AccountMove(models.Model):
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
-        for record in self:
-            if record.fiscal_position_id.foreign_vat:
-                record.tax_country_id = record.fiscal_position_id.country_id
-            else:
-                record.tax_country_id = record.company_id.account_fiscal_country_id
+        foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
+        for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
+            self.env['account.move'].concat(*record_group).tax_country_id = fiscal_position_id.country_id
+        for company_id, record_group in groupby((self-foreign_vat_records), key=lambda r: r.company_id):
+            self.env['account.move'].concat(*record_group).tax_country_id = company_id.account_fiscal_country_id
 
     @api.depends('tax_country_id.code')
     def _compute_tax_country_code(self):
@@ -3610,6 +3612,22 @@ class AccountMove(models.Model):
 
         return rslt
 
+    @contextmanager
+    def _disable_discount_precision(self):
+        """Disable the user defined precision for discounts.
+
+        This is useful for importing documents coming from other softwares and providers.
+        The reasonning is that if the document that we are importing has a discount, it
+        shouldn't be rounded to the local settings.
+        """
+        original_precision_get = DecimalPrecision.precision_get
+        def precision_get(self, application):
+            if application == 'Discount':
+                return 100
+            return original_precision_get(self, application)
+        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
+            yield
+
     def _message_post_after_hook(self, new_message, message_values):
         # OVERRIDE
         # When posting a message, check the attachment to see if it's an invoice and update with the imported data.
@@ -3638,9 +3656,10 @@ class AccountMove(models.Model):
             # start with message_main_attachment_id, that way if OCR is installed, only that one will be parsed.
             # this is based on the fact that the ocr will be the last decoder.
             for attachment in attachments.sorted(lambda x: x != self.message_main_attachment_id):
-                invoice = decoder[1](attachment, self)
-                if invoice:
-                    return res
+                with self._disable_discount_precision():
+                    invoice = decoder[1](attachment, self)
+                    if invoice:
+                        return res
 
         return res
 
@@ -3686,12 +3705,25 @@ class AccountMove(models.Model):
 
         self.ensure_one()
         if self.move_type != 'entry':
+            access_link = None
             for group_name, _group_method, group_data in groups:
-                if group_name in ('portal_customer', 'customer'):
+                if group_name == 'portal_customer':
                     group_data['has_button_access'] = True
+                    access_link = group_data['button_access']['url']
 
-                    # 'notification_is_customer' is used to determine whether the group should be sent the access_token
-                    group_data['notification_is_customer'] = True
+            # create a new group for partners that have been manually added as recipients
+            # those partners should have access to the invoice
+            button_access = {'url': access_link} if access_link else {}
+            recipient_group = (
+                'additional_intended_recipient',
+                lambda pdata: pdata['id'] in msg_vals.get('partner_ids', []) and pdata['id'] != self.partner_id.id,
+                {
+                    'has_button_access': True,
+                    'button_access': button_access,
+                    'notification_is_customer': True,
+                }
+            )
+            groups.insert(0, recipient_group)
 
         return groups
 

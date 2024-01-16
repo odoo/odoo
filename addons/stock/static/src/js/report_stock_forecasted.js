@@ -336,7 +336,8 @@ const ReplenishReport = clientAction.extend({
         return this._rpc( {
             model,
             args: [[modelId]],
-            method: 'do_unreserve'
+            method: 'do_unreserve',
+            context: { unreserve_parent: true },
         }).then(() => this._reloadReport());
     },
 

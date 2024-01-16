@@ -425,7 +425,7 @@ class CustomerPortal(Controller):
 
         report_sudo = request.env.ref(report_ref).with_user(SUPERUSER_ID)
 
-        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
+        if not isinstance(report_sudo, request.env.registry['ir.actions.report']):
             raise UserError(_("%s is not the reference of a report", report_ref))
 
         if hasattr(model, 'company_id'):

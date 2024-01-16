@@ -68,6 +68,11 @@ class TestEventNotifications(TransactionCase):
         events.partner_ids = self.partner
         self.assertEqual(len(events.attendee_ids), 2, "It should have created one attendee per event")
 
+    def test_attendee_added_write(self):
+        """Test that writing ids directly on partner_ids instead of commands is handled."""
+        self.event.write({'partner_ids': [self.partner.id]})
+        self.assertEqual(self.event.attendee_ids.partner_id, self.partner, "It should be linked to the partner")
+
     def test_existing_attendee_added(self):
         self.event.partner_ids = self.partner
         attendee = self.event.attendee_ids

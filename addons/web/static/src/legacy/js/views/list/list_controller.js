@@ -445,6 +445,7 @@ var ListController = BasicController.extend({
             method: 'search',
             args: [domain],
             kwargs: {
+                context: this.model.get(this.handle, { raw: true }).getContext(),
                 limit: limit,
             },
         });

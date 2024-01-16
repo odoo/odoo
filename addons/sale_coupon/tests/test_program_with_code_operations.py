@@ -3,8 +3,10 @@
 
 from odoo.addons.sale_coupon.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestProgramWithCodeOperations(TestSaleCouponCommon):
     # Test the basic operation (apply_coupon) on an coupon program on which we should
     # apply the reward when the code is correct or remove the reward automatically when the reward is

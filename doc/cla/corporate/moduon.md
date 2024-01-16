@@ -14,3 +14,5 @@ Jairo Llopis jairo@moduon.team https://github.com/Yajo
 Eduardo De Miguel edu@moduon.team https://github.com/Shide
 moduonbot moduonbot@moduon.team https://github.com/moduonbot
 Rafael Blasco rblasco@moduon.team https://github.com/rafaelbn
+Andrea Cattalani andrea@moduon.team https://github.com/anddago78 (up to 2023-08-31)
+Emilio Pascual emilio@moduon.team https://github.com/emiliopascual

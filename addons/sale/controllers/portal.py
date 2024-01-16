@@ -88,7 +88,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         values.update({
             'date': date_begin,
-            'quotations': quotations.sudo(),
+            'quotations': quotations,
             'page_name': 'quote',
             'pager': pager,
             'default_url': '/my/quotes',
@@ -131,7 +131,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         values.update({
             'date': date_begin,
-            'orders': orders.sudo(),
+            'orders': orders,
             'page_name': 'order',
             'pager': pager,
             'default_url': '/my/orders',

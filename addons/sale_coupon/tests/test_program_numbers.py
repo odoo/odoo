@@ -10,44 +10,51 @@ from odoo.tools.float_utils import float_compare
 @tagged('post_install', '-at_install')
 class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
-    def setUp(self):
-        super(TestSaleCouponProgramNumbers, self).setUp()
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        self.largeCabinet = self.env['product.product'].create({
+        cls.largeCabinet = cls.env['product.product'].create({
             'name': 'Large Cabinet',
             'list_price': 320.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.conferenceChair = self.env['product.product'].create({
+        cls.conferenceChair = cls.env['product.product'].create({
             'name': 'Conference Chair',
             'list_price': 16.5,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.pedalBin = self.env['product.product'].create({
+        cls.pedalBin = cls.env['product.product'].create({
             'name': 'Pedal Bin',
             'list_price': 47.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.drawerBlack = self.env['product.product'].create({
+        cls.drawerBlack = cls.env['product.product'].create({
             'name': 'Drawer Black',
             'list_price': 25.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
-        self.largeMeetingTable = self.env['product.product'].create({
+        cls.largeMeetingTable = cls.env['product.product'].create({
             'name': 'Large Meeting Table',
             'list_price': 40000.0,
             'taxes_id': False,
+            'company_id': cls.env.company.id,
         })
 
-        self.steve = self.env['res.partner'].create({
+        cls.steve = cls.env['res.partner'].create({
             'name': 'Steve Bucknor',
             'email': 'steve.bucknor@example.com',
+            'property_product_pricelist': cls.pricelist.id,
         })
-        self.empty_order = self.env['sale.order'].create({
-            'partner_id': self.steve.id
+        cls.empty_order = cls.env['sale.order'].create({
+            'partner_id': cls.steve.id,
         })
 
-        self.p1 = self.env['coupon.program'].create({
+        cls.p1 = cls.env['coupon.program'].create({
             'name': 'Code for 10% on orders',
             'promo_code_usage': 'code_needed',
             'promo_code': 'test_10pc',
@@ -55,24 +62,24 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'discount_percentage': 10.0,
             'program_type': 'promotion_program',
         })
-        self.p2 = self.env['coupon.program'].create({
+        cls.p2 = cls.env['coupon.program'].create({
             'name': 'Buy 3 cabinets, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.largeCabinet.id,
+            'reward_product_id': cls.largeCabinet.id,
             'rule_min_quantity': 3,
             'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
-        self.p3 = self.env['coupon.program'].create({
+        cls.p3 = cls.env['coupon.program'].create({
             'name': 'Buy 1 drawer black, get a free Large Meeting Table',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
-            'reward_product_id': self.largeMeetingTable.id,
+            'reward_product_id': cls.largeMeetingTable.id,
             'rule_products_domain': '[["name","ilike","drawer black"]]',
         })
-        self.discount_coupon_program = self.env['coupon.program'].create({
+        cls.discount_coupon_program = cls.env['coupon.program'].create({
             'name': '$100 coupon',
             'program_type': 'coupon_program',
             'reward_type': 'discount',
@@ -1539,3 +1546,45 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         self.assertEqual(len(order.order_line), 1, 'Promotion line should not be present')
         self.assertEqual(order.amount_total, 10, '10$ - 0$(discount) = 10$(total) ')
+
+    def test_fixed_tax_not_affected(self):
+        self.env['coupon.program'].create({
+            'name': '50% discount',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 50,
+            'discount_apply_on': 'on_order',
+        })
+
+        order = self.empty_order
+        # Create taxes
+        self.tax_15pc_excl = self.env['account.tax'].create({
+            'name': "15% Tax excl",
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        self.tax_10_fixed = self.env['account.tax'].create({
+            'name': "10% Fixed tax",
+            'amount_type': 'fixed',
+            'amount': 10,
+        })
+
+        # Set tax and prices on products as neeed for the test
+        self.product_A.write({'list_price': 100})
+        self.product_A.taxes_id = (self.tax_15pc_excl + self.tax_10_fixed)
+
+        # Add products in order
+        self.env['sale.order.line'].create({
+            'product_id': self.product_A.id,
+            'name': 'product A',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        order.recompute_coupon_lines()
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 67.5, '100$ + 15% tax + 10$ tax - 50%(discount) = 67.5$(total) ')
+        self.assertEqual(order.amount_tax, 17.5, '15% tax + 10$ tax$ - 50%$(discount) = 17.5$(total) ')

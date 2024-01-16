@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 EXTRA_REQUEST = 5
 """ During tests, the query on 'base_registry_signaling, base_cache_signaling'
@@ -16,8 +16,7 @@ EXTRA_REQUEST = 5
         ROLLBACK TO SAVEPOINT "test_cursor_5"
 """
 
-
-class UtilPerf(HttpCase):
+class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     def _get_url_hot_query(self, url, cache=True):
         url += ('?' not in url and '?' or '')
         if not cache:
@@ -33,6 +32,11 @@ class UtilPerf(HttpCase):
 
 
 class TestStandardPerformance(UtilPerf):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.users'].browse(2).image_1920 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')
         url = '/web/image/res.users/2/image_256'

@@ -56,7 +56,7 @@ msgstr "Checkout API URL"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_client_key
 msgid "Client Key"
-msgstr "Client Key"
+msgstr "Client-Schlüssel"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_acquirer.py:0
@@ -106,6 +106,12 @@ msgstr "Zahlungstoken"
 #: model:ir.model,name:payment_adyen.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Zahlungstransaktion"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/utils.py:0
+#, python-format
+msgid "Please complete your address details."
+msgstr "Bitte vervollständigen Sie Ihre Adressangaben."
 
 #. module: payment_adyen
 #. openerp-web
@@ -205,7 +211,7 @@ msgstr "Die Basis-URL für die wiederkehrenden API-Endpunkte"
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr "Der Client Key des Webservice-Benutzers"
+msgstr "Der Client-Schlüssel des Webservice-Benutzers"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_merchant_account

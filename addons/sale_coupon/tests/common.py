@@ -7,13 +7,13 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleCouponCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
-        pricelist = cls.env.ref('product.list0')
-        pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
+        cls.pricelist = cls.env.ref('product.list0')
+        cls.pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
 
         # Set all the existing programs to active=False to avoid interference
         cls.env['coupon.program'].search([]).write({'active': False})
@@ -22,6 +22,7 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
         cls.steve = cls.env['res.partner'].create({
             'name': 'Steve Bucknor',
             'email': 'steve.bucknor@example.com',
+            'property_product_pricelist': cls.pricelist.id,
         })
 
         cls.empty_order = cls.env['sale.order'].create({

@@ -267,9 +267,10 @@ class PaymentAcquirer(models.Model):
         for acquirer in self:
             external_id = external_ids[acquirer.id]
             if external_id and not external_id.startswith('__export__'):
-                raise UserError(
-                    _("You cannot delete the payment acquirer %s; archive it instead.", acquirer.name)
-                )
+                raise UserError(_(
+                    "You cannot delete the payment acquirer %s; disable it or uninstall it instead.",
+                    acquirer.name,
+                ))
 
     #=== ACTION METHODS ===#
 

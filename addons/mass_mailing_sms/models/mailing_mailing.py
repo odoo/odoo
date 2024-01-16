@@ -167,9 +167,9 @@ class Mailing(models.Model):
         target = self.env[self.mailing_model_real]
 
         partner_fields = []
-        if issubclass(type(target), self.pool['mail.thread.phone']):
+        if isinstance(target, self.pool['mail.thread.phone']):
             phone_fields = ['phone_sanitized']
-        elif issubclass(type(target), self.pool['mail.thread']):
+        elif isinstance(target, self.pool['mail.thread']):
             phone_fields = [
                 fname for fname in target._sms_get_number_fields()
                 if fname in target._fields and target._fields[fname].store

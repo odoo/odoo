@@ -2024,12 +2024,13 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         allowing them to view the invoice without needing to log in.
         """
 
-        # Create a simple invoice for the partner
         invoice = self.init_invoice(
             'out_invoice', partner=self.partner_a, invoice_date='2023-04-17', amounts=[100])
-
-        # Set the invoice to the 'posted' state
         invoice.action_post()
+
+        # add a follower to the invoice
+        self.partner_b.email = 'partner_b@example.com'
+        invoice.message_subscribe(self.partner_b.ids)
 
         # Create a partner not related to the invoice
         additional_partner = self.env['res.partner'].create({
@@ -2048,8 +2049,10 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ).create({'is_print': False})
         invoice_send_wizard.partner_ids |= additional_partner
 
+        # prevent mail.mail record from being deleted after being sent.
         invoice_send_wizard.template_id.auto_delete = False
 
+        # send the invoice
         invoice_send_wizard.send_and_print_action()
 
         # Find the email sent to the additional partner
@@ -2058,6 +2061,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('recipient_ids', '=', additional_partner.id)
         ])
         self.assertTrue(additional_partner_mail)
-
         self.assertIn('access_token=', additional_partner_mail.body_html,
                       "The additional partner should be sent the link including the token")
+
+        # Find the email sent to the followers
+        follower_mail = self.env['mail.mail'].search([
+            ('res_id', '=', invoice.id),
+            ('recipient_ids', '=', self.partner_b.id)
+        ])
+        self.assertTrue(follower_mail)
+        self.assertNotIn('access_token=', follower_mail.body_html,
+                      "The followers should not bet sent the access token by default")

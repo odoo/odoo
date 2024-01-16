@@ -2238,6 +2238,7 @@ msgstr "สกุลเงินของยอดเงิน"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_residual
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Amount Due"
 msgstr "ยอดเงินค้างชําระ"
@@ -3444,13 +3445,13 @@ msgstr "บัญชีการเปลี่ยนแปลงตามเก
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Loss)"
-msgstr ""
+msgstr "ผลต่างของเงินสดที่สังเกตได้ในระหว่างการนับ (ขาดทุน)"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Cash difference observed during the counting (Profit)"
-msgstr ""
+msgstr "ผลต่างของเงินสดที่สังเกตได้ในระหว่างการนับ (กำไร)"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3969,7 +3970,7 @@ msgstr "เชื่อมต่อบัญชีการเงินของ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "ถือว่าคำตอบเป็นเธรดใหม่"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
@@ -8341,7 +8342,7 @@ msgstr "ทำรายการคงค้าง"
 msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
-msgstr ""
+msgstr "จัดการคำตอบเป็นอีเมลขาเข้าใหม่ แทนที่จะตอบกลับไปที่ชุดข้อความเดียวกัน"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -9438,6 +9439,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"การสนทนาต้นฉบับ: คำตอบอยู่ในหัวข้อการสนทนาในเอกสารต้นฉบับ\n"
+"ที่อยู่อีเมลอื่น: คำตอบไปที่ที่อยู่อีเมลที่กล่าวถึงในรหัสข้อความติดตาม แทนที่จะเป็นชุดการสนทนาในเอกสารต้นฉบับ\n"
+"สิ่งนี้มีผลกระทบต่อรหัสข้อความที่สร้างขึ้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -10146,6 +10150,8 @@ msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
 msgstr ""
+"โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีการสูญเสีย "
+"บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10154,6 +10160,8 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
+"โปรดไปที่สมุดรายวัน %s และกำหนดบัญชีกำไร "
+"บัญชีนี้จะใช้ในการบันทึกผลต่างเงินสด"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -10557,7 +10565,7 @@ msgstr "QIF Import"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code
 msgid "QR Code"
-msgstr ""
+msgstr "รหัส QR โค้ด"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10890,7 +10898,7 @@ msgstr "ภาษีที่แทนที่"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "ตอบกลับ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
@@ -14509,6 +14517,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"ตัวเลือกนี้จะลบการติดตามอีเมลหลังจากถูกส่งอย่างถาวร "
+"รวมถึงจากเมนูทางเทคนิคในการตั้งค่า "
+"เพื่อรักษาพื้นที่จัดเก็บข้อมูลของฐานข้อมูล Odoo ของคุณ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -14609,7 +14620,7 @@ msgstr "ถึง"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "To :"
-msgstr ""
+msgstr "ถึง:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check

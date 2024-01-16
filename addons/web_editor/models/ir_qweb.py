@@ -200,7 +200,7 @@ class ManyToOne(models.AbstractModel):
     def attributes(self, record, field_name, options, values):
         attrs = super(ManyToOne, self).attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
-            many2one = getattr(record, field_name)
+            many2one = record[field_name]
             if many2one:
                 attrs['data-oe-many2one-id'] = many2one.id
                 attrs['data-oe-many2one-model'] = many2one._name
@@ -474,7 +474,7 @@ class Image(models.AbstractModel):
             # force a complete load of the image data to validate it
             image.load()
         except Exception:
-            logger.exception("Failed to load remote image %r", url)
+            logger.warning("Failed to load remote image %r", url, exc_info=True)
             return None
 
         # don't use original data in case weird stuff was smuggled in, with

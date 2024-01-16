@@ -5,11 +5,12 @@ import odoo.tests
 from .common import TestProductConfiguratorCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'kzh')
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
-
+    # TODO: Those tests don't work without sale_management
     def setUp(self):
         super(TestUi, self).setUp()
+        self.env.company.country_id = self.env.ref('base.us')
         self.custom_pricelist = self.env['product.pricelist'].create({
             'name': 'Custom pricelist (TEST)',
             'item_ids': [(0, 0, {
