@@ -98,7 +98,7 @@ class IrModule(models.Model):
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(dict(name=module, state='installed', imported=True, **values))
+            mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
         kind_of_files = ['data', 'init_xml', 'update_xml']
@@ -193,6 +193,8 @@ class IrModule(models.Model):
             'module': module,
             'res_id': asset.id,
         } for asset in created_assets])
+
+        mod._update_from_terp(terp)
 
         return True
 
