@@ -999,7 +999,9 @@ class AccountReconcileModel(models.Model):
             for aml_values in amls_values_list
         )
         sign = 1 if st_line_amount_curr > 0.0 else -1
-        amount_curr_after_rec = sign * (amls_amount_curr + st_line_amount_curr)
+        amount_curr_after_rec = st_line_currency.round(
+            sign * (amls_amount_curr + st_line_amount_curr)
+        )
 
         # The statement line will be fully reconciled.
         if st_line_currency.is_zero(amount_curr_after_rec):
@@ -1016,12 +1018,12 @@ class AccountReconcileModel(models.Model):
 
         # If the tolerance is expressed as a fixed amount, check the residual payment amount doesn't exceed the
         # tolerance.
-        if self.payment_tolerance_type == 'fixed_amount' and -amount_curr_after_rec <= self.payment_tolerance_param:
+        if self.payment_tolerance_type == 'fixed_amount' and st_line_currency.compare_amounts(-amount_curr_after_rec, self.payment_tolerance_param) <= 0:
             return {'allow_write_off', 'allow_auto_reconcile'}
 
         # The tolerance is expressed as a percentage between 0 and 100.0.
         reconciled_percentage_left = (abs(amount_curr_after_rec / amls_amount_curr)) * 100.0
-        if self.payment_tolerance_type == 'percentage' and reconciled_percentage_left <= self.payment_tolerance_param:
+        if self.payment_tolerance_type == 'percentage' and st_line_currency.compare_amounts(reconciled_percentage_left, self.payment_tolerance_param) <= 0:
             return {'allow_write_off', 'allow_auto_reconcile'}
 
         return {'rejected'}
