@@ -674,6 +674,10 @@ class HrExpenseSheet(models.Model):
         company_account_sheets = self - own_account_sheets
 
         moves = self.env['account.move'].create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
+        # Set the main attachment on the moves directly to avoid recomputing the
+        # `register_as_main_attachment` on the moves which triggers the OCR again
+        for move in moves:
+            move.message_main_attachment_id = move.attachment_ids[0] if move.attachment_ids else None
         payments = self.env['account.payment'].with_context(**skip_context).create([
             expense._prepare_payments_vals() for expense in company_account_sheets.expense_line_ids
         ])
