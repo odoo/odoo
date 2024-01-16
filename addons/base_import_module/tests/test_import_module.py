@@ -211,6 +211,8 @@ class TestImportModule(odoo.tests.TransactionCase):
                 ]
             },
             'license': 'LGPL-3',
+            'category': 'Test Category',
+            'depends': ['base'],
         })
 
         stream = BytesIO()
@@ -235,6 +237,10 @@ class TestImportModule(odoo.tests.TransactionCase):
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')
         self.assertEqual(asset_data.name, f'{bundle}_{path}'.replace(".", "_"))
+
+        module = self.env['ir.module.module'].search([('name', '=', 'test_module')])
+        self.assertEqual(module.dependencies_id.mapped('name'), ['base'])
+        self.assertEqual(module.category_id.name, 'Test Category')
 
         # Uninstall test module
         self.env['ir.module.module'].search([('name', '=', 'test_module')]).module_uninstall()
