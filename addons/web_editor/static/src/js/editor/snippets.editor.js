@@ -2129,6 +2129,9 @@ var SnippetsMenu = Widget.extend({
         this.tooltips.dispose();
         options.clearServiceCache();
         options.clearControlledSnippets();
+        if (this.$body[0].ownerDocument !== this.ownerDocument) {
+            this.$body.off('.snippets_menu');
+        }
     },
 
     //--------------------------------------------------------------------------
