@@ -17,7 +17,7 @@ export class PageSearchModel extends SearchModel {
 
         this.rpc = useService('rpc');
         this.pagesState = useState({
-            pageIds: [],
+            websiteDomain: false,
         });
         onWillStart(async () => {
             // Before the searchModel performs its DB search call, append the
@@ -33,7 +33,7 @@ export class PageSearchModel extends SearchModel {
      */
     exportState() {
         const state = super.exportState();
-        state.pageIds = this.pagesState.pageIds;
+        state.websiteDomain = this.pagesState.websiteDomain;
         return state;
     }
 
@@ -43,8 +43,8 @@ export class PageSearchModel extends SearchModel {
     _importState(state) {
         super._importState(...arguments);
 
-        if (state.pageIds.length) {
-            this.pagesState.pageIds = state.pageIds;
+        if (state.websiteDomain) {
+            this.pagesState.websiteDomain = state.websiteDomain;
         }
     }
 
@@ -52,33 +52,41 @@ export class PageSearchModel extends SearchModel {
      * @override
      */
     _getDomain(params = {}) {
-        const domain = super._getDomain(params);
-
-        if (!this.pagesState.pageIds.length) {
+        let domain = super._getDomain(params);
+        if (!this.pagesState.websiteDomain) {
             return domain;
         }
 
-        const result = Domain.and([
+        domain = Domain.and([
             domain,
-            [['id', 'in', this.pagesState.pageIds]]
+            this.pagesState.websiteDomain,
         ]);
-
-        return params.raw ? result : result.toList();
+        return params.raw ? domain : domain.toList();
     }
 
     /**
-     * Updates the pageIds state and notifies the change.
+     * Updates the website domain state and notifies the change. That domain
+     * state will be appended to the base SearchModel domain.
      *
      * @param {number} websiteId - The ID of the website.
      */
     async notifyWebsiteChange(websiteId) {
-        // When the website changes, update the pageIds state (which will be
-        // added in the base SearchModel domain)
-        this.pagesState.pageIds = await this.orm.call(
-            "website",
-            "get_website_page_ids",
-            [websiteId],
-        );
+        let websiteDomain = [];
+        if (websiteId) {
+            if (this.resModel === 'website.page') {
+                // In case of `website.page`, we can't find the website pages
+                // with a regular domain (because we need to filter duplicates).
+                const pageIds = await this.orm.call(
+                    "website",
+                    "get_website_page_ids",
+                    [websiteId],
+                );
+                websiteDomain = [['id', 'in', pageIds]];
+            } else {
+                websiteDomain = [['website_id', 'in', [false, websiteId]]];
+            }
+        }
+        this.pagesState.websiteDomain = websiteDomain;
         this._notify();
     }
 }
