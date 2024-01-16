@@ -337,6 +337,29 @@ QUnit.test(
     }
 );
 
+QUnit.test(
+    "Message of type notification in chatter should not have inline display",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
+        pyEnv["mail.message"].create({
+            author_id: pyEnv.currentPartnerId,
+            body: "<p>Line 1</p><p>Line 2</p>",
+            model: "res.partner",
+            res_id: partnerId,
+            message_type: "notification",
+        });
+        const { openFormView } = await start();
+        await openFormView("res.partner", partnerId);
+        await contains(".o-mail-Message-body");
+        assert.notOk(
+            window
+                .getComputedStyle(document.querySelector(".o-mail-Message-body"), null)
+                .display.includes("inline")
+        );
+    }
+);
+
 QUnit.test("Click on avatar opens its partner chat window", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
@@ -2143,7 +2166,7 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
     const pyEnv = await startServer();
     const [userId1, userId2] = pyEnv["res.users"].create([
         { name: "Jerry Golay" },
-        { name: "Albert" }
+        { name: "Albert" },
     ]);
     const [partnerId1] = pyEnv["res.partner"].create([
         {
@@ -2153,7 +2176,7 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
         {
             name: "Jerry Golay",
             user_ids: [userId1],
-        }
+        },
     ]);
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -2174,6 +2197,6 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussCategoryItem", {
         text: "Jerry Golay",
-        before: [".o-mail-DiscussCategoryItem", { text: "Albert" }]
+        before: [".o-mail-DiscussCategoryItem", { text: "Albert" }],
     });
 });
