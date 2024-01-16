@@ -136,9 +136,8 @@ export class KanbanHeader extends Component {
             body: this.env._t(
                 "Are you sure that you want to archive all the records from this column?"
             ),
-            confirm: async () => {
-                await this.group.list.archive();
-                this.props.progressBarState?.updateCounts(this.group);
+            confirm: () => {
+                return this.group.list.archive();
             },
             cancel: () => {},
         });
@@ -146,7 +145,6 @@ export class KanbanHeader extends Component {
 
     unarchiveGroup() {
         this.group.list.unarchive();
-        this.props.progressBarState?.updateCounts(this.group);
     }
 
     deleteGroup() {
