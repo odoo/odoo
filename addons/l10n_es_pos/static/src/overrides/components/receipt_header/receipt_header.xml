@@ -16,7 +16,7 @@
         </xpath>
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
             <t t-set="partner" t-value="props.data.partner"/>
-            <t t-if="props.data.is_spanish and partner?.id !== props.data.simplified_partner_id">
+            <t t-if="props.data.is_spanish and partner and partner.id !== props.data.simplified_partner_id">
                 <div>Customer: <t t-esc="partner.name" /></div>
                 <div t-if="partner.vat"><t t-esc="props.data.company.country?.vat_label || 'Tax ID'"/>: <t t-esc="partner.vat" /></div>
                 <div t-if="partner.address" t-esc="partner.address"/>
