@@ -160,6 +160,33 @@ export class ImageSelector extends FileSelector {
         await this.uploadService.uploadFiles(files, { resModel: this.props.resModel, resId: this.props.resId, isImage: true }, (attachment) => this.onUploaded(attachment));
     }
 
+    async uploadUrl(url) {
+        await fetch(url).then(async result => {
+            const blob = await result.blob();
+            blob.id = new Date().getTime();
+            blob.name = new URL(url).pathname.split("/").findLast(s => s);
+            await this.uploadFiles([blob]);
+        }).catch(async () => {
+            await new Promise(resolve => {
+                // If it works from an image, use URL.
+                const imageEl = document.createElement("img");
+                imageEl.onerror = () => {
+                    // This message is about the blob fetch failure.
+                    // It is only displayed if the fallback did not work.
+                    this.notificationService.add(_t("An error occurred while fetching the entered URL."), {
+                        title: _t("Error"),
+                        sticky: true,
+                    });
+                    resolve();
+                };
+                imageEl.onload = () => {
+                    super.uploadUrl(url).then(resolve);
+                };
+                imageEl.src = url;
+            });
+        });
+    }
+
     validateUrl(...args) {
         const { isValidUrl, path } = super.validateUrl(...args);
         const isValidFileFormat = IMAGE_EXTENSIONS.some(format => path.endsWith(format));
