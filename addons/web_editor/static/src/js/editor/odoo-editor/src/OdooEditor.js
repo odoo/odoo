@@ -3172,7 +3172,10 @@ export class OdooEditor extends EventTarget {
         const block = closestBlock(sel.anchorNode);
         let activeLabel = undefined;
         for (const [style, cssSelector, isList] of [
-            ['paragraph', 'p:not(.small, .lead)', false],
+            // TODO we might want to review this list to not mention o_xxx
+            // classes but be a setting instead? Probably after current
+            // refactorings being made in master.
+            ['paragraph', 'p:not(.small, .lead, .o_small)', false],
             ['pre', 'pre', false],
             ['heading1', 'h1:not(.display-1, .display-2, .display-3, .display-4)', false],
             ['heading2', 'h2', false],
@@ -3185,7 +3188,10 @@ export class OdooEditor extends EventTarget {
             ['display-3', 'h1.display-3', false],
             ['display-4', 'h1.display-4', false],
             ['blockquote', 'blockquote', false],
-            ['small', '.small', false],
+            // Note: this button will apply the "o_small" class but as an
+            // approximation, we display "Small" if this actually use the
+            // Bootstrap "small" class.
+            ['small', '.small, .o_small', false],
             ['light', '.lead', false],
             ['unordered', 'UL', true],
             ['ordered', 'OL', true],
@@ -3247,7 +3253,7 @@ export class OdooEditor extends EventTarget {
         const range = getDeepRange(this.editable, { sel, correctTripleClick: true });
         const spansBlocks = [...range.commonAncestorContainer.childNodes].some(isBlock);
         linkButton?.classList.toggle('d-none', spansBlocks || isInMedia);
-        
+
         // Hide link button group if it has no visible button.
         const linkBtnGroup = this.toolbar.querySelector('#link.btn-group');
         linkBtnGroup?.classList.toggle('d-none', !linkBtnGroup.querySelector('.btn:not(.d-none)'));
