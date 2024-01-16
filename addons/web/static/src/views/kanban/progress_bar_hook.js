@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { onWillStart, onWillUpdateProps, reactive, toRaw, useComponent } from "@odoo/owl";
+import { reactive, toRaw } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 const FALSE = Symbol("False");
@@ -302,18 +302,12 @@ class ProgressBarState {
         }
     }
 
-    async loadProgressBar(props = {}) {
-        const groupBy = props.groupBy || this.model.root.groupBy;
-        const defaultGroupBy =
-            props.defaultGroupBy || (this.model.root && this.model.root.defaultGroupBy);
-        if (groupBy.length || defaultGroupBy) {
-            const resModel = props.resModel || this.model.root.resModel;
-            const domain = props.domain || this.model.root.domain;
-            const context = props.context || this.model.root.context;
+    async loadProgressBar({ context, domain, groupBy, resModel }) {
+        if (groupBy.length) {
             const { colors, fieldName: field, help } = this.progressAttributes;
             const res = await this.model.orm.call(resModel, "read_progress_bar", [], {
                 domain,
-                group_by: groupBy.length ? groupBy[0] : defaultGroupBy,
+                group_by: groupBy[0],
                 progress_bar: { colors, field, help },
                 context,
             });
@@ -335,8 +329,6 @@ class ProgressBarState {
 }
 
 export function useProgressBar(progressAttributes, model, aggregateFields, activeBars) {
-    const component = useComponent();
-
     const progressBarState = new ProgressBarState(
         progressAttributes,
         model,
@@ -344,13 +336,16 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
         activeBars
     );
 
-    // FIXME: maybe this can be do directly on the readGroup
-    onWillStart(() => {
-        return progressBarState.loadProgressBar(component.props);
-    });
-    onWillUpdateProps((nextProps) => {
-        progressBarState.loadProgressBar(nextProps);
-    });
+    let prom;
+    model.rootParams.onWillLoadRoot = (root) => {
+        prom = progressBarState.loadProgressBar({
+            context: root.context,
+            domain: root.domain,
+            groupBy: root.groupBy,
+            resModel: root.resModel,
+        });
+    };
+    model.rootParams.onRootLoaded = () => prom;
 
     return reactive(progressBarState);
 }
