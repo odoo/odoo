@@ -111,10 +111,10 @@
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>
                         <DescripcionDetalle t-out="line_values['description']"/>
-                        <Cantidad t-out="format_float(line.quantity)"/>
-                        <ImporteUnitario t-out="format_float(line_values['unit_price'])"/>
-                        <Descuento t-out="format_float(line_values['discount'])"/>
-                        <ImporteTotal t-out="format_float(line_values['total'])"/>
+                        <Cantidad t-out="format_float(line.quantity, precision_digits=8)"/>
+                        <ImporteUnitario t-out="format_float(line_values['unit_price'], precision_digits=8)"/>
+                        <Descuento t-out="format_float(line_values['discount'], precision_digits=8)"/>
+                        <ImporteTotal t-out="format_float(line_values['total'], precision_digits=8)"/>
                     </IDDetalleFactura>
                 </DetallesFactura>
                 <ImporteTotalFactura t-out="format_float(amount_total)"/>
