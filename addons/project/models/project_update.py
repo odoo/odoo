@@ -92,7 +92,7 @@ class ProjectUpdate(models.Model):
             project.sudo().last_update_id = update
             update.write({
                 "task_count": project.task_count,
-                "closed_task_count": project.closed_task_count,
+                "closed_task_count": project.task_count - project.open_task_count,
             })
         return updates
 
