@@ -143,8 +143,10 @@ export class SearchArchParser extends XMLParser {
                     // Note: many2one as a default filter will have a
                     // numeric value instead of a string => we want "="
                     // instead of "ilike".
-                    if (["char", "html", "many2many", "one2many", "text"].includes(type)) {
+                    if (["char", "html", "text"].includes(type)) {
                         operator = "ilike";
+                    } else if (["many2many", "one2many"].includes(type)) {
+                        operator = Array.isArray(val) ? "in" : "ilike";
                     } else {
                         operator = "=";
                     }
@@ -159,26 +161,21 @@ export class SearchArchParser extends XMLParser {
                         throw Error();
                     }
                     preField.defaultAutocompleteValue.label = option[1];
-                } else if (fieldType === "many2one") {
+                } else if (
+                    fieldType === "many2one" ||
+                    (["many2many", "one2many"].includes(fieldType) && Array.isArray(val))
+                ) {
+                    if (["many2many", "one2many"].includes(fieldType)) {
+                        preField.defaultAutocompleteValue.value = val;
+                    }
                     this.labels.push((orm) => {
                         return orm
-                            .call(relation, "name_get", [value], { context })
+                            .call(relation, "name_get", [val], { context })
                             .then((results) => {
-                                preField.defaultAutocompleteValue.label = results[0][1];
+                                preField.defaultAutocompleteValue.label = results
+                                    .map((res) => res[1])
+                                    .join(" or "); // translate or
                             });
-                    });
-                } else if (["many2many", "one2many"].includes(fieldType) && Array.isArray(val)) {
-                    preField.defaultAutocompleteValue.operator = "in";
-                    preField.defaultAutocompleteValue.value = val;
-                    this.labels.push(async (orm) => {
-                        const labels = await Promise.all(
-                            val.map((v) =>
-                                orm
-                                    .call(relation, "name_get", [v], { context })
-                                    .then((results) => results[0][1])
-                            )
-                        );
-                        preField.defaultAutocompleteValue.label = `${labels.join(" or ")}`;
                     });
                 }
             }

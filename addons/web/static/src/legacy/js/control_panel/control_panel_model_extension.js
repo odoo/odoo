@@ -975,8 +975,10 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                             // Note: many2one as a default filter will have a
                             // numeric value instead of a string => we want "="
                             // instead of "ilike".
-                            if (["char", "html", "many2many", "one2many", "text"].includes(type)) {
+                            if (["char", "html", "text"].includes(type)) {
                                 operator = "ilike";
+                            } else if (["many2many", "one2many"].includes(type)) {
+                                operator = Array.isArray(attrs.defaultValue) ? "in" : "ilike";
                             } else {
                                 operator = "=";
                             }
@@ -1590,25 +1592,25 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
         _prepareDefaultLabel(filter) {
             const { id, fieldType, fieldName, defaultAutocompleteValue } = filter;
             const { selection, context, relation } = this.fields[fieldName];
+            const updateLabel = label => {
+                const queryElem = this.state.query.find(({ filterId }) => filterId === id);
+                if (queryElem) {
+                    queryElem.label = label;
+                    defaultAutocompleteValue.label = label;
+                }
+            };
             if (fieldType === 'selection') {
                 defaultAutocompleteValue.label = selection.find(
                     sel => sel[0] === defaultAutocompleteValue.value
                 )[1];
-            } else if (fieldType === 'many2one') {
-                const updateLabel = label => {
-                    const queryElem = this.state.query.find(({ filterId }) => filterId === id);
-                    if (queryElem) {
-                        queryElem.label = label;
-                        defaultAutocompleteValue.label = label;
-                    }
-                };
+            } else if (fieldType === 'many2one' || ['many2many', 'one2many'].includes(fieldType) && Array.isArray(defaultAutocompleteValue.value)) {
                 const promise = this.env.services.rpc({
                     args: [defaultAutocompleteValue.value],
                     context: context,
                     method: 'name_get',
                     model: relation,
                 })
-                    .then(results => updateLabel(results[0][1]))
+                    .then(results => updateLabel(results.map((res) => res[1]).join(" or "))) // translate or
                     .guardedCatch(() => updateLabel(defaultAutocompleteValue.value));
                 this.labelPromises.push(promise);
             } else {
