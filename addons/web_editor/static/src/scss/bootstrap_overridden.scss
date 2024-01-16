@@ -84,3 +84,13 @@ $gray-900: map-get($grays, '900') !default;
 $black: map-get($grays, 'black') !default;
 
 $o-color-system-initialized: true;
+
+// This was added by compatibility but it actually became a nice behavior: the
+// bootstrap default "small" behavior will use the ratio of the configured base
+// font size (if configured, e.g. with website settings) and the Odoo own's
+// "small" font size. Grep: SMALLER_FONT_SIZE_RATIO.
+$small-font-size: if(
+    variable-exists('font-size-base'),
+    ($o-small-font-size / $font-size-base) * 1em,
+    null
+) !default;

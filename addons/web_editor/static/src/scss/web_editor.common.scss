@@ -90,7 +90,6 @@
     @include print-variable('h5-font-size', $h5-font-size);
     @include print-variable('h6-font-size', $h6-font-size);
     @include print-variable('font-size-base', $font-size-base);
-    @include print-variable('small-font-size', $small-font-size);
 }
 
 html, body {
@@ -250,6 +249,19 @@ img.ms-auto, img.mx-auto {
     width: auto;
 }
 
+%o-small-font-size {
+    @include font-size($o-small-font-size);
+}
+// Dedicated class to be able to keep the default "small" behavior of bootstrap:
+// being "smaller" that the context where it is used (em units). Here we want to
+// define a specific fixed font-size for a smaller font-size than the base font
+// size. Note that this class is designed to work as the display-x classes: an
+// extra "styling" class to go on an element. For the "font-size class"
+// equivalent, see o_small-fs below.
+.o_small {
+    @extend %o-small-font-size;
+}
+
 @for $index from 1 through 4 {
     .display-#{$index}-fs {
         @include font-size(map-get($display-font-sizes, $index));
@@ -275,6 +287,12 @@ img.ms-auto, img.mx-auto {
 }
 .base-fs {
     @include font-size($font-size-base);
+}
+// Equivalent "font-size" only for the Odoo own "o_small" class. Note that the
+// "o_small" class currently also changes the font-size only but this is to stay
+// consistent with the other classes which act that way (as display-x).
+.o_small-fs {
+    @extend %o-small-font-size;
 }
 
 div.media_iframe_video {

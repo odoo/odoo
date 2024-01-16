@@ -68,6 +68,16 @@
     <t t-name="website.form_field_description">
         <!-- The actual value for this case is handled in JS as it can be -->
         <!-- edited with formatting by the user -->
+        <!--
+            TODO using "small" alongside with the "form-text" class is actually
+            a mistake in current Bootstrap version: it has no effect since the
+            "form-text" class already enforces the default "small" behavior of
+            Bootstrap. In master, remove "small" on all of these.
+
+            TODO changing "font style" (tag) should also be disabled on those
+            form descriptions as the behavior is kinda weird (but it mainly does
+            not make sense to try and change it over there anyway).
+        -->
         <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
             <t t-esc="default_description"/>
         </div>
