@@ -467,7 +467,7 @@ class AccountMoveSend(models.Model):
         subtype = self.env.ref('mail.mt_comment')
         mail_template = self.mail_template_id
 
-        for move, move_data in moves_data.items():
+        for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
             mail_params = self._get_mail_params(move)
             if move_data.get('proforma_pdf_attachment'):
                 mail_params['attachment_ids'].append(move_data['proforma_pdf_attachment'].id)
@@ -561,7 +561,7 @@ class AccountMoveSend(models.Model):
                 self._generate_invoice_fallback_documents(errors)
 
             # Send mail.
-            success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error') and move.partner_id.email}
+            success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
             if success:
                 self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
