@@ -10,6 +10,7 @@ import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/utils/gett
 import { getAccountingData } from "../accounting_test_data";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 import { sprintf } from "@web/core/utils/strings";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { DEFAULT_LOCALE: locale } = spreadsheet.constants;
@@ -63,7 +64,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, 123456)`);
         await waitForDataSourcesLoaded(model);
         assert.strictEqual(
-            getEvaluatedCell(model, "A1").error.message,
+            getEvaluatedCell(model, "A1").message,
             "Currency not available for this company."
         );
     });
@@ -79,16 +80,16 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A7", `=ODOO.DEBIT("100", 1899)`);
         await waitForDataSourcesLoaded(model);
         const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
-        assert.equal(getEvaluatedCell(model, "A1").error.message, "0 is not a valid year.");
-        assert.equal(getEvaluatedCell(model, "A2").error.message, "0 is not a valid year.");
-        assert.equal(getEvaluatedCell(model, "A3").error.message, "-1 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A1").message, "0 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A2").message, "0 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A3").message, "-1 is not a valid year.");
         assert.equal(
-            getEvaluatedCell(model, "A4").error.message,
+            getEvaluatedCell(model, "A4").message,
             sprintf(errorMessage, "not a valid period")
         );
         assert.equal(getEvaluatedCell(model, "A5").value, 0);
-        assert.equal(getEvaluatedCell(model, "A6").error.message, "1899 is not a valid year.");
-        assert.equal(getEvaluatedCell(model, "A7").error.message, "1899 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A6").message, "1899 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A7").message, "1899 is not a valid year.");
     });
 
     QUnit.test("Evaluation with multiple account codes", async (assert) => {
@@ -124,7 +125,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         const model = await createModelWithDataSource({
             mockRPC: async function (route, args) {
                 if (args.method === "spreadsheet_fetch_debit_credit") {
-                    throw new Error("a nasty error");
+                    throw makeServerError({ description: "a nasty error" });
                 }
             },
         });
@@ -132,7 +133,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         await waitForDataSourcesLoaded(model);
         const cell = getEvaluatedCell(model, "A1");
         assert.equal(cell.value, "#ERROR");
-        assert.equal(cell.error.message, "a nasty error");
+        assert.equal(cell.message, "a nasty error");
     });
 
     QUnit.test("Server requests", async (assert) => {
@@ -143,8 +144,8 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     for (const blob of blobs) {
                         assert.step(JSON.stringify(blob));
                     }
+                    return new Array(blobs.length).fill({ credit: 0, debit: 0 });
                 }
-                return [];
             },
         });
         setCellContent(model, "A1", `=ODOO.BALANCE("100", "2022")`);

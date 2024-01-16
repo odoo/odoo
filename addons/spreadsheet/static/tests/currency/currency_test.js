@@ -62,7 +62,7 @@ QUnit.test("invalid date", async (assert) => {
     await waitForDataSourcesLoaded(model);
     assert.strictEqual(getCellValue(model, "A1"), "#ERROR");
     assert.strictEqual(
-        getEvaluatedCell(model, "A1").error.message,
+        getEvaluatedCell(model, "A1").message,
         "The function ODOO.CURRENCY.RATE expects a number value, but 'hello' is a string, and cannot be coerced to a number."
     );
 });
@@ -78,7 +78,7 @@ QUnit.test("Currency rate throw with unknown currency", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("INVALID","USD")`);
     await waitForDataSourcesLoaded(model);
-    assert.strictEqual(getEvaluatedCell(model, "A1").error.message, "Currency rate unavailable.");
+    assert.strictEqual(getEvaluatedCell(model, "A1").message, "Currency rate unavailable.");
 });
 
 QUnit.test("Currency rates are only loaded once", async (assert) => {

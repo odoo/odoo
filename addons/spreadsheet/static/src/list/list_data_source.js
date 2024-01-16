@@ -2,8 +2,8 @@
 
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import {
     formatDateTime,
     deserializeDateTime,
@@ -128,11 +128,8 @@ export class ListDataSource extends OdooViewsDataSource {
         }
         const field = this.getField(fieldName);
         if (!field) {
-            throw new Error(
-                sprintf(
-                    _t("The field %s does not exist or you do not have access to that field"),
-                    fieldName
-                )
+            throw new EvaluationError(
+                _t("The field %s does not exist or you do not have access to that field", fieldName),
             );
         }
         if (!(fieldName in record)) {
@@ -171,7 +168,7 @@ export class ListDataSource extends OdooViewsDataSource {
                 return properties.map((property) => property.string).join(", ");
             }
             case "json":
-                throw new Error(sprintf(_t('Fields of type "%s" are not supported'), "json"));
+                throw new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
             default:
                 return record[fieldName] || "";
         }
