@@ -1011,7 +1011,9 @@ class AccountReconcileModel(models.Model):
             return {'rejected'}
 
         # The statement line will be fully reconciled.
-        residual_balance_after_rec = matched_candidates_values['residual_balance_curr'] + matched_candidates_values['candidates_balance_curr']
+        residual_balance_after_rec = currency.round(
+            matched_candidates_values['residual_balance_curr'] + matched_candidates_values['candidates_balance_curr']
+        )
         if currency.is_zero(residual_balance_after_rec):
             return {'allow_auto_reconcile'}
 
@@ -1026,12 +1028,12 @@ class AccountReconcileModel(models.Model):
 
         # If the tolerance is expressed as a fixed amount, check the residual payment amount doesn't exceed the
         # tolerance.
-        if self.payment_tolerance_type == 'fixed_amount' and -residual_balance_after_rec <= self.payment_tolerance_param:
+        if self.payment_tolerance_type == 'fixed_amount' and currency.compare_amounts(-residual_balance_after_rec, self.payment_tolerance_param) <= 0:
             return {'allow_write_off', 'allow_auto_reconcile'}
 
         # The tolerance is expressed as a percentage between 0 and 100.0.
         reconciled_percentage_left = (residual_balance_after_rec / matched_candidates_values['candidates_balance_curr']) * 100.0
-        if self.payment_tolerance_type == 'percentage' and reconciled_percentage_left <= self.payment_tolerance_param:
+        if self.payment_tolerance_type == 'percentage' and currency.compare_amounts(reconciled_percentage_left, self.payment_tolerance_param) <= 0:
             return {'allow_write_off', 'allow_auto_reconcile'}
 
         return {'rejected'}
