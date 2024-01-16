@@ -260,6 +260,23 @@ class IrModuleModule(models.Model):
                 models.unlink()
                 self._theme_cleanup(model_name, website)
 
+    def _get_theme_cleanup_domain(self, model_name, website):
+        """
+            Get the domain for `_theme_cleanup`. Override this method to include or remove conditions.
+
+            :param model_name: string with the technical name of the model to cleanup
+                (the name must be one of the keys present in ``_theme_model_names``)
+            :param website: ``website`` model for which the models have to be cleaned
+
+            :return: list of tuples representing the domain for `_theme_cleanup`.
+        """
+        self.ensure_one()
+        return [
+            ('key', '=like', self.name + '.%'),
+            ('website_id', '=', website.id),
+            ('theme_template_id', '=', False),
+        ]
+
     def _theme_cleanup(self, model_name, website):
         """
             Remove orphan models of type ``model_name`` from the current theme and
@@ -286,11 +303,8 @@ class IrModuleModule(models.Model):
             return model
         # use active_test to also unlink archived models
         # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
-        orphans = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
-            ('key', '=like', self.name + '.%'),
-            ('website_id', '=', website.id),
-            ('theme_template_id', '=', False),
-        ])
+        domain = self._get_theme_cleanup_domain(model_name, website)
+        orphans = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
         orphans.unlink()
 
     def _theme_get_upstream(self):
