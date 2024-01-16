@@ -485,13 +485,11 @@ export class KanbanRenderer extends Component {
             }
             const refId = previous ? previous.dataset.id : null;
             const targetGroupId = parent?.dataset.id;
-            await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
-            if (dataGroupId !== targetGroupId) {
-                const group = this.props.list.groups.find((g) => g.id === dataGroupId);
-                this.props.progressBarState?.updateAggreagteGroup(group);
+            try {
+                await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+            } finally {
+                this.toggleProcessing(dataRecordId, false);
             }
-
-            this.toggleProcessing(dataRecordId, false);
         }
     }
 
