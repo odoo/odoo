@@ -198,7 +198,7 @@ class StockWarehouse(models.Model):
     def _get_subcontracting_locations(self):
         return self.env['stock.location'].search([
             ('company_id', 'in', self.company_id.ids),
-            ('is_subcontracting_location', '=', 'True'),
+            ('is_subcontracting_location', '=', True),
         ])
 
     def _update_subcontracting_locations_rules(self):

@@ -374,7 +374,7 @@ class ProjectCustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
 
         Task = request.env['project.task']
-        milestone_domain = AND([domain, [('allow_milestones', '=', 'True')]])
+        milestone_domain = AND([domain, [('allow_milestones', '=', True)]])
         milestones_allowed = Task.sudo().search_count(milestone_domain, limit=1) == 1
         searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed, project).items(),
                                          key=lambda item: item[1]["sequence"]))
