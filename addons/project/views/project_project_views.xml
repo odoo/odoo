@@ -402,7 +402,7 @@
                     <field name="partner_id"/>
                     <field name="color"/>
                     <field name="task_count"/>
-                    <field name="closed_task_count"/>
+                    <field name="open_task_count"/>
                     <field name="milestone_count_reached"/>
                     <field name="milestone_count"/>
                     <field name="allow_milestones"/>
@@ -506,11 +506,11 @@
                                         <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
-                                                    <span class="o_value"><t t-esc="record.task_count.value - record.closed_task_count.value"/></span>
+                                                    <span class="o_value"><t t-esc="record.open_task_count.value"/></span>
                                                     <span class="o_label ms-1"><t t-esc="record.label_tasks.value"/></span>
                                                 </div>
                                             </a>
-                                            <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"
+                                            <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.raw_value &gt; 0"
                                                 class="o_kanban_inline_block btn-link text-dark small"
                                                 role="button"
                                                 name="action_get_list_view"
