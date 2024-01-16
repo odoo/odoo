@@ -184,6 +184,29 @@ QUnit.test(
     }
 );
 
+QUnit.test(
+    "Message of type notification in chatter should not have inline display",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
+        pyEnv["mail.message"].create({
+            author_id: pyEnv.currentPartnerId,
+            body: "<p>Line 1</p><p>Line 2</p>",
+            model: "res.partner",
+            res_id: partnerId,
+            message_type: "notification",
+        });
+        const { openFormView } = await start();
+        await openFormView("res.partner", partnerId);
+        await contains(".o-mail-Message-body");
+        assert.notOk(
+            window
+                .getComputedStyle(document.querySelector(".o-mail-Message-body"), null)
+                .display.includes("inline")
+        );
+    }
+);
+
 QUnit.test("Click on avatar opens its partner chat window", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
