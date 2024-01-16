@@ -13636,6 +13636,34 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "open form view action in x2many should display a notification if the record is virtual",
+        async (assert) => {
+            const notificationService = makeFakeNotificationService((msg, options) => {
+                assert.step(`${options.type}:${msg}`);
+            });
+            registry.category("services").add("notification", notificationService, { force: true });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom" open_form_view="1">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            });
+
+            await click(target.querySelector(".o_field_one2many .o_field_x2many_list_row_add a"));
+            await click(target.querySelector(".o_list_record_open_form_view"));
+            assert.verifySteps(['danger:Please click on the "save" button first']);
+        }
+    );
+
     QUnit.test("prevent recreating a deleted record", async (assert) => {
         serverData.models.partner.records.length = 1;
 
