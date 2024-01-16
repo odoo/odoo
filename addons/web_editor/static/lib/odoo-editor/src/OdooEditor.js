@@ -691,6 +691,7 @@ export class OdooEditor extends EventTarget {
         const firstStep = this._historyGetSnapshotStep();
         this._firstStepId = firstStep.id;
         this._historySnapshots = [{ step: firstStep }];
+        console.warn('historyReset', firstStep);
         this._historySteps.push(firstStep);
         // The historyIds carry the ids of the steps that were dropped when
         // doing a snapshot.
@@ -785,9 +786,23 @@ export class OdooEditor extends EventTarget {
 
         // push history
         const currentStep = this._currentStep;
-        if (!currentStep.mutations.length) {
+        const mutationFilterer = mutation => {
+            switch (mutation.type) {
+                case 'attributes':
+                    return !(
+                        mutation.attributeName === 'class' &&
+                        [mutation.value, mutation.oldValue].includes('o_link_in_selection')
+                    ) && (mutation.value || mutation.oldValue); // removing empty attribute -> unimportant technical change
+                case 'add':
+                case 'remove':
+                    return !(mutation.node && 'data-o-link-zws' in (mutation.node.attributes || {}));
+            }
+            return true;
+        };
+        if (!currentStep.mutations.filter(mutationFilterer).length) {
             return false;
         }
+        console.warn('STEP!', currentStep.mutations, currentStep.mutations.filter(mutationFilterer));
 
         currentStep.id = stepId || this._generateId();
         const previousStep = peek(this._historySteps);
@@ -1410,9 +1425,7 @@ export class OdooEditor extends EventTarget {
                     }
                     zwsToPreserve.push(startZws);
                     if (link === linkInSelection) {
-                        this.observerUnactive('_setLinkZws_o_link_in_selection');
                         link.classList.add('o_link_in_selection');
-                        this.observerActive('_setLinkZws_o_link_in_selection');
                     }
                     // Only add the ZWS before if there is nothing before the
                     // link.
@@ -1424,9 +1437,7 @@ export class OdooEditor extends EventTarget {
                     const zwsAfter = this._getLinkZws('after', link) || this._insertLinkZws('after', link);
                     for (const [zws, side] of [[zwsBefore, 'Before'], [zwsAfter, 'After']]) {
                         if (zws && (!zws.parentElement || !zws.parentElement.isContentEditable)) {
-                            this.observerUnactive(`_setLinkZws_zws${side}_remove`);
                             zws.remove();
-                            this.observerActive(`_setLinkZws_zws${side}_remove`);
                         } else if (zws) {
                             zwsToPreserve.push(zws);
                         }
@@ -1819,7 +1830,6 @@ export class OdooEditor extends EventTarget {
         // const restoreCursor = zwsInSelection && preserveCursor(this.document);
         for (const zws of element.querySelectorAll('[data-o-link-zws]')) {
             if (zws.innerHTML.replaceAll('\u200B', '')) {
-                this.observerUnactive('_resetLinkZwsRemoveZws');
                 // The zws span has more than just a zws -> don't remove it.
                 zws.removeAttribute('data-o-link-zws');
                 // TODO: DO THIS PART IN "ON_INPUT > INSERT" INSTEAD:
@@ -1838,15 +1848,12 @@ export class OdooEditor extends EventTarget {
                 if (isCollapsed && anchorOffset !== newOffset) {
                     setSelection(anchorNode, newOffset);
                 }
-                this.observerActive('_resetLinkZwsRemoveZws');
             } else if (!zwsToPreserve.includes(zws)) {
                 // const restoreUpdate = prepareUpdate(
                 //     ...boundariesOut(zws.parentElement),
                 //     { allowReenter: false, label: '_resetLinkZws' }
                 // );
-                this.observerUnactive('_resetLinkZwsRemoveZwsSpan');
                 zws.remove();
-                this.observerActive('_resetLinkZwsRemoveZwsSpan');
                 // restoreUpdate();
             } else if (zws === zwsInSelection) {
                 setSelection(zws, 1);
@@ -1857,9 +1864,7 @@ export class OdooEditor extends EventTarget {
         // focusNode && fillEmpty(focusNode);
         for (const link of element.querySelectorAll('.o_link_in_selection')) {
             if (link !== linkInSelection) {
-                this.observerUnactive('_resetLinkZwsLinkInSelection');
                 link.classList.remove('o_link_in_selection');
-                this.observerActive('_resetLinkZwsLinkInSelection');
             }
         }
         // restoreCursor && restoreCursor();
