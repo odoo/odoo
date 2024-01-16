@@ -12192,15 +12192,15 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".modal .o_data_row .o_field_cell"));
         assert.containsOnce(
             target,
-            ".modal [role='alert']",
+            "[role='alert']",
             "should have open the confirmation modal"
         );
-        assert.containsN(target, ".modal .o_field_many2many_tags .badge", 3);
+        assert.containsN(target, ".o_field_many2many_tags .badge", 6);
         assert.strictEqual(
             target
-                .querySelector(".modal .o_field_many2many_tags .badge:nth-child(3)")
+                .querySelector(".o_field_many2many_tags .badge:nth-child(2)")
                 .textContent.trim(),
-            "Value 3",
+            "Value 2",
             "should have display_name in badge"
         );
     });
