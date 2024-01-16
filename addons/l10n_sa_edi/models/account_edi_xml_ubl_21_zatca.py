@@ -402,3 +402,8 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
     def _get_invoice_payment_terms_vals_list(self, invoice):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         return []
+
+    def _get_partner_contact_vals(self, partner):
+        res = super()._get_partner_contact_vals(partner)
+        res['telephone'] = res.get('telephone', '').replace(' ', '')
+        return res
