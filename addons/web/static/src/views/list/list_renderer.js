@@ -477,14 +477,16 @@ export class ListRenderer extends Component {
         return false;
     }
 
-    focusCell(column, forward = true) {
+    focusCell(column, forward = true, skipNext = false) {
         const index = column
             ? this.state.columns.findIndex(
                   (col) => col.id === column.id && col.name === column.name
               )
             : -1;
         let columns;
-        if (index === -1 && !forward) {
+        if (skipNext) {
+            columns = index === -1 ? [] : [this.state.columns[index]]
+        } else if (index === -1 && !forward) {
             columns = this.state.columns.slice(0).reverse();
         } else {
             columns = [
