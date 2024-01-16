@@ -6307,8 +6307,8 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "onchange",
         "name_create",
         "web_read",
@@ -7381,6 +7381,43 @@ test.tags("desktop")("kanban with sample data: do an on_create action", async ()
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
+});
+
+test("kanban with sample data grouped by m2o and existing groups", async () => {
+    Partner._records = [];
+
+    onRpc("web_read_group", () => {
+        return {
+            groups: [
+                {
+                    product_id_count: 0,
+                    product_id: [3, "hello"],
+                    __domain: [["product_id", "=", "3"]],
+                },
+            ],
+            length: 2,
+        };
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="kanban-box">
+                        <field name="product_id"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(".o_kanban_group:first .o_column_title").toHaveText("hello");
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(16);
+    expect(".o_kanban_record").toHaveText("hello");
 });
 
 test.tags("desktop")("bounce create button when no data and click on empty area", async () => {
@@ -8542,8 +8579,8 @@ test("column progressbars properly work", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -8644,8 +8681,8 @@ test('column progressbars: "false" bar is clickable', async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -8697,8 +8734,8 @@ test('column progressbars: "false" bar with sum_field', async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -8780,8 +8817,8 @@ test("column progressbars: creating a new column should create a new progressbar
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "name_create",
@@ -8825,8 +8862,8 @@ test("column progressbars on quick create properly update counter", async () => 
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "onchange",
@@ -8868,8 +8905,8 @@ test("column progressbars are working with load more", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -8914,8 +8951,8 @@ test("column progressbars with an active filter are working with load more", asy
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -8967,15 +9004,14 @@ test("column progressbars on archiving records update counter", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "action_archive",
-        "web_read_group",
-        "web_search_read",
         "read_progress_bar",
         "web_read_group",
+        "web_search_read",
     ]).toVerifySteps();
 });
 
@@ -9017,15 +9053,14 @@ test("kanban with progressbars: correctly update env when archiving records", as
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "action_archive",
-        "web_read_group",
-        "web_search_read",
         "read_progress_bar",
         "web_read_group",
+        "web_search_read",
     ]).toVerifySteps();
 });
 
@@ -9058,13 +9093,13 @@ test("RPCs when (re)loading kanban view progressbars", async () => {
         "/web/webclient/load_menus",
         // initial load
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         // reload
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -9105,8 +9140,8 @@ test("RPCs when (de)activating kanban view progressbar filters", async () => {
         "/web/webclient/load_menus",
         // initial load
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_read_group domain []",
         "web_search_read",
         "web_search_read",
@@ -9170,8 +9205,8 @@ test.tags("desktop")("drag & drop records grouped by m2o with progressbar", asyn
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -9236,8 +9271,8 @@ test.tags("desktop")("d&d records grouped by date with progressbar with aggregat
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -9277,8 +9312,8 @@ test("progress bar subgroup count recompute", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -9319,8 +9354,8 @@ test.tags("desktop")("progress bar recompute after d&d to and from other column"
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -9364,8 +9399,8 @@ test("progress bar recompute after filter selection", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -9382,7 +9417,7 @@ test("progress bar recompute after filter selection", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["3 yop"]);
     expect(getKanbanCounters()).toEqual(["3"]);
-    expect(["web_read_group", "read_progress_bar", "web_search_read"]).toVerifySteps();
+    expect(["read_progress_bar", "web_read_group", "web_search_read"]).toVerifySteps();
 });
 
 test("progress bar recompute after filter selection (aggregates)", async () => {
@@ -9419,8 +9454,8 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -9440,7 +9475,7 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
 
     expect(getKanbanColumnTooltips()).toEqual(["3 yop"]);
     expect(getKanbanCounters()).toEqual(["600"]);
-    expect(["web_read_group", "read_progress_bar", "web_search_read"]).toVerifySteps();
+    expect(["read_progress_bar", "web_read_group", "web_search_read"]).toVerifySteps();
 });
 
 test("progress bar with aggregates: activate bars (grouped by boolean)", async () => {
@@ -9557,6 +9592,54 @@ test("progress bar with aggregates: activate bars (grouped by date)", async () =
     expect(getKanbanCounters()).toEqual(["15"]);
 });
 
+test("progress bar with aggregates: Archive All in a column", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    Partner._records = [
+        { foo: "yop", bar: true, int_field: 1, active: true },
+        { foo: "yop", bar: true, int_field: 2, active: true },
+        { foo: "blip", bar: true, int_field: 4, active: true },
+        { foo: "gnap", bar: true, int_field: 8, active: true },
+        { foo: "oups", bar: false, int_field: 268, active: true },
+    ];
+
+    let def;
+    onRpc("web_read_group", () => def);
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                <templates><t t-name="kanban-box">
+                    <div>
+                        <field name="foo"/>
+                    </div>
+                </t></templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+
+    expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
+    expect(getKanbanCounters()).toEqual(["268", "15"]);
+
+    const clickColumnAction = await toggleKanbanColumnActions(1);
+    await clickColumnAction("Archive All");
+
+    expect(".o_dialog").toHaveCount(1);
+    def = new Deferred();
+    await contains(".o_dialog footer .btn-primary").click();
+
+    expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
+    expect(getKanbanCounters()).toEqual(["268", "15"]);
+
+    def.resolve();
+    await animationFrame();
+
+    expect(getKanbanColumnTooltips(1)).toEqual([]);
+    expect(getKanbanCounters()).toEqual(["268", "0"]);
+});
+
 test.tags("desktop")("load more should load correct records after drag&drop event", async () => {
     Partner._order = ["sequence", "id"];
     Partner._records.forEach((r, i) => (r.sequence = i));
@@ -9630,8 +9713,8 @@ test.tags("desktop")("column progressbars on quick create with quick_create_view
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "get_views",
@@ -9701,8 +9784,8 @@ test.tags("desktop")("progressbars and active filter with quick_create_view", as
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_read_group",
@@ -10773,16 +10856,16 @@ test("progressbar filter state is kept unchanged when domain is updated (records
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
-        "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "web_read_group",
-        "read_progress_bar",
         "web_search_read",
-        "web_read_group",
+        "web_search_read",
+        "web_search_read",
         "read_progress_bar",
+        "web_read_group",
+        "web_search_read",
+        "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -10859,18 +10942,18 @@ test("progressbar filter state is kept unchanged when domain is updated (emptyin
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
-        "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "web_read_group",
+        "web_search_read",
+        "web_search_read",
+        "web_search_read",
         "read_progress_bar",
-        "web_search_read",
-        "web_search_read",
-        "web_search_read",
         "web_read_group",
+        "web_search_read",
+        "web_search_read",
+        "web_search_read",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -10933,8 +11016,8 @@ test.tags("desktop")("filtered column counters when dropping in non-matching rec
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -10979,8 +11062,8 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
     ]).toVerifySteps();
@@ -11014,7 +11097,6 @@ test.tags("desktop")("filtered column is reloaded when dragging out its last rec
         "web_search_read",
         "/web/dataset/resequence",
         "read",
-        "web_read_group", // should not be, there's a race condition in progress_bar_hook
     ]).toVerifySteps();
 });
 
@@ -11757,8 +11839,8 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -11847,8 +11929,8 @@ test("update field on which progress bars are computed", async () => {
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_search_read",
@@ -12390,8 +12472,8 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
         "/web/webclient/translations",
         "/web/webclient/load_menus",
         "get_views",
-        "web_read_group",
         "read_progress_bar",
+        "web_read_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -12880,7 +12962,7 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
         groupBy: ["product_id"],
     });
 
-    expect(["get_views", "web_read_group", "read_progress_bar", "web_search_read"]).toVerifySteps();
+    expect(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]).toVerifySteps();
     queryOne(".o_content").scrollTo = (params) => {
         expect.step("scrolled");
         expect(params.top).toBe(0);
@@ -13406,4 +13488,47 @@ test.tags("desktop")("quick create a column by pressing enter when input is focu
     await animationFrame();
 
     expect(".o_kanban_group").toHaveCount(3);
+});
+
+test("Correct values for progress bar with toggling filter and slow RPC", async () => {
+    let def;
+    onRpc("read_progress_bar", () => def);
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                <field name="foo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+        searchViewArch: `
+            <search>
+                <filter name="some_filter" string="Some Filter" domain="[['state', '!=', 'ghi']]"/>
+            </search>`,
+    });
+
+    expect(".o_kanban_record").toHaveCount(4);
+    // abc: 1, ghi: 1
+    expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["50%", "50%"]);
+
+    // toggle a filter, and slow down the read_progress_bar rpc
+    def = new Deferred();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Some Filter");
+    // abc: 1, ghi: 1
+    expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["50%", "50%"]);
+
+    def.resolve();
+    await animationFrame();
+    // After the call to read_progress_bar has resolved, the values should be updated correctly
+    expect(".o_kanban_record").toHaveCount(2);
+    // abc: 1
+    expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["100%"]);
 });
