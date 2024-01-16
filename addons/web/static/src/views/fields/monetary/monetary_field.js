@@ -36,6 +36,10 @@ export class MonetaryField extends Component {
         return null;
     }
 
+    get currencyPosition() {
+        return this.currency ? this.currency.position : null;
+    }
+
     get currencySymbol() {
         return this.currency ? this.currency.symbol : "";
     }
