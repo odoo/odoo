@@ -3524,6 +3524,8 @@ export class RelationalModel extends Model {
             onWillSaveMultiRecords: params.onWillSaveMultiRecords,
             onSavedMultiRecords: params.onSavedMultiRecords,
             onWillSetInvalidField: params.onWillSetInvalidField,
+            onWillLoadRoot: params.onWillLoadRoot || (() => {}),
+            onRootLoaded: params.onRootLoaded || (() => {}),
         };
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
@@ -3588,7 +3590,9 @@ export class RelationalModel extends Model {
             ? Object.assign(this.root.exportState(), { offset: params.offset || 0 })
             : this.initialRootState;
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
+        await this.rootParams.onWillLoadRoot(newRoot);
         await this.keepLast.add(newRoot.load({ values: params.values }));
+        await this.rootParams.onRootLoaded(newRoot);
         this.root = newRoot;
         this.rootParams = rootParams;
         this.notify();
