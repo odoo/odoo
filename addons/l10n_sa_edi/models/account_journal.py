@@ -194,9 +194,10 @@ class AccountJournal(models.Model):
         """
         for journal in self:
             journal.l10n_sa_production_csid_validity = False
-            if journal.l10n_sa_production_csid_json:
+            if journal.sudo().l10n_sa_production_csid_json:
                 journal.l10n_sa_production_csid_validity = self._l10n_sa_get_pcsid_validity(
-                    json.loads(journal.l10n_sa_production_csid_json))
+                    json.loads(journal.sudo().l10n_sa_production_csid_json)
+                )
 
     def _l10n_sa_reset_certificates(self):
         """
@@ -530,14 +531,14 @@ class AccountJournal(models.Model):
             Get CSIDs required to perform ZATCA api calls, and regenerate them if they need to be regenerated.
         """
         self.ensure_one()
-        if not self.l10n_sa_production_csid_json:
+        if not self.sudo().l10n_sa_production_csid_json:
             raise UserError(_("Please, make a request to obtain the Compliance CSID and Production CSID before sending "
                             "documents to ZATCA"))
         pcsid_validity = self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_get_zatca_datetime(self.l10n_sa_production_csid_validity)
         time_now = self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_get_zatca_datetime(datetime.now())
         if pcsid_validity < time_now and self.company_id.l10n_sa_api_mode != 'sandbox':
             raise UserError(_("Production certificate has expired, please renew the PCSID before proceeding"))
-        return json.loads(self.l10n_sa_production_csid_json)
+        return json.loads(self.sudo().l10n_sa_production_csid_json)
 
     # ====== API Helper Methods =======
 
