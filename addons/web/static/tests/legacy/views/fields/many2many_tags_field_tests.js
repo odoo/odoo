@@ -247,17 +247,17 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             autocompleteDropdown.querySelectorAll("li").length,
-            3,
-            "autocomplete dropdown should have 3 entry"
+            5,
+            "autocomplete dropdown should have all 5 entries"
         );
 
         assert.strictEqual(
-            autocompleteDropdown.querySelector("li a").textContent,
+            autocompleteDropdown.querySelectorAll("li a")[2].textContent,
             "red",
             "autocomplete dropdown should contain 'red'"
         );
 
-        await click(autocompleteDropdown.querySelector("li a"));
+        await click(autocompleteDropdown.querySelectorAll("li a")[2]);
         assert.containsN(target, ".o_field_many2many_tags .badge", 3, "should contain 3 tags");
         assert.strictEqual(
             target.querySelectorAll(".o_field_many2many_tags .badge .o_tag_badge_text")[2]
@@ -421,7 +421,7 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "name_search") {
                     assert.deepEqual(
                         args.kwargs.args,
-                        ["&", ["id", "<", 50], "!", ["id", "in", [12]]],
+                        [["id", "<", 50]],
                         "domain sent to name_search should be correct"
                     );
                 }
@@ -441,14 +441,14 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             autocompleteDropdown.querySelectorAll("li").length,
-            3,
-            "autocomplete dropdown should have 3 entries"
+            4,
+            "autocomplete dropdown should have all 4 entries"
         );
 
         assert.strictEqual(
             autocompleteDropdown.querySelector("li a").textContent,
-            "silver",
-            "autocomplete dropdown should contain 'silver'"
+            "gold",
+            "autocomplete dropdown should contain 'gold'"
         );
 
         await clickOpenedDropdownItem(target, "timmy", "silver");
@@ -497,18 +497,18 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             autocompleteDropdown.querySelectorAll("li").length,
-            3,
-            "autocomplete dropdown should have 3 entries"
+            4,
+            "autocomplete dropdown should have all 4 entries"
         );
         assert.deepEqual(
             getNodesTextContent(autocompleteDropdown.querySelectorAll("li")),
-            ["silver", "Search More...", "Start typing..."],
-            "should contain newly added tag 'silver'"
+            ["gold", "silver", "Search More...", "Start typing..."],
+            "should contain newly added tag 'silver' and still 'gold'"
         );
         assert.strictEqual(
             autocompleteDropdown.querySelector("li a").textContent,
-            "silver",
-            "autocomplete dropdown should contain 'silver'"
+            "gold",
+            "autocomplete dropdown should contain 'gold' first"
         );
 
         await clickOpenedDropdownItem(target, "timmy", "silver");
@@ -1245,7 +1245,7 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(
                 target,
                 ".o_dialog .o_list_renderer .o_list_record_selector input",
-                serverData.models.partner_type.records.length - 1 + 1,
+                serverData.models.partner_type.records.length + 1,
                 "Should have record selector checkboxes to select multiple records"
             );
 
@@ -1968,7 +1968,7 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "name_search") {
                     assert.step("name_search");
                     // no virtualId in domain
-                    assert.deepEqual(kwargs.args, ["!", ["id", "in", [2]]]);
+                    assert.deepEqual(kwargs.args, []);
                 }
             },
         });
@@ -1994,5 +1994,41 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector("[name='turtles'] input"));
         assert.verifySteps(["name_search"]);
+    });
+
+    QUnit.test("Many2ManyTagsField selected records still pickable and not duplicable", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="turtles" widget="many2many_tags"/>
+                </tree>
+            `,
+        });
+
+        // Check that records are correctly displayed in the dropdown
+        await click(target, "div[name='turtles']");
+        await click(target, "input[id=turtles_0]");
+        assert.strictEqual(target.querySelectorAll("a.dropdown-item")[0].textContent, "leonardo");
+
+        // Check that selecting a record adds the corresponding tag
+        await click(target.querySelectorAll("a.dropdown-item")[0]);
+        assert.strictEqual(target.querySelectorAll(".o_tag").length, 1);
+        assert.strictEqual(target.querySelectorAll(".o_tag")[0].textContent, "leonardo");
+
+        // Check that a selected record is still shown in the dropdown
+        await click(target, "input[id=turtles_0]");
+        assert.strictEqual(target.querySelectorAll("a.dropdown-item")[0].textContent, "leonardo");
+
+        // Check that selecting an already selected record doesn't duplicate it
+        await click(target.querySelectorAll("a.dropdown-item")[0]);
+        assert.strictEqual(target.querySelectorAll(".o_tag").length, 1);
+
+        // Check that deleting a record which was selected twice doens't leave one occurence
+        await click(target, "a.o_delete");
+        assert.strictEqual(target.querySelectorAll(".o_tag").length, 0);
+
     });
 });

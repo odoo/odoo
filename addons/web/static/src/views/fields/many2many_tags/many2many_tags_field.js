@@ -96,14 +96,16 @@ export class Many2ManyTagsField extends Component {
         });
 
         this.update = (recordlist) => {
-            if (!recordlist) {
+            recordlist = recordlist
+                ? recordlist.filter((element) => {
+                      return !this.tags.some((record) => record.resId === element.id);
+                  })
+                : [];
+            if (!recordlist.length) {
                 return;
             }
-            if (Array.isArray(recordlist)) {
-                const resIds = recordlist.map((rec) => rec.id);
-                return saveRecord(resIds);
-            }
-            return saveRecord(recordlist);
+            const resIds = recordlist.map((rec) => rec.id);
+            return saveRecord(resIds);
         };
 
         if (this.props.canQuickCreate) {
@@ -165,12 +167,8 @@ export class Many2ManyTagsField extends Component {
     }
 
     getDomain() {
-        const currentIds = this.props.record.data[this.props.name].currentIds.filter(
-            (id) => typeof id === "number"
-        );
         return Domain.and([
             getFieldDomain(this.props.record, this.props.name, this.props.domain),
-            Domain.not([["id", "in", currentIds]]),
         ]).toList(this.props.context);
     }
 }

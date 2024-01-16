@@ -397,8 +397,8 @@ QUnit.module("Fields", (hooks) => {
             2,
             "Should have 2 tags"
         );
-        // select first input
-        await click(popover.querySelector(".o-autocomplete--dropdown-item"));
+        // select first non selected input
+        await click(popover.querySelectorAll(".o-autocomplete--dropdown-item")[2]);
         assert.strictEqual(popover.querySelectorAll(".o_tag").length, 3, "Should have 3 tags");
         assert.strictEqual(
             o_kanban_record.querySelectorAll(".o_tag").length,
@@ -407,8 +407,8 @@ QUnit.module("Fields", (hooks) => {
         );
         // load more
         await click(popover.querySelector(".o_m2o_dropdown_option_search_more"));
-        // first item
-        await click(document.querySelector(".o_dialog .o_list_table .o_data_row .o_data_cell"));
+        // first non already selected item
+        await click(document.querySelectorAll(".o_dialog .o_list_table .o_data_row .o_data_cell")[3]);
         assert.strictEqual(popover.querySelectorAll(".o_tag").length, 4, "Should have 4 tags");
         assert.strictEqual(
             o_kanban_record.querySelectorAll(".o_tag").length,
