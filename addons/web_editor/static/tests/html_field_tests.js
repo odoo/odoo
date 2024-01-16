@@ -10,6 +10,7 @@ import { onRendered } from "@odoo/owl";
 import { wysiwygData } from "@web_editor/../tests/test_utils";
 import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
+import { insertText } from '@web_editor/js/editor/odoo-editor/test/utils';
 
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();
@@ -158,6 +159,47 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         })
         target.querySelector(".o_field_many2one input").dispatchEvent(customEvent);
     })
+
+    QUnit.test("discard html field changes in form", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, txt: "<p>first</p>" }];
+        let wysiwyg;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            },
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'style-inline' : true}"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = wysiwyg.odooEditor;
+        const editable = editor.editable;
+        editor.testMode = true;
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+        const paragraph = editable.querySelector("p");
+        await setSelection(paragraph, 0);
+        await insertText(editor, "a");
+        assert.strictEqual(editable.innerHTML, `<p>afirst</p>`);
+        // For blur event here to call _onWysiwygBlur function in html_field
+        await editable.dispatchEvent(new Event("blur", { bubbles: true, cancelable: true }));
+        // Wait for the updates to be saved , if we don't wait the update of the value will
+        // be done after the call for discardChanges since it uses some async functions.
+        await new Promise((r) => setTimeout(r, 100));
+        const discardButton = target.querySelector(".o_form_button_cancel");
+        assert.ok(discardButton);
+        await click(discardButton);
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+    });
 
     QUnit.module('Sandboxed Preview');
 
