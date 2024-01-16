@@ -425,6 +425,7 @@
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
                     <attribute name="options">{'no_open': True}</attribute>
+                    <attribute name="context">{'product_template_id': product_tmpl_id}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
                     <field name="additional_product_tag_ids" widget="many2many_tags"/>
