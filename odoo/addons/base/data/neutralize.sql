@@ -21,3 +21,8 @@ INSERT INTO ir_config_parameter (key, value)
 VALUES ('database.is_neutralized', true)
     ON CONFLICT (key) DO
        UPDATE SET value = true;
+
+-- deactivate webhooks
+UPDATE ir_act_server
+   SET webhook_url = 'neutralization - disable webhook'
+ WHERE state = 'webhook';
