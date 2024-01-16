@@ -269,10 +269,11 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             qty_to_order = 0.0
             rounding = orderpoint.product_uom.rounding
-            if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
-                # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
-                product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
-                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
+            # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
+            product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
+            qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
+
+            if float_compare(qty_forecast_with_visibility, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
                 qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
                 remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
                 if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
