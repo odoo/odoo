@@ -87,17 +87,17 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                     <DetallesFactura>
                       <IDDetalleFactura>
                           <DescripcionDetalle>producta</DescripcionDetalle>
-                          <Cantidad>5.00</Cantidad>
-                          <ImporteUnitario>246.00</ImporteUnitario>
-                          <Descuento>246.00</Descuento>
-                          <ImporteTotal>1190.64</ImporteTotal>
+                          <Cantidad>5.00000000</Cantidad>
+                          <ImporteUnitario>246.00000000</ImporteUnitario>
+                          <Descuento>246.00000000</Descuento>
+                          <ImporteTotal>1190.64000000</ImporteTotal>
                       </IDDetalleFactura>
                       <IDDetalleFactura>
                           <DescripcionDetalle>producta</DescripcionDetalle>
-                          <Cantidad>5.00</Cantidad>
-                          <ImporteUnitario>246.00</ImporteUnitario>
-                          <Descuento>1230.00</Descuento>
-                          <ImporteTotal>0.00</ImporteTotal>
+                          <Cantidad>5.00000000</Cantidad>
+                          <ImporteUnitario>246.00000000</ImporteUnitario>
+                          <Descuento>1230.00000000</Descuento>
+                          <ImporteTotal>0.00000000</ImporteTotal>
                       </IDDetalleFactura>
                     </DetallesFactura>
                 </xpath>
