@@ -1562,6 +1562,31 @@
     //from https://stackoverflow.com/questions/721304/insert-commas-into-number-string @Thomas/Alan Moore
     const thousandsGroupsRegexp = /(\d+?)(?=(\d{3})+(?!\d)|$)/g;
     const zeroRegexp = /0/g;
+    // TODO in the future : remove these constants MONTHS/DAYS, and use a library such as luxon to handle it
+    // + possibly handle automatic translation of day/month
+    const MONTHS = {
+        0: _lt("January"),
+        1: _lt("February"),
+        2: _lt("March"),
+        3: _lt("April"),
+        4: _lt("May"),
+        5: _lt("June"),
+        6: _lt("July"),
+        7: _lt("August"),
+        8: _lt("September"),
+        9: _lt("October"),
+        10: _lt("November"),
+        11: _lt("December"),
+    };
+    const DAYS$1 = {
+        0: _lt("Sunday"),
+        1: _lt("Monday"),
+        2: _lt("Tuesday"),
+        3: _lt("Wednesday"),
+        4: _lt("Thursday"),
+        5: _lt("Friday"),
+        6: _lt("Saturday"),
+    };
     // -----------------------------------------------------------------------------
     // FORMAT REPRESENTATION CACHE
     // -----------------------------------------------------------------------------
@@ -1794,8 +1819,9 @@
         return strDate + (strDate && strTime ? " " : "") + strTime;
     }
     function formatJSDate(jsDate, format) {
-        const sep = format.match(/\/|-|\s/)[0];
-        const parts = format.split(sep);
+        var _a;
+        const sep = (_a = format.match(/\/|-|\s/)) === null || _a === void 0 ? void 0 : _a[0];
+        const parts = sep ? format.split(sep) : [format];
         return parts
             .map((p) => {
             switch (p) {
@@ -1803,10 +1829,23 @@
                     return jsDate.getDate();
                 case "dd":
                     return jsDate.getDate().toString().padStart(2, "0");
+                case "ddd":
+                    return DAYS$1[jsDate.getDay()].slice(0, 3);
+                case "dddd":
+                    return DAYS$1[jsDate.getDay()];
                 case "m":
                     return jsDate.getMonth() + 1;
                 case "mm":
                     return String(jsDate.getMonth() + 1).padStart(2, "0");
+                case "mmm":
+                    return MONTHS[jsDate.getMonth()].slice(0, 3);
+                case "mmmm":
+                    return MONTHS[jsDate.getMonth()];
+                case "mmmmm":
+                    return MONTHS[jsDate.getMonth()].slice(0, 1);
+                case "yy":
+                    const fullYear = String(jsDate.getFullYear()).replace("-", "").padStart(2, "0");
+                    return fullYear.slice(fullYear.length - 2);
                 case "yyyy":
                     return jsDate.getFullYear();
                 default:
@@ -40485,9 +40524,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Get a Xc string that represent a part of a range
          */
         getRangePartString(range, part) {
-            const colFixed = range.parts && range.parts[part].colFixed ? "$" : "";
+            var _a, _b;
+            const colFixed = range.parts && ((_a = range.parts[part]) === null || _a === void 0 ? void 0 : _a.colFixed) ? "$" : "";
             const col = part === 0 ? numberToLetters(range.zone.left) : numberToLetters(range.zone.right);
-            const rowFixed = range.parts && range.parts[part].rowFixed ? "$" : "";
+            const rowFixed = range.parts && ((_b = range.parts[part]) === null || _b === void 0 ? void 0 : _b.rowFixed) ? "$" : "";
             const row = part === 0 ? String(range.zone.top + 1) : String(range.zone.bottom + 1);
             let str = "";
             if (range.isFullCol) {
@@ -43130,9 +43170,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.28';
-    __info__.date = '2024-01-12T13:53:29.864Z';
-    __info__.hash = '7251a47';
+    __info__.version = '16.0.29';
+    __info__.date = '2024-01-17T10:50:38.251Z';
+    __info__.hash = '3fda985';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
