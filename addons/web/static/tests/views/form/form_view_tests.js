@@ -14444,4 +14444,33 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("nested form view doesn't parasite the main one", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <form>
+                            <div name="button_box" invisible="crash == True">
+                                <button name="somename" type="object" />
+                            </div>
+                            <footer>
+                                <button name="somename" type="object" />
+                            </footer>
+                        </form>
+                        <tree>
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+        });
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsNone(target, ".o-form-buttonbox");
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.containsOnce(target, ".modal .modal-footer button[name='somename']");
+    });
 });
