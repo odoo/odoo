@@ -53,6 +53,8 @@ class ResourceCalendar(models.Model):
                         'hour_from': attendance.hour_from,
                         'hour_to': attendance.hour_to,
                         'day_period': attendance.day_period,
+                        'date_from': attendance.date_from,
+                        'date_to': attendance.date_to,
                     })
                     for attendance in company_attendance_ids
                 ]
