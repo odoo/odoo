@@ -13,7 +13,8 @@
                         <field name="res_id" invisible="1"/>
                         <field name="partner_ids" widget="many2many_tags_email"
                                 placeholder="Add contacts to notify..."
-                                context="{'force_email':True, 'show_email':True}"/>
+                                options="{'no_quick_create': True}"
+                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         <field name="notify"/>
                         <field name="message" invisible="not notify"
                                options="{'style-inline': true, 'no-attachment': true}"
