@@ -21,6 +21,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
 import { omit } from "@web/core/utils/objects";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { createModelWithLazyGetters } from "../models/lazy_computed";
 
 const { DateTime } = luxon;
 
@@ -64,7 +65,7 @@ var orderline_id = 1;
 // An orderline represent one element of the content of a customer's shopping cart.
 // An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
-export class Orderline extends PosModel {
+class Orderline_Original extends PosModel {
     setup(_defaultObj, options) {
         super.setup(...arguments);
         this.pos = options.pos;
@@ -561,9 +562,9 @@ export class Orderline extends PosModel {
     }
     get_unit_display_price() {
         if (this.pos.config.iface_tax_included === "total") {
-            return this.get_all_prices(1).priceWithTax;
+            return this.get("allPricesUnit").priceWithTax;
         } else {
-            return this.get_all_prices(1).priceWithoutTax;
+            return this.get("allPricesUnit").priceWithoutTax;
         }
     }
     /**
@@ -580,9 +581,9 @@ export class Orderline extends PosModel {
     }
     getUnitDisplayPriceBeforeDiscount() {
         if (this.pos.config.iface_tax_included === "total") {
-            return this.get_all_prices(1).priceWithTaxBeforeDiscount;
+            return this.get("allPricesUnit").priceWithTaxBeforeDiscount;
         } else {
-            return this.get_all_prices(1).priceWithoutTaxBeforeDiscount;
+            return this.get("allPricesUnit").priceWithoutTaxBeforeDiscount;
         }
     }
     get_base_price() {
@@ -631,16 +632,16 @@ export class Orderline extends PosModel {
         }
     }
     get_price_without_tax() {
-        return this.get_all_prices().priceWithoutTax;
+        return this.get("allPrices").priceWithoutTax;
     }
     get_price_with_tax() {
-        return this.get_all_prices().priceWithTax;
+        return this.get("allPrices").priceWithTax;
     }
     get_price_with_tax_before_discount() {
-        return this.get_all_prices().priceWithTaxBeforeDiscount;
+        return this.get("allPrices").priceWithTaxBeforeDiscount;
     }
     get_tax() {
-        return this.get_all_prices().tax;
+        return this.get("allPrices").tax;
     }
     get_applicable_taxes() {
         var i;
@@ -661,7 +662,7 @@ export class Orderline extends PosModel {
         return taxes;
     }
     get_tax_details() {
-        return this.get_all_prices().taxDetails;
+        return this.get("allPrices").taxDetails;
     }
     get_taxes() {
         const taxes_ids =
@@ -716,6 +717,12 @@ export class Orderline extends PosModel {
         let taxesIds = this.tax_ids || product.taxes_id;
         taxesIds = taxesIds.filter((t) => t.id in this.pos.models["account.tax"].getAllBy("id"));
         return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
+    }
+    get allPrices() {
+        return this.get_all_prices();
+    }
+    get allPricesUnit() {
+        return this.get_all_prices(1);
     }
     get_all_prices(qty = this.get_quantity()) {
         var price_unit = this.get_unit_price() * (1.0 - this.get_discount() / 100.0);
@@ -856,6 +863,8 @@ export class Orderline extends PosModel {
         };
     }
 }
+
+export const Orderline = createModelWithLazyGetters(Orderline_Original);
 
 export class Packlotline extends PosModel {
     setup(_defaultObj, options) {
