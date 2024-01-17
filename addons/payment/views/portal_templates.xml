@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Integration of a conditional "Manage payment methods" link in /my -->
-    <!-- This template is no more used and should be removed once portal is merged. -->
-    <template id="payment.pay_meth_link" inherit_id="portal.side_content">
-          <!--<xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
-            <t t-set="partner" t-value="request.env.user.partner_id"/>
-            <t t-set="providers_allowing_tokenization"
-               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
-            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
-             Only show the link if a token can be created or if one already exists
-            <div t-if="providers_allowing_tokenization or existing_tokens"
-                 class='manage_payment_method mt16'>
-                <a href="/my/payment_method">Manage payment methods</a>
-            </div>
-        </xpath>
-        -->
-    </template>
-
     <!-- Display of /payment/pay -->
     <template id="payment.pay">
         <!-- Parameters description:
@@ -67,7 +50,9 @@
                                     <strong>Warning</strong> Make sure you are logged in as the
                                     correct partner before making this payment.
                                 </div>
-                                <div class="o_cc o_cc2 row row-cols-1 row-cols-md-2 mx-0 py-2 rounded">
+                                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 py-2
+                                            rounded"
+                                >
                                     <t t-call="payment.summary_item">
                                         <t t-set="name" t-value="'amount'"/>
                                         <t t-set="label">Amount</t>
@@ -142,11 +127,43 @@
                 <div class="container">
                     <!-- Portal breadcrumb -->
                     <t t-call="payment.portal_breadcrumb"/>
-                    <!-- Status page -->
-                    <div name="o_payment_status" class="row justify-content-center my-3">
-                        <div name="o_payment_status_content"
-                             class="col-12 col-lg-8">
-                            <!-- The content is generated in JavaScript -->
+                    <!-- Payment status page -->
+                    <div class="row justify-content-center my-3">
+                        <div class="col-12 col-lg-8">
+                            <div t-if="payment_not_found" class="text-center">
+                                <p>Your payment is on its way!</p>
+                                <p>
+                                    You should receive an email confirming your payment within a few
+                                    minutes.
+                                </p>
+                                <p>Don't hesitate to contact us if you don't receive it.</p>
+                            </div>
+                            <div t-else="" name="o_payment_status">
+                                <t t-call="payment.state_header">
+                                    <t t-set="is_processing" t-value="True"/>
+                                </t>
+                                <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3
+                                            py-2 rounded"
+                                >
+                                    <t t-call="payment.summary_item">
+                                        <t t-set="name" t-value="'amount'"/>
+                                        <t t-set="label">Amount</t>
+                                        <t t-set="value" t-value="tx.amount"/>
+                                        <t t-set="options"
+                                           t-value="{
+                                                        'widget': 'monetary',
+                                                        'display_currency': tx.currency_id,
+                                                    }"
+                                        />
+                                    </t>
+                                    <t t-call="payment.summary_item">
+                                        <t t-set="name" t-value="'reference'"/>
+                                        <t t-set="label">Reference</t>
+                                        <t t-set="value" t-value="tx.reference"/>
+                                        <t t-set="include_separator" t-value="True"/>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -172,10 +189,10 @@
                         <!-- Confirmation page -->
                         <div class="row">
                             <div class="col">
-                                <t t-call="payment.transaction_status"/>
+                                <t t-call="payment.state_header"/>
                             </div>
                         </div>
-                        <div t-att-class="'o_cc o_cc2 row row-cols-1 mx-0 mb-3 py-2 rounded'
+                        <div t-att-class="'text-bg-light row row-cols-1 mx-0 mb-3 py-2 rounded'
                                           + (' row-cols-md-4' if show_pm else ' row-cols-md-3')"
                         >
                             <t t-call="payment.summary_item">
@@ -259,7 +276,7 @@
         >
             <label t-attf-for="o_payment_summary_{{name}}"
                    t-out="label"
-                   class="d-block small text-muted"
+                   class="d-block small opacity-75"
             />
             <span t-attf-id="o_payment_summary_{{name}}"
                   t-out="value"
@@ -269,36 +286,57 @@
         </div>
     </template>
 
-    <template id="payment.transaction_status">
+    <template id="payment.state_header">
         <!-- Parameters description:
             - tx: The transaction whose status must be displayed.
+            - is_processing: Whether the transaction is being processed.
         -->
+        <t t-set="waiting_heading">
+            <p>Please wait...</p>
+        </t>
         <t t-if="tx.state == 'draft'">
-            <t t-set="alert_style">info</t>
+            <t t-set="alert_style">warning</t>
+            <t t-if="is_processing" t-set="status_heading" t-value="waiting_heading"/>
             <t t-set="status_message">
                 <p>Your payment has not been processed yet.</p>
             </t>
         </t>
         <t t-elif="tx.state == 'pending'">
-            <t t-set="alert_style">warning</t>
-            <t t-set="status_message" t-value="tx.provider_id.sudo().pending_msg"/>
+            <t t-set="alert_style">info</t>
+            <t t-if="is_processing" t-set="status_heading" t-value="waiting_heading"/>
+            <t t-if="tx.operation == 'validation'" t-set="status_message">
+                <p>Saving your payment method.</p>
+            </t>
+            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().pending_msg"/>
         </t>
         <t t-elif="tx.state == 'authorized'">
             <t t-set="alert_style">success</t>
+            <t t-if="is_processing" t-set="status_heading" t-value="waiting_heading"/>
             <t t-set="status_message" t-value="tx.provider_id.sudo().auth_msg"/>
         </t>
         <t t-elif="tx.state == 'done'">
             <t t-set="alert_style">success</t>
-            <t t-set="status_heading" t-value="'Thank you!'"/>
-            <t t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
+            <t t-if="not is_processing" t-set="status_heading">
+                <p>Thank you!</p>
+            </t>
+            <t t-if="tx.operation == 'validation'" t-set="status_message">
+                <p>Your payment method has been saved.</p>
+            </t>
+            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
         </t>
         <t t-elif="tx.state == 'cancel'">
             <t t-set="alert_style">danger</t>
-            <t t-set="status_message" t-value="tx.provider_id.sudo().cancel_msg"/>
+            <t t-if="tx.operation == 'validation'" t-set="status_message">
+                <p>The saving of your payment method has been canceled.</p>
+            </t>
+            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().cancel_msg"/>
         </t>
         <t t-elif="tx.state == 'error'">
             <t t-set="alert_style">danger</t>
-            <t t-set="status_message">
+            <t t-if="tx.operation == 'validation'" t-set="status_message">
+                <p class="mb-0">An error occurred while saving your payment method.</p>
+            </t>
+            <t t-else="" t-set="status_message">
                 <p class="mb-0">An error occurred during the processing of your payment.</p>
             </t>
         </t>
@@ -308,20 +346,30 @@
            t-value="'alert alert-'+ alert_style +' d-flex gap-3'"
         />
 
-        <div t-if="status_message or tx.state_message"
+        <div t-if="status_heading or status_message or tx.state_message"
              name="o_payment_status_alert"
              t-attf-class="{{o_payment_status_alert_class}}"
         >
+            <t t-set="alert_icon"
+               t-value="'fa-cog fa-spin' if is_processing and alert_style != 'danger'
+                        else 'fa-check' if alert_style == 'success'
+                        else 'fa-info-circle' if alert_style == 'info'
+                        else 'fa-exclamation-triangle'"
+            />
             <div id="o_payment_status_icon">
-                <i t-attf-class="fa fa-{{'check' if alert_style == 'success' else 'info-circle'
-                                 if alert_style == 'info' else 'exclamation-triangle'}}"
-                />
+                <i t-attf-class="fa {{alert_icon}}"/>
             </div>
             <div id="o_payment_status_message" class="w-100">
                 <h5 t-if="status_heading" t-out="status_heading" class="alert-heading mb-0"/>
                 <t t-if="status_message" t-out="status_message" class="mb-0"/>
-                <t t-if="tx.state_message" t-out="tx.state_message"  class="mb-0"/>
+                <t t-if="tx.state_message" t-out="tx.state_message" class="mb-0"/>
             </div>
+            <a t-if="is_processing"
+               t-att-href="tx.landing_route"
+               class="alert-link ms-auto text-nowrap"
+            >
+                Skip <i class="oi oi-arrow-right ms-1 small"/>
+            </a>
         </div>
     </template>
 

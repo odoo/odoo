@@ -19,7 +19,7 @@
         </form>
     </template>
 
-    <template id="custom_transaction_status" inherit_id="payment.transaction_status">
+    <template id="custom_state_header" inherit_id="payment.state_header">
 
         <xpath expr="//div[@name='o_payment_status_alert']" position="before">
             <h1 t-if=" tx.provider_id.sudo().code == 'custom' and tx.state == 'pending'"

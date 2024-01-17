@@ -25,27 +25,26 @@ class PaymentPostProcessing(http.Controller):
 
     @http.route('/payment/status', type='http', auth='public', website=True, sitemap=False)
     def display_status(self, **kwargs):
-        """ Display the payment status page.
+        """ Fetch the transaction and display it on the payment status page.
 
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The rendered status page
         :rtype: str
         """
-        return request.render('payment.payment_status')
+        monitored_tx = self._get_monitored_transaction()
+        # The session might have expired, or the transaction never existed.
+        values = {'tx': monitored_tx} if monitored_tx else {'payment_not_found': True}
+        return request.render('payment.payment_status', values)
 
     @http.route('/payment/status/poll', type='json', auth='public')
     def poll_status(self, **_kwargs):
-        """ Fetch the transaction to display on the status page and finalize its post-processing.
+        """ Fetch the transaction and finalize its post-processing.
 
         :return: The post-processing values of the transaction.
         :rtype: dict
         """
-        # Retrieve the last user's transaction from the session.
-        monitored_tx = request.env['payment.transaction'].sudo().browse(
-            self.get_monitored_transaction_id()
-        ).exists()
-        if not monitored_tx:  # The session might have expired, or the tx has never existed.
-            raise Exception('tx_not_found')
+        # We only poll the payment status if a payment was found, so the transaction should exist.
+        monitored_tx = self._get_monitored_transaction()
 
         # Finalize the post-processing of the transaction before redirecting the user to the landing
         # route and its document.
@@ -63,8 +62,11 @@ class PaymentPostProcessing(http.Controller):
                 )
                 raise
 
-        # Return the post-processing values to display the transaction summary to the customer.
-        return monitored_tx._get_post_processing_values()
+        return {
+            'provider_code': monitored_tx.provider_code,
+            'state': monitored_tx.state,
+            'landing_route': monitored_tx.landing_route,
+        }
 
     @classmethod
     def monitor_transaction(cls, transaction):
@@ -75,14 +77,12 @@ class PaymentPostProcessing(http.Controller):
         """
         request.session[cls.MONITORED_TX_ID_KEY] = transaction.id
 
-    @classmethod
-    def get_monitored_transaction_id(cls):
-        """ Return the id of transaction being monitored.
+    def _get_monitored_transaction(self):
+        """ Retrieve the user's last transaction from the session (the transaction being monitored).
 
-        Only the id and not the recordset itself is returned to allow the caller browsing the
-        recordset with sudo privileges, and using the id in a custom query.
-
-        :return: The id of transactions being monitored
-        :rtype: list
+        :return: the user's last transaction
+        :rtype: payment.transaction
         """
-        return request.session.get(cls.MONITORED_TX_ID_KEY)
+        return request.env['payment.transaction'].sudo().browse(
+            request.session.get(self.MONITORED_TX_ID_KEY)
+        ).exists()

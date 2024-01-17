@@ -341,7 +341,7 @@
                     </div>
 
                     <t t-if="sale_order.get_portal_last_transaction()">
-                        <t t-call="payment.transaction_status">
+                        <t t-call="payment.state_header">
                             <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
                         </t>
                     </t>
@@ -414,7 +414,7 @@
                     <div t-if="sale_order.get_portal_last_transaction() and not invoices and sale_order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error"
                         t-att-data-order-id="sale_order.id">
                         <t t-if="sale_order.transaction_ids">
-                            <t t-call="payment.transaction_status">
+                            <t t-call="payment.state_header">
                             <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>
                         </t>
                     </t>
