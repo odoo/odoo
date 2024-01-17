@@ -6,7 +6,7 @@ import odoo
 from odoo.tools import mute_logger, date_utils
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http import STATIC_CACHE_LONG
-from odoo import Command
+from odoo import Command, http
 
 
 @odoo.tests.tagged("-at_install", "post_install")
@@ -385,3 +385,29 @@ class TestMessageController(HttpCaseWithUserDemo):
             url=f"/discuss/channel/{self.channel.id}/guest/{self.guest.id}/avatar_128"
         )
         self.assertEqual(res.headers["Cache-Control"], "no-cache")
+
+    def test_chatter_on_archived_record(self):
+        self.authenticate("admin", "admin")
+        archived_partner = self.env["res.partner"].create({"name": "partner", "active": False})
+
+        # 1. posting a message
+        response = self.make_jsonrpc_request("/mail/message/post", {
+            "thread_model": "res.partner",
+            "thread_id": archived_partner.id,
+            "post_data": {
+                "body": "A great message",
+            }
+        })
+        self.assertIn("A great message", response['body'])
+
+        # 2. attach a file
+        response = self.url_open(
+            "/mail/attachment/upload",
+            {
+                "csrf_token": http.Request.csrf_token(self),
+                "thread_id": archived_partner.id,
+                "thread_model": "res.partner",
+            },
+            files={"ufile": b""},
+        )
+        self.assertEqual(response.status_code, 200)
