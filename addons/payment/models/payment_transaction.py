@@ -910,60 +910,6 @@ class PaymentTransaction(models.Model):
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 
-    def _get_post_processing_values(self):
-        """ Return a dict of values used to display the status of the transaction.
-
-        For a provider to handle transaction status display, it must override this method and
-        return a dict of values. Provider-specific values take precedence over those of the dict of
-        generic post-processing values.
-
-        The returned dict contains the following entries:
-
-        - `provider_code`: The code of the provider.
-        - `provider_name`: The name of the provider.
-        - `reference`: The reference of the transaction.
-        - `amount`: The rounded amount of the transaction.
-        - `currency_id`: The currency of the transaction, as a `res.currency` id.
-        - `state`: The transaction state: `draft`, `pending`, `authorized`, `done`, `cancel`, or
-          `error`.
-        - `state_message`: The information message about the state.
-        - `operation`: The operation of the transaction.
-        - `is_post_processed`: Whether the transaction has already been post-processed.
-        - `landing_route`: The route the user is redirected to after the transaction.
-        - Additional provider-specific entries.
-
-        Note: `self.ensure_one()`
-
-        :return: The dict of processing values.
-        :rtype: dict
-        """
-        self.ensure_one()
-
-        display_message = None
-        if self.state == 'pending':
-            display_message = self.provider_id.pending_msg
-        elif self.state == 'done':
-            display_message = self.provider_id.done_msg
-        elif self.state == 'cancel':
-            display_message = self.provider_id.cancel_msg
-        post_processing_values = {
-            'provider_code': self.provider_code,
-            'provider_name': self.provider_id.name,
-            'reference': self.reference,
-            'amount': self.amount,
-            'currency_id': self.currency_id.id,
-            'state': self.state,
-            'state_message': self.state_message,
-            'display_message': display_message,
-            'operation': self.operation,
-            'landing_route': self.landing_route,
-        }
-        _logger.debug(
-            "post-processing values of transaction with reference %s for provider with id %s:\n%s",
-            self.reference, self.provider_id.id, pprint.pformat(post_processing_values)
-        )  # DEBUG level because this can get spammy with transactions in non-final states
-        return post_processing_values
-
     def _cron_finalize_post_processing(self):
         """ Finalize the post-processing of recently done transactions not handled by the client.
 

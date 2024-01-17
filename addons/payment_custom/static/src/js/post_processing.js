@@ -13,7 +13,7 @@ paymentPostProcessing.include({
     _getFinalStates(providerCode) {
         const finalStates = this._super(...arguments);
         if (providerCode === 'custom') {
-            finalStates.push('pending');
+            finalStates.add('pending');
         }
         return finalStates;
     }

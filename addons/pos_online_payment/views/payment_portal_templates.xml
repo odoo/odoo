@@ -76,7 +76,7 @@
                                 </div>
                             </t>
                             <t t-else="">
-                                <t t-call="payment.transaction_status"/>
+                                <t t-call="payment.state_header"/>
                                 <div class="row row-cols-1 row-cols-sm-2">
                                     <t t-if="state == 'success'">
                                         <div class="col fw-bold">Amount</div>
