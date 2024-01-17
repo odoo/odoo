@@ -50,7 +50,7 @@ class MailController(http.Controller):
         # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
         user = request.env['res.users'].sudo().browse(uid)
-        cids = False
+        cids = []
 
         # no model / res_id, meaning no possible record -> redirect to login
         if not model or not res_id or model not in request.env:
@@ -72,8 +72,8 @@ class MailController(http.Controller):
                 # We need here to extend the "allowed_company_ids" to allow a redirection
                 # to any record that the user can access, regardless of currently visible
                 # records based on the "currently allowed companies".
-                cids = request.httprequest.cookies.get('cids', str(user.company_id.id))
-                cids = [int(cid) for cid in cids.split(',')]
+                cids_str = request.httprequest.cookies.get('cids', str(user.company_id.id))
+                cids = [int(cid) for cid in cids_str.split(',')]
                 try:
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access_rule('read')
                 except AccessError:
