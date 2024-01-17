@@ -32,7 +32,7 @@ QUnit.test("simple chatter on a record", async (assert) => {
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         `/mail/thread/data - {"request_list":["followers","attachments","suggestedRecipients","activities"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
         `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","limit":30}`,

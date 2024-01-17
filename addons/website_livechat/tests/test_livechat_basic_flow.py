@@ -98,15 +98,15 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.authenticate(self.operator.login, 'ideboulonate')
 
         # Retrieve channels information, visitor info should be there
-        params = {"context": {"is_for_livechat": True}}
-        init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/init_messaging", params=params)
+        params = {"init_messaging": True, "context": {"is_for_livechat": True}}
+        init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/action", params=params)
         livechat_info = next(c for c in init_messaging['Thread'] if c['id'] == channel.id)
         self.assertIn('visitor', livechat_info)
 
         # Remove access to visitors and try again, visitors info shouldn't be included
         self.operator.groups_id -= self.group_livechat_user
-        params = {"context": {"is_for_livechat": True}}
-        init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/init_messaging", params=params)
+        params = {"init_messaging": True, "context": {"is_for_livechat": True}}
+        init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/action", params=params)
         livechat_info = next(c for c in init_messaging['Thread'] if c['id'] == channel.id)
         self.assertNotIn('visitor', livechat_info)
 

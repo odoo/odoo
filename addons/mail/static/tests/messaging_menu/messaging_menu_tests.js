@@ -1085,8 +1085,8 @@ QUnit.test("can open messaging menu even if messaging is not initialized", async
     await startServer();
     const def = makeDeferred();
     await start({
-        async mockRPC(route) {
-            if (route === "/mail/init_messaging") {
+        async mockRPC(route, args) {
+            if (route === "/mail/action" && args.init_messaging) {
                 await def;
             }
         },

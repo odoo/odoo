@@ -73,9 +73,6 @@ patch(MockServer.prototype, {
             const { search_term, after, before, limit } = args;
             return this._mockRouteMailMessageHistory(search_term, after, before, limit);
         }
-        if (route === "/mail/init_messaging") {
-            return this._mockRouteMailInitMessaging();
-        }
         if (route === "/mail/inbox/messages") {
             const { search_term, after, around, before, limit } = args;
             return this._mockRouteMailMessageInbox(search_term, after, before, around, limit);
@@ -98,9 +95,6 @@ patch(MockServer.prototype, {
                 );
             }
             return args;
-        }
-        if (route === "/mail/data") {
-            return this._mockRouteMailData(args);
         }
         if (route === "/mail/message/post") {
             const finalData = {};
@@ -206,18 +200,6 @@ patch(MockServer.prototype, {
         return this._mockMailMessageMessageFormat(messageIds);
     },
     /**
-     * Simulates the `/mail/init_messaging` route.
-     *
-     * @private
-     * @returns {Object}
-     */
-    _mockRouteMailInitMessaging() {
-        if (this._mockMailGuest__getGuestFromContext() && this.pyEnv.currentUser?._is_public()) {
-            return this._mockMailGuest__initMessaging();
-        }
-        return this._mockResUsers_InitMessaging([this.pyEnv.currentUserId]);
-    },
-    /**
      * Simulates the `/mail/attachment/delete` route.
      *
      * @private
@@ -312,43 +294,6 @@ patch(MockServer.prototype, {
             return;
         }
         this._mockDiscussChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
-    },
-    /**
-     * Simulates the `/mail/date` route.
-     *
-     * @private
-     */
-    _mockRouteMailData(args) {
-        const res = {};
-        if (args.failures && this.pyEnv.currentPartnerId) {
-            const partner = this.getRecords(
-                "res.partner",
-                [["id", "=", this.pyEnv.currentPartnerId]],
-                {
-                    active_test: false,
-                }
-            )[0];
-            const messages = this.getRecords("mail.message", [
-                ["author_id", "=", partner.id],
-                ["res_id", "!=", 0],
-                ["model", "!=", false],
-                ["message_type", "!=", "user_notification"],
-            ]).filter((message) => {
-                // Purpose is to simulate the following domain on mail.message:
-                // ['notification_ids.notification_status', 'in', ['bounce', 'exception']],
-                // But it's not supported by getRecords domain to follow a relation.
-                const notifications = this.getRecords("mail.notification", [
-                    ["mail_message_id", "=", message.id],
-                    ["notification_status", "in", ["bounce", "exception"]],
-                ]);
-                return notifications.length > 0;
-            });
-            messages.length = Math.min(messages.length, 100);
-            res.Message = this._mockMailMessage_MessageNotificationFormat(
-                messages.map((message) => message.id)
-            );
-        }
-        return res;
     },
     /**
      * Simulates `/mail/link_preview` route.

@@ -11,15 +11,15 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
-    def mail_data(self, **kwargs):
+    def _process_request(self, **kwargs):
         """Override to return channel as member and last messages."""
-        res = super().mail_data(**kwargs)
+        res = super()._process_request(**kwargs)
         if kwargs.get("channels_as_member"):
             channels = request.env["discuss.channel"]._get_channels_as_member()
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
-            res["Thread"].extend(channels._channel_info())
-            res["Message"].extend(channels._get_last_messages().message_format(),)
+            self._add_to_res(res, {"Thread": channels._channel_info()})
+            self._add_to_res(res, {"Message": channels._get_last_messages().message_format()})
         return res
 
 

@@ -1,18 +1,18 @@
 /* @odoo-module */
 
-import "@mail/../tests/helpers/mock_server/controllers/discuss"; // ensure super is loaded first
+import "@mail/../tests/helpers/mock_server/controllers/webclient"; // ensure super is loaded first
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
     /** @override */
-    _mockRouteMailData(args) {
-        const res = super._mockRouteMailData(args);
+    _mockRoute_ProcessRequest(args) {
+        const res = super._mockRoute_ProcessRequest(args);
         if (args.channels_as_member) {
             const channels = this._mockDiscussChannel__get_channels_as_member();
-            res.Message = (res.Message ?? []).concat(
-                channels
+            this._addToRes(res, {
+                Message: channels
                     .map((channel) => {
                         const channelMessages = this.getRecords("mail.message", [
                             ["model", "=", "discuss.channel"],
@@ -28,11 +28,9 @@ patch(MockServer.prototype, {
                             ? this._mockMailMessageMessageFormat([lastMessage.id])[0]
                             : false;
                     })
-                    .filter((lastMessage) => lastMessage)
-            );
-            res.Thread = (res.Thread ?? []).concat(
-                this._mockDiscussChannelChannelInfo(channels.map((channel) => channel.id))
-            );
+                    .filter((lastMessage) => lastMessage),
+                Thread: this._mockDiscussChannelChannelInfo(channels.map((channel) => channel.id)),
+            });
         }
         return res;
     },
