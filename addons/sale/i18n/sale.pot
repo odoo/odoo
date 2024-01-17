@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2024-01-17 10:10+0000\n"
+"PO-Revision-Date: 2024-01-17 10:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -511,6 +511,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr ""
@@ -740,11 +747,6 @@ msgid "Account Number"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
-msgid "Account used for deposits"
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
 msgstr ""
@@ -895,11 +897,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
-msgid "Analytic Distribution Search"
 msgstr ""
 
 #. module: sale
@@ -1484,11 +1481,6 @@ msgid "Customer State"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
-msgid "Customer Taxes"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
 msgstr ""
@@ -1547,26 +1539,15 @@ msgid "Default Quotation Validity"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
-msgid "Default product used for discounts"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
-#: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
-msgid "Default product used for down payments"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Default values"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"Default values used when creating new quotations. Those can still be changed"
-" on each quotation."
+"Default period during which the quote is valid and can still be accepted by "
+"the customer. The default can be changed per order or template."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
+msgid "Default product used for discounts"
 msgstr ""
 
 #. module: sale
@@ -1623,12 +1604,6 @@ msgstr ""
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_company__sale_down_payment_product_id
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
-msgid "Deposit Product"
 msgstr ""
 
 #. module: sale
@@ -1740,11 +1715,6 @@ msgid "Display Type"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Documentation"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Documents"
 msgstr ""
@@ -1757,22 +1727,13 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-msgid "Down Payment"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
-msgid "Down Payment Amount"
+msgid "Down Payment"
 msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
-msgid "Down Payment Product"
 msgstr ""
 
 #. module: sale
@@ -1785,7 +1746,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Down Payments"
 msgstr ""
 
@@ -2127,11 +2087,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
-msgid "Income Account"
 msgstr ""
 
 #. module: sale
@@ -3013,6 +2968,11 @@ msgid "PayPal"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Payment"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
 msgstr ""
@@ -3076,11 +3036,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Prepayment amount"
 msgstr ""
 
 #. module: sale
@@ -3245,11 +3200,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Product used for down payments"
 msgstr ""
 
 #. module: sale
@@ -3500,13 +3450,15 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"Request an online prepayment from your customers to confirm orders. You can "
-"ask them to fully pay the order or partially with a downpayment"
+"Request a payment to confirm orders, in full (100%) or partial. The default "
+"can be changed per order or template."
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Request an online signature to confirm orders"
+msgid ""
+"Request customers to sign quotations to validate orders. The default can be "
+"changed per order or template."
 msgstr ""
 
 #. module: sale
@@ -4216,11 +4168,6 @@ msgid "Taxes"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_taxes_id
-msgid "Taxes used for deposits"
-msgstr ""
-
-#. module: sale
 #. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 msgid ""
@@ -4400,23 +4347,6 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-msgid ""
-"The product used to invoice a down payment should be of type 'Service'. "
-"Please use another product or update this product."
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-msgid ""
-"The product used to invoice a down payment should have an invoice policyset "
-"to \"Ordered quantities\". Please update your deposit product to be able to "
-"create a deposit invoice."
 msgstr ""
 
 #. module: sale

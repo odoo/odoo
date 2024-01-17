@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-08 06:51+0000\n"
+"POT-Creation-Date: 2024-01-17 10:09+0000\n"
+"PO-Revision-Date: 2024-01-17 10:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -88,7 +88,6 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
 msgid ""
 "%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
 "someone, and grab their attention.%(new_line)sType "
@@ -292,17 +291,6 @@ msgstr ""
 msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid ""
-"<br><br>\n"
-"            Type <b>@username</b> to mention someone, and grab their attention.<br>\n"
-"            Type <b>#channel</b> to mention a channel.<br>\n"
-"            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 
 #. module: mail
@@ -1529,12 +1517,12 @@ msgid "Browser default"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__endpoint
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
 msgid "Browser endpoint"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__keys
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__keys
 msgid "Browser keys"
 msgstr ""
 
@@ -2229,8 +2217,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__create_uid
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__create_uid
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_push__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__create_uid
@@ -2267,8 +2255,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__create_date
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__create_date
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_push__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__create_date
@@ -2300,11 +2288,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__credential
 msgid "Credential"
-msgstr ""
-
-#. module: mail
-#: model:ir.model,name:mail.model_mail_notification_web_push
-msgid "Cron data used for web push notification"
 msgstr ""
 
 #. module: mail
@@ -2687,8 +2670,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_notification__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_push__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__display_name
@@ -3289,7 +3272,7 @@ msgid "Expand"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__expiration_time
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__expiration_time
 msgid "Expiration Token Date"
 msgstr ""
 
@@ -4001,8 +3984,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__id
 #: model:ir.model.fields,field_description:mail.field_mail_notification__id
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__id
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__id
+#: model:ir.model.fields,field_description:mail.field_mail_push__id
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__id
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__id
@@ -4596,7 +4579,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_partner_device__keys
+#: model:ir.model.fields,help:mail.field_mail_push_device__keys
 msgid ""
 "It's refer to browser keys used by the notification: \n"
 "- p256dh: It's the subscription public key generated by the browser. The browser will \n"
@@ -4754,8 +4737,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__write_uid
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__write_uid
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_push__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__write_uid
@@ -4793,8 +4776,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__write_date
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__write_date
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_push__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__write_date
@@ -4975,8 +4958,8 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
-msgid "Logged as"
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
+msgid "Logged in as %s"
 msgstr ""
 
 #. module: mail
@@ -5810,6 +5793,12 @@ msgid "No messages found"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
+msgid "No recipient"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "No recipient found."
@@ -6455,7 +6444,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__partner_id
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__partner_ids
 #: model:ir.model.fields,field_description:mail.field_ir_cron__partner_ids
-#: model:ir.model.fields,field_description:mail.field_mail_partner_device__partner_id
+#: model:ir.model.fields,field_description:mail.field_mail_push_device__partner_id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_id
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__partner_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
@@ -6472,11 +6461,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
-msgstr ""
-
-#. module: mail
-#: model:ir.model,name:mail.model_mail_partner_device
-msgid "Partner Web Push Device"
 msgstr ""
 
 #. module: mail
@@ -6512,7 +6496,7 @@ msgid "Pause"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__payload
+#: model:ir.model.fields,field_description:mail.field_mail_push__payload
 msgid "Payload"
 msgstr ""
 
@@ -6843,6 +6827,16 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 msgid "Publisher: Update Notification"
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_push_device
+msgid "Push Notification Device"
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_push
+msgid "Push Notifications"
 msgstr ""
 
 #. module: mail
@@ -8464,7 +8458,7 @@ msgid "The email sent to"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
+#: model:ir.model.constraint,message:mail.constraint_mail_push_device_endpoint_unique
 msgid "The endpoint must be unique !"
 msgstr ""
 
@@ -9650,22 +9644,19 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
 msgid "You are alone in this channel."
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid "You are in a private conversation with <b>@%s</b>."
+msgid "You are in a private conversation with %(member_names)s."
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid "You are in channel <b>#%s</b>."
+msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr ""
 
 #. module: mail
@@ -10014,7 +10005,7 @@ msgid "deaf"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_notification_web_push__user_device
+#: model:ir.model.fields,field_description:mail.field_mail_push__mail_push_device_id
 msgid "devices"
 msgstr ""
 
@@ -10430,11 +10421,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/chatter.js:0
-#, python-format
-msgid "No recipient"
 msgstr ""
