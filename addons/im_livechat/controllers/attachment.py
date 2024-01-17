@@ -13,7 +13,7 @@ class LivechatAttachmentController(AttachmentController):
     @route()
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
-        thread = request.env[thread_model].search([("id", "=", thread_id)])
+        thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
         if not thread:
             raise NotFound()
         if (
