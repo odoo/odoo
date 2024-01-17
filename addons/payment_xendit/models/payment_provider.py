@@ -20,6 +20,9 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('xendit', "Xendit")], ondelete={'xendit': 'set default'}
     )
+    xendit_public_key = fields.Char(
+        string="Xendit Public Key", groups='base.group_system', required_if_provider='xendit'
+    )
     xendit_secret_key = fields.Char(
         string="Xendit Secret Key", groups='base.group_system', required_if_provider='xendit'
     )
@@ -27,7 +30,14 @@ class PaymentProvider(models.Model):
         string="Xendit Webhook Token", groups='base.group_system', required_if_provider='xendit'
     )
 
-    # === BUSINESS METHODS ===#
+    # === COMPUTE METHODS === #
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'xendit').support_tokenization = True
+
+    # === BUSINESS METHODS - PAYMENT FLOW ===#
 
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
@@ -45,11 +55,12 @@ class PaymentProvider(models.Model):
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    def _xendit_make_request(self, payload=None):
+    def _xendit_make_request(self, endpoint, payload=None):
         """ Make a request to Xendit API and return the JSON-formatted content of the response.
 
         Note: self.ensure_one()
 
+        :param str endpoint: The endpoint to be reached by the request.
         :param dict payload: The payload of the request.
         :return The JSON-formatted content of the response.
         :rtype: dict
@@ -57,8 +68,8 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
+        url = f'https://api.xendit.co/{endpoint}'
         auth = (self.xendit_secret_key, '')
-        url = "https://api.xendit.co/v2/invoices"
         try:
             response = requests.post(url, json=payload, auth=auth, timeout=10)
             response.raise_for_status()
@@ -77,3 +88,25 @@ class PaymentProvider(models.Model):
                 )
             )
         return response.json()
+
+    # === BUSINESS METHODS - GETTERS === #
+
+    def _get_redirect_form_view(self, is_validation=False):
+        """ Override of `payment` to avoid rendering the form view for validation operations.
+
+        Unlike other compatible payment methods in Xendit, `Card` is implemented using a direct
+        flow. To avoid rendering a useless template, and also to avoid computing wrong values, this
+        method returns `None` for Xendit's validation operations (Card is and will always be the
+        sole tokenizable payment method for Xendit).
+
+        Note: `self.ensure_one()`
+
+        :param bool is_validation: Whether the operation is a validation.
+        :return: The view of the redirect form template or None.
+        :rtype: ir.ui.view | None
+        """
+        self.ensure_one()
+
+        if self.code == 'xendit' and is_validation:
+            return None
+        return super()._get_redirect_form_view(is_validation)

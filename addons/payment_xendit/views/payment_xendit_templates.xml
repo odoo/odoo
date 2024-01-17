@@ -5,4 +5,60 @@
         <form t-att-action="api_url" method="get"/>
     </template>
 
+    <template id="inline_form">
+        <div name="o_xendit_form" t-att-data-xendit-public-key="provider_sudo.xendit_public_key">
+            <t t-if="pm_sudo.code == 'card'">
+                <div class="mb-3">
+                    <label for="o_xendit_card" class="col-form-label">Card Number</label>
+                    <input
+                        id="o_xendit_card"
+                        type="text"
+                        required=""
+                        maxlength="19"
+                        autocomplete="cc-number"
+                        class="form-control"
+                    />
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="o_xendit_month">Expiration</label>
+                        <div class="input-group">
+                            <input
+                                id="o_xendit_month"
+                                type="number"
+                                placeholder="MM"
+                                min="1"
+                                max="12"
+                                autocomplete="cc-exp-month"
+                                required=""
+                                class="form-control"
+                            />
+                            <input
+                                id="o_xendit_year"
+                                type="number"
+                                placeholder="YYYY"
+                                min="1000"
+                                max="9999"
+                                autocomplete="cc-exp-year"
+                                required=""
+                                class="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <label for="o_xendit_cvn">Card Code</label>
+                        <input
+                            id="o_xendit_cvn"
+                            type="number"
+                            max="9999"
+                            autocomplete="cc-csc"
+                            required=""
+                            class="form-control"
+                        />
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+
 </odoo>
