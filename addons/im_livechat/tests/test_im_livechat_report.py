@@ -17,7 +17,7 @@ class TestImLivechatReport(TestImLivechatCommon):
                 record.available_operator_ids = self.operators
 
         with patch.object(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids):
-            channel_id = self.make_jsonrpc_request("/im_livechat/get_session", {'anonymous_name': 'Anonymous', 'channel_id': self.livechat_channel.id})['id']
+            channel_id = self.make_jsonrpc_request("/im_livechat/get_session", {'anonymous_name': 'Anonymous', 'channel_id': self.livechat_channel.id})["Thread"]['id']
 
         channel = self.env['discuss.channel'].browse(channel_id)
         self.operator = channel.livechat_operator_id

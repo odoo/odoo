@@ -14,7 +14,7 @@ QUnit.test("Only two quick actions are shown", async () => {
     // "Add a reaction" and "View reactions".
     await startServer();
     await loadDefaultConfig();
-    start();
+    await start();
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");

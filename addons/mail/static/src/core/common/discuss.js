@@ -121,7 +121,7 @@ export class Discuss extends Component {
 
     async renameGuest(name) {
         const newName = name.trim();
-        if (this.store.self?.name !== newName) {
+        if (this.store.self.name !== newName) {
             await this.personaService.updateGuestName(this.store.self, newName);
         }
     }

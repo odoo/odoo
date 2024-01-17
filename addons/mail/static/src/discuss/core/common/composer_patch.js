@@ -10,7 +10,7 @@ patch(Composer.prototype, {
             super.allowUpload &&
             (thread.model !== "discuss.channel" ||
                 thread?.allow_public_upload ||
-                this.store.self?.user?.isInternalUser)
+                this.store.self.isInternalUser)
         );
     },
 });

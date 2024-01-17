@@ -131,8 +131,6 @@ class MailGuest(models.Model):
         self.ensure_one()
         # sudo: res.partner - exposing OdooBot name and id
         odoobot = self.env.ref('base.partner_root').sudo()
-        # sudo: mail.guest - guest reading their own id/name/channels
-        guest_sudo = self.sudo()
         return {
             "Store": {
                 "companyName": self.env.company.name,
@@ -147,11 +145,6 @@ class MailGuest(models.Model):
                     "id": odoobot.id,
                     "name": odoobot.name,
                     "type": "partner",
-                },
-                "self": {
-                    "id": guest_sudo.id,
-                    "name": guest_sudo.name,
-                    "type": "guest",
                 },
             },
             "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
