@@ -53,7 +53,6 @@ patch(MockServer.prototype, {
                     .length,
                 menu_id: false, // not useful in QUnit tests
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
-                self: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
                 settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             },
             Thread: this._mockDiscussChannelChannelInfo(

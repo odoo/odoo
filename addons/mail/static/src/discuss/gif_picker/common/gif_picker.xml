@@ -18,7 +18,7 @@
                     <span class="fs-5 text-muted d-block">Failed to load gifs...</span>
                 </div>
                 <div t-if="state.showCategories and !state.loadingError" class="row row-cols-2 gy-2 gx-2" aria-label="list">
-                    <div t-if="store.self?.type === 'partner'" class="col">
+                    <div t-if="store.self.type === 'partner'" class="col">
                         <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="onClickFavoritesCategory" aria-label="list-item">
                             <img
                                 t-if="state.favorites.gifs.length > 0"
@@ -82,7 +82,7 @@
     <t t-name="discuss.Gif">
         <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
             <i
-                t-if="store.self?.type === 'partner'"
+                t-if="store.self.type === 'partner'"
                 class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
                 t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif_value), 'fa-star o-starred': isFavorite(gif_value) }"
                 t-on-click="() => this.onClickFavorite(gif_value)"

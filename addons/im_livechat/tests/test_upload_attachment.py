@@ -21,7 +21,7 @@ class TestUploadAttachment(HttpCase):
                 "channel_id": livechat_channel.id,
                 "persisted": True,
             },
-        )
+        )["Thread"]
         self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"uuid": channel_info["uuid"]})
         with mute_logger("odoo.http"), file_open("addons/web/__init__.py") as file:
             response = self.url_open(

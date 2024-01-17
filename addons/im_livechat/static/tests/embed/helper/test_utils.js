@@ -7,13 +7,13 @@ import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
 import { setupManager } from "@mail/../tests/helpers/webclient_setup";
 
-import { App, onMounted } from "@odoo/owl";
+import { App } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { patchWithCleanup, makeDeferred } from "@web/../tests/helpers/utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
 // =============================================================================
@@ -69,13 +69,6 @@ export async function start({ mockRPC } = {}) {
     const mainComponentRegistry = registry.category("main_components");
     mainComponentRegistry.add("LivechatButton", { Component: LivechatButton });
     mainComponentRegistry.add("ChatWindowContainer", { Component: ChatWindowContainer });
-    const livechatButtonAvailableDeferred = makeDeferred();
-    patchWithCleanup(LivechatButton.prototype, {
-        setup() {
-            super.setup(...arguments);
-            onMounted(() => livechatButtonAvailableDeferred.resolve());
-        },
-    });
     const pyEnv = await getPyEnv();
     pyEnv.logout();
     const { env } = await createWebClient({
@@ -85,6 +78,5 @@ export async function start({ mockRPC } = {}) {
         },
         mockRPC,
     });
-    await livechatButtonAvailableDeferred;
     return env;
 }

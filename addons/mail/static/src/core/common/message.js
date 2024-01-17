@@ -292,7 +292,7 @@ export class Message extends Component {
         return Boolean(
             !this.message.is_transient &&
                 this.message.originThread &&
-                this.store.self?.type === "partner"
+                this.store.self.type === "partner"
         );
     }
 

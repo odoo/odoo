@@ -34,7 +34,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'anonymous_name': 'Visitor',
             'channel_id': self.livechat_channel.id,
             'persisted': True,
-        })
+        })["Thread"]
         channel = self.env['discuss.channel'].browse(channel_info['id'])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
@@ -51,7 +51,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'anonymous_name': 'Visitor',
             'channel_id': self.livechat_channel.id,
             'persisted': True,
-        })
+        })["Thread"]
         channel = self.env['discuss.channel'].browse(channel_info['id'])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
@@ -74,7 +74,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'anonymous_name': 'Visitor',
             'channel_id': self.livechat_channel.id,
             'persisted': True,
-        })
+        })["Thread"]
         channel = self.env['discuss.channel'].browse(channel_info['id'])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 

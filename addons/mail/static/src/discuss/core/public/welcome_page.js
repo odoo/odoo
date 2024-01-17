@@ -30,7 +30,7 @@ export class WelcomePage extends Component {
     }
 
     async joinChannel() {
-        if (this.store.self?.type === "guest") {
+        if (this.store.self.type === "guest") {
             await this.personaService.updateGuestName(this.store.self, this.state.userName.trim());
         }
         this.props.proceed?.();

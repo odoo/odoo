@@ -380,7 +380,7 @@ export class Thread extends Component {
 
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
-        actionDescription.res_id = this.store.self.user.id;
+        actionDescription.res_id = this.store.self.userId;
         this.env.services.action.doAction(actionDescription);
     }
 
