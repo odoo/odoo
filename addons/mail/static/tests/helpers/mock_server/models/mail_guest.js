@@ -23,7 +23,6 @@ patch(MockServer.prototype, {
                 initBusId: this.lastBusNotificationId,
                 menu_id: false,
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
-                self: { id: guest.id, name: guest.name, type: "guest" },
                 settings: {},
             },
             Thread: this._mockDiscussChannelChannelInfo(members.map((member) => member.channel_id)),

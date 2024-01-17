@@ -148,7 +148,7 @@ export class LivechatService {
      */
     async leave({ notifyServer = true } = {}) {
         try {
-            if (this.state === SESSION_STATE.PERSISTED && notifyServer) {
+            if (this.thread && this.state === SESSION_STATE.PERSISTED && notifyServer) {
                 await rpc("/im_livechat/visitor_leave_session", {
                     uuid: this.thread.uuid,
                 });
@@ -204,7 +204,7 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread>}
      */
     async _createThread({ persist = false }) {
-        const threadData = await rpc(
+        const data = await rpc(
             "/im_livechat/get_session",
             {
                 channel_id: this.options.channel_id,
@@ -218,14 +218,14 @@ export class LivechatService {
             },
             { shadow: true }
         );
-        if (!threadData?.operator) {
+        if (!data.Thread?.operator) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             this.leave({ notifyServer: false });
             return;
         }
         this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
-        this._saveLivechatState(threadData, { persisted: persist });
-        this.store.Thread.insert(threadData);
+        this._saveLivechatState(data.Thread, { persisted: persist });
+        this.store.insert(data);
         await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.CREATED].map((fn) => fn()));
     }
 

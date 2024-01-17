@@ -6,7 +6,6 @@ import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
 export class Messaging {
@@ -23,7 +22,6 @@ export class Messaging {
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.isReady = new Deferred();
-        this.store.Persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.store.discuss.inbox = {
             id: "inbox",
             model: "mail.box",

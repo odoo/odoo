@@ -27,7 +27,7 @@ export class DiscussCoreCommon {
             this.busService.subscribe("discuss.channel/joined", (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert(channel);
-                if (invitedByUserId && invitedByUserId !== this.store.self?.user?.id) {
+                if (invitedByUserId && invitedByUserId !== this.store.self.userId) {
                     this.notificationService.add(
                         _t("You have been invited to #%s", thread.displayName),
                         { type: "info" }
@@ -144,7 +144,7 @@ export class DiscussCoreCommon {
             type: serverData.channel_type,
             isAdmin:
                 serverData.channel_type !== "group" &&
-                serverData.create_uid === this.store.self?.user?.id,
+                serverData.create_uid === this.store.self.userId,
         });
         return thread;
     }
@@ -223,7 +223,7 @@ export class DiscussCoreCommon {
         if (
             !channel.correspondent?.eq(this.store.odoobot) &&
             channel.channel_type !== "channel" &&
-            this.store.self?.type === "partner"
+            this.store.self.type === "partner"
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
@@ -233,7 +233,7 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            this.store.self?.type === "partner" &&
+            this.store.self.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
             this.threadService.markAsRead(channel);

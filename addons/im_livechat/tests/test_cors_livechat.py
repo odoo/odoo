@@ -33,7 +33,7 @@ class TestCorsLivechat(HttpCase):
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
-        )
+        )["Thread"]
         channel = self.env["discuss.channel"].browse(channel_info["id"])
         self.assertEqual(channel.channel_member_ids[0].partner_id, self.operator.partner_id)
         self.assertFalse(channel.channel_member_ids[1].partner_id)
@@ -49,7 +49,7 @@ class TestCorsLivechat(HttpCase):
                 "persisted": True,
             },
             headers={"Cookie": f"{guest._cookie_name}={guest.id}{guest._cookie_separator}{guest.access_token};"},
-        )
+        )["Thread"]
         channel = self.env["discuss.channel"].browse(channel_info["id"])
         channel_guest = channel.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
         self.assertNotEqual(channel_guest, guest)
@@ -62,7 +62,7 @@ class TestCorsLivechat(HttpCase):
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
-        )
+        )["Thread"]
         self.authenticate(None, None)
         self.make_jsonrpc_request(
             "/im_livechat/cors/channel/messages",
@@ -80,7 +80,7 @@ class TestCorsLivechat(HttpCase):
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
-        )
+        )["Thread"]
         guest = self.env["mail.guest"].create({"name": "Visitor"})
         self.authenticate(None, None)
         with self.assertRaises(JsonRpcException, msg="werkzeug.exceptions.NotFound"):

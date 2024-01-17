@@ -116,7 +116,7 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = this.store.self?.type === "partner" ? useSuggestion() : undefined;
+        this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         if (this.props.dropzoneRef) {
@@ -425,7 +425,7 @@ export class Composer extends Component {
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const body = this.props.composer.textInputContent;
         const validMentions =
-            this.store.self?.type === "partner"
+            this.store.self.type === "partner"
                 ? this.messageService.getMentionsFromText(body, {
                       mentionedChannels: this.props.composer.mentionedChannels,
                       mentionedPartners: this.props.composer.mentionedPartners,

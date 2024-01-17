@@ -11,7 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 
 QUnit.module("livechat session");
 
-QUnit.test("Session is reset after failing to persist the channel", async (assert) => {
+QUnit.test("Session is reset after failing to persist the channel", async () => {
     await startServer();
     await loadDefaultConfig();
     const { advanceTime } = mockTimeout();

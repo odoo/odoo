@@ -74,7 +74,7 @@ export class MailCoreWeb {
                     }
                     // move messages from Inbox to history
                     const partnerIndex = message.needaction_partner_ids.find(
-                        (p) => p === this.store.self?.id
+                        (p) => p === this.store.self.id
                     );
                     const index = message.needaction_partner_ids.indexOf(partnerIndex);
                     if (index >= 0) {

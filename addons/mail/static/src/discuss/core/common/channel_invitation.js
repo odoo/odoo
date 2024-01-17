@@ -32,12 +32,12 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
         });
         onWillStart(() => {
-            if (this.store.self?.type === "partner") {
+            if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite();
             }
         });
         onMounted(() => {
-            if (this.store.self?.type === "partner") {
+            if (this.store.self.type === "partner") {
                 this.inputRef.el.focus();
             }
         });

@@ -92,7 +92,7 @@ export class Message extends Record {
     now = DateTime.now().set({ milliseconds: 0 });
 
     get editable() {
-        if (!this._store.self?.isAdmin && !this.isSelfAuthored) {
+        if (!this._store.self.isAdmin && !this.isSelfAuthored) {
             return false;
         }
         return this.message_type === "comment";
@@ -124,7 +124,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this._store.self?.in(this.recipients);
+        return this._store.self.in(this.recipients);
     }
 
     get isHighlightedFromMention() {
@@ -132,20 +132,20 @@ export class Message extends Record {
     }
 
     get isSelfAuthored() {
-        if (!this.author || !this._store.self) {
+        if (!this.author) {
             return false;
         }
         return this.author.eq(this._store.self);
     }
 
     get isStarred() {
-        return this._store.self?.in(this.starredPersonas);
+        return this._store.self.in(this.starredPersonas);
     }
 
     get isNeedaction() {
         return (
-            this._store.self?.type === "partner" &&
-            this.needaction_partner_ids.includes(this._store.self?.id)
+            this._store.self.type === "partner" &&
+            this.needaction_partner_ids.includes(this._store.self.id)
         );
     }
 
@@ -155,8 +155,8 @@ export class Message extends Record {
 
     get isHistory() {
         return (
-            this._store.self?.type === "partner" &&
-            this.history_partner_ids.includes(this._store.self?.id)
+            this._store.self.type === "partner" &&
+            this.history_partner_ids.includes(this._store.self.id)
         );
     }
 

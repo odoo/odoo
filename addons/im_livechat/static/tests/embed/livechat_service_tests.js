@@ -7,9 +7,9 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 import { Command } from "@mail/../tests/helpers/command";
 
 import { cookie } from "@web/core/browser/cookie";
-import { click, contains, insertText } from "@web/../tests/utils";
-import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { Deferred } from "@web/core/utils/concurrency";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("livechat service");
 
@@ -57,14 +57,14 @@ QUnit.test("previous operator prioritized", async () => {
     await contains(".o-mail-Message-author", { text: "John Doe" });
 });
 
-QUnit.test("Only necessary requests are made when creating a new chat", async (assert) => {
+QUnit.test("Only necessary requests are made when creating a new chat", async () => {
     await startServer();
     await loadDefaultConfig();
     const linkPreviewDeferred = new Deferred();
     await start({
         mockRPC(route) {
             if (!route.includes("assets")) {
-                assert.step(route);
+                step(route);
             }
             if (route === "/mail/link_preview") {
                 linkPreviewDeferred.resolve();
@@ -72,20 +72,22 @@ QUnit.test("Only necessary requests are made when creating a new chat", async (a
         },
     });
     await contains(".o-livechat-LivechatButton");
-    assert.verifySteps([
+    await assertSteps([
         "/im_livechat/init",
         "/web/webclient/load_menus", // called because menu_service is loaded in qunit bundle
         "/mail/load_message_failures", // called because mail/core/web is loaded in qunit bundle
     ]);
     await click(".o-livechat-LivechatButton");
-    assert.verifySteps(["/im_livechat/get_session"]);
+    await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
+    await assertSteps(["/im_livechat/get_session"]);
     await insertText(".o-mail-Composer-input", "Hello!");
-    assert.verifySteps([]);
+    await assertSteps([]);
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
     await linkPreviewDeferred;
-    assert.verifySteps([
+    await assertSteps([
         "/im_livechat/get_session",
+        "/discuss/channel/fold",
         "/mail/init_messaging",
         "/mail/message/post",
         "/mail/link_preview",

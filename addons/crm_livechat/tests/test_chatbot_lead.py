@@ -38,7 +38,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
             'channel_id': self.livechat_channel.id,
             'chatbot_script_id': self.chatbot_script.id,
             'user_id': user.id,
-        })
+        })["Thread"]
         discuss_channel = self.env['discuss.channel'].sudo().browse(channel_info['id'])
 
         self._post_answer_and_trigger_next_step(

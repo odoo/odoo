@@ -11,6 +11,7 @@ import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 import { browser } from "@web/core/browser/browser";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     clearRegistryWithCleanup,
@@ -176,6 +177,7 @@ export async function start(param0 = {}) {
         name: pyEnv.currentUser?.name,
         partnerId: pyEnv.currentPartnerId,
     });
+    patchWithCleanup(session, { self: pyEnv.getSelfData() });
     if (browser.Notification && !browser.Notification.isPatched) {
         patchBrowserNotification("denied");
     }

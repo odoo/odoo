@@ -1,8 +1,11 @@
 /* @odoo-module */
 
+import { BaseStore, makeStore, Record } from "@mail/core/common/record";
+
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { debounce } from "@web/core/utils/timing";
-import { Record, makeStore, BaseStore } from "./record";
+import { session } from "@web/session";
 
 export class Store extends BaseStore {
     /** @returns {import("models").Store|import("models").Store[]} */
@@ -256,7 +259,12 @@ export const storeService = {
     start(env, services) {
         const store = makeStore(env);
         store.discuss = { activeTab: "main" };
-        store.settings = {};
+        if (session.self) {
+            store.self = session.self;
+        } else {
+            store.self = { id: -1, type: "guest" };
+        }
+        store.settings = user.settings;
         Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";
