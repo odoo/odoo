@@ -23,7 +23,6 @@ class ProjectShareWizard(models.TransientModel):
         if not result.get('access_mode'):
             result.update(
                 access_mode='read',
-                display_access_mode=True,
             )
         return result
 
@@ -34,7 +33,6 @@ class ProjectShareWizard(models.TransientModel):
 
     access_mode = fields.Selection([('read', 'Read-only'), ('edit', 'Edit')])
     send_email = fields.Boolean(string="Send by Email")
-    display_access_mode = fields.Boolean()
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):
