@@ -92,7 +92,7 @@ QUnit.module("Views", {}, function () {
             await contains(".o_data_row", { count: 3 });
             await nextTick();
             assert.verifySteps([
-                "/mail/init_messaging - {}",
+                '/mail/action - {"init_messaging":true}',
                 '/mail/data - {"failures":true}',
                 `/web/dataset/call_kw/hr.expense.sheet/get_views - ${JSON.stringify({
                     model: "hr.expense.sheet",

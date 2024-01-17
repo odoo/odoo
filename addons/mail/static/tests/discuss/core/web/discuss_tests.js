@@ -34,7 +34,7 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     await contains(".o-mail-Discuss-content .o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         '/mail/data - {"channels_as_member":true}',
         '/mail/inbox/messages - {"limit":30}',
@@ -114,7 +114,7 @@ QUnit.test("can join a chat conversation", async (assert) => {
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mitchell Admin, Mario"]]);
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         '/mail/data - {"channels_as_member":true}',
         '/mail/inbox/messages - {"limit":30}',
