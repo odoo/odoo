@@ -28,6 +28,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { CharField } from "@web/views/fields/char/char_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormController } from "@web/views/form/form_controller";
 import { session } from "@web/session";
 import legacySession from "web.session";
@@ -13628,6 +13629,40 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(
             target,
             ".modal:not(.o_inactive_modal) .modal-footer button[name='someothername']"
+        );
+    });
+
+    QUnit.test("an empty json object does not pass the required check", async function (assert) {
+        assert.expect(3);
+        serverData.models.partner.fields.json_field = { type: "json" };
+        class JsonField extends Component {
+            onChange(ev) {
+                this.props.update(JSON.parse(ev.target.value));
+            }
+        }
+        JsonField.props = standardFieldProps;
+        JsonField.supportedTypes = ["json"];
+        JsonField.template = xml`<span><input t-on-change="onChange"/></span>`;
+
+        fieldRegistry.add("json", JsonField);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="json_field" widget="json" required="1"/></form>`,
+        });
+
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, params) => {
+                assert.strictEqual(message.toString(), "<ul><li>json_field</li></ul>");
+                assert.deepEqual(params, { title: "Invalid fields: ", type: "danger" });
+            },
+        });
+        await editInput(target, ".o_field_widget[name=json_field] input", "{}")
+        await clickSave(target);
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name=json_field]"),
+            "o_field_invalid"
         );
     });
 });
