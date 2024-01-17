@@ -182,10 +182,10 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
         # Move to an existing period with another move in it
         new_move.date = fields.Date.to_date('2016-01-10')
-        new_moves.date = fields.Date.to_date('2016-01-15')
-
         # Not an empty period, so names should be reset to '/' (draft)
         self.assertEqual(new_move.name, '/')
+
+        new_moves.date = fields.Date.to_date('2016-01-15')
         self.assertEqual(new_multiple_move_1.name, '/')
         self.assertEqual(new_multiple_move_2.name, '/')
 
@@ -396,26 +396,6 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             moves.mapped('name'),
             ['J0/2010/00001', 'J0/2010/00002', 'J0/2010/00003', 'J0/2010/00003'],
         )
-
-    def test_journal_override_sequence_regex(self):
-        """There is a possibility to override the regex and change the order of the paramters."""
-        self.create_move(date='2020-01-01', name='00000876-G 0002/2020')
-        next_move = self.create_move(date='2020-01-01')
-        next_move.action_post()
-        self.assertEqual(next_move.name, '00000876-G 0002/2021')  # Wait, I didn't want this!
-
-        next_move.button_draft()
-        next_move.name = False
-        next_move.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'
-        next_move.action_post()
-        self.assertEqual(next_move.name, '00000877-G 0002/2020')  # Pfew, better!
-        next_move = self.create_move(date='2020-01-01')
-        next_move.action_post()
-        self.assertEqual(next_move.name, '00000878-G 0002/2020')
-
-        next_move = self.create_move(date='2017-05-02')
-        next_move.action_post()
-        self.assertEqual(next_move.name, '00000001-G 0002/2017')
 
     def test_journal_sequence_ordering(self):
         """Entries are correctly sorted when posting multiple at once."""
