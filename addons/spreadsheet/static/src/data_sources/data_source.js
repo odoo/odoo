@@ -18,7 +18,7 @@ export class LoadableDataSource {
     constructor(services) {
         this._orm = services.orm;
         this._metadataRepository = services.metadataRepository;
-        this._notify = services.notify;
+        this._notifyWhenPromiseResolves = services.notifyWhenPromiseResolves;
 
         /**
          * Last time that this dataSource has been updated
@@ -59,8 +59,8 @@ export class LoadableDataSource {
                 .finally(() => {
                     this._lastUpdate = Date.now();
                     this._isFullyLoaded = true;
-                    this._notify();
                 });
+            await this._notifyWhenPromiseResolves(this._loadPromise);
         }
         return this._loadPromise;
     }
