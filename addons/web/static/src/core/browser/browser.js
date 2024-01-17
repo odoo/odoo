@@ -22,6 +22,7 @@ try {
 
 export const browser = {
     addEventListener: window.addEventListener.bind(window),
+    dispatchEvent: window.dispatchEvent.bind(window),
     AnalyserNode: window.AnalyserNode,
     Audio: window.Audio,
     AudioBufferSourceNode: window.AudioBufferSourceNode,
