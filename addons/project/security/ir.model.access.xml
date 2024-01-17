@@ -14,6 +14,17 @@
             <field name="perm_unlink">0</field>
         </record>
 
+        <record id="access_project_sharing_milestone_portal" model="ir.model.access">
+            <field name="name">project_sharing_milestone_portal</field>
+            <field name="model_id" ref="model_project_milestone"/>
+            <field name="group_id" ref="base.group_portal"/>
+            <field name="active">0</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
     </data>
 
 </odoo>
