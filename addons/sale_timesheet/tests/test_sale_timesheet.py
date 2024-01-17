@@ -145,6 +145,16 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # timesheet can still be modified
         timesheet1.write({'unit_amount': 13})
 
+        timesheet5 = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+            'so_line': so_line_ordered_global_project.id,
+        })
+        self.assertEqual(timesheet5.timesheet_invoice_id, invoice1, "After creating timesheet5, it should be linked to invoice1, since the service policy is ordered_prepaid and invoice1 is the last posted invoice linked to the SOL of timesheet5")
+
     def test_timesheet_delivery(self):
         """ Test timesheet invoicing with 'invoice on delivery' timetracked products
                 1. Create SO and confirm it
@@ -346,8 +356,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         # validate the invoice
         invoice1.action_post()
 
-        self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, even after invoice validation")
-        self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, even after invoice validation")
+        self.assertEqual(timesheet1.timesheet_invoice_id, invoice1, "After validating the invoice1, the timesheet1 should be linked to it, since the service policy of the sol product of the timesheet is delivered_manual")
+        self.assertFalse(timesheet2.timesheet_invoice_id, "After validating the invoice1, the timesheet2 should still not be linked to it, since the timesheet is non-billable")
 
     def test_timesheet_invoice(self):
         """ Test to create invoices for the sale order with timesheets
