@@ -237,7 +237,7 @@
 
         padding-top: map-get($spacers, 2);
         padding-left: var(--formView-sheetBg-padding-x);
-        padding-right: var(--formView-sheetBg-padding-x);
+        padding-right: var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
         width: 100%;
         max-width: $o-form-view-sheet-max-width;
         margin-right: auto; // Always align to le left
