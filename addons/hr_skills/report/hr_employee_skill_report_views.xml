@@ -37,6 +37,8 @@
                 <filter string="Employees with Skills" name="employees_with_skills" domain="[('skill_id', '!=', False)]"/>
                 <filter string="Employees without Skills" name="employees_without_skills" domain="[('skill_id', '=', False)]"/>
                 <separator/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <separator/>
                 <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
                 <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
                 <separator/>
