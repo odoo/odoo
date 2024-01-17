@@ -558,6 +558,7 @@ class BaseModel(metaclass=MetaModel):
     _name = None                #: the model name (in dot-notation, module namespace)
     _description = None         #: the model's informal name
     _module = None              #: the model's module (in the Odoo sense)
+    _business = False           #: business model implementing functional flows
     _custom = False             #: should be True for custom models only
 
     _inherit = ()

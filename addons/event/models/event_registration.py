@@ -16,6 +16,8 @@ class EventRegistration(models.Model):
     _description = 'Event Registration'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
+    _business = True
+    _mailing_enabled = True
 
     @api.model
     def _get_random_barcode(self):

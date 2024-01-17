@@ -30,6 +30,7 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 class Channel(models.Model):
     _description = 'Discussion Channel'
     _name = 'discuss.channel'
+    _business = True
     _mail_flat_thread = False
     _mail_post_access = 'read'
     _inherit = ['mail.thread']

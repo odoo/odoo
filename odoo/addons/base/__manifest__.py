@@ -34,6 +34,7 @@ The kernel of Odoo, needed for all installation.
         'views/ir_cron_trigger_views.xml',
         'views/ir_filters_views.xml',
         'views/ir_mail_server_views.xml',
+        'wizard/wizard_ir_model_menu_create_views.xml',  # used in ir_model_views
         'views/ir_model_views.xml',
         'views/ir_attachment_views.xml',
         'views/ir_rule_views.xml',

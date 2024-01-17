@@ -100,6 +100,8 @@ class Lead(models.Model):
                 'format.address.mixin',
                 'mail.tracking.duration.mixin',
                ]
+    _business = True
+    _mailing_enabled = True
     _primary_email = 'email_from'
     _check_company_auto = True
     _track_duration_field = 'stage_id'

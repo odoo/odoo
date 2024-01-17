@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- menu_create from model form -->
+    <record id="view_model_menu_create" model="ir.ui.view">
+        <field name="name">Create Menu</field>
+        <field name="model">wizard.ir.model.menu.create</field>
+        <field name="arch" type="xml">
+            <form string="Create Menu">
+                <group>
+                    <field name="name"/>
+                    <field name="menu_id"/>
+                </group>
+                <footer>
+                    <button name="menu_create" string="Create Menu" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="act_menu_create" model="ir.actions.act_window">
+        <field name="name">Create Menu</field>
+        <field name="res_model">wizard.ir.model.menu.create</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'model_id': active_id}</field>
+    </record>
+</odoo>
