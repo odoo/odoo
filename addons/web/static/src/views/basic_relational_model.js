@@ -280,6 +280,14 @@ export class Record extends DataPoint {
                         this._setInvalidField(fieldName);
                     }
                     break;
+                case "json":
+                    if (
+                        this.isRequired(fieldName) &&
+                        (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
+                    ) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
                 default:
                     if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
                         this._setInvalidField(fieldName);
