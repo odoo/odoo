@@ -392,3 +392,43 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertAlmostEqual(line_with_A_accounts.amount, -100/3, delta=0.02)
         self.assertAlmostEqual(line_with_B_accounts.amount, -100/3, delta=0.02)
         self.assertAlmostEqual(line_with_B_accounts.amount, -100/3, delta=0.02)
+
+    def test_mo_qty_analytics(self):
+        """
+        This test tests multiple behaviours and edge cases. First off, when
+        an analytic distribution with an MO, the analytic entries should only
+        be generated when the MO's components are consumed/reserved (i.e.
+        picked). Second, when changing the produced quantity in a confirmed MO,
+        it should appropriately adjust the amount of picked components. Third,
+        analytic entries should at all times reflect the current situation, and
+        thus must be regenerated every time there's a change in components'
+        picked status.
+        """
+        # refill components
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.component, location, 10)
+
+        # create a mo
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 10.0
+        mo_form.analytic_distribution = {str(self.analytic_account.id): 100.0}
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(self.analytic_account.balance, 0.0)
+
+        # increase qty_producing to 5.0
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5.0
+        mo_form.save()
+        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(self.analytic_account.balance, -50.0)
+
+        # decrease qty_producing to 0.0
+        mo_form = Form(mo)
+        mo_form.qty_producing = 0.0
+        mo_form.save()
+        self.assertEqual(mo.state, 'progress')
+        self.assertEqual(self.analytic_account.balance, 0.0)
