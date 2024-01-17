@@ -253,7 +253,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 return periodStr ? periodStr + "/" + year : year;
             }
             case "relation":
-                if (!value || !this.orm) {
+                if (!value?.length || !this.orm) {
                     return "";
                 }
                 if (!this.recordsDisplayName[filter.id]) {
