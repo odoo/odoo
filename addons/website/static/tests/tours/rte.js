@@ -42,7 +42,7 @@ wTourUtils.goToTheme(),
     consumeVisibleOnly: true,
 }, {
     content: "click on new page",
-    trigger: '.o_new_content_element a',
+    trigger: '.o_new_content_element',
 }, {
     content: "click on Use this template",
     trigger: ".o_page_template button.btn-primary",
@@ -66,7 +66,7 @@ wTourUtils.goToTheme(),
     consumeVisibleOnly: true,
 }, {
     content: "click on new page",
-    trigger: '.o_new_content_element a',
+    trigger: '.o_new_content_element',
 }, {
     content: "click on Use this template",
     trigger: ".o_page_template button.btn-primary",
