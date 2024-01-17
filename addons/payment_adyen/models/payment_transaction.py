@@ -498,7 +498,7 @@ class PaymentTransaction(models.Model):
             'tokenize': False,
         })
         _logger.info(
-            "created token with id %(token_id)s for partner with id %(partner_id)s from "
+            "Created token with id %(token_id)s for partner with id %(partner_id)s from "
             "transaction with reference %(ref)s",
             {
                 'token_id': token.id,
