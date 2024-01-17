@@ -19,6 +19,7 @@ patch(ForecastedButtons.prototype, 'mrp.ForecastedButtons',{
             additionalContext: {
                 active_id: this.bomId,
                 active_product_id: this.productId,
+                active_model: this.resModel,
             },
         });
     }
