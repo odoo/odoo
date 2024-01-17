@@ -25,3 +25,4 @@ from .convert import *
 from . import osutil
 from .js_transpiler import transpile_javascript, is_odoo_module, URL_RE, ODOO_MODULE_RE
 from .sourcemap_generator import SourceMapGenerator
+from .set_expression import SetDefinitions
