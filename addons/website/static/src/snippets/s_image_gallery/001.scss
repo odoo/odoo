@@ -77,8 +77,10 @@
             .carousel-control-prev {
                 padding-bottom: 64px;
             }
-            ul.carousel-indicators li {
-                border: 1px solid #aaa;
+            .carousel-indicators {
+                img, i {
+                    border: 1px solid #aaa;
+                }
             }
             .media_iframe_video {
                 // 70% because the carousel controls are each 15% and the user
@@ -87,7 +89,7 @@
                 height: 100%;
             }
         }
-        ul.carousel-indicators {
+        .carousel-indicators {
             position: absolute;
             left: 0%;
             bottom: 0;
@@ -96,7 +98,7 @@
             margin-left: 0;
             padding: 0;
             border-width: 0;
-            > * {
+            > img, > i{
                 list-style-image: none;
                 display: inline-block;
                 width: 40px;
@@ -111,6 +113,7 @@
                 background-position: center;
                 border-radius: 0;
                 vertical-align: bottom;
+                object-fit: cover;
                 flex: 0 0 40px;
                 &:not(.active) {
                     opacity: 0.8;
@@ -134,7 +137,7 @@
             }
         }
         &:not(.s_image_gallery_show_indicators) .carousel {
-            ul.carousel-indicators {
+            .carousel-indicators {
                 display: none;
             }
             .carousel-item.active,
@@ -220,27 +223,29 @@
         }
         &.s_image_gallery_indicators_rounded {
             .carousel {
-                ul.carousel-indicators li {
-                    border-radius: 50%;
+                .carousel-indicators {
+                    img, i {
+                        border-radius: 50%;
+                    }
                 }
             }
         }
         &.s_image_gallery_indicators_dots {
             .carousel {
-                ul.carousel-indicators {
+                .carousel-indicators {
                     height: 40px;
                     margin: auto;
 
-                    li {
+                    img, i {
                         max-width: 8px;
                         max-height: 8px;
                         margin: 0 6px;
                         border-radius: 10px;
-                        background-color: $black;
-                        background-image: none !important;
+                        border: 5px solid $gray-900;
+                        box-sizing: border-box;
 
                         &:not(.active) {
-                            opacity: .4;
+                            border-color: $gray-600;
                         }
                     }
                 }
@@ -265,7 +270,7 @@
             padding: 0;
         }
     }
-    ul.carousel-indicators {
+    .carousel-indicators {
         display: none;
     }
 
