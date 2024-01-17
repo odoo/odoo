@@ -280,8 +280,18 @@ class Repair(models.Model):
         if self.product_id.type == 'consu':
             return self.action_repair_confirm()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
-        available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        available_qty_owner = sum(self.env['stock.quant'].search([
+            ('product_id', '=', self.product_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('lot_id', '=', self.lot_id.id),
+            ('owner_id', '=', self.partner_id.id),
+        ]).mapped('quantity'))
+        available_qty_noown = sum(self.env['stock.quant'].search([
+            ('product_id', '=', self.product_id.id),
+            ('location_id', '=', self.location_id.id),
+            ('lot_id', '=', self.lot_id.id),
+            ('owner_id', '=', False),
+        ]).mapped('quantity'))
         repair_qty = self.product_uom._compute_quantity(self.product_qty, self.product_id.uom_id)
         for available_qty in [available_qty_owner, available_qty_noown]:
             if float_compare(available_qty, repair_qty, precision_digits=precision) >= 0:
