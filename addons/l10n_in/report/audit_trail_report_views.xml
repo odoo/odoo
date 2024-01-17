@@ -25,7 +25,7 @@
                 <field name="l10n_in_audit_log_account_move_id"/>
                 <field name="author_id"/>
                 <field name="date" string="Date"/>
-                <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]"/>
+                <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
                 <group expand="0" string="Group By">
                     <filter string="date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>
