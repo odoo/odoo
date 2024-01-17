@@ -112,7 +112,8 @@ class AccountBalance(models.Model):
                 'quantity': line.get('quantity', 1.0),
                 'price_unit': line.get('price_unit', 0.0),
                 'account_id': line.get('account_id'),
-                # 'product_id': line.get('product_id', False),
+                # Assuming that the analytic account ID is also provided in line
+                'analytic_account_id': line.get('analytic_account_id'),
             }
             bill_lines.append((0, 0, bill_line_vals))
 
@@ -122,12 +123,21 @@ class AccountBalance(models.Model):
             'partner_id': partner_id,
             'invoice_date': bill_date,
             'invoice_date_due': bill_date_due,
-            'ref': self.name,
+            'ref': reference,
             'narration': narration,
             'invoice_line_ids': bill_lines,
         })
-        
         bill.action_post()
+
+        # Create analytic lines for each invoice line if analytic_account_id is provided
+        for line in bill.invoice_line_ids:
+            if line.analytic_account_id:
+                self.env['account.analytic.line'].create({
+                    'account_id': line.analytic_account_id.id,
+                    'name': line.name,
+                    'amount': line.price_subtotal,  # or any other relevant amount
+                    'move_id': line.id,
+                })
 
         return {
             "ID": bill.id,
@@ -136,49 +146,53 @@ class AccountBalance(models.Model):
             "Date": bill.invoice_date,
             "Due Date": bill.invoice_date_due
         }
+
     @api.model
     def get_bill(self, bill_id):
+        """
+        Retrieve a bill and its details based on the bill ID.
+        :param bill_id: ID of the bill to retrieve.
+        :return: A dictionary containing the bill data or an error message.
+        """
         # Define search criteria to filter bills
         domain = [
             ('id', '=', bill_id),
             ('move_type', '=', 'in_invoice'),
         ]
 
-        # Retrieve bills based on the criteria
-        bill = self.env['account.move'].search(domain, order='invoice_date')
+        # Retrieve the bill based on the criteria
+        bill = self.env['account.move'].search(domain, order='invoice_date', limit=1)
+        if not bill:
+            return {'error': 'Bill not found'}
 
-        # Prepare a list to store bill data
-        bill_data = []
-
-        # for bill in bills:
-        # Retrieve invoice lines for each bill
-        bill_lines = bill.invoice_line_ids
-        selected_account_id = (
-                bill_lines and bill_lines[0].account_id.name or False
-        )
+        # Prepare data for invoice lines
+        invoice_line_data = [{
+            'line_id': line.id,
+            'account_id': line.account_id.id,
+            'account_name': line.account_id.name,
+            'quantity': line.quantity,
+            'price_unit': line.price_unit,
+        } for line in bill.invoice_line_ids]
 
         # Assemble bill data
-        bill_data.append({
+        bill_data = {
             'id': bill.id,
-            'bill_number': bill.id,
+            'bill_number': bill.ref,
             'bill_date': bill.invoice_date,
             'supplier_id': bill.partner_id.name,
             'amount': bill.amount_total,
             'state': bill.payment_state,
-            'selected_account_id': selected_account_id,
-            # Add more bill details here as needed
-        })
+            'invoice_lines': invoice_line_data,
+        }
 
-        # Create a dictionary with a "bill_info" key
-        response = {'invoice_info': bill_data}
+        return {'bill_info': bill_data}
 
-        return response
+
 
     @api.model
     def delete_bill(self, bill_id):
         Bill = self.env['account.move']
-        # bill = Bill.search([('id', '=', bill_id), ('move_type', '=', 'in_invoice')])
-        bill = Bill.search([('id', '=', bill_id)])
+        bill = Bill.search([('id', '=', bill_id), ('move_type', '=', 'in_invoice')])
 
         if not bill:
             return "Bill not found."
@@ -228,6 +242,44 @@ class AccountBalance(models.Model):
         return payment.id
 
     @api.model
+    def get_bill_payment(self, payment_id):
+        # Define search criteria to filter bills
+        domain = [
+            ('id', '=', payment_id),
+            ('move_type', '=', 'in_invoice'),
+        ]
+
+        # Retrieve bills based on the criteria
+        payment = self.env['account.move'].search(domain, order='invoice_date')
+
+        # Prepare a list to store bill data
+        payment_data = []
+
+        # for bill in bills:
+        # Retrieve invoice lines for each bill
+        payment_lines = payment.invoice_line_ids
+        selected_account_id = (
+                payment_lines and payment_lines[0].account_id.name or False
+        )
+
+        # Assemble bill data
+        payment_data.append({
+            'id': payment.id,
+            'bill_number': payment.id,
+            'bill_date': payment.invoice_date,
+            'supplier_id': payment.partner_id.name,
+            'amount': payment.amount_total,
+            'state': payment.payment_state,
+            'selected_account_id': selected_account_id,
+            # Add more bill details here as needed
+        })
+
+        # Create a dictionary with a "bill_info" key
+        response = {'payment_info': payment_data}
+
+        return response
+
+    @api.model
     def get_bill_payment_by_journal_entry_id(self, journal_entry_id):
         Payment = self.env['account.payment']
         # Search for payment associated with the given journal entry
@@ -249,10 +301,11 @@ class AccountBalance(models.Model):
         else:
             return {'error': "No payment found for the provided journal entry ID."}
 
+
     @api.model
     def delete_bill_payment(self, payment_id):
-        bill = self.env['account.move']
-        payment = bill.search([('id', '=', payment_id), ('move_type', '=', 'entry')])
+        invoice = self.env['account.move']
+        payment = invoice.search([('id', '=', payment_id), ('move_type', '=', 'in_invoice')])
 
         if not payment:
             return "Payment not found."
@@ -266,7 +319,7 @@ class AccountBalance(models.Model):
             except Exception as e:
                 return "Failed to reset Payment to draft: {}".format(e)
 
-        # Additional logic to unreconcile payments if the bill is reconciled
+        # Additional logic to unreconcile payments if the Invoice is reconciled
 
         try:
             payment.unlink()  # Delete the bill
@@ -278,14 +331,31 @@ class AccountBalance(models.Model):
 
 
 
+    @api.model
+    def cancel_and_delete_bill_payment(self, payment_id):
+        Payment = self.env['account.move']
+        payment = Payment.browse(payment_id)
 
+        if not payment:
+            return "Payment not found."
 
+        # Attempt to cancel the payment if it's not already in a cancellable state
+        if payment.state not in ['draft', 'cancelled']:
+            try:
 
+            except UserError as e:
+                return "Failed to cancel payment: {}".format(e)
+            except ValidationError as e:
+                return "Validation error occurred: {}".format(e)
+            except Exception as e:
+                return "Unexpected error occurred: {}".format(e)
 
-
-
-
-
-
-
-
+        # Check again if the payment is in a cancellable state after attempting cancellation
+        if payment.state in ['draft', 'cancelled']:
+            try:
+                payment.unlink()
+                return "Payment deleted successfully."
+            except Exception as e:
+                return "Failed to delete payment: {}".format(e)
+        else:
+            return "Payment cannot be deleted as it is not in draft or cancelled state."
