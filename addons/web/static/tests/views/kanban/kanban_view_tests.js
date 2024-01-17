@@ -9943,8 +9943,11 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["bar"],
-            async mockRPC(route, { method }) {
-                assert.step(method || route);
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+                if (args.method === "web_read_group") {
+                    assert.step(JSON.stringify(args.kwargs.domain));
+                }
             },
         });
 
@@ -9959,13 +9962,16 @@ QUnit.module("Views", (hooks) => {
             // initial load
             "get_views",
             "web_read_group",
+            "[]",
             "read_progress_bar",
             "web_search_read",
             "web_search_read",
             "web_read_group", // recomputes aggregates
+            '["&",["bar","=",true],["foo","=","yop"]]', // perform read_group only on second column (bar=true)
             "web_search_read",
             // activate filter
             "web_read_group", // recomputes aggregates
+            '["&",["bar","=",true],["foo","=","gnap"]]', // perform read_group only on second column (bar=true)
             "web_search_read",
             // activate another filter (switching)
             "web_search_read",
