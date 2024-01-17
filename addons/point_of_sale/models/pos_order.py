@@ -1512,7 +1512,7 @@ class PosOrderLine(models.Model):
             commercial_partner = self.order_id.partner_id.commercial_partner_id
             fiscal_position = self.order_id.fiscal_position_id
             line = line.with_company(self.order_id.company_id)
-            account = line.product_id._get_product_accounts()['income']
+            account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
             if not account:
                 raise UserError(_(
                     "Please define income account for this product: '%s' (id:%d).",
