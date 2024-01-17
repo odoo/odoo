@@ -309,7 +309,7 @@ export class ProfilingQwebView extends Component {
             groups: groups,
         });
         const div = new DOMParser().parseFromString(xml, "text/html").querySelector("div");
-        node.insertBefore(div, node.firstChild);
+        node.appendChild(div);
     }
 
     //--------------------------------------------------------------------------

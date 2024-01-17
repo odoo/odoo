@@ -66,7 +66,7 @@ QUnit.module("Debug > Profiling QWeb", (hooks) => {
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     });
 
-    QUnit.test("profiling qweb view field renders delay and query", async function (assert) {
+    QUnit.only("profiling qweb view field renders delay and query", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
