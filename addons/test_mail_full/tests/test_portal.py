@@ -77,7 +77,7 @@ class TestPortalControllers(TestPortal):
                 'Failed with %s - %s' % (model, res_id)
             )
 
-    def test_portal_avatar_image(self):
+    def test_portal_avatar_with_access_token(self):
         mail_record = self.env['mail.message'].create({
             'author_id': self.record_portal.partner_id.id,
             'model': self.record_portal._name,
@@ -97,6 +97,37 @@ class TestPortalControllers(TestPortal):
         self.assertEqual(no_token_response.status_code, 200)
         self.assertEqual(no_token_response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(no_token_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
+
+    def test_portal_avatar_with_hash_pid(self):
+        self.authenticate(None, None)
+        post_url = f"{self.record_portal.get_base_url()}/mail/chatter_post"
+        res = self.opener.post(
+            url=post_url,
+            json={
+                'params': {
+                    'csrf_token': http.Request.csrf_token(self),
+                    'message': 'Test',
+                    'res_model': self.record_portal._name,
+                    'res_id': self.record_portal.id,
+                    'hash': self.record_portal._sign_token(self.partner_2.id),
+                    'pid': self.partner_2.id,
+                },
+            },
+        )
+        res.raise_for_status()
+        self.assertNotIn("error", res.json())
+        message = self.record_portal.message_ids[0]
+        response = self.url_open(
+            f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={self.record_portal._sign_token(self.partner_2.id)}&pid={self.partner_2.id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get('Content-Type'), 'image/png')
+        self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+
+        placeholder_response = self.url_open(
+            f'/mail/avatar/mail.message/{message.id}/author_avatar/50x50?_hash={self.record_portal._sign_token(self.partner_2.id) + "a"}&pid={self.partner_2.id}')  # false hash
+        self.assertEqual(placeholder_response.status_code, 200)
+        self.assertEqual(placeholder_response.headers.get('Content-Type'), 'image/png')
+        self.assertRegex(placeholder_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
 
     def test_portal_message_fetch(self):
         """Test retrieving chatter messages through the portal controller"""
