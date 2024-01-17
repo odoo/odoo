@@ -1650,9 +1650,7 @@ QUnit.module("mail", {}, function () {
 
         QUnit.test(
             "Retry loading more messages on failed load more messages should load more messages",
-            async function (assert) {
-                assert.expect(0);
-
+            async function () {
                 // first call needs to be successful as it is the initial loading of messages
                 // second call comes from load more and needs to fail in order to show the error alert
                 // any later call should work so that retry button and load more clicks would now work
@@ -1671,7 +1669,7 @@ QUnit.module("mail", {}, function () {
                         };
                     })
                 );
-                const { afterEvent, click, openDiscuss } = await start({
+                const { openDiscuss } = await start({
                     discuss: {
                         context: { active_id: mailChannelId1 },
                     },
@@ -1684,26 +1682,12 @@ QUnit.module("mail", {}, function () {
                     },
                 });
                 await openDiscuss();
+                await contains(".o_MessageView", { count: 30 });
                 messageFetchShouldFail = true;
-                await click(".o_MessageListView_loadMore");
-
+                await clickContains(".o_MessageListView_loadMore");
                 messageFetchShouldFail = false;
-                await afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: () =>
-                        document
-                            .querySelector(".o_MessageListView_alertLoadingFailedRetryButton")
-                            .click(),
-                    message:
-                        "should wait until channel loaded more messages after clicked on load more",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "more-messages-loaded" &&
-                            threadViewer.thread.model === "mail.channel" &&
-                            threadViewer.thread.id === mailChannelId1
-                        );
-                    },
-                });
+                await clickContains(".o_MessageListView_alertLoadingFailedRetryButton");
+                await contains(".o_MessageView", { count: 60 });
             }
         );
 
