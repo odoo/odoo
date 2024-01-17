@@ -278,7 +278,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             amount=tx_sudo.amount,
             currency=tx_sudo.currency_id,
             provider_name=tx_sudo.provider_id.name,
-            tx=tx_sudo, # for the payment.transaction_status template
+            tx=tx_sudo, # for the payment.state_header template
         )
 
         if tx_sudo.state not in ('authorized', 'done'):
