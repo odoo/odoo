@@ -34,11 +34,12 @@ class Post(models.Model):
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection(
         [
-            ('active', 'Active'), ('pending', 'Waiting Validation'),
+            ('active', 'Active'), ('pending', 'Awaiting Validation'),
             ('close', 'Closed'), ('offensive', 'Offensive'),
             ('flagged', 'Flagged'),
         ], string='Status', default='active')
     views = fields.Integer('Views', default=0, readonly=True, copy=False)
+    visible = fields.Boolean('Visible', default=True, help='Posts that are not deleted on the website are "Visible".')
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment', 'email_outgoing'])])
     website_url = fields.Char('Website URL', compute='_compute_website_url')
@@ -74,7 +75,8 @@ class Post(models.Model):
     self_reply = fields.Boolean('Reply to own question', compute='_compute_self_reply', store=True)
     child_ids = fields.One2many(
         'forum.post', 'parent_id', string='Post Answers',
-        domain="[('forum_id', '=', forum_id)]")
+        help="Deleted answers are not included.",
+        domain="[('forum_id', '=', forum_id), ('visible', '=', True)]")
     child_count = fields.Integer('Answers', compute='_compute_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_compute_uid_has_answered')
     has_validated_answer = fields.Boolean(
@@ -236,7 +238,7 @@ class Post(models.Model):
     @api.depends_context('uid')
     def _compute_post_karma_rights(self):
         user = self.env.user
-        is_admin = self.env.is_admin()
+        is_admin = self.env.su or self.env['forum.forum']._is_forum_superuser()
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
         for post, post_sudo in zip(self, self.sudo()):
@@ -260,11 +262,16 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote or post.user_vote == 1
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = post.can_close or post_sudo.active and (post_sudo.create_uid.karma > 0 or post_sudo.create_uid == user)
+            post.can_moderate = is_admin or user.karma >= post.forum_id.karma_moderate
+            post.can_view = (
+                is_creator
+                or post.can_moderate
+                or (post.state in ('active', 'flagged', 'close') and post.can_close)
+                or (post.state in ('active', 'flagged') and post_sudo.create_uid.karma > 0)
+            )
             post.can_display_biography = is_admin or (post_sudo.create_uid.karma >= post.forum_id.karma_user_bio and post_sudo.create_uid.website_published)
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
-            post.can_moderate = is_admin or user.karma >= post.forum_id.karma_moderate
             post.can_use_full_editor = is_admin or user.karma >= post.forum_id.karma_editor
 
     def _search_can_view(self, operator, value):
@@ -276,27 +283,18 @@ class Post(models.Model):
 
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
-        if self.env.is_admin():
-            return [(1, '=', 1)]
+        # not `env.is_admin` (not `.su`) as this `can_view` field is used in ir.rules
+        if self.env['forum.forum']._is_forum_superuser():
+            return expression.TRUE_DOMAIN if operator == '=' else expression.FALSE_DOMAIN
 
-        req = """
-            SELECT p.id
-            FROM forum_post p
-                   LEFT JOIN res_users u ON p.create_uid = u.id
-                   LEFT JOIN forum_forum f ON p.forum_id = f.id
-            WHERE
-                (p.create_uid = %s and f.karma_close_own <= %s)
-                or (p.create_uid != %s and f.karma_close_all <= %s)
-                or (
-                    u.karma > 0
-                    and (p.active or p.create_uid = %s)
-                )
-        """
-
-        op = 'inselect' if operator == '=' else "not inselect"
-
-        # don't use param named because orm will add other param (test_active, ...)
-        return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
+        post_domain = expression.OR([
+            [('create_uid', '=', user.id)],
+            [('forum_id.karma_moderate', '<=', user.karma)],
+            [('state', 'in', ('active', 'flagged', 'close')), ('forum_id.karma_close_all', '<=', user.karma)],
+            [('state', 'in', ('active', 'flagged')), ('create_uid.karma', '>', 0)],
+        ])
+        # sudo required to read karma of other users
+        return [('id', 'in' if operator == '=' else 'not in', self.sudo()._search(post_domain))]
 
     # EXTENDS WEBSITE.SEO.METADATA
 
@@ -323,7 +321,7 @@ class Post(models.Model):
 
         for post in posts:
             # deleted or closed questions
-            if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
+            if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.visible is False):
                 raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
             # karma-based access
             if not post.parent_id and not post.can_ask:
@@ -348,7 +346,7 @@ class Post(models.Model):
         return super(Post, self).unlink()
 
     def write(self, vals):
-        trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
+        trusted_keys = ['active', 'visible', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
 
@@ -366,7 +364,7 @@ class Post(models.Model):
                     if not post.can_flag:
                         raise AccessError(_('%d karma required to flag a post.', post.forum_id.karma_flag))
                     trusted_keys += ['state', 'flag_user_id']
-            if 'active' in vals:
+            if 'active' in vals or 'visible' in vals:
                 if not post.can_unlink:
                     raise AccessError(_('%d karma required to delete or reactivate a post.', post.karma_unlink))
             if 'is_correct' in vals:
@@ -397,16 +395,21 @@ class Post(models.Model):
                     body, subtype_xmlid = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post
                 obj_id.message_post(body=body, subtype_xmlid=subtype_xmlid)
-        if 'active' in vals:
+
+        with_active = 'active' in vals
+        with_visible = 'visible' in vals
+        if with_active or with_visible:
             answers = self.env['forum.post'].with_context(active_test=False).search([('parent_id', 'in', self.ids)])
-            if answers:
-                answers.write({'active': vals['active']})
+            if with_active:
+                answers.active = vals['active']
+            if with_visible:
+                answers.visible = vals['visible']
         return res
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
-        if not force_website and not self.state == 'active':
+        if not force_website and self.state not in ('active', 'flagged'):
             return super(Post, self)._get_access_action(access_uid=access_uid, force_website=force_website)
         return {
             'type': 'ir.actions.act_url',
@@ -475,13 +478,12 @@ class Post(models.Model):
         return True
 
     def reopen(self):
-        if any(post.parent_id or post.state != 'close' for post in self):
+        if any(post.parent_id or post.state not in ('close', 'offensive') for post in self):
             return False
 
-        reason_offensive = self.env.ref('website_forum.reason_7')
         reason_spam = self.env.ref('website_forum.reason_8')
         for post in self:
-            if post.closed_reason_id in (reason_offensive, reason_spam):
+            if post.closed_reason_id.reason_type == 'offensive' or post.closed_reason_id == reason_spam:
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
 
@@ -493,15 +495,15 @@ class Post(models.Model):
                         karma *= 10
                 post.create_uid.sudo()._add_karma(karma * -1, post, _('Reopen a banned question'))
 
-        self.sudo().write({'state': 'active'})
+        self.sudo().write({'state': 'active', 'visible': True, 'closed_reason_id': False})
 
     def close(self, reason_id):
         if any(post.parent_id for post in self):
             return False
 
-        reason_offensive = self.env.ref('website_forum.reason_7').id
-        reason_spam = self.env.ref('website_forum.reason_8').id
-        if reason_id in (reason_offensive, reason_spam):
+        reason = self.env['forum.post.reason'].browse(reason_id)
+        reason_spam = self.env.ref('website_forum.reason_8')
+        if reason.reason_type == 'offensive' or reason_id == reason_spam:
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
@@ -519,9 +521,9 @@ class Post(models.Model):
                 post.create_uid.sudo()._add_karma(karma, post, message)
 
         self.write({
-            'state': 'close',
+            'state': 'offensive' if reason.reason_type == 'offensive' else 'close',
             'closed_uid': self._uid,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+            'closed_date': datetime.today(),
             'closed_reason_id': reason_id,
         })
         return True
@@ -539,7 +541,7 @@ class Post(models.Model):
                 )
             post.write({
                 'state': 'active',
-                'active': True,
+                'visible': True,
                 'moderator_id': self.env.user.id,
             })
             post.post_notification()
@@ -554,17 +556,12 @@ class Post(models.Model):
 
     def flag(self):
         res = []
+        posts_to_flag = self.browse()
         for post in self:
             if not post.can_flag:
                 raise AccessError(_('%d karma required to flag a post.', post.forum_id.karma_flag))
-            if post.state == 'flagged':
-               res.append({'error': 'post_already_flagged'})
             elif post.state == 'active':
-                # TODO: potential performance bottleneck, can be batched
-                post.write({
-                    'state': 'flagged',
-                    'flag_user_id': self.env.user.id,
-                })
+                posts_to_flag |= post
                 res.append(
                     post.can_moderate and
                     {'success': 'post_flagged_moderator'} or
@@ -572,6 +569,8 @@ class Post(models.Model):
                 )
             else:
                 res.append({'error': 'post_non_flaggable'})
+
+        posts_to_flag.write({'state': 'flagged', 'flag_user_id': self.env.user.id})
         return res
 
     def mark_as_offensive(self, reason_id):
@@ -584,10 +583,10 @@ class Post(models.Model):
             # TODO: potential bottleneck, could be done in batch
             post.write({
                 'state': 'offensive',
+                'closed_uid': self.env.user.id if post.state != 'close' else post.closed_uid,
                 'moderator_id': self.env.user.id,
                 'closed_date': fields.Datetime.now(),
                 'closed_reason_id': reason_id,
-                'active': False,
             })
         return True
 
@@ -807,18 +806,18 @@ class Post(models.Model):
         }
 
         domain = website.website_domain()
-        domain = expression.AND([domain, [('state', '=', 'active'), ('can_view', '=', True)]])
-        include_answers = options.get('include_answers', False)
-        if not include_answers:
+        domain = expression.AND([domain, [('visible', '=', options.get('visible', True))]])
+
+        if not options.get('include_answers', False):
             domain = expression.AND([domain, [('parent_id', '=', False)]])
-        forum = options.get('forum')
-        if forum:
+        if forum := options.get('forum'):
             domain = expression.AND([domain, [('forum_id', '=', unslug(forum)[1])]])
-        tags = options.get('tag')
-        if tags:
+        if tags := options.get('tag'):
             domain = expression.AND([domain, [('tag_ids', 'in', [unslug(tag)[1] for tag in tags.split(',')])]])
         filters = options.get('filters')
-        if filters == 'unanswered':
+        if filters in ('pending', 'close', 'offensive'):
+            domain = expression.AND([domain, [('state', '=', filters)]])
+        elif filters == 'unanswered':
             domain = expression.AND([domain, [('child_ids', '=', False)]])
         elif filters == 'solved':
             domain = expression.AND([domain, [('has_validated_answer', '=', True)]])

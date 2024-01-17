@@ -249,7 +249,8 @@
             <t t-set="record_name_plural">tags</t>
             <t t-call="website_forum.no_results_message">
                 <t t-if="tag_filter and tag_filter != 'all'" t-set="result_msg">
-                    There are no tags matching the selected filter <t t-if="search">and search</t>.
+                    <t t-if="search">There are no tags matching the selected filter and search.</t>
+                    <t t-else="">There are no tags matching the selected filter.</t>
                 </t>
                 <t t-elif="search" t-set="result_msg">
                     There are no tags matching the selected search.

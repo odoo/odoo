@@ -120,9 +120,9 @@
             <field name="child_count" string="# Answers" sum="Total Answers" optional="hide"/>
             <field name="state" widget="badge"
                 decoration-success="state == 'active'"
-                decoration-danger="state == 'close'"
-                decoration-warning="state not in ('active', 'close')" optional="show"/>
-
+                decoration-info="state == 'close'"
+                decoration-danger="state == 'offensive'"
+                decoration-warning="state not in ('active', 'close', 'offensive')" optional="show"/>
             <field name="is_seo_optimized"/>
 
             <field name="website_id" groups="website.group_multi_website"/>
@@ -186,14 +186,14 @@
     <field name="name">Users favorite posts</field>
     <field name="res_model">forum.post</field>
     <field name="view_mode">tree,form</field>
-    <field name="domain">[('forum_id', '=', active_id), ('favourite_count', '>', 0), ('state', 'in', ('active', 'close'))]</field>
+    <field name="domain">[('forum_id', '=', active_id), ('favourite_count', '>', 0), ('state', 'in', ('active', 'flagged', 'close'))]</field>
 </record>
 
 <record id="forum_post_action_forum_main" model="ir.actions.act_window">
     <field name="name">Posts</field>
     <field name="res_model">forum.post</field>
     <field name="view_mode">tree,form</field>
-    <field name="domain">[('forum_id', '=', active_id), ('parent_id', '=', False), ('state', 'in', ('active', 'close'))]</field>
+    <field name="domain">[('forum_id', '=', active_id), ('parent_id', '=', False), ('state', 'in', ('active', 'flagged', 'close'))]</field>
 </record>
 
 </data></odoo>

@@ -20,8 +20,13 @@ class TestForumTag(TestForumCommon):
         post_tags = self.env['forum.post'].create(
             [{'name': 'Posting with both tags now', 'forum_id': self.forum.id, 'tag_ids': [Command.set(test_tags.ids)]}]
         )
-        self._check_tags_post_counts(test_tags, [2, 1])
+        post_tag_2 = self.env['forum.post'].create(
+            [{'name': 'Posting second tag only', 'forum_id': self.forum.id, 'tag_ids': [Command.set(test_tags[1].ids)]}]
+        )
+        self._check_tags_post_counts(test_tags, [2, 2])
         post_tag_1.active = False
+        self._check_tags_post_counts(test_tags, [1, 2])
+        post_tag_2.visible = False
         self._check_tags_post_counts(test_tags, [1, 1])
         post_tags.close(None)
         self._check_tags_post_counts(test_tags, [0, 0])

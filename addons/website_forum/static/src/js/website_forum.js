@@ -328,43 +328,40 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onFlagAlertClick: function (ev) {
+    _onFlagAlertClick: async function (ev) {
         ev.preventDefault();
         const elem = ev.currentTarget;
-        rpc(
+        const data = await rpc(
             elem.dataset.href || (elem.getAttribute('href') !== '#' && elem.getAttribute('href')) || elem.closest('form').getAttribute('action'),
-        ).then(data => {
-            if (data.error) {
-                const message = data.error === 'anonymous_user'
-                    ? _t("Sorry you must be logged to flag a post")
-                    : data.error === 'post_already_flagged'
-                        ? _t("This post is already flagged")
-                        : data.error === 'post_non_flaggable'
-                            ? _t("This post can not be flagged")
-                            : data.error;
-                this._displayAccessDeniedNotification(message);
-            } else if (data.success) {
-                const child = elem.firstElementChild;
-                if (data.success === 'post_flagged_moderator') {
-                    const countFlaggedPosts = this.el.querySelector('#count_flagged_posts');
-                    elem.innerText = _t(' Flagged');
-                    elem.prepend(child);
-                    if (countFlaggedPosts) {
-                        countFlaggedPosts.classList.remove('bg-light');
-                        countFlaggedPosts.classList.remove('d-none');
-                        countFlaggedPosts.classList.add('bg-danger');
-                        countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
-                    }
-                    $(elem).nextAll('.flag_validator').removeClass('d-none');
-                } else if (data.success === 'post_flagged_non_moderator') {
-                    const forumAnswer = elem.closest('.forum_answer');
-                    elem.innerText = _t(' Flagged');
-                    elem.prepend(child);
-                    forumAnswer.fadeIn(1000);
-                    forumAnswer.slideUp(1000);
-                }
+        );
+        if (data.error) {
+            const message = data.error === 'anonymous_user'
+                ? _t("Sorry you must be logged to flag a post")
+                : data.error === 'post_non_flaggable'
+                    ? _t("This post can not be flagged")
+                    : data.error;
+            this._displayAccessDeniedNotification(message);
+            return;
+        }
+        let message = '';
+        elem.innerText = _t(' Flagged');
+        elem.disabled = true;
+        const notificationOptions = {
+            title: _t("The post has been flagged"),
+            type: "success",
+        }
+        if (data.success === 'post_flagged_moderator') {
+            const countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged');
+            if (countFlaggedPosts) {
+                countFlaggedPosts.classList.remove('bg-light');
+                countFlaggedPosts.classList.remove('d-none');
+                countFlaggedPosts.classList.add('bg-danger');
+                countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
             }
-        });
+        } else if (data.success === 'post_flagged_non_moderator') {
+            message =  _t("Moderators will be notified about this post.");
+        }
+        this.notification.add(message, notificationOptions)
     },
     /**
      * @private
@@ -555,17 +552,18 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             parseInt(currentTarget.dataset.postId),
         ]);
         this._findParent(currentTarget, '.o_wforum_flag_alert')?.classList.toggle('d-none');
-        const flaggedButton = currentTarget.parentElement.firstElementChild,
-            child = flaggedButton.firstElementChild,
-            countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged'),
-            count = parseInt(countFlaggedPosts.innerText, 10) - 1;
-
+        const flaggedButton = currentTarget.parentElement.firstElementChild;
+        const child = flaggedButton.firstElementChild;
         flaggedButton.innerText = _t(' Flag');
         flaggedButton.prepend(child);
-        if (count === 0) {
-            countFlaggedPosts.classList.add('bg-light');
+        const countFlaggedPosts = this.el.querySelector('#count_posts_queue_flagged');
+        if (countFlaggedPosts) {
+            const count = parseInt(countFlaggedPosts.innerText, 10) - 1;
+            if (count === 0) {
+                countFlaggedPosts.classList.add('bg-light');
+            }
+            countFlaggedPosts.innerText = count;
         }
-        countFlaggedPosts.innerText = count;
     },
     /**
      * @private
