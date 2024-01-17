@@ -441,6 +441,11 @@ class Applicant(models.Model):
             self._update_employee_from_applicant()
         return res
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_employee(self):
+        if self.emp_id:
+            raise UserError(_("The applicant is linked to an employee, to avoid losing information, archive it instead."))
+
     def _email_is_blacklisted(self, mail):
         return mail in [m.strip() for m in self.env['ir.config_parameter'].sudo().get_param('hr_recruitment.blacklisted_emails', '').split(',')]
 
