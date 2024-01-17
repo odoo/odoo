@@ -104,21 +104,11 @@ class Location(models.Model):
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
                  'outgoing_move_line_ids.product_id.weight', 'outgoing_move_line_ids.product_id.weight',
                  'quant_ids.quantity', 'quant_ids.product_id.weight')
-    @api.depends_context('exclude_sml_ids')
     def _compute_weight(self):
+        weight_by_location = self._get_weight()
         for location in self:
-            location.net_weight = 0
-            quants = location.quant_ids.filtered(lambda q: q.product_id.type != 'service')
-            excluded_sml_ids = self._context.get('exclude_sml_ids', [])
-            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
-            for quant in quants:
-                location.net_weight += quant.product_id.weight * quant.quantity
-            location.forecast_weight = location.net_weight
-            for line in incoming_move_lines:
-                location.forecast_weight += line.product_id.weight * line.quantity_product_uom
-            for line in outgoing_move_lines:
-                location.forecast_weight -= line.product_id.weight * line.quantity_product_uom
+            location.net_weight = weight_by_location[location]['net_weight']
+            location.forecast_weight = weight_by_location[location]['forecast_weight']
 
     @api.depends('name', 'location_id.complete_name', 'usage')
     def _compute_complete_name(self):
@@ -295,7 +285,7 @@ class Location(models.Model):
             if locations.storage_category_id:
                 if package and package.package_type_id:
                     move_line_data = self.env['stock.move.line']._read_group([
-                        ('id', 'not in', self._context.get('exclude_sml_ids', [])),
+                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['location_dest_id'], ['result_package_id:count_distinct'])
@@ -308,7 +298,7 @@ class Location(models.Model):
                         qty_by_location[location.id] += count
                 else:
                     move_line_data = self.env['stock.move.line']._read_group([
-                        ('id', 'not in', self._context.get('exclude_sml_ids', [])),
+                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
@@ -362,6 +352,23 @@ class Location(models.Model):
                     day=annual_inventory_day, year=today.year + 1)
         return next_inventory_date
 
+    def _get_weight(self, excluded_sml_ids=False):
+        result = defaultdict(lambda: defaultdict(float))
+        if not excluded_sml_ids:
+            excluded_sml_ids = []
+        for location in self:
+            quants = location.quant_ids.filtered(lambda q: q.product_id.type != 'service')
+            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.product_id.type != 'service' and ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            for quant in quants:
+                result[location]['net_weight'] += quant.product_id.weight * quant.quantity
+                result[location]['forecast_weight'] = result[location]['net_weight']
+            for line in incoming_move_lines:
+                result[location]['forecast_weight'] += line.product_id.weight * line.quantity_product_uom
+            for line in outgoing_move_lines:
+                result[location]['forecast_weight'] -= line.product_id.weight * line.quantity_product_uom
+        return result
+
     def should_bypass_reservation(self):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
@@ -376,10 +383,11 @@ class Location(models.Model):
         self.ensure_one()
         if self.storage_category_id:
             # check if enough space
+            forecast_weight = self._get_weight(self.env.context.get('exclude_sml_ids', set()))[self]['forecast_weight']
             if package and package.package_type_id:
                 # check weight
                 package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id), ('state', 'not in', ['done', 'cancel'])])
-                if self.storage_category_id.max_weight < self.forecast_weight + sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight)):
+                if self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight)):
                     return False
                 # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
@@ -387,7 +395,7 @@ class Location(models.Model):
                     return False
             else:
                 # check weight
-                if self.storage_category_id.max_weight < self.forecast_weight + product.weight * quantity:
+                if self.storage_category_id.max_weight < forecast_weight + product.weight * quantity:
                     return False
                 product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
                 # To handle new line without quantity in order to avoid suggesting a location already full

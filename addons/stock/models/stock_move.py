@@ -1459,27 +1459,24 @@ Please change the quantity done or the rounding precision of your unit of measur
             )
         return vals
 
-    def _update_reserved_quantity(self, need, location_id, quant_ids=None, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_reserved_quantity(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True, quants_cache=None):
         """ Create or update move lines and reserves quantity from quants
             Expects the need (qty to reserve) and location_id to reserve from.
             `quant_ids` can be passed as an optimization since no search on the database
             is performed and reservation is done on the passed quants set
         """
         self.ensure_one()
-        if quant_ids is None:
-            quant_ids = self.env['stock.quant']
         if not lot_id:
             lot_id = self.env['stock.lot']
         if not package_id:
             package_id = self.env['stock.quant.package']
         if not owner_id:
             owner_id = self.env['res.partner']
-
-        quants = quant_ids._get_reserve_quantity(
+        quants = self.env['stock.quant']._get_reserve_quantity(
             self.product_id, location_id, need, product_packaging_id=self.product_packaging_id,
-            uom_id=self.product_uom, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-
+            uom_id=self.product_uom, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, quants_cache=quants_cache)
         taken_quantity = 0
+        move_line_vals_list = []
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Find a candidate move line to update or create a new one.
         for reserved_quant, quantity in quants:
@@ -1490,15 +1487,13 @@ Please change the quantity done or the rounding precision of your unit of measur
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
                 uom_quantity_back_to_product_uom = to_update.product_uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                to_update.with_context(reserved_quant=reserved_quant).quantity += uom_quantity
+                to_update.quantity += uom_quantity
             else:
                 if self.product_id.tracking == 'serial':
-                    vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
-                    if vals_list:
-                        self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(vals_list)
+                    move_line_vals_list += self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
                 else:
                     self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
-        return taken_quantity
+        return move_line_vals_list, taken_quantity
 
     def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):
         return [self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))]
@@ -1599,8 +1594,19 @@ Please change the quantity done or the rounding precision of your unit of measur
             moves_to_assign = moves_to_assign.filtered(
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
-        moves_to_reserve = moves_to_assign.filtered(lambda m: not m._should_bypass_reservation())
-        quants_by_product = self.env['stock.quant']._get_quants_by_products_locations(moves_to_reserve.product_id, moves_to_reserve.location_id)
+        moves_mto = set()
+        moves_mts = set()
+
+        for move in moves_to_assign:
+            if move.move_orig_ids:
+                moves_mto.add(move.id)
+            else:
+                moves_mts.add(move.id)
+        moves_mto = self.env['stock.move'].browse(moves_mto)
+        moves_mts = self.env['stock.move'].browse(moves_mts)
+
+        quants_cache_mto = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+        quants_cache_mts = self.env['stock.quant']._get_quants_by_products_locations(moves_mts.product_id, moves_mts.location_id, strict=False)
 
         for move in moves_to_assign:
             rounding = roundings[move]
@@ -1612,7 +1618,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 assigned_moves_ids.add(move.id)
                 continue
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-            quants = quants_by_product[move.product_id.id]
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.move_orig_ids:
@@ -1665,7 +1670,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, quant_ids=quants, package_id=forced_package_id, strict=False)
+                    move_line_vals, taken_quantity = move._update_reserved_quantity(need, move.location_id, package_id=forced_package_id, strict=False, quants_cache=quants_cache_mts)
+                    self.env['stock.move.line'].create(move_line_vals)
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)
@@ -1694,7 +1700,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
 
-                        taken_quantity = move._update_reserved_quantity(min(quantity, need), location_id, quants, lot_id, package_id, owner_id)
+                        move_line_vals, taken_quantity = move._update_reserved_quantity(min(quantity, need), location_id, lot_id, package_id, owner_id, quants_cache=quants_cache_mto)
+                        self.env['stock.move.line'].create(move_line_vals)
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
                         moves_to_redirect.add(move.id)
