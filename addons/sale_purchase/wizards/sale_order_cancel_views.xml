@@ -9,7 +9,8 @@
             </field>
             <span id="display_invoice_alert" position="after">
                 <span id="display_purchase_orders_alert"
-                        invisible="not display_purchase_orders_alert">
+                        invisible="not display_purchase_orders_alert"
+                        groups="purchase.group_purchase_user">
                     There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>
                 </span>
             </span>
