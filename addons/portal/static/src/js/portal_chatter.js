@@ -206,6 +206,12 @@ var PortalChatter = publicWidget.Widget.extend({
         if (self.options['token']) {
             data['token'] = self.options['token'];
         }
+        if (self.options['hash'] && self.options['pid']) {
+            Object.assign(data, {
+                'hash': self.options['hash'],
+                'pid': self.options['pid'],
+            });
+        }
         // add domain
         if (this.get('domain')) {
             data['domain'] = this.get('domain');
