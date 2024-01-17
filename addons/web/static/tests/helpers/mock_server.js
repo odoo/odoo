@@ -53,6 +53,7 @@ const DEFAULT_FIELD_VALUES = {
     selection: false,
     reference: false,
     properties: [],
+    json: false,
 };
 
 // -----------------------------------------------------------------------------
