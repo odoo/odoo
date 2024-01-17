@@ -22,6 +22,7 @@ export class DataSources extends EventBus {
         this._metadataRepository.addEventListener("labels-fetched", () => this.notify());
         /** @type {Object.<string, any>} */
         this._dataSources = {};
+        this.pendingPromises = new Set();
     }
 
     /**
@@ -38,6 +39,7 @@ export class DataSources extends EventBus {
                 orm: this._orm,
                 metadataRepository: this._metadataRepository,
                 notify: () => this.notify(),
+                notifyWhenPromiseResolves: this.notifyWhenPromiseResolves.bind(this),
             },
             params
         );
@@ -86,11 +88,37 @@ export class DataSources extends EventBus {
         return id in this._dataSources;
     }
 
+    async notifyWhenPromiseResolves(promise) {
+        this.pendingPromises.add(promise);
+        await promise
+            .then(() => {
+                this.pendingPromises.delete(promise);
+                this.notify();
+            })
+            .catch(() => {
+                this.pendingPromises.delete(promise);
+                this.notify();
+            });
+    }
+
     /**
      * Notify that a data source has been updated. Could be useful to
      * request a re-evaluation.
      */
     notify() {
+        if (this.pendingPromises.size) {
+            if (!this.nextTriggerTimeOutId) {
+                // evaluates at least every 10 seconds, even if there are pending promises
+                // to avoid blocking everything if there is a really long request
+                this.nextTriggerTimeOutId = setTimeout(() => {
+                    this.nextTriggerTimeOutId = undefined;
+                    if (this.pendingPromises.size) {
+                        this.trigger("data-source-updated");
+                    }
+                }, 10000);
+            }
+            return;
+        }
         this.trigger("data-source-updated");
     }
 
