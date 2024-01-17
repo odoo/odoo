@@ -48,7 +48,11 @@ export class BomOverviewComponent extends Component {
 
     async initBomData() {
         const variantId = this.props.action.context.active_product_id;
-        this.state.currentVariantId = variantId ? variantId : false;
+        const resModel = this.props.action.context.active_model;
+        this.state.currentVariantId = false;
+        if (resModel === 'product.product' && variantId !== undefined) {
+            this.state.currentVariantId = variantId;
+        }
 
         const bomData = await this.getBomData();
         this.state.bomQuantity = bomData["bom_qty"];
