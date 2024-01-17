@@ -995,9 +995,15 @@ overridden by modules), because:
     </xpath>
     <xpath expr="//div[hasclass('carousel-indicators')]" position="replace">
         <div class="carousel-indicators">
-            <button data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.s_company_team_image_1)" class="active" aria-label="Carousel indicator"/>
-            <button data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.s_company_team_image_2)" aria-label="Carousel indicator"/>
-            <button data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.s_company_team_image_3)" aria-label="Carousel indicator"/>
+            <button class="d-flex overflow-hidden active" data-bs-target="#slideshow_sample" data-bs-slide-to="0" aria-label="Carousel indicator for image 1">
+                <img class="object-fit-cover w-100 h-100" src="/web/image/website.s_company_team_image_1"/>
+            </button>
+            <button class="d-flex overflow-hidden" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator for image 2">
+                <img class="object-fit-cover w-100 h-100" src="/web/image/website.s_company_team_image_2"/>
+            </button>
+            <button class="d-flex overflow-hidden" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator for image 3">
+                <img class="object-fit-cover w-100 h-100" src="/web/image/website.s_company_team_image_3"/>
+            </button>
         </div>
     </xpath>
 </template>

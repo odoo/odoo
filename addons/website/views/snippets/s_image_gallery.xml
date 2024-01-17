@@ -22,9 +22,30 @@
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                        <button class="o_not_editable d-flex overflow-hidden active"
+                                contenteditable="false"
+                                type="button"
+                                data-bs-target="#slideshow_sample"
+                                data-bs-slide-to="0"
+                                aria-label="Carousel indicator for image 1">
+                            <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_08" aria-hidden="true"/>
+                        </button>
+                        <button class="o_not_editable d-flex overflow-hidden"
+                                contenteditable="false"
+                                type="button"
+                                data-bs-target="#slideshow_sample"
+                                data-bs-slide-to="1"
+                                aria-label="Carousel indicator for image 2">
+                            <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_03" aria-hidden="true"/>
+                        </button>
+                        <button class="o_not_editable d-flex overflow-hidden"
+                                contenteditable="false"
+                                type="button"
+                                data-bs-target="#slideshow_sample"
+                                data-bs-slide-to="2"
+                                aria-label="Carousel indicator for image 3">
+                            <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_02" aria-hidden="true"/>
+                        </button>
                     </div>
                     <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
                         <span class="carousel-control-next-icon" aria-hidden="true"/>
@@ -119,7 +140,7 @@
                 <t t-set="so_rounded_no_dependencies" t-value="true"/>
             </t>
         </div>
-        <div data-js="gallery_img" data-selector=".s_image_gallery img"></div>
+        <div data-js="gallery_img" data-selector=".s_image_gallery img:not([aria-hidden])"></div>
     </xpath>
 </template>
 

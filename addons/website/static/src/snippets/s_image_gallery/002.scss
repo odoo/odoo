@@ -184,8 +184,8 @@
         }
 
         // Indicators - Bars
-        &.s_image_gallery_indicators_bars .carousel-indicators > button {
-            background-image: none !important;
+        &.s_image_gallery_indicators_bars .carousel-indicators > button img {
+            display: none;
         }
 
         // Indicators - Squared Miniatures / Rounded Miniatures
@@ -219,9 +219,12 @@
                 height: $-o-carousel-indicators-dots-size;
                 border: 0;
                 border-radius: $border-radius-pill;
-                background-image: none !important;
                 transform: scale(.5);
                 transition: opacity .6s ease, transform .6s ease; // $carousel-indicator-transition values
+
+                img {
+                    display: none;
+                }
 
                 // Increases the click area for easier navigation.
                 &:before {

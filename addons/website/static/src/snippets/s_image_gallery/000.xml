@@ -19,17 +19,21 @@
                  </t>
             </div>
 
-            <ul class="carousel-indicators">
-                <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
-                    <i class="oi oi-chevron-left"/>
-                </li>
+            <div class="carousel-indicators o_not_editable" contenteditable="false">
+                <button type="button" class="o_indicators_left text-center d-none" title="Previous">
+                    <span class="oi oi-chevron-left" aria-hidden="true"/>
+                    <span class="visually-hidden">Previous</span>
+                </button>
                 <t t-foreach="images" t-as="image" t-key="image_index">
-                    <li t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"></li>
+                    <button type="button" class="d-flex overflow-hidden" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-aria-label="Slide to image #{image_index + 1}">
+                        <img class="object-fit-cover h-100 w-100" t-att-src="image.getAttribute('src')" aria-hidden="true"/>
+                    </button>
                 </t>
-                <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
-                    <i class="oi oi-chevron-right"/>
-                </li>
-            </ul>
+                <button type="button" class="o_indicators_right text-center d-none" title="Next">
+                    <span class="oi oi-chevron-right" aria-hidden="true"/>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
 
             <a class="carousel-control-prev o_we_no_overlay o_not_editable" t-attf-href="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
                 <span class="oi oi-chevron-left fa-2x text-white"></span>
