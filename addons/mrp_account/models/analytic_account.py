@@ -6,7 +6,6 @@ from odoo import api, fields, models, _
 
 class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
-    _description = 'Analytic Account'
 
     production_ids = fields.One2many('mrp.production', 'analytic_account_id', string='Manufacturing Orders')
     production_count = fields.Integer("Manufacturing Orders Count", compute='_compute_production_count')
