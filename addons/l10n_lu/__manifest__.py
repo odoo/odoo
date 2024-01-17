@@ -28,6 +28,7 @@ Notes:
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/l10n_lu_chart_data.xml',
         'data/tax_report/section_1.xml',
         'data/tax_report/section_2.xml',
