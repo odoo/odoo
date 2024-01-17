@@ -17,9 +17,8 @@
                 </p>
                 <field name="res_model" invisible="1"/>
                 <field name="res_id" invisible="1"/>
-                <field name="display_access_mode" invisible="1" />
                 <group>
-                    <field options="{'horizontal': true}" name="access_mode" widget="radio" invisible="not display_access_mode"/>
+                    <field options="{'horizontal': true}" name="access_mode" widget="radio"/>
                     <field name="share_link" widget="CopyClipboardChar" invisible="access_mode == 'edit'"/>
                     <field name="send_email" widget="boolean_toggle" options="{'autosave': False}" invisible="access_mode == 'edit'"/>
                     <div invisible="not send_email and access_mode == 'read'" class="o_td_label mb-0">
