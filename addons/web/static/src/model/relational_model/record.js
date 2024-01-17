@@ -402,6 +402,15 @@ export class Record extends DataPoint {
                     }
                     break;
                 }
+                case "json": {
+                    if (
+                        this._isRequired(fieldName) &&
+                        (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
+                    ) {
+                        unsetRequiredFields.push(fieldName);
+                    }
+                    break;
+                }
                 default:
                     if (!this.data[fieldName] && this._isRequired(fieldName)) {
                         unsetRequiredFields.push(fieldName);
