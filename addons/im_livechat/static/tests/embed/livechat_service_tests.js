@@ -101,8 +101,12 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
             temporary_id: -1,
             persisted: true,
         })}`,
-        "/discuss/channel/fold",
-        '/mail/init_messaging - {"context":{"is_for_livechat":true}}',
+        `/discuss/channel/fold - ${JSON.stringify({
+            channel_id: threadId,
+            state: "open",
+            state_count: 1,
+        })}`,
+        '/mail/action - {"init_messaging":true,"context":{"is_for_livechat":true}}',
         `/mail/message/post - ${JSON.stringify({
             context: { lang: "en", tz: "taht", uid: 7, temporary_id: 0.81 },
             post_data: {

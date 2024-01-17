@@ -41,7 +41,7 @@ QUnit.test("list activity widget with no activity", async (assert) => {
     await contains(".o-mail-ActivityButton i.text-muted");
     await contains(".o-mail-ListActivity-summary", { text: "" });
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
@@ -123,7 +123,7 @@ QUnit.test("list activity widget with activities", async (assert) => {
         ],
     });
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
@@ -186,7 +186,7 @@ QUnit.test("list activity widget with exception", async (assert) => {
     await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
     await contains(".o-mail-ListActivity-summary", { text: "Warning" });
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
@@ -291,7 +291,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
     assert.verifySteps([
-        "/mail/init_messaging - {}",
+        '/mail/action - {"init_messaging":true}',
         '/mail/data - {"failures":true}',
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",

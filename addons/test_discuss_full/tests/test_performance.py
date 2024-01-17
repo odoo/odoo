@@ -136,14 +136,14 @@ class TestDiscussFullPerformance(HttpCase):
     @users('emp')
     @warmup
     def test_init_messaging(self):
-        """Test performance of `_init_messaging`."""
+        """Test performance of `init_messaging`."""
         self._setup_test()
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
         self.authenticate(self.users[0].login, self.password)
         with self.assertQueryCount(emp=self._query_count):
-            init_messaging = self.make_jsonrpc_request("/mail/init_messaging")
+            init_messaging = self.make_jsonrpc_request("/mail/action", {"init_messaging": True})
         self.assertEqual(init_messaging, self._get_init_messaging_result())
 
     def _get_init_messaging_result(self):

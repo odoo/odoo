@@ -40,7 +40,7 @@ QUnit.test("sanity check", async () => {
             return originRPC(route, args);
         },
     });
-    await assertSteps(["/mail/init_messaging - {}", '/mail/data - {"failures":true}']);
+    await assertSteps(['/mail/action - {"init_messaging":true}', '/mail/data - {"failures":true}']);
     await openDiscuss();
     await assertSteps([
         '/mail/data - {"channels_as_member":true}',
