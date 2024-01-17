@@ -797,7 +797,9 @@ class HolidaysAllocation(models.Model):
     def _onchange_date_from(self):
         now = date.today()
         if self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
-           or not self.employee_id or not (not self.date_to or self.date_to > now):
+           or (not self.holiday_type == "employee" and self.accrual_plan_id.is_based_on_worked_time)\
+           or self.holiday_type == 'employee' and not self.employee_id\
+           or not (not self.date_to or self.date_to > now):
             return
         self.lastcall = self.date_from
         self.nextcall = False
