@@ -358,7 +358,11 @@ function cardToTable(editable) {
             superCol.append(subTable);
             superRow.append(superCol);
             table.append(superRow);
-            const hasImgTop = [child, ...child.querySelectorAll('.card-img-top')].some(node => (
+            let childImgTop = []
+            if (child.nodeType !== Node.COMMENT_NODE){
+                childImgTop = child.querySelectorAll('.card-img-top')
+            }
+            const hasImgTop = [child, ...childImgTop].some(node => (
                 node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
             ));
             if (hasImgTop) {
