@@ -181,8 +181,6 @@ const _textHighlightFactory = {
         return drawPath(targetEl, {mode: "fill", template, SVGWidth: 200, SVGHeight: 43});
     },
 };
-// Returns the width of the DOMRect object.
-export const getDOMRectWidth = el => el.getBoundingClientRect().width;
 
 /**
  * Draws one or many SVG paths using templates of path shape commands.
