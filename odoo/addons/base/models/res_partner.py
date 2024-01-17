@@ -424,8 +424,6 @@ class Partner(models.Model):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
-            view_id = self.env.ref('base.view_partner_simple_form').id
         arch, view = super()._get_view(view_id, view_type, **options)
         if vat_label := self.env.company.country_id.vat_label:
             for node in arch.iterfind(".//field[@name='vat']"):

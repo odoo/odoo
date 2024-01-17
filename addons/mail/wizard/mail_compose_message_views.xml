@@ -39,7 +39,7 @@
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
                             <span name="document_followers_text" invisible="not model or composition_mode == 'mass_mail'">Followers of the document and</span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
-                                context="{'force_email':True, 'show_email':True}"/>
+                                options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
                     </group>

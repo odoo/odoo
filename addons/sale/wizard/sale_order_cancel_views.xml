@@ -24,9 +24,8 @@
                     <group col="2">
                         <field name="recipient_ids"
                                widget="many2many_tags_email"
-                               context="{'force_email': True,
-                                         'show_email': True,
-                                         'no_create_edit': True}"/>
+                               options="{'no_quick_create': True}"
+                               context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                     </group>
                     <group col="2">
                         <field name="subject" placeholder="Subject"/>

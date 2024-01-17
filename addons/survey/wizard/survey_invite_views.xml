@@ -25,8 +25,8 @@
                                    invisible="survey_access_mode != 'public'"/>
                             <field name="partner_ids"
                                 widget="many2many_tags_email"
-                                placeholder="Add existing contacts..."
-                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"
+                                placeholder="Add existing contacts..." options="{'no_quick_create': True}"
+                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"
                                 required="True"
                                 invisible="not send_email"/>
                             <field name="emails"
