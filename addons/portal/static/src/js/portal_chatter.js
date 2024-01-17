@@ -102,9 +102,13 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     preprocessMessages(messages) {
         const token = this.options['token'];
+        const hash = this.options['hash'];
+        const pid = this.options['pid'];
         _.each(messages, function (m) {
             if (token) {
                 m['author_avatar_url'] = _.str.sprintf('/mail/avatar/mail.message/%s/author_avatar/50x50?access_token=%s', m.id, token);
+            } else if (hash && pid) {
+                m['author_avatar_url'] = _.str.sprintf('/mail/avatar/mail.message/%s/author_avatar/50x50?_hash=%s&pid=%s', m.id, hash, pid);
             } else {
                 m['author_avatar_url'] = _.str.sprintf('/mail/avatar/mail.message/%s/author_avatar/50x50', m.id);
 
