@@ -214,6 +214,24 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="asset">
+        <rng:element name="asset">
+            <rng:attribute name="id" />
+            <rng:attribute name="name" />
+            <rng:optional><rng:attribute name="active" /></rng:optional>
+            <rng:element name="bundle">
+                <rng:optional><rng:attribute name="directive" /></rng:optional>
+                <rng:text/>
+            </rng:element>
+            <rng:element name="path">
+                <rng:text/>
+            </rng:element>
+            <rng:zeroOrMore>
+                <rng:ref name="field" />
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="delete">
         <rng:element name="delete">
             <rng:attribute name="model" />
@@ -323,6 +341,7 @@
                     <rng:ref name="act_window" />
                     <rng:ref name="report" />
                     <rng:ref name="function" />
+                    <rng:ref name="asset" />
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>

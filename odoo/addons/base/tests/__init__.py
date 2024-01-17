@@ -15,6 +15,7 @@ from . import test_http_case
 from . import test_image
 from . import test_avatar_mixin
 from . import test_ir_actions
+from . import test_ir_asset
 from . import test_ir_attachment
 from . import test_ir_cron
 from . import test_ir_http

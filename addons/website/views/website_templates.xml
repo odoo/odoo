@@ -2043,21 +2043,15 @@
 </template>
 
 <!-- Effect options -->
-<record id="website.ripple_effect_scss" model="ir.asset">
-    <field name="key">website.ripple_effect_scss</field>
-    <field name="name">Ripple effect SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">/website/static/src/scss/options/ripple_effect.scss</field>
-    <field name="active" eval="False"/>
-</record>
+<asset id="website.ripple_effect_scss" name="Ripple effect SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>/website/static/src/scss/options/ripple_effect.scss</path>
+</asset>
 
-<record id="website.ripple_effect_js" model="ir.asset">
-    <field name="key">website.ripple_effect_js</field>
-    <field name="name">Ripple effect JS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">/website/static/src/js/content/ripple_effect.js</field>
-    <field name="active" eval="False"/>
-</record>
+<asset id="website.ripple_effect_js" name="Ripple effect JS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>/website/static/src/js/content/ripple_effect.js</path>
+</asset>
 
 <!-- Error and special pages -->
 <template id="website_info" name="Odoo Information">

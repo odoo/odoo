@@ -660,6 +660,45 @@ form: module.record_id""" % (xml_id,)
 
         return self._tag_record(record)
 
+    def _tag_asset(self, el):
+        # This helper transforms an <asset> element into a <record> and forwards it
+        asset_id = el.get('id')
+        full_asset_id = asset_id
+        if '.' not in full_asset_id:
+            full_asset_id = '%s.%s' % (self.module, asset_id)
+        # set the full asset name <module>.<id>
+
+        if self.module.startswith('theme_'):
+            model = 'theme.ir.asset'
+        else:
+            model = 'ir.asset'
+
+        record_attrs = {
+            'id': asset_id,
+            'model': model,
+        }
+
+        Field = builder.E.field
+        name = el.get('name', asset_id)
+
+        record = etree.Element('record', attrib=record_attrs)
+        record.append(Field(name, name='name'))
+        if 'key' in self.env['ir.asset']._fields:
+            record.append(Field(full_asset_id, name='key'))
+        bundle_el = el.find('bundle')
+        record.append(Field(bundle_el.text, name='bundle'))
+        if 'directive' in bundle_el.attrib:
+            record.append(Field(bundle_el.get('directive'), name='directive'))
+        record.append(Field(el.find('path').text, name='path'))
+        for child in el.iterchildren('field'):
+            record.append(child)
+        if el.get('active') in ("True", "False"):
+            record_id = self.id_get(asset_id, raise_if_not_found=False)
+            if self.mode != "update" or not record_id:
+                record.append(Field(name='active', eval=el.get('active')))
+
+        return self._tag_record(record)
+
     def id_get(self, id_str, raise_if_not_found=True):
         if id_str in self.idref:
             return self.idref[id_str]
@@ -725,6 +764,7 @@ form: module.record_id""" % (xml_id,)
             'template': self._tag_template,
             'report': self._tag_report,
             'act_window': self._tag_act_window,
+            'asset': self._tag_asset,
 
             **dict.fromkeys(self.DATA_ROOTS, self._tag_root)
         }
