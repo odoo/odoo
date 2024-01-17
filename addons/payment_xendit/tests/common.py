@@ -12,6 +12,7 @@ class XenditCommon(PaymentCommon):
         cls.xendit = cls._prepare_provider('xendit', update_values={
             'xendit_secret_key': 'xnd_secret_key',
             'xendit_webhook_token': 'xnd_webhook_token',
+            'xendit_public_key': 'xnd_public_key'
         })
         cls.provider = cls.xendit
         cls.webhook_notification_data = {

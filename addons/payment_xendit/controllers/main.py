@@ -5,9 +5,10 @@ import pprint
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.addons.payment import utils as payment_utils
 from odoo.tools import consteq
 
 
@@ -58,3 +59,12 @@ class XenditController(http.Controller):
         if not consteq(tx_sudo.provider_id.xendit_webhook_token, received_token):
             _logger.warning("Received notification with invalid callback token %r.", received_token)
             raise Forbidden()
+
+    @http.route('/payment/xendit/payment', type='json', auth='public')
+    def xendit_payment(self, reference, partner_id, token_data):
+        """ Take newly created token, do a charge request and handle the response
+
+        :param str reference: The reference of the transation
+        """
+        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        tx_sudo._xendit_create_payment_request(token_data)

@@ -7,6 +7,7 @@ from werkzeug import urls
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.addons.payment import utils as payment_utils
 
 from odoo.addons.payment_xendit import const
 
@@ -33,7 +34,7 @@ class PaymentTransaction(models.Model):
         # Initiate the payment and retrieve the invoice data.
         payload = self._xendit_prepare_invoice_request_payload()
         _logger.info("Sending invoice request for link creation:\n%s", pprint.pformat(payload))
-        invoice_data = self.provider_id._xendit_make_request(payload)
+        invoice_data = self.provider_id._xendit_make_request('v2/invoices', payload=payload)
         _logger.info("Received invoice request response:\n%s", pprint.pformat(invoice_data))
 
         # Extract the payment link URL and embed it in the redirect form.
@@ -140,11 +141,54 @@ class PaymentTransaction(models.Model):
         if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
+            if self.tokenize and not self.token_id:
+                self._xendit_tokenize_notification_data(notification_data)
             self._set_done()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:
+            failure_reason = notification_data.get('failure_reason')
             self._set_error(_(
-                "An error occurred during the processing of your payment (status %s). Please try "
-                "again."
+                "An error occurred during the processing of your payment (%s). Please try "
+                "again.", failure_reason
             ))
+
+    def _send_payment_request(self):
+        """ Override of `payment` to send a payment request to Xendit (credit cards) """
+        super()._send_payment_request()
+        if self.provider_code != 'xendit':
+            return
+        if not self.token_id:
+            raise ValidationError("Xendit: " + _("The transaction is not linked to a token."))
+        self._xendit_create_charge(self.token_id.provider_ref)
+
+    def _xendit_create_payment_request(self, token_data):
+        """ Use token stored in token_data to charge the card"""
+
+        self.ensure_one()
+        self._xendit_create_charge(token_data['id'])
+
+    def _xendit_create_charge(self, token):
+        payload = {
+            'token_id': token,
+            'external_id': self.reference,
+            'amount': self.amount
+        }
+        charge_notification_data = self.provider_id._xendit_make_request('credit_card_charges', payload=payload)
+        self._handle_notification_data('xendit', charge_notification_data)
+
+    def _xendit_tokenize_notification_data(self, notification_data):
+        """ Create token using the notification data """
+        card_info = notification_data['masked_card_number'][-4:]
+        token_id = notification_data['credit_card_token_id']
+        token = self.env['payment.token'].create({
+            "provider_id": self.provider_id.id,
+            "payment_method_id": self.payment_method_id.id,
+            "payment_details": card_info,
+            "partner_id": self.partner_id.id,
+            "provider_ref": token_id,
+        })
+        self.write({
+            'token_id': token,
+            'tokenize': False,
+        })

@@ -5,4 +5,31 @@
         <form t-att-action="api_url" method="get"/>
     </template>
 
+    <template id="inline_form">
+        <div name="o_xendit_form"
+             class="o_xendit_form"
+             t-att-data-xendit-inline-form-values="provider_sudo._xendit_get_inline_form_values()"
+        >
+            <t t-if="pm_sudo.code == 'card'">
+                <div class="mb-3">
+                    <label for="o_xendit_card" class="col-form-label">Card Number</label>
+                    <input type="text" id="o_xendit_card" required="" maxlength="19" class="form-control"/>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mb-3">
+                        <label for="o_xendit_month">Expiration</label>
+                        <div class="input-group">
+                            <input type="number" id="o_xendit_month" placeholder="MM" min="1" max="12" required="" class="form-control"/>
+                            <input type="number" id="o_xendit_year" placeholder="YY" min="00" max="99" required="" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <label for="o_xendit_cvn">Card Code</label>
+                        <input type="number" id="o_xendit_cvn" max="9999" class="form-control"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </template>
+
 </odoo>
