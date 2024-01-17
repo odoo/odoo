@@ -26,33 +26,35 @@ const installPromptService = {
 
         // The PWA can only be installed if the app is not already launched (display-mode standalone)
         // For Apple devices, PWA are supported on any mobile version of Safari, or in desktop since version 17
+        // On Safari devices, the check is also done on the display-mode and we rely on the installationState to
+        // decide whether we must show the prompt or not
         const canBeInstalled =
-            !isDisplayStandalone() &&
-            (browser.BeforeInstallPromptEvent !== undefined ||
-                (isBrowserSafari() &&
-                    (isIOS() ||
-                        (isMacOS() &&
-                            browser.navigator.userAgent.match(/Version\/(\d+)/)[1] >= 17))));
+            browser.BeforeInstallPromptEvent !== undefined ||
+            (isBrowserSafari() &&
+                !isDisplayStandalone() &&
+                (isIOS() ||
+                    (isMacOS() && browser.navigator.userAgent.match(/Version\/(\d+)/)[1] >= 17)));
 
         const installationState = browser.localStorage.getItem("pwa.installationState");
-
-        // It is possible that the browser still has the installationState stored in the localstorage once
-        // the app has been uninstalled. This is why we don't use installationState directly in canBeInstalled
-        state.canPromptToInstall = canBeInstalled && !installationState;
-
         const isDeclined = installationState === "dismissed";
 
         if (canBeInstalled && !isDeclined) {
             browser.addEventListener("beforeinstallprompt", (ev) => {
+                // This event is only triggered by the browser when the native prompt to install can be shown
+                // This excludes incognito tabs, as well as visiting the website while the app is installed
+                ev.preventDefault();
+                nativePrompt = ev;
                 if (installationState === "accepted") {
                     // If this event is triggered with the installationState stored, it means that the app has been
                     // removed since its installation. The prompt can be displayed, and the installation state is reset.
-                    state.canPromptToInstall = true;
                     browser.localStorage.removeItem("pwa.installationState");
                 }
-                ev.preventDefault();
-                nativePrompt = ev;
+                state.canPromptToInstall = true;
             });
+            if (isBrowserSafari()) {
+                // since those platforms don't rely on the beforeinstallprompt event, we handle it ourselves
+                state.canPromptToInstall = installationState !== "accepted";
+            }
         }
 
         async function show() {
