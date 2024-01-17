@@ -42,6 +42,9 @@ export class Group extends DataPoint {
     // Getters
     // -------------------------------------------------------------------------
 
+    get groupDomain() {
+        return this.config.initialDomain;
+    }
     get hasData() {
         return this.count > 0;
     }
@@ -75,10 +78,10 @@ export class Group extends DataPoint {
     async applyFilter(filter) {
         if (filter) {
             await this.list.load({
-                domain: Domain.and([this.config.initialDomain, filter]).toList(),
+                domain: Domain.and([this.groupDomain, filter]).toList(),
             });
         } else {
-            await this.list.load({ domain: this.config.initialDomain });
+            await this.list.load({ domain: this.groupDomain });
         }
         this.model._updateConfig(this.config, { extraDomain: filter }, { reload: false });
     }
