@@ -15,7 +15,7 @@
                 </div>
 
                 <div t-if="newOrder" class="main d-flex flex-nowrap flex-grow-1 overflow-hidden">
-                    <div class="flex-grow-1 mw-50 m-3 bg-view border rounded w-50">
+                    <div class="flex-grow-1 mw-50 m-3 bg-view border rounded w-50 overflow-auto">
                         <OrderWidget lines="orderlines" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="getLineData(line)"
