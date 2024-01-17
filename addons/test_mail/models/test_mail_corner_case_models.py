@@ -127,3 +127,14 @@ class MailTestMultiCompany(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
+
+
+class MailTestNotMailThread(models.Model):
+    """ Models not inheriting from mail.thread but using some cross models
+    capabilities of mail. """
+    _name = 'mail.test.nothread'
+    _description = "NoThread Model"
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    customer_id = fields.Many2one('res.partner')
