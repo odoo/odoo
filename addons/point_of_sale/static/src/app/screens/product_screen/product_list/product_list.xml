@@ -32,7 +32,7 @@
                         />
                     </t>
                 </div>
-                <div t-else="" class="product-list-empty no-results-message text-center mt-5">
+                <div t-else="" class="product-list-empty no-results-message text-center">
                     <t t-if="searchWord">
                         <p>No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
                     </t>
@@ -41,8 +41,29 @@
                             <p>There are no products in this category.</p>
                         </t>
                         <t t-else="">
-                            <div t-if="!state.loadingDemo">
-                                <p class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
+                            <div t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                                <t t-foreach="[0, 1, 2]" t-as="i" t-key="i">
+                                    <article tabindex="0" class="product skeleton position-relative btn btn-light d-flex flex-column p-0 m-0 text-start cursor-pointer overflow-hidden transition-base">
+                                        <div class="skeleton__image" />
+                                        <div class="d-flex flex-column mx-2 py-1">
+                                            <div class="skeleton__text lh-sm mb-1 w-100 bg-secondary" />
+                                            <div class="skeleton__text lh-sm mb-2 w-75 bg-secondary" />
+                                            <span class="skeleton__text bg-primary w-50" />
+                                        </div>
+                                    </article>
+                                </t>
+                            </div>
+                            <div t-if="!state.loadingDemo" class="d-flex flex-column align-items-center justify-content-center">
+                                <p class="text-large m-4">No products available</p>
+                                <div class="d-flex">
+                                    <button role="button" class="btn btn-primary" t-on-click="loadDemoDataProducts">
+                                        Load Sample Data
+                                    </button>
+                                    <span class="m-2">or</span>
+                                    <button role="button" class="btn btn-secondary" t-on-click="createNewProducts">
+                                        Create Products
+                                    </button>.
+                                </div>
                             </div>
                             <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
                                 <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">

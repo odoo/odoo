@@ -11,3 +11,17 @@
 .button-no-demo {
     color: #017e84 !important;
 }
+
+.product-list-empty {
+    & .product.skeleton {
+        .skeleton__image {
+            background: $o-gray-200;
+            aspect-ratio: 1/1;
+        }
+        .skeleton__text {
+            opacity: 50%;
+            height: 0.5rem;
+            border-radius: 0.25rem;
+        }
+    }
+}
