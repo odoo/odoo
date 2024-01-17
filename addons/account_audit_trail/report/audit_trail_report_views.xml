@@ -27,7 +27,7 @@
                 <field name="account_audit_log_move_id"/>
                 <field name="author_id"/>
                 <field name="date" string="Date"/>
-                <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]"/>
+                <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]" groups="base.group_system"/>
                 <group expand="0" string="Group By">
                     <filter string="date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
                     <filter string="Journal Entry" name="group_by_log_move_id" domain="[]" context="{'group_by': 'res_id'}"/>
