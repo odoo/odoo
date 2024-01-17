@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="view_kanban_account_analytic_line" model="ir.ui.view">
+        <field name="name">account.analytic.line.kanban.inherit.sale_timesheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class" remove="timesheet_timer_kanban"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_timesheet_from_invoice" model="ir.actions.act_window">
         <field name="name">Timesheets</field>
         <field name="res_model">account.analytic.line</field>
         <field name="view_mode">list,form,graph,pivot,kanban</field>
         <field name="context">{
             'create': False,
-            'edit': False,
             'delete': False,
             "is_timesheet": 1,
         }</field>
@@ -25,7 +35,7 @@
     <record id="action_timesheet_from_invoice_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_tree_user"/>
         <field name="act_window_id" ref="action_timesheet_from_invoice"/>
     </record>
 
@@ -39,7 +49,7 @@
     <record id="action_timesheet_from_invoice_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="5"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="view_id" ref="view_kanban_account_analytic_line"/>
         <field name="act_window_id" ref="action_timesheet_from_invoice"/>
     </record>
 
