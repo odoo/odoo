@@ -20,6 +20,10 @@ class StockMove(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
 
+    def _inverse_picked(self):
+        super()._inverse_picked()
+        self._account_analytic_entry_move()
+
     def _filter_anglo_saxon_moves(self, product):
         return self.filtered(lambda m: m.product_id.id == product.id)
 
@@ -420,11 +424,12 @@ class StockMove(models.Model):
 
         amount, unit_amount = 0, 0
         if self.state != 'done':
-            unit_amount = self.product_uom._compute_quantity(
-                self.quantity, self.product_id.uom_id)
-            # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
-            # we would have to recompute all the analytic estimation at each out.
-            amount = - unit_amount * self.product_id.standard_price
+            if self.picked:
+                unit_amount = self.product_uom._compute_quantity(
+                    self.quantity, self.product_id.uom_id)
+                # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
+                # we would have to recompute all the analytic estimation at each out.
+                amount = - unit_amount * self.product_id.standard_price
         elif self.product_id.valuation == 'real_time' and not self._ignore_automatic_valuation():
             accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
             account_valuation = accounts_data.get('stock_valuation', False)
