@@ -54,7 +54,8 @@
                             <field name="mail_partner_ids"
                                    widget="many2many_tags_email"
                                    placeholder="Add contacts to notify..."
-                                   context="{'force_email': True, 'show_email': True}"/>
+                                   options="{'no_quick_create': True}"
+                                   context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
                         <field name="mail_subject"
                                placeholder="Subject..."
