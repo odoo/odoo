@@ -1428,8 +1428,12 @@ class MrpProduction(models.Model):
         workorder_boms = self.workorder_ids.operation_id.bom_id
         last_workorder_per_bom = defaultdict(lambda: self.env['mrp.workorder'])
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
+
+        def workorder_order(wo):
+            return (wo.operation_id.bom_id, wo.operation_id.sequence)
+
         if self.allow_workorder_dependencies:
-            for workorder in self.workorder_ids:
+            for workorder in self.workorder_ids.sorted(workorder_order):
                 workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id)
                                                       for operation_id in
                                                       workorder.operation_id.blocked_by_operation_ids
@@ -1438,7 +1442,7 @@ class MrpProduction(models.Model):
                     last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         else:
             previous_workorder = False
-            for workorder in self.workorder_ids:
+            for workorder in self.workorder_ids.sorted(workorder_order):
                 if previous_workorder and previous_workorder.operation_id.bom_id == workorder.operation_id.bom_id:
                     workorder.blocked_by_workorder_ids = [Command.link(previous_workorder.id)]
                 previous_workorder = workorder
