@@ -11,7 +11,6 @@ from . import test_reinvoice
 from . import test_upsell_warning
 from . import test_edit_so_line_timesheet
 from . import test_so_line_determined_in_timesheet
-from . import test_sale_timesheet_portal
 from . import test_sale_timesheet_ui
 from . import test_project_pricing_type
 from . import test_project_update
