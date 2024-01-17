@@ -32,7 +32,7 @@ PAYMENT_METHODS_MAPPING = {
 PAYMENT_STATUS_MAPPING = {
     'draft': (),
     'pending': ('PENDING'),
-    'done': ('SUCCEEDED', 'PAID'),
+    'done': ('SUCCEEDED', 'PAID', 'CAPTURED'),
     'cancel': ('CANCELLED', 'EXPIRED'),
     'error': ('FAILED',)
 }

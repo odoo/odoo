@@ -67,3 +67,33 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         tx = self._create_transaction('redirect')
         tx._process_notification_data(self.webhook_notification_data)
         self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_xendit.controllers.main')
+    def test_processing_notification_data_tokenizes_transaction(self):
+        """ Test that the transaction is tokenized when a charge request is successfully made on a
+        transaction that saves payment details. """
+        tx = self._create_transaction('direct', tokenize=True)
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+            '._xendit_make_request', return_value=self.charge_notification_data
+        ), patch(
+            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction'
+            '._xendit_tokenize_from_notification_data'
+        ) as tokenize_mock:
+            tx._xendit_create_charge('dummytoken')
+            self.assertEqual(tokenize_mock.call_count, 1)
+
+    @mute_logger('odoo.addons.payment_xendit.controllers.main')
+    def test_tokenization_flow_not_save_payment_details(self):
+        """ Test that `_xendit_tokenize_from_notification_data` would not be triggered on a
+        transaction that doesn't save the payment details. """
+        tx = self._create_transaction('direct')
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider.'
+            '_xendit_make_request', return_value=self.charge_notification_data
+        ), patch(
+            'odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction.'
+            '_xendit_tokenize_from_notification_data'
+        ) as tokenize_check_mock:
+            tx._xendit_create_charge('dummytoken')
+            self.assertEqual(tokenize_check_mock.call_count, 0)

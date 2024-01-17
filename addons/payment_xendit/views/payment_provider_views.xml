@@ -8,15 +8,22 @@
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
                 <group invisible="code != 'xendit'">
-                    <field name="xendit_secret_key"
-                           string="Secret Key"
-                           required="code == 'xendit' and state != 'disabled'"
-                           password="True"
+                    <field
+                        name="xendit_public_key"
+                        string="Public Key"
+                        required="code == 'xendit' and state != 'disabled'"
                     />
-                    <field name="xendit_webhook_token"
-                           string="Webhook Token"
-                           required="code == 'xendit' and state != 'disabled'"
-                           password="True"
+                    <field
+                        name="xendit_secret_key"
+                        string="Secret Key"
+                        required="code == 'xendit' and state != 'disabled'"
+                        password="True"
+                    />
+                    <field
+                        name="xendit_webhook_token"
+                        string="Webhook Token"
+                        required="code == 'xendit' and state != 'disabled'"
+                        password="True"
                     />
                 </group>
             </group>
