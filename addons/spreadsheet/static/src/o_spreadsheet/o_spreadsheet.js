@@ -942,7 +942,7 @@
     function isDateTime(str) {
         return parseDateTime(str) !== null;
     }
-    const MARKDOWN_LINK_REGEX = /^\[([^\[]+)\]\((.+)\)$/;
+    const MARKDOWN_LINK_REGEX = /^\[(.+)\]\((.+)\)$/;
     //link must start with http or https
     //https://stackoverflow.com/a/3809435/4760614
     const WEB_LINK_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
@@ -32416,9 +32416,9 @@
          * Get a Xc string that represent a part of a range
          */
         getRangePartString(range, part) {
-            const colFixed = range.parts && range.parts[part].colFixed ? "$" : "";
+            const colFixed = range.parts && range.parts[part]?.colFixed ? "$" : "";
             const col = part === 0 ? numberToLetters(range.zone.left) : numberToLetters(range.zone.right);
-            const rowFixed = range.parts && range.parts[part].rowFixed ? "$" : "";
+            const rowFixed = range.parts && range.parts[part]?.rowFixed ? "$" : "";
             const row = part === 0 ? String(range.zone.top + 1) : String(range.zone.bottom + 1);
             let str = "";
             if (range.isFullCol) {
@@ -47926,9 +47926,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.21';
-    __info__.date = '2024-01-12T13:58:43.782Z';
-    __info__.hash = '93874ce';
+    __info__.version = '16.3.22';
+    __info__.date = '2024-01-17T10:55:07.389Z';
+    __info__.hash = '54cf3c0';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
