@@ -56,35 +56,3 @@ class TestResource(TestHrCommon):
         niv_entry = calendars[self.employee_niv.resource_id.id]
         self.assertFalse(niv_entry[self.calendar_40h] - interval, "Interval should cover all calendar's validity")
         self.assertFalse(interval - niv_entry[self.calendar_40h], "Calendar validity should cover all interval")
-
-    def test_availability_hr_infos_resource(self):
-        """ Ensure that all the hr infos needed to display the avatar popover card
-            are available on the model resource.resource, even if the employee is archived
-        """
-        user = self.env['res.users'].create([{
-            'name': 'Test user',
-            'login': 'test',
-            'email': 'test@odoo.perso',
-            'phone': '+32488990011',
-        }])
-        department = self.env['hr.department'].create([{
-            'name': 'QA',
-        }])
-        resource = self.env['resource.resource'].create([{
-            'name': 'Test resource',
-            'user_id': user.id,
-        }])
-        employee = self.env['hr.employee'].create([{
-            'name': 'Test employee',
-            'active': False,
-            'user_id': user.id,
-            'job_title': 'Tester',
-            'department_id': department.id,
-            'work_email': 'test@odoo.pro',
-            'work_phone': '+32800100100',
-            'resource_id': resource.id,
-        }])
-        for field in 'email', 'phone', 'im_status':
-            self.assertEqual(resource[field], user[field])
-        for field in 'job_title', 'department_id', 'work_email', 'work_phone', 'show_hr_icon_display', 'hr_icon_display':
-            self.assertEqual(resource[field], employee[field])

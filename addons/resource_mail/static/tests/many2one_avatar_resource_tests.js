@@ -38,6 +38,9 @@ QUnit.module("M2OAvatarResourceWidgetTests", {
         this.data.userPierreId = pyEnv["res.users"].create({
             name: "Pierre",
             partner_id: this.data.partnerPierreId,
+            email: "Pierre@odoo.test",
+            im_status: "online",
+            phone: "+32487898933",
         });
 
         // Resources
@@ -53,9 +56,6 @@ QUnit.module("M2OAvatarResourceWidgetTests", {
             name: "Pierre",
             resource_type: "user",
             user_id: this.data.userPierreId,
-            email: "Pierre@odoo.test",
-            im_status: "online",
-            phone: "+32487898933",
         }]);
 
         // Tasks linked to those resources

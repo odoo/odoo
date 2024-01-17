@@ -2,7 +2,12 @@
 
 import { start } from "@mail/../tests/helpers/test_utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { click, patchWithCleanup, getFixture, getNodesTextContent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    patchWithCleanup,
+    getFixture,
+    getNodesTextContent,
+} from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { EventBus } from "@odoo/owl";
@@ -51,31 +56,43 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
     QUnit.test("avatar card preview with hr", async (assert) => {
         const pyEnv = await startServer();
         const departmentId = pyEnv["hr.department"].create({
-            name: "Managemment"
+            name: "Managemment",
         });
-        const userId = pyEnv["res.users"].create({
+        const employeeId = pyEnv["hr.employee"].create({
             name: "Mario",
-            email: "Mario@odoo.test",
             work_email: "Mario@odoo.pro",
-            im_status: "online",
-            phone: "+78786987",
             work_phone: "+585555555",
             job_title: "sub manager",
             department_id: departmentId,
         });
+        const userId = pyEnv["res.users"].create({
+            name: "Mario",
+            email: "Mario@odoo.test",
+            im_status: "online",
+            phone: "+78786987",
+            employee_id: employeeId,
+        });
         const mockRPC = (route, args) => {
-            if(route === "/web/dataset/call_kw/res.users/read"){
-                assert.deepEqual(args.args[1], [
-                "name", 
-                "email", 
-                "phone", 
-                "im_status",
-                "share",
-                "work_phone",
-                "work_email",
-                "job_title",
-                "department_id",
-                "employee_id"]);
+            if (route === "/web/dataset/call_kw/res.users/web_read") {
+                assert.deepEqual(args.kwargs.specification, {
+                    name: {},
+                    email: {},
+                    phone: {},
+                    im_status: {},
+                    share: {},
+                    employee_id: {
+                        fields: {
+                            work_phone: {},
+                            work_email: {},
+                            job_title: {},
+                            department_id: {
+                                fields: {
+                                    display_name: {},
+                                },
+                            },
+                        },
+                    },
+                });
                 assert.step("user read");
             }
         };
@@ -109,7 +126,13 @@ QUnit.module("M2XAvatarUser", ({ beforeEach }) => {
         await click(document, ".o_m2o_avatar > img");
         assert.verifySteps(["setTimeout of 250ms", "user read"]);
         assert.containsOnce(target, ".o_avatar_card");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), ['Mario', 'sub manager', 'Managemment', 'Mario@odoo.pro', '+585555555']);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_card_user_infos > *")), [
+            "Mario",
+            "sub manager",
+            "Managemment",
+            "Mario@odoo.pro",
+            "+585555555",
+        ]);
         // Close card
         await click(document, ".o_action_manager");
         assert.containsNone(target, ".o_avatar_card");
