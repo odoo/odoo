@@ -69,6 +69,9 @@ export function addDependencies(deps, activeFields, fields) {
             };
         }
         if (!(name in fields)) {
+            if (dependency.type === "selection" && !Array.isArray(dependency.selection)) {
+                dependency.selection = [];
+            }
             fields[name] = { ...dependency };
         }
     }
