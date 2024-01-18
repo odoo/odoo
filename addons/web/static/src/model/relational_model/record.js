@@ -180,6 +180,9 @@ export class Record extends DataPoint {
     }
 
     discard() {
+        if (this.model._closeUrgentSaveNotification) {
+            this.model._closeUrgentSaveNotification();
+        }
         return this.model.mutex.exec(() => this._discard());
     }
 
@@ -254,11 +257,12 @@ export class Record extends DataPoint {
         });
     }
 
-    urgentSave() {
+    async urgentSave() {
         this.model._urgentSave = true;
         this.model.bus.trigger("WILL_SAVE_URGENTLY");
-        this._save({ reload: false });
-        return this.isValid;
+        const succeeded = await this._save({ reload: false });
+        this.model._urgentSave = false;
+        return succeeded;
     }
 
     // -------------------------------------------------------------------------
@@ -953,6 +957,9 @@ export class Record extends DataPoint {
     }
 
     async _save({ reload = true, onError, nextId } = {}) {
+        if (this.model._closeUrgentSaveNotification) {
+            this.model._closeUrgentSaveNotification();
+        }
         const creation = !this.resId;
         if (nextId) {
             if (creation) {
@@ -974,6 +981,35 @@ export class Record extends DataPoint {
         delete changes.id; // id never changes, and should not be written
         if (!creation && !Object.keys(changes).length) {
             return true;
+        }
+        if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently) {
+            // We are trying to save urgently because the user is closing the page. To
+            // ensure that the save succeeds, we can't do a classic rpc, as these requests
+            // can be cancelled (payload too heavy, network too slow, computer too fast...).
+            // We instead use sendBeacon, which isn't cancellable. However, it has limited
+            // payload (typically < 64k). So we try to save with sendBeacon, and if it
+            // doesn't work, we will prevent the page from unloading.
+            const route = `/web/dataset/call_kw/${this.resModel}/web_save`;
+            const params = {
+                model: this.resModel,
+                method: "web_save",
+                args: [this.resId ? [this.resId] : [], changes],
+                kwargs: { context: this.context, specification: {} },
+            };
+            const data = { jsonrpc: "2.0", method: "call", params };
+            const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+            const succeeded = navigator.sendBeacon(route, blob);
+            if (!succeeded) {
+                this.model._closeUrgentSaveNotification = this.model.notification.add(
+                    markup(
+                        _t(
+                            `Heads up! Your recent changes are too large to save automatically. Please click the <i class="fa fa-cloud-upload fa-fw"></i> button now to ensure your work is saved before you exit this tab.`
+                        )
+                    ),
+                    { sticky: true }
+                );
+            }
+            return succeeded;
         }
         const canProceed = await this.model.hooks.onWillSaveRecord(this, changes);
         if (canProceed === false) {
