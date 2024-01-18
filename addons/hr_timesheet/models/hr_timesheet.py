@@ -373,7 +373,7 @@ class AccountAnalyticLine(models.Model):
                 vals['partner_id'] = data.partner_id.id
             if not vals.get('product_uom_id'):
                 company = account_per_id[vals['account_id']].company_id or data.company_id
-                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id)
+                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
         return vals_list
 
     def _timesheet_postprocess(self, values):
