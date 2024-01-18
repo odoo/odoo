@@ -349,15 +349,43 @@ class StockWarehouseOrderpoint(models.Model):
         all_replenish_location_ids = self._get_orderpoint_locations()
         ploc_per_day = defaultdict(set)
         # For each replenish location get products with negative virtual_available aka forecast
+
+
+        Move = self.env['stock.move'].with_context(active_test=False)
+        Quant = self.env['stock.quant'].with_context(active_test=False)
+        domain_quant, domain_move_in_loc, domain_move_out_loc = all_product_ids._get_domain_locations_new(all_replenish_location_ids.ids)
+        domain_state = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))]
+        domain_product = [['product_id', 'in', all_product_ids.ids]]
+
+        domain_quant = expression.AND([domain_product, domain_quant])
+        domain_move_in = expression.AND([domain_product, domain_state, domain_move_in_loc])
+        domain_move_out = expression.AND([domain_product, domain_state, domain_move_out_loc])
+
+        moves_in = defaultdict(list)
+        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id'], ['product_qty:sum']):
+            moves_in[item[0]].append((item[1], item[2]))
+
+        moves_out = defaultdict(list)
+        for item in Move._read_group(domain_move_out, ['product_id', 'location_id'], ['product_qty:sum']):
+            moves_out[item[0]].append((item[1], item[2]))
+
+        quants = defaultdict(list)
+        for item in Quant._read_group(domain_quant, ['product_id', 'location_id'], ['quantity:sum']):
+            quants[item[0]].append((item[1], item[2]))
+
+        rounding = {product.id: product.uom_id.rounding for product in all_product_ids}
+        path = {loc: loc.parent_path for loc in self.env['stock.location'].search([('id', 'child_of', all_replenish_location_ids.ids)])}
         for loc in all_replenish_location_ids:
-            for product in all_product_ids.with_context(location=loc.id):
-                if float_compare(product.virtual_available, 0, precision_rounding=product.uom_id.rounding) >= 0:
-                    continue
-                # group product by lead_days and location in order to read virtual_available
-                # in batch
-                rules = product._get_rules_from_location(loc)
-                lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]['total_delay']
-                ploc_per_day[(lead_days, loc)].add(product.id)
+            for product in all_product_ids:
+                qty_available = sum(q[1] for q in quants.get(product, [(0, 0)]) if q[0] and path[q[0]] in loc.parent_path)
+                incoming_qty = sum(m[1] for m in moves_in.get(product, [(0, 0)]) if m[0] and path[m[0]] in loc.parent_path)
+                outgoing_qty = sum(m[1] for m in moves_out.get(product, [(0, 0)]) if m[0] and path[m[0]] in loc.parent_path)
+                if float_compare(qty_available + incoming_qty - outgoing_qty, 0, precision_rounding=rounding[product.id]) < 0:
+                    # group product by lead_days and location in order to read virtual_available
+                    # in batch
+                    rules = product._get_rules_from_location(loc)
+                    lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]['total_delay']
+                    ploc_per_day[(lead_days, loc)].add(product.id)
 
         # recompute virtual_available with lead days
         today = fields.datetime.now().replace(hour=23, minute=59, second=59)
