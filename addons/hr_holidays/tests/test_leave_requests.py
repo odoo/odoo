@@ -1082,3 +1082,27 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         for leave_validation_type in types:
             with self.assertRaises(RuntimeError), self.env.cr.savepoint():
                 run_validation_flow(leave_validation_type)
+
+    @freeze_time('2024-01-18')
+    def test_undefined_working_hours(self):
+        """ Ensure time-off can also be allocated without ResourceCalendar. """
+        employee = self.employee_emp
+        employee.resource_calendar_id = False
+        self.env['hr.leave.allocation'].create({
+            'name': 'Annual Time Off',
+            'employee_id': employee.id,
+            'holiday_status_id': self.holidays_type_4.id,
+            'number_of_days': 20,
+            'state': 'confirm',
+            'date_from': '2024-01-01',
+            'date_to': '2024-12-31',
+        })
+        self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': employee.id,
+            'holiday_status_id': self.holidays_type_4.id,
+            'request_date_from': '2024-01-23',
+            'request_date_to': '2024-01-27',
+        })
+        holiday_status = self.holidays_type_4.with_user(self.user_employee_id)
+        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 16.0)
