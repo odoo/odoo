@@ -141,3 +141,12 @@ class ResPartner(models.Model):
         for record in self:
             if record.l10n_it_codice_fiscale and (not codicefiscale.is_valid(record.l10n_it_codice_fiscale) and not iva.is_valid(record.l10n_it_codice_fiscale)):
                 raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345670546' for businesses.", record.l10n_it_codice_fiscale))
+
+    def _deduce_country_code(self):
+        if self.l10n_it_codice_fiscale:
+            return 'IT'
+        return super()._deduce_country_code()
+
+    def _peppol_eas_endpoint_depends(self):
+        # extends account_edi_ubl_cii
+        return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
