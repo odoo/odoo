@@ -344,6 +344,9 @@ class MergePartnerAutomatic(models.TransientModel):
         # delete source partner, since they are merged
         src_partners.unlink()
 
+        # recompute `parent_path` in order to avoid inconsistencies when searching by "child_of"
+        Partner._parent_store_compute()
+
     def _log_merge_operation(self, src_partners, dst_partner):
         _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
 
