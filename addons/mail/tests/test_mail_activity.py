@@ -89,6 +89,7 @@ class ActivityScheduleCase(MailCommon):
                     **{template.activity_type_id.delay_unit: template.activity_type_id.delay_count}))
             self.assertEqual(activity.note, template.note)
             self.assertEqual(activity.summary, template.summary)
+            self.assertFalse(activity.automated)
             if force_responsible_id:
                 self.assertEqual(activity.user_id, force_responsible_id)
             else:
