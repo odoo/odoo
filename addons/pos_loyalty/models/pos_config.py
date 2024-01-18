@@ -73,11 +73,11 @@ class PosConfig(models.Model):
 
     def use_coupon_code(self, code, creation_date, partner_id, pricelist_id):
         self.ensure_one()
-        # Ordering by partner id to use the first assigned to the partner in case multiple coupons have the same code
-        #  it could happen with loyalty programs using a code
         # Points desc so that in coupon mode one could use a coupon multiple times
         coupon = self.env['loyalty.card'].search(
-            [('program_id', 'in', self._get_program_ids().ids), ('partner_id', 'in', (False, partner_id)), ('code', '=', code)],
+            [('program_id', 'in', self._get_program_ids().ids),
+             '|', ('partner_id', 'in', (False, partner_id)), ('program_type', '=', 'gift_card'),
+             ('code', '=', code)],
             order='partner_id, points desc', limit=1)
         program = coupon.program_id
         if not coupon or not program.active:
