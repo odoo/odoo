@@ -29,11 +29,11 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=17.0
-VERSION_IOTBOX=23.11
+VERSION_IOTBOX=24.01
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspios*.img ; then
-    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-10-10/2023-10-10-raspios-bookworm-armhf-lite.img.xz' -O raspios.img.xz
+    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-12-11/2023-12-11-raspios-bookworm-armhf-lite.img.xz' -O raspios.img.xz
     unxz --verbose raspios.img.xz
 fi
 
