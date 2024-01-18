@@ -135,38 +135,49 @@ class ResPartner(models.Model):
                 if error:
                     raise ValidationError(error)
 
-    @api.depends('country_code')
+    @api.model
+    def _get_ubl_cii_formats(self):
+        return {
+            'DE': 'xrechnung',
+            'AU': 'ubl_a_nz',
+            'NZ': 'ubl_a_nz',
+            'NL': 'nlcius',
+            'FR': 'facturx',
+            'SG': 'ubl_sg',
+        }
+
+    def _peppol_eas_endpoint_depends(self):
+        # field dependencies of methods _compute_peppol_endpoint() and _compute_peppol_eas()
+        # because we need to extend depends in l10n modules
+        return ['country_code', 'vat', 'company_registry']
+
+    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
     def _compute_ubl_cii_format(self):
+        format_mapping = self._get_ubl_cii_formats()
         for partner in self:
-            if partner.country_code == 'DE':
-                partner.ubl_cii_format = 'xrechnung'
-            elif partner.country_code in ('AU', 'NZ'):
-                partner.ubl_cii_format = 'ubl_a_nz'
-            elif partner.country_code == 'NL':
-                partner.ubl_cii_format = 'nlcius'
-            elif partner.country_code == 'FR':
-                partner.ubl_cii_format = 'facturx'
-            elif partner.country_code == 'SG':
-                partner.ubl_cii_format = 'ubl_sg'
-            elif partner.country_code in EAS_MAPPING:
+            country_code = partner._deduce_country_code()
+            if country_code in format_mapping:
+                partner.ubl_cii_format = format_mapping[country_code]
+            elif country_code in EAS_MAPPING:
                 partner.ubl_cii_format = 'ubl_bis3'
             else:
                 partner.ubl_cii_format = partner.ubl_cii_format
 
-    @api.depends('peppol_eas')
+    @api.depends(lambda self: self._peppol_eas_endpoint_depends() + ['peppol_eas'])
     def _compute_peppol_endpoint(self):
         """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
             partner.peppol_endpoint = partner.peppol_endpoint
-            if partner.country_code in EAS_MAPPING:
-                field = EAS_MAPPING[partner.country_code].get(partner.peppol_eas)
+            country_code = partner._deduce_country_code()
+            if country_code in EAS_MAPPING:
+                field = EAS_MAPPING[country_code].get(partner.peppol_eas)
                 if field \
                         and field in partner._fields \
                         and partner[field] \
                         and not partner._build_error_peppol_endpoint(partner.peppol_eas, partner[field]):
                     partner.peppol_endpoint = partner[field]
 
-    @api.depends('country_code')
+    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
     def _compute_peppol_eas(self):
         """
         If the country_code changes, recompute the EAS only if there is a country_code, it exists in the
@@ -174,10 +185,11 @@ class ResPartner(models.Model):
         """
         for partner in self:
             partner.peppol_eas = partner.peppol_eas
-            if partner.country_code and partner.country_code in EAS_MAPPING:
-                eas_to_field = EAS_MAPPING[partner.country_code]
+            country_code = partner._deduce_country_code()
+            if country_code in EAS_MAPPING:
+                eas_to_field = EAS_MAPPING[country_code]
                 if partner.peppol_eas not in eas_to_field.keys():
-                    new_eas = list(EAS_MAPPING[partner.country_code].keys())[0]
+                    new_eas = next(iter(EAS_MAPPING[country_code].keys()))
                     # Iterate on the possible EAS until a valid one is found
                     for eas, field in eas_to_field.items():
                         if field and field in partner._fields and partner[field]:
