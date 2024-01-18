@@ -938,7 +938,7 @@ class SlideChannel(models.Model):
                 :return: returns the union of new records and the ones unarchived.
         """
         SlideChannelPartnerSudo = self.env['slide.channel.partner'].sudo()
-        allowed_channels = self._filter_add_members(target_partners, raise_on_access=raise_on_access)
+        allowed_channels = self._filter_add_members(raise_on_access=raise_on_access)
         if not allowed_channels or not target_partners:
             return SlideChannelPartnerSudo
 
@@ -992,14 +992,13 @@ class SlideChannel(models.Model):
                 )
         return result_channel_partners
 
-    def _filter_add_members(self, target_partners, raise_on_access=False):
+    def _filter_add_members(self, raise_on_access=False):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
-        on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
-        if on_invite:
-            if on_invite.has_access('write'):
-                allowed |= on_invite
-            elif raise_on_access:
-                raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
+        if controlled_access := (self - allowed):
+            allowed += controlled_access._filtered_access('write')
+            if raise_on_access and allowed != self:
+                raise AccessError(_('You are not allowed to add members to this course. '
+                                    'Please contact the course responsible or an administrator.'))
         return allowed
 
     def _add_groups_members(self):
