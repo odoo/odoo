@@ -4,7 +4,7 @@
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
-from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuation
+from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
 from odoo.tests import Form
 from odoo.tests.common import tagged
 
@@ -390,7 +390,7 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestMrpStockValuation(TestStockValuation):
+class TestMrpStockValuation(TestStockValuationBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
