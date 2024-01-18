@@ -215,6 +215,71 @@
                     </record>
                 </field>
             </record>
+            <record id="account_tax_report_paygw" model="account.report.line">
+                <field name="name">PAYG Tax Withheld</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_payg_w1" model="account.report.line">
+                        <field name="name">W1: Total salaries, wages and other payments</field>
+                        <field name="code">W1</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_payg_w1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">W1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_payg_w2" model="account.report.line">
+                        <field name="name">W2: Amounts withheld from salaries or wages and other payments shown at W1</field>
+                        <field name="code">W2</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_payg_w2_tag" model="account.report.expression">
+                                <field name="label">sub_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">W2</field>
+                            </record>
+                            <record id="account_tax_report_payg_w2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-W2.sub_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_payg_w4" model="account.report.line">
+                        <field name="name">W4: Amounts withheld where no ABN is quoted</field>
+                        <field name="code">W4</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_payg_w4_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">W4</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_payg_w3" model="account.report.line">
+                        <field name="name">W3: Other amounts withheld (excluding any amount shown at W2 or W4)</field>
+                        <field name="code">W3</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_payg_w3_tag" model="account.report.expression">
+                                <field name="label">sub_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">W3</field>
+                            </record>
+                            <record id="account_tax_report_payg_w3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-W3.sub_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_payg_w5" model="account.report.line">
+                        <field name="name">W5: Total amounts withheld (W2 + W4 + W3)</field>
+                        <field name="code">W5</field>
+                        <field name="aggregation_formula">W2.balance+W3.balance+W4.balance</field>
+                    </record>
+                </field>
+            </record>
             <record id="account_tax_report_gstrpt_summary" model="account.report.line">
                 <field name="name">Summary</field>
                 <field name="hierarchy_level">0</field>
@@ -229,9 +294,14 @@
                         <field name="code">1B</field>
                         <field name="aggregation_formula">G20.balance</field>
                     </record>
+                    <record id="account_tax_report_payg_summary_4" model="account.report.line">
+                        <field name="name">4: PAYG Tax Withheld</field>
+                        <field name="code">4</field>
+                        <field name="aggregation_formula">W5.balance</field>
+                    </record>
                     <record id="account_tax_report_gstrpt_summary_9" model="account.report.line">
                         <field name="name">9: Your payment</field>
-                        <field name="aggregation_formula">1A.balance-1B.balance</field>
+                        <field name="aggregation_formula">1A.balance-1B.balance+4.balance</field>
                     </record>
                 </field>
             </record>
