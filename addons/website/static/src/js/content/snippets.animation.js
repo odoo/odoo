@@ -1221,6 +1221,7 @@ registry.FooterSlideout = publicWidget.Widget.extend({
     },
 });
 
+// TODO in master: remove this widget (not used anymore with the new headers).
 registry.TopMenuCollapse = publicWidget.Widget.extend({
     selector: "header #top_menu_collapse",
 
