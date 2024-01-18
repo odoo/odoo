@@ -27,13 +27,14 @@
             <!-- Topbar -->
             <t t-call="website_event_track.agenda_topbar"/>
             <!-- Drag/Drop Area -->
-            <div class="oe_structure" id="oe_structure_website_event_track_agenda_1"/>
+            <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL AGENDA PAGES OF ALL EVENTS</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_track_agenda_1" t-att-data-editor-message="editor_message"/>
             <!-- Content -->
             <div class="row mb-3">
                 <t t-call="website_event_track.agenda_main"/>
             </div>
             <!-- Drag/Drop Area -->
-            <div class="oe_structure" id="oe_structure_website_event_track_agenda_2"/>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_track_agenda_2" t-att-data-editor-message="editor_message"/>
         </div>
     </t>
 </template>

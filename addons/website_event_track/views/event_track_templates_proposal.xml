@@ -4,7 +4,8 @@
 <template id="event_track_proposal">
     <t t-call="website_event.layout">
         <t t-set="hide_submenu" t-value="True"/>
-        <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
+        <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS</t>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_1" t-att-data-editor-message="editor_message"/>
         <div class="container">
             <section class="row mb-3">
                 <div class="col-lg-8 col-xl-9">
@@ -111,7 +112,7 @@
                             </form>
                         </section>
                     </div>
-                    <div class="oe_structure" id="oe_structure_website_event_track_proposal_2"/>
+                    <div class="oe_structure" id="oe_structure_website_event_track_proposal_2" t-att-data-editor-message="editor_message"/>
                 </div>
                 <aside class="col-lg-4 col-xl-3 mt-3 mt-lg-0 pt-3">
                     <h5 class="o_page_header">Talks Types</h5>
@@ -141,7 +142,7 @@
                 </aside>
             </section>
         </div>
-        <div class="oe_structure" id="oe_structure_website_event_track_proposal_3"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_3" t-att-data-editor-message="editor_message"/>
     </t>
 </template>
 
