@@ -91,6 +91,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 for record in test_records:
                     self.assertActivityCreatedOnRecord(record, {
                         'activity_type_id': self.activity_type_todo,
+                        'automated': False,
                         'date_deadline': self.reference_now.date() + timedelta(days=4),  # activity type delay
                         'note': '<p>Useful link ...</p>',
                         'summary': 'Write specification',
@@ -151,6 +152,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 for record in test_records:
                     self.assertActivityCreatedOnRecord(record, {
                         'activity_type_id': self.activity_type_call,
+                        'automated': False,
                         'date_deadline': self.reference_now.date() + timedelta(days=5),  # both types delays
                         'note': False,
                         'summary': False,

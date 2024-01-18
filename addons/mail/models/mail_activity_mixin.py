@@ -354,6 +354,9 @@ class MailActivityMixin(models.AbstractModel):
         It is useful to avoid having various "env.ref" in the code and allow
         to let the mixin handle access rights.
 
+        Note that unless specified otherwise in act_values, the activities created
+        will have their "automated" field set to True.
+
         :param date_deadline: the day the activity must be scheduled on
         the timezone of the user must be considered to set the correct deadline
         """

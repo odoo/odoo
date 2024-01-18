@@ -215,6 +215,7 @@ class MailActivitySchedule(models.TransientModel):
                     template.activity_type_id, force_base_date=self.plan_date_deadline)
                 record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
+                    automated=False,
                     summary=template.summary,
                     note=template.note,
                     user_id=responsible.id,
@@ -294,6 +295,7 @@ class MailActivitySchedule(models.TransientModel):
     def _action_schedule_activities(self):
         return self._get_applied_on_records().activity_schedule(
             activity_type_id=self.activity_type_id.id,
+            automated=False,
             summary=self.summary,
             note=self.note,
             user_id=self.activity_user_id.id,
