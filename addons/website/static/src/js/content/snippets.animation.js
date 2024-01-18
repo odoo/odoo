@@ -1215,42 +1215,6 @@ registry.FooterSlideout = publicWidget.Widget.extend({
     },
 });
 
-registry.TopMenuCollapse = publicWidget.Widget.extend({
-    selector: "header #top_menu_collapse",
-
-    /**
-     * @override
-     */
-    async start() {
-        this.throttledResize = throttleForAnimation(() => this._onResize());
-        window.addEventListener("resize", this.throttledResize);
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        window.removeEventListener("resize", this.throttledResize);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onResize() {
-        if (this.el.classList.contains("show")) {
-            const togglerEl = this.el.closest("nav").querySelector(".navbar-toggler");
-            if (getComputedStyle(togglerEl).display === "none") {
-                this.$el.collapse("hide");
-            }
-        }
-    },
-});
-
 registry.BottomFixedElement = publicWidget.Widget.extend({
     selector: '#wrapwrap',
 
