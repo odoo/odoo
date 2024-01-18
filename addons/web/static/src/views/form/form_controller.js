@@ -201,7 +201,9 @@ export class FormController extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector("div[name='button_box']:not(field div)");
+        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector(
+            "div[name='button_box']:not(field div)"
+        );
         if (xmlDocButtonBox) {
             const buttonBoxTemplates = useViewCompiler(
                 this.props.Compiler || FormCompiler,
@@ -300,6 +302,7 @@ export class FormController extends Component {
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
             },
+            useSendBeaconToSaveUrgently: true,
         };
     }
 
@@ -384,8 +387,8 @@ export class FormController extends Component {
     }
 
     async beforeUnload(ev) {
-        const isValid = await this.model.root.urgentSave();
-        if (!isValid) {
+        const succeeded = await this.model.root.urgentSave();
+        if (!succeeded) {
             ev.preventDefault();
             ev.returnValue = "Unsaved changes";
         }
