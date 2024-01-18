@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { FormController } from '@web/views/form/form_controller';
@@ -354,6 +354,26 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
     QUnit.test("Ensure that urgentSave works even with modified image to save", async (assert) => {
         assert.expect(5);
+
+        mockSendBeacon((route, { args, model }) => {
+            if (route === '/web/dataset/call_kw/partner/write' && model === 'partner') {
+                if (writeCount === 0) {
+                    // Save normal value without image.
+                    assert.equal(args[1].txt, `<p class="test_target"><br></p>`);
+                } else if (writeCount === 1) {
+                    // Save image with unfinished modification changes.
+                    assert.equal(args[1].txt, imageContainerHTML);
+                } else if (writeCount === 2) {
+                    // Save the modified image.
+                    assert.equal(args[1].txt, getImageContainerHTML(newImageSrc, false));
+                } else {
+                    // Fail the test if too many write are called.
+                    assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
+                }
+                writeCount += 1;
+            }
+        });
+
         let formController;
         // Patch to get the controller instance.
         patchWithCleanup(FormController.prototype, {
@@ -419,20 +439,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 route === '/web/dataset/call_kw/partner/write' &&
                 args.model === 'partner'
             ) {
-                if (writeCount === 0) {
-                    // Save normal value without image.
-                    assert.equal(args.args[1].txt, `<p class="test_target"><br></p>`);
-                } else if (writeCount === 1) {
-                    // Save image with unfinished modification changes.
-                    assert.equal(args.args[1].txt, imageContainerHTML);
-                } else if (writeCount === 2) {
-                    // Save the modified image.
-                    assert.equal(args.args[1].txt, getImageContainerHTML(newImageSrc, false));
-                } else {
-                    // Fail the test if too many write are called.
-                    assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
-                }
-                writeCount += 1;
+                assert.ok(false, "write should only be called through sendBeacon");
             } else if (
                 route === `/web_editor/modify_image/${imageRecord.id}`
             ) {
