@@ -5,6 +5,7 @@ import { timings } from "@bus/misc";
 
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
+import { DISCUSS_ACTION_ID } from "@mail/../tests/helpers/test_constants";
 import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
@@ -34,8 +35,7 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
     return async function openDiscuss(pActiveId) {
         const actionOpenDiscuss = {
             context: { ...context, active_id: pActiveId },
-            // hardcoded actionId, required for discuss_container props validation.
-            id: 104,
+            id: DISCUSS_ACTION_ID,
             params,
             tag: "mail.action_discuss",
             type: "ir.actions.client",
