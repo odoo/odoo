@@ -26,6 +26,9 @@ class TestWebsiteResetPassword(HttpCase):
             kwargs.update(force_send=False)
             return original_send_mail(*args, **kwargs)
 
+        def remove_mail_logs(user):
+            self.env['res.users.password.reset.log'].search([('userid', '=', f"user:{user.id}")]).unlink()
+
         with patch.object(MailMail, 'unlink', lambda self: None), patch.object(MailTemplate, 'send_mail', my_send_mail):
             user = self.env['res.users'].create({
                 'login': 'test',
@@ -50,17 +53,20 @@ class TestWebsiteResetPassword(HttpCase):
             self.env.invalidate_all()  # invalidate get_base_url
 
             user.action_reset_password()
+            remove_mail_logs(user)
             self.assertIn(website_2.domain, user.signup_url)
 
             self.env.invalidate_all()
 
             user.partner_id.website_id = website_1.id
             user.action_reset_password()
+            remove_mail_logs(user)
             self.assertIn(website_1.domain, user.signup_url)
 
             (website_1 + website_2).domain = False
 
             user.action_reset_password()
+            remove_mail_logs(user)
             self.env.invalidate_all()
 
             self.start_tour(user.signup_url, 'website_reset_password', login=None)
