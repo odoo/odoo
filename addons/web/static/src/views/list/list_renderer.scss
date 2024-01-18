@@ -41,6 +41,8 @@
         thead {
             background-color: var(--ListRenderer-thead-bg-color);
             color: $headings-color;
+            position: sticky;
+            z-index: 1;
 
             th:not(.o_list_record_selector) {
                 border-left: $border-width solid var(--ListRenderer-thead-border-end-color);
