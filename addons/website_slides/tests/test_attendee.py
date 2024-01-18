@@ -8,6 +8,7 @@ from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.website_slides.tests import common
+from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 
 @tagged('post_install', '-at_install')
@@ -162,6 +163,9 @@ class TestAttendee(common.SlidesCase):
         # Uninvited partner cannot join the course
         self.channel.with_user(self.user_portal)._action_add_members(user_portal_partner)
         self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
+
+        with self.assertRaises(AccessError):
+            self.channel.with_user(self.user_portal)._action_add_members(user_portal_partner, raise_on_access=True)
 
         user_portal_channel_partner = self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
