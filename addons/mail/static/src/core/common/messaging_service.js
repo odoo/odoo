@@ -58,9 +58,14 @@ export class Messaging {
 
     initMessagingCallback(data) {
         this.store.insert(data);
-        this.store.discuss.isActive =
-            (data.menu_id && data.menu_id === router.current.hash?.menu_id) ||
-            router.hash?.action === "mail.action_discuss";
+        if (!this.store.discuss.isActive) {
+            const routerhash = router.current.hash;
+            if (routerhash?.action === "mail.action_discuss") {
+                this.store.discuss.isActive = true;
+            } else if (data.action_discuss_id) {
+                this.store.discuss.isActive = data.action_discuss_id === routerhash?.action;
+            }
+        }
         this.isReady.resolve();
         this.store.isMessagingReady = true;
     }

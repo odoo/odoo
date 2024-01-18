@@ -261,6 +261,7 @@ class Users(models.Model):
         values = {
             "CannedResponse": self.env["mail.shortcode"].sudo().search_read([], ["source", "substitution"]),
             "Store": {
+                "action_discuss_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.action_discuss"),
                 "companyName": self.env.company.name,
                 "current_user_id": self.id,
                 "discuss": {
@@ -270,7 +271,6 @@ class Users(models.Model):
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "internalUserGroupId": self.env.ref("base.group_user").id,
-                "menu_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.menu_root_discuss"),
                 "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": odoobot.sudo().mail_partner_format().get(odoobot),
                 "self": self.partner_id.mail_partner_format().get(self.partner_id),
