@@ -199,7 +199,9 @@ export class Field extends Component {
                     },
                     domain() {
                         if (fieldInfo.domain) {
-                            return new Domain(evaluateExpr(fieldInfo.domain, record.evalContext)).toList();
+                            return new Domain(
+                                evaluateExpr(fieldInfo.domain, record.evalContext)
+                            ).toList();
                         }
                         return getFieldDomain(record, fieldInfo.name);
                     },
@@ -330,7 +332,10 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         for (const child of node.children) {
             const viewType = child.tagName === "tree" ? "list" : child.tagName;
             const { ArchParser } = viewRegistry.get(viewType);
-            const archInfo = new ArchParser().parse(child, models, fields[name].relation);
+            // We copy and hence isolate the subview from the main view's tree
+            // This way, the subview's tree is autonomous and CSS selectors will work normally
+            const childCopy = child.cloneNode(true);
+            const archInfo = new ArchParser().parse(childCopy, models, fields[name].relation);
             views[viewType] = {
                 ...archInfo,
                 limit: archInfo.limit || 40,
