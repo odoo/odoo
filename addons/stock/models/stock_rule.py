@@ -7,7 +7,7 @@ from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, html_escape
 from odoo.tools.misc import split_every
@@ -107,6 +107,13 @@ class StockRule(models.Model):
             for rule, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", rule.name)
         return vals_list
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        for rule in self:
+            route = rule.route_id
+            if route.company_id and rule.company_id.id != route.company_id.id:
+                raise ValidationError(_("Rule %s belongs to %s while the route belongs to %s.", rule.display_name, rule.company_id.display_name, route.company_id.display_name))
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
