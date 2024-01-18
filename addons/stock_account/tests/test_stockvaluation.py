@@ -46,10 +46,10 @@ def _create_accounting_data(env):
     return stock_input_account, stock_output_account, stock_valuation_account, expense_account, stock_journal
 
 
-class TestStockValuation(TransactionCase):
+class TestStockValuationBase(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestStockValuation, cls).setUpClass()
+        super().setUpClass()
         cls.env.ref('base.EUR').active = True
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
@@ -146,6 +146,7 @@ class TestStockValuation(TransactionCase):
         out_move._action_done()
         return out_move.with_context(svl=True)
 
+class TestStockValuation(TestStockValuationBase):
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,
         price change updates the stock value based on current stock level.
