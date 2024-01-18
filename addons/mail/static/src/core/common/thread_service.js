@@ -953,13 +953,9 @@ export class ThreadService {
      * @param {Message} message
      */
     notifyMessageToUser(thread, message) {
-        if (
-            thread.type === "channel" &&
-            message.recipients?.includes(this.store.user) &&
-            message.notIn(thread.needactionMessages)
-        ) {
-            thread.needactionMessages.add(message);
-            thread.message_needaction_counter++;
+        let notify = thread.type !== "channel";
+        if (thread.type === "channel" && message.recipients?.includes(this.store.user)) {
+            notify = true;
         }
         if (
             thread.chatPartner?.eq(this.store.odoobot) ||
@@ -970,8 +966,10 @@ export class ThreadService {
         ) {
             return;
         }
-        this.store.ChatWindow.insert({ thread });
-        this.outOfFocusService.notify(message, thread);
+        if (notify) {
+            this.store.ChatWindow.insert({ thread });
+            this.outOfFocusService.notify(message, thread);
+        }
     }
 
     /**
