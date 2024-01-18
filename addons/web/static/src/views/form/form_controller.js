@@ -184,7 +184,7 @@ export class FormController extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector("div[name='button_box']");
+        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector("div[name='button_box']:not(field div)");
         if (xmlDocButtonBox) {
             const buttonBoxTemplates = useViewCompiler(
                 this.props.Compiler || FormCompiler,
