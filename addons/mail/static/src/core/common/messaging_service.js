@@ -56,10 +56,14 @@ export class Messaging {
     }
 
     initMessagingCallback() {
-        this.store.discuss.isActive =
-            this.store.discuss.isActive ||
-            (this.store.menu_id && this.store.menu_id === router.current.menu_id) ||
-            router.current.action === "mail.action_discuss";
+        if (!this.store.discuss.isActive) {
+            if (router.current.action === "mail.action_discuss") {
+                this.store.discuss.isActive = true;
+            } else if (this.store.action_discuss_id) {
+                this.store.discuss.isActive =
+                    this.store.action_discuss_id === router.current.action;
+            }
+        }
         this.isReady.resolve();
         this.store.isMessagingReady = true;
     }

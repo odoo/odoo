@@ -3,6 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { today, serializeDate } from "@web/core/l10n/dates";
 import { MockServer } from "@web/../tests/helpers/mock_server";
+import { DISCUSS_ACTION_ID } from "../../test_constants";
 
 patch(MockServer.prototype, {
     /**
@@ -26,6 +27,8 @@ patch(MockServer.prototype, {
                 fields: ["source", "substitution"],
             }),
             Store: {
+                action_discuss_id: DISCUSS_ACTION_ID,
+                current_user_id: this.pyEnv.currentUserId,
                 discuss: {
                     inbox: {
                         counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
@@ -46,7 +49,6 @@ patch(MockServer.prototype, {
                 initBusId: this.lastBusNotificationId,
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
-                menu_id: false, // not useful in QUnit tests
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
                 settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             },

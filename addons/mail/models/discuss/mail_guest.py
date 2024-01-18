@@ -140,7 +140,6 @@ class MailGuest(models.Model):
                 "hasMessageTranslationFeature": False,
                 # sudo: bus.bus: reading non-sensitive last id
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
-                "menu_id": False,
                 "odoobot": {
                     "id": odoobot.id,
                     "name": odoobot.name,
