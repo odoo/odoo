@@ -2,6 +2,7 @@
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { Model, parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
@@ -156,7 +157,7 @@ function containsOdooFunction(content) {
 function isLoaded(model) {
     for (const sheetId of model.getters.getSheetIds()) {
         for (const cell of Object.values(model.getters.getEvaluatedCells(sheetId))) {
-            if (cell.type === "error" && cell.error.message === _t("Data is loading")) {
+            if (cell.type === "error" && isLoadingError(cell)) {
                 return false;
             }
         }

@@ -155,7 +155,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "A1").value, 12);
         assert.strictEqual(getEvaluatedCell(model, "A2").value, "#ERROR");
         assert.strictEqual(
-            getEvaluatedCell(model, "A2").error.message,
+            getEvaluatedCell(model, "A2").message,
             `Fields of type "json" are not supported`
         );
     });
@@ -217,7 +217,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
 
     QUnit.test("Referencing non-existing fields does not crash", async function (assert) {
         assert.expect(4);
-        const forbiddenFieldName = "product_id";
+        const forbiddenFieldName = "a_field";
         let spreadsheetLoaded = false;
         const { model } = await createSpreadsheetWithList({
             columns: ["bar", "product_id"],
@@ -239,8 +239,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             },
         });
         const listId = model.getters.getListIds()[0];
-        // remove forbidden field from the fields of the list.
-        delete model.getters.getListDataSource(listId).getFields()[forbiddenFieldName];
         spreadsheetLoaded = true;
         model.dispatch("REFRESH_ALL_DATA_SOURCES");
         await nextTick();
@@ -255,7 +253,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const A2 = getEvaluatedCell(model, "A2");
         assert.equal(A2.type, "error");
         assert.equal(
-            A2.error.message,
+            A2.message,
             `The field ${forbiddenFieldName} does not exist or you do not have access to that field`
         );
     });
@@ -403,7 +401,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         model.dispatch("REMOVE_ODOO_LIST", { listId: "1" });
         assert.strictEqual(model.getters.getListIds().length, 0);
         const B4 = getEvaluatedCell(model, "B4");
-        assert.equal(B4.error.message, `There is no list with id "1"`);
+        assert.equal(B4.message, `There is no list with id "1"`);
         assert.equal(B4.value, `#ERROR`);
     });
 
@@ -414,12 +412,11 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         model.dispatch("REQUEST_UNDO");
         assert.strictEqual(model.getters.getListIds().length, 1);
         let B4 = getEvaluatedCell(model, "B4");
-        assert.equal(B4.error, undefined);
         assert.equal(B4.value, value);
         model.dispatch("REQUEST_REDO");
         assert.strictEqual(model.getters.getListIds().length, 0);
         B4 = getEvaluatedCell(model, "B4");
-        assert.equal(B4.error.message, `There is no list with id "1"`);
+        assert.equal(B4.message, `There is no list with id "1"`);
         assert.equal(B4.value, `#ERROR`);
     });
 
@@ -640,9 +637,9 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             cell = getEvaluatedCell(model, "C3");
 
             assert.equal(headerCell.value, "#ERROR");
-            assert.equal(headerCell.error.message, "ya done!");
+            assert.equal(headerCell.message, "ya done!");
             assert.equal(cell.value, "#ERROR");
-            assert.equal(cell.error.message, "ya done!");
+            assert.equal(cell.message, "ya done!");
         }
     );
 

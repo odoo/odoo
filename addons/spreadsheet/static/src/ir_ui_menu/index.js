@@ -16,16 +16,19 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
-const { urlRegistry, corePluginRegistry } = spreadsheet.registries;
+const { urlRegistry, corePluginRegistry, errorTypes } = spreadsheet.registries;
 const { EvaluationError } = spreadsheet;
 
 corePluginRegistry.add("ir_ui_menu_plugin", IrMenuPlugin);
 
+const LINK_ERROR = _t("#LINK");
+errorTypes.add(LINK_ERROR);
+
 class BadOdooLinkError extends EvaluationError {
     constructor(menuId) {
         super(
-            _t("#LINK"),
-            sprintf(_t("Menu %s not found. You may not have the required access rights."), menuId)
+            sprintf(_t("Menu %s not found. You may not have the required access rights."), menuId),
+            LINK_ERROR
         );
     }
 }
