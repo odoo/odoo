@@ -1988,52 +1988,52 @@ class Application:
                 return
             ProxyFix(fake_app)(environ, fake_start_response)
 
-        httprequest = werkzeug.wrappers.Request(environ)
-        httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
-        httprequest.parameter_storage_class = (
-            werkzeug.datastructures.ImmutableOrderedMultiDict)
-        request = Request(httprequest)
-        _request_stack.push(request)
-        request._post_init()
-        current_thread.url = httprequest.url
+        with werkzeug.wrappers.Request(environ) as httprequest:
+            httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
+            httprequest.parameter_storage_class = (
+                werkzeug.datastructures.ImmutableOrderedMultiDict)
+            request = Request(httprequest)
+            _request_stack.push(request)
+            request._post_init()
+            current_thread.url = httprequest.url
 
-        try:
-            if self.get_static_file(httprequest.path):
-                response = request._serve_static()
-            elif request.db:
-                with request._get_profiler_context_manager():
-                    response = request._serve_db()
-            else:
-                response = request._serve_nodb()
-            return response(environ, start_response)
-
-        except Exception as exc:
-            # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
-            if isinstance(exc, HTTPException) and exc.code is None:
-                response = exc.get_response()
-                HttpDispatcher(request).post_dispatch(response)
+            try:
+                if self.get_static_file(httprequest.path):
+                    response = request._serve_static()
+                elif request.db:
+                    with request._get_profiler_context_manager():
+                        response = request._serve_db()
+                else:
+                    response = request._serve_nodb()
                 return response(environ, start_response)
 
-            # Logs the error here so the traceback starts with ``__call__``.
-            if hasattr(exc, 'loglevel'):
-                _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
-            elif isinstance(exc, HTTPException):
-                pass
-            elif isinstance(exc, SessionExpiredException):
-                _logger.info(exc)
-            elif isinstance(exc, (UserError, AccessError, NotFound)):
-                _logger.warning(exc)
-            else:
-                _logger.error("Exception during request handling.", exc_info=True)
+            except Exception as exc:
+                # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
+                if isinstance(exc, HTTPException) and exc.code is None:
+                    response = exc.get_response()
+                    HttpDispatcher(request).post_dispatch(response)
+                    return response(environ, start_response)
 
-            # Ensure there is always a WSGI handler attached to the exception.
-            if not hasattr(exc, 'error_response'):
-                exc.error_response = request.dispatcher.handle_error(exc)
+                # Logs the error here so the traceback starts with ``__call__``.
+                if hasattr(exc, 'loglevel'):
+                    _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
+                elif isinstance(exc, HTTPException):
+                    pass
+                elif isinstance(exc, SessionExpiredException):
+                    _logger.info(exc)
+                elif isinstance(exc, (UserError, AccessError, NotFound)):
+                    _logger.warning(exc)
+                else:
+                    _logger.error("Exception during request handling.", exc_info=True)
 
-            return exc.error_response(environ, start_response)
+                # Ensure there is always a WSGI handler attached to the exception.
+                if not hasattr(exc, 'error_response'):
+                    exc.error_response = request.dispatcher.handle_error(exc)
 
-        finally:
-            _request_stack.pop()
+                return exc.error_response(environ, start_response)
+
+            finally:
+                _request_stack.pop()
 
 
 root = Application()
