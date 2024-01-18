@@ -221,7 +221,10 @@ export class DateTimeField extends Component {
      */
     shouldShowSeparator() {
         return (
-            this.props.alwaysRange ||
+            (this.props.alwaysRange &&
+                (this.props.readonly
+                    ? !this.isEmpty(this.startDateField) || !this.isEmpty(this.endDateField)
+                    : true)) ||
             (this.state.range &&
                 (this.props.required ||
                     (!this.isEmpty(this.startDateField) && !this.isEmpty(this.endDateField))))
