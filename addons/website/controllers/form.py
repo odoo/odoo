@@ -4,6 +4,7 @@
 import base64
 import json
 
+from markupsafe import escape
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
@@ -231,7 +232,6 @@ class WebsiteForm(http.Controller):
             mail_create_nosubscribe=True,
             commit_assetsbundle=False,
         ).create(values)
-
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
             if model_name == 'mail.mail':
@@ -246,11 +246,11 @@ class WebsiteForm(http.Controller):
             # If there isn't, put the custom data in a message instead
             if default_field.name:
                 if default_field.ttype == 'html' or model_name == 'mail.mail':
-                    custom_content = nl2br(custom_content)
+                    custom_content = nl2br(escape(custom_content))
                 record.update({default_field.name: custom_content})
             else:
                 values = {
-                    'body': nl2br(custom_content),
+                    'body': nl2br(escape(custom_content)),
                     'model': model_name,
                     'message_type': 'comment',
                     'res_id': record.id,
