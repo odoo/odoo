@@ -65,13 +65,17 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
             activeFields[field.name] = makeActiveField(field);
         }
         if (!fields[field.name]) {
-            fields[field.name] = omit(field, [
+            const newField = omit(field, [
                 "context",
                 "invisible",
                 "required",
                 "readonly",
                 "onChange",
             ]);
+            fields[field.name] = newField;
+            if (newField.type === "selection" && !Array.isArray(newField.selection)) {
+                newField.selection = [];
+            }
         }
     }
 }

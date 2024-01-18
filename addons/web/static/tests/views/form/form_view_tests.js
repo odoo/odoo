@@ -765,6 +765,60 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=p]");
     });
 
+    QUnit.test(
+        "form with o2m having a selection field with fieldDependencies",
+        async function (assert) {
+            class MyField extends CharField {}
+            fieldRegistry.add("my_widget", {
+                component: MyField,
+                fieldDependencies: [{ name: "selection", type: "selection" }],
+            });
+
+            serverData.models.partner.fields.o2m = { type: "one2many", relation: "partner_type" };
+            serverData.models.partner.records[1].o2m = [];
+            serverData.views = {
+                "partner_type,false,form": `<form><field name="display_name" /></form>`,
+            };
+
+            serverData.models.partner_type.fields.selection = {
+                type: "selection",
+                selection: [
+                    ["a", "A"],
+                    ["b", "B"],
+                ],
+            };
+            serverData.models.partner_type.records = [
+                {
+                    id: 1,
+                    display_name: "first partner_type",
+                    selection: false,
+                },
+            ];
+
+            serverData.models.partner.records[1].o2m = [1];
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="o2m">
+                        <tree>
+                            <field name="display_name" widget="my_widget"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 2,
+            });
+
+            assert.containsOnce(target, ".o_field_widget[name=o2m] .o_data_row");
+            await click(
+                target.querySelector(".o_field_widget[name=o2m] .o_field_x2many_list_row_add a")
+            );
+            assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=display_name]");
+        }
+    );
+
     QUnit.test("fieldDependencies are readonly by default", async function (assert) {
         class MyField extends CharField {}
         fieldRegistry.add("my_widget", {
