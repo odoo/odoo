@@ -263,9 +263,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 subtype_xmlid='mail.mt_note',
             )
 
+            title = _("Down payment invoice")
             order.with_user(poster).message_post(
-                body=_("%s has been created",
-                        invoice._get_html_link(title=_("Down payment invoice"))),
+                body=_("%s has been created", invoice._get_html_link(title=title)),
             )
 
             return invoice
