@@ -5649,7 +5649,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
             target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
-            "Unable to save. Correct the issue or discard changes"
+            "Unable to save. Correct the issue or discard all changes"
         );
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
@@ -5683,7 +5683,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
             target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
-            "Unable to save. Correct the issue or discard changes"
+            "Unable to save. Correct the issue or discard all changes"
         );
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
@@ -13423,7 +13423,7 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
-            "Unable to save. Correct the issue or discard changes"
+            "Unable to save. Correct the issue or discard all changes"
         );
     });
 
