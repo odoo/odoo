@@ -1866,7 +1866,7 @@ QUnit.test(
 
 QUnit.test(
     "Retry loading more messages on failed load more messages should load more messages",
-    async (assert) => {
+    async () => {
         // first call needs to be successful as it is the initial loading of messages
         // second call comes from load more and needs to fail in order to show the error alert
         // any later call should work so that retry button and load more clicks would now work
@@ -1895,11 +1895,13 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
+        await contains(".o-mail-Message", { count: 30 });
         messageFetchShouldFail = true;
-        await click("button:contains(Load More)");
+        await clickContains("button", { text: "Load More" });
+        await contains("button", { text: "Click here to retry" });
         messageFetchShouldFail = false;
-        await click("button:contains(Click here to retry)");
-        assert.containsN($, ".o-mail-Message", 60);
+        await clickContains("button", { text: "Click here to retry" });
+        await contains(".o-mail-Message", { count: 60 });
     }
 );
 
