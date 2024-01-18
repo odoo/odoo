@@ -147,15 +147,27 @@ class AccountAnalyticPlan(models.Model):
 
     @api.depends('account_ids', 'children_ids')
     def _compute_all_analytic_account_count(self):
+        # Get all children_ids from each plan
+        self.env.cr.execute("""
+            SELECT parent.id,
+                   array_agg(child.id) as children_ids
+              FROM account_analytic_plan parent
+              JOIN account_analytic_plan child ON child.parent_path LIKE parent.parent_path || '%%'
+             WHERE parent.id IN %s
+          GROUP BY parent.id
+        """, [tuple(self.ids)])
+        all_children_ids = dict(self.env.cr.fetchall())
+
         plans_count = dict(
             self.env['account.analytic.account']._read_group(
-                domain=[('root_plan_id', 'in', self.ids)],
+                domain=[('plan_id', 'child_of', self.ids)],
                 aggregates=['id:count'],
-                groupby=['root_plan_id']
+                groupby=['plan_id']
             )
         )
+        plans_count = {k.id: v for k, v in plans_count.items()}
         for plan in self:
-            plan.all_account_count = plans_count.get(plan, 0)
+            plan.all_account_count = sum(plans_count.get(child_id, 0) for child_id in all_children_ids.get(plan.id, []))
 
     @api.depends('children_ids')
     def _compute_children_count(self):
