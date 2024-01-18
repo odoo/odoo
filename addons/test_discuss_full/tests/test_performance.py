@@ -164,6 +164,7 @@ class TestDiscussFullPerformance(HttpCase):
                 },
             ],
             "Store": {
+                "action_discuss_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.action_discuss"),
                 "companyName": "YourCompany",
                 "discuss": {
                     "inbox": {"counter": 1, "id": "inbox", "model": "mail.box"},
@@ -175,7 +176,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "initChannelsUnreadCounter": 1,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
-                "menu_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.menu_root_discuss"),
                 "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": {
                     "active": False,

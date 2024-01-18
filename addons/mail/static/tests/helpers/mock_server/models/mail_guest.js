@@ -15,7 +15,6 @@ patch(MockServer.prototype, {
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 initBusId: this.lastBusNotificationId,
-                menu_id: false,
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
                 settings: {},
             },
