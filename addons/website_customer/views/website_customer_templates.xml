@@ -4,13 +4,13 @@
 <template id="index" name="Our References">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="container my-4"> 
+            <div class="container my-4">
                 <div class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
                     <h4 class="my-0 me-auto pe-sm-4">Our references</h4>
                     <div class="o_wcrm_search d-flex w-100 w-lg-auto">
                         <form action="" method="get" class="flex-grow-1">
                             <div class="input-group" role="search">
-                                <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="post.get('search', '')"/>                           
+                                <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="post.get('search', '')"/>
                                 <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
                                     <i class="oi oi-search"/>
                                 </button>
@@ -235,7 +235,7 @@
     <xpath expr="//div[hasclass('o_wcrm_filters_top')]" position="after">
         <div class="d-flex align-items-center gap-2 my-4" t-if="len(tags)">
             <a class="badge text-bg-light" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
-                <span class="fa fa-1x fa-tags"/> All 
+                <span class="fa fa-1x fa-tags"/> All
             </a>
             <t t-foreach="tags" t-as="o_tag">
                 <a t-attf-class="text-bg-#{o_tag.classname} badge" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
@@ -248,7 +248,8 @@
 <template id="details" name="Customer Detail">
   <t t-call="website.layout">
     <div id="wrap">
-        <div class="oe_structure" id="oe_structure_website_customer_details_1"/>
+        <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS</t>
+        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_1" t-att-data-editor-message="editor_message"/>
         <div class="container my-4">
             <div class="row">
                 <div class="mb-3" t-if="not edit_page">
@@ -261,7 +262,7 @@
                 </t>
             </div>
         </div>
-        <div class="oe_structure" id="oe_structure_website_customer_details_2"/>
+        <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2" t-att-data-editor-message="editor_message"/>
     </div>
   </t>
 </template>
