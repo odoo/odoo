@@ -47,7 +47,7 @@ have real delivered quantities in sales orders.
             'sale_timesheet/static/src/components/**/*',
         ],
         'web.assets_tests': [
-            'sale_timesheet/static/tests/tours/*',
+            'sale_timesheet/static/tests/tours/**/*',
             'web/static/lib/hoot-dom/**/*',
         ],
         'web.qunit_suite_tests': [
