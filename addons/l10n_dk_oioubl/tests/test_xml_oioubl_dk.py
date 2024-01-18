@@ -173,6 +173,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
     @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
         self.partner_c.company_registry = False
+        self.partner_c.ubl_cii_format = 'oioubl_201' # default format for French partners is facturx
         with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
 
@@ -183,6 +184,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             telling to the user that this field is missing.
         """
         self.partner_b.vat = None
+        self.partner_b.ubl_cii_format = 'oioubl_201' # default format recomputes when vat is changed
         with self.assertRaises(UserError) as exception:
             self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertIn(f"The field '{self.partner_b._fields['vat'].string}' is required", exception.exception.args[0])

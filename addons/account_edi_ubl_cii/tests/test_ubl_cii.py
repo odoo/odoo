@@ -149,3 +149,36 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 .with_context(default_journal_id=self.company_data["default_journal_purchase"].id)\
                 ._create_document_from_attachment(xml_attachment.id)
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
+
+    def test_peppol_eas_endpoint_compute(self):
+        partner = self.partner_a
+        partner.vat = 'DE123456788'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9930',
+            'peppol_endpoint': 'DE123456788',
+        }])
+
+        partner.vat = 'FR23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        partner.vat = '23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        partner.write({
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+        })
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
