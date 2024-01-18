@@ -264,14 +264,18 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
      * @returns {string|undefined}
      */
     getListIdFromPosition(position) {
-        const cell = this.getters.getCell(position);
-        const sheetId = position.sheetId;
-        if (cell && cell.isFormula) {
-            const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
-            if (listFunction) {
-                const content = astToFormula(listFunction.args[0]);
-                return this.getters.evaluateFormula(sheetId, content).toString();
+        try {
+            const cell = this.getters.getCell(position);
+            const sheetId = position.sheetId;
+            if (cell && cell.isFormula) {
+                const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
+                if (listFunction) {
+                    const content = astToFormula(listFunction.args[0]);
+                    return this.getters.evaluateFormula(sheetId, content).toString();
+                }
             }
+        } catch {
+            // the evaluated formula is not valid (i.e. the evaluation threw an evaluation error)
         }
         return undefined;
     }

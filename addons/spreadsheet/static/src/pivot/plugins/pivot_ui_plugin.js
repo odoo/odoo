@@ -205,27 +205,37 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         return undefined;
     }
 
+    /**
+     * Returns the first pivot function of formula with its evaluated arguments.
+     *
+     * @param {Token[]} tokens
+     * @returns { { functionName: string, args: Array<string> } | undefined }
+     */
     getFirstPivotFunction(tokens) {
-        console.log("getFirstPivotFunction", tokens);
-        const pivotFunction = getFirstPivotFunction(tokens);
-        if (!pivotFunction) {
+        try {
+            const pivotFunction = getFirstPivotFunction(tokens);
+            if (!pivotFunction) {
+                return undefined;
+            } 
+            const { functionName, args } = pivotFunction;
+            const evaluatedArgs = args.map((argAst) => {
+                if (argAst.type == "EMPTY") {
+                    return undefined;
+                } else if (
+                    argAst.type === "STRING" ||
+                    argAst.type === "BOOLEAN" ||
+                    argAst.type === "NUMBER"
+                ) {
+                    return argAst.value;
+                }
+                const argsString = astToFormula(argAst);
+                return this.getters.evaluateFormula(this.getters.getActiveSheetId(), argsString);
+            });
+            return { functionName, args: evaluatedArgs };
+        } catch {
+            // the evaluated formula is not valid (i.e. the evaluation threw an evaluation error)
             return undefined;
         }
-        const { functionName, args } = pivotFunction;
-        const evaluatedArgs = args.map((argAst) => {
-            if (argAst.type == "EMPTY") {
-                return undefined;
-            } else if (
-                argAst.type === "STRING" ||
-                argAst.type === "BOOLEAN" ||
-                argAst.type === "NUMBER"
-            ) {
-                return argAst.value;
-            }
-            const argsString = astToFormula(argAst);
-            return this.getters.evaluateFormula(this.getters.getActiveSheetId(), argsString);
-        });
-        return { functionName, args: evaluatedArgs };
     }
 
     /**
@@ -253,10 +263,12 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         ) {
             return undefined;
         }
+        const pivotFunction = this.getters.getFirstPivotFunction(cell.compiledFormula.tokens);
+        if (!pivotFunction) {
+            return undefined;
+        }
         const mainPosition = this.getters.getCellPosition(cell.id);
-        const { args, functionName } = this.getters.getFirstPivotFunction(
-            cell.compiledFormula.tokens
-        );
+        const { args, functionName } = pivotFunction;
         if (functionName === "ODOO.PIVOT.TABLE") {
             const pivotId = args[0];
             const dataSource = this.getPivotDataSource(pivotId);
