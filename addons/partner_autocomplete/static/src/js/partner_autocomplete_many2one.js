@@ -18,7 +18,12 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
     }
 
     get sources() {
-        return super.sources.concat(
+        const sources = super.sources;
+        if (!this.props.quickCreate)
+        {
+            return sources;
+        }
+        return sources.concat(
             {
                 options: async (request) => {
                     if (this.validateSearchTerm(request)) {
