@@ -19,15 +19,15 @@
                     class="o_form_button_cancel btn btn-light px-1 py-0 lh-sm"
                     data-hotkey="j"
                     t-on-click.stop="discard"
-                    data-tooltip="Discard changes"
-                    aria-label="Discard changes">
-                    <i class="fa fa-undo fa-fw" />
+                    data-tooltip="Discard all changes"
+                    aria-label="Discard all changes">
+                    <i class="fa fa-times fa-fw" />
                 </button>
             </div>
             <span
                 t-if="!props.model.root.isNew and indicatorMode === 'invalid'"
                 class="text-danger small ms-2"
-                data-tooltip="Unable to save. Correct the issue or discard changes">
+                data-tooltip="Unable to save. Correct the issue or discard all changes">
                 <i class="fa fa-warning" />
             </span>
         </div>
