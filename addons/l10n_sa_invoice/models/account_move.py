@@ -30,7 +30,8 @@ class AccountMove(models.Model):
         def get_qr_encoding(tag, field):
             company_name_byte_array = field.encode()
             company_name_tag_encoding = tag.to_bytes(length=1, byteorder='big')
-            company_name_length_encoding = len(company_name_byte_array).to_bytes(length=1, byteorder='big')
+            company_name_len = len(company_name_byte_array)
+            company_name_length_encoding = company_name_len.to_bytes(length=(company_name_len.bit_length() + 7) // 8, byteorder='big')
             return company_name_tag_encoding + company_name_length_encoding + company_name_byte_array
 
         for record in self:
