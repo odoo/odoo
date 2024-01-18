@@ -39,16 +39,28 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
         this.hiddenOnScrollEl = this.el.querySelector(".o_header_hide_on_scroll");
-        this.$navbarCollapses = this.$el.find('.navbar-collapse');
 
-        // While scrolling through navbar menus on medium devices, body should not be scrolled with it
-        this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
+        // While scrolling through navbar menus on medium devices, body should
+        // not be scrolled with it.
+        const disableScroll = function () {
             if (uiUtils.getSize() <= SIZES.SM) {
                 $(document.body).addClass('overflow-hidden');
             }
-        }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
+        };
+        const enableScroll = function () {
             $(document.body).removeClass('overflow-hidden');
-        });
+        };
+        this.$navbarOffcanvases = this.$el.find(".offcanvas");
+        this.$navbarOffcanvases
+            .on("show.bs.offcanvas.BaseAnimatedHeader", disableScroll)
+            .on("hide.bs.offcanvas.BaseAnimatedHeader", enableScroll);
+
+        // Compatibility: can probably be removed, there is no such elements in
+        // default navbars... although it could be used by custo.
+        this.$navbarCollapses = this.$el.find('.navbar-collapse');
+        this.$navbarCollapses
+            .on("show.bs.collapse.BaseAnimatedHeader", disableScroll)
+            .on("hide.bs.collapse.BaseAnimatedHeader", enableScroll);
 
         // We can rely on transitionend which is well supported but not on
         // transitionstart, so we listen to a custom odoo event.
@@ -67,6 +79,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     destroy: function () {
         this._toggleFixedHeader(false);
         this.$el.removeClass('o_header_affixed o_header_is_scrolled o_header_no_transition o_transitioning');
+        this.$navbarOffcanvases.off(".BaseAnimatedHeader");
         this.$navbarCollapses.off('.BaseAnimatedHeader');
         this.$el.off('.BaseAnimatedHeader');
         this._super(...arguments);
@@ -256,8 +269,14 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
                 && uiUtils.getSize() > SIZES.SM) {
-            document.body.classList.remove('overflow-hidden');
-            this.$el.find('.navbar-collapse').removeClass('show');
+            this.el.querySelectorAll(".offcanvas.show").forEach(offcanvasEl => {
+                Offcanvas.getOrCreateInstance(offcanvasEl).hide();
+            });
+            // Compatibility: can probably be removed, there is no such elements
+            // in default navbars... although it could be used by custo.
+            this.el.querySelectorAll(".navbar-collapse.show").forEach(collapseEl => {
+                Collapse.getOrCreateInstance(collapseEl).hide();
+            });
         }
     },
 });
@@ -669,6 +688,8 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     selector: 'header#top',
     disabledInEditableMode: false,
     events: {
+        "show.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseShow",
+        "hidden.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseHidden",
         "show.bs.modal #o_search_modal": "_onSearchModalShow",
         "shown.bs.modal #o_search_modal": "_onSearchModalShown",
         "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
@@ -679,6 +700,18 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onCollapseShow() {
+        this.el.classList.add('o_top_menu_collapse_shown');
+    },
+    /**
+     * @private
+     */
+    _onCollapseHidden() {
+        this.el.classList.remove('o_top_menu_collapse_shown');
+    },
     /**
      * @private
      */
