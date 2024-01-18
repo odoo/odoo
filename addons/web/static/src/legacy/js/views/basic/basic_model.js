@@ -91,6 +91,7 @@ import concurrency from "web.concurrency";
 import Context from "web.Context";
 import core from "web.core";
 import Domain from "web.Domain";
+import rpc from "web.rpc";
 import session from "web.session";
 import utils from "web.utils";
 import viewUtils from "web.viewUtils";
@@ -1171,11 +1172,32 @@ var BasicModel = AbstractModel.extend({
                 // in the case of a write, only perform the RPC if there are changes to save
                 if (method === 'create' || changedFields.length) {
                     var args = method === 'write' ? [[record.data.id], changes] : [changes];
+                    const context = record.getContext();
+                    const model = record.model;
+                    if (self.useSendBeacon) {
+                        // We are trying to save urgently because the user is closing the page. To
+                        // ensure that the save succeeds, we can't do a classic rpc, as these requests
+                        // can be cancelled (payload too heavy, network too slow, computer too fast...).
+                        // We instead use sendBeacon, which isn't cancellable. However, it has limited
+                        // payload (typically < 64k). So we try to save with sendBeacon, and if it
+                        // doesn't work, we will prevent the page from unloading.
+                        const { route, params } = rpc.buildQuery({ model, method, args, context });
+                        const data = { jsonrpc: "2.0", method: "call", params };
+                        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+                        const succeeded = navigator.sendBeacon(route, blob);
+                        record.saveInProgress = false;
+                        if (succeeded) {
+                            resolve(changedFields);
+                        } else {
+                            reject("send beacon failed");
+                        }
+                        return;
+                    }
                     self._rpc({
-                            model: record.model,
+                            model,
                             method: method,
                             args: args,
-                            context: record.getContext(),
+                            context,
                         }).then(function (id) {
                             if (method === 'create') {
                                 record.res_id = id;  // create returns an id, write returns a boolean
