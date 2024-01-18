@@ -4,6 +4,13 @@ FORCE_HOST_AP="${1}"
 WIRED_IP=$(python3 -c "import netifaces as ni; print(ni.ifaddresses('eth0').get(ni.AF_INET) and ni.ifaddresses('eth0')[ni.AF_INET][0]['addr'] or '')")
 WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
 
+# Do we have to use the NetworkManager ?
+current_iotbox_version=$(cat "/var/odoo/iotbox_version")
+required_version="23.11"
+if [[ "$current_iotbox_version" < "$required_version" ]]; then
+    logger -t wireless_ap "USING WPA_SUPPLICANT REMOVING NETWORK MANAGER SERVICE"
+    sudo service NetworkManager stop
+fi
 
 ifconfig wlan0 down
 ifconfig wlan0 up
