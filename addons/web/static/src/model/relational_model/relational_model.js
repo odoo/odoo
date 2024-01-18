@@ -35,6 +35,8 @@ import { FetchRecordError } from "./errors";
  * @property {number} [maxGroupByDepth]
  * @property {boolean} [multiEdit]
  * @property {Object} [groupByInfo]
+ * @property {number} [activeIdsLimit]
+ * @property {boolean} [useSendBeaconToSaveUrgently]
  */
 
 /**
@@ -135,6 +137,7 @@ export class RelationalModel extends Model {
         this.multiEdit = params.multiEdit;
         this.activeIdsLimit = params.activeIdsLimit || Number.MAX_SAFE_INTEGER;
         this.specialDataCaches = markRaw(params.state?.specialDataCaches || {});
+        this.useSendBeaconToSaveUrgently = params.useSendBeaconToSaveUrgently || false;
 
         this._urgentSave = false;
     }
