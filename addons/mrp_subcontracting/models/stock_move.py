@@ -22,7 +22,7 @@ class StockMove(models.Model):
             if not move.is_subcontract:
                 continue
             productions = move._get_subcontract_production()
-            if not productions or move.has_tracking != 'serial':
+            if not productions or move.has_tracking == 'none':
                 continue
             if productions._has_tracked_component() or productions[:1].consumption != 'strict':
                 move.display_assign_serial = False

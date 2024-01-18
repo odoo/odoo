@@ -169,8 +169,8 @@ class StockMove(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
-    next_serial = fields.Char('First SN')
-    next_serial_count = fields.Integer('Number of SN')
+    next_serial = fields.Char('First SN/Lot')
+    next_serial_count = fields.Integer('Number of SN/Lots')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
@@ -198,7 +198,7 @@ class StockMove(models.Model):
                 not move.origin_returned_move_id.id and
                 move.state not in ('done', 'cancel')
             )
-            move.display_assign_serial = move.has_tracking == 'serial' and move.display_import_lot
+            move.display_assign_serial = move.display_import_lot
 
     @api.depends('move_line_ids.picked', 'state')
     def _compute_picked(self):
@@ -878,8 +878,19 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.model
     def action_generate_lot_line_vals(self, context, mode, first_lot, count, lot_text):
-        assert mode in ('serial', 'import')
+        assert mode in ('generate', 'import')
         default_vals = {}
+
+        def generate_lot_qty(quantity, qty_per_lot):
+            if qty_per_lot <= 0:
+                raise UserError(_("The quantity per lot should always be a positive value."))
+            line_count = int(quantity // qty_per_lot)
+            leftover = quantity % qty_per_lot
+            qty_array = [qty_per_lot] * line_count
+            if leftover:
+                qty_array.append(leftover)
+            return qty_array
+
         # Get default values
         def remove_prefix(text, prefix):
             if text.startswith(prefix):
@@ -891,13 +902,19 @@ Please change the quantity done or the rounding precision of your unit of measur
                 default_vals[remove_prefix(key, 'default_')] = context[key]
 
         vals_list = []
-        if mode == 'serial':
-            lot_names = self.env['stock.lot'].generate_lot_names(first_lot, count)
+        if default_vals['tracking'] == 'lot' and mode == 'generate':
+            lot_qties = generate_lot_qty(default_vals['quantity'], count)
+        else:
+            lot_qties = [1] * count
+
+        if mode == 'generate':
+            lot_names = self.env['stock.lot'].generate_lot_names(first_lot, len(lot_qties))
         elif mode == 'import':
             lot_names = self.split_lots(lot_text)
-        for lot in lot_names:
+
+        for lot, qty in zip(lot_names, lot_qties):
             if not lot.get('quantity'):
-                lot['quantity'] = 1
+                lot['quantity'] = qty
             loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
             product = self.env['product.product'].browse(default_vals['product_id'])
             loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
