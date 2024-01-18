@@ -379,3 +379,31 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         comp_receipt.move_ids.quantity_done = 1
         comp_receipt.button_validate()
         self.assertEqual(ressuply_pick.state, 'assigned')
+
+    def test_update_qty_purchased_with_subcontracted_product(self):
+        """
+        Test That we can update the quantity of a purchase order line with a subcontracted product
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': 'finished',
+                'product_id': self.finished.id,
+                'product_qty': 3.0,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 50.0}
+            )],
+        })
+        po.button_confirm()
+        self.assertEqual(len(po.picking_ids), 1)
+        picking = po.picking_ids
+        picking.move_ids.quantity_done = 2.0
+        # When we validate the picking manually, we create a backorder.
+        backorder_wizard_dict = picking.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+        self.assertEqual(len(po.picking_ids), 2)
+        picking.backorder_ids.action_cancel()
+        self.assertEqual(picking.backorder_ids.state, 'cancel')
+        po.order_line.product_qty = 2.0
+        self.assertEqual(po.order_line.product_qty, 2.0)
