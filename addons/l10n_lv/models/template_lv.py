@@ -24,7 +24,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.lv',
                 'bank_account_code_prefix': '2620',
                 'cash_account_code_prefix': '2610',
-                'transfer_account_code_prefix': '2699',
+                'transfer_account_code_prefix': '2700',
                 'account_default_pos_receivable_account_id': 'a2613',
                 'income_currency_exchange_account_id': 'a8150',
                 'expense_currency_exchange_account_id': 'a8250',
@@ -35,7 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_payment_credit_account_id': 'a26293',
                 'default_cash_difference_income_account_id': 'a8199',
                 'default_cash_difference_expense_account_id': 'a8299',
-                'account_sale_tax_id': 'tax_sale_vat_21',
-                'account_purchase_tax_id': 'tax_purchase_vat_21',
+                'account_sale_tax_id': 'VAT_S_G_21_LV',
+                'account_purchase_tax_id': 'VAT_P_G_21_LV',
             },
         }
