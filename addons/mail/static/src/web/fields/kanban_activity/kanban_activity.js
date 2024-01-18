@@ -11,9 +11,9 @@ export class KanbanActivity extends Component {
     static components = { ActivityButton };
     // used in children, in particular in ActivityButton
     static fieldDependencies = [
-        { name: "activity_exception_decoration", type: "selection" },
+        { name: "activity_exception_decoration", type: "selection", selection: [] },
         { name: "activity_exception_icon", type: "char" },
-        { name: "activity_state", type: "selection" },
+        { name: "activity_state", type: "selection", selection: [] },
         { name: "activity_summary", type: "char" },
         { name: "activity_type_icon", type: "char" },
         { name: "activity_type_id", type: "many2one", relation: "mail.activity.type" },
