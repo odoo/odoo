@@ -585,6 +585,14 @@ for (const propName of Object.keys(window.console)) {
     hushConsole[propName] = () => {};
 }
 
+export function mockSendBeacon(mock) {
+    patchWithCleanup(navigator, {
+        sendBeacon: (url, blob) => {
+            return mock(url, blob) !== false;
+        },
+    });
+}
+
 export function mockTimeout() {
     const timeouts = new Map();
     let currentTime = 0;
