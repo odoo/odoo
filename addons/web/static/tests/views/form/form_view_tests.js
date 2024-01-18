@@ -750,6 +750,33 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=p]");
     });
 
+    QUnit.test("form with o2m having a selection field with fieldDependencies", async function (assert) {
+        class MyField extends CharField {}
+        fieldRegistry.add("my_widget", {
+            component: MyField,
+            fieldDependencies: [{ name: "state", type: "selection" }],
+        });
+        serverData.models.partner.records[1].p = [1];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="foo" widget="my_widget"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_field_widget[name=p] .o_data_row");
+        await click(target.querySelector(".o_field_widget[name=p] .o_field_x2many_list_row_add a"));
+        assert.containsOnce(target, ".modal .o_form_view .o_field_widget[name=p]");
+    });
+
     QUnit.test("can edit o2m field from form when readonly in list view", async function (assert) {
         serverData.models.partner.records[0].product_ids = [37];
         const mockRPC = (route, { method, args }) => {
