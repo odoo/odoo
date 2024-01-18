@@ -531,7 +531,7 @@ class AccountTax(models.Model):
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
             if len(self.env.companies) > 1 and self.env.context.get('params', {}).get('model') == 'product.template':
                 name += ' (%s)' % record.company_id.display_name
-            if record.country_id != record.company_id.account_fiscal_country_id:
+            if record.country_id != record.company_id._accessible_branches()[:1].account_fiscal_country_id:
                 name += ' (%s)' % record.country_code
             record.display_name = name
 

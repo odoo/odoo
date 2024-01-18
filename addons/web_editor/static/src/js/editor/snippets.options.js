@@ -4600,8 +4600,8 @@ registry.sizing = SnippetOptionWidget.extend({
             if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
                 self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
                 backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
-                self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
                 gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
+                self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
             }
 
             // For loop to handle the cases where it is ne, nw, se or sw. Since
@@ -6244,11 +6244,15 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
     },
     /**
-     * Returns a list of valid formats for a given image.
+     * Returns a list of valid formats for a given image or an empty list if
+     * there is no mimetypeBeforeConversion data attribute on the image.
      *
      * @private
      */
     async _computeAvailableFormats() {
+        if (!this.mimetypeBeforeConversion) {
+            return [];
+        }
         const img = this._getImg();
         const original = await loadImage(this.originalSrc);
         const maxWidth = img.dataset.width ? img.naturalWidth : original.naturalWidth;
@@ -6324,6 +6328,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         this.originalId = img.dataset.originalId;
         this.originalSrc = img.dataset.originalSrc;
+        this.mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
     },
     /**
      * Sets the image's width to its suggested size.
@@ -6396,6 +6401,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === "format_select_opt" && !this.mimetypeBeforeConversion) {
+            return false;
+        }
         if (this._isImageProcessingWidget(widgetName, params)) {
             const img = this._getImg();
             return this._isImageSupportedForProcessing(img, true);

@@ -1,14 +1,21 @@
 from datetime import datetime, timezone
 import random
-from odoo import models
+from odoo import models, api
+from odoo.addons.pos_adyen.models.pos_payment_method import UNPREDICTABLE_ADYEN_DATA
 
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
-    def payment_request_from_kiosk(self, order):
+    @api.model
+    def _get_valid_acquirer_data(self):
+        res = super()._get_valid_acquirer_data()
+        res['metadata.self_order_id'] = UNPREDICTABLE_ADYEN_DATA
+        return res
+
+    def _payment_request_from_kiosk(self, order):
         if self.use_payment_terminal != 'adyen':
-            return super().payment_request_from_kiosk(order)
+            return super()._payment_request_from_kiosk(order)
         else:
             pos_config = order.session_id.config_id
             random_number = random.randrange(10**9, 10**10 - 1)
@@ -31,6 +38,7 @@ class PosPaymentMethod(models.Model):
                                 'TransactionID': order.pos_reference, # your reference to identify a payment.
                                 'TimeStamp': datetime.now(tz=timezone.utc).isoformat(timespec='seconds'), # date and time of the request in UTC format.
                             },
+                            'SaleToAcquirerData': 'metadata.self_order_id=' + str(order.id),
                         },
                         'PaymentTransaction': {
                             'AmountsReq': {
@@ -44,7 +52,4 @@ class PosPaymentMethod(models.Model):
 
             req = self.proxy_adyen_request(data)
 
-            if not req and req.get('error'):
-                return False
-            else:
-                return True
+            return req and (isinstance(req, bool) or not req.get('error'))

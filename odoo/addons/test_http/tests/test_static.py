@@ -485,7 +485,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticUpload(TestHttpStaticCommon):
-    def test_upload_small_file(self):
+    def _test_upload_small_file(self):
         new_test_user(self.env, 'jackoneill')
         self.authenticate('jackoneill', 'jackoneill')
 
@@ -517,6 +517,17 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
             'size': file_size,
         }])
 
+    def test_upload_small_file_without_icp(self):
+        self.env['ir.config_parameter'].sudo().set_param(
+            'web.max_file_upload_size', False,
+        )
+        self._test_upload_small_file()
+
+    def test_upload_small_file_with_icp(self):
+        self.env['ir.config_parameter'].sudo().set_param(
+            'web.max_file_upload_size', 16386,  # gizen.png is smaller
+        )
+        self._test_upload_small_file()
 
     def test_upload_large_file(self):
         new_test_user(self.env, 'jackoneill')

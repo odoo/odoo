@@ -14,13 +14,13 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_expense_categ_id': 'a7550',
             'property_account_income_categ_id': 'a6110',
             'code_digits': '4',
-            'use_anglo_saxon': True,
         }
 
     @template('lv', 'res.company')
     def _get_lv_res_company(self):
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.lv',
                 'bank_account_code_prefix': '2620',
                 'cash_account_code_prefix': '2610',

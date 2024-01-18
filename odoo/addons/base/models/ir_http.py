@@ -172,6 +172,21 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _pre_dispatch(cls, rule, args):
+        ICP = request.env['ir.config_parameter'].with_user(SUPERUSER_ID)
+
+        # Change the default database-wide 128MiB upload limit on the
+        # ICP value. Do it before calling http's generic pre_dispatch
+        # so that the per-route limit @route(..., max_content_length=x)
+        # takes over.
+        try:
+            key = 'web.max_file_upload_size'
+            if (value := ICP.get_param(key, None)) is not None:
+                request.httprequest.max_content_length = int(value)
+        except ValueError:  # better not crash on ALL requests
+            _logger.error("invalid %s: %r, using %s instead",
+                key, value, request.httprequest.max_content_length,
+            )
+
         request.dispatcher.pre_dispatch(rule, args)
 
         # Replace uid placeholder by the current request.env.uid

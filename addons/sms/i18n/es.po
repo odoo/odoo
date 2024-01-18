@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr "# Destinatarios inválidos"
+msgstr "# Destinatarios no válidos"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
@@ -42,7 +42,7 @@ msgstr "%s (copia)"
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
-msgstr "%sDestinatarios inválidos"
+msgstr "%s destinatarios no válidos"
 
 #. module: sms
 #. odoo-python
@@ -176,12 +176,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nº de archivos adjuntos"
+msgstr "Número de archivos adjuntos"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
-msgstr "En la lista de denegación"
+msgstr "En la lista negra"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
@@ -493,7 +493,7 @@ msgstr "ID"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -529,7 +529,7 @@ msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+msgstr "Si está marcada, algunos mensajes tienen error de envío."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
@@ -677,7 +677,7 @@ msgstr "Mensaje"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -693,7 +693,7 @@ msgstr "Mensajes"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
 msgid "Missing Number"
-msgstr "Numero faltante"
+msgstr "Número faltante"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
@@ -753,7 +753,7 @@ msgstr "Número de acciones"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
@@ -938,7 +938,7 @@ msgstr "Reenviar notificación"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr "Restablecer las plantillas de SMS"
+msgstr "Restablecer plantilla de SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -1015,7 +1015,7 @@ msgstr "SMS (sin nota)"
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega del SMS"
+msgstr "Error de envío del SMS"
 
 #. module: sms
 #. odoo-javascript
@@ -1067,12 +1067,12 @@ msgstr "Plantilla de SMS"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
 msgid "SMS Template Preview"
-msgstr "Previsualización de la plantilla de SMS"
+msgstr "Vista previa de la plantilla de SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
 msgid "SMS Template Reset"
-msgstr "Restablecimiento de la plantilla SMS"
+msgstr "Restablecimiento de la plantilla de SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -1106,8 +1106,8 @@ msgstr "Contenido de SMS"
 #, python-format
 msgid "SMS template model of %(action_name)s does not match action model."
 msgstr ""
-"El modelo de la plantilla SMS de %(action_name)s no coincide con el modelo "
-"de acción."
+"El modelo de la plantilla de SMS de %(action_name)s no coincide con el "
+"modelo de acción."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
@@ -1134,7 +1134,7 @@ msgstr "Número desinfectado"
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr "Buscar plantillas SMS"
+msgstr "Buscar plantillas de SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1357,7 +1357,7 @@ msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
 "Este número de teléfono está en la lista negra para el marketing por SMS. "
-"Haz clic para retirarlo de la lista negra."
+"Haga clic para retirarlo de la lista negra."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1467,7 +1467,7 @@ msgstr "Mensajes del sitio web"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms

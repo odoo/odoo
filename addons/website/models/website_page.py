@@ -183,7 +183,7 @@ class Page(models.Model):
                     page_url_normalized = {'homepage_url': page.url}
                     website._handle_homepage_url(page_url_normalized)
                     if website.homepage_url == page_url_normalized['homepage_url']:
-                        website.homepage_url = vals['url']
+                        website.homepage_url = url
                 vals['url'] = url
 
             # If name has changed, check for key uniqueness

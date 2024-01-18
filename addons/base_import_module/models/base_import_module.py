@@ -30,7 +30,7 @@ class BaseImportModule(models.TransientModel):
         }
 
     def get_dependencies_to_install_names(self):
-        module_ids = self.env['ir.module.module']._get_missing_dependencies_modules(base64.decodebytes(self.module_file))
+        module_ids, _not_found = self.env['ir.module.module']._get_missing_dependencies_modules(base64.decodebytes(self.module_file))
         return module_ids.mapped('name')
 
     def action_module_open(self):

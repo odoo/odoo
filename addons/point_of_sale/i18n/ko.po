@@ -6,15 +6,16 @@
 # Martin Trigaux, 2023
 # Daye Jeong, 2023
 # Sarah Park, 2023
-# Wil Odoo, 2023
+# JH CHOI <hwangtog@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -277,6 +278,16 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">바코드</span>\n"
 "                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Cash Register</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1233,11 +1244,6 @@ msgid "Cash Out"
 msgstr "시재 출금"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Cash Register"
-msgstr "금전등록기"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Rounding"
@@ -1722,14 +1728,10 @@ msgid "Continue"
 msgstr "계속"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
 msgstr "계속 판매하기"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "Continue selling"
-msgstr "판매 계속하기"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1888,6 +1890,7 @@ msgstr "맞춤 값"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
@@ -1981,8 +1984,8 @@ msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
 msgstr "고객 화면이 지원되지 않습니다. IoT 박스를 업그레이드하십시오."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2735,6 +2738,13 @@ msgid ""
 msgstr "이 결제 수단을 사용할 경우 고객을 강제 설정하고 고객별로 전표를 입력합니다. 종료 단계의 과정이 느려질 수 있습니다. "
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/orderline/orderline.xml:0
+#, python-format
+msgid "Free"
+msgstr "무료"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
@@ -3244,7 +3254,6 @@ msgstr "전표 항목"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Journal Items"
 msgstr "전표 항목"
@@ -3470,6 +3479,13 @@ msgstr "로고"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
 msgstr "LOT명"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "로트 번호"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3736,11 +3752,6 @@ msgid "Newspaper Rack"
 msgstr "신문걸이"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "다음 활동 캘린더 행사"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "다음 활동 마감일"
@@ -3887,6 +3898,13 @@ msgstr "명명법"
 #, python-format
 msgid "None"
 msgstr "없음"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/report_sale_details.py:0
+#, python-format
+msgid "Not Categorized"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4267,20 +4285,13 @@ msgid "Order saved for later"
 msgstr "나중에 사용하기 위해 저장된 주문"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
-#, python-format
-msgid "Order:"
-msgstr "주문:"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr "이 필드의 주문 내역은 해당 주문을 환불한 내용입니다."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4455,8 +4466,8 @@ msgid "PayTM Payment Terminal"
 msgstr "PayTM 결제 단말기"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -5125,6 +5136,7 @@ msgstr "저작권자"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "준비 표시"
@@ -6036,13 +6048,6 @@ msgid "Search Orders..."
 msgstr "주문 검색"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/control_panel/control_panel.xml:0
-#, python-format
-msgid "Search Products..."
-msgstr "품목 검색"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
 msgstr "판매 주문 검색"
@@ -6902,12 +6907,8 @@ msgstr "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화�
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                    Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
-"허용되는 최대 차액은 %s입니다 \n"
-"\n"
-"                    마감 차액을 허용하려면 관리자에게 문의하세요."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8007,14 +8008,6 @@ msgstr "주문서가 미결 상태인 경우 POS를 종료할 수 없습니다."
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
 msgstr "계정 잠금 날짜 이전에는 세션을 작성할 수 없습니다."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
-msgstr "POS 세션에 연결되어 있는 은행거래명세서 내역은 삭제할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python

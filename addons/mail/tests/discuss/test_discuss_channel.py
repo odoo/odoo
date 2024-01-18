@@ -402,3 +402,66 @@ class TestChannelInternals(MailCommon):
         member_of_correspondent = self.env['discuss.channel.member'].search([('channel_id', '=', chat.id), ('partner_id', '=', self.test_partner.id)])
         self.assertTrue(member_of_current_user.is_pinned)
         self.assertFalse(member_of_correspondent.is_pinned)
+
+    @users("employee")
+    def test_channel_command_help_in_channel(self):
+        """Ensures the command '/help' works in a channel"""
+        channel = self.env["discuss.channel"].browse(self.test_channel.ids)
+        channel.name = "<strong>R&D</strong>"
+        self.env['bus.bus'].sudo().search([]).unlink()
+        with self.assertBus(
+            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+            [
+                {
+                    "type": "discuss.channel/transient_message",
+                    "payload": {
+                        "body":
+                            "<span class='o_mail_notification'>"
+                            "You are in channel <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
+                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
+                            "<br>Type <b>#channel</b> to mention a channel."
+                            "<br>Type <b>/command</b> to execute a command."
+                            "</span>",
+                        "model": "discuss.channel",
+                        "res_id": channel.id,
+                    },
+                },
+            ],
+        ):
+            channel.execute_command_help()
+
+    def test_channel_command_help_in_group(self):
+        """Ensures the command '/help' works in a group"""
+        test_user = self.env['res.users'].create({
+            "login": "mario",
+            "name": "Mario",
+        })
+        self.partner_employee_nomail.name = f"<strong>{self.partner_employee_nomail.name}</strong>"
+        # Guarantee that the channel member ids in the group are in order.
+        test_group = self.env['discuss.channel'].create({
+            'name': 'Private Channel',
+            'channel_type': 'group',
+            'channel_partner_ids': [(6, 0, test_user.partner_id.id)]
+        })
+        test_group.add_members(self.partner_employee_nomail.ids)
+        self.env['bus.bus'].sudo().search([]).unlink()
+        with self.assertBus(
+            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
+            [
+                {
+                    "type": "discuss.channel/transient_message",
+                    "payload": {
+                        "body":
+                            "<span class='o_mail_notification'>"
+                            "You are in a private conversation with <b>@Mario</b> and <b>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</b>."
+                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
+                            "<br>Type <b>#channel</b> to mention a channel."
+                            "<br>Type <b>/command</b> to execute a command."
+                            "</span>",
+                        "model": "discuss.channel",
+                        "res_id": test_group.id,
+                    },
+                },
+            ],
+        ):
+            test_group.execute_command_help()

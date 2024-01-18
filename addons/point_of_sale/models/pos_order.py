@@ -231,45 +231,19 @@ class PosOrder(models.Model):
         :return: A list of python dictionaries (see '_convert_to_tax_base_line_dict' in account.tax).
         """
         self.ensure_one()
-        commercial_partner = self.partner_id.commercial_partner_id
+        return self.lines._prepare_tax_base_line_values(sign=sign)
 
-        base_line_vals_list = []
-        for line in self.lines.with_company(self.company_id):
-            account = line.product_id._get_product_accounts()['income']
-            if not account:
-                raise UserError(_(
-                    "Please define income account for this product: '%s' (id:%d).",
-                    line.product_id.name, line.product_id.id,
-                ))
-
-            if self.fiscal_position_id:
-                account = self.fiscal_position_id.map_account(account)
-
-            is_refund = line.qty * line.price_unit < 0
-
-            product_name = line.product_id\
-                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
-                .get_product_multiline_description_sale()
-            base_line_vals_list.append(
-                {
-                    **self.env['account.tax']._convert_to_tax_base_line_dict(
-                        line,
-                        partner=commercial_partner,
-                        currency=self.currency_id,
-                        product=line.product_id,
-                        taxes=line.tax_ids_after_fiscal_position,
-                        price_unit=line.price_unit,
-                        quantity=sign * line.qty,
-                        price_subtotal=sign * line.price_subtotal,
-                        discount=line.discount,
-                        account=account,
-                        is_refund=is_refund,
-                    ),
-                    'uom': line.product_uom_id,
-                    'name': product_name,
-                }
-            )
-        return base_line_vals_list
+    @api.model
+    def _get_invoice_lines_values(self, line_values, pos_order_line):
+        return {
+            'product_id': line_values['product'].id,
+            'quantity': line_values['quantity'],
+            'discount': line_values['discount'],
+            'price_unit': line_values['price_unit'],
+            'name': line_values['name'],
+            'tax_ids': [(6, 0, line_values['taxes'].ids)],
+            'product_uom_id': line_values['uom'].id,
+        }
 
     def _prepare_invoice_lines(self):
         """ Prepare a list of orm commands containing the dictionaries to fill the
@@ -282,15 +256,8 @@ class PosOrder(models.Model):
         invoice_lines = []
         for line_values in line_values_list:
             line = line_values['record']
-            invoice_lines.append((0, None, {
-                'product_id': line_values['product'].id,
-                'quantity': line_values['quantity'],
-                'discount': line_values['discount'],
-                'price_unit': line_values['price_unit'],
-                'name': line_values['name'],
-                'tax_ids': [(6, 0, line_values['taxes'].ids)],
-                'product_uom_id': line_values['uom'].id,
-            }))
+            invoice_lines_values = self._get_invoice_lines_values(line_values, line)
+            invoice_lines.append((0, None, invoice_lines_values))
             if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',
@@ -419,7 +386,7 @@ class PosOrder(models.Model):
     @api.depends('date_order', 'company_id', 'currency_id', 'company_id.currency_id')
     def _compute_currency_rate(self):
         for order in self:
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order.date())
 
     @api.depends('lines.is_total_cost_computed')
     def _compute_is_total_cost_computed(self):
@@ -573,11 +540,11 @@ class PosOrder(models.Model):
     def _is_pos_order_paid(self):
         return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
-    def _get_rounded_amount(self, amount):
+    def _get_rounded_amount(self, amount, force_round=False):
         # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
         if self.config_id.cash_rounding \
-           and (not self.config_id.only_round_cash_method \
-           or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
+           and (force_round or (not self.config_id.only_round_cash_method \
+           or any(p.payment_method_id.is_cash_count for p in self.payment_ids))):
             amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
@@ -728,7 +695,7 @@ class PosOrder(models.Model):
         rate = self.currency_id._get_conversion_rate(self.currency_id, company_currency, self.company_id, self.date_order)
 
         # Concert each order line to a dictionary containing business values. Also, prepare for taxes computation.
-        base_line_vals_list = self._prepare_tax_base_line_values(sign=sign)
+        base_line_vals_list = self._prepare_tax_base_line_values(sign=-1)
         tax_results = self.env['account.tax']._compute_taxes(base_line_vals_list)
 
         total_balance = 0.0
@@ -871,7 +838,11 @@ class PosOrder(models.Model):
                 move_lines.append(aml_values)
 
         # Make a move with all the lines.
-        reversal_entry = self.env['account.move'].with_context(default_journal_id=self.config_id.journal_id.id).create({
+        reversal_entry = self.env['account.move'].with_context(
+            default_journal_id=self.config_id.journal_id.id,
+            skip_invoice_sync=True,
+            skip_invoice_line_sync=True,
+        ).create({
             'journal_id': self.config_id.journal_id.id,
             'date': fields.Date.context_today(self),
             'ref': _('Reversal of POS closing entry %s for order %s from session %s', self.session_move_id.name, self.name, self.session_id.name),
@@ -1536,6 +1507,53 @@ class PosOrderLine(models.Model):
         for line in self:
             line.margin = line.price_subtotal - line.total_cost
             line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+
+    def _prepare_tax_base_line_values(self, sign=1):
+        """ Convert pos order lines into dictionaries that would be used to compute taxes later.
+
+        :param sign: An optional parameter to force the sign of amounts.
+        :return: A list of python dictionaries (see '_convert_to_tax_base_line_dict' in account.tax).
+        """
+        base_line_vals_list = []
+        for line in self:
+            commercial_partner = self.order_id.partner_id.commercial_partner_id
+            fiscal_position = self.order_id.fiscal_position_id
+            line = line.with_company(self.order_id.company_id)
+            account = line.product_id._get_product_accounts()['income']
+            if not account:
+                raise UserError(_(
+                    "Please define income account for this product: '%s' (id:%d).",
+                    line.product_id.name, line.product_id.id,
+                ))
+
+            if fiscal_position:
+                account = fiscal_position.map_account(account)
+
+            is_refund = line.qty * line.price_unit < 0
+
+            product_name = line.product_id\
+                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
+                .get_product_multiline_description_sale()
+            base_line_vals_list.append(
+                {
+                    **self.env['account.tax']._convert_to_tax_base_line_dict(
+                        line,
+                        partner=commercial_partner,
+                        currency=self.order_id.currency_id,
+                        product=line.product_id,
+                        taxes=line.tax_ids_after_fiscal_position,
+                        price_unit=line.price_unit,
+                        quantity=sign * line.qty,
+                        price_subtotal=sign * line.price_subtotal,
+                        discount=line.discount,
+                        account=account,
+                        is_refund=is_refund,
+                    ),
+                    'uom': line.product_uom_id,
+                    'name': product_name,
+                }
+            )
+        return base_line_vals_list
 
 
 class PosOrderLineLot(models.Model):

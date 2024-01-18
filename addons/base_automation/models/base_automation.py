@@ -805,7 +805,7 @@ class BaseAutomation(models.Model):
                         if 'domain' in res:
                             result.setdefault('domain', {}).update(res['domain'])
                         if 'warning' in res:
-                            result['warning'] += res["warning"]
+                            result['warning'] = res["warning"]
                 return result
 
             return base_automation_onchange
@@ -816,7 +816,7 @@ class BaseAutomation(models.Model):
             """ Patch method `name` on `model`, unless it has been patched already. """
             if model not in patched_models[name]:
                 patched_models[name].add(model)
-                ModelClass = type(model)
+                ModelClass = model.env.registry[model._name]
                 method.origin = getattr(ModelClass, name)
                 setattr(ModelClass, name, method)
 

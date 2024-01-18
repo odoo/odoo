@@ -6,15 +6,16 @@
 # Martin Trigaux, 2023
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Vasco Rodrigues, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Vasco Rodrigues, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,6 +148,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                                    Return to shipping"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
 msgid ""
 "<i class=\"fa fa-bolt me-2\"/>\n"
@@ -170,7 +178,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -316,6 +324,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
 msgstr ""
@@ -919,7 +928,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__can_publish
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Pode publicar"
 
 #. module: website_sale
 #. odoo-python
@@ -938,7 +947,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cards"
-msgstr ""
+msgstr "Quadros"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
@@ -1273,8 +1282,16 @@ msgstr "Conteúdo"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 #, python-format
 msgid "Continue checkout"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"Continue checkout\n"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -1410,6 +1427,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Shipping Methods"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
 msgstr ""
 
 #. module: website_sale
@@ -2061,7 +2083,7 @@ msgstr "É Seguidor"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
 msgid "Is Published"
-msgstr ""
+msgstr "Está publicado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2336,6 +2358,13 @@ msgid "Name Short"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_public_category.py:0
+#, python-format
+msgid "New"
+msgstr "Novo"
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
 msgid "New Product"
 msgstr "Novo Produto"
@@ -2390,7 +2419,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
+msgid "No product defined in this category."
 msgstr ""
 
 #. module: website_sale
@@ -2411,7 +2440,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for '"
-msgstr ""
+msgstr "Nenhum resultado encontrado para '"
 
 #. module: website_sale
 #. odoo-python
@@ -2431,7 +2460,7 @@ msgstr "Nenhum(a)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
 msgid "Not Published"
-msgstr ""
+msgstr "Não publicado"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3211,7 +3240,7 @@ msgstr "Substituir"
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Restringir publicação a este site."
 
 #. module: website_sale
 #. odoo-python
@@ -3269,7 +3298,7 @@ msgstr "Direita"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "Otimizado para SEO"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_sms_error
@@ -3343,6 +3372,11 @@ msgstr "Vendedor"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
 msgid "Sample"
 msgstr "Amostra"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Save address"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3419,7 +3453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Nome de SEO"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -4064,7 +4098,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/notification/cart_notification/cart_notification.xml:0
+#: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
 #, python-format
 msgid "View cart"
 msgstr ""
@@ -4197,7 +4231,7 @@ msgstr "Loja Online"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Filtro de bloco de código do site"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_url
@@ -4209,7 +4243,7 @@ msgstr "URL do Website"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "Visitante do Site"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
@@ -4238,7 +4272,7 @@ msgstr "Website meta Título"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Imagem opengraph do site"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
@@ -4387,11 +4421,6 @@ msgstr "Código Postal"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "active"
 msgstr ""
 
 #. module: website_sale

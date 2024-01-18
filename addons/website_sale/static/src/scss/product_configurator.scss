@@ -105,23 +105,6 @@ label.css_attribute_color.css_not_available {
     }
 }
 
-.radio_input_value, select, label {
-    .badge {
-        margin-left: 3px;
-        padding-left: 3px;
-    }
-
-    .sign_badge_price_extra {
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        color: map-get($theme-colors, 'primary');
-        background: white;
-        line-height: 1rem;
-        border-radius: 50%;
-    }
-}
-
 .variant_attribute {
     padding-bottom: 1rem;
 
@@ -202,6 +185,23 @@ label.css_attribute_color.css_not_available {
             -webkit-appearance: none;
             appearance: none;
             opacity: 0;
+        }
+    }
+
+    .radio_input_value, select, label {
+        .badge {
+            margin-left: 3px;
+            padding-left: 3px;
+        }
+
+        .sign_badge_price_extra {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            color: map-get($theme-colors, 'primary');
+            background: white;
+            line-height: 1rem;
+            border-radius: 50%;
         }
     }
 }

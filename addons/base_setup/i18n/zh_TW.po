@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,59 +23,59 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
+msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"生效使用者數目\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"active_user_count &gt; '1'\">\n"
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
 "                                        Active User\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= '1'\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"active_user_count &gt; '1'\">\n"
-"                                        有效用戶\n"
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"                                        名生效使用者\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= '1'\">\n"
-"                                        有效用戶\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
+"                                        名生效使用者\n"
 "                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"company_count &gt; '1'\">\n"
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Company\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= '1'\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
 "                                        Companies\n"
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"company_count &gt; '1'\">\n"
-"                                        公司\n"
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        間公司\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= '1'\">\n"
-"                                        公司\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
+"                                        間公司\n"
 "                                    </span>\n"
 "                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"language_count &gt; '1'\">\n"
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
 "                                            Language\n"
 "                                        </span>\n"
-"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= '1'\">\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"language_count &gt; '1'\">\n"
-"                                            語言\n"
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            種語言\n"
 "                                        </span>\n"
-"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= '1'\">\n"
-"                                            語言\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
+"                                            種語言\n"
 "                                        </span>"
 
 #. module: base_setup
@@ -326,11 +326,6 @@ msgid "Get product pictures using barcode"
 msgstr "使用條碼獲取產品圖片"
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Google Calendar"
-msgstr "Google日曆"
-
-#. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 路由"
@@ -404,7 +399,7 @@ msgstr "管理語言"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr "管理用戶"
+msgstr "管理使用者"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
@@ -414,7 +409,7 @@ msgstr "多幣別"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr "正常使用者數量"
+msgstr "生效使用者數目"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
@@ -445,11 +440,6 @@ msgstr "於Apple Store下載"
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Google Play"
 msgstr "於Google Play下載"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Outlook Calendar"
-msgstr "Outlook 行事曆"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
@@ -515,16 +505,6 @@ msgstr "設定"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
 msgid "Show Effect"
 msgstr "顯示效果"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Google Calendar"
-msgstr "將日曆與Google日曆同步"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Outlook"
-msgstr "將您的日曆與 Outlook 同步"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code

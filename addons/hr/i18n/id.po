@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Abe Manyo, 2023
 # Wil Odoo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,6 +371,17 @@ msgstr "Tambahkan rencana baru"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr "Informasi Tambahan"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
+"Informasi Tambahan: \n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -877,6 +888,16 @@ msgstr "Buat Pengguna"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "Buat departemen baru"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "Buat tipe karyawan baru"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "Buat lokasi kerja baru"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2100,11 +2121,6 @@ msgid "No Tags found ! Let's create one"
 msgstr "Tidak ada Tag yang ditemukan. Ayo buat baru"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid "No Work Locations found ! Let's create one"
-msgstr "Tidak ada Lokasi Kerja yang ditemukan ! Ayo buat baru"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2342,19 +2358,6 @@ msgstr "Penggajian"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
 msgstr "Perfect written English"
-
-#. module: hr
-#: model_terms:hr.job,description:hr.job_consultant
-#: model_terms:hr.job,description:hr.job_developer
-#: model_terms:hr.job,description:hr.job_marketing
-msgid ""
-"Perform assigned responsibilities, collaborate with team members, and adhere"
-" to company policies. Strong communication, problem-solving, and work ethic "
-"required. Adaptability, initiative, and willingness to learn are valued."
-msgstr ""
-"Lakukan tanggung jawab yang ditugaskan, kolaborasi dengan anggota tim, dan "
-"ikuti kebijakan perusahaan. Komunikasi kuat, problem-solving, dan work ethic"
-" bagus. Dapat beradaptasi, memiliki inisiatif, dan kemauan untuk belajar."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3002,6 +3005,19 @@ msgstr ""
 "Anda dapat menggunakan kolom ini untuk pencarian cepat."
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
+"              He develops and monitors the annual budget in collaboration with Sales.\n"
+"              He defines the products and customers portfolio according to the marketing plan.\n"
+"              This mission requires strong collaboration with Technical Service and Sales."
+msgstr ""
+"Manager Marketing menentukan strategi marketing jangka menengah sampai panjang untuk segmen market milik dia di Dunia.\n"
+"              Dia membuat dan memonitor anggaran tahunan secara kolaborasi dengan Sales.\n"
+"              Dia mendefinisikan produk dan portfolio pelanggan sesuai dengan rencana marketing.\n"
+"              Misi ini membutuhkan kolaborasi yang kuat dengan Layanan Teknis dan Sales."
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -3251,8 +3267,8 @@ msgstr "Lihat profil"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "Visa Berakhir Tanggal"
+msgid "Visa Expiration Date"
+msgstr "Tanggal Kadaluwarsa Visa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3266,6 +3282,23 @@ msgstr "No. Visa"
 #, python-format
 msgid "Warning"
 msgstr "Peringatan"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are currently looking for someone like that to join our Consultant team."
+msgstr ""
+"Kami saat ini sedang mencari orang seperti itu untuk bergabung dengan tim "
+"Konsultan kami."
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are currently looking for someone like that to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+msgstr ""
+"Kami saat ini sedang mencari orang seperti itu untuk bergabung dengan tim Web kami.\n"
+"                Seseorang yang dapat melakukan coding dengan cepat dan melakukan analisis atau bertemu klien untuk menjelaskan kemungkinan teknis yang dapat memenuhi kebutuhan mereka."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3375,15 +3408,6 @@ msgstr "Lokasi Kerja"
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
 msgstr "Lokasi Kerja"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid ""
-"Work Locations are used to define more precisely where your employee is "
-"located everyday."
-msgstr ""
-"Lokasi Kerja digunakan untuk mendefinisikan lebih tepat di mana karyawan "
-"Anda berlokasi setiap hari."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone

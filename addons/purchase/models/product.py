@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
-    ], string="Control Policy", compute='_compute_purchase_method', store=True, readonly=False,
+    ], string="Control Policy", compute='_compute_purchase_method', default='receive', store=True, readonly=False,
         help="On ordered quantities: Control bills based on ordered quantities.\n"
             "On received quantities: Control bills based on received quantities.")
     purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
@@ -23,8 +23,12 @@ class ProductTemplate(models.Model):
 
     @api.depends('detailed_type')
     def _compute_purchase_method(self):
+        default_purchase_method = self.env['product.template'].default_get(['purchase_method']).get('purchase_method')
         for product in self:
-            product.purchase_method = 'purchase' if product.detailed_type == 'service' else 'receive'
+            if product.detailed_type == 'service':
+                product.purchase_method = 'purchase'
+            else:
+                product.purchase_method = default_purchase_method
 
     def _compute_purchased_product_qty(self):
         for template in self:

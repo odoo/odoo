@@ -20,16 +20,16 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
-# Martin Trigaux, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:30+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -182,6 +182,13 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/navbar/back_button/back_button.xml:0
+#, python-format
+msgid "BACK"
+msgstr "PALUU"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 #, python-format
@@ -256,10 +263,22 @@ msgid "Blue"
 msgstr "Sininen"
 
 #. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
+msgid "Burger Menu Combo"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Restaurant"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/navbar/back_button/back_button.xml:0
+#, python-format
+msgid "Change table"
 msgstr ""
 
 #. module: pos_restaurant
@@ -1029,6 +1048,13 @@ msgid "Table Name?"
 msgstr ""
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
+#, python-format
+msgid "Table is not empty"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
@@ -1054,6 +1080,15 @@ msgstr "Tässä pöydässä palveltujen asiakkaiden oletusmäärä."
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
 msgstr "Tämän kassan käsittelemät ravintolakerrokset."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
+#, python-format
+msgid ""
+"The table already contains an order. Do you want to proceed and transfer the"
+" order here?"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -1221,6 +1256,13 @@ msgstr "Leveys"
 #, python-format
 msgid "Yellow"
 msgstr "Keltainen"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Kyllä"
 
 #. module: pos_restaurant
 #. odoo-python

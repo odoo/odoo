@@ -11,6 +11,7 @@ from odoo.addons.hw_drivers import main
 from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
+websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
 def send_to_controller(print_id, device_identifier):
     server = helpers.get_odoo_server_url()
@@ -30,9 +31,8 @@ def send_to_controller(print_id, device_identifier):
                 'Accept': 'text/plain',
             },
         )
-    except Exception as e:
-        _logger.error('Could not reach configured server')
-        _logger.error('A error encountered : %s ', e)
+    except Exception:
+        _logger.exception('Could not reach configured server: %s', server)
 
 
 def on_message(ws, messages):
@@ -53,7 +53,12 @@ def on_message(ws, messages):
 
 
 def on_error(ws, error):
-    _logger.error(error)
+    _logger.error("websocket received an error: %s", error)
+
+
+def on_close(ws, close_status_code, close_msg):
+    _logger.debug("websocket closed with status: %s", close_status_code)
+
 
 class WebsocketClient(Thread):
     iot_channel = ""
@@ -63,7 +68,7 @@ class WebsocketClient(Thread):
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
         ws.send(
-            json.dumps({'event_name': 'subscribe', 'data': {'channels':[self.iot_channel], 'last': 0}})
+            json.dumps({'event_name': 'subscribe', 'data': {'channels': [self.iot_channel], 'last': 0}})
         )
 
     def __init__(self, url):
@@ -75,7 +80,24 @@ class WebsocketClient(Thread):
     def run(self):
         self.ws = websocket.WebSocketApp(self.url,
             on_open=self.on_open, on_message=on_message,
-            on_error=on_error)
-        while 1: # A loop is necessary because reconnection must occur in all cases, even if the server closes the connection properly
-            self.ws.run_forever()
-            time.sleep(10) # Wait 10 second between each reconnection attempts
+            on_error=on_error, on_close=on_close)
+
+        # The IoT synchronised servers can stop in 2 ways that we need to handle:
+        #  A. Gracefully:
+        #   In this case a disconnection signal is sent to the IoT-box
+        #   The websocket is properly closed, but it needs to be established a new connection when
+        #   the server will be back.
+        #
+        # B. Forced/killed:
+        #   In this case there is no disconnection signal received
+        #
+        #   This will also happen with the graceful quit as `reconnect` will trigger if the server
+        #   is offline while attempting the new connection
+        while True:
+            try:
+                run_res = self.ws.run_forever(reconnect=10)
+                _logger.debug("websocket run_forever return with %s", run_res)
+            except Exception:
+                _logger.exception("An unexpected exception happened when running the websocket")
+            _logger.debug('websocket will try to restart in 10 seconds')
+            time.sleep(10)

@@ -46,6 +46,8 @@ import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { KanbanRecord } from "@web/views/kanban/kanban_record";
 
 import {
     patchDialog,
@@ -291,7 +293,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("KanbanView");
 
     QUnit.test("basic ungrouped rendering", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         await makeView({
             type: "kanban",
@@ -318,6 +320,10 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_ungrouped");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(target, ".o_kanban_ghost", 6);
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
@@ -434,7 +440,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(17);
+        assert.expect(18);
 
         patchWithCleanup(KanbanRenderer.prototype, {
             setup() {
@@ -471,6 +477,10 @@ QUnit.module("Views", (hooks) => {
         });
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
@@ -9937,8 +9947,11 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["bar"],
-            async mockRPC(route, { method }) {
-                assert.step(method || route);
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+                if (args.method === "web_read_group") {
+                    assert.step(JSON.stringify(args.kwargs.domain));
+                }
             },
         });
 
@@ -9953,13 +9966,16 @@ QUnit.module("Views", (hooks) => {
             // initial load
             "get_views",
             "web_read_group",
+            "[]",
             "read_progress_bar",
             "web_search_read",
             "web_search_read",
             "web_read_group", // recomputes aggregates
+            '["&",["bar","=",true],["foo","=","yop"]]', // perform read_group only on second column (bar=true)
             "web_search_read",
             // activate filter
             "web_read_group", // recomputes aggregates
+            '["&",["bar","=",true],["foo","=","gnap"]]', // perform read_group only on second column (bar=true)
             "web_search_read",
             // activate another filter (switching)
             "web_search_read",
@@ -13811,6 +13827,8 @@ QUnit.module("Views", (hooks) => {
                 <kanban class="o_kanban_test">
                     <header>
                         <button name="display" type="object" class="display" string="display" display="always"/>
+                        <button name="display" type="object" class="display_invisible" string="invisible 1" display="always" invisible="1"/>
+                        <button name="display" type="object" class="display_invisible_2" string="invisible context" display="always" invisible="context.get('a')"/>
                         <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                     </header>
                     <field name="bar" />
@@ -13823,6 +13841,9 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>`,
                 domain,
+                context: {
+                    a: true,
+                },
             });
             patchWithCleanup(kanban.env.services.action, {
                 doActionButton: async (params) => {
@@ -13840,6 +13861,7 @@ QUnit.module("Views", (hooks) => {
                     });
 
                     assert.deepEqual(context, {
+                        a: true,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
@@ -14144,4 +14166,146 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 0);
         assert.containsN(target, ".o_kanban_group:nth-child(3) .o_kanban_record", 2);
     });
+
+    QUnit.test("kanbans with basic and custom compiler, same arch", async (assert) => {
+        // In this test, the exact same arch will be rendered by 2 different kanban renderers:
+        // once with the basic one, and once with a custom renderer having a custom compiler. The
+        // purpose of the test is to ensure that the template is compiled twice, once by each
+        // compiler, even though the arch is the same.
+        class MyKanbanCompiler extends KanbanCompiler {
+            setup() {
+                super.setup();
+                this.compilers.push({ selector: "div", fn: this.compileDiv });
+            }
+
+            compileDiv(node, params) {
+                const compiledNode = this.compileGenericNode(node, params);
+                compiledNode.setAttribute("class", "my_kanban_compiler");
+                return compiledNode;
+            }
+        }
+        class MyKanbanRecord extends KanbanRecord {}
+        MyKanbanRecord.Compiler = MyKanbanCompiler;
+        class MyKanbanRenderer extends KanbanRenderer {}
+        MyKanbanRenderer.components = {
+            ...KanbanRenderer.components,
+            KanbanRecord: MyKanbanRecord,
+        };
+        viewRegistry.add("my_kanban", {
+            ...kanbanView,
+            Renderer: MyKanbanRenderer,
+        });
+
+        serverData.models.partner.fields.one2many = {
+            type: "one2many",
+            name: "o2m",
+            relation: "partner",
+        };
+        serverData.models.partner.records[0].one2many = [1];
+        serverData.views = {
+            "partner,false,form": `<form><field name="one2many" mode="kanban"/></form>`,
+            "partner,false,search": `<search/>`,
+            "partner,false,kanban": `<kanban js_class="my_kanban">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click"><field name="foo"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+        });
+
+        // main kanban, custom view
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsOnce(target, ".o_my_kanban_view");
+        assert.containsN(target, ".my_kanban_compiler", 4);
+
+        // switch to form
+        await click(target.querySelector(".o_kanban_record"));
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsOnce(target, ".o_form_view .o_field_widget[name=one2many]");
+
+        // x2many kanban, basic renderer
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+        assert.containsNone(target, ".my_kanban_compiler");
+    });
+
+    QUnit.test(
+        "Kanban grouped on field with readonly expression depending on context",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="product_id" readonly="context.get('abc')" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+                groupBy: ["product_id"],
+                context: { abc: true },
+            });
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        }
+    );
+
+    QUnit.test(
+        "Kanban grouped on field with readonly expression depending on fields",
+        async (assert) => {
+            // Fields are not available in the current context as the drag and drop must be enabled globally
+            // for the view, it's not a per record thing.
+            // So if the readonly expression contains fields, it will resolve to readonly === false and
+            // the drag and drop will be enabled.
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="foo" />
+                            <field name="product_id" readonly="foo == 'yop'" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+                groupBy: ["product_id"],
+            });
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        }
+    );
 });

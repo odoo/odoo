@@ -5,6 +5,7 @@ import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
 import { Field } from "@web/views/fields/field";
 import { browser } from "@web/core/browser/browser";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { ButtonBox } from "@web/views/form/button_box/button_box";
@@ -77,7 +78,7 @@ export class FormRenderer extends Component {
     }
 
     get shouldAutoFocus() {
-        return !this.props.archInfo.disableAutofocus;
+        return !hasTouch() && !this.props.archInfo.disableAutofocus;
     }
 }
 

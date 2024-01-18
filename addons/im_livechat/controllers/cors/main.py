@@ -2,7 +2,7 @@
 
 from odoo.http import route
 from odoo.addons.im_livechat.controllers.main import LivechatController
-from odoo.addons.im_livechat.tools.misc import downgrade_to_public_user, force_guest_env
+from odoo.addons.im_livechat.tools.misc import force_guest_env
 
 
 class CorsLivechatController(LivechatController):
@@ -15,7 +15,7 @@ class CorsLivechatController(LivechatController):
     def cors_get_session(
         self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs
     ):
-        downgrade_to_public_user()
+        force_guest_env(kwargs.get("guest_token", ""), raise_if_not_found=False)
         return self.get_session(
             channel_id, anonymous_name, previous_operator_id, chatbot_script_id, persisted, **kwargs
         )

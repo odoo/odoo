@@ -38,7 +38,7 @@ function updateFields(record, vals) {
             // "store[Model] =" is considered a Model.insert()
             record[fieldName].insert(value);
         } else {
-            const fieldDefinition = record._RawModel._fields.get(fieldName);
+            const fieldDefinition = record.Model._fields.get(fieldName);
             if (!fieldDefinition || Record.isAttr(fieldDefinition)) {
                 updateAttr(record, fieldName, value);
             } else {
@@ -54,7 +54,7 @@ function updateFields(record, vals) {
  * @param {any} value
  */
 function updateAttr(record, fieldName, value) {
-    const fieldDefinition = record._RawModel._fields.get(fieldName);
+    const fieldDefinition = record.Model._fields.get(fieldName);
     // ensure each field write goes through the proxy exactly once to trigger reactives
     const targetRecord = record._proxyUsed.has(fieldName) ? record : record._proxy;
     if (
@@ -172,7 +172,7 @@ function sortRecordList(recordListFullProxy, func) {
 
 export function makeStore(env) {
     Record.UPDATE = 0;
-    const recordByLocalId = new Map();
+    const recordByLocalId = reactive(new Map());
     const res = {
         // fake store for now, until it becomes a model
         /** @type {import("models").Store} */
@@ -193,7 +193,7 @@ export function makeStore(env) {
         // work-around: make an object whose prototype is the class, so that static props become
         // instance props.
         /** @type {typeof Record} */
-        const Model = Object.assign(Object.create(OgClass), { env, store: res.store });
+        const Model = Object.create(OgClass);
         // Produce another class with changed prototype, so that there are automatic get/set on relational fields
         const Class = {
             [OgClass.name]: class extends OgClass {
@@ -204,9 +204,10 @@ export function makeStore(env) {
                     record._proxyUsed = new Set();
                     record._updateFields = new Set();
                     record._raw = record;
-                    record._RawModel = Model;
+                    record.Model = Model;
                     const recordProxyInternal = new Proxy(record, {
                         get(record, name, recordFullProxy) {
+                            recordFullProxy = record._downgradeProxy(recordFullProxy);
                             const field = record._fields.get(name);
                             if (field) {
                                 if (field.compute && !field.eager) {
@@ -262,10 +263,11 @@ export function makeStore(env) {
                             });
                         },
                     });
+                    record._proxyInternal = recordProxyInternal;
                     const recordProxy = reactive(recordProxyInternal);
                     record._proxy = recordProxy;
                     if (record instanceof BaseStore) {
-                        res.store = recordProxy;
+                        res.store = record;
                     }
                     for (const [name, fieldDefinition] of Model._fields) {
                         const SYM = record[name]?.[0];
@@ -285,30 +287,28 @@ export function makeStore(env) {
                                 owner: record,
                                 _raw: recordList,
                             });
-                            if (record instanceof BaseStore) {
-                                recordList.store = recordProxy;
-                            } else {
-                                recordList.store = res.store;
-                            }
+                            recordList.store = res.store;
                             field.value = recordList;
                         } else {
                             record[name] = fieldDefinition.default;
                         }
                         if (fieldDefinition.compute) {
-                            onChange(recordProxy, name, () => {
-                                if (field.computing) {
-                                    /**
-                                     * Use a reactive to reset the computeInNeed flag when there is
-                                     * a change. This assumes when other reactive are still
-                                     * observing the value, its own callback will reset the flag to
-                                     * true through the proxy getters.
-                                     */
-                                    field.computeInNeed = false;
-                                }
-                            });
-                            // reset flags triggered by registering onChange
-                            field.computeInNeed = false;
-                            field.sortInNeed = false;
+                            if (!fieldDefinition.eager) {
+                                onChange(recordProxy, name, () => {
+                                    if (field.computing) {
+                                        /**
+                                         * Use a reactive to reset the computeInNeed flag when there is
+                                         * a change. This assumes when other reactive are still
+                                         * observing the value, its own callback will reset the flag to
+                                         * true through the proxy getters.
+                                         */
+                                        field.computeInNeed = false;
+                                    }
+                                });
+                                // reset flags triggered by registering onChange
+                                field.computeInNeed = false;
+                                field.sortInNeed = false;
+                            }
                             const proxy2 = reactive(recordProxy, function computeObserver() {
                                 field.requestCompute();
                             });
@@ -335,20 +335,22 @@ export function makeStore(env) {
                             });
                         }
                         if (fieldDefinition.sort) {
-                            onChange(recordProxy, name, () => {
-                                if (field.sorting) {
-                                    /**
-                                     * Use a reactive to reset the inNeed flag when there is a
-                                     * change. This assumes if another reactive is still observing
-                                     * the value, its own callback will reset the flag to true
-                                     * through the proxy getters.
-                                     */
-                                    field.sortInNeed = false;
-                                }
-                            });
-                            // reset flags triggered by registering onChange
-                            field.computeInNeed = false;
-                            field.sortInNeed = false;
+                            if (!fieldDefinition.eager) {
+                                onChange(recordProxy, name, () => {
+                                    if (field.sorting) {
+                                        /**
+                                         * Use a reactive to reset the inNeed flag when there is a
+                                         * change. This assumes if another reactive is still observing
+                                         * the value, its own callback will reset the flag to true
+                                         * through the proxy getters.
+                                         */
+                                        field.sortInNeed = false;
+                                    }
+                                });
+                                // reset flags triggered by registering onChange
+                                field.computeInNeed = false;
+                                field.sortInNeed = false;
+                            }
                             const proxy2 = reactive(recordProxy, function sortObserver() {
                                 field.requestSort();
                             });
@@ -378,23 +380,22 @@ export function makeStore(env) {
                         if (fieldDefinition.onUpdate) {
                             /** @type {Function} */
                             let observe;
-                            const fn = (record) => fieldDefinition.onUpdate.call(record);
                             Object.assign(field, {
-                                onChange: () => {
-                                    fn(recordProxy);
+                                onUpdate: () => {
+                                    /**
+                                     * Forward internal proxy for performance as onUpdate does not
+                                     * need reactive (observe is called separately).
+                                     */
+                                    fieldDefinition.onUpdate.call(record._proxyInternal);
                                     observe?.();
                                 },
                             });
                             Record._onChange(recordProxy, name, (obs) => {
                                 observe = obs;
-                                if (field.sorting) {
-                                    observe();
-                                    return;
-                                }
                                 if (Record.UPDATE !== 0) {
-                                    Record.ADD_QUEUE(field, "onChange");
+                                    Record.ADD_QUEUE(field, "onUpdate");
                                 } else {
-                                    field.onChange();
+                                    field.onUpdate();
                                 }
                             });
                         }
@@ -405,7 +406,8 @@ export function makeStore(env) {
         }[OgClass.name];
         Object.assign(Model, {
             Class,
-            records: JSON.parse(JSON.stringify(OgClass.records)),
+            env,
+            records: reactive({}),
             _fields: new Map(),
         });
         Models[name] = Model;
@@ -449,15 +451,20 @@ export function makeStore(env) {
             }
         }
     }
+    /**
+     * store/_rawStore are assigned on models at next step, but they are
+     * required on Store model to make the initial store insert.
+     */
+    Object.assign(res.store.Store, { store: res.store, _rawStore: res.store });
     // Make true store (as a model)
-    res.store = res.store.Store.insert();
-    const store = toRaw(res.store)._raw;
+    res.store = toRaw(res.store.Store.insert())._raw;
     for (const Model of Object.values(Models)) {
-        Model.store = res.store;
-        res.store[Model.name] = Model;
+        Model._rawStore = res.store;
+        Model.store = res.store._proxy;
+        res.store._proxy[Model.name] = Model;
     }
-    Object.assign(store, { Models, storeReady: true });
-    return res.store;
+    Object.assign(res.store, { Models, storeReady: true });
+    return res.store._proxy;
 }
 
 class RecordUses {
@@ -517,15 +524,17 @@ class RecordList extends Array {
     data = [];
 
     get fieldDefinition() {
-        return this.owner._RawModel._fields.get(this.name);
+        return this.owner.Model._fields.get(this.name);
     }
 
     constructor() {
         super();
         const recordList = this;
+        recordList._raw = recordList;
         const recordListProxyInternal = new Proxy(recordList, {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
+                recordListFullProxy = recordList._downgradeProxy(recordListFullProxy);
                 if (
                     typeof name === "symbol" ||
                     Object.keys(recordList).includes(name) ||
@@ -556,7 +565,9 @@ class RecordList extends Array {
                     );
                 }
                 // Attempt an unimplemented array method call
-                const array = [...recordListFullProxy];
+                const array = [
+                    ...recordList._proxyInternal[Symbol.iterator].call(recordListFullProxy),
+                ];
                 return array[name]?.bind(array);
             },
             /** @param {RecordList<R>} recordListProxy */
@@ -566,7 +577,7 @@ class RecordList extends Array {
                         // support for "array[index] = r3" syntax
                         const index = parseInt(name);
                         recordList._insert(val, function recordListSet_Insert(newRecord) {
-                            const oldRecord = toRaw(recordList.store)._raw.recordByLocalId.get(
+                            const oldRecord = toRaw(recordList.store.recordByLocalId).get(
                                 recordList.data[index]
                             );
                             if (oldRecord && oldRecord.notEq(newRecord)) {
@@ -591,7 +602,11 @@ class RecordList extends Array {
                         const newLength = parseInt(val);
                         if (newLength !== recordList.data.length) {
                             if (newLength < recordList.data.length) {
-                                recordListProxy.splice(newLength, recordList.length - newLength);
+                                recordList.splice.call(
+                                    recordListProxy,
+                                    newLength,
+                                    recordList.length - newLength
+                                );
                             }
                             recordListProxy.data.length = newLength;
                         }
@@ -602,9 +617,20 @@ class RecordList extends Array {
                 });
             },
         });
+        recordList._proxyInternal = recordListProxyInternal;
         recordList._proxy = reactive(recordListProxyInternal);
         return recordList;
     }
+
+    /**
+     * The internal reactive is only necessary to trigger outer reactives when
+     * writing on it. As it has no callback, reading through it has no effect,
+     * except slowing down performance and complexifying the stack.
+     */
+    _downgradeProxy(fullProxy) {
+        return this._proxy === fullProxy ? this._proxyInternal : fullProxy;
+    }
+
     /**
      * @param {R|any} val
      * @param {(R) => void} [fn] function that is called in-between preinsert and
@@ -652,7 +678,7 @@ class RecordList extends Array {
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
             /** @type {R[]} */
-            const oldRecordsProxy = recordList._proxy.slice();
+            const oldRecordsProxy = recordList._proxyInternal.slice.call(recordList._proxy);
             for (const oldRecordProxy of oldRecordsProxy) {
                 toRaw(oldRecordProxy)._raw.__uses__.delete(recordList);
             }
@@ -668,8 +694,8 @@ class RecordList extends Array {
     }
     /** @param {R[]} records */
     push(...records) {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListPush() {
             for (const val of records) {
                 const record = recordList._insert(val, function recordListPushInsert(record) {
@@ -687,20 +713,21 @@ class RecordList extends Array {
     }
     /** @returns {R} */
     pop() {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListPop() {
             /** @type {R} */
             const oldRecordProxy = recordListFullProxy.at(-1);
             if (oldRecordProxy) {
-                recordListFullProxy.splice(recordListFullProxy.length - 1, 1);
+                recordList.splice.call(recordListFullProxy, recordListFullProxy.length - 1, 1);
             }
             return oldRecordProxy;
         });
     }
     /** @returns {R} */
     shift() {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListShift() {
             const recordProxy = recordListFullProxy.store.recordByLocalId.get(
                 recordListFullProxy.data.shift()
@@ -720,8 +747,8 @@ class RecordList extends Array {
     }
     /** @param {R[]} records */
     unshift(...records) {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListUnshift() {
             for (let i = records.length - 1; i >= 0; i--) {
                 const record = recordList._insert(records[i], (record) => {
@@ -739,7 +766,8 @@ class RecordList extends Array {
     }
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return recordListFullProxy.data.indexOf(toRaw(recordProxy)?._raw.localId);
     }
     /**
@@ -748,10 +776,14 @@ class RecordList extends Array {
      * @param {...R} [newRecordsProxy]
      */
     splice(start, deleteCount, ...newRecordsProxy) {
-        const recordListFullProxy = this;
-        const recordList = toRaw(recordListFullProxy)._raw;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListSplice() {
-            const oldRecordsProxy = recordListFullProxy.slice(start, start + deleteCount);
+            const oldRecordsProxy = recordList._proxyInternal.slice.call(
+                recordListFullProxy,
+                start,
+                start + deleteCount
+            );
             const list = recordListFullProxy.data.slice(); // splice on copy of list so that reactive observers not triggered while splicing
             list.splice(
                 start,
@@ -781,7 +813,8 @@ class RecordList extends Array {
     }
     /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return Record.MAKE_UPDATE(function recordListSort() {
             sortRecordList(recordListFullProxy, func);
             return recordListFullProxy;
@@ -789,7 +822,8 @@ class RecordList extends Array {
     }
     /** @param {...R[]|...RecordList[R]} collections */
     concat(...collections) {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         return recordListFullProxy.data
             .map((localId) => recordListFullProxy.store.recordByLocalId.get(localId))
             .concat(...collections.map((c) => [...c]));
@@ -805,8 +839,8 @@ class RecordList extends Array {
                 }
                 recordList._insert(last, function recordListAddInsertOne(record) {
                     if (record.localId !== recordList.data[0]) {
-                        recordList._proxy.pop();
-                        recordList._proxy.push(record);
+                        recordList.pop.call(recordList._proxy);
+                        recordList.push.call(recordList._proxy, record);
                     }
                 });
                 return;
@@ -817,7 +851,7 @@ class RecordList extends Array {
                 }
                 recordList._insert(val, function recordListAddInsertMany(record) {
                     if (recordList.data.indexOf(record.localId) === -1) {
-                        recordList._proxy.push(record);
+                        recordList.push.call(recordList._proxy, record);
                     }
                 });
             }
@@ -861,7 +895,7 @@ class RecordList extends Array {
                 val,
                 function recordList_AddNoInvManyInsert(record) {
                     if (recordList.data.indexOf(record.localId) === -1) {
-                        recordList._proxy.push(record);
+                        recordList.push.call(recordList._proxy, record);
                         record.__uses__.add(recordList);
                     }
                 },
@@ -880,7 +914,7 @@ class RecordList extends Array {
                     function recordListDelete_Insert(record) {
                         const index = recordList.data.indexOf(record.localId);
                         if (index !== -1) {
-                            recordList._proxy.splice(index, 1);
+                            recordList.splice.call(recordList._proxy, index, 1);
                         }
                     },
                     { mode: "DELETE" }
@@ -903,7 +937,7 @@ class RecordList extends Array {
                 function recordList_DeleteNoInv_Insert(record) {
                     const index = recordList.data.indexOf(record.localId);
                     if (index !== -1) {
-                        recordList._proxy.splice(index, 1);
+                        recordList.splice.call(recordList._proxy, index, 1);
                         record.__uses__.delete(recordList);
                     }
                 },
@@ -916,13 +950,14 @@ class RecordList extends Array {
         const recordList = toRaw(this)._raw;
         return Record.MAKE_UPDATE(function recordListClear() {
             while (recordList.data.length > 0) {
-                recordList._proxy.pop();
+                recordList.pop.call(recordList._proxy);
             }
         });
     }
     /** @yields {R} */
     *[Symbol.iterator]() {
-        const recordListFullProxy = this;
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._downgradeProxy(this);
         for (const localId of recordListFullProxy.data) {
             yield recordListFullProxy.store.recordByLocalId.get(localId);
         }
@@ -981,7 +1016,7 @@ class RecordList extends Array {
  *   when it's needed (i.e. accessed). Eager sorted fields are immediately re-sorted at end of update cycle,
  *   whereas lazy sorted fields wait extra for them being needed.
  * @property {boolean} [sortInNeed] on lazy sorted-fields, determines whether this field is needed (i.e. accessed).
- * @property {() => void} [onChange] function that contains functions to be called when the value of field
+ * @property {() => void} [onUpdate] function that contains functions to be called when the value of field
  *   has changed, e.g. sort and onUpdate.
  * @property {RecordList<Record>} [value] value of the field. Either its raw value if it's an attribute,
  *   or a RecordList if it's a relational field.
@@ -999,19 +1034,19 @@ export class Record {
     static trusted = false;
     static id;
     /** @type {Object<string, Record>} */
-    static records = {};
+    static records;
     /** @type {import("models").Store} */
     static store;
     /** @type {RecordField[]} */
     static FC_QUEUE = []; // field-computes
     /** @type {RecordField[]} */
     static FS_QUEUE = []; // field-sorts
-    /** @type {Aray<{field: RecordField, records: Record[]}>} */
+    /** @type {Array<{field: RecordField, records: Record[]}>} */
     static FA_QUEUE = []; // field-onadds
-    /** @type {Aray<{field: RecordField, records: Record[]}>} */
+    /** @type {Array<{field: RecordField, records: Record[]}>} */
     static FD_QUEUE = []; // field-ondeletes
     /** @type {RecordField[]} */
-    static FO_QUEUE = []; // field-onchanges
+    static FU_QUEUE = []; // field-onupdates
     /** @type {Function[]} */
     static RO_QUEUE = []; // record-onchanges
     /** @type {Record[]} */
@@ -1030,7 +1065,7 @@ export class Record {
                 Record.FS_QUEUE.length > 0 ||
                 Record.FA_QUEUE.length > 0 ||
                 Record.FD_QUEUE.length > 0 ||
-                Record.FO_QUEUE.length > 0 ||
+                Record.FU_QUEUE.length > 0 ||
                 Record.RO_QUEUE.length > 0 ||
                 Record.RD_QUEUE.length > 0
             ) {
@@ -1038,14 +1073,14 @@ export class Record {
                 const FS_QUEUE = [...Record.FS_QUEUE];
                 const FA_QUEUE = [...Record.FA_QUEUE];
                 const FD_QUEUE = [...Record.FD_QUEUE];
-                const FO_QUEUE = [...Record.FO_QUEUE];
+                const FU_QUEUE = [...Record.FU_QUEUE];
                 const RO_QUEUE = [...Record.RO_QUEUE];
                 const RD_QUEUE = [...Record.RD_QUEUE];
                 Record.FC_QUEUE.length = 0;
                 Record.FS_QUEUE.length = 0;
                 Record.FA_QUEUE.length = 0;
                 Record.FD_QUEUE.length = 0;
-                Record.FO_QUEUE.length = 0;
+                Record.FU_QUEUE.length = 0;
                 Record.RO_QUEUE.length = 0;
                 Record.RD_QUEUE.length = 0;
                 while (FC_QUEUE.length > 0) {
@@ -1070,9 +1105,9 @@ export class Record {
                         onDelete?.call(field.value.owner._proxy, record._proxy)
                     );
                 }
-                while (FO_QUEUE.length > 0) {
-                    const field = FO_QUEUE.pop();
-                    field.onChange();
+                while (FU_QUEUE.length > 0) {
+                    const field = FU_QUEUE.pop();
+                    field.onUpdate();
                 }
                 while (RO_QUEUE.length > 0) {
                     const cb = RO_QUEUE.pop();
@@ -1086,8 +1121,9 @@ export class Record {
                     }
                     for (const [localId, names] of record.__uses__.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const usingRecordProxy =
-                                record._RawModel.store.recordByLocalId.get(localId);
+                            const usingRecordProxy = toRaw(
+                                record.Model._rawStore.recordByLocalId
+                            ).get(localId);
                             if (!usingRecordProxy) {
                                 // record already deleted, clean inverses
                                 record.__uses__.data.delete(localId);
@@ -1105,7 +1141,7 @@ export class Record {
                         }
                     }
                     delete record.Model.records[record.localId];
-                    record._RawModel.store.recordByLocalId.delete(record.localId);
+                    record.Model._rawStore.recordByLocalId.delete(record.localId);
                 }
             }
             Record.UPDATE--;
@@ -1114,7 +1150,7 @@ export class Record {
     }
     /**
      * @param {RecordField|Record} fieldOrRecord
-     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onChange"} type
+     * @param {"compute"|"sort"|"onAdd"|"onDelete"|"onUpdate"} type
      * @param {Record} [record] when field with onAdd/onDelete, the record being added or deleted
      */
     static ADD_QUEUE(fieldOrRecord, type, record) {
@@ -1172,9 +1208,9 @@ export class Record {
                     }
                 }
             }
-            if (type === "onChange") {
-                if (!Record.FO_QUEUE.some((f) => toRaw(f) === rawField)) {
-                    Record.FO_QUEUE.push(field);
+            if (type === "onUpdate") {
+                if (!Record.FU_QUEUE.some((f) => toRaw(f) === rawField)) {
+                    Record.FU_QUEUE.push(field);
                 }
             }
         }
@@ -1207,13 +1243,14 @@ export class Record {
     static _onChange(record, key, callback) {
         let proxy;
         function _observe() {
-            void proxy[key];
-            if (proxy[key] instanceof Object) {
-                void Object.keys(proxy[key]);
+            // access proxy[key] only once to avoid triggering reactive get() many times
+            const val = proxy[key];
+            if (typeof val === "object" && val !== null) {
+                void Object.keys(val);
             }
-            if (proxy[key] instanceof Array) {
-                void proxy[key].length;
-                void proxy[key].forEach((i) => i);
+            if (Array.isArray(val)) {
+                void val.length;
+                void toRaw(val).forEach.call(val, (i) => i);
             }
         }
         if (Array.isArray(key)) {
@@ -1240,7 +1277,7 @@ export class Record {
      *
      * @type {Map<string, FieldDefinition>}
      */
-    static _fields = new Map();
+    static _fields;
     static isRecord(record) {
         return Boolean(record?.[IS_RECORD_SYM]);
     }
@@ -1308,6 +1345,7 @@ export class Record {
         return res;
     }
     static _retrieveIdFromData(data) {
+        const Model = toRaw(this);
         const res = {};
         function _deepRetrieve(expr2) {
             if (typeof expr2 === "string") {
@@ -1336,18 +1374,18 @@ export class Record {
                 }
             }
         }
-        if (this.id === undefined) {
+        if (Model.id === undefined) {
             return res;
         }
-        if (typeof this.id === "string") {
+        if (typeof Model.id === "string") {
             if (typeof data !== "object" || data === null) {
-                return { [this.id]: data }; // non-object data => single id
+                return { [Model.id]: data }; // non-object data => single id
             }
-            if (Record.isCommand(data[this.id])) {
+            if (Record.isCommand(data[Model.id])) {
                 // Note: only Record.one() is supported
-                const [cmd, data2] = data[this.id].at(-1);
+                const [cmd, data2] = data[Model.id].at(-1);
                 return Object.assign(res, {
-                    [this.id]:
+                    [Model.id]:
                         cmd === "DELETE"
                             ? undefined
                             : cmd === "DELETE.noinv"
@@ -1357,9 +1395,9 @@ export class Record {
                             : data2,
                 });
             }
-            return { [this.id]: data[this.id] };
+            return { [Model.id]: data[Model.id] };
         }
-        for (const expr of this.id) {
+        for (const expr of Model.id) {
             if (typeof expr === "symbol") {
                 continue;
             }
@@ -1384,12 +1422,10 @@ export class Record {
      * @returns {Record}
      */
     static new(data) {
-        const ModelProxy = this;
-        const Model = toRaw(ModelProxy);
+        const Model = toRaw(this);
         return Record.MAKE_UPDATE(function RecordNew() {
             const recordProxy = new Model.Class();
             const record = toRaw(recordProxy)._raw;
-            record.Model = ModelProxy;
             const ids = Model._retrieveIdFromData(data);
             for (const name in ids) {
                 if (
@@ -1400,23 +1436,21 @@ export class Record {
                 ) {
                     // preinsert that record in relational field,
                     // as it is required to make current local id
-                    ids[name] = Model.store[Model._fields.get(name).targetModel].preinsert(
+                    ids[name] = Model._rawStore[Model._fields.get(name).targetModel].preinsert(
                         ids[name]
                     );
                 }
             }
-            Object.assign(recordProxy, {
-                localId: Model.localId(ids),
-                ...ids,
-            });
-            ModelProxy.records[record.localId] = recordProxy;
-            if (record._RawModel.name === "Store") {
+            Object.assign(record, { localId: Model.localId(ids) });
+            Object.assign(recordProxy, { ...ids });
+            Model.records[record.localId] = recordProxy;
+            if (record.Model.name === "Store") {
                 Object.assign(record, {
-                    env: Model.store.env,
-                    recordByLocalId: Model.store.recordByLocalId,
+                    env: Model._rawStore.env,
+                    recordByLocalId: Model._rawStore.recordByLocalId,
                 });
             }
-            Model.store.recordByLocalId.set(record.localId, recordProxy);
+            Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const field of record._fields.values()) {
                 field.requestCompute?.();
                 field.requestSort?.();
@@ -1503,7 +1537,8 @@ export class Record {
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
-        const SubClass = this;
+        const ModelFullProxy = this;
+        const Model = toRaw(ModelFullProxy);
         return Record.MAKE_UPDATE(function RecordInsert() {
             const isMulti = Array.isArray(data);
             if (!isMulti) {
@@ -1512,7 +1547,7 @@ export class Record {
             const oldTrusted = Record.trusted;
             Record.trusted = options.html ?? Record.trusted;
             const res = data.map(function RecordInsertMap(d) {
-                return SubClass._insert(d, options);
+                return Model._insert.call(ModelFullProxy, d, options);
             });
             Record.trusted = oldTrusted;
             if (!isMulti) {
@@ -1523,16 +1558,21 @@ export class Record {
     }
     /** @returns {Record} */
     static _insert(data) {
-        const res = this.preinsert(data);
-        res.update(data);
-        return res;
+        const ModelFullProxy = this;
+        const Model = toRaw(ModelFullProxy);
+        const recordFullProxy = Model.preinsert.call(ModelFullProxy, data);
+        const record = toRaw(recordFullProxy)._raw;
+        record.update.call(record._proxy, data);
+        return recordFullProxy;
     }
     /**
      * @param {Object} data
      * @returns {Record}
      */
     static preinsert(data) {
-        return this.get(data) ?? this.new(data);
+        const ModelFullProxy = this;
+        const Model = toRaw(ModelFullProxy);
+        return Model.get.call(ModelFullProxy, data) ?? Model.new(data);
     }
     static isCommand(data) {
         return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
@@ -1548,7 +1588,7 @@ export class Record {
     _fields = new Map();
     __uses__ = markRaw(new RecordUses());
     get _store() {
-        return toRaw(this)._raw._RawModel.store;
+        return toRaw(this)._raw.Model._rawStore._proxy;
     }
     /**
      * Technical attribute, contains the Model entry in the store.
@@ -1581,7 +1621,7 @@ export class Record {
                 updateFields(record, data);
             } else {
                 // update on single-id data
-                updateFields(record, { [record._RawModel.id]: data });
+                updateFields(record, { [record.Model.id]: data });
             }
         });
     }
@@ -1626,31 +1666,45 @@ export class Record {
         const data = { ...recordProxy };
         for (const [name, { value }] of record._fields) {
             if (RecordList.isMany(value)) {
-                data[name] = value.map((recordProxy) => recordProxy.toIdData());
+                data[name] = value.map((recordProxy) => {
+                    const record = toRaw(recordProxy)._raw;
+                    return record.toIdData.call(record._proxyInternal);
+                });
             } else if (RecordList.isOne(value)) {
-                data[name] = value[0]?.toIdData();
+                const record = toRaw(value[0])?._raw;
+                data[name] = record?.toIdData.call(record._proxyInternal);
             } else {
                 data[name] = recordProxy[name]; // Record.attr()
             }
         }
         delete data._fields;
         delete data._proxy;
+        delete data._proxyInternal;
         delete data._proxyUsed;
         delete data._raw;
-        delete data._RawModel;
+        delete data.Model;
         delete data._updateFields;
         delete data.__uses__;
         delete data.Model;
         return data;
     }
     toIdData() {
-        const data = this._RawModel._retrieveIdFromData(this);
+        const data = this.Model._retrieveIdFromData(this);
         for (const [name, val] of Object.entries(data)) {
             if (Record.isRecord(val)) {
                 data[name] = val.toIdData();
             }
         }
         return data;
+    }
+
+    /**
+     * The internal reactive is only necessary to trigger outer reactives when
+     * writing on it. As it has no callback, reading through it has no effect,
+     * except slowing down performance and complexifying the stack.
+     */
+    _downgradeProxy(fullProxy) {
+        return this._proxy === fullProxy ? this._proxyInternal : fullProxy;
     }
 }
 

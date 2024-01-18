@@ -83,7 +83,7 @@ msgstr "Recarga de A/C"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -708,7 +708,7 @@ msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
 msgstr ""
-"Fecha en la que la cobertura de los contratos expira (de forma "
+"Fecha en la que expira la cobertura de los contratos (de forma "
 "predeterminada, un año después de la fecha de inicio)"
 
 #. module: fleet
@@ -898,7 +898,7 @@ msgstr "Reemplazo del refrigerante del motor"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_20
 msgid "Engine/Drive Belt(s) Replacement"
-msgstr "Reemplazo de correa(s) de motor/transmisión"
+msgstr "Reemplazo de las correas de motor y transmisión"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -985,8 +985,7 @@ msgstr "Tipo de servicio de flota"
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
-"Flota: genere costos de contratos basados en la frecuencia de los costos"
+msgstr "Flota: genere costos de contratos según la frecuencia de los costos"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
@@ -1095,7 +1094,7 @@ msgstr "Tiene un mensaje"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_24
 msgid "Head Gasket(s) Replacement"
-msgstr "Reemplazo de junta(s) de culata"
+msgstr "Reemplazo de las juntas de culata"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_25
@@ -1366,8 +1365,8 @@ msgid ""
 "            you when some contracts have to be renewed."
 msgstr ""
 "Gestione todos sus contratos (arrendamiento, seguros, etc) con\n"
-"            sus servicios y costos relacionados. Odoo le advertirá automáticamente\n"
-"            cuando se tengan que renovar algunos contratos."
+"            sus servicios y costos relacionados. Odoo le advertirá de forma automática\n"
+"            cuando tenga que renovar algunos contratos."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1748,7 +1747,7 @@ msgstr "Se planea cambio"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_diesel
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__plug_in_hybrid_diesel
 msgid "Plug-in Hybrid Diesel"
-msgstr "Carro híbrido de disel enchufable"
+msgstr "Carro híbrido de diésel enchufable"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_gasoline
@@ -2068,10 +2067,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Estado basado en actividades\n"
+"Estado según las actividades\n"
 "Vencida: ya pasó la fecha límite\n"
 "Hoy: hoy es la fecha de la actividad\n"
-"Planeada: actividades futuras."
+"Planeada: futuras actividades."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
@@ -2123,7 +2122,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "El código ISO del país en dos caracteres.\n"
-"Puede utilizar este campo para una búsqueda rápida."
+"Puede utilizar este campo para realizar una búsqueda rápida."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -2397,7 +2396,7 @@ msgstr "Fecha de advertencia"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Warning: renewal due soon"
-msgstr "Advertencia: renovación pronto"
+msgstr "Advertencia: se necesita renovar pronto"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
@@ -2412,7 +2411,7 @@ msgstr "Wave"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
-msgstr "Semanalmente"
+msgstr "Semanal"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_51
@@ -2459,7 +2458,7 @@ msgstr "Año del modelo"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__yearly
 msgid "Yearly"
-msgstr "Anualmente"
+msgstr "Anual"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
@@ -2479,14 +2478,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
 msgstr ""
-"Se pueden definir varios modelos (por ejemplo, A3 , A4) para cada marca "
-"(Audi) ."
+"Puede definir varios modelos (por ejemplo, A3 , A4) para cada marca (Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. Model S"
-msgstr "Por ejemplo, Model S"
+msgstr "Por ejemplo, Modelo S"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form

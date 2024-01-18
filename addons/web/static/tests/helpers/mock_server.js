@@ -2503,11 +2503,14 @@ export class MockServer {
                             if (!relatedFields) {
                                 record[fieldName] = record[fieldName][0];
                             } else {
-                                const displayName = record[fieldName][1];
-                                record[fieldName] = { id: record[fieldName][0] };
-                                if ("display_name" in relatedFields) {
-                                    record[fieldName].display_name = displayName;
-                                }
+                                record[fieldName] = this.mockWebRead(
+                                    field.relation,
+                                    [record[fieldName][0]],
+                                    {
+                                        specification: relatedFields,
+                                        context: spec[fieldName].context,
+                                    }
+                                )[0];
                             }
                         }
                     }

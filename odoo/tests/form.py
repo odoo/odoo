@@ -283,7 +283,11 @@ class Form:
         """ Initialize the form for an existing record. """
         assert self._record.id, "editing unstored records is not supported"
         self._values.clear()
+
         [record_values] = self._record.web_read(self._view['fields_spec'])
+        self._env.flush_all()
+        self._env.clear()  # discard cache and pending recomputations
+
         values = convert_read_to_form(record_values, self._view['fields'])
         self._values.update(values)
 

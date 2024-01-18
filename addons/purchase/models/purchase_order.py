@@ -146,8 +146,8 @@ class PurchaseOrder(models.Model):
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', related='partner_id.receipt_reminder_email', readonly=False)
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', related='partner_id.reminder_date_before_receipt', readonly=False)
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -197,6 +197,12 @@ class PurchaseOrder(models.Model):
             if self.env.context.get('show_total_amount') and po.amount_total:
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             po.display_name = name
+
+    @api.depends('company_id', 'partner_id')
+    def _compute_receipt_reminder_email(self):
+        for order in self:
+            order.receipt_reminder_email = order.partner_id.with_company(order.company_id).receipt_reminder_email
+            order.reminder_date_before_receipt = order.partner_id.with_company(order.company_id).reminder_date_before_receipt
 
     @api.depends_context('lang')
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
@@ -813,10 +819,11 @@ class PurchaseOrder(models.Model):
         """When auto sending a reminder mail, only send for unconfirmed purchase
         order and not all products are service."""
         return self.search([
-            ('receipt_reminder_email', '=', True),
+            ('partner_id', '!=', False),
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
-        ]).filtered(lambda p: p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+        ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
+            p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
 
     def _default_order_line_values(self):
         default_data = super()._default_order_line_values()

@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,17 +35,17 @@ msgstr ""
 
 #. module: hr_homeworking
 #. odoo-javascript
-#: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
+#: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
-msgid "Add Location"
-msgstr "Locatie toevoegen"
+msgid "Are you sure you want to delete this exception?"
+msgstr "Weet je zeker dat je deze uitzondering wilt verwijderen?"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
-msgid "Are you sure you want to delete this exception?"
-msgstr "Weet je zeker dat je deze uitzondering wilt verwijderen?"
+msgid "Are you sure you want to delete this location?"
+msgstr "Weet je zeker dat je deze locatie wilt verwijderen?"
 
 #. module: hr_homeworking
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee__hr_icon_display__presence_home
@@ -75,6 +75,7 @@ msgstr "Basis werknemer"
 
 #. module: hr_homeworking
 #. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Confirmation"
@@ -257,8 +258,11 @@ msgid "Set Homework Location Wizard"
 msgstr "Wizard instellen werkplek op afstand werken"
 
 #. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
 #: model:ir.actions.act_window,name:hr_homeworking.set_location_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.homework_location_wizard_view_form
+#, python-format
 msgid "Set Location"
 msgstr "Bepaal locatie"
 

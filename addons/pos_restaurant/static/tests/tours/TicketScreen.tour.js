@@ -27,7 +27,6 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickTicketButton(),
             TicketScreen.nthRowContains(2, "-0001"),
             TicketScreen.deleteOrder("-0001"),
-            TicketScreen.clickDiscard(),
 
             // Create 2 items in a table. From floorscreen, delete 1 item. Then select the other item.
             // Correct order and screen should be displayed and the BackToFloorButton is shown.

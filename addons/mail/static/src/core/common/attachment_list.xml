@@ -35,12 +35,12 @@
                         <i class="fa fa-spin fa-spinner"/>
                     </div>
                     <div class="position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flax-wrap flex-column">
-                        <div t-if="showDelete"
+                        <div t-if="showDelete and !ui.isSmall"
                             class="btn btn-sm btn-dark rounded opacity-75 opacity-100-hover"
                             tabindex="0" aria-label="Remove" role="menuitem" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
                             <i class="fa fa-trash"/>
                         </div>
-                        <div t-if="canDownload(attachment)" class="btn btn-sm btn-dark rounded opacity-75 opacity-100-hover mt-auto" t-on-click.stop="() => this.onClickDownload(attachment)" title="Download">
+                        <div t-if="canDownload(attachment) and !ui.isSmall" class="btn btn-sm btn-dark rounded opacity-75 opacity-100-hover mt-auto" t-on-click.stop="() => this.onClickDownload(attachment)" title="Download">
                             <i class="fa fa-download"/>
                         </div>
                     </div>

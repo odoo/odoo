@@ -64,20 +64,10 @@ class MicrosoftCalendarService():
             'Prefer': 'outlook.body-content-type="html", odata.maxpagesize=50'
         }
         if not params:
-            # Get context keys limiting query range for reducing requests and then increase performance.
-            start_date = self.microsoft_service._context.get('range_start_date')
-            end_date = self.microsoft_service._context.get('range_end_date')
-            if start_date and end_date:
-                start_date = start_date.strftime("%Y-%m-%dT00:00:00Z")
-                end_date = fields.Datetime.add(end_date, days=1).strftime("%Y-%m-%dT00:00:00Z")
-            else:
-                ICP = self.microsoft_service.env['ir.config_parameter'].sudo()
-                day_range = int(ICP.get_param('microsoft_calendar.sync.range_days', default=365))
-                start_date = fields.Datetime.subtract(fields.Datetime.now(), days=day_range).strftime("%Y-%m-%dT00:00:00Z")
-                end_date = fields.Datetime.add(fields.Datetime.now(), days=day_range).strftime("%Y-%m-%dT00:00:00Z")
+            # By default, fetch events from at most one year in the past and two years in the future.
             params = {
-                'startDateTime': start_date,
-                'endDateTime': end_date,
+                'startDateTime': fields.Datetime.subtract(fields.Datetime.now(), years=1).strftime("%Y-%m-%dT00:00:00Z"),
+                'endDateTime': fields.Datetime.add(fields.Datetime.now(), years=2).strftime("%Y-%m-%dT00:00:00Z"),
             }
 
         # get the first page of events
@@ -124,20 +114,6 @@ class MicrosoftCalendarService():
                 # retry with a full sync
                 return self._get_events_delta(token=token, timeout=timeout)
             raise e
-
-        # update sync min and max date range after retrieving occurrences, they must be entirely created once
-        # otherwise we would have to retrieve everytime all occurrences from all recurrences in _get_occurrence_details
-        min_start_dt = self.microsoft_service._context.get('range_start_date')
-        max_stop_dt = self.microsoft_service._context.get('range_end_date')
-        for event in events:
-            if event.get('type') == 'occurrence' and event.get('start') and event.get('end'):
-                # get time values and update min start and max stop from sync context range
-                time_values = self.microsoft_service.env['calendar.event']._microsoft_to_odoo_recurrence_values(MicrosoftEvent([event]))
-                if not min_start_dt or time_values['start'] < min_start_dt:
-                    min_start_dt = time_values['start']
-                if not max_stop_dt or time_values['stop'] > max_stop_dt:
-                    max_stop_dt = time_values['stop']
-        self.microsoft_service = self.microsoft_service.with_context(range_start_date=min_start_dt, range_end_date=max_stop_dt)
 
         # event occurrences (from a recurrence) are retrieved separately to get all their info,
         # # and mainly the iCalUId attribute which is not provided by the 'get_delta' api end point

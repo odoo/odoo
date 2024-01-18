@@ -253,7 +253,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 return periodStr ? periodStr + "/" + year : year;
             }
             case "relation":
-                if (!value || !this.orm) {
+                if (!value?.length || !this.orm) {
                     return "";
                 }
                 if (!this.recordsDisplayName[filter.id]) {
@@ -436,7 +436,7 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         const noPeriod = !value.period || value.period === "empty";
         const noYear = value.yearOffset === undefined;
         if (noPeriod && noYear) {
-            return [];
+            return new Domain();
         }
         const setParam = { year: now.year };
         const yearOffset = value.yearOffset || 0;

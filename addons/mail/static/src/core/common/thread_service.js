@@ -61,11 +61,23 @@ export class ThreadService {
     }
 
     async fetchChannelMembers(thread) {
+        if (thread.fetchMembersState === "pending") {
+            return;
+        }
+        const previousState = thread.fetchMembersState;
+        thread.fetchMembersState = "pending";
         const known_member_ids = thread.channelMembers.map((channelMember) => channelMember.id);
-        const results = await this.rpc("/discuss/channel/members", {
-            channel_id: thread.id,
-            known_member_ids: known_member_ids,
-        });
+        let results;
+        try {
+            results = await this.rpc("/discuss/channel/members", {
+                channel_id: thread.id,
+                known_member_ids: known_member_ids,
+            });
+        } catch (e) {
+            thread.fetchMembersState = previousState;
+            throw e;
+        }
+        thread.fetchMembersState = "fetched";
         let channelMembers = [];
         if (
             results["channelMembers"] &&
@@ -75,11 +87,13 @@ export class ThreadService {
             channelMembers = results["channelMembers"][0][1];
         }
         thread.memberCount = results["memberCount"];
-        for (const channelMember of channelMembers) {
-            if (channelMember.persona || channelMember.partner) {
-                thread.channelMembers.add({ ...channelMember, thread });
+        Record.MAKE_UPDATE(() => {
+            for (const channelMember of channelMembers) {
+                if (channelMember.persona || channelMember.partner) {
+                    thread.channelMembers.add({ ...channelMember, thread });
+                }
             }
-        }
+        });
     }
 
     /**
@@ -403,15 +417,15 @@ export class ThreadService {
     }
 
     async unpin(thread) {
+        thread.isLocallyPinned = false;
         if (thread.eq(this.store.discuss.thread)) {
             this.router.replaceState({ active_id: undefined });
         }
-        if (thread.model !== "discuss.channel") {
-            return;
+        if (thread.model === "discuss.channel" && thread.is_pinned) {
+            return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
+                pinned: false,
+            });
         }
-        return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
-            pinned: false,
-        });
     }
 
     pin(thread) {
@@ -438,8 +452,9 @@ export class ThreadService {
     /**
      * @param {import("models").Thread} thread
      * @param {boolean} replaceNewMessageChatWindow
+     * @param {Object} [options]
      */
-    open(thread, replaceNewMessageChatWindow) {
+    open(thread, replaceNewMessageChatWindow, options) {
         this.setDiscussThread(thread);
     }
 
@@ -641,6 +656,9 @@ export class ThreadService {
                 : "channel";
         if (pushState) {
             this.router.pushState({ active_id: activeId });
+        }
+        if (!thread.is_pinned) {
+            thread.isLocallyPinned = true;
         }
     }
 

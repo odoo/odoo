@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Tony Ng, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -639,13 +639,13 @@ msgstr "<span class=\"o_stat_text\">休假</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">from </span>"
-msgstr "<span class=\"text-muted\">從 </span>"
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">至 </span>"
+msgid "<span class=\"text-muted\">from </span>"
+msgstr "<span class=\"text-muted\">從 </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1123,8 +1123,8 @@ msgid "Approval"
 msgstr "核准方式"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
@@ -2217,8 +2217,8 @@ msgid "Hourly"
 msgstr "每小時"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
@@ -2800,6 +2800,11 @@ msgstr "無須核准"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.act_hr_employee_holiday_type
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid "No data to display"
+msgstr "無資料可供顯示"
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
 msgid "No data yet!"
 msgstr "暫無資料！"
@@ -3142,8 +3147,8 @@ msgid "Reasons"
 msgstr "原因"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
@@ -3356,6 +3361,13 @@ msgstr "第二個月日"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day_display
 msgid "Second Month Day Display"
 msgstr "第二個月日顯示"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Second approval request for %(leave_type)s"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3716,6 +3728,13 @@ msgstr "類別的最小序列為休假要求的預設值"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "There is no valid allocation to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -3871,6 +3890,8 @@ msgstr ""
 "               員工向人資單位要求休假分配（例如，休養日）。"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_id
@@ -3881,6 +3902,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#, python-format
 msgid "Time Off Request"
 msgstr "休假申請"
 
@@ -4131,6 +4153,13 @@ msgstr "分配給該員工的帶薪休假總數，更改此值以建立分配/�
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
 msgid "Training Time Off"
 msgstr "培訓休假"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4488,13 +4517,6 @@ msgstr "您不能拒絕該分配請求，因為該員工已經為此休假。請
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
-msgid "You don't have a valid allocation to cover that request."
-msgstr "你沒有有效的撥款來滿足這一要求。"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
 msgstr "您無權對休假請求進行二次批准"
@@ -4642,8 +4664,8 @@ msgid "day(s)"
 msgstr "天"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4688,8 +4710,8 @@ msgid "from %(date_from)s to %(date_to)s - %(state)s"
 msgstr "由 %(date_from)s 至 %(date_to)s - %(state)s"
 
 #. module: hr_holidays
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4788,6 +4810,11 @@ msgstr "累計數額不足以用於支取該長度的假期。"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "到"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "to refuse"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

@@ -62,11 +62,10 @@ cd "${__dir}"
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
 mkdir -pv "${USR_BIN}"
 cd "/tmp"
-curl 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip' > ngrok.zip
-unzip ngrok.zip
-rm -v ngrok.zip
+curl 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.tgz' > ngrok.tgz
+tar xvzf ngrok.tgz -C "${USR_BIN}"
+rm -v ngrok.tgz
 cd "${__dir}"
-mv -v /tmp/ngrok "${USR_BIN}"
 
 # zero pad the image to be around 4.4 GiB, by default the image is only ~2.2 GiB
 echo "Enlarging the image..."

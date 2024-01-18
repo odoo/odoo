@@ -82,6 +82,52 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertTrue(self.warehouse_1.manu_type_id.active)
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
 
+    def test_multi_warehouse_resupply(self):
+        """ test a multi warehouse flow give a correct date delay
+            product_6 is sold from warehouse_1, its component (product_4) is
+            resupplied from warehouse_2 and manufactured in warehouse_2.
+            Everything in mto """
+
+        mto = self.env.ref('stock.route_warehouse0_mto')
+        mto.active = True
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+        })
+        # product 4 can only be manufacture in WH2
+        self.bom_1.picking_type_id = warehouse_2.manu_type_id
+
+        self.warehouse_1.manufacture_steps = "pbm"
+        self.warehouse_1.resupply_wh_ids = [(6, 0, [warehouse_2.id])]
+        self.product_6.route_ids = [(6, 0, [
+            self.env.ref('mrp.route_warehouse0_manufacture').id,
+            mto.id,
+        ])]
+        self.product_4.route_ids = [(6, 0, [
+            self.warehouse_1.resupply_route_ids.id,
+            self.env.ref('stock.route_warehouse0_mto').id,
+            mto.id,
+        ])]
+        warehouse_2.resupply_route_ids.rule_ids.procure_method = 'make_to_order'
+        customer_location = self.env.ref('stock.stock_location_customers')
+        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
+
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                self.product_6,
+                5.0,
+                self.product_6.uom_id,
+                customer_location,
+                'test_ressuply',
+                'test_ressuply',
+                self.warehouse_1.company_id,
+                {
+                    'warehouse_id': self.warehouse_1,
+                    'group_id': pg,
+                },
+            ),
+        ])
+
     def test_manufacturing_scrap(self):
         """
             Testing to do a scrap of consumed material.

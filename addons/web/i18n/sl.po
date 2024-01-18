@@ -16,14 +16,15 @@
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Martin Trigaux, 2023
+# Katja Deržič, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1105,6 +1106,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Always range"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Americas"
@@ -1860,7 +1868,7 @@ msgstr "Podjetje"
 #: model:ir.model.fields,field_description:web.field_base_document_layout__company_details
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Company Details"
-msgstr ""
+msgstr "Podrobnosti o podjetju"
 
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
@@ -2215,7 +2223,7 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__custom_colors
 msgid "Custom Colors"
-msgstr ""
+msgstr "Barve po meri"
 
 #. module: web
 #. odoo-python
@@ -3045,7 +3053,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.js:0
 #, python-format
 msgid "Favorite"
-msgstr ""
+msgstr "Priljubljeno"
 
 #. module: web
 #. odoo-javascript
@@ -3067,6 +3075,13 @@ msgstr ""
 #, python-format
 msgid "Field Type"
 msgstr "Tip polja"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/expression_editor/expression_editor.js:0
+#, python-format
+msgid "Field properties not supported"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3139,7 +3154,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 #, python-format
 msgid "Foldable"
-msgstr ""
+msgstr "Zložljiv"
 
 #. module: web
 #. odoo-javascript
@@ -3704,7 +3719,7 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "So podrobnosti o podjetju prazne"
 
 #. module: web
 #. odoo-javascript
@@ -4221,12 +4236,12 @@ msgstr "Logotip"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_primary_color
 msgid "Logo Primary Color"
-msgstr ""
+msgstr "Osnovna barva logotipa"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
-msgstr ""
+msgstr "Sekundarna barva logotipa"
 
 #. module: web
 #. odoo-javascript
@@ -5363,6 +5378,11 @@ msgid "Password"
 msgstr "Geslo"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -5489,13 +5509,6 @@ msgstr ""
 "Če želite napako prijaviti službi za podporo, uporabite gumb za kopiranje."
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-
-#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
@@ -5573,7 +5586,7 @@ msgstr ""
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
 msgid "Preview logo"
-msgstr ""
+msgstr "Predogled logotipa"
 
 #. module: web
 #. odoo-javascript
@@ -5824,9 +5837,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Ready to make your record disappear into thin air? Are you sure?\n"
-"\n"
 "It will be gone forever!\n"
-"\n"
 "\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
@@ -6485,6 +6496,15 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
 #, python-format
 msgid "Set priority..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid ""
+"Set to true the full range input has to be display by default, even if "
+"empty."
 msgstr ""
 
 #. module: web
@@ -7347,27 +7367,6 @@ msgstr "Nearhiviraj vse"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught CORS Error"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Javascript Error"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid "Uncaught Promise"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
@@ -7383,18 +7382,6 @@ msgstr "Nedoločeno"
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #, python-format
 msgid "Unfold"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_service.js:0
-#, python-format
-msgid ""
-"Unknown CORS error\n"
-"\n"
-"An unknown CORS error occured.\n"
-"The error probably originates from a JavaScript file served from a different origin.\n"
-"(Opening your browser console might give you a hint on the error.)"
 msgstr ""
 
 #. module: web

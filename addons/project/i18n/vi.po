@@ -5,15 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,13 +195,11 @@ msgstr "<b>Kéo &amp; thả</b> các thẻ để đổi công việc của bạn
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
-"    or # <b>mentions</b> to reach an entire team."
+"<b>Log notes</b> for internal communications <i>(the people following this "
+"task won't be notified of the note you are logging unless you specifically "
+"tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
+"<b>mentions</b> to reach an entire team."
 msgstr ""
-"<b>Ghi chép nhật ký</b> cho trao đổi nội bộ <i>(những người theo dõi nhiệm vụ này sẽ không được thông báo\n"
-"    về ghi chú bạn đang ghi trừ khi bạn gắn thẻ cụ thể cho họ)</i>. Dùng @ <b>đề cập</b> đến việc ping một đồng nghiệp \n"
-"    hoặc # <b>đề cập</b> để tiếp cận toàn bộ nhóm."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -689,8 +687,9 @@ msgid "Activity Exception Decoration"
 msgstr "Hoạt động ngoại lệ"
 
 #. module: project
-#: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_task
-msgid "Activity Plan"
+#: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
+#: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_project
+msgid "Activity Plans"
 msgstr "Kế hoạch hoạt động"
 
 #. module: project
@@ -721,6 +720,7 @@ msgid "Add Milestone"
 msgstr "Thêm mốc thời gian"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Add a new plan"
 msgstr "Thêm kế hoạch mới"
@@ -846,7 +846,7 @@ msgid "Allocated Time"
 msgstr "Thời gian được phân bổ"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "Thời gian đã phân bổ:"
 
@@ -1208,8 +1208,8 @@ msgid "Can Be Marked As Done"
 msgstr "Có thể đánh dấu là đã hoàn tất"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
@@ -1241,11 +1241,10 @@ msgstr "Đã yêu cầu thay đổi"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
-"     of a product, of a team, of a construction site, etc.</i>"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the "
+"name of a customer, of a product, of a team, of a construction site, "
+"etc.</i>"
 msgstr ""
-"Chọn một <b>tên</b> cho dự án. <i>Có thể là bất kỳ tên nào bạn muốn: tên của khách hàng,\n"
-"     sản phẩm, một đội, hay tên một công trường, v.v.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1965,8 +1964,8 @@ msgstr ""
 "dùng"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
@@ -2891,8 +2890,8 @@ msgid "Messages"
 msgstr "Tin nhắn"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3019,8 +3018,8 @@ msgid "Neutral face"
 msgstr "Mặt không biểu cảm"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
@@ -3098,13 +3097,6 @@ msgstr "Tiếp theo"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Next Activity"
 msgstr "Hoạt động tiếp theo"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
-#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3411,6 +3403,21 @@ msgstr ""
 "(parent_model) và nhiệm vụ (model))"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid ""
+"Partner company cannot be different from its assigned projects' company"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/res_partner.py:0
+#, python-format
+msgid "Partner company cannot be different from its assigned tasks' company"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
@@ -3623,8 +3630,8 @@ msgid "Progress Percentage"
 msgstr "Phần trăm tiến trình"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/project_rating_graph/project_rating_graph_view.js:0
@@ -4415,8 +4422,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint đang thực hiện"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5378,36 +5385,27 @@ msgstr "Sử dụng"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
-"    Add new people to the followers' list to make them aware of the main changes about this task."
+"Use the chatter to <b>send emails</b> and communicate efficiently with your "
+"customers. Add new people to the followers' list to make them aware of the "
+"main changes about this task."
 msgstr ""
-"Dùng cửa sổ chat để <b>gửi email</b> và giao tiếp hiệu quả với khách hàng. \n"
-"    Thêm người mới vào danh sách người theo dõi để họ biết được những thay đổi chính của nhiệm vụ này."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
 msgid ""
 "Use these keywords in the title to set new tasks:\n"
 "\n"
-"        30h Allocate 30 hours to the task\n"
-"        #tags Set tags on the task\n"
-"        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"            #tags Set tags on the task\n"
+"            @user Assign the task to a user\n"
+"            ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
-"Sử dụng các từ khóa này trong tiêu đề để thiết lập nhiệm vụ mới:\n"
-"\n"
-"         30h Phân bổ 30 giờ cho nhiệm vụ\n"
-"         #thẻ Tạo thẻ cho nhiệm vụ\n"
-"         @người_dùng Gán nhiệm vụ cho một người dùng\n"
-"         ! Đặt nhiệm vụ ở mức độ ưu tiên cao\n"
-"\n"
-"Hãy đảm bảo sử dụng đúng định dạng và thứ tự. VD: Cải thiện màn hình cấu hình 5h #tính_năng #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
 #: model:res.groups,name:project.group_project_user
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "Người dùng"
 
@@ -5796,11 +5794,6 @@ msgstr "vd: Tiệc văn phòng"
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
 msgstr "VD: Ra mắt sản phẩm"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "fs-4"
-msgstr ""
 
 #. module: project
 #. odoo-javascript

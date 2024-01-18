@@ -5,8 +5,6 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.calendar.controllers.main import CalendarController
 
-from dateutil.parser import parse
-
 
 class MicrosoftCalendarController(CalendarController):
 
@@ -42,19 +40,9 @@ class MicrosoftCalendarController(CalendarController):
                     "status": "need_auth",
                     "url": url
                 }
-            # Get synchronization time window form calendar view if received through parameters.
-            sync_context = {}
-            range_start_date = kw.get('rangeStart')
-            range_end_date = kw.get('rangeEnd')
-            if range_start_date and range_end_date:
-                sync_context.update({
-                    'range_start_date': parse(range_start_date),
-                    'range_end_date': parse(range_end_date),
-                })
 
             # If App authorized, and user access accepted, We launch the synchronization
-            sync_context.update({'dont_notify': True})
-            need_refresh = request.env.user.sudo().with_context(sync_context)._sync_microsoft_calendar()
+            need_refresh = request.env.user.sudo().with_context(dont_notify=True)._sync_microsoft_calendar()
 
             # If synchronization has been stopped or paused
             sync_status = request.env.user._get_microsoft_sync_status()

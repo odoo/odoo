@@ -19,17 +19,17 @@
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2023
 # Umur Akın <umura@projetgrup.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
-# Murat Durmuş <muratd@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Halil, 2023
+# Murat Durmuş <muratd@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Halil, 2023\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1615,6 +1615,15 @@ msgstr ""
 " yararlanamıyoruz."
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/ir_qweb_fields.py:0
+#, python-format
+msgid ""
+"On your default language, empty the blog post description and save to get an"
+" automated (translated) summary."
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
@@ -1736,6 +1745,11 @@ msgstr "Yayınlama Seçenekleri"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__post_date
 msgid "Publishing date"
 msgstr "Yayınlanma Tarihi"
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr "Qweb Alanı"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__rating_ids
@@ -2495,6 +2509,11 @@ msgstr "Tüm blogların sayfalarında görünür"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "Mevcut web sitesinde görülebilir"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website

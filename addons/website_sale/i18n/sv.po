@@ -6,7 +6,6 @@
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Patrik Lermon <patrik.lermon@gmail.com>, 2023
 # Daniel Forslund <daniel.forslund@gmail.com>, 2023
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
 # Zou Haojun <haojunzou84@gmail.com>, 2023
 # fah_odoo <fah@odoo.com>, 2023
 # Levi Siuzdak (sile), 2023
@@ -26,14 +25,15 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2023\n"
+"Last-Translator: Martin Wilderoth <martin.wilderoth@linserv.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,6 +167,13 @@ msgstr ""
 "<br/>\n"
 "                30 dagars pengarna-tillbaka-garanti<br/>\n"
 "                Frakt: 2-3 arbetsdagar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                                    Return to shipping"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -337,6 +344,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
 msgstr ""
@@ -1306,8 +1314,16 @@ msgstr "Innehåll"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 #, python-format
 msgid "Continue checkout"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"Continue checkout\n"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -1444,6 +1460,11 @@ msgstr "DHL Express kontakt"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Shipping Methods"
 msgstr "DHL leveranser"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2382,6 +2403,13 @@ msgid "Name Short"
 msgstr "Kortnamn"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_public_category.py:0
+#, python-format
+msgid "New"
+msgstr "Ny"
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
 msgid "New Product"
 msgstr "Ny produkt"
@@ -2436,8 +2464,8 @@ msgstr "Ingen produkt definierad"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
-msgstr "Ingen produkt definierad i kategori \""
+msgid "No product defined in this category."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -3398,6 +3426,11 @@ msgid "Sample"
 msgstr "Prov"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Save address"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Search Abandoned Sales Orders"
 msgstr "Sök övergivna försäljnings ordrar"
@@ -4128,7 +4161,7 @@ msgstr "Visa Produkt"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/notification/cart_notification/cart_notification.xml:0
+#: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
 #, python-format
 msgid "View cart"
 msgstr ""
@@ -4454,11 +4487,6 @@ msgstr "Post No."
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
 msgstr "Prefix för postnummer"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "active"
-msgstr "aktiv"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

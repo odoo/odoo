@@ -745,13 +745,22 @@ class Website(Home):
         if res_model == 'website.page':
             fields.extend(['website_indexed', 'website_id'])
 
+        res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
-        res = record.read(fields)[0]
+        try:
+            record.check_access_rights('write')
+            record.check_access_rule('write')
+        except AccessError:
+            record = record.sudo()
+            res['can_edit_seo'] = False
+
+        res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
 
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
             res['seo_name_default'] = slugify(record.display_name)  # default slug, if seo_name become empty
             res['seo_name'] = record.seo_name and slugify(record.seo_name) or ''
+
         return res
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)

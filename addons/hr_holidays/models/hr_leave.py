@@ -1493,21 +1493,32 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return responsible
 
     def activity_update(self):
-        to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
+        to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
         activity_vals = []
+        today = fields.Date.today()
+        model_id = self.env.ref('hr_holidays.model_hr_leave').id
+        confirm_activity = self.env.ref('hr_holidays.mail_act_leave_approval')
+        approval_activity = self.env.ref('hr_holidays.mail_act_leave_second_approval')
         for holiday in self:
-            note = _(
-                'New %(leave_type)s Request created by %(user)s',
-                leave_type=holiday.holiday_status_id.name,
-                user=holiday.create_uid.name,
-            )
             if holiday.state == 'draft':
                 to_clean |= holiday
-            elif holiday.state == 'confirm':
+            elif holiday.state in ['confirm', 'validate1']:
                 if holiday.holiday_status_id.leave_validation_type != 'no_validation':
+                    if holiday.state == 'confirm':
+                        activity_type = confirm_activity
+                        note = _(
+                            'New %(leave_type)s Request created by %(user)s',
+                            leave_type=holiday.holiday_status_id.name,
+                            user=holiday.create_uid.name,
+                        )
+                    else:
+                        activity_type = approval_activity
+                        note = _(
+                            'Second approval request for %(leave_type)s',
+                            leave_type=holiday.holiday_status_id.name,
+                        )
+                        to_do_confirm_activity |= holiday
                     user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
-                    today = fields.Date.today()
-                    activity_type = self.env.ref('hr_holidays.mail_act_leave_approval')
                     for user_id in user_ids:
                         date_deadline = (
                             (holiday.date_from -
@@ -1522,7 +1533,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                             'note': note,
                             'user_id': user_id,
                             'res_id': holiday.id,
-                            'res_model_id': self.env.ref('hr_holidays.model_hr_leave').id,
+                            'res_model_id': model_id,
                         })
             elif holiday.state == 'validate':
                 to_do |= holiday
@@ -1530,6 +1541,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 to_clean |= holiday
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
+        if to_do_confirm_activity:
+            to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
         self.env['mail.activity'].create(activity_vals)
@@ -1596,7 +1609,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
-        if self.state in ['validate', 'validate1']:
+        if any(holiday.state in ['validate', 'validate1'] for holiday in self):
             self.check_access_rights('read')
             self.check_access_rule('read')
             return super(HolidaysRequest, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)

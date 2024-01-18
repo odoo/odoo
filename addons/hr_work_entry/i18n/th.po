@@ -3,7 +3,8 @@
 # 	* hr_work_entry
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,9 @@ msgid ""
 "                            Work Entries\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            รายการงาน\n"
+"                            </span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -75,6 +79,8 @@ msgid ""
 "Careful, the Code is used in many references, changing it could lead to "
 "unwanted changes."
 msgstr ""
+"โปรดระวัง มีการใช้รหัสในการอ้างอิงจำนวนมาก "
+"การเปลี่ยนแปลงอาจนำไปสู่การเปลี่ยนแปลงที่ไม่พึงประสงค์ได้"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -101,6 +107,11 @@ msgstr "ขัดแย้ง"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
 msgstr "ขัดแย้ง"
+
+#. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
+msgid "Create a new work entry type"
+msgstr "สร้างประเภทรายการงานใหม่"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -171,7 +182,7 @@ msgstr "สิ้นสุด"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "External Code"
-msgstr ""
+msgstr "รหัสภายนอก"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
@@ -191,7 +202,7 @@ msgstr "HR ประเภทการเข้างาน"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
 msgid "Has Work Entries"
-msgstr ""
+msgstr "มีรายการงาน"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
@@ -235,6 +246,11 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid "No data to display"
+msgstr "ไม่มีข้อมูลให้แสดง"
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
 msgstr "หมายเหตุ: ไม่สามารถแก้ไขรายการเข้างานที่ตรวจสอบแล้วได้"
@@ -242,13 +258,13 @@ msgstr "หมายเหตุ: ไม่สามารถแก้ไขร�
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
 msgid "Overtime Hours"
-msgstr ""
+msgstr "ชั่วโมงล่วงเวลา"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "รหัสบัญชีเงินเดือน"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -308,6 +324,14 @@ msgid "To"
 msgstr "ถึง"
 
 #. module: hr_work_entry
+#: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"ลองเพิ่มบันทึกหรือตรวจสอบให้แน่ใจว่าไม่มีตัวกรองที่ใช้งานอยู่ในแถบค้นหา"
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Type"
 msgstr "ประเภท"
@@ -330,7 +354,7 @@ msgstr "ประเภทที่ยังไม่ได้กำหนด"
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "Use this code to export your data to a third party"
-msgstr ""
+msgstr "ใช้รหัสนี้เพื่อส่งออกข้อมูลของคุณไปยังบุคคลที่สาม"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated

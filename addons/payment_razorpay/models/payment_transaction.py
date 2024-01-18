@@ -394,7 +394,8 @@ class PaymentTransaction(models.Model):
         if entity_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['authorized']:
-            self._set_authorized()
+            if self.provider_id.capture_manually:
+                self._set_authorized()
         elif entity_status in const.PAYMENT_STATUS_MAPPING['done']:
             if self.tokenize:
                 self._razorpay_tokenize_from_notification_data(notification_data)

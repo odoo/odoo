@@ -4,17 +4,17 @@
 # 
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Chloe Wang, 2023
 # Wil Odoo, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,6 +359,17 @@ msgstr "添加新计划"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr "其它信息"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
+"附加信息：\n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -863,6 +874,16 @@ msgstr "创建用户"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "创建一个新的部门"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "创建新的员工类型"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "创建新的工作地点"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2072,11 +2093,6 @@ msgid "No Tags found ! Let's create one"
 msgstr "未找到标签！让我们创建一个"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid "No Work Locations found ! Let's create one"
-msgstr "未找到工作地点 ！让我们创建一个"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2307,16 +2323,6 @@ msgstr "工资册"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
 msgstr "很好的英文写作能力"
-
-#. module: hr
-#: model_terms:hr.job,description:hr.job_consultant
-#: model_terms:hr.job,description:hr.job_developer
-#: model_terms:hr.job,description:hr.job_marketing
-msgid ""
-"Perform assigned responsibilities, collaborate with team members, and adhere"
-" to company policies. Strong communication, problem-solving, and work ethic "
-"required. Adaptability, initiative, and willingness to learn are valued."
-msgstr "履行指定职责，与团队成员合作，遵守公司政策。要求具备较强的沟通能力、解决问题的能力和职业道德。注重适应性、主动性和学习意愿。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2955,6 +2961,19 @@ msgstr ""
 "可以使用该字段进行快速搜索。"
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
+"              He develops and monitors the annual budget in collaboration with Sales.\n"
+"              He defines the products and customers portfolio according to the marketing plan.\n"
+"              This mission requires strong collaboration with Technical Service and Sales."
+msgstr ""
+"营销经理为其负责的全球细分市场制定中长期营销战略。\n"
+"              与销售部门合作制定和监控年度预算。\n"
+"              根据营销计划确定产品和客户组合。\n"
+"              这项任务要求与技术服务部门和销售部门密切合作。"
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -3194,8 +3213,8 @@ msgstr "查看资料"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "签证到期日期"
+msgid "Visa Expiration Date"
+msgstr "签证有效期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3209,6 +3228,21 @@ msgstr "签证号"
 #, python-format
 msgid "Warning"
 msgstr "警告"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are currently looking for someone like that to join our Consultant team."
+msgstr "我们正在寻找这样的人才加入我们的顾问团队。"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are currently looking for someone like that to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+msgstr ""
+"我们正在寻找这样的人才加入我们的网络团队。\n"
+"                能够从编码工作中抽身出来，进行分析或与客户会面，向他们解释满足其需求的技术可能性。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3318,13 +3352,6 @@ msgstr "工作地点"
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
 msgstr "工作地点"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid ""
-"Work Locations are used to define more precisely where your employee is "
-"located everyday."
-msgstr "工作地点用于更准确地描述员工的日常工作地点。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone

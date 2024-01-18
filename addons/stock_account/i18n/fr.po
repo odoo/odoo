@@ -3,16 +3,16 @@
 # 	* stock_account
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,6 +258,7 @@ msgstr "Cogs origine"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__company_id
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Company"
 msgstr "Société"
 
@@ -346,6 +347,7 @@ msgstr "Valeur actuelle"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Date"
 msgstr "Date"
 
@@ -424,6 +426,12 @@ msgid "Incoming"
 msgstr "Entrant"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.inventory_aging_action
+#: model:ir.ui.menu,name:stock_account.menu_inventory_aging
+msgid "Inventory Aging"
+msgstr "Vieillissement de l'inventaire"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
 msgstr "Emplacements de l'inventaire"
@@ -459,6 +467,7 @@ msgstr "Journal"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Journal Entry"
 msgstr "Pièce comptable"
 
@@ -543,11 +552,6 @@ msgid "New value by quantity"
 msgstr "Nouvelle valeur par quantité"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
-msgid "Open Valuation Layer"
-msgstr "Ouvrir la couche de valorisation"
-
-#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 msgid "Other Info"
 msgstr "Autres informations"
@@ -625,6 +629,11 @@ msgstr "Motif"
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
 msgstr "Motif de la revalorisation"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
+msgid "Receipt WH"
+msgstr "Reçu WH"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -854,6 +863,19 @@ msgstr ""
 "même entreprise d'origine ou de destination."
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""
+"La valeur d'une couche de valorisation d'inventaire ne peut pas être "
+"négative. Les coûts logistiques doivent être utilisés pour rectifier une "
+"transfert spécifique."
+
+#. module: stock_account
+#: model_terms:ir.actions.act_window,help:stock_account.inventory_aging_action
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
 msgid ""
@@ -865,12 +887,19 @@ msgstr ""
 "stock."
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Total Moved Quantity"
+msgstr "Quantité totale déplacée"
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Remaining Quantity"
 msgstr "Quantité totale restante"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Remaining Value"
 msgstr "Valeur totale restante"
 

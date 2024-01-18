@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Order } from "@point_of_sale/app/store/models";
+import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(Order.prototype, {
@@ -10,6 +10,15 @@ patch(Order.prototype, {
             is_gcc_country: ["SA", "AE", "BH", "OM", "QA", "KW"].includes(
                 this.pos.company.country?.code
             ),
+        };
+    },
+});
+
+patch(Orderline.prototype, {
+    getDisplayData() {
+        return {
+            ...super.getDisplayData(),
+            tax: this.env.utils.formatCurrency(this.get_tax(), false),
         };
     },
 });

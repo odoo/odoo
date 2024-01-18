@@ -13,8 +13,8 @@ from io import BytesIO
 from os.path import join as opj
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, UserError
-from odoo.modules.module import MANIFEST_NAMES
+from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
@@ -25,6 +25,8 @@ _logger = logging.getLogger(__name__)
 APPS_URL = "https://apps.odoo.com"
 MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
+def to_tuple(t):
+    return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
 
 class IrModule(models.Model):
     _inherit = "ir.module.module"
@@ -77,7 +79,7 @@ class IrModule(models.Model):
             terp['icon'] = opj('/', module_icon, icon_path)
         values = self.get_values_from_terp(terp)
         if 'version' in terp:
-            values['latest_version'] = terp['version']
+            values['latest_version'] = adapt_version(terp['version'])
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
@@ -197,6 +199,8 @@ class IrModule(models.Model):
 
     @api.model
     def _import_zipfile(self, module_file, force=False, with_demo=False):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators can install data modules."))
         if not module_file:
             raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
@@ -247,7 +251,7 @@ class IrModule(models.Model):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        if self._import_module(mod_name, path, force=force, with_demo=with_demo):
+                        if self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo):
                             success.append(mod_name)
                     except Exception as e:
                         _logger.exception('Error while importing module')
@@ -283,8 +287,9 @@ class IrModule(models.Model):
     @api.model
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         if _domain_asks_for_industries(domain):
-            fields_name = list(specification.keys())
-            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)
+            fields_name = tuple(specification.keys())
+            domain_tuple = to_tuple(domain or [])
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain_tuple, offset=offset, limit=limit)
             return {
                 'length': len(modules_list),
                 'records': modules_list,
@@ -303,7 +308,7 @@ class IrModule(models.Model):
         }
 
     def web_read(self, specification):
-        fields = list(specification.keys())
+        fields = tuple(specification.keys())
         module_type = self.env.context.get('module_type', 'official')
         if module_type != 'official':
             modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
@@ -332,12 +337,12 @@ class IrModule(models.Model):
             resp.raise_for_status()
             modules_list = resp.json().get('result', [])
             for mod in modules_list:
-                mod['id'] = -1
                 module_name = mod.get('name', module_name)
+                existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
+                mod['id'] = existing_mod.id if existing_mod else -1
                 if 'icon' in fields:
                     mod['icon'] = f"{APPS_URL}{mod['icon']}"
                 if 'state' in fields:
-                    existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
                     if existing_mod:
                         mod['state'] = 'installed'
                     else:
@@ -378,10 +383,13 @@ class IrModule(models.Model):
                 timeout=5.0,
             )
             resp.raise_for_status()
+            missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
+            if unavailable_modules:
+                raise UserError(missing_dependencies_description)
             import_module = self.env['base.import.module'].create({
                 'module_file': base64.b64encode(resp.content),
                 'state': 'init',
-                'modules_dependencies': self._get_missing_dependencies(resp.content)
+                'modules_dependencies': missing_dependencies_description,
             })
             return {
                 'name': 'Install an App',
@@ -399,18 +407,31 @@ class IrModule(models.Model):
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
-        modules = self._get_missing_dependencies_modules(zip_data)
+        modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ''
-        if modules:
-            description = _('The following modules will be also installed:\n')
+        if unavailable_modules:
+            description = _(
+                "The installation of the data module would fail as the following dependencies can't"
+                " be found in the addons-path:\n"
+            )
+            for module in unavailable_modules:
+                description += "- " + module + "\n"
+            description += _(
+                "\nYou may need the Enterprise version to install the data module. Please visit "
+                "https://www.odoo.com/pricing-plan for more information.\n"
+                "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+            )
+        elif modules:
+            description = _("The following modules will also be installed:\n")
             for mod in modules:
                 description += "- " + mod.shortdesc + "\n"
-        return description
+        return description, unavailable_modules
 
     def _get_missing_dependencies_modules(self, zip_data):
         dependencies_to_install = self.env['ir.module.module']
-        known_mods = self.search([])
+        known_mods = self.search([('to_buy', '=', False)])
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
+        not_found_modules = set()
         with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
             manifest_files = [
                 file
@@ -428,7 +449,10 @@ class IrModule(models.Model):
                     continue
                 unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
                 dependencies_to_install |= known_mods.filtered(lambda m: m.name in unmet_dependencies)
-        return dependencies_to_install
+                not_found_modules |= set(
+                    mod for mod in unmet_dependencies if mod not in dependencies_to_install.mapped('name')
+                )
+        return dependencies_to_install, not_found_modules
 
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):

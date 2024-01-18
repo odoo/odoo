@@ -86,7 +86,7 @@ class PosConfig(models.Model):
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', compute_sudo=True, string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_customer_facing_display = fields.Boolean(compute='_compute_customer_facing_display')
@@ -720,23 +720,43 @@ class PosConfig(models.Model):
         if pms:
             self.payment_method_ids = [Command.link(pm.id) for pm in pms]
 
+    def _is_journal_exist(self, journal_code, name, company_id):
+        account_journal = self.env['account.journal']
+        existing_journal = account_journal.search([
+            ('name', '=', name),
+            ('code', '=', journal_code),
+            ('company_id', '=', company_id),
+        ], limit=1)
+
+        return existing_journal.id or account_journal.create({
+            'name': name,
+            'code': journal_code,
+            'type': 'cash',
+            'company_id': company_id,
+        }).id
+
+    def _is_pos_pm_exist(self, name, journal_id, company_id):
+        pos_payment = self.env['pos.payment.method']
+        existing_pos_cash_pm = pos_payment.search([
+            ('name', '=', name),
+            ('journal_id', '=', journal_id),
+            ('company_id', '=', company_id),
+        ], limit=1)
+
+        return existing_pos_cash_pm.id or pos_payment.create({
+            'name': name,
+            'journal_id': journal_id,
+            'company_id': company_id,
+        }).id
+
     def _ensure_cash_payment_method(self, journal_code, name):
         self.ensure_one()
         if not self.company_id.chart_template or self.payment_method_ids.filtered('is_cash_count'):
             return
         company_id = self.company_id.id
-        cash_journal = self.env['account.journal'].create({
-            'name': name,
-            'code': journal_code,
-            'type': 'cash',
-            'company_id': company_id,
-        })
-        cash_pm = self.env['pos.payment.method'].create({
-            'name': name,
-            'journal_id': cash_journal.id,
-            'company_id': company_id,
-        })
-        self.payment_method_ids = [Command.link(cash_pm.id)]
+        cash_journal_id = self._is_journal_exist(journal_code, name, company_id)
+        cash_pm_id = self._is_pos_pm_exist(name, cash_journal_id, company_id)
+        self.payment_method_ids = [Command.link(cash_pm_id)]
 
     def get_limited_products_loading(self, fields):
         tables, where_clause, params = self.env['product.product']._where_calc(

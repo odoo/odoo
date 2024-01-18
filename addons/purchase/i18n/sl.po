@@ -8,7 +8,6 @@
 # jl2035 <jaka.luthar@gmail.com>, 2023
 # Vida Potočnik <vida.potocnik@mentis.si>, 2023
 # Boris Kodelja <boris@hbs.si>, 2023
-# Katja Deržič, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Grega Vavtar <grega@hbs.si>, 2023
 # Tadej Lupšina <tadej@hbs.si>, 2023
@@ -17,14 +16,15 @@
 # Nejc G <nejc@luxim.si>, 2023
 # matjaz k <matjaz@mentis.si>, 2023
 # Jasmina Macur <jasmina@hbs.si>, 2023
+# Katja Deržič, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2023\n"
+"Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -610,7 +610,7 @@ msgstr "Analitična porazdelitev"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Analitično iskanje distribucije"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
@@ -620,7 +620,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Analitična natančnost"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -674,7 +674,6 @@ msgid "Automatically remind the receipt date to your vendors"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -686,7 +685,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
-msgstr ""
+msgstr "Povprečni strošek"
 
 #. module: purchase
 #. odoo-javascript
@@ -1020,7 +1019,7 @@ msgstr "Dnevi za potrditev"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
 msgid "Days to Receive"
-msgstr ""
+msgstr "Število dni do prejema"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1105,7 +1104,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr ""
+msgstr "Dropship naslov"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1436,7 +1435,7 @@ msgstr "Ročna faktura"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
 msgid "Manual Received Qty"
-msgstr ""
+msgstr "Ročno prejeta količina"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -1638,7 +1637,6 @@ msgid "Number of Actions"
 msgstr "Število aktivnosti"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
@@ -1761,7 +1759,7 @@ msgstr "Pakiranje"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Količina pakiranja"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -1998,7 +1996,7 @@ msgstr "Postavka nabavnega naloga"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr ""
+msgstr "Opozorilo na vrstico nabavnega naročila"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2148,12 +2146,12 @@ msgstr "Kol naročena"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
 msgid "Qty Received"
-msgstr ""
+msgstr "Kol. prejeta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
-msgstr ""
+msgstr "Kol. za obračun"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2240,7 +2238,7 @@ msgstr "Opomnik o prejemu"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
 msgid "Receipt Reminder Email"
-msgstr ""
+msgstr "Opomnik o prejemu e-pošte"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2255,7 +2253,7 @@ msgstr "Prejeta količina"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Metoda prejete količine"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2276,7 +2274,7 @@ msgstr "Prejeta količina"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_confirmed
 msgid "Reception Confirmed"
-msgstr ""
+msgstr "Sprejem potrjen"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -2322,7 +2320,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "Reminder Confirmed"
-msgstr ""
+msgstr "Potrjen opomnik"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
@@ -2621,12 +2619,12 @@ msgstr "Davek"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Davčna država"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Skupni znesek davkov"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_calculation_rounding_method

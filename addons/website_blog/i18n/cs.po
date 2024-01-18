@@ -6,16 +6,16 @@
 # Tomáš Píšek, 2023
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
-# Wil Odoo, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1465,6 +1465,15 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/ir_qweb_fields.py:0
+#, python-format
+msgid ""
+"On your default language, empty the blog post description and save to get an"
+" automated (translated) summary."
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
@@ -1584,6 +1593,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__post_date
 msgid "Publishing date"
 msgstr "Datum vydání"
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr "Qweb pole"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__rating_ids
@@ -1875,7 +1889,7 @@ msgstr "Kategorie štítků"
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tag_category
 msgid "Tag Category"
-msgstr ""
+msgstr "Kategorie štítku"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_category_form
@@ -2259,6 +2273,11 @@ msgstr "Viditelné na všech stránkách blogů"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "Viditelné na aktuální webstránce"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website

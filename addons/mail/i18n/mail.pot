@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2024-01-05 12:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -95,6 +95,17 @@ msgid "%(name)s: %(message)s)"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
+msgid ""
+"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
+"someone, and grab their attention.%(new_line)sType "
+"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
+"%(bold_start)s/command%(bold_end)s to execute a command."
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 #, python-format
@@ -138,7 +149,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
+#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
+#, python-format
+msgid "%s Message"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
 #, python-format
 msgid "%s Messages"
 msgstr ""
@@ -308,28 +326,10 @@ msgid ". Narrow your search to see more choices."
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
-#, python-format
-msgid "1 Message"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid ""
-"<br><br>\n"
-"            Type <b>@username</b> to mention someone, and grab their attention.<br>\n"
-"            Type <b>#channel</b> to mention a channel.<br>\n"
-"            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 
 #. module: mail
@@ -880,9 +880,53 @@ msgid "Advanced Options"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_exception_decoration__warning
 msgid "Alert"
 msgstr ""
 
@@ -1082,13 +1126,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #, python-format
 msgid "And 1 other member."
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/discuss/discuss_channel.py:0
-#, python-format
-msgid "Anonymous"
 msgstr ""
 
 #. module: mail
@@ -3309,9 +3346,53 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__error
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_exception_decoration__danger
 #, python-format
 msgid "Error"
 msgstr ""
@@ -5155,9 +5236,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
-msgid "Logged as"
+msgid "Logged in as"
 msgstr ""
 
 #. module: mail
@@ -6596,9 +6677,53 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__overdue
 #, python-format
 msgid "Overdue"
 msgstr ""
@@ -6826,9 +6951,53 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__planned
 #, python-format
 msgid "Planned"
 msgstr ""
@@ -9070,9 +9239,53 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__today
 #, python-format
 msgid "Today"
 msgstr ""
@@ -9968,6 +10181,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
+msgid "You are alone in a private conversation."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+#, python-format
 msgid "You are alone in this channel."
 msgstr ""
 
@@ -9975,14 +10195,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
-msgid "You are in a private conversation with <b>@%s</b>."
+msgid "You are in a private conversation with %(member_names)s."
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
-msgid "You are in channel <b>#%s</b>."
+msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
 msgstr ""
 
 #. module: mail
@@ -10827,4 +11047,11 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 #, python-format
 msgid "“%(member_name)s” in “%(channel_name)s”"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/chatter.js:0
+#, python-format
+msgid "No recipient"
 msgstr ""

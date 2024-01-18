@@ -2,6 +2,8 @@
 
 from datetime import date
 
+from freezegun import freeze_time
+
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -37,9 +39,15 @@ class TestPaymentToken(PaymentCommon):
         token = self._create_token()
         self.assertEqual(token._build_display_name(), '•••• 1234')
 
+    @freeze_time('2024-1-31 10:00:00')
     def test_display_name_for_empty_payment_details(self):
         """ Test that the display name is still built for token without payment details. """
         token = self._create_token(payment_details='')
+        self.env.cr.execute(
+            'UPDATE payment_token SET create_date = %s WHERE id = %s',
+            params=(date.today(), token.id),
+        )
+        token.invalidate_recordset(fnames=['create_date'])
         self.assertEqual(
             token._build_display_name(),
             f"Payment details saved on {date.today().strftime('%Y/%m/%d')}",

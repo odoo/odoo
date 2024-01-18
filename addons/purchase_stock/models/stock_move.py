@@ -73,7 +73,7 @@ class StockMove(models.Model):
             remaining_value = invoiced_value - receipt_value
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
-            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec) if remaining_value and remaining_qty else line._get_gross_price_unit()
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
@@ -201,12 +201,7 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier" or (
-                self.location_dest_id.usage == "internal"
-                and self.location_id.usage != "supplier"
-                and self.warehouse_id
-                and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
-        )
+        return self.location_dest_id.usage == "supplier"
 
     def _get_all_related_aml(self):
         # The back and for between account_move and account_move_line is necessary to catch the

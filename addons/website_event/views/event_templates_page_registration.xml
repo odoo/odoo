@@ -132,7 +132,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center w-100 mb-3">
             <h4 class="mb-0">Tickets</h4>
             <t t-call="website_event.registration_configure_tickets_button" t-if="request.env.user.has_group('event.group_event_manager')">
-                <t t-set="linkClasses">ms-2</t>
+                <t t-set="linkClasses" t-translation="off">ms-2</t>
             </t>
         </div>
         <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
@@ -149,7 +149,7 @@
                     </em>
                     <t t-call="website_event.registration_configure_tickets_button"
                         t-if="request.env.user.has_group('event.group_event_manager')">
-                            <t t-set="linkClasses">alert-link my-3</t>
+                            <t t-set="linkClasses" t-translation="off">alert-link my-3</t>
                     </t>
                 </div>
                 <button class="btn btn-danger" disabled="1">Registrations not yet open</button>
@@ -397,10 +397,10 @@
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between p-0">
                                     <div class="o_wevent_registration_multi_select flex-md-grow-1 me-2 text-end"/>
-                                    <div class="w-auto ms-auto">
+                                    <div class="ms-auto">
                                         <select t-if="not ticket.is_expired and ticket.sale_available"
                                             t-attf-name="nb_register-#{ticket.id}"
-                                            class="form-select">
+                                            class="w-auto form-select">
                                             <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
                                             <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                             <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>

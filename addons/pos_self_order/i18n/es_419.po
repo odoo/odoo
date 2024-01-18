@@ -3,12 +3,12 @@
 # 	* pos_self_order
 # 
 # Translators:
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2023
-# Wil Odoo, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,11 +190,6 @@ msgid "Back"
 msgstr "Regresar"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
-msgid "CLOSE SESSION"
-msgstr "CERRAR SESIÓN"
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #, python-format
@@ -256,6 +251,11 @@ msgstr "Elija el lugar donde comerá"
 #, python-format
 msgid "Close"
 msgstr "Cerrar"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Close Session"
+msgstr "Cerrar sesión"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -334,8 +334,8 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
-"Enlaces personalizados que el restaurante puede configurar para que se "
-"muestren en la pantalla de autopedido"
+"Enlaces personalizados que el restaurante puede configurar para que "
+"aparezcan en la pantalla de autopedido"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -414,8 +414,8 @@ msgid ""
 "Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
-"Se le asignará un código QR único a cada mesa de su planta según su configuración. Por motivos de seguridad,\n"
-"                    tanto el punto de venta como los nombres de las mesas se codifican en la URL generada, tal y como se muestra en el siguiente ejemplo:"
+"A cada mesa de su piso se le asignará un código QR único según su configuración. Por motivos de seguridad,\n"
+"                    tanto el punto de venta como los nombres de las mesas se cifran en la URL generada, tal y como se muestra en el siguiente ejemplo:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -480,7 +480,7 @@ msgstr "Genérico"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 #, python-format
 msgid "Get a tracker and enter its number here"
-msgstr "Consiga un rastreador e introduzca su número aquí"
+msgstr "Consiga un rastreador y escriba su número aquí"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
@@ -495,8 +495,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"Hola, parece que ha olvidado crear productos o añadirlos a pos_config. "
-"Añádalos antes de utilizar el autopedido."
+"Disculpe, parece que olvidó crear productos o agregarlos a pos_config. "
+"Agréguelos antes de utilizar Autopedido."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -537,7 +537,7 @@ msgid ""
 "If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
 "                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Si necesita códigos QR personalizados, empiece por escanear el código QR correspondiente para obtener la URL. Después,\n"
+"Si necesita códigos QR personalizados, primero escanee el código QR correspondiente para obtener la URL. Después,\n"
 "                utilice un generador de códigos QR como https://www.qrcode-monkey.com o https://www.qr-code-generator.com."
 
 #. module: pos_self_order
@@ -572,7 +572,7 @@ msgstr "Información"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Information about your product for Self Order and Kiosk"
-msgstr "Información sobre su producto para autopedidos y quioscos"
+msgstr "Información sobre su producto para el modo Autopedido y Quiosco"
 
 #. module: pos_self_order
 #: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
@@ -611,7 +611,7 @@ msgstr "Última actualización el"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
 msgstr ""
-"Deje que sus clientes realicen sus pedidos a través de su móvil o de un "
+"Permita que sus clientes hagan sus pedidos a través de celular o de un "
 "quiosco."
 
 #. module: pos_self_order
@@ -634,7 +634,7 @@ msgid ""
 "                online or order with the QR codes on your tables"
 msgstr ""
 "Gracias a los códigos QR de sus mesas, sus clientes podrán\n"
-"                explorar fácilmente su menú en línea o hacer pedidos"
+"                consultar su menú en línea con facilidad o hacer pedidos"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -643,7 +643,7 @@ msgid ""
 "                online with the QR codes on your tables"
 msgstr ""
 "Gracias a los códigos QR de sus mesas, sus clientes podrán\n"
-"                explorar fácilmente su menú en línea"
+"                consultar su menú en línea con facilidad"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1039,7 +1039,7 @@ msgstr "Imagen de marca del quiosco de autopedidos"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr "Imagen del nombre de marca del quiosco de autopedidos"
+msgstr "Nombre de la imagen de marca del quiosco de autopedidos"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1112,7 +1112,7 @@ msgstr "Pantallas de inicio"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Start Kiosk"
-msgstr "Inicio del quiosco"
+msgstr "Iniciar quiosco"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
@@ -1174,7 +1174,7 @@ msgstr "Comida para llevar"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Takeaway"
-msgstr "para llevar"
+msgstr "Para llevar"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1278,13 +1278,6 @@ msgstr "Sí"
 #, python-format
 msgid "You cannot edit a posted orderline !"
 msgstr "No puede editar una línea de orden publicada."
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.js:0
-#, python-format
-msgid "You cannot edit an posted order!"
-msgstr "No puede editar una orden publicada."
 
 #. module: pos_self_order
 #. odoo-javascript

@@ -82,7 +82,7 @@ class MailThread(models.AbstractModel):
         """
         defaults = {}
 
-        if issubclass(type(self), self.pool['utm.mixin']):
+        if isinstance(self, self.pool['utm.mixin']):
             thread_references = msg_dict.get('references', '') or msg_dict.get('in_reply_to', '')
             msg_references = tools.mail_header_msgid_re.findall(thread_references)
             if msg_references:

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
@@ -21,6 +21,7 @@ export class AttachmentList extends Component {
     static template = "mail.AttachmentList";
 
     setup() {
+        this.ui = useState(useService("ui"));
         // Arbitrary high value, this is effectively a max-width.
         this.imagesWidth = 1920;
         this.dialog = useService("dialog");

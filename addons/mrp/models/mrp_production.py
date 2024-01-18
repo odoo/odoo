@@ -769,7 +769,7 @@ class MrpProduction(models.Model):
             else:
                 production.move_raw_ids = [Command.delete(move.id) for move in production.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished')
+    @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids')
     def _compute_move_finished_ids(self):
         for production in self:
             if production.state != 'draft':
@@ -1539,7 +1539,7 @@ class MrpProduction(models.Model):
                 rounding = move.product_id.uom_id.rounding
                 # extra lines with non-zero qty picked
                 if move.product_id not in expected_qty_by_product and move.picked and not float_is_zero(quantity, precision_rounding=rounding):
-                    issues.append((order, move.product_id, 0.0, quantity))
+                    issues.append((order, move.product_id, quantity, 0.0))
                     continue
                 done_qty_by_product[move.product_id] += quantity if move.picked else 0.0
 

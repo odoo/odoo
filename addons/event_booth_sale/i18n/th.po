@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,7 +190,7 @@ msgstr "เทมเพลตบูธอีเวนต์"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_id
 msgid "Final Sale Order Line"
-msgstr "ไลน์คำสั่งขายสุดท้าย"
+msgstr "รายการคำสั่งขายสุดท้าย"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__id
@@ -257,6 +258,8 @@ msgid ""
 "Please make sure all your event-booth related lines are configured before "
 "confirming this order:%s"
 msgstr ""
+"โปรดตรวจสอบให้แน่ใจว่าได้กำหนดค่ารายการที่เกี่ยวข้องกับบูธกิจกรรมทั้งหมดของคุณแล้ว"
+" ก่อนที่จะยืนยันคำสั่งซื้อนี้:%s"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__price
@@ -278,7 +281,7 @@ msgstr "ราคาที่ลดรวมภาษี"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__price_incl
 msgid "Price incl"
-msgstr ""
+msgstr "ราคารวม"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_product_template
@@ -310,18 +313,18 @@ msgstr "การลงทะเบียน"
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Registrations from the same Order Line must belong to a single event."
-msgstr "การลงทะเบียนจากไลน์คำสั่งเดียวกันจะต้องอยู่ในอีเวนต์เดียว"
+msgstr "การลงทะเบียนจากรายการคำสั่งเดียวกันจะต้องอยู่ในอีเวนต์เดียว"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_registration_ids
 msgid "SO Lines with reservations"
-msgstr "ไลน์ SO กับการจอง"
+msgstr "รายการ SO กับการจอง"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__sale_order_line_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__sale_order_line_id
 msgid "Sale Order Line"
-msgstr "ไลน์คำสั่งขาย"
+msgstr "รายการคำสั่งขาย"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_sale_order
@@ -331,7 +334,7 @@ msgstr "คำสั่งขาย"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "ไลน์คำสั่งขาย"
+msgstr "รายการคำสั่งขาย"
 
 #. module: event_booth_sale
 #: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
@@ -350,7 +353,7 @@ msgstr "บูธต่อไปนี้ไม่พร้อมใช้งา
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
 msgid "There can be only one registration for a booth by sale order line"
-msgstr "สามารถลงทะเบียนออกบูธได้เพียง 1 บูธ โดยไลน์คำสั่งขาย"
+msgstr "สามารถลงทะเบียนออกบูธได้เพียง 1 บูธ โดยรายการคำสั่งขาย"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_tree_from_event

@@ -3,16 +3,16 @@
 # 	* portal
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Wil Odoo, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,14 +105,31 @@ msgstr "<option value=\"\">sélectionner...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid ""
-"<small class=\"form-text text-muted\">Changing company name or VAT number is"
-" not allowed once document(s) have been issued for your account. <br/>Please"
-" contact us directly for this operation.</small>"
+"<small class=\"form-text text-muted\">\n"
+"                Company name, VAT Number and country can not be changed once document(s) have been issued for your account.\n"
+"                <br/>Please contact us directly for that operation.\n"
+"            </small>"
 msgstr ""
-"<small class=\"form-text text-muted\">La modification du nom de l'entreprise"
-" ou du numéro de TVA n'est plus autorisée une fois que des documents ont été"
-" émis pour votre compte. <br/>Veuillez nous contacter directement pour "
-"effectuer cette opération.</small>"
+"<small class=\"form-text text-muted\">\n"
+"                Il n'est pas possible de modifier le nom de la société, le numéro de TVA et le pays une fois que des documents ont été émis pour votre compte.\n"
+"                <br/>Veuillez nous contacter directement pour effectuer cette opération.\n"
+"            </small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Précédent\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" "
+"title=\"Suivant\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -408,6 +425,16 @@ msgstr ""
 "La modification du nom de la société n'est pas autorisée une fois que des "
 "documents ont été créés pour votre compte. Veuillez nous contacter "
 "directement pour effectuer cette opération."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Il n'est pas autorisé de modifier le pays une fois que des documents ont été"
+" émis pour votre compte. Veuillez nous contacter directement pour cette "
+"opération."
 
 #. module: portal
 #. odoo-javascript
@@ -901,7 +928,6 @@ msgstr "Nouveau mot de passe :"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Suivant"
@@ -1008,11 +1034,6 @@ msgstr "Portail : invitation d'utilisateur"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "Généré par"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Préc."
 
 #. module: portal
 #. odoo-javascript

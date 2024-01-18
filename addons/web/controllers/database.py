@@ -140,7 +140,7 @@ class Database(http.Controller):
             error = "Database backup error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False, max_content_length=None)
     def restore(self, master_pwd, backup_file, name, copy=False, neutralize_database=False):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:

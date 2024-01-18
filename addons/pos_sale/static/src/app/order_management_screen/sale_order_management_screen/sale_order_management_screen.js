@@ -377,8 +377,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                 } else {
                     const title = _t("No down payment product");
                     const body = _t(
-                        "It seems that you didn't configure a down payment product in your point of sale.\
-                        You can go to your point of sale configuration to choose one."
+                        "It seems that you didn't configure a down payment product in your point of sale. You can go to your point of sale configuration to choose one."
                     );
                     await this.popup.add(ErrorPopup, { title, body });
                 }

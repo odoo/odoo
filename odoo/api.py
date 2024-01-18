@@ -456,7 +456,9 @@ def _call_kw_multi(method, self, args, kwargs):
 
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(type(model), name)
+    method = getattr(type(model), name, None)
+    if not method:
+        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
     api = getattr(method, '_api', None)
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)

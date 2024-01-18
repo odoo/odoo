@@ -88,7 +88,13 @@ export const dialogService = {
             return remove;
         };
 
-        return { add };
+        function closeAll() {
+            for (const dialog of [...stack].reverse()) {
+                dialog.close();
+            }
+        }
+
+        return { add, closeAll };
     },
 };
 

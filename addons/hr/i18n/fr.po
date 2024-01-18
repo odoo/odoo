@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -369,6 +369,17 @@ msgstr "Ajouter un nouveau plan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr "Informations supplémentaires"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
+"Informations additionnelles :\n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -873,6 +884,16 @@ msgstr "Créer un utilisateur"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "Créer un nouveau département"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "Créer un nouveau type d'emploi"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "Créer un nouveau lieu de travail"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1729,13 +1750,13 @@ msgstr "Description du poste"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job Position"
-msgstr "Poste de travail"
+msgstr "Poste"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Offres d'emploi"
+msgstr "Postes"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -2101,11 +2122,6 @@ msgid "No Tags found ! Let's create one"
 msgstr "Aucune étiquette trouvée ! Créons-en une"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid "No Work Locations found ! Let's create one"
-msgstr "Aucun lieu de travail trouvé ! Créons-en un"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2344,19 +2360,6 @@ msgstr "Paie"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
 msgstr "Anglais écrit parfait"
-
-#. module: hr
-#: model_terms:hr.job,description:hr.job_consultant
-#: model_terms:hr.job,description:hr.job_developer
-#: model_terms:hr.job,description:hr.job_marketing
-msgid ""
-"Perform assigned responsibilities, collaborate with team members, and adhere"
-" to company policies. Strong communication, problem-solving, and work ethic "
-"required. Adaptability, initiative, and willingness to learn are valued."
-msgstr ""
-"Assumez les responsabilités assignées, collaborez avec les membres de l'équipe et respectez les politiques de l'entreprise.\n"
-"De solides compétences en communication, en résolution de problèmes et une bonne éthique de travail sont requises.\n"
-"La capacité d'adaptation, l'esprit d'initiative et la volonté d'apprendre sont appréciés."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3006,6 +3009,19 @@ msgstr ""
 "Vous pouvez utiliser ce champ pour une recherche rapide."
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
+"              He develops and monitors the annual budget in collaboration with Sales.\n"
+"              He defines the products and customers portfolio according to the marketing plan.\n"
+"              This mission requires strong collaboration with Technical Service and Sales."
+msgstr ""
+"Le directeur marketing définit la stratégie marketing à moyen et long terme pour les segments de marché qu'il couvre dans le monde. \n"
+"Il élabore et contrôle le budget annuel en collaboration avec le département des ventes. \n"
+"Il définit le portefeuille de produits et de clients en fonction du plan marketing. \n"
+"Cette mission nécessite une forte collaboration avec le service technique et le département des ventes."
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -3259,7 +3275,7 @@ msgstr "Voir le profil"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
+msgid "Visa Expiration Date"
 msgstr "Date d'expiration du visa"
 
 #. module: hr
@@ -3274,6 +3290,23 @@ msgstr "N° de visa"
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are currently looking for someone like that to join our Consultant team."
+msgstr ""
+"Nous sommes actuellement à la recherche d'une personne qui souhaite "
+"rejoindre notre équipe de consultants."
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are currently looking for someone like that to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+msgstr ""
+"Nous sommes actuellement à la recherche d'une personne qui souhaite rejoindre notre équipe Web. \n"
+"Quelqu'un qui peut sortir du codage et effectuer des analyses ou rencontrer des clients pour leur expliquer les possibilités techniques qui peuvent répondre à leurs besoins."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3323,7 +3356,7 @@ msgid ""
 msgstr ""
 "D'un simple coup d’œil sur l'écran de l'employé d'Odoo, vous\n"
 "pouvez facilement trouver toutes les informations dont vous avez besoin sur chaque personne ;\n"
-"coordonnées, poste de travail, disponibilité, etc."
+"coordonnées, poste, disponibilité, etc."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -3334,7 +3367,7 @@ msgid ""
 msgstr ""
 "D'un simple coup d’œil sur l'écran de l'employé d'Odoo, vous pouvez aisément"
 " trouver toutes les informations dont vous avez besoin sur chaque personne ;"
-" informations de contact, poste de travail, disponibilité, etc."
+" informations de contact, poste, disponibilité, etc."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3385,15 +3418,6 @@ msgstr "Lieu de travail"
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
 msgstr "Lieux de travail"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid ""
-"Work Locations are used to define more precisely where your employee is "
-"located everyday."
-msgstr ""
-"Les lieux de travail sont utilisés pour définir plus précisément où votre "
-"employé se trouve chaque jour."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone

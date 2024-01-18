@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
@@ -355,6 +355,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr "Informação Adicional"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -852,6 +861,16 @@ msgstr "Criar Utilizador"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "Criar um novo departamento"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2046,11 +2065,6 @@ msgid "No Tags found ! Let's create one"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid "No Work Locations found ! Let's create one"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2276,16 +2290,6 @@ msgstr "Folha de Salários"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
-msgstr ""
-
-#. module: hr
-#: model_terms:hr.job,description:hr.job_consultant
-#: model_terms:hr.job,description:hr.job_developer
-#: model_terms:hr.job,description:hr.job_marketing
-msgid ""
-"Perform assigned responsibilities, collaborate with team members, and adhere"
-" to company policies. Strong communication, problem-solving, and work ethic "
-"required. Adaptability, initiative, and willingness to learn are valued."
 msgstr ""
 
 #. module: hr
@@ -2924,6 +2928,15 @@ msgstr ""
 "Pode utilizar este campo para procura rápida."
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
+"              He develops and monitors the annual budget in collaboration with Sales.\n"
+"              He defines the products and customers portfolio according to the marketing plan.\n"
+"              This mission requires strong collaboration with Technical Service and Sales."
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -3164,8 +3177,8 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "Data de expiração do visto"
+msgid "Visa Expiration Date"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3179,6 +3192,19 @@ msgstr "Número de visto"
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are currently looking for someone like that to join our Consultant team."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are currently looking for someone like that to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3284,13 +3310,6 @@ msgstr "Localização de Trabalho"
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid ""
-"Work Locations are used to define more precisely where your employee is "
-"located everyday."
 msgstr ""
 
 #. module: hr

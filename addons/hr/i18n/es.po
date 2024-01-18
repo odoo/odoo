@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Larissa Manderfeld, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgstr "'Insignia - %s' % (object.name).replace('/', '')"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Onsite Interview"
-msgstr ""
+msgstr "1 Entrevista in situ"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -336,7 +337,7 @@ msgstr "Estado de la actividad"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Ícono de tipo de actividad"
+msgstr "Icono de tipo de actividad"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
@@ -370,6 +371,17 @@ msgstr "Agregar un nuevo plan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr "Información adicional"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
+"Información adicional: \n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -499,7 +511,7 @@ msgstr "Asignación"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nº de archivos adjuntos"
+msgstr "Número de archivos adjuntos"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -876,6 +888,16 @@ msgid "Create a new department"
 msgstr "Crear un nuevo departamento"
 
 #. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "Crear un nuevo tipo de empleado"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "Crear una nueva ubicación de trabajo"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -963,6 +985,15 @@ msgid ""
 "Building strong relationships with clients / customers for business growth profitability.\n"
 "Keep regular interaction with key clients for better extraction and expansion."
 msgstr ""
+"Demostración de diferentes servicios de Odoo para cada cliente y convencer al cliente sobre la funcionalidad de la aplicación.\n"
+"El candidato deberá tener excelentes habilidades de comunicación.\n"
+"Habilidades de creación de relaciones y de influencia.\n"
+"Experiencia en adquisición de nuevos clientes (NCA) y gestión de relaciones.\n"
+"Recopilación de información sobre el mercado y los clientes.\n"
+"Coordinación con el equipo de ventas y de apoyo para adoptar diferentes estrategias.\n"
+"Revisión de los progresos e identificación de oportunidades y nuevas áreas de desarrollo.\n"
+"Construir relaciones sólidas con los clientes / clientes para la rentabilidad del crecimiento del negocio.\n"
+"Mantener una interacción regular con los clientes clave para una mejor extracción y expansión."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -1086,6 +1117,9 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+"Muestre los ajustes de trabajo remoto para cada empleado y informes "
+"específicos. Los iconos de asistencia se actualizarán con la ubicación de "
+"trabajo remota."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
@@ -1395,7 +1429,7 @@ msgstr "Seguidores (Contactos)"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icono de Font Awesome ej. fa-tasks"
+msgstr "Icono de Font Awesome p. ej. fa-tasks"
 
 #. module: hr
 #. odoo-python
@@ -1427,7 +1461,7 @@ msgstr "Ofrecemos fruta, café <br>y botanas."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
-msgstr ""
+msgstr "Tiempo completo"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1448,7 +1482,7 @@ msgstr "Generar"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Proporcione más detalles sobre el motivo para archivar el empleado."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1500,7 +1534,7 @@ msgstr ""
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "Estado de asistencia de recursos humanos"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1612,15 +1646,14 @@ msgstr "Nº identificación"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
+msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
+msgstr "Si está marcada, algunos mensajes tienen error de envío."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -1634,7 +1667,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
-msgstr ""
+msgstr "Si tiene más de un coche, separe las matrículas con un espacio."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1676,7 +1709,7 @@ msgstr "Importar plantillas para empleados"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
-msgstr ""
+msgstr "Interino"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1860,11 +1893,21 @@ msgid ""
 "Lorem Ipsum passages, and more recently with desktop publishing software "
 "like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
+"Lorem Ipsum es simplemente el texto ficticio de la industria de la impresión"
+" y la composición tipográfica. Lorem Ipsum ha sido el texto ficticio "
+"estándar de la industria desde el siglo XVI, cuando un impresor desconocido "
+"tomó una galera de tipos y la revolvió para hacer un libro de muestras "
+"tipográficas. No solo ha sobrevivido durante cinco siglos, sino también al "
+"salto a la composición tipográfica electrónica, permaneciendo esencialmente "
+"inalterado. Se popularizó en la década de 1960 con el lanzamiento de hojas "
+"de Letraset que contenían pasajes de Lorem Ipsum y, más recientemente, con "
+"software de autoedición como Aldus PageMaker que incluye versiones de Lorem "
+"Ipsum."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Archivos adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
@@ -1960,7 +2003,7 @@ msgstr "Menú"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
@@ -2077,11 +2120,6 @@ msgstr "Se valorará"
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
 msgstr "No se encontraron etiquetas. ¡Creemos una!"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid "No Work Locations found ! Let's create one"
-msgstr "No se encontraron lugares de trabajo. ¡Creemos uno!"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2227,7 +2265,7 @@ msgstr "Abrir perfil"
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no permitida"
+msgstr "Operación no admitida"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
@@ -2283,7 +2321,7 @@ msgstr "Ruta padre"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Part-Time"
-msgstr "Medio tiempo"
+msgstr "Tiempo parcial"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
@@ -2323,21 +2361,6 @@ msgstr "Nómina"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
 msgstr "Inglés escrito perfecto"
-
-#. module: hr
-#: model_terms:hr.job,description:hr.job_consultant
-#: model_terms:hr.job,description:hr.job_developer
-#: model_terms:hr.job,description:hr.job_marketing
-msgid ""
-"Perform assigned responsibilities, collaborate with team members, and adhere"
-" to company policies. Strong communication, problem-solving, and work ethic "
-"required. Adaptability, initiative, and willingness to learn are valued."
-msgstr ""
-"Realizar las responsabilidades asignadas, colaborar con los miembros del "
-"equipo y cumplir con las políticas de la empresa. Es necesario tener "
-"habilidades avanzadas para comunicarse, solucionar problemas y tener una "
-"buena ética laboral. Valoramos la adaptabilidad, la iniciativa y la voluntad"
-" de aprender."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2989,6 +3012,19 @@ msgstr ""
 "Puedes utilizar este campo para una búsqueda rápida."
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
+"              He develops and monitors the annual budget in collaboration with Sales.\n"
+"              He defines the products and customers portfolio according to the marketing plan.\n"
+"              This mission requires strong collaboration with Technical Service and Sales."
+msgstr ""
+"El gerente de marketing define la estrategia de marketing a mediano y a largo plazo para sus segmentos cubiertos de mercado en el mundo. \n"
+"              Desarrolla y vigila el presupuesto anual en colaboración con el área de Ventas.\n"
+"              Define el portafolio de productos y clientes de acuerdo con el plan de marketing.\n"
+"              Esta tarea requiere una colaboración sólida con Servicios técnicos y Ventas."
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -3143,7 +3179,7 @@ msgstr "Por definir"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Today Activities"
-msgstr "Actividades de Hoy"
+msgstr "Actividades de hoy"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
@@ -3175,7 +3211,7 @@ msgstr "Entrenamientos"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
@@ -3214,7 +3250,7 @@ msgstr "Partners del usuario"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "Ofertas de empleo:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -3243,8 +3279,8 @@ msgstr "Ver perfil"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "Fecha de vencimiento de Visa"
+msgid "Visa Expiration Date"
+msgstr "Fecha de expiración del visado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3258,6 +3294,23 @@ msgstr "Número de Visa"
 #, python-format
 msgid "Warning"
 msgstr "Advertencia"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are currently looking for someone like that to join our Consultant team."
+msgstr ""
+"Estamos buscando a alguien que quiera unirse a nuestro equipo de "
+"consultores. "
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are currently looking for someone like that to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+msgstr ""
+"Buscamos a alguien que quiera unirse a nuestro equipo Web.\n"
+"                Una persona que vaya más allá de la programación y realice un análisis o se reúna con los clientes para explicar las posibilidades técnicas que puedan cumplir sus necesidades."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3305,6 +3358,9 @@ msgid ""
 "                    can easily find all the information you need for each person;\n"
 "                    contact data, job position, availability, etc."
 msgstr ""
+"Con un vistazo rápido a la pantalla de empleado de Odoo,\n"
+"                    puede encontrar con facilidad toda la información que necesita de cada persona:\n"
+"                    datos de contacto, puesto de trabajo, disponibilidad, etc."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -3366,13 +3422,6 @@ msgstr "Ubicación de trabajo"
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
 msgstr "Ubicación de trabajo"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid ""
-"Work Locations are used to define more precisely where your employee is "
-"located everyday."
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone

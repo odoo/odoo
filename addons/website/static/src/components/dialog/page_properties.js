@@ -115,12 +115,19 @@ export class DuplicatePageDialog extends Component {
 
     async duplicate() {
         if (this.state.name) {
-            const res = await this.orm.call(
-                'website.page',
-                'clone_page',
-                [this.props.pageId, this.state.name]
-            );
-            this.website.goToWebsite({path: res, edition: true});
+            // TODO In master support only multiple pages.
+            const pageIds = this.props.pageIds ?? [this.props.pageId];
+            for (let count = 0; count < pageIds.length; count++) {
+                const name = this.state.name + (count ? ` ${count + 1}` : "");
+                const res = await this.orm.call(
+                    'website.page',
+                    'clone_page',
+                    [pageIds[count], name]
+                );
+                if (!this.props.pageIds) {
+                    this.website.goToWebsite({path: res, edition: true});
+                }
+            }
         }
         this.props.onDuplicate();
     }
@@ -139,9 +146,11 @@ DuplicatePageDialog.template = xml`
 </WebsiteDialog>
 `;
 DuplicatePageDialog.props = {
-    onDuplicate: {type: Function, optional: true},
+    onDuplicate: Function,
     close: Function,
     pageId: Number,
+    // If pageIds is defined, pageId is ignored.
+    pageIds: { type: Array, element: Number, optional: true },
 };
 
 export class PagePropertiesDialog extends FormViewDialog {

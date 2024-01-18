@@ -3,15 +3,15 @@
 # 	* web_hierarchy
 # 
 # Translators:
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,22 @@ msgstr "Ansicht des Aktionsfensters"
 #: model:ir.model,name:web_hierarchy.model_base
 msgid "Base"
 msgstr "Basis"
+
+#. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
+#, python-format
+msgid "Cannot change the parent because it will cause a cyclic."
+msgstr ""
+"Sie können das übergeordnete Element nicht ändern, da dies einen Zyklus "
+"verursacht."
+
+#. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
+#, python-format
+msgid "Fold"
+msgstr "Einklappen"
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -89,6 +105,13 @@ msgid "The parent record cannot be the record dragged."
 msgstr "Der übergeordnete Datensatz kann nicht der gezogene Datensatz sein."
 
 #. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
+#, python-format
+msgid "Unfold"
+msgstr "Ausklappen"
+
+#. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_ui_view
 msgid "View"
 msgstr "Ansicht"
@@ -98,10 +121,3 @@ msgstr "Ansicht"
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__type
 msgid "View Type"
 msgstr "Ansichtstyp"
-
-#. module: web_hierarchy
-#. odoo-javascript
-#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
-#, python-format
-msgid "people"
-msgstr "Personen"

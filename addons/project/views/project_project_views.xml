@@ -87,8 +87,8 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
-                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date"}' required="date_start or date" />
-                            <field name="date" invisible="1" />
+                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}' required="date_start or date" />
+                            <field name="date" invisible="1" required="date_start"/>
                         </group>
                     </group>
                     <notebook>
@@ -230,8 +230,7 @@
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                     <field name="company_id" column_invisible="True"/>
-                    <!-- XBO: required modifiers contains a falsy domain to be able to display the daterange without any button to set the date_end -->
-                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date'}" required="False" optional="hide"/>
+                    <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
                     <field name="date" column_invisible="True" />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" column_invisible="True"/>
@@ -390,6 +389,7 @@
                     <field name="partner_id"/>
                     <field name="color"/>
                     <field name="task_count"/>
+                    <field name="closed_task_count"/>
                     <field name="milestone_count_reached"/>
                     <field name="milestone_count"/>
                     <field name="allow_milestones"/>
@@ -457,7 +457,7 @@
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1"/>
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
-                                            <div class="o_primary">
+                                            <div class="o_primary me-5">
                                                 <span class="o_text_overflow" t-att-title="record.display_name.value"><t t-esc="record.display_name.value"/></span>
                                                 <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
                                                     <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
@@ -493,7 +493,7 @@
                                         <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
-                                                    <span class="o_value"><t t-esc="record.task_count.value"/></span>
+                                                    <span class="o_value"><t t-esc="record.task_count.value - record.closed_task_count.value"/></span>
                                                     <span class="o_label ms-1"><t t-esc="record.label_tasks.value"/></span>
                                                 </div>
                                             </a>

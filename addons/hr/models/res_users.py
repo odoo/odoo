@@ -53,7 +53,6 @@ HR_WRITABLE_FIELDS = [
     'km_home_work',
     'marital',
     'mobile_phone',
-    'notes',
     'employee_parent_id',
     'passport_id',
     'permit_no',

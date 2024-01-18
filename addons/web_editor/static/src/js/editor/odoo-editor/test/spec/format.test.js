@@ -950,6 +950,21 @@ describe('Format', () => {
             });
         });
     });
+    describe('zws', () => {
+        it('should insert a span zws when toggling a formatting command twice', () => {
+            return testEditor(BasicEditor, {
+                contentBefore: `<p>[]<br></p>`,
+                stepFunction: async editor => {
+                    await editor.execCommand('bold');
+                    await editor.execCommand('bold');
+                },
+                // todo: It would be better to remove the zws entirely so that
+                // the P could have the "/" hint but that behavior might be
+                // complex with the current implementation.
+                contentAfterEdit: `<p>${strong(`[]\u200B`, 'first')}</p>`,
+            });
+        });
+    });
 });
 
 describe('setTagName', () => {

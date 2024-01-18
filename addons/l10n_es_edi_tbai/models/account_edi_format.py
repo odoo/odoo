@@ -330,10 +330,11 @@ class AccountEdiFormat(models.Model):
         invoice_lines = []
         for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
             if line.discount == 100.0:
-                gross_price_subtotal = line.price_unit * line.quantity
+                inverse_currency_rate = abs(line.move_id.amount_total_signed / line.move_id.amount_total) if line.move_id.amount_total else 1
+                balance_before_discount = - line.price_unit * line.quantity * inverse_currency_rate
             else:
-                gross_price_subtotal = line.price_subtotal / (1 - line.discount / 100.0)
-            discount = (gross_price_subtotal - line.price_subtotal) * refund_sign
+                balance_before_discount = line.balance / (1 - line.discount / 100)
+            discount = (balance_before_discount - line.balance)
 
             if not any([t.l10n_es_type == 'sujeto_isp' for t in line.tax_ids]):
                 total = line.price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
@@ -392,7 +393,7 @@ class AccountEdiFormat(models.Model):
             if tax_details_info_service_vals['tax_details_info']:
                 desglose.setdefault('DesgloseTipoOperacion', {})
                 desglose['DesgloseTipoOperacion']['PrestacionServicios'] = tax_details_info_service_vals['tax_details_info']
-                desglose['TipoDesglose']['DesgloseTipoOperacion']['PrestacionServicios'].update(
+                desglose['DesgloseTipoOperacion']['PrestacionServicios'].update(
                     {'S1': tax_details_info_service_vals['S1_list'],
                      'S2': tax_details_info_service_vals['S2_list']})
 

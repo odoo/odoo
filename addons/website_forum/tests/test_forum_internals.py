@@ -145,3 +145,14 @@ class TestTags(TestForumCommon):
 
         self.assertEqual(self.base_forum.tag_most_used_ids, self.base_forum.tag_ids[:MOST_USED_TAGS_COUNT])
         self.assertEqual(self.base_forum.tag_unused_ids, self.env['forum.tag'])
+
+    def test_forum_post_link(self):
+        content = 'This is a test link: <a href="https://www.example.com/route?param1=a&param2=b" rel="ugc">test</a> Let make sure it works.'
+        self.user_portal.karma = 50
+        with self.with_user(self.user_portal.login):
+            post = self.env['forum.post'].create({
+                'name': "Post Forum test",
+                'content': content,
+                'forum_id': self.forum.id,
+            })
+        self.assertEqual(post.content, '<p>This is a test link: <a rel="nofollow" href="https://www.example.com/route?param1=a&amp;param2=b">test</a> Let make sure it works.</p>')

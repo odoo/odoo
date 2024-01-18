@@ -24,3 +24,4 @@ Pablo Montenegro pam@adhoc.com.ar https://github.com/pablohmontenegro
 Ignacio Cainelli ica@adhoc.com.ar https://github.com/ica-adhoc
 Martin Diego Quinteros maq@adhoc.com.ar https://github.com/maq-adhoc
 Maximiliano Mezzavilla mem@adhoc.com.ar https://github.com/mem-adhoc
+Alexis Lopez loa@adhoc.com.ar https://github.com/ALopez-Adhoc

@@ -89,6 +89,7 @@ class TestTourManualConsumption(HttpCase):
     def test_mrp_manual_consumption_02(self):
         """
         test that when a new quantity is manually set for a component,
+        and the field picked is set to True,
         and the MO is marked as done, the component quantity is not overwritten.
         """
         Product = self.env['product.product']
@@ -106,7 +107,7 @@ class TestTourManualConsumption(HttpCase):
             'product_qty': 1,
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_nt.id, 'product_qty': 1}),
+                (0, 0, {'product_id': product_nt.id, 'product_qty': 1, 'manual_consumption': True}),
             ],
         })
 
@@ -119,7 +120,7 @@ class TestTourManualConsumption(HttpCase):
 
         self.assertEqual(mo.state, 'confirmed')
         move_nt = mo.move_raw_ids
-        self.assertEqual(move_nt.manual_consumption, False)
+        self.assertEqual(move_nt.manual_consumption, True)
         self.assertEqual(move_nt.quantity, 0)
         self.assertFalse(move_nt.picked)
 

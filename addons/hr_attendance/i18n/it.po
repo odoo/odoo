@@ -3,18 +3,18 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,6 +307,13 @@ msgid "Basic Employee"
 msgstr "Dipendente base"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#, python-format
+msgid "Before"
+msgstr "Prima"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_browser
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Browser"
@@ -350,7 +357,6 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 #, python-format
 msgid "Check IN"
@@ -368,7 +374,6 @@ msgstr "Ingresso"
 
 #. module: hr_attendance
 #. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 #, python-format
 msgid "Check OUT"
@@ -383,6 +388,22 @@ msgstr "Check OUT"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check Out"
 msgstr "Uscita"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#, python-format
+msgid "Check in"
+msgstr "Check-in"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#, python-format
+msgid "Check out"
+msgstr "Check-out"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -695,11 +716,8 @@ msgid "Has Message"
 msgstr "Ha messaggio"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
-#, python-format
 msgid "Hours"
 msgstr "Ore"
 
@@ -1025,13 +1043,6 @@ msgid "Please return to the main menu."
 msgstr "Torna al menu principale."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
-#, python-format
-msgid "Previously"
-msgstr "Precedentemente"
-
-#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Dipendente pubblico"
@@ -1150,14 +1161,6 @@ msgstr ""
 "dove figura come responsabile"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
-#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
-#, python-format
-msgid "Today"
-msgstr "Oggi"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1184,6 +1187,13 @@ msgstr "Lavoro straordinario totale"
 #, python-format
 msgid "Total extra hours:"
 msgstr "Ore extra totali:"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
+#, python-format
+msgid "Total today"
+msgstr "Totale oggi"
 
 #. module: hr_attendance
 #. odoo-python

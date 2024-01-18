@@ -813,6 +813,15 @@ QUnit.test("Show recipient list when there is more than 5 followers.", async () 
     await contains(".o-mail-Chatter", { text: "To: test1, test2, test3, test4, test5, …" });
 });
 
+QUnit.test("Show 'No recipient found.' with 0 followers.", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "test name 1", email: "test1@odoo.com" });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Chatter-top", { text: "To: No recipient" });
+});
+
 QUnit.test(
     "Uploading multiple files in the composer create multiple temporary attachments",
     async () => {

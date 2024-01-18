@@ -402,7 +402,7 @@ class Contains {
     /**
      * Executes the action(s) given to this constructor on the found element,
      * prints the success messages, and resolves the main deferred.
-     
+
      * @param {HTMLElement} el
      */
     executeAction(el) {
@@ -643,4 +643,77 @@ class Contains {
  */
 export async function contains(selector, options) {
     await new Contains(selector, options).run();
+}
+
+const stepState = {
+    expectedSteps: null,
+    deferred: null,
+    timeout: null,
+    currentSteps: [],
+
+    clear() {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+        this.deferred = null;
+        this.currentSteps = [];
+        this.expectedSteps = null;
+    },
+
+    check({ crashOnFail = false } = {}) {
+        const success =
+            this.expectedSteps.length === this.currentSteps.length &&
+            this.expectedSteps.every((s, i) => s === this.currentSteps[i]);
+        if (!success && !crashOnFail) {
+            return;
+        }
+        QUnit.config.current.assert.verifySteps(this.expectedSteps);
+        if (success) {
+            this.deferred.resolve();
+        } else {
+            this.deferred.reject(new Error("Steps do not match."));
+        }
+        this.clear();
+    },
+};
+
+if (window.QUnit) {
+    QUnit.testStart(() =>
+        registerCleanup(() => {
+            if (stepState.expectedSteps) {
+                stepState.check({ crashOnFail: true });
+            } else {
+                stepState.clear();
+            }
+        })
+    );
+}
+
+/**
+ * Indicate the completion of a test step. This step must then be verified by
+ * calling `assertSteps`.
+ *
+ * @param {string} step
+ */
+export function step(step) {
+    stepState.currentSteps.push(step);
+    QUnit.config.current.assert.step(step);
+    if (stepState.expectedSteps) {
+        stepState.check();
+    }
+}
+
+/**
+ * Wait for the given steps to be executed or for the timeout to be reached.
+ *
+ * @param {string[]} steps
+ */
+export function assertSteps(steps) {
+    if (stepState.expectedSteps) {
+        stepState.check({ crashOnFail: true });
+    }
+    stepState.expectedSteps = steps;
+    stepState.deferred = makeDeferred();
+    stepState.timeout = setTimeout(() => stepState.check({ crashOnFail: true }), 2000);
+    stepState.check();
+    return stepState.deferred;
 }

@@ -62,6 +62,7 @@ class ResConfigSettings(models.TransientModel):
 
             real_proxy_users = self.env['account_edi_proxy_client.user'].sudo().search([
                 ('company_id', '=', config.company_id.id),
+                ('proxy_type', '=', 'l10n_it_edi'),
                 ('id_client', 'not like', 'demo'),
             ])
 
@@ -85,6 +86,7 @@ class ResConfigSettings(models.TransientModel):
                 elif proxy_user.id_client[:4] == 'demo' and edi_mode != 'demo':
                     self.env['account_edi_proxy_client.user'].search([
                         ('company_id', '=', config.company_id.id),
+                        ('proxy_type', '=', 'l10n_it_edi'),
                         ('id_client', '=like', 'demo%'),
                     ]).sudo().unlink()
                     self._create_proxy_user(config.company_id, edi_mode)

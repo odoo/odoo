@@ -3,16 +3,16 @@
 # 	* hr_contract
 # 
 # Translators:
-# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +40,7 @@ msgstr "ประวัติสัญญาของ%s"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "/ month"
-msgstr ""
+msgstr "/ เดือน"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -49,6 +49,9 @@ msgid ""
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"                                    ในสัญญาตั้งแต่\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -56,6 +59,8 @@ msgid ""
 "<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
 "title=\"In Contract Since\"> In Contract Since</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"contract_warning\" "
+"title=\"In Contract Since\"> ในสัญญาตั้งแต่</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -64,6 +69,9 @@ msgid ""
 "                                            To\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                            ถึง\n"
+"                                        </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -72,6 +80,9 @@ msgid ""
 "                                        From\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        จาก\n"
+"                                    </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -83,6 +94,12 @@ msgid ""
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
+"                                    สัญญา\n"
+"                                </span>\n"
+"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                    สัญญา\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -94,6 +111,12 @@ msgid ""
 "                                        Contract\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+"                                        สัญญา\n"
+"                                    </span>\n"
+"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
+"                                        สัญญา\n"
+"                                    </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -108,6 +131,8 @@ msgid ""
 "According to Employee's Working Permit Expiration Date, this contract has "
 "been put in red on the %s. Please advise and correct."
 msgstr ""
+"ตามวันหมดอายุของใบอนุญาตทำงานของพนักงาน สัญญานี้จึงได้ใส่เครื่องหมายสีแดงบน "
+"%s กรุณาตรวจสอบและแก้ไข"
 
 #. module: hr_contract
 #. odoo-python
@@ -117,6 +142,7 @@ msgid ""
 "According to the contract's end date, this contract has been put in red on "
 "the %s. Please advise and correct."
 msgstr ""
+"ตามวันที่สิ้นสุดสัญญา สัญญานี้จะถูกใส่เป็นสีแดงบน %s กรุณาตรวจสอบและแก้ไข"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -217,6 +243,8 @@ msgid ""
 "Calendar Mismatch: The employee's calendar does not match this contract's "
 "calendar. This could lead to unexpected behaviors."
 msgstr ""
+"ปฏิทินไม่ตรงกัน: ปฏิทินของพนักงานไม่ตรงกับปฏิทินของสัญญานี้ "
+"สิ่งนี้อาจนำไปสู่พฤติกรรมที่ไม่คาดคิด"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
@@ -291,13 +319,13 @@ msgstr "วันที่สิ้นสุดสัญญา"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr ""
+msgstr "ระยะเวลาแจ้งการหมดอายุของสัญญา"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
 msgid "Contract Expiry Notice Period"
-msgstr ""
+msgstr "ระยะเวลาแจ้งการสิ้นสุดสัญญา"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -380,7 +408,7 @@ msgstr "สัญญาที่จะตรวจสอบ"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contracts to review"
-msgstr ""
+msgstr "สัญญาที่จะตรวจสอบ"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
@@ -516,12 +544,12 @@ msgstr "ข้อมูลพนักงาน"
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_employee_manager
 msgid "Employee Manager"
-msgstr ""
+msgstr "ผู้จัดการพนักงาน"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr ""
+msgstr "บัญชีธนาคารของพนักงานเพื่อจ่ายเงินเดือน"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
@@ -747,6 +775,11 @@ msgid "No Contracts"
 msgstr "ไม่มีสัญญา"
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
+msgid "No data to display"
+msgstr "ไม่มีข้อมูลให้แสดง"
+
+#. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
 msgid "Not Under Contract"
 msgstr "ไม่ได้อยู่ภายใต้สัญญา"
@@ -768,13 +801,14 @@ msgid ""
 "Number of days prior to the contract end date that a contract expiration "
 "warning is triggered."
 msgstr ""
+"จำนวนวันก่อนวันที่สิ้นสุดสัญญาที่มีการทริกเกอร์คำเตือนการหมดอายุของสัญญา"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid ""
 "Number of days prior to the work permit expiration date that a warning is "
 "triggered."
-msgstr ""
+msgstr "จำนวนวันก่อนวันหมดอายุใบอนุญาตทำงานที่มีการเตือน"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
@@ -794,7 +828,7 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Open Contract"
-msgstr ""
+msgstr "เปิดสัญญา"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
@@ -951,7 +985,7 @@ msgstr "สัญญาของ %s กำลังจะหมดอายุ"
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The work permit of %s is about to expire."
-msgstr ""
+msgstr "ใบอนุญาตทำงานของ %s กำลังจะหมดอายุ"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
@@ -966,7 +1000,7 @@ msgstr "กิจกรรมวันนี้"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Type in notes about this contract..."
-msgstr ""
+msgstr "พิมพ์หมายเหตุเกี่ยวกับสัญญานี้..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
@@ -1007,13 +1041,13 @@ msgstr "ประวัติการสื่อสารของเว็บ
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Work Permit Expiration Notice Period"
-msgstr ""
+msgstr "ระยะเวลาแจ้งการหมดอายุของใบอนุญาตทำงาน"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
 msgid "Work Permit Expiry Notice Period"
-msgstr ""
+msgstr "ระยะเวลาแจ้งใบอนุญาตทำงานหมดอายุ"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no

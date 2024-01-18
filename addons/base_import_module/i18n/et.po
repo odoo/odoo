@@ -12,6 +12,7 @@
 # JanaAvalah, 2023
 # Egon Raamat <egon@avalah.ee>, 2023
 # Rivo Zängov <eraser@eraser.ee>, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,13 +20,23 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"\n"
+"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+msgstr ""
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -152,7 +163,7 @@ msgstr "Paigalda"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
-msgstr ""
+msgstr "Installi rakendus"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -245,7 +256,16 @@ msgstr "Stuudio kohandamiseks on vaja Odoo Studio rakendust."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "The following modules will be also installed:\n"
+msgid "The following modules will also be installed:\n"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"The installation of the data module would fail as the following dependencies"
+" can't be found in the addons-path:\n"
 msgstr ""
 
 #. module: base_import_module

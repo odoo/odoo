@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Marianna Ciofani, 2023
 # Wil Odoo, 2023
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -370,6 +370,17 @@ msgstr "Aggiungi un nuovo piano"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
 msgid "Additional Information"
 msgstr "Informazioni aggiuntive"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Additional Information: \n"
+" %(description)s"
+msgstr ""
+"Informazioni aggiuntive: \n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -875,6 +886,16 @@ msgstr "Crea Utente"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "Crea un nuovo reparto"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "Crea un nuovo tipo di impiego"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "Crea un nuovo luogo di lavoro"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2102,11 +2123,6 @@ msgid "No Tags found ! Let's create one"
 msgstr "Nessun tag trovato! Creiamone uno"
 
 #. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid "No Work Locations found ! Let's create one"
-msgstr "Nessun luogo di lavoro trovato! Creiamone uno"
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2346,21 +2362,6 @@ msgstr "Libro paga"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
 msgstr "Ottimo inglese scritto"
-
-#. module: hr
-#: model_terms:hr.job,description:hr.job_consultant
-#: model_terms:hr.job,description:hr.job_developer
-#: model_terms:hr.job,description:hr.job_marketing
-msgid ""
-"Perform assigned responsibilities, collaborate with team members, and adhere"
-" to company policies. Strong communication, problem-solving, and work ethic "
-"required. Adaptability, initiative, and willingness to learn are valued."
-msgstr ""
-"Adempi alle responsabilità assegnate, collabora con i membri del team e "
-"rispetta le politiche aziendali. È richiesta una forte capacità di "
-"comunicazione, di risoluzione dei problemi e di etica del lavoro. Sono "
-"apprezzate l'adattabilità, l'iniziativa e la disponibilità "
-"all'apprendimento."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3009,6 +3010,19 @@ msgstr ""
 "È possibile usare questo campo per una ricerca rapida."
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_marketing
+msgid ""
+"The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments in the World.\n"
+"              He develops and monitors the annual budget in collaboration with Sales.\n"
+"              He defines the products and customers portfolio according to the marketing plan.\n"
+"              This mission requires strong collaboration with Technical Service and Sales."
+msgstr ""
+"Il Marketing Manager definisce la strategia dal medio al lungo termine per i segmenti di mercato coperti nel mondo.\n"
+"              Ha il compito di sviluppare e controllare il budget annuale in collaborazione con il team Vendite.\n"
+"              Stabilisce i prodotti e i porfolio dei clienti secondo il piano di marketing.\n"
+"              Questa missione richiede una forte collaborazione con il Servizio tecnico e il team Vendite."
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
@@ -3263,8 +3277,8 @@ msgstr "Mostra profilo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "Data scadenza VISA"
+msgid "Visa Expiration Date"
+msgstr "Data di scadenza Visa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3278,6 +3292,22 @@ msgstr "N° visto"
 #, python-format
 msgid "Warning"
 msgstr "Attenzione"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_consultant
+msgid ""
+"We are currently looking for someone like that to join our Consultant team."
+msgstr ""
+"Siamo alla ricerca di qualcuno che voglia unirsi al team di consulenza."
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_developer
+msgid ""
+"We are currently looking for someone like that to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
+msgstr ""
+"Siamo alla ricerca di qualcuno che voglia unirsi al team Web.\n"
+"                Qualcuno a cui piace il coding ed è in grado di eseguire analisi o incontrare i clienti per spiegare loro le possibilità tecniche adatte ai loro bisogni."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3389,15 +3419,6 @@ msgstr "Luogo di lavoro"
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
 msgstr "Luoghi di lavoro"
-
-#. module: hr
-#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
-msgid ""
-"Work Locations are used to define more precisely where your employee is "
-"located everyday."
-msgstr ""
-"I luoghi di lavoro vengono utilizzati per definire in maniera più precisa "
-"dove si trova il tuo dipendente ogni giorno."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone

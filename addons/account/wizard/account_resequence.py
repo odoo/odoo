@@ -68,6 +68,7 @@ class ReSequenceWizard(models.TransientModel):
             for i, line in enumerate(new_values):
                 if i < 3 or i == len(new_values) - 1 or line['new_by_name'] != line['new_by_date'] \
                  or (self.sequence_number_reset == 'year' and line['server-date'][0:4] != previous_line['server-date'][0:4])\
+                 or (self.sequence_number_reset == 'year_range' and line['server-year-start-date'][0:4] != previous_line['server-year-start-date'][0:4])\
                  or (self.sequence_number_reset == 'month' and line['server-date'][0:7] != previous_line['server-date'][0:7]):
                     if in_elipsis:
                         changeLines.append({'id': 'other_' + str(line['id']), 'current_name': _('... (%s other)', in_elipsis), 'new_by_name': '...', 'new_by_date': '...', 'date': '...'})
@@ -91,8 +92,12 @@ class ReSequenceWizard(models.TransientModel):
         relative to the preview widget.
         """
         def _get_move_key(move_id):
+            company = move_id.company_id
+            year_start, year_end = get_fiscal_year(move_id.date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
             if self.sequence_number_reset == 'year':
                 return move_id.date.year
+            elif self.sequence_number_reset == 'year_range':
+                return "%s-%s"%(year_start.year, year_end.year)
             elif self.sequence_number_reset == 'month':
                 return (move_id.date.year, move_id.date.month)
             return 'default'
@@ -104,10 +109,12 @@ class ReSequenceWizard(models.TransientModel):
                 moves_by_period[_get_move_key(move)] += move
 
             seq_format, format_values = record.move_ids[0]._get_sequence_format_param(record.first_name)
+            sequence_number_reset = record.move_ids[0]._deduce_sequence_number_reset(record.first_name)
 
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
                 # compute the new values period by period
+                year_start, year_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
                 for move in period_recs:
                     new_values[move.id] = {
                         'id': move.id,
@@ -115,12 +122,14 @@ class ReSequenceWizard(models.TransientModel):
                         'state': move.state,
                         'date': format_date(self.env, move.date),
                         'server-date': str(move.date),
+                        'server-year-start-date': str(year_start),
                     }
 
                 new_name_list = [seq_format.format(**{
                     **format_values,
-                    'year': period_recs[0].date.year % (10 ** format_values['year_length']),
-                    'month': period_recs[0].date.month,
+                    'month': year_start.month,
+                    'year_end': year_end.year % (10 ** format_values['year_end_length']),
+                    'year': year_start.year % (10 ** format_values['year_length']),
                     'seq': i + (format_values['seq'] if j == (len(moves_by_period)-1) else 1),
                 }) for i in range(len(period_recs))]
 

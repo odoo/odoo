@@ -26,6 +26,10 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'name': 'Component',
             'type': 'consu',
         }])
+        self.vendor = self.env['res.partner'].create({
+            'name': 'Vendor',
+            'company_id': self.env.ref('base.main_company').id,
+        })
 
         self.bom_finished2 = self.env['mrp.bom'].create({
             'product_tmpl_id': self.finished2.product_tmpl_id.id,
@@ -251,6 +255,55 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertTrue(orderpoint)
         self.assertEqual(orderpoint.warehouse_id, self.warehouse)
 
+    def test_purchase_and_return03(self):
+        """
+        With 2 steps receipt and an input location child of Physical Location (instead of WH)
+        The user buys 10 x a subcontracted product P. He receives the 10
+        products and then does a return with 3 x P. The test ensures that the
+        final received quantity is correctly computed
+        """
+        # Set 2 steps receipt
+        self.warehouse.write({"reception_steps": "two_steps"})
+        # Set 'Input' parent location to 'Physical locations'
+        physical_locations = self.env.ref("stock.stock_location_locations")
+        input_location = self.warehouse.wh_input_stock_loc_id
+        input_location.write({"location_id": physical_locations.id})
+
+        # Create Purchase
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_uom_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        # Receive Products
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 10
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 10.0)
+
+        # Return Products
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 3
+        return_wizard.product_return_moves.to_refund = True
+        return_id, _ = return_wizard._create_returns()
+
+        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking.move_ids.quantity = 3
+        return_picking.move_ids.picked = True
+        return_picking.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 7.0)
+
     def test_subcontracting_resupply_price_diff(self):
         """Test that the price difference is correctly computed when a subcontracted
         product is resupplied.
@@ -342,6 +395,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         product_category_all.property_stock_account_production_cost_id = production_cost_account
         product_category_all.property_stock_valuation_account_id = valu_account
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        self.comp1.standard_price = 8
         purchase = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
             'order_line': [Command.create({
@@ -367,6 +421,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         svl = aml.stock_valuation_layer_ids
         self.assertEqual(len(svl), 1)
         self.assertEqual(svl.value, 5)
+        self.assertEqual(self.finished.standard_price, 1.5 + 8, 'product cost should match vendor subcontracting cost + component cost')
         # check for the automated inventory valuation
         account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
         self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
@@ -514,3 +569,50 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             "Lead time = Manufacturing lead time + Days to Purchase + Purchase security lead time + DTPMO on BOM")
         for component in bom_data['components']:
             self.assertEqual(component['availability_state'], 'available')
+
+    def test_resupply_order_buy_mto(self):
+        """ Test a subcontract component can has resupply on order + buy + mto route"""
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        (self.comp1 + self.comp2).write({
+             'route_ids': [
+                Command.link(resupply_sub_on_order_route.id),
+                Command.link(self.env.ref('purchase_stock.route_warehouse0_buy').id),
+                Command.link(mto_route.id)],
+             'seller_ids': [Command.create({
+                 'partner_id': self.vendor.id,
+             })],
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': 'finished',
+                'product_id': self.finished.id,
+                'product_qty': 1.0,
+                'product_uom': self.finished.uom_id.id,
+                'price_unit': 50.0}
+            )],
+        })
+
+        po.button_confirm()
+        ressuply_pick = self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
+        self.assertEqual(len(ressuply_pick.move_ids), 2)
+        self.assertEqual(ressuply_pick.move_ids.mapped('product_id'), self.comp1 | self.comp2)
+
+        # should have create a purchase order for the components
+        comp_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(len(comp_po.order_line), 2)
+        self.assertEqual(comp_po.order_line.mapped('product_id'), self.comp1 | self.comp2)
+        # confirm the po should create stock moves linked to the resupply
+        comp_po.button_confirm()
+        comp_receipt = comp_po.picking_ids
+        self.assertEqual(comp_receipt.move_ids.move_dest_ids, ressuply_pick.move_ids)
+
+        # validate the comp receipt should reserve the resupply
+        self.assertEqual(ressuply_pick.state, 'waiting')
+        comp_receipt.move_ids.quantity = 1
+        comp_receipt.move_ids.picked = True
+        comp_receipt.button_validate()
+        self.assertEqual(ressuply_pick.state, 'assigned')

@@ -30,7 +30,7 @@ class PurchaseOrderLine(models.Model):
         compute='_compute_price_unit_and_date_planned_and_name',
         digits='Discount',
         store=True, readonly=False)
-    taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)], context={'active_test': False})
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
@@ -607,6 +607,7 @@ class PurchaseOrderLine(models.Model):
             name += '\n' + product_lang.description_purchase
 
         date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
+        discount = seller.discount or 0.0
 
         return {
             'name': name,
@@ -617,6 +618,7 @@ class PurchaseOrderLine(models.Model):
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes.ids)],
             'order_id': po.id,
+            'discount': discount,
         }
 
     def _convert_to_middle_of_day(self, date):

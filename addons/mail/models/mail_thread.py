@@ -763,7 +763,7 @@ class MailThread(models.AbstractModel):
                 bounced_record_done = bounced_record_done or (bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
 
             # set record as bounced unless already done due to blacklist mixin
-            if bounced_record and not bounced_record_done and issubclass(type(bounced_record), self.pool['mail.thread']):
+            if bounced_record and not bounced_record_done and isinstance(bounced_record, self.pool['mail.thread']):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
             if bounced_partner and bounced_message:
@@ -1931,7 +1931,7 @@ class MailThread(models.AbstractModel):
           If no partner has been found and/or created for a given emails its
           matching partner is an empty record.
         """
-        if records and issubclass(type(records), self.pool['mail.thread']):
+        if records and isinstance(records, self.pool['mail.thread']):
             followers = records.mapped('message_partner_ids')
         else:
             followers = self.env['res.partner']
@@ -2229,7 +2229,9 @@ class MailThread(models.AbstractModel):
             model, res_id = self._name, self.id
         body = ''
         if message_values.get('body'):
-            body = message_values['body'] if not is_html_empty(message_values['body']) else ''
+            # at this point, body should be valid Markup; other content will be
+            # escaped to avoid any issue
+            body = escape(message_values['body']) if not is_html_empty(message_values['body']) else ''
 
         m2m_attachment_ids = []
         if attachment_ids:
@@ -2322,7 +2324,9 @@ class MailThread(models.AbstractModel):
                         node.set('src', f'/web/image/{att_id}?access_token={token}')
                         postprocessed = True
                 if postprocessed:
-                    return_values['body'] = lxml.html.tostring(root, pretty_print=False, encoding='unicode')
+                    # tostring being a raw string, we have to respect I/O and return
+                    # a valid Markup
+                    return_values['body'] = Markup(lxml.html.tostring(root, pretty_print=False, encoding='unicode'))
         return_values['attachment_ids'] = m2m_attachment_ids
         return return_values
 
@@ -4186,7 +4190,9 @@ class MailThread(models.AbstractModel):
         if strict:
             self._check_can_update_message_content(message.sudo())
 
-        msg_values = {'body': body} if body is not None else {}
+        msg_values = {
+            'body': escape(body),  # keep html if already Markup, otherwise escape
+        } if body is not None else {}
         if attachment_ids:
             msg_values.update(
                 self._process_attachments_for_post([], attachment_ids, {

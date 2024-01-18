@@ -4,6 +4,7 @@
 import operator
 import re
 import secrets
+from io import BytesIO
 from unittest.mock import patch
 
 import requests
@@ -68,6 +69,14 @@ class TestDatabaseOperations(BaseCase):
     def assertDbs(self, dbs):
         self.assertEqual(self.list_dbs_filtered() - self.base_databases, set(dbs))
 
+    def url_open_drop(self, dbname):
+        res = self.session.post(self.url('/web/database/drop'), data={
+            'master_pwd': self.password,
+            'name': dbname,
+        }, allow_redirects=False)
+        res.raise_for_status()
+        return res
+
     def test_database_creation(self):
         # check verify_admin_password patch
         self.assertTrue(odoo.tools.config.verify_admin_password(self.password))
@@ -88,10 +97,7 @@ class TestDatabaseOperations(BaseCase):
         self.assertDbs([test_db_name])
 
         # delete the created database
-        res = self.session.post(self.url('/web/database/drop'), data={
-            'master_pwd': self.password,
-            'name': test_db_name,
-        }, allow_redirects=False)
+        res = self.url_open_drop(test_db_name)
         self.assertEqual(res.status_code, 303)
         self.assertIn('/web/database/manager', res.headers['Location'])
         self.assertDbs([])
@@ -110,10 +116,70 @@ class TestDatabaseOperations(BaseCase):
         self.assertDbs([test_db_name])
 
         # delete the created database
-        res = self.session.post(self.url('/web/database/drop'), data={
-            'master_pwd': self.password,
-            'name': test_db_name,
-        }, allow_redirects=False)
-        self.assertEqual(res.status_code, 303)
+        res = self.url_open_drop(test_db_name)
         self.assertIn('/web/database/manager', res.headers['Location'])
         self.assertDbs([])
+
+    def test_database_restore(self):
+        test_db_name = self.db_name + '-test-database-restore'
+        self.assertNotIn(test_db_name, self.list_dbs_filtered())
+
+        # backup the current database inside a temporary zip file
+        res = self.session.post(
+            self.url('/web/database/backup'),
+            data={
+                'master_pwd': self.password,
+                'name': self.db_name,
+            },
+            allow_redirects=False,
+            stream=True,
+        )
+        res.raise_for_status()
+        datetime_pattern = r'\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d'
+        self.assertRegex(
+            res.headers.get('Content-Disposition'),
+            fr"attachment; filename\*=UTF-8''{self.db_name}_{datetime_pattern}\.zip"
+        )
+        backup_file = BytesIO()
+        backup_file.write(res.content)
+        self.assertGreater(backup_file.tell(), 0, "The backup seems corrupted")
+
+        # upload the backup under a new name (create a duplicate)
+        with self.subTest(DEFAULT_MAX_CONTENT_LENGTH=None), \
+             patch.object(odoo.http, 'DEFAULT_MAX_CONTENT_LENGTH', None):
+            backup_file.seek(0)
+            self.session.post(
+                self.url('/web/database/restore'),
+                data={
+                    'master_pwd': self.password,
+                    'name': test_db_name,
+                    'copy': True,
+                },
+                files={
+                    'backup_file': backup_file,
+                },
+                allow_redirects=False
+            ).raise_for_status()
+            self.assertDbs([test_db_name])
+            self.url_open_drop(test_db_name)
+
+        # upload the backup again, this time simulating that the file is
+        # too large under the default size limit, the default size limit
+        # shouldn't apply to /web/database URLs
+        with self.subTest(DEFAULT_MAX_CONTENT_LENGTH=1024), \
+             patch.object(odoo.http, 'DEFAULT_MAX_CONTENT_LENGTH', 1024):
+            backup_file.seek(0)
+            self.session.post(
+                self.url('/web/database/restore'),
+                data={
+                    'master_pwd': self.password,
+                    'name': test_db_name,
+                    'copy': True,
+                },
+                files={
+                    'backup_file': backup_file,
+                },
+                allow_redirects=False
+            ).raise_for_status()
+        self.assertDbs([test_db_name])
+        self.url_open_drop(test_db_name)

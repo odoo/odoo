@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import uuid
 from unittest.mock import patch
-import threading
 
-from odoo import tools, Command, fields
+from odoo import Command, fields
+from odoo.tools import mute_logger
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.pos_online_payment.models.pos_order import PosOrder
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.osv.expression import AND
@@ -150,21 +149,6 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
     def setUp(self):
         self.enable_reconcile_after_done_patcher = False
 
-        real_get_and_set_online_payments_data = PosOrder.get_and_set_online_payments_data
-
-        def _fake_get_and_set_online_payments_data(method_self, next_online_payment_amount=False):
-            pos_order_id = method_self.id
-            order_access_token = method_self.access_token
-            expected_payment_provider_id = self.payment_provider.id
-            if not isinstance(next_online_payment_amount, bool) and not tools.float_is_zero(next_online_payment_amount, precision_rounding=method_self.currency_id.rounding) and next_online_payment_amount > 0:
-                # Delay must be long enough to execute _fake_online_payment after the current RPC call is answered
-                t = threading.Timer(5, self._fake_online_payment, args=(pos_order_id, order_access_token, expected_payment_provider_id))
-                t.start()
-
-            return real_get_and_set_online_payments_data(method_self, next_online_payment_amount)
-
-        self._fake_get_and_set_online_payments_data = _fake_get_and_set_online_payments_data
-
         super(TestUi, self).setUp()
 
         self.assertTrue(self.company)
@@ -184,9 +168,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         # Checks that the products used in the tours are available in this pos_config.
         # This code is executed here because _loader_params_product_product is defined in pos.session
         # and not in pos.config.
-        params = self.pos_config.current_session_id._loader_params_product_product()
-        self.assertTrue(params)
-        pos_config_products_domain = params['search_params']['domain']
+        pos_config_products_domain = self.pos_config._get_available_product_domain()
         self.assertTrue(pos_config_products_domain)
         tests_products_domain = AND([pos_config_products_domain, ['&', '&', ('name', '=', 'Letter Tray'), ('list_price', '=', 4.8), ('available_in_pos', '=', True)]])
         # active_test=False to follow pos.config:get_pos_ui_product_product_by_params
@@ -195,17 +177,116 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
     def _start_tour(self, tour_name):
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, tour_name, login="pos_op_user")
 
-    def test_server_fake_payment_tour(self):
+    def _open_session_fake_cashier_unpaid_order(self):
         self._open_session_ui()
 
-        before_tour_datetime = fields.Datetime.now()
-        with patch.object(PosOrder, 'get_and_set_online_payments_data', self._fake_get_and_set_online_payments_data):
-            self._start_tour('OnlinePaymentServerFakePaymentTour')
+        current_session = self.pos_config.current_session_id
+        current_session.set_cashbox_pos(0, None)
 
-        test_orders = self.env['pos.order'].search(['&', ('config_id', '=', self.pos_config.id), ('date_order', '>=', before_tour_datetime)])
-        self.assertEqual(len(test_orders), 1)
-        for order in test_orders:
-            self.assertEqual(order.state, 'done', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+        # Simulate a cashier saving an unpaid order on the server
+        product = self.letter_tray
+        order_uid = '00055-001-0001'
+        order_pos_reference = 'Order ' + order_uid
+
+        untax, atax = self.compute_tax(product, product.list_price)
+        order_data = {
+            'data': {
+                'uid': order_uid,
+                'name': order_pos_reference,
+                'pos_session_id': current_session.id,
+                'sequence_number': 1,
+                'user_id': self.pos_user.id,
+                'partner_id': False,
+                'access_token': str(uuid.uuid4()),
+                'amount_paid': 0,
+                'amount_return': 0,
+                'amount_tax': atax,
+                'amount_total': untax + atax,
+                'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+                'fiscal_position_id': False,
+                'lines': [[0, 0, {
+                    'product_id': product.id,
+                    'qty': 1,
+                    'discount': 0,
+                    'tax_ids': [(6, 0, product.taxes_id.ids)],
+                    'price_unit': product.list_price,
+                    'price_subtotal': untax,
+                    'price_subtotal_incl': untax + atax,
+                    'pack_lot_ids': [],
+                }]],
+                'statement_ids': [],
+            },
+            'to_invoice': False,
+        }
+
+        create_result = self.env['pos.order'].with_user(self.pos_user).create_from_ui([order_data], draft=True)
+        self.assertEqual(len(current_session.order_ids), 1)
+        order_id = next(result_order_data for result_order_data in create_result if result_order_data['pos_reference'] == order_pos_reference)['id']
+
+        order = self.env['pos.order'].search([('id', '=', order_id)])
+        self.assertEqual(order.state, 'draft')
+        return order
+
+    def _test_fake_customer_online_payment(self, payments_amount=1, cashier_request_for_remaining=True):
+        order = self._open_session_fake_cashier_unpaid_order()
+        current_session = self.pos_config.current_session_id
+
+        amount_per_payment = order.amount_total / payments_amount
+        for i in range(payments_amount):
+            if i != payments_amount - 1 or cashier_request_for_remaining:
+                # Simulate the cashier requesting an online payment for the order
+                op_data = order.with_user(self.pos_user).get_and_set_online_payments_data(amount_per_payment)
+                self.assertEqual(op_data['id'], order.id)
+                self.assertTrue('paid_order' not in op_data)
+
+            # Simulate the customer paying the order online
+            self._fake_online_payment(order.id, order.access_token, self.payment_provider.id)
+
+        self.assertEqual(order.state, 'paid')
+        op_data = order.with_user(self.pos_user).get_and_set_online_payments_data()
+        self.assertEqual(op_data['id'], order.id)
+        self.assertTrue('paid_order' in op_data)
+
+        # Simulate the cashier closing the session (to detect eventual accounting issues)
+        total_cash_payment = sum(current_session.order_ids.filtered(lambda o: o.state != 'cancel').payment_ids.filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
+        current_session.post_closing_cash_details(total_cash_payment)
+        close_result = current_session.close_session_from_ui()
+
+        self.assertTrue(close_result['successful'])
+        self.assertEqual(current_session.state, 'closed', 'Session was not properly closed')
+
+        self.assertEqual(order.state, 'done', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+
+    # Code from addons/point_of_sale/tests/test_point_of_sale_flow.py
+    def compute_tax(self, product, price, qty=1, taxes=None):
+        if not taxes:
+            taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id)
+        currency = self.pos_config.currency_id
+        res = taxes.compute_all(price, currency, qty, product=product)
+        untax = res['total_excluded']
+        return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
+    # End of code from addons/point_of_sale/tests/test_point_of_sale_flow.py
+
+    def test_1_online_payment_with_cashier(self):
+        self._test_fake_customer_online_payment(payments_amount=1, cashier_request_for_remaining=True)
+
+    def test_1_online_payment_without_cashier(self):
+        self._test_fake_customer_online_payment(payments_amount=1, cashier_request_for_remaining=False)
+
+    def test_2_online_payments_with_cashier(self):
+        self._test_fake_customer_online_payment(payments_amount=2, cashier_request_for_remaining=True)
+
+    def test_invalid_access_token(self):
+        order = self._open_session_fake_cashier_unpaid_order()
+
+        with mute_logger('odoo.http'): # Mutes "The provided order or access token is invalid." online payment portal error.
+            self.assertRaises(AssertionError, self._fake_open_pos_order_pay_page, order.id, order.access_token[:-1])
+            self.assertRaises(AssertionError, self._fake_open_pos_order_pay_page, order.id, '')
+
+            self.assertRaises(AssertionError, self._fake_open_pos_order_pay_confirmation_page, order.id, order.access_token[:-1], 1)
+            self.assertRaises(AssertionError, self._fake_open_pos_order_pay_confirmation_page, order.id, '', 1)
+
+        self.assertEqual(order.state, 'draft')
 
     def test_local_fake_paid_data_tour(self):
         self._open_session_ui()

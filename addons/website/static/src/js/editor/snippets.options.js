@@ -4029,11 +4029,7 @@ options.registry.GridImage = options.Class.extend({
      * @returns {?HTMLElement}
      */
     _getImageGridItem() {
-        const parentEl = this.$target[0].parentNode;
-        if (parentEl && parentEl.classList.contains('o_grid_item_image')) {
-            return parentEl;
-        }
-        return null;
+        return this.$target[0].closest(".o_grid_item_image");
     },
     /**
      * @override

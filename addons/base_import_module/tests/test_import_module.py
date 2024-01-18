@@ -13,6 +13,7 @@ from odoo.tests import new_test_user
 
 from unittest.mock import patch
 
+from odoo import release
 from odoo.addons import __path__ as __addons_path__
 from odoo.tools import mute_logger
 
@@ -233,6 +234,7 @@ class TestImportModule(odoo.tests.TransactionCase):
                 ]
             },
             'license': 'LGPL-3',
+            'version': '1.0',
         })
         stream = BytesIO()
         with ZipFile(stream, 'w') as archive:
@@ -256,6 +258,9 @@ class TestImportModule(odoo.tests.TransactionCase):
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')
         self.assertEqual(asset_data.name, f'{bundle}_/{path}'.replace(".", "_"))
+
+        module = self.env['ir.module.module'].search([('name', '=', 'test_module')])
+        self.assertEqual(module.latest_version, f'{release.series}.1.0')
 
         # Update test module
         stream = BytesIO()
@@ -346,10 +351,11 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         with ZipFile(archive, 'w') as zipf:
             for path, data in files:
                 zipf.writestr(path, data)
+        modules_dependencies, _not_found = self.env['ir.module.module']._get_missing_dependencies(archive.getvalue())
         import_module = self.env['base.import.module'].create({
                 'module_file': base64.b64encode(archive.getvalue()),
                 'state': 'init',
-                'modules_dependencies': self.env['ir.module.module']._get_missing_dependencies(archive.getvalue())
+                'modules_dependencies': modules_dependencies,
             })
         dependencies_names = import_module.get_dependencies_to_install_names()
         self.assertEqual(dependencies_names, [])

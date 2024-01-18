@@ -6,9 +6,7 @@ import { calendarNotificationService } from "@calendar/js/services/calendar_noti
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { click, contains } from "@web/../tests/utils";
 
 const serviceRegistry = registry.category("services");
@@ -16,11 +14,6 @@ const serviceRegistry = registry.category("services");
 QUnit.module("Calendar Notification", (hooks) => {
     hooks.beforeEach(() => {
         serviceRegistry.add("calendarNotification", calendarNotificationService);
-        patchWithCleanup(browser, {
-            setTimeout(fn) {
-                super.setTimeout(fn, 0);
-            },
-        });
     });
 
     QUnit.test(
@@ -43,7 +36,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                     event_id: 2,
                     title: "Meeting",
                     message: "Very old meeting message",
-                    timer: 20 * 60,
+                    timer: 0,
                     notify_at: "1978-04-14 12:45:00",
                 },
             ]);
@@ -85,7 +78,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                     event_id: 2,
                     title: "Meeting",
                     message: "Very old meeting message",
-                    timer: 20 * 60,
+                    timer: 0,
                     notify_at: "1978-04-14 12:45:00",
                 },
             ]);
@@ -116,7 +109,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                     event_id: 2,
                     title: "Meeting",
                     message: "Very old meeting message",
-                    timer: 20 * 60,
+                    timer: 0,
                     notify_at: "1978-04-14 12:45:00",
                 },
             ]);

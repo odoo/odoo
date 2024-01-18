@@ -378,12 +378,10 @@ class Project(models.Model):
             else:
                 project.access_instruction_message = ''
 
+    # TODO: Remove in master
     @api.onchange('date_start', 'date')
     def _onchange_planned_date(self):
-        if not self.date and self.date_start:
-            self.date_start = False
-        elif not self.date_start and self.date:
-            self.date = False
+        return
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):

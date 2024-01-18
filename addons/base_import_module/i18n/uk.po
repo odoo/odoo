@@ -21,6 +21,16 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"\n"
+"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+msgstr ""
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "Активувати"
@@ -239,8 +249,17 @@ msgstr "Налаштування Студії вимагають додаток 
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "The following modules will be also installed:\n"
-msgstr "Також будуть встановлені такі модулі:\n"
+msgid "The following modules will also be installed:\n"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"The installation of the data module would fail as the following dependencies"
+" can't be found in the addons-path:\n"
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python

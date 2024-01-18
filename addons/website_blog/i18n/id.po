@@ -3,15 +3,16 @@
 # 	* website_blog
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,9 +63,9 @@ msgid ""
 msgstr ""
 "<b>Binocular itu ringan dan portabel.</b> Kecuali Anda memiliki uang untuk "
 "menyiapkan da n menggunakan observatorium, Anda kemungkinkan harus "
-"travelling. Binocular gampang Anda bawa dan mereka juga ringan untuk "
-"ditenteng dan digunakan di mana saja ketimbang harus menggunakan "
-"perlengkapan teleskop yang berat dan rumit."
+"travelling. Binocular mudah dibawa dan juga ringan untuk ditenteng dan "
+"digunakan di mana saja ketimbang harus menggunakan perlengkapan teleskop "
+"yang berat dan rumit."
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -159,8 +160,8 @@ msgid ""
 "<em class=\"h4 my-0\">The more reviews you read, the more you notice how "
 "they tend to cluster at the extremes of opinion.</em>"
 msgstr ""
-"<em class=\"h4 my-0\">Lebih banyak review yang Anda baca, semakin gampang "
-"bagi Anda untuk menyadari bahwa review cenderung merupakan opini yang "
+"<em class=\"h4 my-0\">Lebih banyak review yang Anda baca, semakin mudah bagi"
+" Anda untuk menyadari bahwa review cenderung merupakan opini yang "
 "ekstrim.</em>"
 
 #. module: website_blog
@@ -1454,7 +1455,7 @@ msgid ""
 "Molokai Maui helicopter tours will take you to a different island but one that is only nine miles away and easily accessible by air. This island has a very small population with a different culture and scenery. The entire coast of the northeast is lined with cliffs and remote beaches. They are completely inaccessible by any other means of transportation than air.\n"
 "People who live on the island have never even seen this remarkable scenery unless they have taken Maui helicopter tours to view it. When the weather has been rainy and there is a lot of rainfall for he season you will see many astounding waterfalls."
 msgstr ""
-"Tur helikopter Molokai Maui akan membawa Anda ke pulau yang berbeda namun hanya 9 mil jauhnya dan gampang diakses dari udara. Pulau ini memiliki populasi sangat kecil dengan kultur dan pemandangan yang berbeda. Seluruh pantai timur laut memiliki jejeran tebing dan pantai terpencil. Bagian tersebut tidak dapat diakses oleh transportasi apapun kecuali dari udara.\n"
+"Tur helikopter Molokai Maui akan membawa Anda ke pulau yang berbeda namun hanya 9 mil jauhnya dan mudah diakses dari udara. Pulau ini memiliki populasi sangat kecil dengan kultur dan pemandangan yang berbeda. Seluruh pantai timur laut memiliki jejeran tebing dan pantai terpencil. Bagian tersebut tidak dapat diakses oleh transportasi apapun kecuali dari udara.\n"
 "Mereka yang tinggal di pulau tidak pernah melihat pemandangan luar biasa ini kecuali mereka menggunakan tur helikopter Maui. Saat cuaca mendung dan terdapat banyak hujan untuk musim tersebut Anda akan melihat banyak air terjun yang memukau."
 
 #. module: website_blog
@@ -1609,6 +1610,17 @@ msgstr ""
 " dapat melihat apa yang sebetulnya ingin kita lihat di angkasa."
 
 #. module: website_blog
+#. odoo-python
+#: code:addons/website_blog/models/ir_qweb_fields.py:0
+#, python-format
+msgid ""
+"On your default language, empty the blog post description and save to get an"
+" automated (translated) summary."
+msgstr ""
+"Pada bahasa default Anda, kosongkan keterangan blog post dan simpan untuk "
+"mendapatkan ringkasan (yang diterjemahkan) otomatis."
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
@@ -1730,6 +1742,11 @@ msgstr "Opsi Publikasi"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__post_date
 msgid "Publishing date"
 msgstr "Tanggal publikasi"
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr "Field Qweb"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__rating_ids
@@ -2280,7 +2297,7 @@ msgid ""
 "matters."
 msgstr ""
 "Terdapat juga masalah mengenai motivasi peninjau. Lebih banyak review yang "
-"Anda baca, semakin gampang bagi Anda untuk menyadari bahwa review cenderung "
+"Anda baca, semakin mudah bagi Anda untuk menyadari bahwa review cenderung "
 "merupakan opini yang ekstrim. Di satu sisi, Anda memiliki review yang marah "
 "dengan orang yang siap menyerang; di sisi lain, Anda memiliki pengunjung "
 "yang puas memberikan pujian yang luar biasa besar sampai susah dipercaya. "
@@ -2507,6 +2524,11 @@ msgstr "Terlihat di semua halaman blog"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
 msgstr "Terlihat pada website saat ini"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
+msgid "WRITE HERE OR DRAG BUILDING BLOCKS"
+msgstr "TULIS DI SINI ATAU TARIK BLOK PENYUSUN"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website

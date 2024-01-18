@@ -11,6 +11,7 @@ patch(Order.prototype, {
             if (this.defaultTableNeeded(options)) {
                 this.tableId = this.pos.table.id;
             }
+            this.booked = false;
             this.customerCount = this.customerCount || 1;
         }
     },
@@ -20,6 +21,7 @@ patch(Order.prototype, {
         if (this.pos.config.module_pos_restaurant) {
             json.table_id = this.tableId;
             json.customer_count = this.customerCount;
+            json.booked = this.booked;
         }
 
         return json;
@@ -51,7 +53,22 @@ patch(Order.prototype, {
         return {
             ...super.export_for_printing(...arguments),
             set_tip_after_payment: this.pos.config.set_tip_after_payment,
+            isRestaurant: this.pos.config.module_pos_restaurant,
         };
+    },
+    setBooked(booked) {
+        this.booked = booked;
+        if (booked) {
+            this.save_to_db();
+            this.pos.ordersToUpdateSet.add(this);
+        }
+    },
+    async add_product(product, options) {
+        const result = super.add_product(...arguments);
+        if (this.pos.config.module_pos_restaurant) {
+            this.setBooked(true);
+        }
+        return result;
     },
 });
 

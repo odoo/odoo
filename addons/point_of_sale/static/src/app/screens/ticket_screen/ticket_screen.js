@@ -150,7 +150,7 @@ export class TicketScreen extends Component {
                 ),
             });
             if (!confirmed) {
-                return;
+                return confirmed;
             }
         }
         if (order && (await this._onBeforeDeleteOrder(order))) {
@@ -172,6 +172,7 @@ export class TicketScreen extends Component {
         if (this.pos.isOpenOrderShareable()) {
             this.pos._removeOrdersFromServer();
         }
+        return true;
     }
     async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
@@ -642,7 +643,7 @@ export class TicketScreen extends Component {
                 modelField: "pos_reference",
             },
             DATE: {
-                repr: (order) => order.date_order.toFormat("yyyy-MM-dd HH:mm a"),
+                repr: (order) => formatDateTime(order.date_order),
                 displayName: _t("Date"),
                 modelField: "date_order",
             },

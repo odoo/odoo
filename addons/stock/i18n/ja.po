@@ -3,18 +3,19 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
-# Junko Augias, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +107,13 @@ msgstr "返品数"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr "%(name)s (コピー)(%(id)s)"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid ""
@@ -127,6 +135,7 @@ msgstr "%(warehouse)s:%(supplier)sからプロダクトを供給します"
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
@@ -500,6 +509,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Allocation</span>"
 msgstr "<span class=\"o_stat_text\">割当</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "<span class=\"o_stat_text\">Detailed Operations</span>"
+msgstr "<span class=\"o_stat_text\">詳細オペレーション</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1211,6 +1225,11 @@ msgid "At Confirmation"
 msgstr "確認時"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
+msgid "At Customer"
+msgstr "顧客で"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_attachment_count
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_attachment_count
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_attachment_count
@@ -1289,8 +1308,8 @@ msgid "Automatic No Step Added"
 msgstr "自動 (ステップ追加なし)"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1725,6 +1744,7 @@ msgstr "会社"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__company_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Company"
 msgstr "会社"
 
@@ -2121,6 +2141,7 @@ msgstr "新しい倉庫を作成すると、自動的に保管ロケーション
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Creation Date"
 msgstr "作成日"
@@ -2129,6 +2150,11 @@ msgstr "作成日"
 #: model:ir.model.fields,help:stock.field_stock_picking__date
 msgid "Creation Date, usually the time of the order"
 msgstr "作成日は通常オーダされた時です"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
+msgid "Creation date"
+msgstr "作成日"
 
 #. module: stock
 #. odoo-python
@@ -2722,6 +2748,7 @@ msgstr "移動先アドレス (引当用)"
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -2771,7 +2798,7 @@ msgstr "宛先ルート"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Detailed Operations"
 msgstr "詳細オペレーション"
@@ -2941,7 +2968,7 @@ msgstr "完了梱包数量"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Draft"
-msgstr "下書き"
+msgstr "ドラフト"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3795,6 +3822,7 @@ msgstr "このチェックボックスをオンにすると、このオペレー
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
+#: model:ir.model.fields,help:stock.field_stock_picking__show_operations
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_operations
 msgid ""
 "If this checkbox is ticked, the pickings lines will represent detailed stock"
@@ -3875,6 +3903,11 @@ msgstr "ロットをインポート"
 #, python-format
 msgid "Import Template for Inventory Adjustments"
 msgstr "在庫調整用のテンプレートをインポートする"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "In Stock"
+msgstr "在庫あり"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4038,6 +4071,7 @@ msgstr "無効なドメイン左オペランド%s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "無効なドメイン演算子%s"
@@ -4045,6 +4079,7 @@ msgstr "無効なドメイン演算子%s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr "無効なドメイン右オペランド '%s'。整数/浮動型である必要があります。"
@@ -4303,6 +4338,14 @@ msgid "Keep Difference"
 msgstr "差異を保持"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Keep current lines"
+msgstr "現在の明細を維持"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
@@ -4559,6 +4602,11 @@ msgstr "このロケーションが企業間で共有されている場合は、
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Linked Moves"
 msgstr "リンクされた移動"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "List view of detailed operations"
+msgstr "詳細オペレーションのリストビュー"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4842,7 +4890,15 @@ msgstr "手動"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__manual
 msgid "Manual Operation"
-msgstr "手動"
+msgstr "手動操作"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "Manual Replenishment"
+msgstr "手動補充"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__manual
@@ -5327,8 +5383,8 @@ msgid "Normal"
 msgstr "通常"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -5445,6 +5501,7 @@ msgstr "オフィスチェア"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
@@ -5453,6 +5510,7 @@ msgid "On Hand"
 msgstr "手持在庫"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
@@ -6618,6 +6676,7 @@ msgstr "プッシュ先"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_detailed_operation_tree
 msgid "Put in Pack"
 msgstr "梱包する"
 
@@ -6738,7 +6797,6 @@ msgstr "開梱数量"
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_qty
-#: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_quant__quantity
@@ -7806,13 +7864,6 @@ msgid "Sequence picking"
 msgstr "ピッキング採番"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid "Sequences %s already exist."
-msgstr "付番%sはすでに存在します"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
 msgid "Serial Numbers"
 msgstr "シリアルナンバー"
@@ -8006,6 +8057,7 @@ msgstr "数量クリアボタンを表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
+#: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_operations
 msgid "Show Detailed Operations"
 msgstr "詳細オペレーションを表示"
@@ -8032,11 +8084,6 @@ msgstr "たくさんのテキストを表示"
 #: model:ir.model.fields,field_description:stock.field_product_template__show_on_hand_qty_status_button
 msgid "Show On Hand Qty Status Button"
 msgstr "手元数量ステータスボタンを表示"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
-msgid "Show Operations"
-msgstr "操作を表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
@@ -8167,6 +8214,7 @@ msgstr "参照元"
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_id
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_src_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__location_id
@@ -8480,6 +8528,11 @@ msgid "Storage Locations"
 msgstr "保管場所"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
+msgid "Store To"
+msgstr "以下に保管"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
@@ -8631,6 +8684,13 @@ msgid "The first in the sequence is the default one."
 msgstr "The first in the sequence is the default one."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "The following replenishment order have been generated"
+msgstr "以下の補充オーダが発生"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "The forecasted quantity of"
 msgstr "予想数量:"
@@ -8760,7 +8820,7 @@ msgstr "ロケーション用の棚卸頻度 (日数) の作成した将来の�
 msgid ""
 "The serial number has already been assigned: \n"
 " Product: %s, Serial Number: %s"
-msgstr "シリアル番号はすでに割り当てられています:製品:%s、シリアル番号:%s"
+msgstr "シリアル番号はすでに割り当てられています:プロダクト:%s、シリアル番号:%s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -9032,6 +9092,18 @@ msgstr "このレコードはすでに存在します。"
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
 msgstr "このレポートは同時に完了および未完了%s用に使用することはできません。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"This sequence prefix is already being used by another operation type. It is "
+"recommended that you select a unique prefix to avoid issues and/or repeated "
+"reference values or assign the existing reference sequence to this operation"
+" type."
+msgstr ""
+"この付番接頭辞は、別のオペレーションタイプですでに使用されています。問題や参照の繰返しを避けるために一意の接頭辞を選択するか、既存の参照付番をこのオペレーションタイプに割当てることを推奨します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9537,7 +9609,7 @@ msgstr "単位カテゴリ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
 msgid "Update Product Quantity"
-msgstr "製品数変更"
+msgstr "プロダクト数変更"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -9545,8 +9617,8 @@ msgid "Update Quantities"
 msgstr "数量を更新"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
@@ -9929,7 +10001,7 @@ msgstr "重量単位ラベル"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
 msgid "Weighted Product"
-msgstr "計量対象製品"
+msgstr "計量対象プロダクト"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids
@@ -10077,11 +10149,6 @@ msgstr "ウィザード"
 #, python-format
 msgid "Write one lot/serial name per line, followed by the quantity."
 msgstr "ロット／シリアル名を1行に1つ書き、その後に数量を記入して下さい。"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
-msgid "Write your SN/LN one by one or copy paste a list."
-msgstr "SN /LNを1つずつ書き込むか、リストをコピーして貼り付けます。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10500,6 +10567,13 @@ msgstr "内部操作タイプを実行するため、保管場所をアクティ
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/wizard/product_replenish.py:0
+#, python-format
+msgid "You need to select a route to replenish your products"
+msgstr "プロダクトを補充するルートを選択して下さい。"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You need to set a Serial Number before generating more."
@@ -10677,6 +10751,11 @@ msgstr "例: 物理的ロケーション"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "e.g. Receptions"
 msgstr "例: 入荷"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
+msgid "e.g. SN000001"
+msgstr "例: SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

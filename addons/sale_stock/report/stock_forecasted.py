@@ -14,18 +14,20 @@ class StockForecasted(models.AbstractModel):
             return line
 
         picking = move_out.picking_id
-        line['move_out'].update({
-            'picking_id' : {
-                'id' : picking.id,
-                'priority' : picking.priority,
-                'sale_id' : {
-                    'id' : picking.sale_id.id,
-                    'amount_untaxed' : picking.sale_id.amount_untaxed,
-                    'currency_id' : picking.sale_id.currency_id.read(fields=['id', 'name'])[0] if read else picking.sale_id.currency_id,
-                    'partner_id' : picking.sale_id.partner_id.read(fields=['id', 'name'])[0] if read else picking.sale_id.partner_id,
+        # If read is False, line['move_out'] is a stock.move record and will trigger a record update
+        if read:
+            line['move_out'].update({
+                'picking_id': {
+                    'id': picking.id,
+                    'priority': picking.priority,
+                    'sale_id': {
+                        'id': picking.sale_id.id,
+                        'amount_untaxed': picking.sale_id.amount_untaxed,
+                        'currency_id': picking.sale_id.currency_id.read(fields=['id', 'name'])[0],
+                        'partner_id': picking.sale_id.partner_id.read(fields=['id', 'name'])[0],
+                    }
                 }
-            }
-        })
+            })
         return line
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):

@@ -16,11 +16,8 @@ from ..controllers.home import Home
 
 _logger = logging.getLogger(__name__)
 
-
-@tagged('post_install', '-at_install')
-class TestTOTP(HttpCaseWithUserDemo):
-    def setUp(self):
-        super().setUp()
+class TestTOTPMixin:
+    def install_totphook(self):
         totp = None
         # might be possible to do client-side using `crypto.subtle` instead of
         # this horror show, but requires working on 64b integers, & BigInt is
@@ -46,6 +43,13 @@ class TestTOTP(HttpCaseWithUserDemo):
         def _cleanup():
             del Home.totp_hook
             self.env.registry.clear_cache('routing')
+
+
+@tagged('post_install', '-at_install')
+class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
+    def setUp(self):
+        super().setUp()
+        self.install_totphook()
 
     def test_totp(self):
         # TODO: Make this work if no demo data + hr installed

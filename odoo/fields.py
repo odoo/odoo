@@ -3312,6 +3312,9 @@ class Properties(Field):
 
     def _setup_attrs(self, model_class, name):
         super()._setup_attrs(model_class, name)
+        self._setup_definition_attrs()
+
+    def _setup_definition_attrs(self):
         if self.definition:
             # determine definition_record and definition_record_field
             assert self.definition.count(".") == 1
@@ -3320,6 +3323,12 @@ class Properties(Field):
             # make the field computed, and set its dependencies
             self._depends = (self.definition_record, )
             self.compute = self._compute
+
+    def setup_related(self, model):
+        super().setup_related(model)
+        if self.inherited_field and not self.definition:
+            self.definition = self.inherited_field.definition
+            self._setup_definition_attrs()
 
     # Database/cache format: a value is either None, or a dict mapping property
     # names to their corresponding value, like
@@ -4150,12 +4159,11 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        if value:
-            cache = records.env.cache
-            for record in records:
-                val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-                cache.set(record, self, val)
-            records.modified([self.name])
+        cache = records.env.cache
+        for record in records.with_context(active_test=False):
+            val = self.convert_to_cache(record[self.name] | value, record, validate=False)
+            cache.set(record, self, val)
+        records.modified([self.name])
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)

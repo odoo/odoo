@@ -279,6 +279,10 @@ export class Thread extends Record {
     custom_notifications = false;
     /** @type {String} */
     mute_until_dt;
+    /** @type {Boolean} */
+    isLocallyPinned = false;
+    /** @type {"not_fetched"|"pending"|"fetched"} */
+    fetchMembersState = "not_fetched";
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {

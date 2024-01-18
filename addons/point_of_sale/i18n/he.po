@@ -13,7 +13,6 @@
 # yotam katzuni, 2023
 # Sagi Ahiel, 2023
 # Adi Sharashov <Adi@laylinetech.com>, 2023
-# yael terner, 2023
 # Ofir Blum <ofir.blum@gmail.com>, 2023
 # Netta Waizer, 2023
 # NoaFarkash, 2023
@@ -22,22 +21,23 @@
 # Moshe Flam <pashute@gmail.com>, 2023
 # MichaelHadar, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
-# דודי מלכה <Dudimalka6@gmail.com>, 2023
 # Ha Ketem <haketem@gmail.com>, 2023
 # yacov mosbacher <ymosba@gmail.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
-# Martin Trigaux, 2023
 # ExcaliberX <excaliberx@gmail.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # hed shefer <hed@laylinetech.com>, 2023
+# yael terner, 2023
+# דודי מלכה <Dudimalka6@gmail.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: hed shefer <hed@laylinetech.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -298,6 +298,16 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Cash Register</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
 msgstr "<span class=\"oe_inline\"><b>דלג על מסך התצוגה המקדימה</b></span>"
@@ -315,7 +325,7 @@ msgstr "<span>יתרה</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Closing</span>"
-msgstr ""
+msgstr "<span>סגירה</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1226,7 +1236,7 @@ msgstr "יומן מזומנים"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
 msgid "Cash Lines"
-msgstr ""
+msgstr "שורות מזומן"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -1246,11 +1256,6 @@ msgstr ""
 #, python-format
 msgid "Cash Out"
 msgstr "הוצאת מזומן"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
-msgid "Cash Register"
-msgstr "קופת רושמת"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
@@ -1315,7 +1320,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Cash register"
-msgstr ""
+msgstr "רישום בקופה"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
@@ -1500,7 +1505,7 @@ msgstr "תאריך סגירה"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__closing_notes
 msgid "Closing Notes"
-msgstr ""
+msgstr "הערות סגירה"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1571,7 +1576,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_combo
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Combo Choices"
-msgstr ""
+msgstr "שילוב מוצרים"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
@@ -1591,7 +1596,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "Combos"
-msgstr ""
+msgstr "שילובים"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -1739,13 +1744,9 @@ msgid "Continue"
 msgstr "המשך"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
-msgstr "המשך מכירה"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "Continue selling"
 msgstr "המשך מכירה"
 
 #. module: point_of_sale
@@ -1905,6 +1906,7 @@ msgstr "ערכים מותאמים אישית"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
@@ -1998,8 +2000,8 @@ msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2746,6 +2748,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/generic_components/orderline/orderline.xml:0
+#, python-format
+msgid "Free"
+msgstr "פנוי"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
@@ -3256,7 +3265,6 @@ msgstr "תנועת יומן"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Journal Items"
 msgstr "תנועות יומן"
@@ -3473,6 +3481,13 @@ msgstr "לוגו"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
 msgstr "שם אצווה"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "מספר אצווה"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3741,11 +3756,6 @@ msgid "Newspaper Rack"
 msgstr "מתקן לעיתונים"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "הפעילות הבאה ביומן"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "מועד אחרון לפעילות הבאה"
@@ -3844,7 +3854,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__num_of_products
 msgid "No of Products"
-msgstr ""
+msgstr "מס' מוצרים"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -3892,6 +3902,13 @@ msgstr "מונחים"
 #, python-format
 msgid "None"
 msgstr "אף אחד"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/report_sale_details.py:0
+#, python-format
+msgid "Not Categorized"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -4272,20 +4289,13 @@ msgid "Order saved for later"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
-#, python-format
-msgid "Order:"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
@@ -4460,8 +4470,8 @@ msgid "PayTM Payment Terminal"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -4680,7 +4690,7 @@ msgstr "אנא אשר כמות גדולה"
 #: code:addons/point_of_sale/models/pos_combo.py:0
 #, python-format
 msgid "Please add products in combo."
-msgstr ""
+msgstr "הוסף מוצרים בשילוב"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5130,9 +5140,10 @@ msgstr "מופעל ע\"י"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
+#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
-msgstr ""
+msgstr "תצוגת הכנה"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_printer_form
@@ -5358,7 +5369,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_combo
 msgid "Product Combos"
-msgstr ""
+msgstr "שילובי מוצרים"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5371,7 +5382,7 @@ msgstr "פרטי מוצר"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__base_price
 msgid "Product Price"
-msgstr ""
+msgstr "מחיר מוצר"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5428,7 +5439,7 @@ msgstr "וריאנטים של מוצר"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_combo
 msgid "Product combo choices"
-msgstr ""
+msgstr "בחירות שילוב מוצרים"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5469,7 +5480,7 @@ msgstr "מוצרים"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__combo_line_ids
 msgid "Products in Combo"
-msgstr ""
+msgstr "שילוב מוצרים"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -5787,7 +5798,7 @@ msgstr "משתמש אחראי"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Restaurant Mode"
-msgstr ""
+msgstr "מצב מסעדה"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limit_categories
@@ -6043,13 +6054,6 @@ msgid "Search Orders..."
 msgstr "חפש הזמנות..."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_list/control_panel/control_panel.xml:0
-#, python-format
-msgid "Search Products..."
-msgstr "חפש מוצר"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
 msgstr "חפש הזמנת לקוח"
@@ -6232,7 +6236,7 @@ msgstr "פקודת יומן משמרת"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
 #: model:ir.ui.menu,name:point_of_sale.menu_report_daily_details
 msgid "Session Report"
-msgstr ""
+msgstr "משמרת"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6915,8 +6919,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                    Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
 
 #. module: point_of_sale
@@ -7149,6 +7152,8 @@ msgid ""
 "ensure that whatever product the user chooses for a component, it will "
 "always be they same price."
 msgstr ""
+"הערך שממנו מבוסס הדירוג היחסי של מחיר הרכיב. זאת כדי להבטיח שכל מוצר שהמשתמש"
+" יבחר עבור רכיב, תמיד יהיה אותו מחיר."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -8029,14 +8034,6 @@ msgstr "אינך יכול ליצור סשן לפני תאריך הנעילה ה�
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/account_bank_statement.py:0
-#, python-format
-msgid ""
-"You cannot delete a bank statement line linked to Point of Sale session."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 #, python-format
 msgid ""
@@ -8197,7 +8194,7 @@ msgstr "שייך למשמרת אחרת:"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_tree
 msgid "combos"
-msgstr ""
+msgstr "שילובים"
 
 #. module: point_of_sale
 #. odoo-javascript

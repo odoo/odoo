@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Abe Manyo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:30+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,11 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Value ditetapkan disini "
 "khusus pada perusahaan.\" groups=\"base.group_multi_company\"/>"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">of</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -364,11 +369,6 @@ msgid "Options"
 msgstr "Opsi"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Prepayment amount"
-msgstr "Jumlah prabayar"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
 msgstr "Persentase pembayaran di muka"
@@ -451,8 +451,8 @@ msgstr "Kutipan template"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Quotation expires after"
-msgstr "Quotation kadaluwarsa pada"
+msgid "Quotation Validity"
+msgstr "Validitas Quotation"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -549,7 +549,7 @@ msgid ""
 msgstr ""
 "Kerepotan menggunakan katalog produk yang kompleks? Coba Konfigurator Produk"
 " untuk membantu sales mengonfigurasi produk dengan beragam opsi: warna, "
-"ukuran, kapasitas, dsb. Membuat encoding sale order lebih gampang dan bebas "
+"ukuran, kapasitas, dsb. Membuat encoding sale order lebih mudah dan bebas "
 "kesalahan."
 
 #. module: sale_management

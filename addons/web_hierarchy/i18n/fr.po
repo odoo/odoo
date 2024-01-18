@@ -3,15 +3,15 @@
 # 	* web_hierarchy
 # 
 # Translators:
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,21 @@ msgstr "Vue de la fenêtre d'action"
 #: model:ir.model,name:web_hierarchy.model_base
 msgid "Base"
 msgstr "Base"
+
+#. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
+#, python-format
+msgid "Cannot change the parent because it will cause a cyclic."
+msgstr ""
+"Il n'est pas possible de modifier le parent, car cela entraînerait un cycle."
+
+#. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
+#, python-format
+msgid "Fold"
+msgstr "Replier"
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -89,6 +104,13 @@ msgid "The parent record cannot be the record dragged."
 msgstr "L'enregistrement parent ne peut pas être l'enregistrement déplacé."
 
 #. module: web_hierarchy
+#. odoo-javascript
+#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
+#, python-format
+msgid "Unfold"
+msgstr "Déplier"
+
+#. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_ui_view
 msgid "View"
 msgstr "Vue"
@@ -98,10 +120,3 @@ msgstr "Vue"
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_ui_view__type
 msgid "View Type"
 msgstr "Type de vue"
-
-#. module: web_hierarchy
-#. odoo-javascript
-#: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
-#, python-format
-msgid "people"
-msgstr "personnes"

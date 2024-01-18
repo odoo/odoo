@@ -414,6 +414,30 @@ function isMobile(self) {
     return isMobile;
 }
 
+/**
+ * Returns the parsed data coming from the data-for element for the given form.
+ *
+ * @param {string} formId
+ * @param {HTMLElement} parentEl
+ * @returns {Object|undefined} the parsed data
+ */
+function getParsedDataFor(formId, parentEl) {
+    const dataForEl = parentEl.querySelector(`[data-for='${formId}']`);
+    if (!dataForEl) {
+        return;
+    }
+    return JSON.parse(dataForEl.dataset.values
+        // replaces `True` by `true` if they are after `,` or `:` or `[`
+        .replace(/([,:\[]\s*)True/g, '$1true')
+        // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
+        .replace(/([,:\[]\s*)(False|None)/g, '$1""')
+        // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
+        .replace(/'(\s*[,:\]}])/g, '"$1')
+        // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
+        .replace(/([{\[:,]\s*)'/g, '$1"')
+    );
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -427,4 +451,5 @@ export default {
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,
     isMobile: isMobile,
+    getParsedDataFor: getParsedDataFor,
 };

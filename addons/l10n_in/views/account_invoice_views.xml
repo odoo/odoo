@@ -9,6 +9,7 @@
                 <field name="country_code" invisible="1"/>
                 <field name="l10n_in_journal_type" invisible="1"/>
                 <field name="l10n_in_state_id" domain="[('country_id.code', '=', 'IN')]"
+                    options="{'no_create': True, 'no_open': True}"
                     invisible="country_code != 'IN' or move_type == 'entry'"
                     readonly="state != 'draft'"
                     required="country_code == 'IN' and move_type != 'entry' and l10n_in_journal_type in ('sale', 'purchase')"/>

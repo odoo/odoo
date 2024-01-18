@@ -742,7 +742,7 @@
                 return slide;
             }
             // A quiz in a documentation on non fullscreen view
-            return $(`.o_wslides_js_lesson_quiz[data-id="${slideId}"`).data();
+            return $(`.o_wslides_js_lesson_quiz[data-id="${slideId}"]`).data();
         },
 
         /**

@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +26,18 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">พนักงาน</span>"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
 msgid "Activity plan template"
 msgstr "แบบฟอร์มแผนกิจกรรม"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "งานที่มอบหมาย"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -97,7 +104,7 @@ msgstr "พนักงาน"
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "พนักงาน %s ไม่ได้เชื่อมโยงกับยานพาหนะ"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -114,7 +121,7 @@ msgstr "การจัดการกองรถ"
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Fleet Manager is limited to Employee plans."
-msgstr ""
+msgstr "ผู้จัดการระบบขนส่งจำกัดเฉพาะแผนพนักงานเท่านั้น"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
@@ -166,11 +173,6 @@ msgid "Release Company Car"
 msgstr "ออกรถของบริษัท"
 
 #. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
-msgid "Responsible"
-msgstr "รับผิดชอบ"
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
 msgstr "บริการสำหรับยานพาหนะ"
@@ -180,7 +182,7 @@ msgstr "บริการสำหรับยานพาหนะ"
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
-msgstr ""
+msgstr "ยานพาหนะของพนักงาน %(employee)s ไม่ได้เชื่อมโยงกับผู้จัดการระบบขนส่ง"
 
 #. module: hr_fleet
 #. odoo-javascript

@@ -153,7 +153,7 @@ export function usePartnerAutocomplete() {
     function getCreateData(company) {
         const removeUselessFields = (company) => {
             // Delete attribute to avoid "Field_changed" errors
-            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList'];
+            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList', 'skip_enrich'];
             fields.forEach((field) => {
                 delete company[field];
             });
@@ -169,7 +169,7 @@ export function usePartnerAutocomplete() {
 
         return new Promise((resolve) => {
             // Fetch additional company info via Autocomplete Enrichment API
-            const enrichPromise = enrichCompany(company);
+            const enrichPromise = !company.skip_enrich ? enrichCompany(company) : false;
 
             // Get logo
             const logoPromise = company.logo ? getCompanyLogo(company.logo) : false;

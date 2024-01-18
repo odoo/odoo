@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import wUtils from "@website/js/utils";
 
 export const cartHandlerMixin = {
@@ -118,14 +119,14 @@ function updateCartNavBar(data) {
 function showCartNotification(callService, props, options = {}) {
     // Show the notification about the cart
     if (props.lines) {
-        callService("cartNotificationService", "add", "Item(s) added to your cart", {
+        callService("cartNotificationService", "add", _t("Item(s) added to your cart"), {
             lines: props.lines,
             currency_id: props.currency_id,
             ...options,
         });
     }
     if (props.warning) {
-        callService("cartNotificationService", "add", "Warning", {
+        callService("cartNotificationService", "add", _t("Warning"), {
             warning: props.warning,
             ...options,
         });
