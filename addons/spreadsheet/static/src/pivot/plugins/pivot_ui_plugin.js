@@ -62,7 +62,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
 
         globalFiltersFieldMatchers["pivot"] = {
             ...globalFiltersFieldMatchers["pivot"],
-            waitForReady: () => this._getPivotsWaitForReady(),
             getFields: (pivotId) => this.getPivotDataSource(pivotId).getFields(),
         };
     }
@@ -484,16 +483,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         for (const pivotId of this.getters.getPivotIds()) {
             this._addDomain(pivotId);
         }
-    }
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    _getPivotsWaitForReady() {
-        return this.getters
-            .getPivotIds()
-            .map((pivotId) => this.getPivotDataSource(pivotId).loadMetadata());
     }
 
     /**

@@ -3,7 +3,6 @@
 import { LoadableDataSource } from "./data_source";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { omit } from "@web/core/utils/objects";
 
 /**
@@ -49,22 +48,22 @@ export class OdooViewsDataSource extends LoadableDataSource {
     }
 
     async loadMetadata() {
-        if (!this._metaData.fields) {
-            this._metaData.fields = await this._metadataRepository.fieldsGet(
-                this._metaData.resModel
-            );
+        const fields = this.getFields();
+        if (fields.status === "pending") {
+            fields.promise.then((fields) => {
+                // is this needed?
+                this._metaData.fields = fields;
+                return fields;
+            });
         }
+        await fields.promise;
     }
 
     /**
-     * @returns {Record<string, Field>} List of fields
+     * @returns {import("./loadable").Loadable<Record<string, Field>>} List of fields
      */
     getFields() {
-        if (this._metaData.fields === undefined) {
-            this.loadMetadata();
-            throw new LoadingDataError();
-        }
-        return this._metaData.fields;
+        return this.serverData.get(this._metaData.resModel, "fields_get");
     }
 
     /**
@@ -84,10 +83,6 @@ export class OdooViewsDataSource extends LoadableDataSource {
      */
     async _load() {
         await this.loadMetadata();
-    }
-
-    isMetaDataLoaded() {
-        return this._metaData.fields !== undefined;
     }
 
     /**
@@ -131,7 +126,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
     /**
      * @returns {Promise<string>} Display name of the model
      */
-    getModelLabel() {
-        return this._metadataRepository.modelDisplayName(this._metaData.resModel);
+    async getModelLabel() {
+        const model = this._metaData.resModel;
+        const result = await this.serverData.fetch("ir.model", "display_name_for", [[model]]);
+        return result[0]?.display_name || "";
     }
 }

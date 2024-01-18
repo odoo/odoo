@@ -58,27 +58,6 @@ export class MetadataRepository extends EventBus {
     }
 
     /**
-     * Get the display name of the given model
-     *
-     * @param {string} model Technical name
-     * @returns {Promise<string>} Display name of the model
-     */
-    async modelDisplayName(model) {
-        const result = await this.serverData.fetch("ir.model", "display_name_for", [[model]]);
-        return (result[0] && result[0].display_name) || "";
-    }
-
-    /**
-     * Get the list of fields for the given model
-     *
-     * @param {string} model Technical name
-     * @returns {Promise<Record<string, Field>>} List of fields (result of fields_get)
-     */
-    async fieldsGet(model) {
-        return this.serverData.fetch(model, "fields_get");
-    }
-
-    /**
      * Add a label to the cache
      *
      * @param {string} model

@@ -23,7 +23,6 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         globalFiltersFieldMatchers["list"] = {
             ...globalFiltersFieldMatchers["list"],
             getFields: (listId) => this.getListDataSource(listId).getFields(),
-            waitForReady: () => this.getListsWaitForReady(),
         };
     }
 
@@ -324,16 +323,6 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
         const dataSourceId = this._getListDataSourceId(id);
         await this.dataSources.load(dataSourceId);
         return this.getListDataSource(id);
-    }
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    getListsWaitForReady() {
-        return this.getters
-            .getListIds()
-            .map((listId) => this.getListDataSource(listId).loadMetadata());
     }
 
     isListUnused(listId) {

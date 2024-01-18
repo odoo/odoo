@@ -4,6 +4,7 @@ import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { EvaluationError } from "@odoo/o-spreadsheet";
+import { ServerData } from "./server_data";
 
 /**
  * DataSource is an abstract class that contains the logic of fetching and
@@ -20,7 +21,9 @@ export class LoadableDataSource {
         this._orm = services.orm;
         this._metadataRepository = services.metadataRepository;
         this._notify = services.notify;
-
+        this.serverData = new ServerData(this._orm, {
+            whenDataIsFetched: () => services.notify(),
+        });
         /**
          * Last time that this dataSource has been updated
          */

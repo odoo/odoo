@@ -41730,6 +41730,7 @@
     // as necessary in several iterations, where evaluated cells can trigger the evaluation
     // of other cells depending on it, at the next iteration.
     //#endregion
+    const start = Date.now()
     class EvaluationPlugin extends UIPlugin {
         static getters = [
             "evaluateFormula",
@@ -41772,6 +41773,7 @@
                     break;
                 case "EVALUATE_CELLS":
                     this.evaluator.evaluateAllCells();
+                    console.log(Date.now() - start)
                     break;
             }
         }

@@ -20,7 +20,6 @@ export class OdooChartUIPlugin extends UIPlugin {
                 const model = await this.getChartDataSource(chartId).getModelLabel();
                 return sprintf(_t("Chart - %s"), model);
             },
-            waitForReady: () => this._getOdooChartsWaitForReady(),
             getFields: (chartId) => this.getChartDataSource(chartId).getFields(),
         };
     }
@@ -193,16 +192,6 @@ export class OdooChartUIPlugin extends UIPlugin {
     _setChartDataSource(chartId) {
         const chart = this.getters.getChart(chartId);
         chart.setDataSource(this.getChartDataSource(chartId));
-    }
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    _getOdooChartsWaitForReady() {
-        return this.getters
-            .getOdooChartIds()
-            .map((chartId) => this.getChartDataSource(chartId).loadMetadata());
     }
 
     _getOdooChartDataSourceId(chartId) {
