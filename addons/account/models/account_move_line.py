@@ -890,7 +890,7 @@ class AccountMoveLine(models.Model):
                 tax_ids = self.move_id.company_id.account_purchase_tax_id
         else:
             # Miscellaneous operation.
-            tax_ids = self.account_id.tax_ids
+            tax_ids = False if self.env.context.get('skip_computed_taxes') else self.account_id.tax_ids
 
         if self.company_id and tax_ids:
             tax_ids = tax_ids.filtered(lambda tax: tax.company_id == self.company_id)

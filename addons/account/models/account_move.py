@@ -604,7 +604,7 @@ class AccountMove(models.Model):
     def _compute_hide_post_button(self):
         for record in self:
             record.hide_post_button = record.state != 'draft' \
-                or record.auto_post != 'no' and record.date > fields.Date.today()
+                or record.auto_post != 'no' and record.date > fields.Date.context_today(record)
 
     @api.depends('journal_id')
     def _compute_company_id(self):
@@ -991,7 +991,7 @@ class AccountMove(models.Model):
                         untaxed_amount_currency = invoice.amount_untaxed * sign
                         untaxed_amount = invoice.amount_untaxed_signed
                     invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
-                        date_ref=invoice.invoice_date or invoice.date or fields.Date.today(),
+                        date_ref=invoice.invoice_date or invoice.date or fields.Date.context_today(invoice),
                         currency=invoice.currency_id,
                         tax_amount_currency=tax_amount_currency,
                         tax_amount=tax_amount,
@@ -3963,7 +3963,7 @@ class AccountMove(models.Model):
         :return (datetime.date):
         """
         lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         highest_name = self.highest_name or self._get_last_sequence(relaxed=True, lock=False)
         number_reset = self._deduce_sequence_number_reset(highest_name)
         if lock_dates:
