@@ -247,7 +247,7 @@ class WebsiteForm(http.Controller):
             # If there isn't, put the custom data in a message instead
             if default_field.name:
                 if default_field.ttype == 'html' or model_name == 'mail.mail':
-                    custom_content = nl2br(custom_content)
+                    custom_content = nl2br_enclose(custom_content)
                 record.update({default_field.name: custom_content})
             elif hasattr(record, '_message_log'):
                 record._message_log(
