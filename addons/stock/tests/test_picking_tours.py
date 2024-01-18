@@ -58,6 +58,33 @@ class TestStockPickingTour(HttpCase):
         ])
         self.assertEqual(len(serial), 5)
 
+    def test_generate_serial_2(self):
+        """ Generate lot numbers in the detailed operation modal """
+        product_lot_1 = self.env['product.product'].create({
+            'name': 'Product Lot 1',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        url = self._get_picking_url(self.receipt.id)
+        self.start_tour(url, 'test_generate_serial_2', login='admin', timeout=60)
+        self.assertEqual(self.receipt.state, 'done')
+        self.assertEqual(self.receipt.move_ids.product_uom_qty, 100)
+        self.assertEqual(self.receipt.move_ids.quantity, 100)
+        self.assertEqual(len(self.receipt.move_ids.move_line_ids), 11)
+
+        lots_batch_1 = self.env['stock.lot'].search([
+            ('name', 'ilike', 'lot_n_1_%'),
+            ('product_id', '=', product_lot_1.id)
+        ], order='name asc')
+        lots_batch_2 = self.env['stock.lot'].search([
+            ('name', 'ilike', 'lot_n_2_%'),
+            ('product_id', '=', product_lot_1.id)
+        ], order='name asc')
+        self.assertEqual(len(lots_batch_1), 7)
+        self.assertEqual(lots_batch_1[-1].product_qty, 5)
+        self.assertEqual(len(lots_batch_2), 4)
+        self.assertEqual(lots_batch_2[-1].product_qty, 11)
+
     def test_inventory_adjustment_apply_all(self):
         """
         Checks if the "Apply All" button works for all new entries, even if
