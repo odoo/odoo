@@ -57,23 +57,18 @@ function updateAttr(record, fieldName, value) {
     const fieldDefinition = record.Model._fields.get(fieldName);
     // ensure each field write goes through the proxy exactly once to trigger reactives
     const targetRecord = record._proxyUsed.has(fieldName) ? record : record._proxy;
-    if (
-        fieldDefinition?.html &&
-        Record.trusted &&
-        typeof value === "string" &&
-        !(value instanceof Markup)
-    ) {
-        if (record[fieldName]?.toString() !== value) {
-            record._updateFields.add(fieldName);
-            targetRecord[fieldName] = markup(value);
-            record._updateFields.delete(fieldName);
-        }
-    } else {
-        if (record[fieldName] !== value) {
-            record._updateFields.add(fieldName);
-            targetRecord[fieldName] = value;
-            record._updateFields.delete(fieldName);
-        }
+    let shouldChange = record[fieldName] !== value;
+    let newValue = value;
+    if (fieldDefinition?.html && Record.trusted) {
+        shouldChange =
+            record[fieldName]?.toString() !== value?.toString() ||
+            !(record[fieldName] instanceof Markup);
+        newValue = typeof value === "string" ? markup(value) : value;
+    }
+    if (shouldChange) {
+        record._updateFields.add(fieldName);
+        targetRecord[fieldName] = newValue;
+        record._updateFields.delete(fieldName);
     }
 }
 
