@@ -4265,6 +4265,8 @@ QUnit.module("Views", (hooks) => {
         await editColumnName("new column");
         await validateColumn();
 
+        await nextTick();
+
         assert.strictEqual(target.querySelector(".o_column_quick_create input").value, "");
         assert.containsN(target, ".o_kanban_group", 2);
 
@@ -13575,5 +13577,39 @@ QUnit.module("Views", (hooks) => {
         // x2many kanban, basic renderer
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.containsNone(target, ".my_kanban_compiler");
+    });
+
+    QUnit.test("can quick create a column when pressing enter when input is focused", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                `<kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+
+        await createColumn();
+        
+        // We don't use the editInput helper as it would trigger a change event automatically.
+        // We need to wait for the enter key to trigger the event.
+        const input = target.querySelector(".o_column_quick_create input");
+        input.value = "New Column";
+        await triggerEvent(input, null, "input");
+
+        await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
+            key: "Enter",
+        });
+
+        assert.containsN(target, ".o_kanban_group", 3);
     });
 });
