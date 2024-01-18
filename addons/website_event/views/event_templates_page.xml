@@ -9,8 +9,8 @@
         <div id="wrap" t-attf-class="o_wevent_event js_event d-flex flex-column h-100 #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">
             <t t-if="not hide_submenu" t-call="website_event.navbar"/>
             <t t-out="0"/>
-            <t t-set="editor_sub_message">Following content will appear on all events.</t>
-            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="editor_sub_message"/>
+            <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PAGES OF ALL EVENTS</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" t-att-data-editor-message="editor_message"/>
         </div>
     </t>
 </template>
@@ -19,7 +19,7 @@
     <div class="container my-3">
         <a href="/event">
             <i class="fa fa-chevron-left me-2"/>
-            <span>Back to events</span> 
+            <span>Back to events</span>
         </a>
     </div>
     <div class="mb-3">
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                 </nav>
-                <!-- Add Register additional CTA button, in addition to menus -->   
+                <!-- Add Register additional CTA button, in addition to menus -->
                 <a t-if="event.menu_register_cta and not event.is_participating"
                     t-att-href="'/event/%s/register' % (slug(event))"
                     t-attf-class="btn btn-primary #{'d-none' if hide_register_cta else ''}">
@@ -68,7 +68,6 @@
                 </div>
             </div>
         </nav>
-        
     </div>
 </template>
 

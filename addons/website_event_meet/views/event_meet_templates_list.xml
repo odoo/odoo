@@ -6,7 +6,8 @@
         <t t-set="hide_submenu" t-value="True"/>
         <div class="o_wevent_online o_wemeet_index h-100">
             <!-- Drag/Drop Area -->
-            <div id="oe_structure_website_event_location_1" class="oe_structure"/>
+            <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_location_1" t-att-data-editor-message="editor_message"/>
             <!-- Content -->
             <div class="o_wemeet_container container h-100">
                 <div class="row h-100 mb-5 mx-0">
@@ -15,7 +16,7 @@
                 </div>
             </div>
             <!-- Drag/Drop Area -->
-            <div id="oe_structure_website_event_location_2" class="oe_structure mb-5"/>
+            <div class="oe_structure oe_empty mb-5" id="oe_structure_website_event_location_2" t-att-data-editor-message="editor_message"/>
         </div>
     </t>
 </template>
