@@ -118,7 +118,7 @@ export class Thread extends Component {
                 if (this.props.jumpPresent !== this.lastJumpPresent) {
                     this.messageHighlight?.clearHighlight();
                     if (this.props.thread.loadNewer) {
-                        this.jumpToPresent("instant");
+                        this.jumpToPresent();
                     } else {
                         if (this.props.order === "desc") {
                             this.scrollableRef.el.scrollTop = 0;
@@ -384,14 +384,11 @@ export class Thread extends Component {
         this.env.services.action.doAction(actionDescription);
     }
 
-    async jumpToPresent(behavior) {
+    async jumpToPresent() {
         this.messageHighlight?.clearHighlight();
         await this.threadService.loadAround(this.props.thread);
         this.props.thread.loadNewer = false;
-        this.present.el?.scrollIntoView({
-            behavior: behavior ?? (this.props.order === "asc" ? "smooth" : "instant"), // FIXME somehow smooth not working in desc mode
-            block: "center",
-        });
+        this.props.thread.scrollTop = this.props.order === "desc" ? 0 : "bottom";
         this.state.showJumpPresent = false;
     }
 
