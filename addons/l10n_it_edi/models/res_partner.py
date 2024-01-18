@@ -183,3 +183,12 @@ class ResPartner(models.Model):
                         'action': invalid_records._get_records_action(name=_("Check Partner(s)"), views=views),
                     }
         return errors
+
+    def _deduce_country_code(self):
+        if self.l10n_it_codice_fiscale:
+            return 'IT'
+        return super()._deduce_country_code()
+
+    def _peppol_eas_endpoint_depends(self):
+        # extends account_edi_ubl_cii
+        return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
