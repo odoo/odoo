@@ -224,6 +224,13 @@ patch(MockServer.prototype, {
         });
         delete values.subtype_xmlid;
         const messageId = this.pyEnv["mail.message"].create(values);
+        for (const partnerId of kwargs.partner_ids || []) {
+            this.pyEnv["mail.notification"].create({
+                mail_message_id: messageId,
+                notification_type: "inbox",
+                res_partner_id: partnerId,
+            });
+        }
         this._mockMailThread_NotifyThread(model, ids, messageId, context?.temporary_id);
         return Object.assign(this._mockMailMessageMessageFormat([messageId])[0], {
             temporary_id: context?.temporary_id,
