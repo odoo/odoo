@@ -206,7 +206,6 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     }
 
     getFirstPivotFunction(tokens) {
-        console.log("getFirstPivotFunction", tokens);
         const pivotFunction = getFirstPivotFunction(tokens);
         if (!pivotFunction) {
             return undefined;
