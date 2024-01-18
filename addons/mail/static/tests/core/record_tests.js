@@ -260,6 +260,22 @@ QUnit.test("Trusted insert on html field with { html: true }", async (assert) =>
     assert.strictEqual(world.body, "<p>world</p>");
 });
 
+QUnit.test("(Un)trusted insertion is applied even with same field value", async (assert) => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+        body = Record.attr("", { html: true });
+    }).register();
+    const store = await start();
+    const rawMessage = { id: 1, body: "<p>hello</p>" };
+    let message = store.Message.insert(rawMessage);
+    assert.notOk(message.body instanceof markup("").constructor);
+    message = store.Message.insert(rawMessage, { html: true });
+    assert.ok(message.body instanceof markup("").constructor);
+    message = store.Message.insert(rawMessage);
+    assert.notOk(message.body instanceof markup("").constructor);
+});
+
 QUnit.test("Unshift preserves order", async (assert) => {
     (class Message extends Record {
         static id = "id";
