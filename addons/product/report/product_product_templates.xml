@@ -121,7 +121,7 @@
                     <div class="text-end" style="padding: 0 4px;">
                         <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
                                 t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
-                        <div class="o_label_extra_data">
+                        <div t-if="False" class="o_label_extra_data">
                             <t t-out="extra_html"/>
                         </div>
                     </div>
