@@ -53,9 +53,15 @@ class AliasDomain(models.Model):
 
     @api.depends('default_from', 'name')
     def _compute_default_from_email(self):
+        """ Default from may be a valid complete email and not only a left-part
+        like bounce or catchall aliases. Adding domain name should therefore
+        be done only if necessary. """
         self.default_from_email = ''
         for domain in self.filtered('default_from'):
-            domain.default_from_email = f'{domain.default_from}@{domain.name}'
+            if "@" in domain.default_from:
+                domain.default_from_email = domain.default_from
+            else:
+                domain.default_from_email = f'{domain.default_from}@{domain.name}'
 
     @api.constrains('bounce_alias', 'catchall_alias')
     def _check_bounce_catchall_uniqueness(self):
@@ -121,14 +127,9 @@ class AliasDomain(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Sanitize bounce_alias / catchall_alias """
+        """ Sanitize bounce_alias / catchall_alias / default_from """
         for vals in vals_list:
-            if vals.get('bounce_alias'):
-                vals['bounce_alias'] = self.env['mail.alias']._sanitize_alias_name(vals['bounce_alias'])
-            if vals.get('catchall_alias'):
-                vals['catchall_alias'] = self.env['mail.alias']._sanitize_alias_name(vals['catchall_alias'])
-            if vals.get('default_from'):
-                vals['default_from'] = self.env['mail.alias']._sanitize_alias_name(vals['default_from'])
+            self._sanitize_configuration(vals)
 
         alias_domains = super().create(vals_list)
 
@@ -144,11 +145,19 @@ class AliasDomain(models.Model):
         return alias_domains
 
     def write(self, vals):
-        """ Sanitize bounce_alias / catchall_alias """
-        if vals.get('bounce_alias'):
-            vals['bounce_alias'] = self.env['mail.alias']._sanitize_alias_name(vals['bounce_alias'])
-        if vals.get('catchall_alias'):
-            vals['catchall_alias'] = self.env['mail.alias']._sanitize_alias_name(vals['catchall_alias'])
-        if vals.get('default_from'):
-            vals['default_from'] = self.env['mail.alias']._sanitize_alias_name(vals['default_from'])
+        """ Sanitize bounce_alias / catchall_alias / default_from """
+        self._sanitize_configuration(vals)
         return super().write(vals)
+
+    @api.model
+    def _sanitize_configuration(self, config_values):
+        """ Tool sanitizing configuration values for domains """
+        if config_values.get('bounce_alias'):
+            config_values['bounce_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['bounce_alias'])
+        if config_values.get('catchall_alias'):
+            config_values['catchall_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['catchall_alias'])
+        if config_values.get('default_from'):
+            config_values['default_from'] = self.env['mail.alias']._sanitize_alias_name(
+                config_values['default_from'], is_email=True
+            )
+        return config_values
