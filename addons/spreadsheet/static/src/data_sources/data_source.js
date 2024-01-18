@@ -80,6 +80,13 @@ export class LoadableDataSource {
         return this._isFullyLoaded;
     }
 
+    ifReady(callback) {
+        if (this.isReady) {
+            return callback();
+        }
+        this.load();
+        return "Loading...";
+    }
     /**
      * @protected
      */
