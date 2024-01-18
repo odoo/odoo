@@ -4,11 +4,11 @@
 from odoo import Command
 from odoo.tests.common import new_test_user
 from .common import TestSaleProjectCommon
-from odoo.tests import Form
+from odoo.tests import Form, HttpCase
 from odoo.tests.common import tagged
 
 @tagged('post_install', '-at_install')
-class TestSaleProject(TestSaleProjectCommon):
+class TestSaleProject(HttpCase, TestSaleProjectCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -92,6 +92,24 @@ class TestSaleProject(TestSaleProjectCommon):
 
         # Create partner
         cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
+
+        project = cls.env['project.project'].create({
+            'name': 'Test History Project',
+            'type_ids': [Command.create({'name': 'To Do'})],
+            'allow_billable': True
+        })
+
+        cls.env['project.task'].create({
+            'name': 'Test History Task',
+            'stage_id': project.type_ids[0].id,
+            'project_id': project.id,
+        })
+
+    def test_task_create_sol_ui(self):
+        self.start_tour('/web', 'task_create_sol_tour', login='admin')
+
+    def test_project_create_sol_ui(self):
+        self.start_tour('/web', 'project_create_sol_tour', login='admin')
 
     def test_sale_order_with_project_task(self):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
