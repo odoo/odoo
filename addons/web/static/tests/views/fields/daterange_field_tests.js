@@ -1219,4 +1219,22 @@ QUnit.module("Fields", (hooks) => {
             assert.containsNone(target, ".o_add_date");
         }
     );
+
+    QUnit.test(
+        "there is no arrow between the dates with option always_range if nothing is set and it is readonly",
+        async (assert) => {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': 'true'}" />
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': 'true'}" readonly="true" />
+                </form>`,
+            });
+
+            assert.containsOnce(target, ".fa-long-arrow-right");
+        }
+    );
 });
