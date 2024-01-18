@@ -9,7 +9,7 @@ import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 
 const { cellMenuRegistry, featurePluginRegistry } = spreadsheet.registries;
 const { astToFormula } = spreadsheet;
-const { toString, toBoolean } = spreadsheet.helpers;
+const { isEvaluationError, toString, toBoolean } = spreadsheet.helpers;
 
 featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 
@@ -43,7 +43,7 @@ cellMenuRegistry.add("move_lines_see_records", {
         const evaluatedCell = env.model.getters.getEvaluatedCell(position);
         const cell = env.model.getters.getCell(position);
         return (
-            !evaluatedCell.error &&
+            !isEvaluationError(evaluatedCell.value) &&
             evaluatedCell.value !== "" &&
             cell &&
             cell.isFormula &&
