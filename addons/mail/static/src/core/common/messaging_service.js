@@ -77,9 +77,16 @@ export class Messaging {
         this.store.internalUserGroupId = data.internalUserGroupId;
         this.store.discuss.starred.counter = data.starred_counter;
         this.store.mt_comment_id = data.mt_comment_id;
-        this.store.discuss.isActive =
-            data.menu_id === this.router.current.hash?.menu_id ||
-            this.router.hash?.action === "mail.action_discuss";
+        if (!this.store.discuss.isActive) {
+            const routerhash = this.router.current.hash;
+            if (routerhash?.action === "mail.action_discuss") {
+                this.store.discuss.isActive = true;
+            } else if (data.action_discuss_id) {
+                this.store.discuss.isActive = data.action_discuss_id === routerhash?.action;
+            } else {
+                this.store.discuss.isActive = data.menu_id && data.menu_id === routerhash?.menu_id;
+            }
+        }
         this.store.CannedResponse.insert(data.shortcodes ?? []);
         this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
         this.store.initBusId = data.initBusId;
