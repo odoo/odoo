@@ -188,7 +188,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("REMOVE_PIVOT", { pivotId: "1" });
         assert.strictEqual(model.getters.getPivotIds().length, 0);
         const B4 = getEvaluatedCell(model, "B4");
-        assert.equal(B4.error.message, `There is no pivot with id "1"`);
+        assert.equal(B4.message, `There is no pivot with id "1"`);
         assert.equal(B4.value, `#ERROR`);
     });
 
@@ -199,12 +199,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("REQUEST_UNDO");
         assert.strictEqual(model.getters.getPivotIds().length, 1);
         let B4 = getEvaluatedCell(model, "B4");
-        assert.equal(B4.error, undefined);
         assert.equal(B4.value, value);
         model.dispatch("REQUEST_REDO");
         assert.strictEqual(model.getters.getPivotIds().length, 0);
         B4 = getEvaluatedCell(model, "B4");
-        assert.equal(B4.error.message, `There is no pivot with id "1"`);
+        assert.equal(B4.message, `There is no pivot with id "1"`);
         assert.equal(B4.value, `#ERROR`);
     });
 
@@ -215,14 +214,8 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         await nextTick();
         assert.equal(getCellValue(model, "G10"), "#ERROR");
         assert.equal(getCellValue(model, "G11"), "#ERROR");
-        assert.equal(
-            getEvaluatedCell(model, "G10").error.message,
-            "Field non-existing does not exist"
-        );
-        assert.equal(
-            getEvaluatedCell(model, "G11").error.message,
-            "Field non-existing does not exist"
-        );
+        assert.equal(getEvaluatedCell(model, "G10").message, "Field non-existing does not exist");
+        assert.equal(getEvaluatedCell(model, "G11").message, "Field non-existing does not exist");
     });
 
     QUnit.test(
@@ -468,7 +461,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         await waitForDataSourcesLoaded(model);
         assert.equal(
-            getEvaluatedCell(model, "E10").error.message,
+            getEvaluatedCell(model, "E10").message,
             "Unable to fetch the label of 1111111 of model product"
         );
     });
@@ -842,9 +835,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             headerCell = getEvaluatedCell(model, "A3");
             cell = getEvaluatedCell(model, "C3");
             assert.equal(headerCell.value, "#ERROR");
-            assert.equal(headerCell.error.message, "ya done!");
+            assert.equal(headerCell.message, "ya done!");
             assert.equal(cell.value, "#ERROR");
-            assert.equal(cell.error.message, "ya done!");
+            assert.equal(cell.message, "ya done!");
         }
     );
 
