@@ -358,4 +358,24 @@ QUnit.module('partner_autocomplete', {
         await triggerEvent(input, null, "blur");
         assert.containsOnce(target, ".modal-open");
     });
+
+    QUnit.test("Hide auto complate suggestion for no create", async function (assert) {
+        const partnerMakeViewParams = {
+            ...makeViewParams,
+            arch:
+                `<form>
+                    <field name="company_type"/>
+                    <field name="parent_id" widget="res_partner_many2one" options="{'no_create': True}"/>
+                </form>`
+        }
+        await makeView(partnerMakeViewParams);
+        const input = target.querySelector("[name='parent_id'] input");
+        await editInputNoChangeEvent(input, "blabla");
+        const autocompleteContainer = input.parentElement;
+        assert.containsNone(
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
+            "There should be no option when partner field has no_create attribute"
+        );
+    });
 });
