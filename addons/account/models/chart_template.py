@@ -954,10 +954,10 @@ class AccountChartTemplate(models.AbstractModel):
             code = template_mapping.get(code).get('parent')
         return parents
 
-    def _get_tag_mapper(self, template_code):
+    def _get_tag_mapper(self, country_id):
         tags = {x.name: x.id for x in self.env['account.account.tag'].search([
             ('applicability', '=', 'taxes'),
-            ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
+            ('country_id', '=', country_id),
         ])}
 
         def mapping_getter(*args):
@@ -976,7 +976,7 @@ class AccountChartTemplate(models.AbstractModel):
         return mapping_getter
 
     def _deref_account_tags(self, template_code, tax_data):
-        mapper = self._get_tag_mapper(template_code)
+        mapper = self._get_tag_mapper(self._get_chart_template_mapping()[template_code]['country_id'])
         for tax in tax_data.values():
             for fname in ('invoice_repartition_line_ids', 'refund_repartition_line_ids', 'repartition_line_ids'):
                 if tax.get(fname):
