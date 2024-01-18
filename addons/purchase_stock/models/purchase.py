@@ -448,7 +448,7 @@ class PurchaseOrderLine(models.Model):
                 # If the user increased quantity of existing line or created a new line
                 pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 picking = pickings and pickings[0] or False
-                if not picking:
+                if not picking and line.product_qty > line.qty_received:
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
 
