@@ -594,6 +594,14 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(timesheet_with_task.product_uom_id, self.task1.company_id.project_time_mode_id,
                          "The product_uom_id of the timesheet should be equal to the task's company uom "
                          "if the project's analytic account has no company_id")
+        # Remove the company also on the project to be sure we find a UoM
+        self.project_customer.company_id = False
+        timesheet_with_project.with_user(self.user_employee).write(
+            {'unit_amount': 2.0, 'project_id': self.project_customer.id})
+        self.assertEqual(timesheet_with_project.product_uom_id, self.env.company.project_time_mode_id,
+                         "The product_uom_id of the timesheet should be equal to the company uom "
+                         "if the project's analytic account and the project have no company_id")
+
 
     def test_create_timesheet_with_default_employee_in_context(self):
         timesheet = self.env['account.analytic.line'].with_context(default_employee_id=self.empl_employee.id).create({
