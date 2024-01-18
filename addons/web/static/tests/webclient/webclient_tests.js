@@ -96,6 +96,9 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
 
     // Register the component as a main one, mount the webclient and control-click the <a href/>
     clearRegistryWithCleanup(mainComponentRegistry);
+    // Clear router registeries
+    clearRegistryWithCleanup(registry.category("routeToUrl"));
+    clearRegistryWithCleanup(registry.category("getRoute"));
     mainComponentRegistry.add("mycomponent", { Component: MyComponent });
     env = await makeTestEnv(baseConfig);
     await mount(WebClient, target, { env });

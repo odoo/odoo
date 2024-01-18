@@ -257,7 +257,7 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
         }
     }
     const newMenus = {
-        root: { id: "root", children: [1, 2], name: "root", appID: "root" },
+        root: { id: "root", children: [1], name: "root", appID: "root" },
         1: { id: 1, children: [10, 11, 12], name: "App0", appID: 1 },
         10: { id: 10, children: [], name: "Section 10", appID: 1 },
         11: { id: 11, children: [], name: "Section 11", appID: 1 },

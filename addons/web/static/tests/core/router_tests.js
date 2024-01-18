@@ -91,19 +91,14 @@ QUnit.test("can parse URI encoded strings", (assert) => {
 });
 
 QUnit.test("routeToUrl encodes URI compatible strings", (assert) => {
-    patchWithCleanup(browser, {
-        location: {
-            pathname: "/asf",
-        },
-    });
     let route = {};
-    assert.strictEqual(routeToUrl(route), "/asf");
+    assert.strictEqual(routeToUrl(route), "/apps");
 
     route = { a: "11", g: "summer wine" };
-    assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine");
+    assert.strictEqual(routeToUrl(route), "/apps?a=11&g=summer%20wine");
 
     route = { b: "2", c: "", e: "kloug,gloubi" };
-    assert.strictEqual(routeToUrl(route), "/asf?b=2&c=&e=kloug%2Cgloubi");
+    assert.strictEqual(routeToUrl(route), "/apps?b=2&c=&e=kloug%2Cgloubi");
 });
 
 QUnit.module("Router: Push state");
@@ -245,7 +240,6 @@ QUnit.test("do not re-push when hash is same (with integers as strings)", async 
 
 QUnit.test("test the help utils history.back and history.forward", async (assert) => {
     patchWithCleanup(browser.location, {
-        pathname: "/asf",
         origin: "http://lordofthering",
     });
     routerBus.addEventListener("ROUTE_CHANGE", () => assert.step("ROUTE_CHANGE"));
@@ -253,31 +247,31 @@ QUnit.test("test the help utils history.back and history.forward", async (assert
 
     router.pushState({ k1: 1 });
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1");
 
     router.pushState({ k2: 2 });
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1&k2=2");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1&k2=2");
 
     router.pushState({ k3: 3 }, { replace: true });
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k3=3");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k3=3");
 
     browser.history.back(); // Click on back button
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1&k2=2");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1&k2=2");
 
     router.pushState({ k4: 3 }, { replace: true }); // Click on a link
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k4=3");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k4=3");
 
     browser.history.back(); // Click on back button
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k1=1&k2=2");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k1=1&k2=2");
 
     browser.history.forward(); // Click on forward button
     await nextTick();
-    assert.deepEqual(browser.location.href, "http://lordofthering/asf?k4=3");
+    assert.deepEqual(browser.location.href, "http://lordofthering/apps?k4=3");
 
     assert.verifySteps(["ROUTE_CHANGE", "ROUTE_CHANGE", "ROUTE_CHANGE"]);
 });

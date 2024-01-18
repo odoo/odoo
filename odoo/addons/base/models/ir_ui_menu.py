@@ -24,6 +24,7 @@ class IrUiMenu(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(string='Menu', required=True, translate=True)
+    path = fields.Char(string="Path to show in the URL")
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
@@ -72,6 +73,22 @@ class IrUiMenu(models.Model):
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive menus.'))
+
+    @api.constrains('path')
+    def _check_path(self):
+        for menu in self:
+            if menu.path:
+                if '/' in menu.path:
+                    raise ValidationError(_('Error! Should not contain slashes.'))
+                if ' ' in menu.path:
+                    raise ValidationError(_('Error! Should not contain spaces.'))
+                if menu.path.isnumeric():
+                    raise ValidationError(_('Error! Should not be numeric.'))
+                # check special characters (except - and _ ) but avoid éèàçù etc.
+                # Maybe something like this : if not re.match(r'^[a-z0-9_-]*$', menu.path):
+                # maybe add a compute field app_id. If so, uncomment the following lines:
+                # if self.env['ir.ui.menu'].search_count([('path', '=', menu.barcode), ('app_id', '=', menu.app_id)]) > 1:
+                #     raise ValidationError(_('Another menu already has this path on the same app.'))
 
     @api.model
     @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
@@ -250,7 +267,7 @@ class IrUiMenu(models.Model):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon']
+        fields = ['name', 'path', 'sequence', 'parent_id', 'action', 'web_icon']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {

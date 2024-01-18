@@ -43,6 +43,93 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         }
     }
 
+    function _findActionInMenu(menu, actionID) {
+        if (!menu) {
+            return;
+        }
+        if (menu.actionID === actionID) {
+            return menu;
+        }
+        if (!menu.childrenTree) {
+            return;
+        }
+        return _findActionInMenu(menu.childrenTree[0], actionID);
+    }
+
+    function _menuRouteToUrl(route) {
+        if (route.menu_id) {
+            let menu = _getMenu(route.menu_id);
+            // Find the first element of the url the app.
+            const app = _getMenu(menu.appID);
+            let pathname = `/${app.path || app.xmlid}`;
+            delete route.menu_id;
+            if (menu.id === app.id) {
+                menu =
+                    _findActionInMenu(menu.childrenTree && menu.childrenTree[0], app.actionID) ??
+                    menu;
+            }
+            // If there is not an action or the action is not the same as the one of the menu,
+            // we need to add the action/model to the url.
+            if (!route.action || route.action !== menu.actionID) {
+                return { pathname, route, continue: true };
+            }
+            if (menu.id !== app.id) {
+                pathname += `/${menu.path || menu.xmlid}`;
+            }
+            delete route.action;
+            delete route.model;
+            if (route.view_type && !route.id) {
+                pathname += `/${route.view_type}`;
+                delete route.view_type;
+            } else if (route.id) {
+                pathname += `/${route.id}`;
+                delete route.view_type;
+                delete route.id;
+            }
+            return { pathname, route };
+        }
+
+        return false;
+    }
+
+    function _menuGetRoute(splitPath) {
+        const state = {};
+        const apps = _getMenu("root").children.map((mid) => _getMenu(mid));
+        const app = Object.values(apps).find(
+            (m) => splitPath[0] === m.path || splitPath[0] === m.xmlid
+        );
+        if (!app) {
+            return false;
+        }
+        const menu = Object.values(menusData).find(
+            (m) => m.appID === app.id && (splitPath[1] === m.path || splitPath[1] === m.xmlid)
+        );
+        if (!menu) {
+            if (app) {
+                state.menu_id = app.id;
+                return { state, continue: true };
+            }
+            return false;
+        }
+        state.menu_id = menu.id;
+        if (menu.actionID) {
+            state.action = menu.actionID;
+        }
+        if (splitPath.length === 3) {
+            if (isNaN(parseInt(splitPath[2]))) {
+                // URL has a view type as last parameter, so it's a multi-record view
+                state.view_type = splitPath[2];
+            } else {
+                // URL has an id as last paremeter, so it's a form view
+                state.view_type = "form";
+                state.id = parseInt(splitPath[2]);
+            }
+        }
+        return { state };
+    }
+
+    registry.category("routeToUrl").add("menuRouteToUrl", _menuRouteToUrl, { sequence: 1 });
+    registry.category("getRoute").add("menuGetRoute", _menuGetRoute, { sequence: 1 });
     return {
         getAll() {
             return Object.values(menusData);

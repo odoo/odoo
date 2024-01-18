@@ -57,6 +57,8 @@ export class WebClient extends Component {
     }
 
     async loadRouterState() {
+        // JPP This method should be refactored to use the new router
+
         let stateLoaded = await this.actionService.loadState();
         let menuId = Number(router.current.menu_id || 0);
 

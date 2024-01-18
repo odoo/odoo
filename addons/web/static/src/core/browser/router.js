@@ -4,6 +4,7 @@ import { EventBus } from "@odoo/owl";
 import { shallowEqual } from "../utils/objects";
 import { objectToUrlEncodedString } from "../utils/urls";
 import { browser } from "./browser";
+import { registry } from "@web/core/registry";
 
 export const routerBus = new EventBus();
 
@@ -100,28 +101,57 @@ export function parseSearchQuery(search) {
  * @returns
  */
 export function routeToUrl(route) {
-    const search = objectToUrlEncodedString(route);
-    return browser.location.pathname + (search ? "?" + search : "");
+    let tmpRoute = Object.assign({}, route);
+    let pathname = "/apps";
+    const allParsers = registry.category("routeToUrl").getAll();
+    for (const parser of allParsers) {
+        const parsed = parser(tmpRoute);
+        if (parsed) {
+            tmpRoute = parsed.route;
+            pathname = pathname + parsed.pathname;
+            if (!parsed.continue) {
+                break;
+            }
+        }
+    }
+    const search = objectToUrlEncodedString(tmpRoute);
+    return pathname + (search ? "?" + search : "");
 }
 
 function getRoute(urlObj) {
-    const search = parseSearchQuery(urlObj.search);
+    const state = parseSearchQuery(urlObj.search);
+    const splitPath = urlObj.pathname.split("/").filter(Boolean);
 
     // If the url contains a hash, it can be for two motives:
     // 1. It is an anchor link, in that case, we ignore it, as it will not have a keys/values format
     //    the sanitizeHash function will remove it from the hash object.
     // 2. It has one or more keys/values, in that case, we merge it with the search.
     const hash = sanitizeHash(parseHash(urlObj.hash));
-    if (Object.keys(hash).length > 0) {
-        Object.assign(search, hash);
-        const url = browser.location.origin + routeToUrl(search);
+    if (Object.keys(hash).length > 0 || splitPath.length === 1) {
+        Object.assign(state, hash);
+        const url = browser.location.origin + routeToUrl(state);
         browser.history.replaceState({}, "", url);
     }
-    return search;
+    if (splitPath.length > 1 && splitPath[0] === "apps") {
+        splitPath.splice(0, 1);
+        const allParsers = registry.category("getRoute").getAll();
+        for (const parser of allParsers) {
+            const parsed = parser(splitPath);
+            if (parsed) {
+                Object.assign(state, parsed.state);
+                if (!parsed.continue) {
+                    break;
+                }
+            }
+        }
+    }
+
+    return state;
 }
 
 let current;
 let pushTimeout;
+let updateTimeout;
 let allPushArgs;
 let _lockedKeys;
 
@@ -131,6 +161,14 @@ export function startRouter() {
     allPushArgs = [];
     _lockedKeys = new Set(["debug"]);
 }
+
+registry.category("getRoute").addEventListener("UPDATE", () => {
+    browser.clearTimeout(updateTimeout);
+    updateTimeout = browser.setTimeout(() => {
+        current = getRoute(browser.location);
+        updateTimeout = null;
+    });
+});
 
 // pushState and replaceState keep the browser on the same document. It's a simulation of going to a new page.
 // The back button on the browser is a navigation tool that takes you to the previous document.

@@ -160,6 +160,9 @@
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
+            # replace the menu service with an empty one
+            ('replace', 'web/static/src/webclient/menus/menu_service.js', 'project/static/src/project_sharing/menu_service.js'),
+
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),
             'web/static/src/webclient/actions/reports/*.js',

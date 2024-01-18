@@ -1431,3 +1431,51 @@ export const actionService = {
 };
 
 registry.category("services").add("action", actionService);
+function actionRouteToUrl(route) {
+    if ((route.action && typeof route.action === "number") || route.model) {
+        let pathname = "";
+        if (route.action) {
+            pathname = `/${route.action}`;
+            delete route.action;
+            delete route.model;
+        } else {
+            pathname = `/${route.model}`;
+            delete route.model;
+        }
+        if (route.view_type && !route.id) {
+            pathname += `/${route.view_type}`;
+            delete route.view_type;
+        } else if (route.id) {
+            pathname += `/${route.id}`;
+            delete route.view_type;
+            delete route.id;
+        }
+        return { pathname, route };
+    }
+    return false;
+}
+
+function actionGetRoute(splitPath) {
+    const state = {};
+    if (isNaN(parseInt(splitPath[0]))) {
+        // URL has a model
+        state.model = splitPath[0];
+    } else {
+        // URL has an action id
+        state.action = parseInt(splitPath[0]);
+    }
+    if (splitPath.length === 2) {
+        if (isNaN(parseInt(splitPath[1]))) {
+            // URL has a view type as last parameter, so it's a multi-record view
+            state.view_type = splitPath[1];
+        } else {
+            // URL has an id as last paremeter, so it's a form view
+            state.view_type = "form";
+            state.id = parseInt(splitPath[1]);
+        }
+    }
+    return { state };
+}
+
+registry.category("routeToUrl").add("actionRouteToUrl", actionRouteToUrl, { sequence: 10 });
+registry.category("getRoute").add("actionGetRoute", actionGetRoute, { sequence: 10 });

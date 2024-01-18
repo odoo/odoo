@@ -28,6 +28,7 @@ class IrUiMenu(models.Model):
                     "children": menu['children'],
                     "appID": False,
                     "xmlid": "",
+                    "path": False,
                     "actionID": False,
                     "actionModel": False,
                     "webIcon": None,
@@ -51,6 +52,7 @@ class IrUiMenu(models.Model):
                 web_menus[menu['id']] = {
                     "id": menu['id'],
                     "name": menu['name'],
+                    "path": menu['path'],
                     "children": menu['children'],
                     "appID": menu['app_id'],
                     "xmlid": menu['xmlid'],

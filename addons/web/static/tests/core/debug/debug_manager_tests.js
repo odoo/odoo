@@ -275,10 +275,8 @@ QUnit.module("DebugMenu", (hooks) => {
             }
         };
         testConfig = { mockRPC };
-        patchWithCleanup(browser, {
-            location: {
-                reload: () => assert.step("reloadPage"),
-            },
+        patchWithCleanup(browser.location, {
+            reload: () => assert.step("reloadPage"),
         });
         debugRegistry.category("default").add("regenerateAssets", regenerateAssets);
         const env = await makeTestEnv(testConfig);
