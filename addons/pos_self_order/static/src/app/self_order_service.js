@@ -347,10 +347,13 @@ export class SelfOrder extends Reactive {
             }
 
             effect(
-                batched((state) => this.saveOrderToLocalStorage(state.orders)),
+                batched(
+                    (state) =>
+                        Array.isArray(state.orders) &&
+                        localStorage.setItem("orders", JSON.stringify(state.orders))
+                ),
                 [this]
             );
-
             const orders = JSON.parse(localStorage.getItem("orders")) ?? [];
             this.orders.push(
                 ...orders.map((o) => {
@@ -358,8 +361,6 @@ export class SelfOrder extends Reactive {
                     return new Order(o);
                 })
             );
-
-            effect((state) => this.saveOrderToLocalStorage(state.orders), [this]);
             await this.getOrdersFromServer();
             await this.getPricesFromServer();
         }
@@ -384,10 +385,6 @@ export class SelfOrder extends Reactive {
 
     isCategoryAvailable(categoryId) {
         return this.availableCategoryListIds.includes(categoryId);
-    }
-
-    saveOrderToLocalStorage(orders) {
-        Array.isArray(orders) && localStorage.setItem("orders", JSON.stringify(orders));
     }
 
     cancelOrder() {
