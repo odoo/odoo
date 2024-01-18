@@ -15,7 +15,7 @@
                     </group>
                     <group>
                         <field name="pricelist_id" groups="product.group_product_pricelist"/>
-                        <field name="extra_html" widget="html" invisible="print_format not in ('dymo', '2x7xprice')"/>
+                        <field name="extra_html" widget="html" invisible="print_format != '2x7xprice'"/>
                     </group>
                 </group>
                 <footer>
