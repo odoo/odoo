@@ -466,3 +466,13 @@ class StockRoute(models.Model):
         for route in self:
             route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
         super().toggle_active()
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        for route in self:
+            if not route.company_id:
+                continue
+
+            for rule in route.rule_ids:
+                if route.company_id.id != rule.company_id.id:
+                    raise ValidationError(_("Rule %s belongs to %s while the route belongs to %s.", rule.display_name, rule.company_id.display_name, route.company_id.display_name))
