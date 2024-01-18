@@ -1585,8 +1585,68 @@ class AccountMove(models.Model):
                 copied_vals = line.copy_data()[0]
                 self.invoice_line_ids += self.env['account.move.line'].new(copied_vals)
 
+<<<<<<< HEAD
             self.currency_id = self.invoice_vendor_bill_id.currency_id
             self.fiscal_position_id = self.invoice_vendor_bill_id.fiscal_position_id
+||||||| parent of 330e996eb33a (temp)
+        :param invoice_date (datetime.date): The invoice date
+        :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
+        :return (datetime.date):
+        """
+        lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
+        today = fields.Date.today()
+        highest_name = self.highest_name or self._get_last_sequence(relaxed=True, lock=False)
+        number_reset = self._deduce_sequence_number_reset(highest_name)
+        if lock_dates:
+            invoice_date = lock_dates[-1][0] + timedelta(days=1)
+        if self.is_sale_document(include_receipts=True):
+            if lock_dates:
+                if not highest_name or number_reset == 'month':
+                    return min(today, date_utils.get_month(invoice_date)[1])
+                elif number_reset == 'year':
+                    return min(today, date_utils.end_of(invoice_date, 'year'))
+        else:
+            if not highest_name or number_reset == 'month':
+                if (today.year, today.month) > (invoice_date.year, invoice_date.month):
+                    return date_utils.get_month(invoice_date)[1]
+                else:
+                    return max(invoice_date, today)
+            elif number_reset == 'year':
+                if today.year > invoice_date.year:
+                    return date(invoice_date.year, 12, 31)
+                else:
+                    return max(invoice_date, today)
+        return invoice_date
+=======
+        :param invoice_date (datetime.date): The invoice date
+        :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
+        :return (datetime.date):
+        """
+        lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
+        today = fields.Date.context_today(self)
+        highest_name = self.highest_name or self._get_last_sequence(relaxed=True, lock=False)
+        number_reset = self._deduce_sequence_number_reset(highest_name)
+        if lock_dates:
+            invoice_date = lock_dates[-1][0] + timedelta(days=1)
+        if self.is_sale_document(include_receipts=True):
+            if lock_dates:
+                if not highest_name or number_reset == 'month':
+                    return min(today, date_utils.get_month(invoice_date)[1])
+                elif number_reset == 'year':
+                    return min(today, date_utils.end_of(invoice_date, 'year'))
+        else:
+            if not highest_name or number_reset == 'month':
+                if (today.year, today.month) > (invoice_date.year, invoice_date.month):
+                    return date_utils.get_month(invoice_date)[1]
+                else:
+                    return max(invoice_date, today)
+            elif number_reset == 'year':
+                if today.year > invoice_date.year:
+                    return date(invoice_date.year, 12, 31)
+                else:
+                    return max(invoice_date, today)
+        return invoice_date
+>>>>>>> 330e996eb33a (temp)
 
             # Reset
             self.invoice_vendor_bill_id = False
