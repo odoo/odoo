@@ -339,7 +339,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints = orderpoints - orderpoints_removed
         to_refill = defaultdict(float)
         all_product_ids = self._get_orderpoint_products()
-        all_replenish_location_ids = self.env['stock.location'].search([('replenish_location', '=', True)])
+        all_replenish_location_ids = self._get_orderpoint_locations()
         ploc_per_day = defaultdict(set)
         # For each replenish location get products with negative virtual_available aka forecast
         for loc in all_replenish_location_ids:
@@ -572,3 +572,6 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_orderpoint_products(self):
         return self.env['product.product'].search([('type', '=', 'product'), ('stock_move_ids', '!=', False)])
+
+    def _get_orderpoint_locations(self):
+        return self.env['stock.location'].search([('replenish_location', '=', True)])
