@@ -445,3 +445,19 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         # Tag name_search should not raise Error if project_id is False
         task.tag_ids.with_context(project_id=task.project_id.id).name_search(
             args=["!", ["id", "in", []]])
+
+    def test_task_mail_assignement(self):
+        """ This test will check that an assignement mail is sent when adding an assignee to a task """
+        with self.mock_mail_gateway():
+            self.env['project.task'].create({
+                'name': 'Mail Task',
+                'user_ids': self.user_projectmanager,
+                'project_id': self.project_pigs.id
+            })
+        self.assertSentEmail(self.env.user.email_formatted, [self.user_projectmanager.email_formatted])
+
+    def test_task_copy_no_mail_assignement(self):
+        """ This test will check that no assignement mail is sent to assignees of a duplicated task """
+        with self.mock_mail_gateway():
+            self.task_1.copy() # if the feature that prevents assignement mails from being sent when copying a task is broken, this will create a mail
+        self.assertNotSentEmail(self.user_projectuser.email_formatted) # check that no mail was received for the assignee of the task
