@@ -473,7 +473,7 @@ class IrFieldsConverter(models.AbstractModel):
                         with self.env.cr.savepoint():
                             id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
-                        error_msg = _("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
+                        error_msg = _("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", self.env['ir.model']._get(field.comodel_name).name)
         else:
             raise self._format_import_error(
                 Exception,

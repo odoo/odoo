@@ -2077,7 +2077,7 @@ class Html(_String):
                         "restricted for security reasons. It is possible that someone "
                         "with higher privileges previously modified it, and you are therefore "
                         "not able to modify it yourself while preserving the content.",
-                        record._description, self.string,
+                        record.env['ir.model']._get(record._name).name, self.string,
                     ))
 
         return html_sanitize(value, **sanitize_vals)
