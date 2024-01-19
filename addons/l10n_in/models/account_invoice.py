@@ -73,6 +73,12 @@ class AccountMove(models.Model):
             }}
         return super()._onchange_name_warning()
 
+    def _get_name_invoice_report(self):
+        self.ensure_one()
+        if self.country_code == 'IN':
+            return 'l10n_in.l10n_in_report_invoice_document_inherit'
+        return super()._get_name_invoice_report()
+
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
         posted = super()._post(soft)
