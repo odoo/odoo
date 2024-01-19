@@ -1882,44 +1882,64 @@ registry.TextHighlight = publicWidget.Widget.extend({
      * @override
      */
     async start() {
+        // We need to adapt the text highlights on resize (E.g. custom fonts
+        // loading, layout option changes, window resized...), mainly to take in
+        // consideration the rendered line breaks in text nodes... But after
+        // every adjustment, the `ResizeObserver` will unfortunately immediately
+        // notify a size change once new highlight items are observed leading to
+        // an infinite loop. To avoid that, we use a lock map (`observerLock`)
+        // to block the callback on this first notification for observed items.
+        this.observerLock = new Map();
+        this.resizeObserver = new window.ResizeObserver(entries => {
+            window.requestAnimationFrame(() => {
+                const textHighlightEls = new Set();
+                entries.forEach(entry => {
+                    const target = entry.target;
+                    if (this.observerLock.get(target)) {
+                        // Unlock the target, the next resize will trigger a
+                        // highlight adaptation.
+                        return this.observerLock.set(target, false);
+                    }
+                    const topTextEl = target.closest(".o_text_highlight");
+                    for (const el of topTextEl
+                        ? [topTextEl]
+                        : target.querySelectorAll(":scope .o_text_highlight")) {
+                        textHighlightEls.add(el);
+                    }
+                });
+                textHighlightEls.forEach(textHighlightEl => {
+                    for (const textHighlightItemEl of this._getHighlightItems(textHighlightEl)) {
+                        // Unobserve the highlight lines (they will be replaced
+                        // by new ones after the update).
+                        this.resizeObserver.unobserve(textHighlightItemEl);
+                    }
+                    // Adapt the highlight (new items are automatically locked
+                    // and observed).
+                    switchTextHighlight(textHighlightEl);
+                });
+            });
+        });
+
+        this.el.addEventListener("text_highlight_added", this._onTextHighlightAdded.bind(this));
+        this.el.addEventListener("text_highlight_remove", this._onTextHighlightRemove.bind(this));
         // Text highlights are saved with a single wrapper that contains all
         // information to build the effects, So we need to make the adaptation
         // here to show the SVGs.
         for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
             applyTextHighlight(textEl);
         }
-        // We need to adapt the text highlights on resize, mainly to take in
-        // consideration the rendered line breaks in text nodes...
-        this._adaptOnResize = throttleForAnimation(() => {
-            this.options.wysiwyg?.odooEditor.observerUnactive("textHighlightResize");
-            for (const textEl of this.el.querySelectorAll(".o_text_highlight")) {
-                // Remove old effect, normalize content, redraw SVGs...
-                switchTextHighlight(textEl);
-            }
-            this.options.wysiwyg?.odooEditor.observerActive("textHighlightResize");
-        });
-        if (!this.editableMode) {
-            this._adaptOnFontsLoading();
-        }
-        window.addEventListener("resize", this._adaptOnResize);
         return this._super(...arguments);
     },
     /**
      * @override
      */
     destroy() {
-        this._super(...arguments);
-        window.removeEventListener("resize", this._adaptOnResize);
-        if (!this.editableMode) {
-            this.resizeObserver.disconnect();
-            this.observerLocked.clear();
-        } else {
-            // We only save the highlight information on the main text wrapper,
-            // the full structure will be restored on page load.
-            for (const textHighlightEl of this.el.querySelectorAll(".o_text_highlight")) {
-                removeTextHighlight(textHighlightEl);
-            }
+        // We only save the highlight information on the main text wrapper,
+        // the full structure will be restored on page load.
+        for (const textHighlightEl of this.el.querySelectorAll(".o_text_highlight")) {
+            removeTextHighlight(textHighlightEl);
         }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1933,6 +1953,8 @@ registry.TextHighlight = publicWidget.Widget.extend({
      * before the text width is updated, so we need to do the update manually
      * here by adjusting the highlights if the text width changes using a
      * `ResizeObserver`.
+     *
+     * TODO: Remove in master (left in stable for compatibility)
      *
      * @private
      */
@@ -1983,26 +2005,90 @@ registry.TextHighlight = publicWidget.Widget.extend({
         this._lockHighlightObserver();
     },
     /**
+     * The `resizeObserver` ignores an element if it has an inline display.
+     * We need to target the closest non-inline parent.
+     *
      * @private
-     * @param {HTMLElement} [container=this.el] the element where the "resize"
-     * should be observed.
+     * @param {HTMLElement} el
      */
-    _observeHighlightResize(container = this.el) {
-        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
-            this.resizeObserver.observe(unit);
-        });
+    _closestToObserve(el) {
+        if (el === this.el || !el) {
+            return null;
+        }
+        if (window.getComputedStyle(el).display !== "inline") {
+            return el;
+        }
+        return this._closestToObserve(el.parentElement);
+    },
+    /**
+     * Returns a list of text highlight items (lines) in the provided element.
+     *
+     * @private
+     * @param {HTMLElement} el
+     */
+    _getHighlightItems(el = this.el) {
+        return el.querySelectorAll(":scope .o_text_highlight_item");
+    },
+    /**
+     * Returns a list of highlight elements to observe.
+     *
+     * @private
+     * @param {HTMLElement} topTextEl
+     */
+    _getObservedEls(topTextEl) {
+        const closestToObserve = this._closestToObserve(topTextEl);
+        return [
+            ...(closestToObserve ? [closestToObserve] : []),
+            ...this._getHighlightItems(topTextEl),
+        ];
+    },
+    /**
+     * @private
+     * @param {HTMLElement} topTextEl the element where the "resize" should
+     * be observed.
+     */
+    _observeHighlightResize(topTextEl) {
+        // The `ResizeObserver` cannot detect the width change on highlight
+        // units (`.o_text_highlight_item`) as long as the width of the entire
+        // `.o_text_highlight` element remains the same, so we need to observe
+        // each one of them and do the adjustment only once for the whole text.
+        for (const highlightItemEl of this._getObservedEls(topTextEl)) {
+            this.resizeObserver.observe(highlightItemEl);
+        }
     },
     /**
      * Used to prevent the first callback triggered by `ResizeObserver` on new
      * observed items.
      *
      * @private
-     * @param {HTMLElement} [container=this.el] the container of observed items.
+     * @param {HTMLElement} topTextEl the container of observed items.
      */
-    _lockHighlightObserver(container = this.el) {
-        [...container.querySelectorAll(".o_text_highlight_item")].forEach(unit => {
-            this.observerLocked.set(unit, true);
-        });
+    _lockHighlightObserver(topTextEl) {
+        for (const targetEl of this._getObservedEls(topTextEl)) {
+            this.observerLock.set(targetEl, true);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onTextHighlightAdded({ target }) {
+        this._lockHighlightObserver(target);
+        this._observeHighlightResize(target);
+    },
+    /**
+     * @private
+     */
+    _onTextHighlightRemove({ target }) {
+        // We don't need to track the removed text highlight items after
+        // highlight adaptations.
+        for (const highlightItemEl of this._getHighlightItems(target)) {
+            this.observerLock.delete(highlightItemEl);
+        }
     },
 });
 
