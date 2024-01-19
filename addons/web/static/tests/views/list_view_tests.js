@@ -4261,7 +4261,7 @@ QUnit.module("Views", (hooks) => {
                 <tree>
                     <field name="company_currency_id" column_invisible="1"/>
                     <field name="currency_id" column_invisible="1"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Sum"/>
                     <field name="amount_currency"/>
                 </tree>`,
             });
@@ -4280,6 +4280,12 @@ QUnit.module("Views", (hooks) => {
                 target.querySelectorAll("tfoot td")[1].textContent,
                 "—",
                 "aggregates monetary should never work if different currencies are used"
+            );
+            assert.strictEqual(
+                target.querySelectorAll("tfoot td")[2].textContent,
+                "",
+                "monetary aggregation should only be attempted with an active aggregation function" +
+                " when using different currencies"
             );
         }
     );
