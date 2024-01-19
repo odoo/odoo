@@ -235,7 +235,6 @@ registry
             startSteps();
 
             ProductScreen.do.clickHomeCategory();
-
             ProductScreen.exec.addOrderline("Test Product 1", "1.00", "100");
             PosLoyalty.do.clickDiscountButton();
             PosLoyalty.do.clickConfirmButton();
@@ -303,9 +302,12 @@ registry
         ProductScreen.do.clickCustomer('AAA Partner');
         ProductScreen.do.clickDisplayedProduct('Product B');
         ProductScreen.do.clickDisplayedProduct('Product A');
+        ProductScreen.check.totalAmountIs('210.00');
+        PosLoyalty.check.isRewardButtonHighlighted(true);
         PosLoyalty.do.clickRewardButton();
         SelectionPopup.do.clickItem("$ 5");
         ProductScreen.check.totalAmountIs('205.00');
+        PosLoyalty.check.isRewardButtonHighlighted(true);
         PosLoyalty.do.clickRewardButton();
         SelectionPopup.do.clickItem("$ 5");
         ProductScreen.check.totalAmountIs('200.00');
