@@ -1863,8 +1863,10 @@ class Lead(models.Model):
         contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
         "Raoul" <raoul@raoul.fr> as recipient. """
         result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
+        if not (self.partner_name or self.contact_name) or not self.email_from:
+            return result
         for email, partner_info in zip(emails, result):
-            if partner_info.get('partner_id') or not email or not (self.partner_name or self.contact_name):
+            if partner_info.get('partner_id') or not email:
                 continue
             # reformat email if no name information
             name_emails = tools.email_split_tuples(email)
