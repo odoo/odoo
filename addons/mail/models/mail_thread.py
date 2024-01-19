@@ -1813,7 +1813,7 @@ class MailThread(models.AbstractModel):
             return result
         if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
             return result
-        if partner and partner.id in [val['partner_id'] for val in result]:  # already existing partner ID -> skip
+        if partner and partner.id in [val.get('partner_id', False) for val in result]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
             email_normalized = ','.join(email_normalize_all(partner.email))
