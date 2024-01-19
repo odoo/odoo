@@ -109,5 +109,7 @@ class PaymentProvider(models.Model):
         # If the payment method is used by any payments, we block the uninstallation of the module.
         if self._check_existing_payment(payment_method):
             raise UserError(_("You cannot uninstall this module as payments using this payment method already exist."))
+        if self._check_existing_payment_method_lines(payment_method):
+            raise UserError(_("To uninstall this module, please remove first the corresponding payment method line in the outgoing payments tab defined on the bank journal."))
         super()._remove_provider(code)
         payment_method.unlink()
