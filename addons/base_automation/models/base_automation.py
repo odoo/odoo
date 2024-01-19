@@ -142,7 +142,7 @@ class BaseAutomation(models.Model):
         help="Some triggers need a reference to a selection field. This field is used to store it.")
     trg_field_ref_model_name = fields.Char(
         string='Trigger Field Model',
-        compute='_compute_trg_field_ref__model_and_display_names')
+        compute='_compute_trg_field_ref__model_name')
     trg_field_ref = fields.Many2oneReference(
         model_field='trg_field_ref_model_name',
         compute='_compute_trg_field_ref',
@@ -150,9 +150,6 @@ class BaseAutomation(models.Model):
         readonly=False,
         store=True,
         help="Some triggers need a reference to another field. This field is used to store it.")
-    trg_field_ref_display_name = fields.Char(
-        string='Trigger Reference Display Name',
-        compute='_compute_trg_field_ref__model_and_display_names')
     trg_date_id = fields.Many2one(
         'ir.model.fields', string='Trigger Date',
         compute='_compute_trg_date_id',
@@ -301,22 +298,18 @@ class BaseAutomation(models.Model):
             automation.trg_field_ref = self.env[relation]
 
     @api.depends('trg_field_ref', 'trigger_field_ids')
-    def _compute_trg_field_ref__model_and_display_names(self):
+    def _compute_trg_field_ref__model_name(self):
         to_compute = self.filtered(lambda a: a.trigger in ['on_stage_set', 'on_tag_set'] and a.trg_field_ref is not False)
         # wondering why we check based on 'is not'? Because the ref could be an empty recordset
         # and we still need to introspec on the model in that case - not just ignore it
         to_reset = (self - to_compute)
         to_reset.trg_field_ref_model_name = False
-        to_reset.trg_field_ref_display_name = False
         for automation in to_compute:
             relation = automation.trigger_field_ids.relation
             if not relation:
                 automation.trg_field_ref_model_name = False
-                automation.trg_field_ref_display_name = False
                 continue
-            resid = automation.trg_field_ref
             automation.trg_field_ref_model_name = relation
-            automation.trg_field_ref_display_name = self.env[relation].browse(resid).display_name
 
     @api.depends('trigger', 'trigger_field_ids', 'trg_field_ref')
     def _compute_filter_pre_domain(self):

@@ -40,12 +40,11 @@
                                             required="trigger in ['on_state_set', 'on_priority_set']"
                                         />
                                         <field name="trg_field_ref" placeholder="Select a value..." class="oe_inline"
-                                            widget="base_automation_trigger_reference"
+                                            options="{'no_open': True, 'no_create': True}"
                                             invisible="trigger not in ['on_stage_set', 'on_tag_set']"
                                             required="trigger in ['on_stage_set', 'on_tag_set']"
                                         />
                                         <field name="trg_field_ref_model_name" invisible="1" />
-                                        <field name="trg_field_ref_display_name" invisible="1" />
                                         <field name="trg_date_id" class="oe_inline" string="Date Field"
                                             options="{'no_open': True, 'no_create': True}"
                                                 invisible="trigger != 'on_time'"
@@ -249,7 +248,7 @@
                                                 <field name="trigger" />
                                                 <field name="on_change_field_ids" invisible="trigger != 'on_change'" class="my-1" />
                                                 <field name="trg_selection_field_id" invisible="trigger not in ['on_state_set', 'on_priority_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
-                                                <field name="trg_field_ref_display_name" invisible="trigger not in ['on_stage_set', 'on_tag_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
+                                                <field name="trg_field_ref" invisible="trigger not in ['on_stage_set', 'on_tag_set']" class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
                                                 <field name="trigger_field_ids" invisible="trigger not in ['on_create_or_write']" class="my-1" />
                                             </div>
                                             <div class="d-flex align-items-center gap-1" invisible="trigger != 'on_time'">
