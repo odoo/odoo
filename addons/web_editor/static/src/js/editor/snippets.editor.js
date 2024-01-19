@@ -1994,7 +1994,8 @@ class SnippetsMenu extends Component {
             // Prevent horizontal scroll when tooltip is displayed.
             boundary: this.el.ownerDocument.body,
             title: function () {
-                const el = this;
+                // Workaround BS regression: https://github.com/twbs/bootstrap/issues/38720
+                const el = this === undefined ? arguments[0] : this.el;
                 if (el.tagName !== 'WE-TITLE') {
                     return el.title;
                 }
