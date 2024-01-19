@@ -298,6 +298,52 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.value_svl, 375)
         self.assertEqual(self.product1.quantity_svl, 19)
 
+    def test_lc_generated_from_bill_multi_comapnies(self):
+        """
+        In a multi-company environment:
+        Confirm PO, receive products, post bill and generate LC
+        """
+        company = self.env.company
+        self.env.user.company_id = self.env['res.company'].create({
+            'name': 'Another Company',
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.company_id = company
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10
+            po_line.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids.quantity = 1
+        receipt.button_validate()
+
+        action = po.action_create_invoice()
+        bill = self.env['account.move'].browse(action['res_id'])
+        bill_form = Form(bill)
+        bill_form.invoice_date = bill_form.date
+        with bill_form.invoice_line_ids.new() as inv_line:
+            inv_line.product_id = self.productlc1
+            inv_line.price_unit = 5
+            inv_line.is_landed_costs_line = True
+        bill = bill_form.save()
+        bill.action_post()
+
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+
+        product = self.product1.with_company(company)
+        self.assertEqual(product.value_svl, 15)
+        self.assertEqual(product.quantity_svl, 1)
+        self.assertEqual(product.standard_price, 15)
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
