@@ -2,7 +2,6 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { deepCopy } from "@web/core/utils/objects";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { EvaluationError } from "@odoo/o-spreadsheet";
@@ -148,6 +147,23 @@ const ODOO_FIN_ARGS = () => [
         _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
     arg("offset (number, default=0)", _t("Offset applied to the years.")),
+    arg("company_id (number, optional)", _t("The company to target (Advanced).")),
+    arg(
+        "include_unposted (boolean, default=FALSE)",
+        _t("Set to TRUE to include unposted entries.")
+    ),
+];
+
+const ODOO_RESIDUAL_ARGS = () => [
+    arg(
+        "account_codes (string, optional)",
+        _t("The prefix of the accounts. If none provided, all receivable and payable accounts will be used.")
+    ),
+    arg(
+        "date_range (string, date, optional)",
+        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+    ),
+    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
     arg("company_id (number, optional)", _t("The company to target (Advanced).")),
     arg(
         "include_unposted (boolean, default=FALSE)",
@@ -310,3 +326,39 @@ functionRegistry.add("ODOO.ACCOUNT.GROUP", {
         return accountTypes.join(",");
     },
 });
+
+functionRegistry.add("ODOO.RESIDUAL", {
+    description: _t("Return the residual amount for the specified account(s) and period"),
+    args: ODOO_RESIDUAL_ARGS(),
+    category: "Odoo",
+    returns: ["NUMBER"],
+    compute: function (
+        accountCodes,
+        dateRange,
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
+    ) {
+        const _accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
+        const _offset = toNumber(offset, this.locale);
+        if ( !dateRange?.value ) {
+            dateRange = { value: new Date().getFullYear() }
+        }
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _companyId = toNumber(companyId, this.locale);
+        const _includeUnposted = toBoolean(includeUnposted);
+        return {
+            value: this.getters.getAccountResidual(
+                _accountCodes,
+                _dateRange,
+                _offset,
+                _companyId,
+                _includeUnposted
+            ),
+            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
+        };
+    },
+})

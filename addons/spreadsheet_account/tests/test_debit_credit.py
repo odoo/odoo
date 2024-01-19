@@ -1239,15 +1239,35 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "include_unposted": True,
             }
         )
+        company = self.company_data['company']
+        payable_receivable_accounts = self.env['account.account'].with_company(company).search([
+            ('account_type', 'in', ['liability_payable', 'asset_receivable'])
+        ])
         self.assertEqual(
             action,
             {
+                "domain": [
+                    "&",
+                    "&",
+                    "&",
+                    ("account_id", "in", payable_receivable_accounts.ids),
+                    "|",
+                    "&",
+                    ("account_id.include_initial_balance", "=", True),
+                    ("date", "<=", date(2022, 12, 31)),
+                    "&",
+                    "&",
+                    ("account_id.include_initial_balance", "=", False),
+                    ("date", ">=", date(2022, 1, 1)),
+                    ("date", "<=", date(2022, 12, 31)),
+                    ("company_id", "=", company.id),
+                    ("move_id.state", "!=", "cancel")
+                ],
                 "type": "ir.actions.act_window",
                 "res_model": "account.move.line",
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [(0, "=", 1)],
                 "name": "Cell Audit",
             },
         )
