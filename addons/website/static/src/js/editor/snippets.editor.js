@@ -741,39 +741,6 @@ weSnippetEditor.SnippetEditor.include({
     /**
      * @override
      */
-    async start() {
-        await this._super(...arguments);
-        // When a SnippetEditor is destroyed before the start() has ended
-        // (which can happen when a widget is immediately removed, as start()
-        // is async but destroy() is not), it could create a useless observer.
-        if (this.isDestroyed()) {
-            return;
-        }
-        this._adaptOnOptionResize = throttleForAnimation(this._adaptOnOptionResize.bind(this));
-        this.editorResizeObserver = new window.ResizeObserver(entries => {
-            // In addition to window resizing, every editor's option that
-            // changes the content size has an effect on text highlights.
-            // The idea here is to observe the size changes in the editor's
-            // target and adapt the text highlights (if they exist)
-            // accordingly.
-            if (!this.observerLock) {
-                this._adaptOnOptionResize();
-            } else {
-                this.observerLock = false;
-            }
-        });
-        this._highlightResizeObserve();
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this.editorResizeObserver?.disconnect();
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
     getName() {
         if (this.$target[0].closest('[data-oe-field=logo]')) {
             return _t("Logo");
@@ -818,6 +785,8 @@ weSnippetEditor.SnippetEditor.include({
         return restore;
     },
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @private
      */
     _highlightResizeObserve() {
@@ -828,6 +797,8 @@ weSnippetEditor.SnippetEditor.include({
         this.editorResizeObserver.observe(this.$target[0]);
     },
     /**
+     * TODO: Remove in master (left in stable for compatibility)
+     *
      * @private
      */
     _adaptOnOptionResize() {

@@ -359,6 +359,7 @@ export function applyTextHighlight(topTextEl, highlightID) {
     [...topTextEl.querySelectorAll(".o_text_highlight_item")].forEach(container => {
         container.append(drawTextHighlightSVG(container, highlightID || getCurrentTextHighlight(topTextEl)));
     });
+    topTextEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
 }
 
 /**
@@ -367,6 +368,7 @@ export function applyTextHighlight(topTextEl, highlightID) {
  * @param {HTMLElement} topTextEl
  */
 export function removeTextHighlight(topTextEl) {
+    topTextEl.dispatchEvent(new Event("text_highlight_remove", { bubbles: true }));
     // Simply replace every `<span class="o_text_highlight_item">
     // textNode1 [textNode2,...]<svg .../></span>` by `textNode1
     // [textNode2,...]`.
