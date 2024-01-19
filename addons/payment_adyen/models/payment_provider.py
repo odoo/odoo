@@ -75,7 +75,7 @@ class PaymentProvider(models.Model):
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
-    def _adyen_make_request(self, endpoint, endpoint_param=None, payload=None, method='POST'):
+    def _adyen_make_request(self, endpoint, endpoint_param=None, payload=None, method='POST', idempotency_key=None):
         """ Make a request to Adyen API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -86,6 +86,7 @@ class PaymentProvider(models.Model):
                                    transaction for the '/payments/{}/refunds' endpoint.
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
+        :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response
         :rtype: dict
         :raise: ValidationError if an HTTP error occurs
@@ -114,6 +115,8 @@ class PaymentProvider(models.Model):
         endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
         url = _build_url(self.adyen_api_url_prefix, version, endpoint)
         headers = {'X-API-Key': self.adyen_api_key}
+        if method == 'POST' and idempotency_key:
+            headers['idempotency-key'] = idempotency_key
         try:
             response = requests.request(method, url, json=payload, headers=headers, timeout=60)
             try:
