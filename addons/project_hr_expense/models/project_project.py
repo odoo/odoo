@@ -69,7 +69,7 @@ class Project(models.Model):
 
         expenses_read_group = self.env['hr.expense']._read_group(
             [
-                ('state', 'in', ['approved', 'done']),
+                ('sheet_id.state', 'in', ['post', 'done']),
                 ('analytic_distribution', 'in', self.analytic_account_id.ids),
             ],
             groupby=['currency_id'],
@@ -78,25 +78,19 @@ class Project(models.Model):
         if not expenses_read_group:
             return {}
         expense_ids = []
-        amount_billed = amount_to_bill = 0.0
+        amount_billed = 0.0
         for currency, ids, untaxed_amount_currency_sum in expenses_read_group:
             if can_see_expense:
                 expense_ids.extend(ids)
-            amount_to_bill += currency._convert(
+            amount_billed += currency._convert(
                 from_amount=untaxed_amount_currency_sum,
                 to_currency=self.currency_id,
                 company=self.company_id,
             )
 
-        expenses = self.env['hr.expense'].browse(expense_ids)
-        for expense in expenses:
-            if expense.sheet_id.state in ['post', 'done']:
-                amount_to_bill -= expense.sheet_id.untaxed_amount
-                amount_billed -= expense.sheet_id.untaxed_amount
-
         section_id = 'expenses'
         expense_profitability_items = {
-            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_billed, 'to_bill': -amount_to_bill},
+            'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -amount_billed, 'to_bill': 0.0},
         }
         if can_see_expense:
             args = [section_id, [('id', 'in', expense_ids)]]

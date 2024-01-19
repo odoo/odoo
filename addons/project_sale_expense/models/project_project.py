@@ -12,7 +12,7 @@ class Project(models.Model):
 
     def _get_expenses_profitability_items(self, with_action=True):
         expenses_read_group = self.env['hr.expense']._read_group(
-            [('state', 'in', ['approved', 'done']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            [('sheet_id.state', 'in', ['post', 'done']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
             groupby=['sale_order_id', 'product_id', 'currency_id'],
             aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
         )
@@ -28,9 +28,9 @@ class Project(models.Model):
                 expense_ids.extend(ids)
             dict_amount_per_currency[currency] += untaxed_amount_currency_sum
 
-        amount_billed = amount_to_bill = 0.0
+        amount_billed = 0.0
         for currency, untaxed_amount_currency_sum in dict_amount_per_currency.items():
-            amount_to_bill += currency._convert(untaxed_amount_currency_sum, self.currency_id, self.company_id)
+            amount_billed += currency._convert(untaxed_amount_currency_sum, self.currency_id, self.company_id)
 
         sol_read_group = self.env['sale.order.line'].sudo()._read_group(
             [
@@ -58,20 +58,14 @@ class Project(models.Model):
             total_amount_expense_to_invoice += currency._convert(revenues['to_invoice'], self.currency_id, self.company_id)
             total_amount_expense_invoiced += currency._convert(revenues['invoiced'], self.currency_id, self.company_id)
 
-        expenses = self.env['hr.expense'].browse(expense_ids)
-        for expense in expenses:
-            if expense.sheet_id.state in ['post', 'done']:
-                amount_to_bill -= expense.sheet_id.untaxed_amount
-                amount_billed -= expense.sheet_id.untaxed_amount
-
         section_id = 'expenses'
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
         expense_data = {
             'costs': {
                 'id': section_id,
                 'sequence': sequence,
-                'billed': amount_billed,
-                'to_bill': -amount_to_bill,
+                'billed': -amount_billed,
+                'to_bill': 0.0,
             },
         }
         if reinvoice_expense_ids:

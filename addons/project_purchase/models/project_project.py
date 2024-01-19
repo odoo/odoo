@@ -115,26 +115,20 @@ class Project(models.Model):
             purchase_order_lines = self.env['purchase.order.line'].sudo().search_fetch([
                 ('state', 'in', ['purchase', 'done']),
                 ('analytic_distribution', 'in', self.analytic_account_id.ids),
-                '|',
                 ('qty_invoiced', '>', 0),
-                '|', ('qty_to_invoice', '>', 0), ('product_uom_qty', '>', 0),
             ], ['qty_invoiced', 'qty_to_invoice', 'product_uom_qty', 'price_unit', 'currency_id', 'analytic_distribution'])
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             with_action = with_action and self.user_has_groups('purchase.group_purchase_user, account.group_account_invoice, account.group_account_readonly')
             if purchase_order_lines:
-                amount_invoiced = amount_to_invoice = 0.0
+                amount_invoiced = 0.0
                 for pol in purchase_order_lines:
                     purchase_order_line_invoice_line_ids.extend(pol.invoice_lines.ids)
                     price_unit = pol.currency_id._convert(pol.price_unit, self.currency_id, self.company_id)
                     analytic_contribution = pol.analytic_distribution[str(self.analytic_account_id.id)] / 100.
                     amount_invoiced -= price_unit * pol.qty_invoiced * analytic_contribution if pol.qty_invoiced > 0 else 0.0
-                    if pol.qty_to_invoice > 0:
-                        amount_to_invoice -= price_unit * pol.qty_to_invoice * analytic_contribution
-                    else:
-                        amount_to_invoice -= price_unit * (pol.product_uom_qty - pol.qty_invoiced) * analytic_contribution
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
-                purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
+                purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': 0.0}
                 if with_action:
                     args = [section_id, [('id', 'in', purchase_order_lines.ids)]]
                     if len(purchase_order_lines) == 1:
@@ -143,7 +137,6 @@ class Project(models.Model):
                     purchase_order_costs['action'] = action
                 costs['data'].append(purchase_order_costs)
                 costs['total']['billed'] += amount_invoiced
-                costs['total']['to_bill'] += amount_to_invoice
             domain = [
                 ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
                 ('parent_state', 'in', ['draft', 'posted']),
