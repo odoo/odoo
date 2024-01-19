@@ -76,9 +76,6 @@ export class PartnerList extends Component {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
         this.pos.closeTempScreen();
     }
-    activateEditMode() {
-        this.state.detailIsShown = true;
-    }
     // Getters
 
     get_partners_sorted(max_count) {
@@ -171,20 +168,6 @@ export class PartnerList extends Component {
             state_id,
             lang: user.lang,
         });
-    }
-    async saveChanges(processedChanges) {
-        let partner;
-
-        if (processedChanges.id) {
-            partner = this.pos.models["res.partner"].get(processedChanges["id"]);
-            this.pos.data.write("res.partner", [partner.id], processedChanges);
-        } else {
-            partner = await this.pos.data.create("res.partner", [processedChanges]);
-            partner = partner["res.partner"][0];
-        }
-
-        this.state.selectedPartner = partner;
-        this.confirm();
     }
     async searchPartner() {
         if (this.state.previousQuery != this.state.query) {

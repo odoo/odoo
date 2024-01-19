@@ -67,11 +67,6 @@ export class CashMovePopup extends Component {
             3000
         );
     }
-    _onAmountKeypress(event) {
-        if (["-", "+"].includes(event.key)) {
-            event.preventDefault();
-        }
-    }
     _onWindowKeyup(event) {
         if (event.key === this.props.confirmKey && !["TEXTAREA"].includes(event.target.tagName)) {
             this.confirm();
