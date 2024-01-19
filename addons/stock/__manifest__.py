@@ -6,7 +6,7 @@
     'version': '1.1',
     'summary': 'Manage your stock and logistics activities',
     'website': 'https://www.odoo.com/app/inventory',
-    'depends': ['product', 'barcodes_gs1_nomenclature', 'digest'],
+    'depends': ['base_import', 'product', 'barcodes_gs1_nomenclature', 'digest'],
     'category': 'Inventory/Inventory',
     'sequence': 25,
     'demo': [
