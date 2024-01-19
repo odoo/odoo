@@ -4,3 +4,4 @@
 from . import test_account_group
 from . import test_debit_credit
 from . import test_company_fiscal_year
+from . import test_residual_amount
