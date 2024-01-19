@@ -40,17 +40,6 @@ class PaymentProvider(models.Model):
         required_if_provider='asiapay',
     )
 
-    @api.depends('code')
-    def _compute_view_configuration_fields(self):
-        """ Override of payment to make the `available_currency_ids` field required.
-
-        :return: None
-        """
-        super()._compute_view_configuration_fields()
-        self.filtered(lambda p: p.code == 'asiapay').update({
-            'require_currency': True,
-        })
-
     # ==== CONSTRAINT METHODS ===#
 
     @api.constrains('available_currency_ids', 'state')
