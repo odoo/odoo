@@ -88,25 +88,6 @@ Tooltip.prototype.show = function () {
     }
 };
 
-// Fix some cases when we want to render more than one node on the root level
-// In BS4 the jQuery was using all node but in the jQuery compatibility layer
-// in BS5 it takes only the first node if the jQuery Element is used in the
-// function. This hack try to restore the old behaviour wrapping all element
-// in a DIV element (to be single root node)
-// PS: this can break some querySelector and some CSS selector if they are too
-// fragile.
-// FIXME: Remove this hack and change all custom content to have only one node
-// and/or remove use of jQuery and so use an HTMLElement.
-const bootstrapSetElementContent = Tooltip.prototype.setElementContent;
-Tooltip.prototype.setElementContent = function (element, content) {
-    if (content && content.jquery && content.length) {
-        const $rootElement = $('<div/>');
-        $rootElement.append(content);
-        content = $rootElement[0];
-    }
-    return bootstrapSetElementContent.call(this, element, content);
-};
-
 /* Bootstrap scrollspy fix for non-body to spy */
 
 const bootstrapSpyRefreshFunction = ScrollSpy.prototype.refresh;
