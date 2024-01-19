@@ -991,27 +991,31 @@ class Cache(object):
             dirty must raise an exception
         """
         field_cache = self._set_field_cache(record, field)
+        record_id = record.id
+
         if field.translate and value is not None:
             # only for model translated fields
             lang = record.env.lang or 'en_US'
-            cache_value = field_cache.get(record._ids[0]) or {}
+            cache_value = field_cache.get(record_id) or {}
             cache_value[lang] = value
             value = cache_value
-        field_cache[record._ids[0]] = value
+
+        field_cache[record_id] = value
 
         if not check_dirty:
             return
+
         if dirty:
-            assert field.column_type and field.store and record.id
-            self._dirty[field].add(record.id)
+            assert field.column_type and field.store and record_id
+            self._dirty[field].add(record_id)
             if record.pool.field_depends_context[field]:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
                 context_none = dict.fromkeys(record.pool.field_depends_context[field])
                 record = record.with_env(record.env(context=context_none))
                 field_cache = self._set_field_cache(record, field)
-                field_cache[record._ids[0]] = value
-        elif record.id in self._dirty.get(field, ()):
+                field_cache[record_id] = value
+        elif record_id in self._dirty.get(field, ()):
             _logger.error("cache.set() removing flag dirty on %s.%s", record, field.name, stack_info=True)
 
     def update(self, records, field, values, dirty=False, check_dirty=True):
