@@ -84,13 +84,6 @@ patch(Orderline.prototype, {
             this.uuid = json.uuid;
         }
     },
-    get_line_diff_hash() {
-        if (this.getNote()) {
-            return this.id + "|" + this.getNote();
-        } else {
-            return "" + this.id;
-        }
-    },
     toggleSkipChange() {
         if (this.hasChange || this.skipChange) {
             this.skipChange = !this.skipChange;
