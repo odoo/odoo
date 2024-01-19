@@ -682,6 +682,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @param {Event} ev
      */
     _onTextHighlightClick(ev) {
+        // To be able to open the highlights grid immediately, we need to
+        // prevent the `_onClick()` handler from closing the widget (using
+        // the `_closeWidgets()` method) right after opening it.
+        ev.stopPropagation();
+        this._closeWidgets();
         const target = ev.currentTarget;
         this.__handleTextOptionsPostActivate = ($snippet) => {
             // TODO should be reviewed

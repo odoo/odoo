@@ -3754,9 +3754,11 @@ options.registry.TextHighlight = options.Class.extend({
     * @override
     */
     notify(name, data) {
-        // Apply the highlight effect DOM structure when added for the first time.
+        // Apply the highlight effect DOM structure when added for the first time
+        // and display the highlight effects grid immediately.
         if (name === "new_text_highlight") {
             this._autoAdaptHighlights();
+            this._requestUserValueWidgets("text_highlight_opt")[0]?.enable();
         }
         this._super(...arguments);
     },
