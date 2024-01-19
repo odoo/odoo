@@ -20,7 +20,8 @@ QUnit.test('"Start a conversation" item selection opens chat', async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Start a conversation']", "Gandalf");
@@ -35,7 +36,8 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
@@ -47,7 +49,8 @@ QUnit.test('"New channel" item selection opens channel (existing)', async () => 
 QUnit.test('"New channel" item selection opens channel (new)', async () => {
     patchUiSize({ height: 360, width: 640 });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "slytherins");

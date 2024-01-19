@@ -8,13 +8,13 @@ import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 import { serializeDate } from "@web/core/l10n/dates";
 import { ListController } from "@web/views/list/list_controller";
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
 
 const { DateTime } = luxon;
 
 QUnit.module("activity widget");
 
-QUnit.test("list activity widget with no activity", async (assert) => {
+QUnit.test("list activity widget with no activity", async () => {
     const pyEnv = await startServer();
     const views = {
         "res.users,false,list": `
@@ -28,21 +28,18 @@ QUnit.test("list activity widget with no activity", async (assert) => {
                 args.method !== "get_views" &&
                 !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(`${route} - ${JSON.stringify(args)}`);
+                step(`${route} - ${JSON.stringify(args)}`);
             }
         },
         serverData: { views },
         session: { uid: pyEnv.currentUserId },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o-mail-ActivityButton i.text-muted");
-    await contains(".o-mail-ListActivity-summary", { text: "" });
-    assert.verifySteps([
-        '/mail/action - {"init_messaging":true}',
-        '/mail/data - {"failures":true}',
+    await assertSteps([
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
             method: "web_search_read",
@@ -66,9 +63,11 @@ QUnit.test("list activity widget with no activity", async (assert) => {
             },
         })}`,
     ]);
+    await contains(".o-mail-ActivityButton i.text-muted");
+    await contains(".o-mail-ListActivity-summary", { text: "" });
 });
 
-QUnit.test("list activity widget with activities", async (assert) => {
+QUnit.test("list activity widget with activities", async () => {
     const pyEnv = await startServer();
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([{}, {}]);
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([
@@ -101,30 +100,17 @@ QUnit.test("list activity widget with activities", async (assert) => {
                 args.method !== "get_views" &&
                 !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(`${route} - ${JSON.stringify(args)}`);
+                step(`${route} - ${JSON.stringify(args)}`);
             }
         },
         serverData: { views },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(":nth-child(1 of .o_data_row)", {
-        contains: [
-            [".o-mail-ActivityButton i.text-warning.fa-phone"],
-            [".o-mail-ListActivity-summary", { text: "Call with Al" }],
-        ],
-    });
-    await contains(":nth-child(2 of .o_data_row)", {
-        contains: [
-            [".o-mail-ActivityButton i.text-success.fa-tasks"],
-            [".o-mail-ListActivity-summary", { text: "Type 2" }],
-        ],
-    });
-    assert.verifySteps([
-        '/mail/action - {"init_messaging":true}',
-        '/mail/data - {"failures":true}',
+    await assertSteps([
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
             method: "web_search_read",
@@ -148,9 +134,21 @@ QUnit.test("list activity widget with activities", async (assert) => {
             },
         })}`,
     ]);
+    await contains(":nth-child(1 of .o_data_row)", {
+        contains: [
+            [".o-mail-ActivityButton i.text-warning.fa-phone"],
+            [".o-mail-ListActivity-summary", { text: "Call with Al" }],
+        ],
+    });
+    await contains(":nth-child(2 of .o_data_row)", {
+        contains: [
+            [".o-mail-ActivityButton i.text-success.fa-tasks"],
+            [".o-mail-ListActivity-summary", { text: "Type 2" }],
+        ],
+    });
 });
 
-QUnit.test("list activity widget with exception", async (assert) => {
+QUnit.test("list activity widget with exception", async () => {
     const pyEnv = await startServer();
     const activityId = pyEnv["mail.activity"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].create({});
@@ -174,20 +172,17 @@ QUnit.test("list activity widget with exception", async (assert) => {
                 args.method !== "get_views" &&
                 !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(`${route} - ${JSON.stringify(args)}`);
+                step(`${route} - ${JSON.stringify(args)}`);
             }
         },
         serverData: { views },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
-    await contains(".o-mail-ListActivity-summary", { text: "Warning" });
-    assert.verifySteps([
-        '/mail/action - {"init_messaging":true}',
-        '/mail/data - {"failures":true}',
+    await assertSteps([
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
             method: "web_search_read",
@@ -211,9 +206,11 @@ QUnit.test("list activity widget with exception", async (assert) => {
             },
         })}`,
     ]);
+    await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
+    await contains(".o-mail-ListActivity-summary", { text: "Warning" });
 });
 
-QUnit.test("list activity widget: open dropdown", async (assert) => {
+QUnit.test("list activity widget: open dropdown", async () => {
     const pyEnv = await startServer();
     const [activityTypeId_1, activityTypeId_2] = pyEnv["mail.activity.type"].create([{}, {}]);
     const [activityId_1, activityId_2] = pyEnv["mail.activity"].create([
@@ -254,7 +251,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
                 args.method !== "get_views" &&
                 !["/mail/", "/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
-                assert.step(`${route} - ${JSON.stringify(args)}`);
+                step(`${route} - ${JSON.stringify(args)}`);
             }
             if (args.method === "action_feedback") {
                 pyEnv["res.users"].write([pyEnv.currentUserId], {
@@ -274,25 +271,17 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
             super.setup();
             const selectRecord = this.props.selectRecord;
             this.props.selectRecord = (...args) => {
-                assert.step(`select_record ${JSON.stringify(args)}`);
+                step(`select_record ${JSON.stringify(args)}`);
                 return selectRecord(...args);
             };
         },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    await contains(".o-mail-ListActivity-summary", { text: "Call with Al" });
-    await click(".o-mail-ActivityButton");
-    await click(
-        ":nth-child(1 of .o-mail-ActivityListPopoverItem) .o-mail-ActivityListPopoverItem-markAsDone"
-    );
-    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
-    assert.verifySteps([
-        '/mail/action - {"init_messaging":true}',
-        '/mail/data - {"failures":true}',
+    await assertSteps([
         `/web/dataset/call_kw/res.users/web_search_read - ${JSON.stringify({
             model: "res.users",
             method: "web_search_read",
@@ -315,12 +304,22 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
                 domain: [],
             },
         })}`,
+    ]);
+    await contains(".o-mail-ListActivity-summary", { text: "Call with Al" });
+    await click(".o-mail-ActivityButton");
+    await assertSteps([
         `/web/dataset/call_kw/mail.activity/activity_format - ${JSON.stringify({
             model: "mail.activity",
             method: "activity_format",
             args: [[activityId_1, activityId_2]],
             kwargs: { context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId } },
         })}`,
+    ]);
+    await click(
+        ":nth-child(1 of .o-mail-ActivityListPopoverItem) .o-mail-ActivityListPopoverItem-markAsDone"
+    );
+    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    await assertSteps([
         `/web/dataset/call_kw/mail.activity/action_feedback - ${JSON.stringify({
             model: "mail.activity",
             method: "action_feedback",
@@ -348,6 +347,7 @@ QUnit.test("list activity widget: open dropdown", async (assert) => {
             },
         })}`,
     ]);
+    await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
 });
 
 QUnit.test("list activity widget: batch selection from list", async (assert) => {
@@ -379,7 +379,7 @@ QUnit.test("list activity widget: batch selection from list", async (assert) => 
         doAction(action, options) {
             if (action.res_model === "mail.activity.schedule") {
                 scheduleWizardContext = action.context;
-                assert.step("do_action_activity");
+                step("do_action_activity");
                 options.onClose();
                 wizardOpened.resolve();
                 return true;
@@ -456,7 +456,7 @@ QUnit.test("list activity widget: batch selection from list", async (assert) => 
         active_id: marioId,
         active_model: "res.partner",
     });
-    assert.verifySteps(Array(4).fill("do_action_activity"));
+    await assertSteps(Array(4).fill("do_action_activity"));
 });
 
 QUnit.test("list activity exception widget with activity", async () => {

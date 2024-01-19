@@ -2,7 +2,6 @@
 
 import { reactive } from "@odoo/owl";
 
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -21,9 +20,6 @@ export class MailCoreWeb {
 
     setup() {
         this.messagingService.isReady.then(() => {
-            rpc("/mail/data", { failures: true }, { silent: true }).then((data) => {
-                this.store.insert(data, { html: true });
-            });
             this.busService.subscribe("mail.activity/updated", (payload) => {
                 if (payload.activity_created) {
                     this.store.activityCounter++;

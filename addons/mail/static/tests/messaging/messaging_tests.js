@@ -7,7 +7,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("messaging");
 
@@ -22,7 +22,17 @@ QUnit.test("Receiving a new message out of discuss app should open a chat window
         ],
         channel_type: "chat",
     });
-    await start();
+    await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
+    });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    // send after init_messaging because bus subscription is done after init_messaging
     // simulate receving new message
     pyEnv.withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -47,7 +57,17 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const { openDiscuss, openFormView } = await start();
+        const { openDiscuss, openFormView } = await start({
+            async mockRPC(route, args, originalRpc) {
+                if (route === "/mail/action" && args.init_messaging) {
+                    const res = await originalRpc(...arguments);
+                    step(`/mail/action - ${JSON.stringify(args)}`);
+                    return res;
+                }
+            },
+        });
+        await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+        // send after init_messaging because bus subscription is done after init_messaging
         await openDiscuss();
         // simulate receiving new message
         pyEnv.withUser(userId, () =>

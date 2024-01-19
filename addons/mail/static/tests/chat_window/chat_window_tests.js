@@ -15,6 +15,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import {
+    assertSteps,
     click,
     contains,
     createFile,
@@ -22,6 +23,7 @@ import {
     inputFiles,
     insertText,
     scroll,
+    step,
 } from "@web/../tests/utils";
 
 QUnit.module("chat window");
@@ -711,7 +713,17 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        await start();
+        await start({
+            async mockRPC(route, args, originalRpc) {
+                if (route === "/mail/action" && args.init_messaging) {
+                    const res = await originalRpc(...arguments);
+                    step(`/mail/action - ${JSON.stringify(args)}`);
+                    return res;
+                }
+            },
+        });
+        await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+        // send after init_messaging because bus subscription is done after init_messaging
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
             rpc("/mail/message/post", {
@@ -949,7 +961,7 @@ QUnit.test(
         ]);
         pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
         await start();
-        $(".o-mail-Composer-input")[0].blur();
+        await contains(".o-mail-Composer-input:not(:focus)");
         // simulate receiving a message
         pyEnv.withUser(userId, () =>
             rpc("/mail/message/post", {

@@ -21,6 +21,7 @@ export class MessagingMenu extends Component {
         this.discussSystray = useDiscussSystray();
         this.store = useState(useService("mail.store"));
         this.hasTouch = hasTouch;
+        this.messagingService = useState(useService("mail.messaging"));
         this.notification = useState(useService("mail.notification.permission"));
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.threadService = useState(useService("mail.thread"));
@@ -37,14 +38,16 @@ export class MessagingMenu extends Component {
         });
     }
 
-    async beforeOpen() {
-        if (
-            !this.store.discuss.inbox.isLoaded &&
-            this.store.discuss.inbox.status !== "loading" &&
-            this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
-        ) {
-            this.threadService.fetchNewMessages(this.store.discuss.inbox);
-        }
+    beforeOpen() {
+        this.messagingService.isReady.then(() => {
+            if (
+                !this.store.discuss.inbox.isLoaded &&
+                this.store.discuss.inbox.status !== "loading" &&
+                this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
+            ) {
+                this.threadService.fetchNewMessages(this.store.discuss.inbox);
+            }
+        });
     }
 
     onClickThread(isMarkAsRead, thread) {

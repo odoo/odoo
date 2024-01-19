@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-        <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'main')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+        <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
         </div>
     </div>
