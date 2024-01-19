@@ -921,10 +921,27 @@ class IrActionsReport(models.Model):
     @api.model
     def _render(self, report_ref, res_ids, data=None):
         report = self._get_report(report_ref)
-        report_type = report.report_type.lower().replace('-', '_')
+        report_type = report.report_type.replace('-', '_')
         render_func = getattr(self, '_render_' + report_type, None)
         if not render_func:
             return None
+        return render_func(report_ref, res_ids, data=data)
+
+    def report_render(self, report_ref, res_ids, data=None, converter=None):
+        """Return the rendered report
+
+        :param report_ref: The report id, record or name
+        :param res_ids: ids of the records to print
+        :param data:
+        :param converter: The requested output like pdf, html or text
+        :rtype: bytes, str
+        """
+        report = self._get_report(report_ref)
+        report_type = 'qweb_' + converter if converter else report.report_type.replace('-', '_')
+        try:
+            render_func = getattr(self, '_render_' + report_type)
+        except AttributeError:
+            raise ValueError('Invalid report type: %s' % report_type) from None
         return render_func(report_ref, res_ids, data=data)
 
     def report_action(self, docids, data=None, config=True):
