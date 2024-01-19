@@ -38,7 +38,7 @@ patch(Message.prototype, {
         return this.hasAuthorClickable() ? _t("Open card") : undefined;
     },
     hasAuthorClickable() {
-        return this.message.author?.user;
+        return this.message.author?.userId;
     },
     onClickAuthor(ev) {
         if (this.hasAuthorClickable()) {
@@ -46,7 +46,7 @@ patch(Message.prototype, {
             const target = ev.currentTarget;
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
-                    id: this.message.author.user.id,
+                    id: this.message.author.userId,
                 });
             }
         }
