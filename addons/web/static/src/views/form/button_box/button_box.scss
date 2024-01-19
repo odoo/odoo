@@ -1,7 +1,7 @@
 .o-form-buttonbox {
     // Compute the expected oe_stat_button's height according to the default btn size.
-    $-stat-button-inner-size: ($btn-padding-y * 2) + ($btn-font-size * $btn-line-height);
-    $-stat-button-height: $-stat-button-inner-size + o-to-rem($btn-border-width * 2);
+    $-stat-button-inner-size: calc(#{$btn-padding-y} * 2 + #{$btn-font-size} * #{$btn-line-height});
+    $-stat-button-height: calc(#{$-stat-button-inner-size} + #{$btn-border-width} * 2);
 
     $-stat-button-icon-size: 1.5em;
     $-stat-button-icon-margin-end: $btn-padding-x * 0.5;
