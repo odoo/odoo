@@ -26,6 +26,11 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
         isCheck: true,
     },
     {
+        content: "Check that the highlights grid was displayed",
+        trigger: "we-select[data-name=text_highlight_opt] we-toggler.active",
+        isCheck: true,
+    },
+    {
         content: "Disable the highlight effect",
         trigger: "div.o_we_text_highlight",
     },
@@ -62,7 +67,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
         content: "Check if the text was correctly updated",
         trigger: ":iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",        isCheck: true,
     },
-    ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged"),
+    ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
     {
         content: "When changing the text highlight, we only replace the highlight SVG with a new drawn one",
         trigger: ":iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(1)",
