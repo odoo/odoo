@@ -38,7 +38,16 @@ class NewLeadNotification(TestCrmCommon):
     def test_lead_message_get_suggested_recipients_email(self):
         """ Test '_message_get_suggested_recipients' and its override in lead
         when dealing with various emails. """
-        lead_format, lead_multi, lead_from, lead_partner = self.env['crm.lead'].create([
+
+        partner_no_email = self.env['res.partner'].create({'name': 'Test Partner', 'email': False})
+        (
+            lead_format,
+            lead_multi,
+            lead_from,
+            lead_partner,
+            lead_partner_no_email,
+            lead_partner_no_email_with_cc
+        ) = self.env['crm.lead'].create([
             {
                 'email_from': '"New Customer" <new.customer.format@test.example.com>',
                 'name': 'Test Suggestion (email_from with format)',
@@ -58,12 +67,21 @@ class NewLeadNotification(TestCrmCommon):
                 'name': 'Test Suggestion (partner_id)',
                 'partner_id': self.contact_1.id,
                 'user_id': self.user_sales_leads.id,
+            }, {
+              'name': 'Test Suggestion (partner no email)',
+              'partner_id': partner_no_email.id,
+              'user_id': self.user_sales_leads.id
+            }, {
+              'name': 'Test Suggestion (partner no email with cc email)',
+              'partner_id': partner_no_email.id,
+              'email_cc': 'test_cc@odoo.com',
+              'user_id': self.user_sales_leads.id
             }
         ])
-        for lead, expected in zip(
-                lead_format + lead_multi + lead_from + lead_partner,
-                [
-                    {
+        for lead, expected_suggested in zip(
+            lead_format + lead_multi + lead_from + lead_partner + lead_partner_no_email + lead_partner_no_email_with_cc,
+            [
+                [{
                         'name': 'New Customer',
                         'email': 'new.customer.format@test.example.com',
                         'lang': None,
@@ -75,7 +93,8 @@ class NewLeadNotification(TestCrmCommon):
                             'user_id': self.user_sales_leads.id,
                             'team_id': self.sales_team_1.id,
                         },
-                    }, {
+                  }],
+                [{
                         'name': 'Multi Name',
                         'email': 'new.customer.multi.1@test.example.com,new.customer.2@test.example.com',
                         'lang': None,
@@ -87,7 +106,8 @@ class NewLeadNotification(TestCrmCommon):
                             'user_id': self.user_sales_leads.id,
                             'team_id': self.sales_team_1.id,
                         },
-                    }, {
+                  }],
+                [{
                         'name': 'Std Name',
                         'email': 'new.customer.simple@test.example.com',
                         'lang': None,
@@ -99,31 +119,55 @@ class NewLeadNotification(TestCrmCommon):
                             'user_id': self.user_sales_leads.id,
                             'team_id': self.sales_team_1.id,
                         },
-                    }, {
+                  }],
+                [{
                         'partner_id': self.contact_1.id,
                         'name': 'Philip J Fry',
                         'email': 'philip.j.fry@test.example.com',
                         'lang': self.contact_1.lang,
                         'reason': 'Customer',
-                        'create_values': {},
+                        'create_values': {}
+                  }],
+                [{
+                  'partner_id': partner_no_email.id,
+                  'name': 'Test Partner',
+                  'lang': partner_no_email.lang,
+                  'reason': 'Customer',
+                  'create_values': {}
+                  }],
+                [
+                    {
+                      'name': False,
+                      'email': 'test_cc@odoo.com',
+                      'lang': None,
+                      'reason': 'CC Email',
+                      'create_values': {}
                     },
-                    # creation values only if not partner
-                ],
+                    {
+                      'partner_id': partner_no_email.id,
+                      'name': 'Test Partner',
+                      'lang': partner_no_email.lang,
+                      'reason': 'Customer',
+                      'create_values':{}
+                    }
+                ]
+            ]
         ):
             with self.subTest(lead=lead, lead_name=lead.name, email_from=lead.email_from):
                 res = lead._message_get_suggested_recipients()
-                self.assertEqual(len(res), 1)
-                res_customer_data = res[0].pop('create_values', {})
-                customer_data = expected.pop('create_values')
-                self.assertItemsEqual(res[0], expected)
-                if not customer_data:
-                    self.assertFalse(res_customer_data)
-                else:
-                    for partner_fname in customer_data:
-                        found, expected = res_customer_data[partner_fname], customer_data[partner_fname]
-                        self.assertEqual(
-                            found, expected,
-                            f'Lead suggested customer: wrong value for {partner_fname} got {found} instead of {expected}')
+                self.assertEqual(len(res), len(expected_suggested))
+                for index, expected_recepient in enumerate(expected_suggested):
+                    expected_customer_data = expected_recepient.pop('create_values')
+                    res_customer_data = res[index].pop('create_values', {})
+                    self.assertItemsEqual(res[index], expected_recepient)
+                    if not expected_customer_data:
+                        self.assertFalse(res_customer_data)
+                    else:
+                        for partner_fname in expected_customer_data:
+                            found, expected_suggested = res_customer_data[partner_fname], expected_customer_data[partner_fname]
+                            self.assertEqual(
+                                found, expected_suggested,
+                                f'Lead suggested customer: wrong value for {partner_fname} got {found} instead of {expected_suggested}')
 
     @users('user_sales_manager')
     def test_lead_message_get_suggested_recipients_langs(self):
