@@ -905,6 +905,11 @@ class AccountGroup(models.Model):
             del vals['code_prefix_start']
         return vals
 
+    @api.constrains('parent_id')
+    def _check_parent_not_circular(self):
+        if not self._check_recursion():
+            raise ValidationError(_("You cannot create recursive groups."))
+
     @api.model_create_multi
     def create(self, vals_list):
         groups = super().create([self._sanitize_vals(vals) for vals in vals_list])
