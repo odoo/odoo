@@ -33,6 +33,7 @@ QUnit.module("spreadsheet data source", {}, () => {
             const dataSource = new TestDataSource({
                 notify: () => assert.step("notify"),
                 notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+                cancelPromise: () => assert.step("cancel-promise"),
             });
             dataSource.load();
             assert.verifySteps(["notify-from-promise"]);
@@ -40,7 +41,7 @@ QUnit.module("spreadsheet data source", {}, () => {
             assert.strictEqual(dataSource.isReady(), false);
             def1.resolve();
             await nextTick();
-            assert.verifySteps(["notify-from-promise"]);
+            assert.verifySteps(["cancel-promise", "notify-from-promise"]);
             assert.strictEqual(dataSource.isReady(), false);
             def2.resolve();
             await nextTick();
@@ -63,6 +64,7 @@ QUnit.module("spreadsheet data source", {}, () => {
         const dataSource = new TestDataSource({
             notify: () => assert.step("notify"),
             notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+            cancelPromise: () => assert.step("cancel-promise"),
             orm: {
                 call: () => {
                     const error = new RPCError();
