@@ -3338,20 +3338,6 @@ class MailThread(models.AbstractModel):
     # CONTROLLERS
     # ------------------------------------------------------
 
-    def _get_mail_redirect_suggested_company(self):
-        """ Return the suggested company to be set on the context
-        in case of a mail redirection to the record. To avoid multi
-        company issues when clicking on a link sent by email, this
-        could be called to try setting the most suited company on
-        the allowed_company_ids in the context. This method can be
-        overridden, for example on the hr.leave model, where the
-        most suited company is the company of the leave type, as
-        specified by the ir.rule.
-        """
-        if 'company_id' in self:
-            return self.company_id
-        return False
-
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
         return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
