@@ -176,17 +176,6 @@ class PaymentProvider(models.Model):
     module_state = fields.Selection(string="Installation State", related='module_id.state')
     module_to_buy = fields.Boolean(string="Odoo Enterprise Module", related='module_id.to_buy')
 
-    # View configuration fields
-    show_credentials_page = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_allow_tokenization = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_allow_express_checkout = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_pre_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_pending_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_auth_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_done_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    show_cancel_msg = fields.Boolean(compute='_compute_view_configuration_fields')
-    require_currency = fields.Boolean(compute='_compute_view_configuration_fields')
-
     #=== COMPUTE METHODS ===#
 
     @api.depends('code')
@@ -220,42 +209,6 @@ class PaymentProvider(models.Model):
                 provider.color = 2  # orange
             elif provider.state == 'enabled':
                 provider.color = 7  # green
-
-    @api.depends('code')
-    def _compute_view_configuration_fields(self):
-        """ Compute the view configuration fields based on the provider.
-
-        View configuration fields are used to hide specific elements (notebook pages, fields, etc.)
-        from the form view of payment providers. These fields are set to `True` by default and are
-        as follows:
-
-        - `show_credentials_page`: Whether the "Credentials" notebook page should be shown.
-        - `show_allow_tokenization`: Whether the `allow_tokenization` field should be shown.
-        - `show_allow_express_checkout`: Whether the `allow_express_checkout` field should be shown.
-        - `show_pre_msg`: Whether the `pre_msg` field should be shown.
-        - `show_pending_msg`: Whether the `pending_msg` field should be shown.
-        - `show_auth_msg`: Whether the `auth_msg` field should be shown.
-        - `show_done_msg`: Whether the `done_msg` field should be shown.
-        - `show_cancel_msg`: Whether the `cancel_msg` field should be shown.
-        - `require_currency`: Whether the `available_currency_ids` field shoud be required.
-
-        For a provider to hide specific elements of the form view, it must override this method and
-        set the related view configuration fields to `False` on the appropriate `payment.provider`
-        records.
-
-        :return: None
-        """
-        self.update({
-            'show_credentials_page': True,
-            'show_allow_tokenization': True,
-            'show_allow_express_checkout': True,
-            'show_pre_msg': True,
-            'show_pending_msg': True,
-            'show_auth_msg': True,
-            'show_done_msg': True,
-            'show_cancel_msg': True,
-            'require_currency': False,
-        })
 
     @api.depends('code')
     def _compute_feature_support_fields(self):

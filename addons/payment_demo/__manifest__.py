@@ -10,6 +10,7 @@
     'depends': ['payment'],
     'data': [
         'views/payment_demo_templates.xml',
+        'views/payment_provider_views.xml',
         'views/payment_token_views.xml',
         'views/payment_transaction_views.xml',
 

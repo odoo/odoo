@@ -13,15 +13,6 @@ class PaymentProvider(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('code')
-    def _compute_view_configuration_fields(self):
-        """ Override of payment to hide the credentials page.
-
-        :return: None
-        """
-        super()._compute_view_configuration_fields()
-        self.filtered(lambda p: p.code == 'demo').show_credentials_page = False
-
     def _compute_feature_support_fields(self):
         """ Override of `payment` to enable additional features. """
         super()._compute_feature_support_fields()
