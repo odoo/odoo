@@ -19,3 +19,4 @@ from . import test_web_search_read
 from . import test_domain
 from . import test_web_redirect
 from . import test_res_users
+from . import test_ir_qweb
