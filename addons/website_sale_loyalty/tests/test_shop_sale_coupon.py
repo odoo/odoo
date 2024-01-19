@@ -28,17 +28,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         cls.env.ref('website.default_website').company_id = cls.env.company
 
     def test_01_admin_shop_sale_loyalty_tour(self):
-        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer provider is not installed")
-
-        transfer_provider = self.env.ref('payment.payment_provider_transfer')
-        transfer_provider.sudo().write({
-            'state': 'enabled',
-            'is_published': True,
-            'company_id': self.env.company.id,
-        })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
-
         # pre enable "Show # found" option to avoid race condition...
         public_category = self.env['product.public.category'].create({'name': 'Public Category'})
 

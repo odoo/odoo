@@ -10,6 +10,7 @@
     'data': [
         'views/payment_custom_templates.xml',
         'views/payment_provider_views.xml',
+        'views/payment_method_views.xml',
 
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',  # Depends on `payment_method_wire_transfer`.

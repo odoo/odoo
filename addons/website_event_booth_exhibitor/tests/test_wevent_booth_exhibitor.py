@@ -19,7 +19,6 @@ class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPorta
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.env.ref('base.user_admin').write({
             'name': 'Mitchell Admin',

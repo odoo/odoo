@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_method_form" model="ir.ui.view">
+        <field name="name">payment.method.form.inherit.custom</field>
+        <field name="model">payment.method</field>
+        <field name="inherit_id" ref="payment.payment_method_form"/>
+        <field name="arch" type="xml">
+            <field name="pending_msg" position="after">
+                <div class="o_row" colspan="2" invisible="code != 'wire_transfer'">
+                    <button string=" Reload Pending Message"
+                            type="object"
+                            name="action_recompute_pending_msg"
+                            class="oe_link ms-0 ps-0"
+                            icon="fa-refresh"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

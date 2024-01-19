@@ -14,6 +14,7 @@
                     </div>
                     <group>
                         <field name="code" readonly="id" groups="base.group_no_one"/>
+                        <field name="code" invisible="True" groups="!base.group_no_one"/>
                         <field name="primary_payment_method_id" invisible="is_primary"/>
                         <field name="active" widget="boolean_toggle"/>
                         <label for="supported_country_ids"/>
@@ -77,6 +78,15 @@
                                        string="Supported by"
                                        widget="many2many_tags"
                                 />
+                            </group>
+                        </page>
+                        <page string="Messages" name="messages">
+                            <group>
+                                <field name="pre_msg"/>
+                                <field name="pending_msg"/>
+                                <field name="auth_msg"/>
+                                <field name="done_msg"/>
+                                <field name="cancel_msg"/>
                             </group>
                         </page>
                     </notebook>
