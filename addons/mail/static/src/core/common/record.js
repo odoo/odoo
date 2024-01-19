@@ -1521,10 +1521,12 @@ export class Record {
      *   Useful to automatically markup when the insert is trusted.
      * @param {() => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
+     * @property {(Object, Object) => number} [sort] if defined, this field is automatically sorted
+     *   by this function.
      * @returns {T}
      */
-    static attr(def, { compute, eager = false, html, onUpdate } = {}) {
-        return [ATTR_SYM, { compute: compute, default: def, eager, html, onUpdate }];
+    static attr(def, { compute, eager = false, html, onUpdate, sort } = {}) {
+        return [ATTR_SYM, { compute, default: def, eager, html, onUpdate, sort }];
     }
     /** @returns {Record|Record[]} */
     static insert(data, options = {}) {
