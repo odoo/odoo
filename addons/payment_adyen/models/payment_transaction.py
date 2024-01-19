@@ -98,6 +98,9 @@ class PaymentTransaction(models.Model):
             endpoint='/payments',
             payload=data,
             method='POST',
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self, scope='payment_request_token'
+            )
         )
 
         # Handle the payment request response
