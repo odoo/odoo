@@ -62,7 +62,7 @@ class ResourceResource(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('company_id') and not values.get('calendar_id'):
+            if values.get('company_id') and not 'calendar_id' in values:
                 values['calendar_id'] = self.env['res.company'].browse(values['company_id']).resource_calendar_id.id
             if not values.get('tz'):
                 # retrieve timezone on user or calendar
