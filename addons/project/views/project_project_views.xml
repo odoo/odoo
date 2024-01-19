@@ -71,7 +71,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
-                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-2"/>
+                            <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-2" options="{'autosave': False}"/>
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_text_overflow" placeholder="e.g. Office Party"/>
                         </h1>
                     </div>
@@ -463,7 +463,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
                                 <div class="o_project_kanban_main d-flex align-items-baseline gap-1">
-                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1"/>
+                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary me-5">
