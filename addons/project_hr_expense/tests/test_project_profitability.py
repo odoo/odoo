@@ -40,7 +40,11 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         # Create a new company with the foreign currency.
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
-        foreign_employee = self.env['hr.employee'].create({'name': 'Foreign employee', 'company_id': foreign_company.id})
+        foreign_employee = self.env['hr.employee'].create({
+            'name': 'Foreign employee',
+            'company_id': foreign_company.id,
+            'work_email': 'email@email',
+        })
 
         expense = self.env['hr.expense'].create({
             'name': 'Car Travel Expenses',
@@ -55,6 +59,7 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             expense,
             self.project,
             self.project_profitability_items_empty)
+        self.assertEqual(expense_sheet.state, 'approve')
 
         sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
         self.assertIn('expenses', sequence_per_invoice_type)
@@ -62,13 +67,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
 
         self.assertDictEqual(
             self.project._get_profitability_items(False),
-            {
-                'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': -expense.untaxed_amount_currency, 'billed': 0.0}],
-                    'total': {'to_bill': -expense.untaxed_amount_currency, 'billed': 0.0},
-                },
-                'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
-            },
+            self.project_profitability_items_empty,
+            'No data should be found since the sheets are not posted or done.',
         )
 
         # Create an expense in a foreign company, the expense is linked to the AA of the project.
@@ -88,8 +88,12 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         self.assertEqual(expense_sheet_foreign.state, 'submit')
         expense_sheet_foreign.action_approve_expense_sheets()
         self.assertEqual(expense_sheet_foreign.state, 'approve')
+        expense_sheet_foreign.action_sheet_move_create()
+        self.assertEqual(expense_sheet_foreign.state, 'post')
+        expense_sheet.action_sheet_move_create()
+        self.assertEqual(expense_sheet.state, 'post')
 
-        # The cost of the foreign expense sheet should now be computed in the project profitability, since it is now approved
+        # Both costs should now be computed in the project profitability, since both expense sheets were posted
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             {
@@ -97,33 +101,36 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                     'data': [{
                         'id': 'expenses',
                         'sequence': expense_sequence,
-                        'to_bill': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2,
-                        'billed': 0.0
+                        'to_bill': 0.0,
+                        'billed': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2
                     }],
-                    'total': {'to_bill': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2, 'billed': 0.0},
+                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency - expense_foreign.untaxed_amount_currency * 0.2},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
         )
 
-        # Cancel the expense sheet of the main company. Only the total from the foreign company should be computed
-        expense_sheet._do_refuse('Test cancel expense')
+        # Reset to draft the expense sheet of the main company. Only the total from the foreign company should be computed
+        expense_sheet.action_reset_expense_sheets()
+        self.assertEqual(expense_sheet.state, 'draft')
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': -expense_foreign.untaxed_amount_currency * 0.2, 'billed': 0.0}],
-                    'total': {'to_bill': -expense_foreign.untaxed_amount_currency * 0.2, 'billed': 0.0},
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2}],
+                    'total': {'to_bill': 0.0, 'billed': -expense_foreign.untaxed_amount_currency * 0.2},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
         )
 
-        expense_sheet_foreign._do_refuse('Test cancel foreign expense')
+        # Reset to draft the expense sheet of the foreign company. No data should be computed now.
+        expense_sheet_foreign.action_reset_expense_sheets()
+        self.assertEqual(expense_sheet_foreign.state, 'draft')
         self.assertDictEqual(
             self.project._get_profitability_items(False),
             self.project_profitability_items_empty,
-            'No data should be found since the sheets are not approved yet.',
+            'No data should be found since the sheets are not posted or done.',
         )
 
     def test_project_profitability_after_expense_sheet_actions(self):
@@ -157,8 +164,8 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
             self.project._get_profitability_items(False),
             {
                 'costs': {
-                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': -expense.untaxed_amount_currency, 'billed': 0.0}],
-                    'total': {'to_bill': -expense.untaxed_amount_currency, 'billed': 0.0},
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency}],
+                    'total': {'to_bill': 0.0, 'billed': -expense.untaxed_amount_currency},
                 },
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
