@@ -32,6 +32,7 @@ from odoo.tools.misc import topological_sort
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.ir_module")
 
 ACTION_DICT = {
     'view_mode': 'form',
@@ -64,11 +65,11 @@ def assert_log_admin_access(method):
     def check_and_log(method, self, *args, **kwargs):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
-        log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
+        log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user, origin)
         if not self.env.is_admin():
-            _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
+            _audit_logger.getChild('access').warning('DENY access to module.%s on %s to user %r (%s) via %s', *log_data)
             raise AccessDenied()
-        _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
+        _audit_logger.getChild('access').info('ALLOW access to module.%s on %s to user %r (%s) via %s', *log_data)
         return method(self, *args, **kwargs)
     return decorator(check_and_log, method)
 

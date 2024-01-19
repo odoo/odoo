@@ -17,6 +17,7 @@ import logging
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger("audit.ir_actions")
 
 
 class IrActions(models.Model):
@@ -625,8 +626,9 @@ class IrActionsServer(models.Model):
                 try:
                     self.env[action.model_name].check_access_rights("write")
                 except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, action.model_name,
+                    _audit_logger.getChild('server_action').warning("Forbidden server action %r executed while the user %r (%s) does not"
+                                    " have access to %s.", action.name,
+                                    self.env.user.login, self.env.user, action.model_name,
                     )
                     raise
 
@@ -637,12 +639,16 @@ class IrActionsServer(models.Model):
                 try:
                     records.check_access_rule('write')
                 except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, records,
+                    _audit_logger.getChild('server_action').warning("Forbidden server action %r executed while the user %r (%s) does not"
+                                    " have access to %s.", action.name,
+                                    self.env.user.login, self.env.user, records,
                     )
                     raise
 
             runner, multi = action._get_runner()
+            if runner and action.usage != "ir_cron":
+                _audit_logger.getChild('server_action').info("%r (%s) has been run by %r (%s).",
+                                self.display_name, self, self.env.user.login, self.env.user)
             if runner and multi:
                 # call the multi method
                 run_self = action.with_context(eval_context['env'].context)

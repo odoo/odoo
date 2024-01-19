@@ -312,7 +312,7 @@ class TestServerActions(TestServerActionsBase):
         with self.assertRaises(AccessError):
             self.test_partner.with_user(user_demo.id).check_access_rule("write")
         # nor execute a server action on it
-        with self.assertRaises(AccessError), mute_logger('odoo.addons.base.models.ir_actions'):
+        with self.assertRaises(AccessError), mute_logger('audit.ir_actions.server_action'):
             self_demo.with_context(self.context).run()
 
 

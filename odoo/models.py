@@ -67,7 +67,7 @@ from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
-_unlink = logging.getLogger(__name__ + '.unlink')
+_audit_logger = logging.getLogger("audit.models")
 
 regex_order = re.compile(r'^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -1056,6 +1056,11 @@ class BaseModel(metaclass=MetaModel):
         if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
             raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
         fields_to_export = [fix_import_export_id_paths(f) for f in fields_to_export]
+        _audit_logger.getChild('export').info("Export made on model %r for %d records on %d fields by %r (%s). "
+                     "Domain : %s, Fields : %s, Ids (10 max) : %s",
+                     repr(self._name), len(self.ids), len(fields_to_export),
+                     self.env.user.login, self.env.user, self._context.get('export_domain'), fields_to_export,
+                     self.ids[:10])
         return {'datas': self._export_rows(fields_to_export)}
 
     @api.model
@@ -3725,7 +3730,7 @@ Fields:
             self.flush()
 
         # auditing: deletions are infrequent and leave no trace in the database
-        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
+        _audit_logger.getChild('unlink').info('User %d deleted %s', self._uid, self)
 
         return True
 
