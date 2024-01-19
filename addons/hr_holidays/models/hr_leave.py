@@ -89,7 +89,7 @@ class HolidaysRequest(models.Model):
 
         if 'state' in fields_list and not defaults.get('state'):
             lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
-            defaults['state'] = 'confirm'
+            defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
 
         if 'date_from' and 'date_to' in fields_list:
             now = fields.Datetime.now()
