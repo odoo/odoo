@@ -344,11 +344,17 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
         .o_we_colorpicker_switch_panel button {
             margin-bottom: -1px;
+            border: 0;
+            padding: $btn-padding-y-sm $btn-padding-x-sm;
+            background: transparent;
+            color: var(--o-we-toolbar-color-clickable, #{$o-we-toolbar-color-clickable});
+
+            &:hover {
+                color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
+            }
 
             &.active {
-                border-bottom: 1px solid var(--o-we-toolbar-color-accent, #{$o-we-toolbar-color-accent});
-                background: none;
-                box-shadow: none;
+                box-shadow: inset 0 ($border-width * -1) 0 var(--o-we-toolbar-color-accent, #{$o-we-toolbar-color-accent});
                 color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
             }
 
