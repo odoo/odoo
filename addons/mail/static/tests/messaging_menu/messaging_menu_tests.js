@@ -10,14 +10,9 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import {
-    getFixture,
-    makeDeferred,
-    patchWithCleanup,
-    triggerHotkey,
-} from "@web/../tests/helpers/utils";
-import { click, contains, insertText, triggerEvents } from "@web/../tests/utils";
 import { getOrigin } from "@web/core/utils/urls";
+import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { assertSteps, click, contains, insertText, step, triggerEvents } from "@web/../tests/utils";
 
 const { DateTime } = luxon;
 
@@ -137,16 +132,14 @@ QUnit.test("no 'OdooBot has a request' in mobile app", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering with PWA installation request", async (assert) => {
-    const target = getFixture();
-
+QUnit.test("rendering with PWA installation request", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwa.installationState") {
-                assert.step("getItem " + key);
+                step("getItem " + key);
                 // in this test, installation has not yet proceeded
                 return null;
             }
@@ -163,11 +156,10 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     patchWithCleanup(env.services.installPrompt, {
         show() {
-            assert.step("show prompt");
+            step("show prompt");
         },
     });
-    assert.verifySteps(["getItem pwa.installationState"]);
-
+    await assertSteps(["getItem pwa.installationState"]);
     await contains(".o-mail-MessagingMenu-counter");
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -177,27 +169,22 @@ QUnit.test("rendering with PWA installation request", async (assert) => {
             pyEnv.odoobotId
         }/avatar_128?unique=${DateTime.fromSQL(odoobot.write_date).ts}']`
     );
-    assert.strictEqual(
-        target.querySelector(".o-mail-NotificationItem-name").textContent,
-        "OdooBot has a suggestion"
-    );
-    assert.strictEqual(
-        target.querySelector(".o-mail-NotificationItem-text").textContent,
-        "Come here often? Install Odoo on your device!"
-    );
-
+    await contains(".o-mail-NotificationItem-name", { text: "OdooBot has a suggestion" });
+    await contains(".o-mail-NotificationItem-text", {
+        text: "Come here often? Install Odoo on your device!",
+    });
     await click(".o-mail-NotificationItem a.btn-primary");
-    assert.verifySteps(["show prompt"]);
+    await assertSteps(["show prompt"]);
 });
 
-QUnit.test("installation of the PWA request can be dismissed", async (assert) => {
+QUnit.test("installation of the PWA request can be dismissed", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwa.installationState") {
-                assert.step("getItem " + key);
+                step("getItem " + key);
                 // in this test, installation has not yet proceeded
                 return null;
             }
@@ -205,84 +192,75 @@ QUnit.test("installation of the PWA request can be dismissed", async (assert) =>
         },
         setItem(key, value) {
             if (key === "pwa.installationState") {
-                assert.step("installationState value:  " + value);
+                step("installationState value:  " + value);
             }
             return super.setItem(key, value);
         },
     });
-
     const { env } = await start();
     // This event must be triggered to initialize the installPrompt service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     patchWithCleanup(env.services.installPrompt, {
         show() {
-            assert.step("show prompt should not be triggered");
+            step("show prompt should not be triggered");
         },
     });
-    assert.verifySteps(["getItem pwa.installationState"]);
-
+    await assertSteps(["getItem pwa.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem .fa-close");
-    assert.verifySteps(["installationState value:  dismissed"]);
-
+    await assertSteps(["installationState value:  dismissed"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering with PWA installation request (dismissed)", async (assert) => {
-    const target = getFixture();
-
+QUnit.test("rendering with PWA installation request (dismissed)", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwa.installationState") {
-                assert.step("getItem " + key);
+                step("getItem " + key);
                 // in this test, installation has been previously dismissed by the user
                 return "dismissed";
             }
             return super.getItem(key);
         },
     });
-
     await start();
     // This event must be triggered to initialize the installPrompt service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    assert.verifySteps(["getItem pwa.installationState"]);
-    assert.containsNone(target, ".o-mail-MessagingMenu-counter");
-
+    await assertSteps(["getItem pwa.installationState"]);
+    await contains(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("rendering with PWA installation request (already running as PWA)", async (assert) => {
-    const target = getFixture();
-
+QUnit.test("rendering with PWA installation request (already running as PWA)", async () => {
     patchWithCleanup(browser, {
         BeforeInstallPromptEvent: () => {},
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "pwa.installationState") {
-                assert.step("getItem " + key);
+                step("getItem " + key);
                 // in this test, we remove any value that could contain localStorage so the service would be allowed to prompt
                 return null;
             }
             return super.getItem(key);
         },
     });
-
     await start();
     // The 'beforeinstallprompt' event is not triggered here, since the
     // browser wouldn't trigger it when the app is already launched
-    assert.verifySteps(["getItem pwa.installationState"]);
-    assert.containsNone(target, ".o-mail-MessagingMenu-counter");
-
+    await assertSteps(["getItem pwa.installationState"]);
+    await contains(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsNone(target, ".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
 QUnit.test("Is closed after clicking on new message", async () => {
@@ -379,7 +357,7 @@ QUnit.test("grouped notifications by document model", async (assert) => {
     const { env } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
-            assert.step("do_action");
+            step("do_action");
             assert.strictEqual(action.name, "Mail Failures");
             assert.strictEqual(action.type, "ir.actions.act_window");
             assert.strictEqual(action.view_mode, "kanban,list,form");
@@ -404,7 +382,7 @@ QUnit.test("grouped notifications by document model", async (assert) => {
         text: "Partner",
         contains: [".badge", { text: "2" }],
     });
-    assert.verifySteps(["do_action"]);
+    await assertSteps(["do_action"]);
 });
 
 QUnit.test(
@@ -473,7 +451,7 @@ QUnit.test("non-failure notifications are ignored", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-QUnit.test("mark unread channel as read", async (assert) => {
+QUnit.test("mark unread channel as read", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -495,7 +473,7 @@ QUnit.test("mark unread channel as read", async (assert) => {
     await start({
         async mockRPC(route, args) {
             if (route.includes("set_last_seen_message")) {
-                assert.step("set_last_seen_message");
+                step("set_last_seen_message");
             }
         },
     });
@@ -503,7 +481,7 @@ QUnit.test("mark unread channel as read", async (assert) => {
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem.text-muted");
-    assert.verifySteps(["set_last_seen_message"]);
+    await assertSteps(["set_last_seen_message"]);
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -614,6 +592,7 @@ QUnit.test('"Start a conversation" in mobile shows channel selector (+ click awa
     patchUiSize({ height: 360, width: 640 });
     const { openDiscuss } = await start();
     await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
     await contains("button", { text: "Start a conversation" });
     await contains("input[placeholder='Start a conversation']", { count: 0 });
@@ -631,6 +610,7 @@ QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', asyn
     patchUiSize({ height: 360, width: 640 });
     const { openDiscuss } = await start();
     await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
     await contains("button", { text: "New Channel" });
     await contains("input[placeholder='Add or join a channel']", { count: 0 });
@@ -921,7 +901,7 @@ QUnit.test(
         const { env } = await start();
         patchWithCleanup(env.services.action, {
             doAction(action) {
-                assert.step("do_action");
+                step("do_action");
                 assert.strictEqual(action.res_id, partnerId);
                 assert.strictEqual(action.res_model, "res.partner");
             },
@@ -930,7 +910,7 @@ QUnit.test(
         await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });
         await click(".o-mail-ChatWindow-command i.fa-expand");
         await contains(".o-mail-ChatWindow", { count: 0 });
-        assert.verifySteps(["do_action"], "should have done an action to open the form view");
+        await assertSteps(["do_action"], "should have done an action to open the form view");
     }
 );
 
@@ -1147,4 +1127,22 @@ QUnit.test("can open messaging menu even if messaging is not initialized", async
     await contains(".o-mail-DiscussSystray", { text: "No conversation yet..." });
     def.resolve();
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
+});
+
+QUnit.test("can open messaging menu even if channels are not fetched", async () => {
+    patchBrowserNotification("denied");
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    const def = makeDeferred();
+    await start({
+        async mockRPC(route, args) {
+            if (["/mail/action", "/mail/data"].includes(route) && args.channels_as_member) {
+                await def;
+            }
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-DiscussSystray", { text: "No conversation yet..." });
+    def.resolve();
+    await contains(".o-mail-NotificationItem", { text: "General" });
 });

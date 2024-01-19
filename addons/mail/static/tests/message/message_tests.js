@@ -548,7 +548,8 @@ QUnit.test("Reaction summary", async () => {
         model: "discuss.channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { text: "Hello world" });
     const partnerNames = ["Foo", "Bar", "FooBar", "Bob"];
     const expectedSummaries = [
         "Foo has reacted with 😅",
@@ -1346,7 +1347,7 @@ QUnit.test("Channel should be opened after clicking on its mention", async () =>
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "my-channel" });
     const { openFormView } = await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion strong", { text: "#my-channel" });

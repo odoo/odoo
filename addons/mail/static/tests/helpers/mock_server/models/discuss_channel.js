@@ -945,7 +945,7 @@ patch(MockServer.prototype, {
         return ["chat", "group"];
     },
     /**
-     * Simulates `get_channels_as_member` on `discuss.channel`.
+     * Simulates `_get_channels_as_member` on `discuss.channel`.
      */
     _mockDiscussChannel__get_channels_as_member() {
         const guest = this._mockMailGuest__getGuestFromContext();
@@ -967,9 +967,11 @@ patch(MockServer.prototype, {
     /**
      * Simulates `_get_init_channels` on `discuss.channel`.
      */
-    _mockDiscussChannel__get_init_channels(user) {
+    _mockDiscussChannel__get_init_channels(user, context) {
+        const guest =
+            this.pyEnv.currentUser?._is_public() && this._mockMailGuest__getGuestFromContext();
         const members = this.getRecords("discuss.channel.member", [
-            ["partner_id", "=", user.partner_id],
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", user.partner_id],
             "|",
             ["fold_state", "in", ["open", "folded"]],
             ["rtc_inviting_session_id", "!=", false],

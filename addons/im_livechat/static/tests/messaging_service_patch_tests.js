@@ -8,7 +8,7 @@ import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { contains } from "@web/../tests/utils";
+import { assertSteps, contains, step } from "@web/../tests/utils";
 
 QUnit.module("messaging service (patch)");
 
@@ -25,6 +25,13 @@ QUnit.test("Notify message received out of focus", async () => {
     });
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
         services: {
             presence: makeFakePresenceService({
                 isOdooFocused() {
@@ -33,6 +40,8 @@ QUnit.test("Notify message received out of focus", async () => {
             }),
         },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    // send after init_messaging because bus subscription is done after init_messaging
     await pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/chat_post", {
             message_content: "Hello",

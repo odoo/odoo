@@ -20,8 +20,8 @@ patch(MockServer.prototype, {
         if (args.init_messaging) {
             const initMessaging =
                 this._mockMailGuest__getGuestFromContext() && this.pyEnv.currentUser?._is_public()
-                    ? this._mockMailGuest__initMessaging()
-                    : this._mockResUsers_InitMessaging([this.pyEnv.currentUserId]);
+                    ? this._mockMailGuest__initMessaging(args.context)
+                    : this._mockResUsers_InitMessaging([this.pyEnv.currentUserId], args.context);
             this._addToRes(res, initMessaging);
         }
         if (args.failures && this.pyEnv.currentPartnerId) {

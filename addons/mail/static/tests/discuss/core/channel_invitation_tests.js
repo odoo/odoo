@@ -26,8 +26,8 @@ QUnit.test(
             ],
             channel_type: "channel",
         });
-        const { openDiscuss } = await start({ hasTimeControl: true });
-        openDiscuss(channelId);
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
         await click(".o-mail-Discuss-header button[title='Add Users']");
         await contains(".o-discuss-ChannelInvitation");
     }

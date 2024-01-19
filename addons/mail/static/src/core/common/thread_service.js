@@ -698,7 +698,7 @@ export class ThreadService {
                       mentionedPartners,
                   })
                 : undefined;
-        const partner_ids = validMentions?.partners.map((partner) => partner.id);
+        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
         let recipientEmails = [];
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
@@ -707,7 +707,7 @@ export class ThreadService {
             recipientEmails = thread.suggestedRecipients
                 .filter((recipient) => recipient.checked && !recipient.persona)
                 .map((recipient) => recipient.email);
-            partner_ids?.push(...recipientIds);
+            partner_ids.push(...recipientIds);
         }
         return {
             context: {

@@ -8,7 +8,7 @@ import { mockGetMedia, start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains, triggerEvents } from "@web/../tests/utils";
+import { assertSteps, click, contains, step, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("call");
 
@@ -117,7 +117,15 @@ QUnit.test("should display invitations", async (assert) => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    const { env } = await start();
+    const { env } = await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
+    });
     patchWithCleanup(env.services["mail.sound_effects"], {
         play(name) {
             assert.step(`play - ${name}`);
@@ -128,6 +136,8 @@ QUnit.test("should display invitations", async (assert) => {
             super.stop(...arguments);
         },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    // send after init_messaging because bus subscription is done after init_messaging
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
         Thread: {
             id: channelId,
@@ -271,7 +281,8 @@ QUnit.test("'Start a meeting' in mobile", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "Slytherin" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
     await click("button", { text: "Start a meeting" });
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });

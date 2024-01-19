@@ -31,7 +31,8 @@ patch(Messaging.prototype, {
         if (livechatService.savedState?.threadData) {
             messagingData.Thread.push(livechatService.savedState.threadData);
         }
-        this.initMessagingCallback(messagingData);
+        this.store.insert(messagingData);
+        this.initMessagingCallback();
     },
     get initMessagingParams() {
         return {

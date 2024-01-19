@@ -4,19 +4,27 @@ import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { contains } from "@web/../tests/utils";
+import { assertSteps, contains, step } from "@web/../tests/utils";
 
 QUnit.module("out of focus");
 
 QUnit.test("Spaces in notifications are not encoded", async () => {
-    const { openDiscuss, pyEnv } = await start({
+    const { pyEnv } = await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
         services: {
             presence: makeFakePresenceService({ isOdooFocused: () => false }),
         },
     });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
-    await openDiscuss();
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    // send after init_messaging because bus subscription is done after init_messaging
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
         id: channelId,
         message: {

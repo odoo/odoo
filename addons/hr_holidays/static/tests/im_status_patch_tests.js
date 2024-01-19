@@ -5,9 +5,11 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { start } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
 
+import { contains } from "@web/../tests/utils";
+
 QUnit.module("im_status");
 
-QUnit.test("on leave & online", async (assert) => {
+QUnit.test("on leave & online", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_online" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -19,10 +21,10 @@ QUnit.test("on leave & online", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Online']");
+    await contains(".o-mail-ImStatus i.fa-plane[title='Online']");
 });
 
-QUnit.test("on leave & away", async (assert) => {
+QUnit.test("on leave & away", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_away" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -34,10 +36,10 @@ QUnit.test("on leave & away", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Idle']");
+    await contains(".o-mail-ImStatus i.fa-plane[title='Idle']");
 });
 
-QUnit.test("on leave & offline", async (assert) => {
+QUnit.test("on leave & offline", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_offline" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -49,5 +51,5 @@ QUnit.test("on leave & offline", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-mail-ImStatus i.fa-plane[title='Out of office']");
+    await contains(".o-mail-ImStatus i.fa-plane[title='Out of office']");
 });

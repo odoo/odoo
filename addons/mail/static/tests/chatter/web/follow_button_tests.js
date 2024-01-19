@@ -41,14 +41,9 @@ QUnit.test("hover following button", async () => {
 });
 
 QUnit.test('click on "follow" button', async () => {
-    const { openView, pyEnv } = await start();
-    openView({
-        res_id: pyEnv.currentPartnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
+    const { openFormView, pyEnv } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
     await contains("button", { text: "Follow" });
-
     await click("button", { text: "Follow" });
     await contains("button", { text: "Following" });
 });
@@ -66,7 +61,7 @@ QUnit.test('Click on "follow" button should save draft record', async () => {
             </form>`,
     };
     const { openFormView } = await start({ serverData: { views } });
-    openFormView("res.partner");
+    await openFormView("res.partner");
     await contains("button", { text: "Follow" });
     await contains("div.o_field_char");
     await click("button", { text: "Follow" });

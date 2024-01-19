@@ -287,7 +287,8 @@ QUnit.test("Show send button in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
     await click(".o-mail-NotificationItem", { text: "minecraft-wii-u" });
     await contains(".o-mail-Composer button[aria-label='Send']");

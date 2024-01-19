@@ -2,7 +2,6 @@
 
 import { Store } from "@mail/core/common/store_service";
 
-import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 
@@ -20,12 +19,11 @@ const StorePatch = {
         }
         this.fetchChannelsState = "fetching";
         this.fetchChannelsDeferred = new Deferred();
-        rpc("/mail/data", { channels_as_member: true }).then(
+        this.fetchData({ channels_as_member: true }).then(
             /**
-             * @param {{ Message: Object[], Thread: Object[] }} data
+             * @param {{ Message: import("models").Message[] }} recordsByModel
              */
-            (data) => {
-                const { Message: messages } = this.insert(data, { html: true });
+            ({ Message: messages }) => {
                 for (const message of messages) {
                     if (message.isNeedaction) {
                         message.originThread.needactionMessages.add(message);

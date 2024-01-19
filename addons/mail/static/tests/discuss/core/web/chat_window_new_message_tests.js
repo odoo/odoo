@@ -88,6 +88,7 @@ QUnit.test(
         await start();
         // open "new message" chat window
         await click(".o_menu_systray i[aria-label='Messages']");
+        await contains(".o-mail-ChatWindow", { text: "channel-1" });
         await click("button", { text: "New Message" });
         await contains(".o-mail-ChatWindow", { count: 2 });
         await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "New message" });

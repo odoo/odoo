@@ -8,7 +8,7 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 
 import { Command } from "@mail/../tests/helpers/command";
 
-import { contains, focus } from "@web/../tests/utils";
+import { assertSteps, contains, focus, step } from "@web/../tests/utils";
 import { cookie } from "@web/core/browser/cookie";
 
 QUnit.module("thread service");
@@ -24,6 +24,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
@@ -31,8 +32,23 @@ QUnit.test("new message from operator displays unread counter", async () => {
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
-    await start();
-    $(".o-mail-Composer-input").blur();
+    await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
+    });
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true, // called because mail/core/web is loaded in qunit bundle
+            context: { is_for_livechat: true },
+        })}`,
+    ]);
+    // send after init_messaging because bus subscription is done after init_messaging
     pyEnv.withUser(pyEnv.adminUserId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
@@ -54,6 +70,7 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
@@ -61,12 +78,23 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
-    cookie.set(
-        "im_livechat.saved_state",
-        JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
-    );
-    await start();
-    $(".o-mail-Composer-input").blur();
+    await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
+    });
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true, // called because mail/core/web is loaded in qunit bundle
+            context: { is_for_livechat: true },
+        })}`,
+    ]);
+    // send after init_messaging because bus subscription is done after init_messaging
     pyEnv.withUser(pyEnv.adminUserId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },

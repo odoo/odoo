@@ -25,11 +25,14 @@ export class DiscussClientAction extends Component {
         this.store = useState(useService("mail.store"));
         this.messaging = useState(useService("mail.messaging"));
         this.threadService = useService("mail.thread");
-        onWillStart(async () => {
-            await this.messaging.isReady;
-            await this.restoreDiscussThread(this.props);
+        onWillStart(() => {
+            // bracket to avoid blocking rendering with restore promise
+            this.restoreDiscussThread(this.props);
         });
-        onWillUpdateProps((nextProps) => this.restoreDiscussThread(nextProps));
+        onWillUpdateProps((nextProps) => {
+            // bracket to avoid blocking rendering with restore promise
+            this.restoreDiscussThread(nextProps);
+        });
     }
 
     /**
@@ -60,6 +63,7 @@ export class DiscussClientAction extends Component {
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             this.threadService.setDiscussThread(activeThread);
         }
+        this.store.discuss.hasRestoredThread = true;
     }
 }
 

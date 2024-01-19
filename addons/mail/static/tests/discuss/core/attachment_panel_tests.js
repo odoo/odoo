@@ -54,9 +54,13 @@ QUnit.test("Can toggle allow public upload", async () => {
     const pyEnv = await startServer();
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: tab1.target });
-    const tab2 = await start({ asTab: true });
+    await contains(".o-mail-ActionPanel", {
+        contains: ["label", { text: "File upload is disabled for external users" }],
+        target: tab1.target,
+    });
     await tab2.openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Show Attachments']", { target: tab2.target });
     await contains(".o-mail-ActionPanel", {
