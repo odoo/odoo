@@ -190,6 +190,10 @@ class AccountMove(models.Model):
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
         ar_invoices._check_argentinean_invoice_taxes()
+
+        for inv in ar_invoices:
+            inv.invoice_date = inv.invoice_date or fields.Date.context_today(self)
+
         posted = super()._post(soft=soft)
 
         posted_ar_invoices = posted & ar_invoices
