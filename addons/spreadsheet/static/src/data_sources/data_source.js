@@ -15,10 +15,11 @@ import { KeepLast } from "@web/core/utils/concurrency";
  * particular data.
  */
 export class LoadableDataSource {
-    constructor(services) {
-        this._orm = services.orm;
-        this._metadataRepository = services.metadataRepository;
-        this._notifyWhenPromiseResolves = services.notifyWhenPromiseResolves;
+    constructor(params) {
+        this._orm = params.orm;
+        this._metadataRepository = params.metadataRepository;
+        this._notifyWhenPromiseResolves = params.notifyWhenPromiseResolves;
+        this._cancelPromise = params.cancelPromise;
 
         /**
          * Last time that this dataSource has been updated
@@ -44,6 +45,7 @@ export class LoadableDataSource {
      */
     async load(params) {
         if (params && params.reload) {
+            this._cancelPromise(this._loadPromise);
             this._loadPromise = undefined;
         }
         if (!this._loadPromise) {
