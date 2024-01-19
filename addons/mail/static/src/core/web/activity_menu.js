@@ -26,13 +26,11 @@ export class ActivityMenu extends Component {
     }
 
     async fetchSystrayActivities() {
-        const groups = await this.env.services.orm.call("res.users", "systray_get_activities");
-        let total = 0;
-        for (const group of groups) {
-            total += group.total_count || 0;
-        }
-        this.store.activityCounter = total;
-        this.store.activityGroups = groups;
+        const dataByModelName = await this.env.services.orm.call(
+            "res.users",
+            "systray_get_activities"
+        );
+        this.store.insert(dataByModelName);
     }
 
     onBeforeOpen() {

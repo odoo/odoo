@@ -67,9 +67,8 @@ class Users(models.Model):
                 ('attendee_ids', 'in', current_user_non_declined_attendee_ids)]
 
     @api.model
-    def systray_get_activities(self):
-        res = super(Users, self).systray_get_activities()
-
+    def _get_activity_groups(self):
+        res = super()._get_activity_groups()
         EventModel = self.env['calendar.event']
         meetings_lines = EventModel.search_read(
             self._systray_get_calendar_event_domain(),
@@ -87,7 +86,6 @@ class Users(models.Model):
                 "view_type": EventModel._systray_view,
             }
             res.insert(0, meetings_systray)
-
         return res
 
     @api.model
