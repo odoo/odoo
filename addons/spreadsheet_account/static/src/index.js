@@ -22,7 +22,11 @@ cellMenuRegistry.add("move_lines_see_records", {
         let [codes, date_from, date_to, offset, companyId, includeUnposted] = args
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
-        codes = toString(codes?.value).split(",");
+        try {
+            codes = toString(codes?.value).split(",");
+        } catch {
+            codes = [];
+        }
         const locale = env.model.getters.getLocale();
         let dateFrom;
         try {

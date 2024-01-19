@@ -44,12 +44,9 @@ class AccountAccount(models.Model):
         return start, end
 
     def _build_spreadsheet_formula_domain(self, formula_params):
-        codes = [code for code in formula_params["codes"] if code]
-        if not codes:
-            return expression.FALSE_DOMAIN
-
         company_id = formula_params["company_id"] or self.env.company.id
-        account_ids = self._get_all_accounts([formula_params])[company_id].ids
+        codes = [code for code in formula_params["codes"] if code]
+        account_ids = self._get_all_accounts([formula_params], default_accounts=bool(not codes))[company_id].ids
 
         start = formula_params['date_from_boundary']
         end = formula_params['date_to_boundary']
@@ -127,20 +124,26 @@ class AccountAccount(models.Model):
 
         return [(date(year=1900, month=1, day=1), timeline[0][0] + relativedelta(days=-1))] + timeline
 
-    def _get_all_accounts(self, args_list):
+    def _get_all_accounts(self, args_list, default_accounts=False):
         company_to_codes = defaultdict(set)
         for args in args_list:
             codes = tuple({code for code in args["codes"] if code})
             company_to_codes[args['company_id'] or self.env.company.id].update(codes)
 
+        default_domain = [('account_type', 'in', ['liability_payable', 'asset_receivable'])] if default_accounts else expression.FALSE_DOMAIN
+
         all_accounts = dict()
         for company_id, codes in company_to_codes.items():
-            domain = expression.OR(
+            code_domain = expression.OR(
                 [
                     ('code', '=like', f'{code}%'),
                 ]
                 for code in codes
             )
+            domain = expression.AND([
+                expression.OR([code_domain, default_domain]),
+                self.env['account.account']._check_company_domain(company_id),
+            ])
             accounts = self.env['account.account'].with_company(company_id).search(domain)
             all_accounts[company_id] = accounts
 
@@ -199,6 +202,11 @@ class AccountAccount(models.Model):
     def spreadsheet_move_line_action(self, args):
         self._pre_process_date_period_boundaries([args])
         domain = self._build_spreadsheet_formula_domain(args)
+        codes = [code for code in args["codes"] if code]
+        if codes:
+            name = _("Journal items for account prefix %s", ", ".join(codes))
+        else:
+            name = _("Journal items for payable and receivable accounts")
         return {
             "type": "ir.actions.act_window",
             "res_model": "account.move.line",
@@ -206,7 +214,7 @@ class AccountAccount(models.Model):
             "views": [[False, "list"]],
             "target": "current",
             "domain": domain,
-            "name": _("Journal items for account prefix %s", ", ".join(args["codes"])),
+            "name": name,
         }
 
     @api.readonly
@@ -232,27 +240,51 @@ class AccountAccount(models.Model):
 
     @api.readonly
     @api.model
-    def _spreadsheet_fetch_data(self, args_list, fields):
+    def spreadsheet_fetch_residual_amount(self, args_list):
+        """Fetch data for ODOO.RESIDUAL formulas
+        The input list looks like this:
+        [{
+            date_from: {
+                range_type: "year"
+                year: int
+            },
+            date_to: {
+                range_type: "year"
+                year: int
+            },
+            company_id: int
+            codes: str[]
+            include_unposted: bool
+        }]
+        """
+        return self._spreadsheet_fetch_data(args_list, ['amount_residual'], default_accounts=True)
+
+    @api.readonly
+    @api.model
+    def _spreadsheet_fetch_data(self, args_list, fields, default_accounts=False):
         if not args_list:
             return []
 
         self._pre_process_date_period_boundaries(args_list)
         timeline = self._pre_process_timeline(args_list)
-        all_accounts = self._get_all_accounts(args_list)
+        all_accounts = self._get_all_accounts(args_list, default_accounts=default_accounts)
         all_lines = self._get_all_lines(args_list, fields, timeline, all_accounts)
 
         results = []
         for args in args_list:
             subcodes = tuple({subcode for subcode in args["codes"] if subcode})
 
-            if not subcodes:
+            if not subcodes and not default_accounts:
                 results.append({field: 0.0 for field in fields})
                 continue
 
             company_id = args['company_id'] or self.env.company.id
             states = ['posted', 'draft'] if args['include_unposted'] else ['posted']
             periods = args['date_periods']
-            accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).code.startswith(subcodes))
+            if subcodes:
+                accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).code.startswith(subcodes))
+            else:
+                accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).account_type in ['liability_payable', 'asset_receivable'])
 
             matching_keys = set()
             for account in accounts:
