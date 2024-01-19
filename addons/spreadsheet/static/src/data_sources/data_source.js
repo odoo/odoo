@@ -1,10 +1,9 @@
 /** @odoo-module */
 
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { EvaluationError } from "@odoo/o-spreadsheet";
 import { ServerData } from "./server_data";
+import { Loadable } from "./loadable";
 
 /**
  * DataSource is an abstract class that contains the logic of fetching and
@@ -35,7 +34,6 @@ export class LoadableDataSource {
          */
         this._loadPromise = undefined;
         this._isFullyLoaded = false;
-        this._isValid = true;
         this._loadError = undefined;
     }
 
@@ -52,13 +50,13 @@ export class LoadableDataSource {
         }
         if (!this._loadPromise) {
             this._isFullyLoaded = false;
-            this._isValid = true;
-            this._loadError = undefined;
             this._loadPromise = this._concurrency
                 .add(this._load())
-                .catch((e) => {
-                    this._isValid = false;
-                    this._loadError = { value: e instanceof RPCError ? e.data.message : e.message };
+                .catch(error => {
+                    if (error instanceof RPCError) {
+                        throw new Error(error.data.message);
+                    }
+                    throw error;
                 })
                 .finally(() => {
                     this._lastUpdate = Date.now();
@@ -81,32 +79,6 @@ export class LoadableDataSource {
     }
 
     /**
-     * @protected
-     */
-    ifDataIsLoaded(callback) {
-        if (!this._isFullyLoaded) {
-            this.load();
-            return LOADING_ERROR;
-        }
-        if (!this._isValid) {
-            return this._loadError;
-        }
-        return callback();
-    }
-    /**
-     * @protected
-     */
-    _assertDataIsLoaded() {
-        if (!this._isFullyLoaded) {
-            this.load();
-            throw LOADING_ERROR;
-        }
-        if (!this._isValid) {
-            throw new EvaluationError(this._loadError);
-        }
-    }
-
-    /**
      * Load the data in the model
      *
      * @abstract
@@ -114,5 +86,3 @@ export class LoadableDataSource {
      */
     async _load() {}
 }
-
-const LOADING_ERROR = new LoadingDataError();

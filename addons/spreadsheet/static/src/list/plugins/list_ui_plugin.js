@@ -5,6 +5,7 @@ import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
+import { Loadable } from "../../data_sources/loadable";
 
 const { astToFormula } = spreadsheet;
 
@@ -300,7 +301,7 @@ export class ListUIPlugin extends spreadsheet.UIPlugin {
      * @param {number} position Position of the record in the list
      * @param {string} fieldName Field Name
      *
-     * @returns {string|undefined}
+     * @returns {Loadable<string|undefined>}
      */
     getListCellValue(listId, position, fieldName) {
         return this.getters.getListDataSource(listId).getListCellValue(position, fieldName);

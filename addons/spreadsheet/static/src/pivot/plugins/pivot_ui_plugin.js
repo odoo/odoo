@@ -8,6 +8,7 @@ import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { PivotDataSource } from "../pivot_data_source";
+import { Loadable } from "../../data_sources/loadable";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
@@ -304,7 +305,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
         dataSource.markAsHeaderUsed(domain);
         const len = domain.length;
         if (len === 0) {
-            return _t("Total");
+            return { value: _t("Total") };
         }
         return dataSource.getDisplayedPivotHeaderValue(domain);
     }
@@ -364,8 +365,8 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
             const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
-                let value = dataSource.getPivotHeaderValue(domainArgs.slice(-2));
-                if (value === NO_RECORD_AT_THIS_POSITION) {
+                let { value, status } = dataSource.getPivotHeaderValue(domainArgs.slice(-2));
+                if (value === NO_RECORD_AT_THIS_POSITION || status !== Loadable.resolved) {
                     continue;
                 }
                 let transformedValue;

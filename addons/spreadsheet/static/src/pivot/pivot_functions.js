@@ -107,7 +107,7 @@ const ODOO_PIVOT_HEADER = {
         assertDomainLength(args);
         const pivot = this.getters.getPivotDataSource(pivotId);
         return {
-            value: this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale),
+            ...this.getters.getDisplayedPivotHeaderValue(pivotId, args, this.locale),
             format: odooPivotHeaderFormat(pivot, args, this.locale),
         };
     },

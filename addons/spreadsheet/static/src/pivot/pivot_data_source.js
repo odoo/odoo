@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { SpreadsheetPivotModel } from "./pivot_model";
+import { Loadable } from "../data_sources/loadable";
 
 export class PivotDataSource extends OdooViewsDataSource {
     /**
@@ -17,12 +18,14 @@ export class PivotDataSource extends OdooViewsDataSource {
      */
     constructor(services, params) {
         super(services, params);
+        /** @type {() => Loadable<SpreadsheetPivotModel>} */
+        this._model = lazy(() => new Loadable(this.load()));
     }
 
     async _load() {
         await super._load();
         /** @type {SpreadsheetPivotModel} */
-        this._model = new SpreadsheetPivotModel(
+        const model = new SpreadsheetPivotModel(
             { _t },
             {
                 metaData: this._metaData,
@@ -33,7 +36,8 @@ export class PivotDataSource extends OdooViewsDataSource {
                 metadataRepository: this._metadataRepository,
             }
         );
-        await this._model.load(this._searchParams);
+        await model.load(this._searchParams);
+        return model;
     }
 
     async copyModelWithOriginalDomain() {
@@ -64,16 +68,14 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string[]} domain
      */
     getDisplayedPivotHeaderValue(domain) {
-        this._assertDataIsLoaded();
-        return this._model.getDisplayedPivotHeaderValue(domain);
+        return this._model().map((model) => model.getDisplayedPivotHeaderValue(domain));
     }
 
     /**
      * @param {string[]} domain
      */
     getPivotHeaderValue(domain) {
-        this._assertDataIsLoaded();
-        return this._model.getPivotHeaderValue(domain);
+        return this._model().map((model) => model.getPivotHeaderValue(domain));
     }
 
     /**
@@ -81,8 +83,8 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string[]} domain
      */
     markAsValueUsed(measure, domain) {
-        if (this._model) {
-            this._model.markAsValueUsed(measure, domain);
+        if (this._model().status === Loadable.resolved) {
+            this._model().value.markAsValueUsed(measure, domain);
         }
     }
 
@@ -90,8 +92,8 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string[]} domain
      */
     markAsHeaderUsed(domain) {
-        if (this._model) {
-            this._model.markAsHeaderUsed(domain);
+        if (this._model().status === Loadable.resolved) {
+            this._model().value.markAsHeaderUsed(domain);
         }
     }
 
@@ -101,8 +103,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isUsedValue(measure, domain) {
-        this._assertDataIsLoaded();
-        return this._model.isUsedValue(measure, domain);
+        return this._model().map((model) => model.isUsedValue(measure, domain));
     }
 
     /**
@@ -110,19 +111,17 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isUsedHeader(domain) {
-        this._assertDataIsLoaded();
-        return this._model.isUsedHeader(domain);
+        return this._model().map((model) => model.isUsedHeader(domain));
     }
 
     clearUsedValues() {
-        if (this._model) {
-            this._model.clearUsedValues();
+        if (this._model().status === Loadable.resolved) {
+            this._model().value.clearUsedValues();
         }
     }
 
     getTableStructure() {
-        this._assertDataIsLoaded();
-        return this._model.getTableStructure();
+        return this._model().map((model) => model.getTableStructure());
     }
 
     /**
@@ -130,16 +129,14 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {string[]} domain
      */
     getPivotCellValue(measure, domain) {
-        this._assertDataIsLoaded();
-        return this._model.getPivotCellValue(measure, domain);
+        return this._model().map((model) => model.getPivotCellValue(measure, domain));
     }
 
     /**
      * @param {string[]}
      */
     getPivotCellDomain(domain) {
-        this._assertDataIsLoaded();
-        return this._model.getPivotCellDomain(domain);
+        return this._model().map((model) => model.getPivotCellDomain(domain));
     }
 
     /**
@@ -149,8 +146,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getGroupByDisplayLabel(fieldName, value, locale) {
-        this._assertDataIsLoaded();
-        return this._model.getGroupByDisplayLabel(fieldName, value, locale);
+        return this._model().map((model) => model.getGroupByDisplayLabel(fieldName, value, locale));
     }
 
     /**
@@ -158,16 +154,14 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getFormattedGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.getFormattedGroupBy(fieldName);
+        return this._model().map((model) => model.getFormattedGroupBy(fieldName));
     }
 
     /**
      * @param {string} groupFieldString
      */
     parseGroupField(groupFieldString) {
-        this._assertDataIsLoaded();
-        return this._model.parseGroupField(groupFieldString);
+        return this._model().map((model) => model.parseGroupField(groupFieldString));
     }
 
     /**
@@ -175,8 +169,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isGroupedOnlyByOneDate(dimension) {
-        this._assertDataIsLoaded();
-        return this._model.isGroupedOnlyByOneDate(dimension);
+        return this._model().map((model) => model.isGroupedOnlyByOneDate(dimension));
     }
 
     /**
@@ -184,8 +177,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getGroupOfFirstDate(dimension) {
-        this._assertDataIsLoaded();
-        return this._model.getGroupOfFirstDate(dimension);
+        return this._model().map((model) => model.getGroupOfFirstDate(dimension));
     }
 
     /**
@@ -194,8 +186,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {string}
      */
     getGroupByAtIndex(dimension, index) {
-        this._assertDataIsLoaded();
-        return this._model.getGroupByAtIndex(dimension, index);
+        return this._model().map((model) => model.getGroupByAtIndex(dimension, index));
     }
 
     /**
@@ -203,8 +194,7 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isColumnGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.isColumnGroupBy(fieldName);
+        return this._model().map((model) => model.isColumnGroupBy(fieldName));
     }
 
     /**
@@ -212,20 +202,17 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @returns {boolean}
      */
     isRowGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.isRowGroupBy(fieldName);
+        return this._model().map((model) => model.isRowGroupBy(fieldName));
     }
 
     /**
      * @returns {number}
      */
     getNumberOfColGroupBys() {
-        this._assertDataIsLoaded();
-        return this._model.getNumberOfColGroupBys();
+        return this._model().map((model) => model.getNumberOfColGroupBys());
     }
 
     async prepareForTemplateGeneration() {
-        this._assertDataIsLoaded();
-        await this._model.prepareForTemplateGeneration();
+        return this._model().map((model) => model.prepareForTemplateGeneration()).promise;
     }
 }

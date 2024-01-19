@@ -31,11 +31,10 @@ const ODOO_LIST = {
         const position = toNumber(index, this.locale) - 1;
         const _fieldName = toString(fieldName);
         assertListsExists(id, this.getters);
-        const value = this.getters.getListCellValue(id, position, _fieldName);
         const field = this.getters.getListDataSource(id).getField(_fieldName);
         return {
-            value,
-            format: odooListFormat(id, position, field, this.getters, this.locale),
+            ...this.getters.getListCellValue(id, position, _fieldName),
+            format: odooListFormat(id, position, field.value, this.getters, this.locale),
         };
     },
     returns: ["NUMBER", "STRING"],
@@ -48,8 +47,11 @@ function odooListFormat(id, position, field, getters, locale) {
         case "float":
             return "#,##0.00";
         case "monetary": {
-            const currencyName = getters.getListCellValue(id, position, field.currency_field);
-            return getters.getCurrencyFormat(currencyName);
+            return getters.getListCellValue(id, position, field.currency_field)
+                .map(currencyName => getters.getCurrencyFormat(currencyName))
+                .defaultsTo(undefined)
+                .value
+            return ;
         }
         case "date":
             return locale.dateFormat;

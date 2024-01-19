@@ -6,7 +6,9 @@ import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 
 /**
- * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
+ * @typedef {import("./metadata_repository").Field} Field
+ *
+ * @typedef {} Loadable
  */
 
 /**
@@ -60,7 +62,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
     }
 
     /**
-     * @returns {import("./loadable").Loadable<Record<string, Field>>} List of fields
+     * @returns {import("./loadable").Loadable<Record<string, Field>>}
      */
     getFields() {
         return this.serverData.get(this._metaData.resModel, "fields_get");
@@ -68,14 +70,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
 
     /**
      * @param {string} field Field name
-     * @returns {Field | undefined} Field
      */
     getField(field) {
-        if (this._metaData.fields === undefined) {
-            this.loadMetadata();
-            throw new LoadingDataError();
-        }
-        return this._metaData.fields[field];
+        return this.getFields().map((fields) => fields[field]);
     }
 
     /**
