@@ -900,7 +900,7 @@ class Home(http.Controller):
             # invalidate session token cache as we've changed the uid
             request.env['res.users'].clear_caches()
             request.session.session_token = security.compute_session_token(request.session, request.env)
-
+            _logger.info("The user %r (%s) became superuser.", request.env.user.login, request.env.user)
         return request.redirect(self._login_redirect(uid))
 
     @http.route('/web/health', type='http', auth='none', save_session=False)
@@ -1380,7 +1380,8 @@ class Binary(http.Controller):
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
-
+        _logger.info("Document %r (#%d on model %r) accessed (potentially downloaded) by %s",
+                    filename, id, model, request.env.user)
         return request.env['ir.http']._get_content_common(xmlid=xmlid, model=model, res_id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token, token=token)
 
@@ -1820,7 +1821,7 @@ class ExportFormat(object):
             response_data = self.from_group_data(fields, tree)
         else:
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
-
+            _logger.info("Export domain : %s", domain)
             export_data = records.export_data(field_names).get('datas',[])
             response_data = self.from_data(columns_headers, export_data)
 

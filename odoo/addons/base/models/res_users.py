@@ -766,6 +766,9 @@ class Users(models.Model):
         if not password:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        user_agent, user_agent_string = request.httprequest.user_agent if request else None, "n/a"
+        if user_agent:
+            user_agent_string = f"{user_agent.platform} {user_agent.browser} {sha256(user_agent.string.encode()).hexdigest()[:8]}"
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
@@ -781,10 +784,12 @@ class Users(models.Model):
                         user.tz = tz
                     user._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
+            _logger.info("Login failed for db:%s login:%s from %s UserAgent:%r",
+                         db, login, ip, user_agent_string)
             raise
 
-        _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
+        _logger.info("Login successful for db:%s login:%s from %s UserAgent:%r",
+                     db, login, ip, user_agent_string)
 
         return user.id
 
@@ -873,7 +878,7 @@ class Users(models.Model):
         self._check_credentials(old_passwd, {'interactive': True})
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info("Password change for '%s' (#%s) from %s", self.env.user.login, self.env.uid, ip)
+        _logger.info("Password change for %s from %s", self.env.user, ip)
 
         # use self.env.user here, because it has uid=SUPERUSER_ID
         return self.env.user.write({'password': new_passwd})
@@ -1691,6 +1696,7 @@ class ChangePasswordUser(models.TransientModel):
             if not line.new_passwd:
                 raise UserError(_("Before clicking on 'Change Password', you have to write a new password."))
             line.user_id.write({'password': line.new_passwd})
+        _logger.info("%s have a new password set by %s", self, self.env.user)
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
 

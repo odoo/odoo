@@ -942,7 +942,11 @@ class IrActionsReport(models.Model):
         )
         if res_ids:
             self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
-            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
+            domain = 'N/A'
+            if context.get('action_context'):
+                domain = context.get('action_context').get('active_domain')
+            _logger.info('The PDF report has been generated for model: %r, records %s by %s. Domain : %s',
+                self_sudo.model, res_ids, self.env.user, domain)
             return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 
