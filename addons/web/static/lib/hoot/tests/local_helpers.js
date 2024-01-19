@@ -41,5 +41,5 @@ export function mount(component, appConfig) {
  * @param {string} url
  */
 export function parseUrl(url) {
-    return new URL(url).pathname.replace(/(\.test)?\.js$/, "");
+    return url.replace(/^.*hoot\/tests/, "@hoot").replace(/(\.test)?\.js$/, "");
 }

@@ -671,7 +671,6 @@ const _keyDown = (target, eventInit) => {
                 if (eventInit.ctrlKey) {
                     // Select all
                     if (isEditable(target)) {
-                        target.setSelectionRange(0, target.value.length);
                         events.push(dispatch(target, "select"));
                     } else {
                         const selection = globalThis.getSelection();
@@ -908,7 +907,7 @@ const LOG_COLORS = {
     lightBlue: "#9bbbdc",
     reset: "inherit",
 };
-const SPECIAL_EVENTS = ["blur", "focus", "submit"];
+const SPECIAL_EVENTS = ["blur", "focus", "select", "submit"];
 let allowLogs = false;
 /** @type {Event[]} */
 let currentEvents = [];

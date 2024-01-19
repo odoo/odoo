@@ -273,6 +273,9 @@ export class TestRunner {
      * @param {(() => void) | string} fn
      */
     addSuite(config, name, fn) {
+        if (!name) {
+            throw new HootError(`a suite name must not be empty, got ${name}`);
+        }
         const names = ensureArray(name).flatMap((n) => normalize(n).split("/").filter(Boolean));
         const [suiteName, ...otherNames] = names;
         if (names.length > 1) {
@@ -341,6 +344,9 @@ export class TestRunner {
      * @param {() => void | PromiseLike<void>} fn
      */
     addTest(config, name, fn) {
+        if (!name) {
+            throw new HootError(`a test name must not be empty, got ${name}`);
+        }
         const { suite: parentSuite } = this.getCurrent();
         if (!parentSuite) {
             throw testError({ name, parent: null }, `cannot register a test outside of a suite.`);

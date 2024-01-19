@@ -1,12 +1,10 @@
 /** @odoo-module */
 
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-mock";
+import { getActiveElement, getParentFrame } from "../../../hoot-dom/helpers/dom";
+import { click, pointerDown } from "../../../hoot-dom/helpers/events";
 import {
-    getActiveElement,
     getFocusableElements,
     getNextFocusableElement,
-    getParentFrame,
     getPreviousFocusableElement,
     getRect,
     isDisplayed,
@@ -20,8 +18,9 @@ import {
     waitFor,
     waitForNone,
     waitUntil,
-} from "@web/../lib/hoot-dom/helpers/dom";
-import { click, pointerDown } from "@web/../lib/hoot-dom/helpers/events";
+} from "../../../hoot-dom/hoot-dom";
+import { describe, expect, getFixture, test } from "../../hoot";
+import { delay, tick } from "../../hoot-mock";
 import { mount, parseUrl } from "../local_helpers";
 
 /**
@@ -143,6 +142,24 @@ const FULL_HTML_TEMPLATE = /* html */ `
     </footer>
     `;
 const SVG_URL = "http://www.w3.org/2000/svg";
+
+// const SUITES = 100;
+// const TESTS_PER_SUITE = 100;
+// const ASSERTS_PER_TEST = 20;
+
+// for (let suiteId = 0; suiteId < SUITES; suiteId++) {
+//     describe(`suite_${suiteId}`, () => {
+//         for (let testId = 0; testId < TESTS_PER_SUITE; testId++) {
+//             test(`test_${testId}_suite_${suiteId}`, async () => {
+//                 for (let assertId = 0; assertId < ASSERTS_PER_TEST; assertId++) {
+//                     expect(assertId).toBe(assertId);
+//                 }
+
+//                 await new Promise((r) => setTimeout(r));
+//             });
+//         }
+//     });
+// }
 
 describe`ui`(parseUrl(import.meta.url), () => {
     test.todo("should crash", () => {

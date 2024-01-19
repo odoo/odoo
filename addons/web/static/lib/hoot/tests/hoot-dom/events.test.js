@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { after, describe, expect, test } from "@odoo/hoot";
 import {
     clear,
     click,
@@ -18,7 +17,8 @@ import {
     scroll,
     select,
     uncheck,
-} from "@odoo/hoot-dom";
+} from "../../../hoot-dom/hoot-dom";
+import { after, describe, expect, test } from "../../hoot";
 import { mount, parseUrl } from "../local_helpers";
 
 /**
