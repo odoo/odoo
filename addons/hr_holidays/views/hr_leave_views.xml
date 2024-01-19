@@ -200,12 +200,12 @@
             <field name="can_approve" invisible="1"/>
             <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
                 <button string="Mark as Draft" name="action_draft" type="object"
-                        attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                        attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
