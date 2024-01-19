@@ -525,6 +525,14 @@
                            invisible="payment_state == 'invoicing_legacy' or state != 'posted' or move_type == 'entry'"
                            optional="show"/>
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+                    <field name="move_sent_values"
+                           string="Sent"
+                           widget="badge"
+                           decoration-success="move_sent_values == 'sent'"
+                           decoration-danger="move_sent_values == 'not_sent'"
+                           column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')"
+                           optional="hide"
+                    />
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
                     <field name="abnormal_amount_warning" column_invisible="1"/>
                     <field name="abnormal_date_warning" column_invisible="1"/>
@@ -1464,6 +1472,17 @@
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
                     <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
+                    <separator/>
+                    <filter name="sent"
+                            string="Sent"
+                            domain="[('is_move_sent', '=', True)]"
+                            invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"
+                    />
+                    <filter name="not_sent"
+                            string="Not Sent"
+                            domain="[('is_move_sent', '=', False)]"
+                            invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"
+                    />
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
