@@ -756,9 +756,8 @@ class TestActivitySystray(TestActivityCommon):
             'test_mail.mail_act_test_todo',
             user_id=self.env.user.id,
         )
-
         total_count = sum(
-            record['total_count'] for record in self.env.user.systray_get_activities()
+            record['total_count'] for record in self.env.user.systray_get_activities()["Store"]["activityGroups"]
             if record.get('model') == test_record._name
         )
         self.assertEqual(total_count, 1)

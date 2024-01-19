@@ -11,12 +11,12 @@ class Users(models.Model):
     _inherit = ['res.users']
 
     @api.model
-    def systray_get_activities(self):
+    def _get_activity_groups(self):
         """ Split mass_mailing and mass_mailing_sms activities in systray by 
             removing the single mailing.mailing activity represented and
             doing a new query to split them by mailing_type.
         """
-        activities = super(Users, self).systray_get_activities()
+        activities = super()._get_activity_groups()
         view_type = self.env['mailing.mailing']._systray_view
         for activity in activities:
             if activity.get('model') == 'mailing.mailing':

@@ -9,10 +9,10 @@ class Users(models.Model):
     _inherit = ['res.users']
 
     @api.model
-    def systray_get_activities(self):
+    def _get_activity_groups(self):
         """ Update the systray icon of res.partner activities to use the
         contact application one instead of base icon. """
-        activities = super(Users, self).systray_get_activities()
+        activities = super()._get_activity_groups()
         for activity in activities:
             if activity['model'] != 'res.partner':
                 continue

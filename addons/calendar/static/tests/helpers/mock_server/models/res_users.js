@@ -47,13 +47,9 @@ patch(MockServer.prototype, {
         ];
     },
 
-    /**
-     * Simulates `systray_get_activities` on `res.users`.
-     *
-     * @override
-     */
-    _mockResUsersSystrayGetActivities() {
-        const activities = super._mockResUsersSystrayGetActivities(...arguments);
+    /** @override */
+    _mockResUsers_getActivityGroups() {
+        const activities = super._mockResUsers_getActivityGroups(...arguments);
         const meetingsLines = this.pyEnv["calendar.event"].searchRead(
             this._mockResUsers_SystrayGetCalendarEventDomain(),
             {

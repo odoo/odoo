@@ -265,7 +265,7 @@ class TestMultiCompanySetup(TestMailMCCommon):
         test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
         test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
         test_activity = next(
-            a for a in user_admin.systray_get_activities()
+            a for a in user_admin.systray_get_activities()["Store"]["activityGroups"]
             if a['model'] == 'mail.test.multi.company.with.activity'
         )
         self.assertEqual(
@@ -285,7 +285,7 @@ class TestMultiCompanySetup(TestMailMCCommon):
         )
 
         test_activity = next(
-            a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+            a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()["Store"]["activityGroups"]
             if a['model'] == 'mail.test.multi.company.with.activity'
         )
         self.assertEqual(

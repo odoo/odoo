@@ -20,7 +20,7 @@ QUnit.test("menu with no records", async () => {
     await start({
         async mockRPC(route, args) {
             if (args.method === "systray_get_activities") {
-                return [];
+                return {};
             }
         },
     });

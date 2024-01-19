@@ -10,12 +10,12 @@ class Users(models.Model):
     _inherit = 'res.users'
 
     @api.model
-    def systray_get_activities(self):
+    def _get_activity_groups(self):
         """ Split To-do and Project activities in systray by removing
             the single project.task activity represented and doing a
             new query to split them between private/non-private tasks.
         """
-        activity_groups = super().systray_get_activities()
+        activity_groups = super()._get_activity_groups()
         # 1. removing project.task activity group
         to_remove = next((g for g in activity_groups if g.get('model') == 'project.task'), None)
         if to_remove:
