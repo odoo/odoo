@@ -19,7 +19,7 @@ export const uploadService = {
             isVisible: false,
         });
 
-        registry.category('main_components').add('UploadProgressToast', {
+        registry.category("main_components").add('UploadProgressToast', {
             Component: UploadProgressToast,
             props: {
                 close: () => progressToast.isVisible = false,

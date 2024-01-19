@@ -48,6 +48,7 @@ import {
 import { isCSSColor } from '@web/core/utils/colors';
 import { EmojiPicker } from '@web/core/emoji_picker/emoji_picker';
 import { Tooltip } from "@web/core/tooltip/tooltip";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -111,8 +112,6 @@ const REQUEST_ERROR = Symbol('REQUEST_ERROR');
 // this is a local cache for ice server descriptions
 let ICE_SERVERS = null;
 
-let fileViewerId = 0;
-
 export class Wysiwyg extends Component {
     static template = 'web_editor.Wysiwyg';
     static components = { MediaDialog, VideoSelector, Toolbar, ImageCrop };
@@ -148,6 +147,7 @@ export class Wysiwyg extends Component {
         this.getColorPickerTemplateService = useService('get_color_picker_template');
         this.notification = useService("notification");
         this.popover = useService("popover");
+        this.fileViewer = useFileViewer();
         this.busService = this.env.services.bus_service;
 
         const getColorPickedHandler = (colorType) => {
@@ -1587,22 +1587,12 @@ export class Wysiwyg extends Component {
      * @param {string} url
      */
     showImageFullscreen(url) {
-        const viewerId = `web.file_viewer${fileViewerId++}`;
-        registry.category("main_components").add(viewerId, {
-            Component: FileViewer,
-            props: {
-                files: [{
-                        isImage: true,
-                        isViewable: true,
-                        displayName: url,
-                        defaultSource: url,
-                        downloadUrl: url,
-                }],
-                startIndex: 0,
-                close: () => {
-                    registry.category('main_components').remove(viewerId);
-                },
-            },
+        this.fileViewer.open({
+            isImage: true,
+            isViewable: true,
+            displayName: url,
+            defaultSource: url,
+            downloadUrl: url,
         });
         this.odooEditor.document.getSelection()?.collapseToEnd();
         this.odooEditor.editable.blur();
