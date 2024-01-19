@@ -9,8 +9,7 @@ from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounti
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
-@common.tagged('post_install', '-at_install')
-class TestSaleMrpFlow(ValuationReconciliationTestCommon):
+class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -234,6 +233,9 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             move_line.qty_done = qty_to_process[comp][0]
             move._action_done()
 
+
+@common.tagged('post_install', '-at_install')
+class TestSaleMrpFlow(TestSaleMrpFlowCommon):
     def test_00_sale_mrp_flow(self):
         """ Test sale to mrp flow with diffrent unit of measure."""
 
