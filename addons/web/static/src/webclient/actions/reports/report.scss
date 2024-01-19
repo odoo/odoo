@@ -2,6 +2,36 @@ $o-default-report-font: 'Lato' !default;
 $o-default-report-primary-color: rgb(0, 0, 0) !default;
 $o-default-report-secondary-color: rgb(0, 0, 0) !default;
 
+// wkhtmltopdf doesn't support CSS custom properties (--name-stuff)
+// It doesn't support CSS's rgba function
+// We re-define here the .bg-[theme-colors] (and text)
+// In order to define them as a css rgb function
+$report-extended-theme-colors: map-merge(
+  $utilities-colors,
+  (
+    "black": to-rgb($black),
+    "white": to-rgb($white),
+    "body": to-rgb($body-bg)
+  )
+);
+@each $color-name, $color-value in $report-extended-theme-colors {
+    .text-#{$color-name} {
+        color: RGB($color-value) if($enable-important-utilities, !important, null);
+    }
+    .bg-#{$color-name} {
+        background-color: RGB($color-value) if($enable-important-utilities, !important, null);
+    }
+}
+// Do a similar operation than before for grays.
+@each $color-name, $color-value in $grays {
+    .text-#{$color-name} {
+        color: $color-value if($enable-important-utilities, !important, null);
+    }
+    .bg-#{$color-name} {
+        background-color: $color-value if($enable-important-utilities, !important, null);
+    }
+}
+
 html, body {
     height: 100%;
     direction: ltr;
