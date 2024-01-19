@@ -67,8 +67,7 @@ class StockLandedCost(models.Model):
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
         required=True, default=lambda self: self._default_account_journal_id())
-    company_id = fields.Many2one('res.company', string="Company",
-        related='account_journal_id.company_id')
+    company_id = fields.Many2one('res.company', string="Company", required=True, default=lambda self: self.env.company)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_landed_cost_id')
     vendor_bill_id = fields.Many2one(
         'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')])
