@@ -14,8 +14,8 @@ export const partnerCompareRegistry = registry.category("mail.partner_compare");
 partnerCompareRegistry.add(
     "mail.internal-users",
     (p1, p2) => {
-        const isAInternalUser = p1.user?.isInternalUser;
-        const isBInternalUser = p2.user?.isInternalUser;
+        const isAInternalUser = p1.isInternalUser;
+        const isBInternalUser = p2.isInternalUser;
         if (isAInternalUser && !isBInternalUser) {
             return -1;
         }

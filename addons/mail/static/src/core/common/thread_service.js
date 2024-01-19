@@ -444,7 +444,7 @@ export class ThreadService {
                     );
                     return;
                 }
-                partner.user = { id: userId };
+                partner.userId = userId;
             }
             return partner;
         }

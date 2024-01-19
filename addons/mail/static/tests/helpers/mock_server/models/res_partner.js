@@ -272,12 +272,8 @@ patch(MockServer.prototype, {
                         is_company: partner.is_company,
                         name: partner.name,
                         type: "partner",
-                        user: mainUser
-                            ? {
-                                  id: mainUser.id,
-                                  isInternalUser: !mainUser.share,
-                              }
-                            : false,
+                        userId: mainUser ? mainUser.id : false,
+                        isInternalUser: mainUser ? !mainUser.share : false,
                         write_date: partner.write_date,
                     },
                 ];
