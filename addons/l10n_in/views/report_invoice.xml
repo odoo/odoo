@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//address[@t-field='o.partner_id']" position="after">
             <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
         </xpath>
@@ -47,6 +47,23 @@
             <t t-else="">$0</t>
         </xpath>
 
+    </template>
+
+    <!-- Workarounds for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit'"
+               t-call="l10n_in.l10n_in_report_invoice_document_inherit"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit'"
+               t-call="l10n_in.l10n_in_report_invoice_document_inherit"
+               t-lang="lang"/>
+        </xpath>
     </template>
 
 </odoo>
