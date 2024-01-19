@@ -15,15 +15,6 @@
                 <field name="module_id" invisible="1"/>
                 <field name="module_state" invisible="1"/>
                 <field name="module_to_buy" invisible="1"/>
-                <field name="show_credentials_page" invisible="1"/>
-                <field name="show_allow_express_checkout" invisible="1"/>
-                <field name="show_allow_tokenization" invisible="1"/>
-                <field name="show_pre_msg" invisible="1"/>
-                <field name="show_pending_msg" invisible="1"/>
-                <field name="show_auth_msg" invisible="1"/>
-                <field name="show_done_msg" invisible="1"/>
-                <field name="show_cancel_msg" invisible="1"/>
-                <field name="require_currency" invisible="1"/>
                 <field name="code" invisible="1"/>
                 <sheet>
                     <!-- === Stat Buttons === -->
@@ -71,7 +62,7 @@
                         </group>
                     </group>
                     <notebook invisible="module_id and module_state != 'installed'">
-                        <page string="Credentials" name="credentials" invisible="code == 'none' or not show_credentials_page">
+                        <page string="Credentials" name="credentials" invisible="code == 'none'">
                             <group name="provider_credentials"/>
                         </page>
                         <page string="Configuration" name="configuration">
@@ -95,9 +86,9 @@
                                             Enable Payment Methods
                                         </a>
                                     </div>
-                                    <field name="allow_tokenization" invisible="not support_tokenization or not show_allow_tokenization"/>
+                                    <field name="allow_tokenization" invisible="not support_tokenization"/>
                                     <field name="capture_manually" invisible="not support_manual_capture"/>
-                                    <field name="allow_express_checkout" invisible="not support_express_checkout or not show_allow_express_checkout"/>
+                                    <field name="allow_express_checkout" invisible="not support_express_checkout"/>
                                 </group>
                                 <group string="Availability" name="availability">
                                     <field name="maximum_amount"/>
@@ -107,8 +98,7 @@
                                         <field name="available_currency_ids"
                                                widget="many2many_tags"
                                                placeholder="Select currencies. Leave empty not to restrict any."
-                                               options="{'no_create': True}"
-                                               required="require_currency and state != 'disabled'"/>
+                                               options="{'no_create': True}"/>
                                     </div>
                                     <field name="available_country_ids"
                                            widget="many2many_tags"
@@ -122,11 +112,11 @@
                             name="messages"
                             invisible="module_id and module_state != 'installed'">
                             <group>
-                                <field name="pre_msg" invisible="not show_pre_msg"/>
-                                <field name="pending_msg" invisible="not show_pending_msg"/>
-                                <field name="auth_msg" invisible="not support_manual_capture or not show_auth_msg"/>
-                                <field name="done_msg" invisible="not show_done_msg"/>
-                                <field name="cancel_msg" invisible="not show_cancel_msg"/>
+                                <field name="pre_msg"/>
+                                <field name="pending_msg"/>
+                                <field name="auth_msg" invisible="not support_manual_capture"/>
+                                <field name="done_msg"/>
+                                <field name="cancel_msg"/>
                             </group>
                         </page>
                     </notebook>

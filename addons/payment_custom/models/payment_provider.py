@@ -32,20 +32,6 @@ class PaymentProvider(models.Model):
         providers.filtered(lambda p: p.custom_mode == 'wire_transfer').pending_msg = None
         return providers
 
-    @api.depends('code')
-    def _compute_view_configuration_fields(self):
-        """ Override of payment to hide the credentials page.
-
-        :return: None
-        """
-        super()._compute_view_configuration_fields()
-        self.filtered(lambda p: p.code == 'custom').update({
-            'show_credentials_page': False,
-            'show_pre_msg': False,
-            'show_done_msg': False,
-            'show_cancel_msg': False,
-        })
-
     def action_recompute_pending_msg(self):
         """ Recompute the pending message to include the existing bank accounts. """
         account_payment_module = self.env['ir.module.module']._get('account_payment')
