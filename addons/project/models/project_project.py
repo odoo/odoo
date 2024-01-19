@@ -55,20 +55,12 @@ class Project(models.Model):
         for project in self:
             project.is_favorite = self.env.user in project.favorite_user_ids
 
-    def _inverse_is_favorite(self):
-        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
-        for project in self:
-            if self.env.user in project.favorite_user_ids:
-                favorite_projects |= project
-            else:
-                not_fav_projects |= project
-
-        # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
-
-    def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+    def _set_favorite_user_ids(self, is_favorite):
+        self_sudo = self.sudo() # To allow project users to set projects as favorite
+        if is_favorite:
+            self_sudo.favorite_user_ids = [Command.link(self.env.uid)]
+        else:
+            self_sudo.favorite_user_ids = [Command.unlink(self.env.uid)]
 
     name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True, default_export_compatible=True)
     description = fields.Html(help="Description to provide more information and context about this project")
@@ -88,9 +80,8 @@ class Project(models.Model):
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
-        default=_get_default_favorite_user_ids,
         string='Members')
-    is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
+    is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
         compute_sudo=True, string='Show Project on Dashboard')
     label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
@@ -437,6 +428,9 @@ class Project(models.Model):
             if stage.company_id:
                 for vals in vals_list:
                     vals['company_id'] = stage.company_id.id
+        for vals in vals_list:
+            if vals.pop('is_favorite', False):
+                vals['favorite_user_ids'] = [self.env.uid]
         projects = super().create(vals_list)
         return projects
 
@@ -459,8 +453,7 @@ class Project(models.Model):
 
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
-            vals.pop('is_favorite')
-            self._fields['is_favorite'].determine_inverse(self)
+            self._set_favorite_user_ids(vals.pop('is_favorite'))
 
         if 'last_update_status' in vals and vals['last_update_status'] != 'to_define':
             for project in self:
