@@ -185,7 +185,7 @@ class PaymentMethod(models.Model):
 
     def _get_compatible_payment_methods(
         self, provider_ids, partner_id, currency_id=None, force_tokenization=False,
-        is_express_checkout=False
+        is_express_checkout=False, **kwargs
     ):
         """ Search and return the payment methods matching the compatibility criteria.
 
@@ -201,6 +201,7 @@ class PaymentMethod(models.Model):
         :param bool force_tokenization: Whether only payment methods supporting tokenization can be
                                         matched.
         :param bool is_express_checkout: Whether the payment is made through express checkout.
+        :param dict kwargs: Optional data. This parameter is not used here.
         :return: The compatible payment methods.
         :rtype: payment.method
         """
