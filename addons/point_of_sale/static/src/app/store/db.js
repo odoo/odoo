@@ -29,17 +29,6 @@ export class PosDB {
         }
     }
 
-    /**
-     * sets an uuid to prevent conflict in locally stored data between multiple PoS Configs. By
-     * using the uuid of the config the local storage from other configs will not get effected nor
-     * loaded in sessions that don't belong to them.
-     *
-     * @param {string} uuid Unique identifier of the PoS Config linked to the current session.
-     */
-    set_uuid(uuid) {
-        this.name = this.name + "_" + uuid;
-    }
-
     /* loads a record store from the database. returns default if nothing is found */
     load(store, deft) {
         if (CACHE[store] !== undefined) {

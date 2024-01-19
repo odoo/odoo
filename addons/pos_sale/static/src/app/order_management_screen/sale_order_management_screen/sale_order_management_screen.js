@@ -72,11 +72,6 @@ export class SaleOrderManagementScreen extends Component {
     get orders() {
         return this.saleOrderFetcher.get();
     }
-    async _setNumpadMode(event) {
-        const { mode } = event.detail;
-        this.numpadMode = mode;
-        this.numberBuffer.reset();
-    }
     onNextPage() {
         this.saleOrderFetcher.nextPage();
     }

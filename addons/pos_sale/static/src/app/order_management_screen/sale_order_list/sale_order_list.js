@@ -24,7 +24,4 @@ export class SaleOrderList extends Component {
     get highlightedOrder() {
         return this.state.highlightedOrder;
     }
-    _onClickOrder(order) {
-        this.state.highlightedOrder = order;
-    }
 }

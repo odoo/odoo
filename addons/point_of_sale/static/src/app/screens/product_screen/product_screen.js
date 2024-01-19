@@ -83,9 +83,6 @@ export class ProductScreen extends Component {
         });
         this.scrollDirection = useScrollDirection("products");
     }
-    /**
-     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
-     */
     getCategories() {
         const selectedCategory = this.pos.selectedCategory;
         const categoriesToDisplay = selectedCategory

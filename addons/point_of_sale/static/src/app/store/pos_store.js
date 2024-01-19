@@ -490,20 +490,6 @@ export class PosStore extends Reactive {
             attribute_value_ids,
         };
     }
-
-    _loadPosPrinters(printers) {
-        this.unwatched.printers = [];
-        // list of product categories that belong to one or more order printer
-        for (const printerConfig of printers) {
-            const printer = this.create_printer(printerConfig);
-            printer.config = printerConfig;
-            this.unwatched.printers.push(printer);
-            for (const cat of printer.product_categories_ids) {
-                this.printers_category_ids_set.add(cat.id);
-            }
-        }
-        this.config.iface_printers = !!this.unwatched.printers.length;
-    }
     create_printer(config) {
         const url = deduceUrl(config.proxy_ip || "");
         return new HWPrinter({ url });
@@ -519,38 +505,6 @@ export class PosStore extends Reactive {
             // The JS used to detect font loading is not 100% robust, so
             // do not wait more than 5sec
             setTimeout(resolve, 5000);
-        });
-    }
-    async _loadPictures() {
-        this.company_logo = new Image();
-        return new Promise((resolve, reject) => {
-            this.company_logo.onload = () => {
-                const img = this.company_logo;
-                let ratio = 1;
-                const targetwidth = 300;
-                const maxheight = 150;
-                if (img.width !== targetwidth) {
-                    ratio = targetwidth / img.width;
-                }
-                if (img.height * ratio > maxheight) {
-                    ratio = maxheight / img.height;
-                }
-                const width = Math.floor(img.width * ratio);
-                const height = Math.floor(img.height * ratio);
-                const c = document.createElement("canvas");
-                c.width = width;
-                c.height = height;
-                const ctx = c.getContext("2d");
-                ctx.drawImage(this.company_logo, 0, 0, width, height);
-
-                this.company_logo_base64 = c.toDataURL();
-                resolve();
-            };
-            this.company_logo.onerror = () => {
-                reject();
-            };
-            this.company_logo.crossOrigin = "anonymous";
-            this.company_logo.src = `/web/image?model=res.company&id=${this.company.id}&field=logo`;
         });
     }
 
@@ -669,7 +623,6 @@ export class PosStore extends Reactive {
             this.sendDraftToServer();
         }
         if (this.selectedOrder) {
-            this.selectedOrder.firstDraft = false;
             this.selectedOrder.updateSavedQuantity();
         }
         const order = this.createReactiveOrder();
@@ -935,12 +888,6 @@ export class PosStore extends Reactive {
         }
         return message;
     }
-    async _getPricelistJson(pricelistsToGet) {
-        return await this.data.call("pos.session", "get_pos_ui_product_pricelists_by_ids", [
-            [odoo.pos_session_id],
-            pricelistsToGet,
-        ]);
-    }
     async _getMissingProducts(ordersJson) {
         const productIds = [];
         for (const order of ordersJson) {
@@ -1041,7 +988,6 @@ export class PosStore extends Reactive {
     // change the current order
     set_order(order, options) {
         if (this.selectedOrder) {
-            this.selectedOrder.firstDraft = false;
             this.selectedOrder.updateSavedQuantity();
         }
         this.selectedOrder = order;
@@ -1376,38 +1322,6 @@ export class PosStore extends Reactive {
 
         return report;
     }
-
-    _load_orders() {
-        var jsons = this.db.get_unpaid_orders();
-        var orders = [];
-        var not_loaded_count = 0;
-
-        for (var i = 0; i < jsons.length; i++) {
-            var json = jsons[i];
-            if (json.pos_session_id === this.session.id) {
-                orders.push(this.createReactiveOrder(json));
-            } else {
-                not_loaded_count += 1;
-            }
-        }
-
-        if (not_loaded_count) {
-            console.info(
-                "There are " +
-                    not_loaded_count +
-                    " locally saved unpaid orders belonging to another session"
-            );
-        }
-
-        orders = orders.sort(function (a, b) {
-            return a.sequence_number - b.sequence_number;
-        });
-
-        if (orders.length) {
-            this.orders.push(orders);
-        }
-    }
-
     /**
      * Mirror JS method of:
      * _compute_amount in addons/account/models/account.py
@@ -1463,7 +1377,6 @@ export class PosStore extends Reactive {
             base: sign * round_pr(tax_base_amount, currency_rounding),
         };
     }
-
     /**
      * Mirror JS method of:
      * compute_all in addons/account/models/account.py

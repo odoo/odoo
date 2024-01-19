@@ -43,10 +43,6 @@ export class CartPage extends Component {
         return !lastChange ? currentQty : currentQty - lastChange.qty;
     }
 
-    backToMenu() {
-        this.router.navigate("product_list");
-    }
-
     async pay() {
         const orderingMode = this.selfOrder.config.self_ordering_service_mode;
         const type = this.selfOrder.config.self_ordering_mode;

@@ -395,14 +395,6 @@ export class Orderline extends PosModel {
     get_quantity_str() {
         return this.quantityStr;
     }
-    get_quantity_str_with_unit() {
-        if (this.is_pos_groupable()) {
-            return this.quantityStr + " " + this.get_unit().name;
-        } else {
-            return this.quantityStr;
-        }
-    }
-
     get_lot_lines() {
         return this.pack_lot_lines && this.pack_lot_lines;
     }
@@ -454,10 +446,6 @@ export class Orderline extends PosModel {
     set_selected(selected) {
         this.selected = selected;
         // this trigger also triggers the change event of the collection.
-    }
-    // returns true if this orderline is selected
-    is_selected() {
-        return this.selected;
     }
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
@@ -591,25 +579,6 @@ export class Orderline extends PosModel {
             rounding
         );
     }
-    get_display_price_one() {
-        var rounding = this.pos.currency.rounding;
-        var price_unit = this.get_unit_price();
-        if (this.pos.config.iface_tax_included !== "total") {
-            return round_pr(price_unit * (1.0 - this.get_discount() / 100.0), rounding);
-        } else {
-            var product = this.get_product();
-            var taxes_ids = this.tax_ids || product.taxes_id;
-            var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
-            var all_taxes = this.compute_all(
-                product_taxes,
-                price_unit,
-                1,
-                this.pos.currency.rounding
-            );
-
-            return round_pr(all_taxes.total_included * (1 - this.get_discount() / 100), rounding);
-        }
-    }
     get_display_price() {
         if (this.pos.config.iface_tax_included === "total") {
             return this.get_price_with_tax();
@@ -634,9 +603,6 @@ export class Orderline extends PosModel {
     }
     get_price_with_tax() {
         return this.get_all_prices().priceWithTax;
-    }
-    get_price_with_tax_before_discount() {
-        return this.get_all_prices().priceWithTaxBeforeDiscount;
     }
     get_tax() {
         return this.get_all_prices().tax;
@@ -766,9 +732,6 @@ export class Orderline extends PosModel {
     compute_fixed_price(price) {
         return this.pos.computePriceAfterFp(price, this.get_taxes()).price;
     }
-    get_fixed_lst_price() {
-        return this.compute_fixed_price(this.get_lst_price());
-    }
     get_lst_price() {
         return this.product.get_price(this.pos.config.pricelist_id, 1, this.price_extra);
     }
@@ -779,14 +742,6 @@ export class Orderline extends PosModel {
             this.pos.data.models["decimal.precision"].find((dp) => dp.name === "Product Price")
                 .digits
         );
-    }
-    is_last_line() {
-        var order = this.pos.get_order();
-        var orderlines = order.orderlines;
-        var last_id = orderlines[orderlines.length - 1].cid;
-        var selectedLine = order ? order.selected_orderline : null;
-
-        return !selectedLine ? false : last_id === selectedLine.cid;
     }
     set_customer_note(note) {
         this.customerNote = note || "";
@@ -933,11 +888,6 @@ export class Payment extends PosModel {
     get_amount() {
         return this.amount;
     }
-    get_amount_str() {
-        return formatFloat(this.amount, {
-            digits: [69, this.pos.currency.decimal_places],
-        });
-    }
     set_selected(selected) {
         if (this.selected !== selected) {
             this.selected = selected;
@@ -1060,7 +1010,6 @@ export class Order extends PosModel {
         this.cashier = this.pos.get_cashier();
         this.finalized = false; // if true, cannot be modified.
         this.shippingDate = null;
-        this.firstDraft = true;
         this.combos = [];
 
         this.partner = null;
@@ -1156,7 +1105,6 @@ export class Order extends PosModel {
         this.date_order = deserializeDateTime(json.date_order);
         this.server_id = json.server_id || json.id || false;
         this.user_id = json.user_id;
-        this.firstDraft = false;
 
         if (json.fiscal_position_id) {
             var fiscal_position = this.pos.models["account.fiscal.position"].find(function (fp) {
@@ -1792,10 +1740,6 @@ export class Order extends PosModel {
         return true;
     }
 
-    isFirstDraft() {
-        return this.firstDraft;
-    }
-
     fix_tax_included_price(line) {
         line.set_unit_price(line.compute_fixed_price(line.price));
     }
@@ -2022,13 +1966,6 @@ export class Order extends PosModel {
         }
         this.pos.numpadMode = "quantity";
     }
-    deselect_orderline() {
-        if (this.selected_orderline) {
-            this.selected_orderline.set_selected(false);
-            this.selected_orderline = undefined;
-        }
-    }
-
     /* ---- Payment Lines --- */
     add_paymentline(payment_method) {
         this.assert_editable();
@@ -2073,18 +2010,6 @@ export class Order extends PosModel {
         }
         this.paymentlines = this.paymentlines.filter((l) => l.cid !== line.cid);
     }
-    clean_empty_paymentlines() {
-        var lines = this.paymentlines;
-        var empty = [];
-        for (var i = 0; i < lines.length; i++) {
-            if (!lines[i].get_amount()) {
-                empty.push(lines[i]);
-            }
-        }
-        for (i = 0; i < empty.length; i++) {
-            this.remove_paymentline(empty[i]);
-        }
-    }
     select_paymentline(line) {
         if (line !== this.selected_paymentline) {
             if (this.selected_paymentline) {
@@ -2104,26 +2029,6 @@ export class Order extends PosModel {
                 return false;
             }
         });
-    }
-    /**
-     * Stops a payment on the terminal if one is running
-     */
-    stop_electronic_payment() {
-        var lines = this.get_paymentlines();
-        var line = lines.find(function (line) {
-            var status = line.get_payment_status();
-            return (
-                status && !["done", "reversed", "reversing", "pending", "retry"].includes(status)
-            );
-        });
-        if (line) {
-            line.set_payment_status("waitingCancel");
-            line.payment_method.payment_terminal
-                .send_payment_cancel(this, line.cid)
-                .finally(function () {
-                    line.set_payment_status("retry");
-                });
-        }
     }
     /* ---- Payment Status --- */
     get_subtotal() {
@@ -2147,16 +2052,6 @@ export class Order extends PosModel {
     }
     _get_ignored_product_ids_total_discount() {
         return [];
-    }
-    _reduce_total_discount_callback(sum, orderLine) {
-        let discountUnitPrice =
-            orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.get_discount() / 100);
-        if (orderLine.display_discount_policy() === "without_discount") {
-            discountUnitPrice +=
-                orderLine.get_taxed_lst_unit_price() -
-                orderLine.getUnitDisplayPriceBeforeDiscount();
-        }
-        return sum + discountUnitPrice * orderLine.get_quantity();
     }
     get_total_discount() {
         const ignored_product_ids = this._get_ignored_product_ids_total_discount();
