@@ -61,7 +61,7 @@ class EventRegistration(models.Model):
         if not event_lead_rule_skip:
             to_update = self.filtered(lambda reg: reg.lead_count)
         if to_update:
-            lead_tracked_vals = to_update._get_lead_tracked_values()
+            lead_tracked_vals = to_update._get_lead_tracked_values(vals)
 
         res = super(EventRegistration, self).write(vals)
 
@@ -279,7 +279,7 @@ class EventRegistration(models.Model):
             f" {line_suffix}" if line_suffix else "",
         ) + Markup("</li>")
 
-    def _get_lead_tracked_values(self):
+    def _get_lead_tracked_values(self, new_vals):
         """ Tracked values are based on two subset of fields to track in order
         to fill or update leads. Two main use cases are
 
@@ -292,7 +292,9 @@ class EventRegistration(models.Model):
             not rewrite partner values from registration values.
 
         Tracked values are therefore the union of those two field sets. """
-        tracked_fields = list(set(self._get_lead_contact_fields()) or set(self._get_lead_description_fields()))
+        tracked_fields = list(set(self._get_lead_contact_fields()))
+        if 'registration_answer_ids' in new_vals:
+            tracked_fields.append('registration_answer_ids')
         return dict(
             (registration.id,
              dict((field, self._convert_value(registration[field], field)) for field in tracked_fields)
