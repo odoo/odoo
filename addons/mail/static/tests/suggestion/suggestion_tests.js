@@ -255,7 +255,7 @@ QUnit.test("display partner mention when typing more than 2 words if they match"
 
 QUnit.test("Internal user should be displayed first", async () => {
     const pyEnv = await startServer();
-    const [user1Id, user2Id] = pyEnv["res.users"].create([{ share: true }, { share: true }]);
+    const [user1Id, user2Id] = pyEnv["res.users"].create([{}, {}]);
     const partnerIds = pyEnv["res.partner"].create([
         { name: "Person A" },
         { name: "Person B" },
@@ -288,7 +288,7 @@ QUnit.test("Internal user should be displayed first", async () => {
 
 QUnit.test("Current user that is a follower should be considered as such", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ share: true });
+    const userId = pyEnv["res.users"].create({});
     pyEnv["res.partner"].create([
         { email: "a@test.com", name: "Person A" },
         { email: "b@test.com", name: "Person B", user_ids: [userId] },

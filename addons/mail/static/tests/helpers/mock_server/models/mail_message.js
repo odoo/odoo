@@ -208,13 +208,7 @@ patch(MockServer.prototype, {
                 const [partner] = this.getRecords("res.partner", [["id", "=", message.author_id]], {
                     active_test: false,
                 });
-                const [user] = this.getRecords("res.users", [
-                    ["partner_id", "=", message.author_id],
-                ]);
                 author = this._mockResPartnerMailPartnerFormat([partner.id]).get(partner.id);
-                if (user) {
-                    author["user"] = { id: user.id, isInternalUser: !user.share };
-                }
             } else {
                 author = false;
             }

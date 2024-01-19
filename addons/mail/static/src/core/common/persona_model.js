@@ -45,13 +45,14 @@ export class Persona extends Record {
     country = Record.one("Country");
     /** @type {string} */
     email;
-    /** @type {Array | Object | undefined} */
-    user;
+    /** @type {number} */
+    userId;
     /** @type {ImStatus} */
     im_status;
     /** @type {'email' | 'inbox'} */
     notification_preference;
     isAdmin = false;
+    isInternalUser = false;
     /** @type {string} */
     write_date;
 
@@ -77,8 +78,8 @@ export class Persona extends Record {
         if (this.type === "guest") {
             return imageUrl("mail.guest", this.id, "avatar_128", { unique: this.write_date });
         }
-        if (this.user?.id) {
-            return imageUrl("res.users", this.user.id, "avatar_128", { unique: this.write_date });
+        if (this.userId) {
+            return imageUrl("res.users", this.userId, "avatar_128", { unique: this.write_date });
         }
         return DEFAULT_AVATAR;
     }
