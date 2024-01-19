@@ -201,7 +201,10 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.model
     def action_open_orderpoints(self):
-        return self._get_orderpoint_action()
+        action = self._get_orderpoint_action()
+        orderpoints = self.env['stock.warehouse.orderpoint'].search([])
+        orderpoints._compute_qty_to_order()
+        return action
 
     def action_stock_replenishment_info(self):
         self.ensure_one()
@@ -261,7 +264,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
