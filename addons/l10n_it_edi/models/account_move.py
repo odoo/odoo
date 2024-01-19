@@ -382,7 +382,7 @@ class AccountMove(models.Model):
             'sender': sender,
             'buyer': buyer,
             'seller': seller,
-            'representative': company.l10n_it_tax_representative_partner_id,
+            'representative': company.l10n_it_has_tax_representative and company.l10n_it_tax_representative_partner_id,
             'sender_info': sender_info_values,
             'buyer_info': buyer_info_values,
             'seller_info': seller_info_values,

@@ -338,3 +338,23 @@ class TestItEdiExport(TestItEdi):
 
         with self.subTest('credit note'):
             self._assert_export_invoice(credit_note, 'credit_note_negative_price.xml')
+
+    def test_tax_representative(self):
+        # Test to check for l10n_it_edi_tax_representive if l10n_it_has_tax_representative is not set.
+        self.company.l10n_it_has_tax_representative = False
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2024-01-31',
+            'invoice_date_due': '2024-01-31',
+            'partner_id': self.italian_partner_no_address_codice.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'price_unit': 100.00,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'tax_representative_unchecked.xml')
