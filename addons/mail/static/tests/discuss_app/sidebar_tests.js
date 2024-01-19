@@ -8,7 +8,7 @@ import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { getOrigin } from "@web/core/utils/urls";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 const { DateTime } = luxon;
 
@@ -21,7 +21,7 @@ QUnit.test("toggling category button hide category items", async () => {
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
 
@@ -61,7 +61,7 @@ QUnit.test("Closing a category sends the updated user setting to the server.", a
             }
         },
     });
-    openDiscuss();
+    await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -85,7 +85,7 @@ QUnit.test("Opening a category sends the updated user setting to the server.", a
             }
         },
     });
-    openDiscuss();
+    await openDiscuss();
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -94,7 +94,7 @@ QUnit.test("Opening a category sends the updated user setting to the server.", a
 
 QUnit.test("channel - command: should have view command when category is unfolded", async () => {
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("i[title='View or join channels']");
 });
 
@@ -105,14 +105,14 @@ QUnit.test("channel - command: should have view command when category is folded"
         is_discuss_sidebar_category_channel_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarCategory-channel .btn", { text: "Channels" });
     await contains("i[title='View or join channels']");
 });
 
 QUnit.test("channel - command: should have add command when category is unfolded", async () => {
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("i[title='Add or join a channel']");
 });
 
@@ -123,7 +123,7 @@ QUnit.test("channel - command: should not have add command when category is fold
         is_discuss_sidebar_category_channel_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { text: "Channels" });
     await contains("i[title='Add or join a channel']", { count: 0 });
 });
@@ -136,7 +136,7 @@ QUnit.test("channel - states: close manually by clicking the title", async () =>
         is_discuss_sidebar_category_channel_open: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "general" });
     await click(".o-mail-DiscussSidebarCategory-channel .btn", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
@@ -150,7 +150,7 @@ QUnit.test("channel - states: open manually by clicking the title", async () => 
         is_discuss_sidebar_category_channel_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
 
@@ -165,7 +165,7 @@ QUnit.test("sidebar: inbox with counter", async () => {
         res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
 });
 
@@ -173,7 +173,7 @@ QUnit.test("default thread rendering", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("button", { text: "Inbox" });
     await contains("button", { text: "Starred" });
     await contains("button", { text: "History" });
@@ -206,7 +206,7 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async () => {
         pyEnv["discuss.channel"].create({ name: `channel${id}` });
     }
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
     await contains(".o-mail-DiscussSidebar input[placeholder='Quick search...']");
 
@@ -242,7 +242,7 @@ QUnit.test("sidebar: basic chat rendering", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
@@ -256,7 +256,7 @@ QUnit.test("sidebar: show pinned channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
 });
 
@@ -264,7 +264,7 @@ QUnit.test("sidebar: open pinned channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
@@ -289,7 +289,7 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
             }
         },
     });
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     assert.verifySteps([]);
@@ -312,7 +312,7 @@ QUnit.test("sidebar: unpin chat from bus", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
 
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
@@ -347,7 +347,7 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-discuss-badge", { count: 0 });
@@ -367,7 +367,7 @@ QUnit.test("mark channel as seen on last message visible [REQUIRE FOCUS]", async
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel.o-unread", { text: "test" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-unread)", { text: "test" });
 });
@@ -382,7 +382,7 @@ QUnit.test(
         });
         pyEnv["discuss.channel"].create({ name: "general" });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-down"],
@@ -430,7 +430,7 @@ QUnit.test(
             },
         ]);
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-down"],
@@ -451,7 +451,7 @@ QUnit.test(
             is_discuss_sidebar_category_channel_open: false,
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-right"],
@@ -499,7 +499,7 @@ QUnit.test(
             is_discuss_sidebar_category_channel_open: false,
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-right"],
@@ -525,7 +525,7 @@ QUnit.test(
             channel_type: "chat",
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-down"],
@@ -554,7 +554,7 @@ QUnit.test(
             channel_type: "chat",
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-down"],
@@ -580,7 +580,7 @@ QUnit.test(
             channel_type: "chat",
         });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-right"],
@@ -620,7 +620,7 @@ QUnit.test(
             },
         ]);
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory", {
             contains: [
                 ["i.oi.oi-chevron-right"],
@@ -633,7 +633,7 @@ QUnit.test(
 
 QUnit.test("chat - command: should have add command when category is unfolded", async () => {
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", {
         contains: [
             ["i.oi.oi-chevron-down"],
@@ -650,7 +650,7 @@ QUnit.test("chat - command: should not have add command when category is folded"
         is_discuss_sidebar_category_chat_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory", {
         contains: [
@@ -669,7 +669,7 @@ QUnit.test("chat - states: close manually by clicking the title", async () => {
         is_discuss_sidebar_category_chat_open: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -687,7 +687,7 @@ QUnit.test("sidebar channels should be ordered case insensitive alphabetically",
         { name: "époque" },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "abc",
         before: [".o-mail-DiscussSidebarChannel", { text: "Abc" }],
@@ -718,7 +718,7 @@ QUnit.test("sidebar: public channel rendering", async () => {
         group_public_id: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains("button", { text: "channel1", contains: [".fa-globe"] });
 });
 
@@ -729,7 +729,7 @@ QUnit.test("channel - avatar: should have correct avatar", async () => {
         avatarCacheKey: "notaDateCache",
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=notaDateCache']`
@@ -769,7 +769,7 @@ QUnit.test("channel - states: close should update the value on the server", asyn
     });
     const currentUserId = pyEnv.currentUserId;
     const { openDiscuss, env } = await start();
-    openDiscuss();
+    await openDiscuss();
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -794,7 +794,7 @@ QUnit.test("channel - states: open should update the value on the server", async
     });
     const currentUserId = pyEnv.currentUserId;
     const { openDiscuss, env } = await start();
-    openDiscuss();
+    await openDiscuss();
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -819,7 +819,9 @@ QUnit.test("channel - states: close from the bus", async () => {
         is_discuss_sidebar_category_channel_open: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
+    await contains("button", { text: "channel1" });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_channel_open: false,
@@ -835,8 +837,19 @@ QUnit.test("channel - states: open from the bus", async () => {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    const { openDiscuss } = await start();
-    openDiscuss();
+    const { openDiscuss } = await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
+    });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    // send after init_messaging because bus subscription is done after init_messaging
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_channel_open: true,
@@ -851,7 +864,7 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({ name: "channel1" });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await click(".o-mail-DiscussSidebarChannel", { text: "channel1" });
         await contains("button.o-active", { text: "channel1" });
 
@@ -874,8 +887,11 @@ QUnit.test("chat - states: open manually by clicking the title", async () => {
         is_discuss_sidebar_category_chat_open: false,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
+    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 });
 
@@ -888,7 +904,8 @@ QUnit.test("chat - states: close should call update server data", async (assert)
     });
     const currentUserId = pyEnv.currentUserId;
     const { openDiscuss, env } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -897,6 +914,7 @@ QUnit.test("chat - states: close should call update server data", async (assert)
     assert.ok(initalSettings.is_discuss_sidebar_category_chat_open);
 
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -913,7 +931,8 @@ QUnit.test("chat - states: open should call update server data", async (assert) 
         is_discuss_sidebar_category_chat_open: false,
     });
     const { openDiscuss, env } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     const currentUserId = pyEnv.currentUserId;
     const initalSettings = await env.services.orm.call(
         "res.users.settings",
@@ -923,6 +942,7 @@ QUnit.test("chat - states: open should call update server data", async (assert) 
     assert.notOk(initalSettings.is_discuss_sidebar_category_chat_open);
 
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     const newSettings = await env.services.orm.call(
         "res.users.settings",
         "_find_or_create_for_user",
@@ -939,7 +959,9 @@ QUnit.test("chat - states: close from the bus", async () => {
         is_discuss_sidebar_category_chat_open: true,
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
+    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: false,
@@ -955,8 +977,20 @@ QUnit.test("chat - states: open from the bus", async () => {
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    const { openDiscuss } = await start();
-    openDiscuss();
+    const { openDiscuss } = await start({
+        async mockRPC(route, args, originalRpc) {
+            if (route === "/mail/action" && args.init_messaging) {
+                const res = await originalRpc(...arguments);
+                step(`/mail/action - ${JSON.stringify(args)}`);
+                return res;
+            }
+        },
+    });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    // send after init_messaging because bus subscription is done after init_messaging
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
+    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: true,
@@ -971,7 +1005,7 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({ channel_type: "chat" });
         const { openDiscuss } = await start();
-        openDiscuss();
+        await openDiscuss();
         await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
         await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
 
@@ -1003,7 +1037,7 @@ QUnit.test("chat - avatar: should have correct avatar", async () => {
         channel_type: "chat",
     });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
 
     await contains(".o-mail-DiscussSidebarChannel img");
     await contains(
@@ -1048,7 +1082,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(
         ".o-mail-DiscussSidebarChannel",
         { text: "Yoshi" },
@@ -1069,7 +1103,7 @@ QUnit.test("Can unpin chat channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Mitchell Admin" });
@@ -1079,7 +1113,7 @@ QUnit.test("Unpinning chat should display notification", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await contains(".o_notification:has(.o_notification_bar.bg-info)", {
@@ -1147,7 +1181,7 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
         },
     ]);
     const { openDiscuss } = await start();
-    openDiscuss();
+    await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel .o-discuss-badge");
     click(".o-mail-DiscussSidebarChannel");
     await contains(".o-discuss-badge", { count: 0 });
@@ -1161,7 +1195,7 @@ QUnit.test("Unpinning channel closes its chat window", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { text: "Sales" });
-    openDiscuss();
+    await openDiscuss();
     await click("[title='Leave this channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Sales" }],
     });

@@ -8,6 +8,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import {
+    assertSteps,
     click,
     contains,
     createFile,
@@ -15,25 +16,25 @@ import {
     dropFiles,
     insertText,
     scroll,
+    step,
 } from "@web/../tests/utils";
 
 QUnit.module("chatter");
 
-QUnit.test("simple chatter on a record", async (assert) => {
+QUnit.test("simple chatter on a record", async () => {
     const { openFormView, pyEnv } = await start({
         mockRPC(route, args) {
             if (route.startsWith("/mail") || route.startsWith("/discuss")) {
-                assert.step(`${route} - ${JSON.stringify(args)}`);
+                step(`${route} - ${JSON.stringify(args)}`);
             }
         },
     });
+    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");
     await contains(".o-mail-Thread");
-    assert.verifySteps([
-        '/mail/action - {"init_messaging":true}',
-        '/mail/data - {"failures":true}',
+    await assertSteps([
         `/mail/thread/data - {"request_list":["followers","attachments","suggestedRecipients","activities"],"thread_id":${partnerId},"thread_model":"res.partner"}`,
         `/mail/thread/messages - {"thread_id":${partnerId},"thread_model":"res.partner","limit":30}`,
     ]);
@@ -45,7 +46,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
     const { openFormView } = await start({
         mockRPC(route, args) {
             if (route === "/mail/message/post") {
-                assert.step(route);
+                step(route);
                 const expected = {
                     context: args.context,
                     post_data: {
@@ -77,7 +78,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
 
     await click(".o-mail-Composer button:enabled", { text: "Send" });
     await contains(".o-mail-Message");
-    assert.verifySteps(["/mail/message/post"]);
+    await assertSteps(["/mail/message/post"]);
 });
 
 QUnit.test("can post a note on a record thread", async (assert) => {
@@ -86,7 +87,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
     const { openFormView } = await start({
         mockRPC(route, args) {
             if (route === "/mail/message/post") {
-                assert.step(route);
+                step(route);
                 const expected = {
                     context: args.context,
                     post_data: {
@@ -118,7 +119,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
 
     await click(".o-mail-Composer button:enabled", { text: "Log" });
     await contains(".o-mail-Message");
-    assert.verifySteps(["/mail/message/post"]);
+    await assertSteps(["/mail/message/post"]);
 });
 
 QUnit.test("No attachment loading spinner when creating records", async () => {
@@ -758,20 +759,20 @@ QUnit.test(
                 if (action.res_model === "res.partner") {
                     return super.doAction(action, options);
                 } else if (action.res_model === "mail.activity.schedule") {
-                    assert.step("mail.activity.schedule");
+                    step("mail.activity.schedule");
                     assert.equal(action.context.active_model, "res.partner");
                     assert.ok(Number(action.context.active_id));
                     options.onClose();
                     wizardOpened.resolve();
                 } else {
-                    assert.step("Unexpected action" + action.res_model);
+                    step("Unexpected action" + action.res_model);
                 }
             },
         });
         await openFormView("res.partner");
         await click("button", { text: "Activities" });
         await wizardOpened;
-        assert.verifySteps(["mail.activity.schedule"]);
+        await assertSteps(["mail.activity.schedule"]);
     }
 );
 

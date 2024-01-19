@@ -8,14 +8,8 @@ patch(MockServer.prototype, {
         const guestId = this.pyEnv?.cookie.get("dgid");
         return guestId ? this.pyEnv["mail.guest"].searchRead([["id", "=", guestId]])[0] : null;
     },
-    _mockMailGuest__initMessaging() {
-        const guest = this._mockMailGuest__getGuestFromContext();
-        const members = this.getRecords("discuss.channel.member", [
-            ["guest_id", "=", guest.id],
-            "|",
-            ["fold_state", "in", ["open", "folded"]],
-            ["inviting_partner_ids", "!=", false],
-        ]);
+    _mockMailGuest__initMessaging(context) {
+        const channels = this._mockDiscussChannel__get_init_channels(undefined, context);
         return {
             Store: {
                 hasGifPickerFeature: true,
@@ -25,7 +19,7 @@ patch(MockServer.prototype, {
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
                 settings: {},
             },
-            Thread: this._mockDiscussChannelChannelInfo(members.map((member) => member.channel_id)),
+            Thread: this._mockDiscussChannelChannelInfo(channels.map((channels) => channels.id)),
         };
     },
     /**

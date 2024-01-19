@@ -1,14 +1,20 @@
 /* @odoo-module */
 
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { start } from "@mail/../tests/helpers/test_utils";
 import { serializeDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 
 QUnit.module("message model test", {});
 
 QUnit.test("Message model properties", async (assert) => {
+    const pyEnv = await startServer();
     const { env } = await start();
+    env.services["mail.store"].Store.insert({
+        self: { id: pyEnv.currentPartnerId, type: "partner" },
+    });
     env.services["mail.store"].Thread.insert({
-        id: 3,
+        id: pyEnv.currentPartnerId,
         model: "res.partner",
         name: "general",
     });
@@ -26,11 +32,11 @@ QUnit.test("Message model properties", async (assert) => {
         body: "<p>Test</p>",
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
-        needaction_partner_ids: [3],
-        starredPersonas: { id: 3, type: "partner" },
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        starredPersonas: { id: pyEnv.currentPartnerId, type: "partner" },
         model: "res.partner",
-        originThread: { id: 3, model: "res.partner" },
-        res_id: 3,
+        originThread: { id: pyEnv.currentPartnerId, model: "res.partner" },
+        res_id: pyEnv.currentPartnerId,
     });
     assert.ok(message);
     assert.ok(message.isNeedaction);
@@ -42,7 +48,7 @@ QUnit.test("Message model properties", async (assert) => {
     assert.strictEqual(message.attachments[0].name, "test.txt");
 
     assert.ok(message.originThread);
-    assert.strictEqual(message.originThread.id, 3);
+    assert.strictEqual(message.originThread.id, pyEnv.currentPartnerId);
     assert.strictEqual(message.originThread.name, "general");
 
     assert.ok(message.author);

@@ -8,10 +8,11 @@ import { Command } from "@mail/../tests/helpers/command";
 
 import { session } from "@web/session";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { contains } from "@web/../tests/utils";
 
 QUnit.module("chat request");
 
-QUnit.test("chat request opens chat window", async (assert) => {
+QUnit.test("chat request opens chat window", async () => {
     const pyEnv = await startServer();
     const livechatId = await loadDefaultConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
@@ -22,6 +23,7 @@ QUnit.test("chat request opens chat window", async (assert) => {
             Command.create({ guest_id: guestId, fold_state: "open" }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_channel_id: livechatId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
@@ -33,5 +35,5 @@ QUnit.test("chat request opens chat window", async (assert) => {
         },
     });
     await start();
-    assert.containsOnce($, ".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow");
 });

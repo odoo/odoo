@@ -10,6 +10,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { config as transitionConfig } from "@web/core/transition";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
+    assertSteps,
     click,
     contains,
     createFile,
@@ -17,6 +18,7 @@ import {
     focus,
     insertText,
     scroll,
+    step,
     triggerEvents,
 } from "@web/../tests/utils";
 
@@ -257,18 +259,25 @@ QUnit.test(
             channel_type: "chat",
         });
         await start({
-            mockRPC(route, args) {
+            async mockRPC(route, args, originalRpc) {
+                if (route === "/mail/action" && args.init_messaging) {
+                    const res = await originalRpc(...arguments);
+                    step(`/mail/action - ${JSON.stringify(args)}`);
+                    return res;
+                }
                 if (args.method === "channel_fetched") {
                     assert.strictEqual(args.args[0][0], channelId);
                     assert.strictEqual(args.model, "discuss.channel");
-                    assert.step("rpc:channel_fetch");
+                    step("rpc:channel_fetch");
                 } else if (route === "/discuss/channel/set_last_seen_message") {
                     assert.strictEqual(args.channel_id, channelId);
-                    assert.step("rpc:set_last_seen_message");
+                    step("rpc:set_last_seen_message");
                 }
             },
         });
         await contains(".o_menu_systray i[aria-label='Messages']");
+        await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+        // send after init_messaging because bus subscription is done after init_messaging
         pyEnv.withUser(userId, () =>
             rpc("/mail/message/post", {
                 post_data: { body: "Hello!", message_type: "comment" },
@@ -277,12 +286,11 @@ QUnit.test(
             })
         );
         await contains(".o-mail-Message");
-        assert.verifySteps(["rpc:channel_fetch"]);
+        await assertSteps(["rpc:channel_fetch"]);
         await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
         await focus(".o-mail-Composer-input");
         await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
-
-        assert.verifySteps(["rpc:set_last_seen_message"]);
+        await assertSteps(["rpc:set_last_seen_message"]);
     }
 );
 

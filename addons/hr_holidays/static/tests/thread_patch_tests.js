@@ -4,9 +4,11 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
+import { contains } from "@web/../tests/utils";
+
 QUnit.module("thread");
 
-QUnit.test("out of office message on direct chat with out of office partner", async (assert) => {
+QUnit.test("out of office message on direct chat with out of office partner", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
@@ -22,5 +24,5 @@ QUnit.test("out of office message on direct chat with out of office partner", as
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".alert:contains(Out of office until Jan 1, 2023)");
+    await contains(".alert", { text: "Out of office until Jan 1, 2023" });
 });

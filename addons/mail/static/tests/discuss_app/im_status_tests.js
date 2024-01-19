@@ -3,6 +3,7 @@
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { Store } from "@mail/core/common/store_service";
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
 
@@ -66,7 +67,8 @@ QUnit.test("change icon on change partner im_status", async () => {
         channel_type: "chat",
     });
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
-    openDiscuss(channelId);
+    await openDiscuss(channelId);
+    await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-mail-ImStatus i[title='Online']");
 
     pyEnv["res.partner"].write([partnerId], { im_status: "offline" });

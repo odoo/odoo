@@ -23,6 +23,7 @@ QUnit.test("persisted session history", async () => {
             Command.create({ partner_id: pyEnv.adminPartnerId }),
             Command.create({ guest_id: guestId, fold_state: "open" }),
         ],
+        livechat_active: true,
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
@@ -75,7 +76,6 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
     await assertSteps([
         `/im_livechat/init - {"channel_id":${livechatChannelId}}`,
         '/web/webclient/load_menus - {"hash":"161803"}', // called because menu_service is loaded in qunit bundle
-        '/mail/data - {"failures":true}', // called because mail/core/web is loaded in qunit bundle
     ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
@@ -106,7 +106,11 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
             state: "open",
             state_count: 1,
         })}`,
-        '/mail/action - {"init_messaging":true,"context":{"is_for_livechat":true}}',
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true, // called because mail/core/web is loaded in qunit bundle
+            context: { is_for_livechat: true },
+        })}`,
         `/mail/message/post - ${JSON.stringify({
             context: { lang: "en", tz: "taht", uid: 7, temporary_id: 0.81 },
             post_data: {
@@ -115,6 +119,7 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
                 attachment_tokens: [],
                 canned_response_ids: [],
                 message_type: "comment",
+                partner_ids: [],
                 subtype_xmlid: "mail.mt_comment",
                 partner_emails: [],
             },

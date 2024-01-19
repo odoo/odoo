@@ -7,9 +7,10 @@ import { patch } from "@web/core/utils/patch";
 Object.assign(MessagingMenu.components, { ChannelSelector });
 
 patch(MessagingMenu.prototype, {
-    async beforeOpen() {
-        await this.store.fetchChannels();
-        return super.beforeOpen(...arguments);
+    beforeOpen() {
+        const res = super.beforeOpen(...arguments);
+        this.store.fetchChannels();
+        return res;
     },
     get counter() {
         const count = super.counter;

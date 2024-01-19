@@ -31,6 +31,7 @@ QUnit.test("do not save fold state of temporary live chats", async () => {
     await contains(".o-mail-Message", { text: "Hello" });
     await assertSteps(["fold - open"]);
     await click(".o-mail-ChatWindow-header");
+    await contains(".o-mail-Message", { text: "Hello", count: 0 });
     await assertSteps(["fold - folded"]);
     await click("[title='Close Chat Window']");
     await click("button", { text: "Close conversation" });

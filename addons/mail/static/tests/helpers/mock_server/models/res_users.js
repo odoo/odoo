@@ -16,9 +16,10 @@ patch(MockServer.prototype, {
      *
      * @private
      * @param {integer[]} ids
+     * @param {Object} context
      * @returns {Object}
      */
-    _mockResUsers_InitMessaging(ids) {
+    _mockResUsers_InitMessaging(ids, context) {
         const user = this.getRecords("res.users", [["id", "in", ids]])[0];
         const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         const channels = this._mockDiscussChannel__get_channels_as_member();
@@ -56,7 +57,9 @@ patch(MockServer.prototype, {
                 settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             },
             Thread: this._mockDiscussChannelChannelInfo(
-                this._mockDiscussChannel__get_init_channels(user).map((channel) => channel.id)
+                this._mockDiscussChannel__get_init_channels(user, context).map(
+                    (channel) => channel.id
+                )
             ),
         };
     },
