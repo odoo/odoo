@@ -36,7 +36,7 @@ export class LoadableDataSource {
         this._loadPromise = undefined;
         this._isFullyLoaded = false;
         this._isValid = true;
-        this._loadErrorMessage = "";
+        this._loadError = undefined;
     }
 
     /**
@@ -53,12 +53,12 @@ export class LoadableDataSource {
         if (!this._loadPromise) {
             this._isFullyLoaded = false;
             this._isValid = true;
-            this._loadErrorMessage = "";
+            this._loadError = undefined;
             this._loadPromise = this._concurrency
                 .add(this._load())
                 .catch((e) => {
                     this._isValid = false;
-                    this._loadErrorMessage = e instanceof RPCError ? e.data.message : e.message;
+                    this._loadError = { value: e instanceof RPCError ? e.data.message : e.message };
                 })
                 .finally(() => {
                     this._lastUpdate = Date.now();
@@ -80,12 +80,18 @@ export class LoadableDataSource {
         return this._isFullyLoaded;
     }
 
-    ifReady(callback) {
-        if (this.isReady) {
-            return callback();
+    /**
+     * @protected
+     */
+    ifDataIsLoaded(callback) {
+        if (!this._isFullyLoaded) {
+            this.load();
+            return LOADING_ERROR;
         }
-        this.load();
-        return "Loading...";
+        if (!this._isValid) {
+            return this._loadError;
+        }
+        return callback();
     }
     /**
      * @protected
@@ -96,7 +102,7 @@ export class LoadableDataSource {
             throw LOADING_ERROR;
         }
         if (!this._isValid) {
-            throw new EvaluationError(this._loadErrorMessage);
+            throw new EvaluationError(this._loadError);
         }
     }
 
