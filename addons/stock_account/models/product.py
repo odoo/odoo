@@ -267,7 +267,7 @@ class ProductProduct(models.Model):
                 credit_account_id = product_accounts[product.id]['stock_valuation'].id
             else:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
-                credit_account_id = product_accounts[product.id]['expense'].id
+                credit_account_id = product_accounts[product.id]['income'].id
 
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
