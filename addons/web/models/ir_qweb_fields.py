@@ -64,14 +64,18 @@ class Image(models.AbstractModel):
             "That is because the image goes into the tag, or it gets the " \
             "hose again."
 
+        src = src_zoom = None
         if options.get('qweb_img_raw_data', False):
-            return super(Image, self).record_to_html(record, field_name, options)
+            value = record[field_name]
+            if value is False:
+                return False
+            src = self._get_src_data_b64(value, options)
+        else:
+            src, src_zoom = self._get_src_urls(record, field_name, options)
 
         aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
         aclasses += options.get('class', '').split()
         classes = ' '.join(map(escape, aclasses))
-
-        src, src_zoom = self._get_src_urls(record, field_name, options)
 
         if options.get('alt-field') and options['alt-field'] in record and record[options['alt-field']]:
             alt = escape(record[options['alt-field']])

@@ -22,3 +22,4 @@ from . import test_translate
 from . import test_web_redirect
 from . import test_res_users
 from . import test_webmanifest
+from . import test_ir_qweb
