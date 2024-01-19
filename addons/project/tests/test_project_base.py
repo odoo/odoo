@@ -4,7 +4,7 @@ from lxml import etree
 
 from odoo import fields
 from odoo.osv import expression
-from odoo.tests import users
+from odoo.tests import Form, users
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
@@ -177,6 +177,54 @@ class TestProjectBase(TestProjectCommon):
 
         self.assertTrue(self.project_pigs.id < self.project_goats.id)
         self.assertEqual(Project.search(domain, order='id').ids, project_ids)
+
+    @users('bastien')
+    def test_edit_favorite(self):
+        project1, project2 = projects = self.env['project.project'].create([{
+            'name': 'Project Test1',
+        }, {
+            'name': 'Project Test2',
+            'is_favorite': True,
+        }])
+        self.assertFalse(project1.is_favorite)
+        self.assertTrue(project2.is_favorite)
+        project1.is_favorite = True
+        project2.is_favorite = False
+        projects.invalidate_recordset(['is_favorite']) # To force 'is_favorite' to recompute
+        self.assertTrue(project1.is_favorite)
+        self.assertFalse(project2.is_favorite)
+
+    @users('bastien')
+    def test_create_favorite_from_project_form(self):
+        Project = self.env['project.project']
+        form1 = Form(Project)
+        form1.name = 'Project Test1'
+        self.assertFalse(form1.is_favorite)
+        project1 = form1.save()
+        self.assertFalse(project1.is_favorite)
+
+        form2 = Form(Project)
+        form2.name = 'Project Test2'
+        form2.is_favorite = True
+        self.assertTrue(form2.is_favorite)
+        project2 = form2.save()
+        self.assertTrue(project2.is_favorite)
+
+    @users('bastien')
+    def test_edit_favorite_from_project_form(self):
+        project1, project2 = self.env['project.project'].create([{
+            'name': 'Project Test1',
+        }, {
+            'name': 'Project Test2',
+            'is_favorite': True,
+        }])
+        with Form(project1) as form:
+            form.is_favorite = True
+        self.assertTrue(project1.is_favorite)
+
+        with Form(project2) as form:
+            form.is_favorite = False
+        self.assertFalse(project2.is_favorite)
 
     def test_change_project_or_partner_company(self):
         """ Tests that it is impossible to change the company of a project
