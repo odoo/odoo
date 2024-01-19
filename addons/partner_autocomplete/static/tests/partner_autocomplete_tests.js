@@ -198,23 +198,23 @@ QUnit.module('partner_autocomplete', {
         assert.doesNotHaveClass(nameInput, 'o-autocomplete--input', "The input for field 'name' should be a regular input");
 
         const companyInput = target.querySelector("[name='parent_id'] input");
+        const autocompleteContainer = companyInput.parentElement;
 
         await click(companyInput, null);
         assert.containsNone(
-            companyInput,
-            ".o-autocomplete--dropdown-menu",
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
             "There should be no option when input is empty"
         );
 
         await editInputNoChangeEvent(companyInput, "od");
         assert.containsNone(
-            companyInput,
-            ".o-autocomplete--dropdown-menu",
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
             "There should be no option when the length of the query is < 3"
         );
 
         await editInputNoChangeEvent(companyInput, "company");
-        const autocompleteContainer = companyInput.parentElement;
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
@@ -251,23 +251,23 @@ QUnit.module('partner_autocomplete', {
         await editSelect(target, "[name='company_type'] > select", '"company"');
 
         const input = target.querySelector("[name='name'] .dropdown input");
+        const autocompleteContainer = input.parentElement;
 
         await click(input, null);
         assert.containsNone(
-            input,
-            ".o-autocomplete--dropdown-menu",
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
             "There should be no option when input is empty"
         );
 
         await editInputNoChangeEvent(input, "od");
         assert.containsNone(
-            input,
-            ".o-autocomplete--dropdown-menu",
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
             "There should be no option when the length of the query is < 3"
         );
 
         await editInputNoChangeEvent(input, "company");
-        const autocompleteContainer = input.parentElement;
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
@@ -304,23 +304,23 @@ QUnit.module('partner_autocomplete', {
         await editSelect(target, "[name='company_type'] > select", '"company"');
 
         const input = target.querySelector("[name='vat'] .dropdown input");
+        const autocompleteContainer = input.parentElement;
 
         await click(input, null);
         assert.containsNone(
-            input,
-            ".o-autocomplete--dropdown-menu",
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
             "There should be no option when input is empty"
         );
 
         await editInputNoChangeEvent(input, "blabla");
         assert.containsNone(
-            input,
-            ".o-autocomplete--dropdown-menu",
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
             "There should be no option when the value doesn't have a valid VAT number format"
         );
 
         await editInputNoChangeEvent(input, "BE0477472701");
-        const autocompleteContainer = input.parentElement;
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
