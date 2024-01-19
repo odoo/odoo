@@ -18,6 +18,7 @@ export class AccountingPlugin extends OdooUIPlugin {
         "getAccountGroupCodes",
         "getFiscalStartDate",
         "getFiscalEndDate",
+        "getAccountResidual",
     ]);
     constructor(config) {
         super(config);
@@ -136,5 +137,35 @@ export class AccountingPlugin extends OdooUIPlugin {
             throw new EvaluationError(_t("The company fiscal year could not be found."));
         }
         return result;
+    }
+
+    /**
+     * Gets the residual amount for given account code prefixes over a given period
+     * @param {string[]} codes prefixes of the accounts codes
+     * @param {DateRange} dateRange start date of the period to look
+     * @param {number} offset year offset of the period to search
+     * @param {number} companyId specific company to target
+     * @param {boolean} includeUnposted whether or not select unposted entries
+     * @returns {number | undefined}
+     */
+    getAccountResidual(codes, dateRange, offset, companyId, includeUnposted) {
+        dateRange = deepCopy(dateRange);
+        dateRange.year += offset;
+        // Excel dates start at 1899-12-30, we should not support date ranges
+        // that do not cover dates prior to it.
+        // Unfortunately, this check needs to be done right before the server
+        // call as a date to low (year <= 1) can raise an error server side.
+        if (dateRange.year < 1900) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
+        }
+        const result = this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_residual_amount",
+            camelToSnakeObject({ codes, dateRange, companyId, includeUnposted })
+        );
+        if (result === false) {
+            throw new EvaluationError(_t("The residual amount for given accounts could not be computed."));
+        }
+        return result.amount_residual;
     }
 }

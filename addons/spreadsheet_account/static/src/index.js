@@ -24,7 +24,11 @@ cellMenuRegistry.add("move_lines_see_records", {
         let [codes, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
-        codes = toString(codes?.value).split(",");
+        try {
+            codes = toString(codes?.value).split(",");
+        } catch {
+            codes = [];
+        }
         const locale = env.model.getters.getLocale();
         const dateRange = parseAccountingDate(date_range, locale);
         offset = parseInt(offset?.value) || 0;
