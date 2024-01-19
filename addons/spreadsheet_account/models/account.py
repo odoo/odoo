@@ -224,3 +224,51 @@ class AccountMove(models.Model):
         )
         mapped = dict(data)
         return [mapped.get(account_type, []) for account_type in account_types]
+
+    @api.model
+    def get_residual_amount(self, args_list):
+
+        all_accounts, all_lines = self._get_accounts_and_lines_for_all_cells(
+            args_list,
+            extra_aggregates=['amount_residual:array_agg']
+        )
+
+        lines_dict = defaultdict(
+            lambda: (),
+            {(company.id, state, account.id): tuple(val) for company, state, account, *val in all_lines}
+        )
+
+        results = []
+
+        for args in args_list:
+            company_id = args['company_id'] or self.env.company.id
+            company = self.env["res.company"].browse(company_id)
+            states = ['posted', 'draft'] if args['include_unposted'] else ['posted']
+            subcodes = {subcode for subcode in args["codes"] if subcode}
+            start, _end = self._get_date_period_boundaries(
+                args['date_from'], company
+            )
+            _start, end = self._get_date_period_boundaries(
+                args['date_to'], company
+            )
+
+            accounts = self.env['account.account']
+            if subcodes:
+                for subcode in subcodes:
+                    accounts += all_accounts.filtered(lambda acc: acc.code.startswith(subcode))
+            else:
+                accounts += all_accounts.filtered(lambda acc: acc.account_type in ["liability_payable", "asset_receivable"])
+
+            cell_amount_residual = 0.0
+            for account in accounts:
+                include_initial_balance = account.include_initial_balance
+                for state in states:
+                    for line_date, line_amount_residual in zip(*lines_dict[(company_id, state, account.id)]):
+                        if (include_initial_balance and line_date > end) \
+                           or (not include_initial_balance and (line_date < start or line_date > end)):
+                            continue
+
+                        cell_amount_residual += line_amount_residual
+
+            results.append(cell_amount_residual)
+        return results
