@@ -40,6 +40,7 @@ export class DataSources extends EventBus {
                 metadataRepository: this._metadataRepository,
                 notify: () => this.notify(),
                 notifyWhenPromiseResolves: this.notifyWhenPromiseResolves.bind(this),
+                cancelPromise: (promise) => this.pendingPromises.delete(promise),
             },
             params
         );
@@ -88,6 +89,10 @@ export class DataSources extends EventBus {
         return id in this._dataSources;
     }
 
+    /**
+     * @private
+     * @param {Promise<unknown>} promise
+     */
     async notifyWhenPromiseResolves(promise) {
         this.pendingPromises.add(promise);
         await promise
