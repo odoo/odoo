@@ -1132,6 +1132,7 @@ class AccountTax(models.Model):
             return {'tax': tax_values['tax_repartition_line'].tax_id}
 
         global_tax_details = {
+            'to_process': to_process,
             'base_amount_currency': 0.0,
             'base_amount': 0.0,
             'tax_amount_currency': 0.0,
