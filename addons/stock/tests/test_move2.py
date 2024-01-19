@@ -3,6 +3,7 @@
 
 from datetime import timedelta
 
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 
@@ -170,6 +171,47 @@ class TestPickShip(TestStockCommon):
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_client.id)])
         self.assertEqual(backorder.state, 'confirmed', 'Backorder should be waiting for reservation')
+
+    def test_mto_reorient_sub_loc(self):
+        """
+            check the mto chain is not broken in case of reorientation into sublocation
+        """
+        picking_pick, picking_client = self.create_pick_ship()
+        sub_pick_a, sub_pick_b = self.env['stock.location'].create([{
+            'name': 'Sub Pick A',
+            'usage': 'internal',
+            'location_id': self.pack_location,
+        }, {
+            'name': 'Sub Pick B',
+            'usage': 'internal',
+            'location_id': self.pack_location,
+        }])
+        location = self.env['stock.location'].browse(self.stock_location)
+
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(self.productA, location, 10.0)
+        picking_pick.action_assign()
+        picking_pick.move_ids[0].move_line_ids[0].location_dest_id = sub_pick_a
+        picking_pick.button_validate()
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.pack_location,
+            'move_line_ids': [Command.create({
+                'location_id': sub_pick_a.id,
+                'location_dest_id': sub_pick_b.id,
+                'quantity': 10,
+                'product_id': self.productA.id,
+            })],
+            'state': 'confirmed',
+            'picked': True,
+        })._action_done()
+
+        self.assertEqual(picking_client.state, 'assigned',
+                         'The state of the client should be assigned even after reorientation')
 
     def test_mto_to_mts(self):
         """

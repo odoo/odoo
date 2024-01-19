@@ -1477,7 +1477,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not owner_id:
             owner_id = self.env['res.partner']
 
-        quants = quant_ids._get_reserve_quantity(
+        quants = quant_ids.with_context(self.env.context)._get_reserve_quantity(
             self.product_id, location_id, need, product_packaging_id=self.product_packaging_id,
             uom_id=self.product_uom, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
@@ -1698,7 +1698,11 @@ Please change the quantity done or the rounding precision of your unit of measur
 
                         taken_quantity = move._update_reserved_quantity(min(quantity, need), location_id, quants, lot_id, package_id, owner_id)
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
-                            continue
+                            # fallback on move location if the previous move quantity has been move manually
+                            # into another sub location
+                            taken_quantity = move.with_context(allow_child_locations=True)._update_reserved_quantity(min(quantity, need), move.location_id, quants, lot_id, package_id, owner_id)
+                            if float_is_zero(taken_quantity, precision_rounding=rounding):
+                                continue
                         moves_to_redirect.add(move.id)
                         if float_is_zero(need - taken_quantity, precision_rounding=rounding):
                             assigned_moves_ids.add(move.id)
