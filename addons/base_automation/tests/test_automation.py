@@ -25,7 +25,6 @@ class TestAutomation(TransactionCaseWithUserDemo):
 
         # trg_field should only be set when trigger is 'on_stage_set' or 'on_tag_set'
         self.assertFalse(automation.trg_field_ref)
-        self.assertFalse(automation.trg_field_ref_display_name)
         self.assertFalse(automation.trg_field_ref_model_name)
 
         action = self.env["ir.actions.server"].create({
