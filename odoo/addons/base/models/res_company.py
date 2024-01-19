@@ -10,6 +10,7 @@ import re
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
+from odoo.loglevels import LogType
 from random import randrange
 from PIL import Image
 
@@ -198,6 +199,13 @@ class Company(models.Model):
     def cache_restart(self):
         self.clear_caches()
 
+    _fields_to_log = {'name', 'parent_id', 'active', 'partner_id', 'report_header', 'report_footer', 'company_details',
+                     'currency_id', 'user_ids', 'street', 'street2', 'zip', 'city', 'state_id', 'bank_ids', 'country_id'
+                     , 'email', 'phone', 'mobile', 'website', 'vat', 'company_registry', 'external_report_layout_id',
+                     'base_onboarding_company_state'}
+    _fields_to_log_wo_value = {'logo', 'logo_web', 'favicon', 'font', 'primary_color', 'secondary_color',
+                              'layout_background', 'layout_background_image'}
+
     @api.model
     def create(self, vals):
         if not vals.get('favicon'):
@@ -220,6 +228,11 @@ class Company(models.Model):
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)
+        for record, data in company._get_modified_value(self._fields_to_log, vals,
+                                                        self._fields_to_log_wo_value):
+            _logger.info("%s %r (#%d) created with %r by user "
+                         "%r (#%d) ", LogType.RESCOMPANY_CREATE, record.display_name, record.id, data,
+                         self.env.user.display_name, self.env.user.id)
         # The write is made on the user to set it automatically in the multi company group.
         self.env.user.write({'company_ids': [Command.link(company.id)]})
 
@@ -237,8 +250,12 @@ class Company(models.Model):
             currency = self.env['res.currency'].browse(values['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
-
+        _log_saved_data = super(Company, self)._save_values_for_log(self._fields_to_log, values)
         res = super(Company, self).write(values)
+        for record, data in self._get_modified_value(self._fields_to_log, values, _log_saved_data):
+            _logger.info("%s %r (#%d) has been modified with %r by user"
+                         " %r (#%d) ", LogType.RESCOMPANY_WRITE, record.display_name, record.id, data,
+                         self.env.user.display_name, self.env.user.id)
 
         # invalidate company cache to recompute address based on updated partner
         company_address_fields = self._get_company_address_field_names()
@@ -246,6 +263,7 @@ class Company(models.Model):
         if company_address_fields_upd:
             self.invalidate_cache(fnames=company_address_fields)
         return res
+
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

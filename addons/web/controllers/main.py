@@ -43,6 +43,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, serialize_exce
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
+from odoo.loglevels import LogType
 
 _logger = logging.getLogger(__name__)
 
@@ -900,7 +901,8 @@ class Home(http.Controller):
             # invalidate session token cache as we've changed the uid
             request.env['res.users'].clear_caches()
             request.session.session_token = security.compute_session_token(request.session, request.env)
-
+            _logger.info("%s The user %r (#%d) became superuser.", LogType.BECAME_SUPERUSER,
+            request.env.user.display_name, request.env.user.id)
         return request.redirect(self._login_redirect(uid))
 
     @http.route('/web/health', type='http', auth='none', save_session=False)
@@ -1380,7 +1382,8 @@ class Binary(http.Controller):
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
-
+        _logger.info("%s Document %r (#%d) accessed (potentially downloaded) by user %s (#%d)", LogType.DOCUMENT_ACCESS,
+                     filename, id, request.env.user.display_name, request.env.user.id)
         return request.env['ir.http']._get_content_common(xmlid=xmlid, model=model, res_id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token, token=token)
 
@@ -1821,7 +1824,7 @@ class ExportFormat(object):
         else:
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
-            export_data = records.export_data(field_names).get('datas',[])
+            export_data = records.with_context(export_domain=domain).export_data(field_names).get('datas', [])
             response_data = self.from_data(columns_headers, export_data)
 
         # TODO: call `clean_filename` directly in `content_disposition`?

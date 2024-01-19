@@ -9,6 +9,7 @@ from odoo import _, models
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 from odoo.tools.misc import babel_locale_parse, hmac
+from odoo.loglevels import LogType
 
 from odoo.addons.auth_totp.models.totp import hotp, TOTP
 
@@ -52,9 +53,9 @@ class Users(models.Model):
         key = user._get_totp_mail_key()
         match = TOTP(key).match(code, window=3600, timestep=3600)
         if match is None:
-            _logger.info("2FA check (mail): FAIL for %s %r", user, user.login)
+            _logger.info("%s 2FA check (mail): FAIL for %s %r", LogType.MFA_LOGIN_FAIL, user, user.login)
             raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check(mail): SUCCESS for %s %r", user, user.login)
+        _logger.info("%s 2FA check(mail): SUCCESS for %s %r", LogType.MFA_LOGIN_SUCCESS, user, user.login)
         self._totp_rate_limit_purge('code_check')
         self._totp_rate_limit_purge('send_email')
         return True

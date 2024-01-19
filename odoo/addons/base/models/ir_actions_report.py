@@ -9,6 +9,7 @@ from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
+from odoo.loglevels import LogType
 
 import base64
 import io
@@ -922,7 +923,10 @@ class IrActionsReport(models.Model):
         )
         if res_ids:
             self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
-            _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
+            domain_used = f"Domain used : {context['active_domain']}" if context['active_domain'] else ""
+            _logger.info('%s The PDF report has been generated for model: %r, records %r by user %r (#%d).'
+                         ' %s', LogType.PDF_EXPORT, self_sudo.model, str(res_ids), self.env.user.display_name,
+                         self.env.user.id, domain_used)
             return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 

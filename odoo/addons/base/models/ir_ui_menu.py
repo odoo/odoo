@@ -4,12 +4,16 @@
 import base64
 import operator
 import re
+import logging
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules import get_module_resource
 from odoo.osv import expression
+from odoo.loglevels import LogType
+
+_logger = logging.getLogger(__name__)
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -142,19 +146,33 @@ class IrUiMenu(models.Model):
     def name_get(self):
         return [(menu.id, menu._get_full_name()) for menu in self]
 
+    _fields_to_log = {'name', 'active', 'sequence', 'child_id', 'parent_id', 'parent_path', 'groups_id', 'action',
+                      'complete_name'}
+
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
         for values in vals_list:
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).create(vals_list)
+        res = super(IrUiMenu, self).create(vals_list)
+        _logger.info("%s %s by user %r (#%d)", LogType.IRUIMENU_CREATE,
+        ', '.join(f"{record.name} (#{record.id}) created with '{data}'" for record, data in
+        res._get_modified_value(self._fields_to_log, vals_list)), self.env.user.display_name,
+        self.env.user.id)
+        return res
 
     def write(self, values):
         self.clear_caches()
+        _log_saved_data = self._save_values_for_log(self._fields_to_log, values)
         if 'web_icon' in values:
             values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
-        return super(IrUiMenu, self).write(values)
+        res = super(IrUiMenu, self).write(values)
+        _logger.info("%s %s by user %r (#%d)", LogType.IRUIMENU_MODIF,
+            ', '.join(f"{record.name} (#{record.id}) modified for '{data}'" for record, data in
+            self._get_modified_value(self._fields_to_log, values, _log_saved_data)), self.env.user.display_name,
+            self.env.user.id)
+        return res
 
     def _compute_web_icon_data(self, web_icon):
         """ Returns the image associated to `web_icon`.

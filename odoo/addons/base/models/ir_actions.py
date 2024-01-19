@@ -8,6 +8,7 @@ from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
+from odoo.loglevels import LogType
 
 import base64
 from collections import defaultdict
@@ -501,6 +502,25 @@ class IrActionsServer(models.Model):
     def _onchange_crud_model_id(self):
         self.link_field_id = False
 
+    _fields_to_log = {'name', 'type', 'usage', 'code', 'state', 'model_id', 'model_name', 'code', 'binding_model_id'}
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(IrActionsServer, self).create(vals_list)
+        for record, data in res._get_modified_value(self._fields_to_log, vals_list):
+            _logger.info("%s %r (#%d) created with %r by user %r (#%d)", LogType.SERVER_ACTION_CREATE,
+                        record.display_name, record.id, data, self.env.user.display_name, self.env.user.id)
+        return res
+
+    def write(self, vals):
+        _log_saved_data = self._save_values_for_log(self._fields_to_log, vals)
+        res = super(IrActionsServer, self).write(vals)
+        for record, new_data in self._get_modified_value(self._fields_to_log, vals, _log_saved_data):
+            _logger.info("%s %r (#%d) modified for %r by user %r (#%d)", LogType.SERVER_ACTION_WRITE,
+                         record.display_name, record.id, new_data, self.env.user.display_name,
+                         self.env.user.id)
+        return res
+
     def create_action(self):
         """ Create a contextual action for each server action. """
         for action in self:
@@ -625,8 +645,9 @@ class IrActionsServer(models.Model):
                 try:
                     self.env[action.model_name].check_access_rights("write")
                 except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, action.model_name,
+                    _logger.warning("%s Forbidden server action %r executed while the user %s does not"
+                                    " have access to %s.", LogType.SERVER_ACTION_FORBIDDEN, action.name,
+                                    self.env.user.login, action.model_name,
                     )
                     raise
 
@@ -637,28 +658,36 @@ class IrActionsServer(models.Model):
                 try:
                     records.check_access_rule('write')
                 except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, records,
+                    _logger.warning("%s Forbidden server action %r executed while the user %s does not"
+                                    " have access to %s.", LogType.SERVER_ACTION_FORBIDDEN, action.name,
+                                    self.env.user.login, records,
                     )
                     raise
 
             runner, multi = action._get_runner()
-            if runner and multi:
-                # call the multi method
-                run_self = action.with_context(eval_context['env'].context)
-                res = runner(run_self, eval_context=eval_context)
-            elif runner:
-                active_id = self._context.get('active_id')
-                if not active_id and self._context.get('onchange_self'):
-                    active_id = self._context['onchange_self']._origin.id
-                    if not active_id:  # onchange on new record
-                        res = runner(action, eval_context=eval_context)
-                active_ids = self._context.get('active_ids', [active_id] if active_id else [])
-                for active_id in active_ids:
-                    # run context dedicated to a particular active_id
-                    run_self = action.with_context(active_ids=[active_id], active_id=active_id)
-                    eval_context["env"].context = run_self._context
+            if runner:
+                # Avoid logging CRON that are already logged
+                if self.usage != "ir_cron":
+                    # Log must be before the runner. In case an exception is raised in the SA.
+                    _logger.info("%s %r (#%d) has been run by user %r (#%d).", LogType.SERVER_ACTION_RUN,
+                                self.display_name, self.id, self.env.user.display_name, self.env.user.id)
+                if multi:
+                    # call the multi method
+                    run_self = action.with_context(eval_context['env'].context)
                     res = runner(run_self, eval_context=eval_context)
+                else:
+                    active_id = self._context.get('active_id')
+                    if not active_id and self._context.get('onchange_self'):
+                        active_id = self._context['onchange_self']._origin.id
+                        if not active_id:  # onchange on new record
+                            res = runner(action, eval_context=eval_context)
+                    active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+                    for active_id in active_ids:
+                        # run context dedicated to a particular active_id
+                        run_self = action.with_context(active_ids=[active_id], active_id=active_id)
+                        eval_context["env"].context = run_self._context
+                        res = runner(run_self, eval_context=eval_context)
+
             else:
                 _logger.warning(
                     "Found no way to execute server action %r of type %r, ignoring it. "

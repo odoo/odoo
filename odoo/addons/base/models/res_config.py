@@ -9,6 +9,7 @@ from lxml import etree
 from odoo import api, models, _, Command
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
+from odoo.loglevels import LogType
 
 _logger = logging.getLogger(__name__)
 
@@ -751,6 +752,20 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             return RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
         return UserError(msg % values)
 
+    def _log_on_create(self, values, res, previous_settings):
+        data_to_log = []
+        for key in values:
+            # Must compare the previous and the new record as for each setting change a new record is created
+            if res[key] != previous_settings[key]:
+                if not isinstance(res[key], bool) and previous_settings and previous_settings[key]:
+                    data_to_log.append(f"{key}: {previous_settings[key]} ==> {res[key]}")
+                else:
+                    data_to_log.append(f"{key}: {res[key]}")
+        if data_to_log:
+            _logger.info("%s Settings modified for %r "
+                         "by user %r (#%d)", LogType.RESCONFIG_CREATE_AND_MODIFY, ", ".join(data_to_log),
+                         self.env.user.display_name, self.env.user.id)
+
     @api.model
     def create(self, values):
         # Optimisation: saving a res.config.settings even without changing any
@@ -781,4 +796,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             if old_value == new_value:
                 values.pop(field.name)
 
-        return super(ResConfigSettings, self).create(values)
+        previous_settings = self.search([], order='create_date desc', limit=1)
+        res = super(ResConfigSettings, self).create(values)
+        self._log_on_create(values, res, previous_settings)
+        return res

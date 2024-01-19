@@ -16,6 +16,8 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
+from odoo.loglevels import LogType
+
 
 _logger = logging.getLogger(__name__)
 
@@ -1874,17 +1876,30 @@ class IrModelAccess(models.Model):
             if model in self.env:
                 getattr(self.env[model], method)()
 
+    _fields_to_log = {"name", "active", "model_id", "group_id", "perm_read", "perm_write", "perm_create", "perm_unlink"}
+
     #
     # Check rights on actions
     #
     @api.model_create_multi
     def create(self, vals_list):
         self.call_cache_clearing_methods()
-        return super(IrModelAccess, self).create(vals_list)
+        res = super(IrModelAccess, self).create(vals_list)
+        for record, data in res._get_modified_value(self._fields_to_log, vals_list):
+            _logger.info("%s The IrModelAccess %r (#%s) has been created with value %r by user %r "
+                         "(#%s)", LogType.IRMODELACCESS_CREATE, record.display_name, record.id, data,
+                         self.env.user.display_name, self.env.user.id)
+        return res
 
     def write(self, values):
         self.call_cache_clearing_methods()
-        return super(IrModelAccess, self).write(values)
+        _log_saved_data = self._save_values_for_log(self._fields_to_log, values)
+        res = super(IrModelAccess, self).write(values)
+        for record, new_data in self._get_modified_value(self._fields_to_log, values, _log_saved_data):
+            _logger.info("%s The IrModelAccess %r (#%s) has been modified for the new data %r "
+                         "by user %r (#%s)", LogType.IRMODELACCESS_WRITE, record.display_name, record.id,
+                         new_data, self.env.user.display_name, self.env.user.id)
+        return res
 
     def unlink(self):
         self.call_cache_clearing_methods()

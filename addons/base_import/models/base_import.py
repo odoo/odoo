@@ -25,6 +25,7 @@ from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.loglevels import LogType
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -1316,8 +1317,6 @@ class Import(models.TransientModel):
         except ImportValidationError as error:
             return {'messages': [error.__dict__]}
 
-        _logger.info('importing %d rows...', len(input_file_data))
-
         import_fields, merged_data = self._handle_multi_mapping(import_fields, input_file_data)
 
         if options.get('fallback_values'):
@@ -1332,7 +1331,9 @@ class Import(models.TransientModel):
             import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
         import_result = model.load(import_fields, merged_data)
-        _logger.info('done')
+        if not dryrun:
+            _logger.info('%s Imported %d rows on model %r with fields %r by user %r (#%d)', LogType.IMPORT,
+                         len(input_file_data), self.res_model, fields, self.env.user.display_name, self.env.user.id)
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
         # an InternalError (ROLLBACK should work, maybe). Ignore that.

@@ -35,6 +35,7 @@ from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.image import image_data_uri
 from odoo.models import check_method_name
 from odoo.osv.expression import expression
+from odoo.loglevels import LogType
 
 _logger = logging.getLogger(__name__)
 
@@ -510,6 +511,8 @@ actual arch.
                 values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
+    _fields_to_log = {'name', 'model', 'key', 'priority', 'inherit_id', 'xml_id', 'groups_id', 'mode'}
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
@@ -546,6 +549,11 @@ actual arch.
 
         self.clear_caches()
         result = super(View, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
+        for record, data in result._get_modified_value(self._fields_to_log, vals_list,
+                                                        self._fields_to_log_wo_value):
+            _logger.info("%s %r (#%d) created with %r by user "
+                         "%r (#%d) ", LogType.IRUIVIEW_CREATE, record.display_name, record.id, data,
+                         self.env.user.display_name, self.env.user.id)
         return result.with_env(self.env)
 
     def write(self, vals):
@@ -563,8 +571,12 @@ actual arch.
         self.clear_caches()
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
-
+        _log_saved_data = super(View, self)._save_values_for_log(self._fields_to_log, vals)
         res = super(View, self).write(self._compute_defaults(vals))
+        for record, data in self._get_modified_value(self._fields_to_log, vals, _log_saved_data):
+            _logger.info("%s %r (#%d) modified with %r by user"
+                         " %r (#%d) ", LogType.IRUIVIEW_WRITE, record.display_name, record.id, data,
+                         self.env.user.display_name, self.env.user.id)
 
         # Check the xml of the view if it gets re-activated.
         # Ideally, `active` shoud have been added to the `api.constrains` of `_check_xml`,

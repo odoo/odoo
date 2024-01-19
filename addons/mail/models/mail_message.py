@@ -11,6 +11,8 @@ from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools.misc import clean_context
+from odoo.loglevels import LogType
+
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -553,6 +555,13 @@ class Message(models.Model):
             + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
         )
 
+    _fields_to_log = {'body', 'subject', 'date', 'attachment_ids', 'author_id'}
+
+    def _filtered_records(self):
+        # Logging all the message modification would bloat the logs but logs messages from different user than the
+        # author_id looks a good tradeoff
+        return self.filtered(lambda m: self.env.user.id != 1 and m.author_id.id != self.env.user.id )
+
     @api.model_create_multi
     def create(self, values_list):
         tracking_values_list = []
@@ -625,7 +634,11 @@ class Message(models.Model):
 
             if message.is_thread_message(values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
-
+        data = ', '.join(f"'{record.display_name}' (#{record.id}) created with '{data}'" for record, data in
+                        messages._filtered_records()._get_modified_value(self._fields_to_log, values_list))
+        if data:
+            _logger.info("%s %s by user %r (#%s)",
+                        LogType.MAIL_MESSAGE_CREATED_DIFF_AUTHOR, data, self.env.user.display_name, self.env.user.id)
         return messages
 
     def read(self, fields=None, load='_classic_read'):
@@ -638,7 +651,13 @@ class Message(models.Model):
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
+        filtered_records_log = self._filtered_records()
+        _log_saved_data = filtered_records_log._save_values_for_log(self._fields_to_log, vals)
         res = super(Message, self).write(vals)
+        for record, new_data in filtered_records_log._get_modified_value(self._fields_to_log, vals, _log_saved_data):
+            _logger.info("%s MailMessage %r (#%s) has been modified for fields %r by user %r (#%s)",
+                        LogType.MAIL_MESSAGE_WRITE_DIFF_AUTHOR, record.display_name, record.id, new_data,
+                        self.env.user.display_name, self.env.user.id)
         if vals.get('attachment_ids'):
             for mail in self:
                 mail.attachment_ids.check(mode='read')

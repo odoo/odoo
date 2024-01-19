@@ -30,6 +30,7 @@ from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
 from odoo.http import request
+from odoo.loglevels import LogType
 
 _logger = logging.getLogger(__name__)
 
@@ -66,9 +67,11 @@ def assert_log_admin_access(method):
         origin = request.httprequest.remote_addr if request else 'n/a'
         log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
         if not self.env.is_admin():
-            _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
+            _logger.warning('%s DENY access to module.%s on %s to user %s ID #%s via %s',
+                            LogType.IR_MODULE_ACCESS_DENIED, *log_data)
             raise AccessDenied()
-        _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
+        _logger.info('%s ALLOW access to module.%s on %s to user %s #%s via %s', LogType.IR_MODULE_ACCESS_ALLOWED,
+                    *log_data)
         return method(self, *args, **kwargs)
     return decorator(check_and_log, method)
 

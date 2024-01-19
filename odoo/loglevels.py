@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import sys
+from enum import Enum
+
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG = 'debug'
@@ -102,3 +104,92 @@ def exception_to_unicode(e):
         return text_type(e)
     except Exception:
         return u"Unknown message"
+
+
+class LogType(Enum):
+    sec_event_prefix = "SEC_EV_"
+
+    # res.user related event
+    res_user_event_prefix = sec_event_prefix + "U_"
+    RESUSER_CREATE = res_user_event_prefix + "0001"
+    RESUSER_WRITE = res_user_event_prefix + "0002"
+    LOGIN_SUCCESSFUL = res_user_event_prefix + "0004"
+    LOGIN_FAILED = res_user_event_prefix + "0005"
+    LOGIN_RENAME = res_user_event_prefix + "0006"
+    PASSWORD_RESET = res_user_event_prefix + "0007"
+    PASSWORD_CHANGED = res_user_event_prefix + "0008"
+
+    MFA_ACTIVATION_SUCCESS = res_user_event_prefix + "0010"
+    MFA_ACTIVATION_FAIL = res_user_event_prefix + "0011"
+    MFA_DEACTIVATION_SUCCESS = res_user_event_prefix + "0012"
+    MFA_DEACTIVATION_FAIL = res_user_event_prefix + "0013"
+    MFA_LOGIN_SUCCESS = res_user_event_prefix + "0014"
+    MFA_LOGIN_FAIL = res_user_event_prefix + "0015"
+    TOTP_DEVICE_ADD = res_user_event_prefix + "0016"
+    TOTP_DEVICE_REMOVED = res_user_event_prefix + "0017"
+    MFA_INVITE_SETUP = res_user_event_prefix + "0018"
+
+
+
+    RESUSER_ARCHIVE = res_user_event_prefix + "0051"
+    RESUSER_UNARCHIVE = res_user_event_prefix + "0052"
+    RESUSER_GROUP_WRITE = res_user_event_prefix + "0050"
+    BECAME_SUPERUSER = res_user_event_prefix + "0101"
+
+    LOGIN_COOLDOWN = res_user_event_prefix + "0109"
+    LOGIN_RATE_LIMITED = res_user_event_prefix + "0110"
+
+    RESUSER_PARTNERCHANGE = res_user_event_prefix + "0189"
+
+
+
+    # No category
+    no_category_event_prefix = sec_event_prefix + "O_"
+    RECORD_DELETION = no_category_event_prefix + "0001"
+
+    PDF_EXPORT = no_category_event_prefix + "0003"
+
+    IR_MODULE_ACCESS_ALLOWED = no_category_event_prefix + "0005"
+    IR_MODULE_ACCESS_DENIED = no_category_event_prefix + "0006"
+
+    IRRULE_CREATE = no_category_event_prefix + "0007"
+    IRRULE_MODIFIED = no_category_event_prefix + "0008"
+
+    IRRULE_ACCESS_DENIED = no_category_event_prefix + "0010"
+    IRRULE_ACCESS_ALLOWED = no_category_event_prefix + "0011"
+
+    RESGROUP_CREATE = no_category_event_prefix + "0012"
+    RESGROUP_WRITE = no_category_event_prefix + "0013"
+
+    RESCOMPANY_CREATE = no_category_event_prefix + "0014"
+    RESCOMPANY_WRITE = no_category_event_prefix + "0015"
+
+    IRMODELACCESS_CREATE = no_category_event_prefix + "0020"
+    IRMODELACCESS_WRITE = no_category_event_prefix + "0021"
+    IRUIVIEW_CREATE = no_category_event_prefix + "0022"
+    IRUIVIEW_WRITE = no_category_event_prefix + "0023"
+
+    SERVER_ACTION_RUN = no_category_event_prefix + "0050"
+    SERVER_ACTION_CREATE = no_category_event_prefix + "0051"
+    SERVER_ACTION_WRITE = no_category_event_prefix + "0052"
+    SERVER_ACTION_FORBIDDEN = no_category_event_prefix + "0054"
+
+    EXPORT = no_category_event_prefix + "0101"
+    IMPORT = no_category_event_prefix + "0102"
+
+    # Mail message Create/WriteUID is different from AUTHOR.ID
+    MAIL_MESSAGE_CREATED_DIFF_AUTHOR = no_category_event_prefix + "0555"
+    MAIL_MESSAGE_WRITE_DIFF_AUTHOR = no_category_event_prefix + "0556"
+
+    IRUIMENU_CREATE = no_category_event_prefix + "0560"
+    IRUIMENU_MODIF = no_category_event_prefix + "0561"
+
+    DOCUMENT_ACCESS = no_category_event_prefix + "0585"
+    DOCUMENT_DOWNLOAD = no_category_event_prefix + "0586"
+    DOCUMENT_DOWNLOAD_ZIP = no_category_event_prefix + "0587"
+    DOCUMENT_UPLOAD = no_category_event_prefix + "0588"
+
+    RESCONFIG_CREATE_AND_MODIFY = no_category_event_prefix + "0666"
+
+    def __str__(self):
+        return "[" + self.value + "]"

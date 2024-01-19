@@ -8,6 +8,8 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval, time
+from odoo.loglevels import LogType
+
 
 _logger = logging.getLogger(__name__)
 class IrRule(models.Model):
@@ -208,16 +210,27 @@ class IrRule(models.Model):
         self.clear_caches()
         return res
 
+    _fields_to_log = {'name', 'active', 'model_id', 'groups', 'domain_force', 'perm_read', 'perm_write', 'perm_create',
+                    'perm_unlink'}
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super(IrRule, self).create(vals_list)
+        for record, data in res._get_modified_value(self._fields_to_log, vals_list):
+            _logger.info("%s %r (#%s) created with value %r by user %r (#%s) ", LogType.IRRULE_CREATE,
+                        record.display_name, record.id, data, self.env.user.display_name, self.env.user.id)
         # DLE P33: tests
         self.flush()
         self.clear_caches()
         return res
 
     def write(self, vals):
+        _log_saved_data = self._save_values_for_log(self._fields_to_log, vals)
         res = super(IrRule, self).write(vals)
+        for record, new_data in self._get_modified_value(self._fields_to_log, vals, _log_saved_data):
+            _logger.info("%s %r (#%s) modified for %r by user"
+                         " %r (#%s) ", LogType.IRRULE_WRITE, record.display_name, record.id, new_data,
+                         self.env.user.display_name, self.env.user.id)
         # DLE P33: tests
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
@@ -227,7 +240,8 @@ class IrRule(models.Model):
         return res
 
     def _make_access_error(self, operation, records):
-        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
+        _logger.info('%s Access Denied by record rules for operation: %s on record ids: %r, uid: %s, '
+                     'model: %s', LogType.IRRULE_ACCESS_DENIED, operation, records.ids[:6], self._uid, records._name)
         self = self.with_context(self.env.user.context_get())
 
         model = records._name

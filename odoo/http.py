@@ -1030,6 +1030,7 @@ class OpenERPSession(sessions.Session):
             base_location=request.httprequest.url_root.rstrip('/'),
             HTTP_HOST=wsgienv['HTTP_HOST'],
             REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            HTTP_USER_AGENT=wsgienv['HTTP_USER_AGENT']
         )
         uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         self.pre_uid = uid

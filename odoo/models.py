@@ -64,6 +64,7 @@ from .tools import date_utils
 from .tools import populate
 from .tools import unique
 from .tools.lru import LRU
+from .loglevels import LogType
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -1056,6 +1057,11 @@ class BaseModel(metaclass=MetaModel):
         if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
             raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
         fields_to_export = [fix_import_export_id_paths(f) for f in fields_to_export]
+        _logger.info("[%s] Export made on model %s for %s records on %s fields by user %s (#%s). "
+                     "Domain : %s, Fields : %s, Ids (10 max) : %s",
+                     LogType.EXPORT, repr(self._name), len(self.ids), len(fields_to_export),
+                     self.env.user.display_name, self.env.user.id, self._context.get('export_domain'), fields_to_export,
+                     self.ids[:10])
         return {'datas': self._export_rows(fields_to_export)}
 
     @api.model
@@ -3725,7 +3731,8 @@ Fields:
             self.flush()
 
         # auditing: deletions are infrequent and leave no trace in the database
-        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
+        _unlink.info('%s User %r (#%d) deleted %s records with IDs: %r, Display names : %r', LogType.RECORD_DELETION,
+                    self.env.user.display_name, self._uid, self._name, self.ids, ", ".join(self.mapped('display_name')))
 
         return True
 
@@ -6564,6 +6571,87 @@ Fields:
             the default placeholder 'web/static/img/placeholder.png'.
         """
         return False
+
+    def _save_values_for_log(self, keyset_to_save, values):
+        """ Saves specific data before record modification. When logging modification of
+        data (write), it is better to know the previous and new value of an operation.
+
+        :param set keyset_to_save: A set of field name that should be saved and returned
+        :param dict values: fields to update and the value to set on them (as on create/write)
+
+        :return: A dict {record_id:{fields:values}}
+        """
+        saved_data = {}
+        for record in self:
+            _saved_data_by_id = {}
+            for key in values:
+                if key in keyset_to_save:
+                    _saved_data_by_id[key] = record[key]
+                if _saved_data_by_id:
+                    saved_data[record.id] = _saved_data_by_id
+        return saved_data
+
+    def _format_log(self, key, past_object=None):
+        """ Formats log based on their type.
+
+        In case of a recordset modification, only the added and removed records are logged.
+
+        :param string key: The key of the modified field
+        :param record past_object: In case of a modification of data, the state of the record self before modification
+
+        :return: A formated string in order to display the new record state on a specific key
+        """
+        if past_object and past_object[key] == self[key]:
+            return ""
+        elif not past_object or (past_object and isinstance(past_object, bool)):
+            return f"{key}: {self[key]}"
+        elif isinstance(past_object[key], BaseModel):
+            if len(self[key]) == 1 and len(past_object[key]) == 1:
+                return f"{key}: {past_object[key].display_name} (#{self[key].id}) ==> "\
+                       f"{self[key].display_name} (#{self[key].id})"
+            else: # Recordset require to log only the difference
+                added_diff = self[key]-past_object[key]
+                removed_diff = past_object[key]-self[key]
+                crafted_string = str()
+                if removed_diff:
+                    removed_dis_name = ', '.join(f"{dis_name} (#{id})" for id, dis_name in
+                        zip(removed_diff.ids, removed_diff.mapped('display_name')))
+                    crafted_string += f"Removed: '{removed_dis_name}' "
+                if added_diff:
+                    added_dis_name = ', '.join(f"{dis_name} (#{id})" for id, dis_name in
+                        zip(added_diff.ids, added_diff.mapped('display_name')))
+                    crafted_string += f"Added: '{added_dis_name}'"
+                return f"{key}: {crafted_string}" if crafted_string else str()
+        else:
+            return f"{key}: {past_object[key]} ==> {self[key]}"
+
+    def _get_modified_value(self, keyset_to_save, modified_values, before_modification=None,
+                            keyset_to_save_wo_value=None):
+        """ For each records generate a string of the field and their values that has get some change.
+
+        :param set keyset_to_save: A set of fields, telling which field need to be logged
+        :param dict modified_values: fields to update and the value to set on them (as on create/write)
+        :param dict before_modification: In order to log previous to new data, a dict {record_id:{fields:values}}
+            usually returned by _save_values_for_log()
+        :param set keyset_to_save_wo_value:  A set of fields, telling which field need to be logged without logging the
+            value which can be useful for sensitive data
+        :returns: A generator of record, data_to_log where data_to_log is a string with all the data that should be
+            logged
+        """
+        for index, record in enumerate(self):
+            data_to_log = []
+            looper = modified_values[index] if isinstance(modified_values, list) else modified_values
+            for key in looper:
+                if key in keyset_to_save:
+                    if not before_modification or (keyset_to_save_wo_value and key in keyset_to_save_wo_value):
+                        log_formated = record._format_log(key)
+                    elif before_modification:
+                        log_formated = record._format_log(key, before_modification[record.id])
+                    if log_formated:
+                        data_to_log.append(log_formated)
+            if data_to_log:
+                yield record, ", ".join(data_to_log)
+
 
     def _populate_factories(self):
         """ Generates a factory for the different fields of the model.
