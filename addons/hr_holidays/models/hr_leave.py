@@ -89,7 +89,7 @@ class HolidaysRequest(models.Model):
                 defaults['request_unit_custom'] = False
 
         if 'state' in fields_list and not defaults.get('state'):
-            defaults['state'] = 'confirm'
+            defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
 
         if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
             defaults['request_date_from'] = fields.Date.today()
