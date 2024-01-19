@@ -94,6 +94,6 @@ class PaymentProvider(models.Model):
         """ Override of `payment` to delete the payment method of the provider. """
         payment_method = self._get_provider_payment_method(code)
         if self._check_existing_payment_method_lines(payment_method):
-            raise UserError(_("To uninstall this module, please remove first the corresponding payment method line in the outgoing payments tab defined on the bank journal."))
+            raise UserError(_("To uninstall this module, please remove first the corresponding payment method line in the incoming payments tab defined on the bank journal."))
         super()._remove_provider(code)
         payment_method.unlink()
