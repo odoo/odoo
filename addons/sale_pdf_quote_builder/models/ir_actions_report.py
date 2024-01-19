@@ -57,7 +57,7 @@ class IrActionsReport(models.Model):
                     footer_stream = IrBinary._record_to_stream(footer_record, 'sale_footer').read()
                     self._add_pages_to_writer(writer, footer_stream)
 
-                form_fields = self._get_form_fields_mapping(order)
+                form_fields = self._get_form_fields_mapping(order, doc_line_id_mapping)
                 pdf.fill_form_fields_pdf(writer, form_fields=form_fields)
                 with io.BytesIO() as _buffer:
                     writer.write(_buffer)
@@ -112,7 +112,7 @@ class IrActionsReport(models.Model):
         return ['description', 'quantity', 'uom', 'price_unit', 'discount', 'product_sale_price',
                 'taxes', 'tax_excl_price', 'tax_incl_price']
 
-    def _get_form_fields_mapping(self, order):
+    def _get_form_fields_mapping(self, order, doc_line_id_mapping=None):
         """ Dictionary mapping specific pdf fields name to Odoo fields data for a sale order.
         Override this method to add new fields to the mapping.
 
@@ -138,7 +138,8 @@ class IrActionsReport(models.Model):
         }
 
         # Adding fields from each line, prefixed by the line_id to avoid conflicts
-        for line in order.order_line:
+        lines_with_doc_ids = set(doc_line_id_mapping.values())
+        for line in order.order_line.filtered(lambda sol: sol.id in lines_with_doc_ids):
             form_fields_mapping.update(self._get_sol_form_fields_mapping(line))
 
         return form_fields_mapping
