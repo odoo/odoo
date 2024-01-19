@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import logging
 import re
 
 from odoo import api, fields, models, _
@@ -127,3 +126,19 @@ class AccountMove(models.Model):
             barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120)
             return image_data_uri(base64.b64encode(barcode))
         return super()._generate_qr_code(silent_errors)
+
+    def _l10n_in_get_hsn_summary_table(self):
+        self.ensure_one()
+        display_uom = self.env.user.user_has_groups('uom.group_uom')
+
+        base_lines = [
+            {
+                'l10n_in_hsn_code': line.l10n_in_hsn_code,
+                'quantity': line.quantity,
+                'price_unit': line.price_unit,
+                'uom': {'id': line.product_uom_id.id, 'name': line.product_uom_id.name},
+                'tax_values_list': line.tax_ids._convert_to_dict_for_taxes_computation(),
+            }
+            for line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product')
+        ]
+        return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
