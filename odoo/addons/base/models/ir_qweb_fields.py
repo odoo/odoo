@@ -381,7 +381,7 @@ class ImageConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, options):
+    def _get_src_data_b64(self, value, options):
         try: # FIXME: maaaaaybe it could also take raw bytes?
             image = Image.open(BytesIO(base64.b64decode(value)))
             image.verify()
@@ -390,7 +390,11 @@ class ImageConverter(models.AbstractModel):
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return Markup('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii')))
+        return "data:%s;base64,%s" % (Image.MIME[image.format], value.decode('ascii'))
+
+    @api.model
+    def value_to_html(self, value, options):
+        return Markup('<img src="%s">' % self._get_src_data_b64(value, options))
 
 class ImageUrlConverter(models.AbstractModel):
     """ ``image_url`` widget rendering, inserts an image tag in the
