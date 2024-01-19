@@ -31,13 +31,28 @@ QUnit.module("spreadsheet data source", {}, () => {
                 }
             }
             const dataSource = new TestDataSource({
+<<<<<<< HEAD
                 notify: () => {},
+||||||| parent of 703f6748071b (temp)
+                notify: () => assert.step("notify"),
+                notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+=======
+                notify: () => assert.step("notify"),
+                notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+                cancelPromise: () => assert.step("cancel-promise"),
+>>>>>>> 703f6748071b (temp)
             });
             dataSource.load();
             dataSource.load({ reload: true });
             assert.strictEqual(dataSource.isReady(), false);
             def1.resolve();
             await nextTick();
+<<<<<<< HEAD
+||||||| parent of 703f6748071b (temp)
+            assert.verifySteps(["notify-from-promise"]);
+=======
+            assert.verifySteps(["cancel-promise", "notify-from-promise"]);
+>>>>>>> 703f6748071b (temp)
             assert.strictEqual(dataSource.isReady(), false);
             def2.resolve();
             await nextTick();
@@ -57,7 +72,16 @@ QUnit.module("spreadsheet data source", {}, () => {
         }
 
         const dataSource = new TestDataSource({
+<<<<<<< HEAD
             notify: () => {},
+||||||| parent of 703f6748071b (temp)
+            notify: () => assert.step("notify"),
+            notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+=======
+            notify: () => assert.step("notify"),
+            notifyWhenPromiseResolves: () => assert.step("notify-from-promise"),
+            cancelPromise: () => assert.step("cancel-promise"),
+>>>>>>> 703f6748071b (temp)
             orm: {
                 call: () => {
                     throw makeServerError({ description: "Ya done!" });

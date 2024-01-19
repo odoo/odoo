@@ -41,6 +41,13 @@ export class DataSources extends EventBus {
                 orm: this._orm,
                 metadataRepository: this._metadataRepository,
                 notify: () => this.notify(),
+<<<<<<< HEAD
+||||||| parent of 703f6748071b (temp)
+                notifyWhenPromiseResolves: this.notifyWhenPromiseResolves.bind(this),
+=======
+                notifyWhenPromiseResolves: this.notifyWhenPromiseResolves.bind(this),
+                cancelPromise: (promise) => this.pendingPromises.delete(promise),
+>>>>>>> 703f6748071b (temp)
             },
             params
         );
@@ -89,6 +96,40 @@ export class DataSources extends EventBus {
         return id in this._dataSources;
     }
 
+<<<<<<< HEAD
+||||||| parent of 703f6748071b (temp)
+    async notifyWhenPromiseResolves(promise) {
+        this.pendingPromises.add(promise);
+        await promise
+            .then(() => {
+                this.pendingPromises.delete(promise);
+                this.notify();
+            })
+            .catch(() => {
+                this.pendingPromises.delete(promise);
+                this.notify();
+            });
+    }
+
+=======
+    /**
+     * @private
+     * @param {Promise<unknown>} promise
+     */
+    async notifyWhenPromiseResolves(promise) {
+        this.pendingPromises.add(promise);
+        await promise
+            .then(() => {
+                this.pendingPromises.delete(promise);
+                this.notify();
+            })
+            .catch(() => {
+                this.pendingPromises.delete(promise);
+                this.notify();
+            });
+    }
+
+>>>>>>> 703f6748071b (temp)
     /**
      * Notify that a data source has been updated. Could be useful to
      * request a re-evaluation.
