@@ -674,6 +674,11 @@ class AccountGroup(models.Model):
         if res:
             raise ValidationError(_('Account Groups with the same granularity can\'t overlap'))
 
+    @api.constrains('parent_id')
+    def _check_parent_not_circular(self):
+        if not self._check_recursion():
+            raise ValidationError(_("You cannot create recursive groups."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
