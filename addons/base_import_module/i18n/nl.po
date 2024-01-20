@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"Mogelijk heb je de Enterprise-versie nodig om de gegevensmodule te installeren. Ga naar https://www.odoo.com/pricing-plan voor meer informatie.\n"
+"Als je website-thema's nodig hebt, kan je deze downloaden van https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -216,6 +219,13 @@ msgstr "Officiële apps"
 
 #. module: base_import_module
 #. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Only administrators can install data modules."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
@@ -252,7 +262,7 @@ msgstr "Studio aanpassingen vereisen de Odoo Studio app."
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "De volgende modules worden ook geïnstalleerd:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -262,6 +272,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"De installatie van de gegevensmodule zou mislukken omdat de volgende "
+"afhankelijkheden niet kunnen worden gevonden in de addons-path:\n"
 
 #. module: base_import_module
 #. odoo-python

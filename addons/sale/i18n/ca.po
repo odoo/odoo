@@ -24,11 +24,11 @@
 # Josep Anton Belchi, 2023
 # marcescu, 2023
 # Arnau Ros, 2023
-# Quim - eccit <quim@eccit.com>, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Harcogourmet, 2024
+# Quim - eccit <quim@eccit.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Harcogourmet, 2024\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -890,8 +890,7 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
 
 #. module: sale
@@ -1699,14 +1698,8 @@ msgstr "Quantitat de lliurament"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"Data de lliurament que podeu prometre al client, calculat amb el mínim "
-"\"lead time\" de les línies de la comanda en el cas de serveis. En cas de "
-"tramesa, es té en compte la política de tramesa de la comanda per a fer "
-"servir el mínim o el màxim \"lead time\" de les línies de comanda."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1903,6 +1896,13 @@ msgstr "Bestreta (percentatge) "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
 msgstr ""
 
 #. module: sale
@@ -3119,11 +3119,6 @@ msgid "Other Info"
 msgstr "Altra informació"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3503,6 +3498,11 @@ msgid "Quotation #"
 msgstr "Pressupost # "
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Pressupost / Comanda"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Compte de pressupostos"
@@ -3586,11 +3586,6 @@ msgstr "Pressupostos i Vendes "
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Valoracions"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3956,17 +3951,6 @@ msgstr "Equips de vendes"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Avisos de vendes"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"L'element de la comanda de vendes al qual s'afegirà el temps dedicat per a "
-"facturar-lo al vostre client. Elimina l'element de comanda de vendes perquè "
-"l'entrada del full de temps no sigui billable."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

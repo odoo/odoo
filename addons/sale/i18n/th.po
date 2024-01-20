@@ -5,8 +5,8 @@
 # Translators:
 # Wichanon Jamwutthipreecha, 2023
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2023
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1159,16 +1159,8 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
-"ช่วยให้คุณแชร์เอกสารกับลูกค้าของคุณภายในการขาย\n"
-"ปล่อยว่างไว้หากคุณไม่ต้องการแชร์เอกสารนี้กับลูกค้าฝ่ายขาย\n"
-"ใบเสนอราคา: เอกสารจะถูกส่งไปยังลูกค้าและเข้าถึงได้ตลอดเวลา\n"
-"เช่น ตัวเลือกนี้มีประโยชน์ในการแชร์ไฟล์คำอธิบายสินค้า\n"
-"คำสั่งซื้อที่ยืนยันแล้ว: เอกสารจะถูกส่งไปยังและลูกค้าสามารถเข้าถึงได้\n"
-"เช่น ตัวเลือกนี้จะมีประโยชน์ในการแชร์คู่มือผู้ใช้หรือเนื้อหาดิจิทัลที่ซื้อในอีคอมเมิร์ซ\n"
-"ใบเสนอราคาภายใน: เอกสารจะรวมอยู่ในใบเสนอราคาแบบ PDF ระหว่างหน้าส่วนหัวและตารางใบเสนอราคา"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1988,14 +1980,8 @@ msgstr "ปริมาณการจัดส่ง"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"วันที่จัดส่งที่คุณสามารถสัญญากับลูกค้าได้ "
-"โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของไลน์คำสั่งในกรณีของสินค้าบริการ "
-"ในกรณีของการจัดส่ง "
-"นโยบายการจัดส่งของคำสั่งจะถูกนำมาพิจารณาโดยใช้ระยะเวลานำสินค้าขั้นต่ำหรือสูงสุดของไลน์คำสั่ง"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2193,6 +2179,13 @@ msgstr "เงินดาวน์ (เปอร์เซ็นต์)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "เงินดาวน์ <br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3399,11 +3392,6 @@ msgid "Other Info"
 msgstr "ข้อมูลอื่นๆ"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "ใบเสนอราคา PDF"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3780,6 +3768,11 @@ msgid "Quotation #"
 msgstr "ใบเสนอราคา #"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "ใบเสนอราคา / คำสั่ง"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "จำนวนใบเสนอราคา"
@@ -3863,11 +3856,6 @@ msgstr "ใบเสนอราคาและการขาย"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "ใบเสนอราคาเพื่อตรวจสอบ"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "การให้คะแนน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4232,16 +4220,6 @@ msgstr "ทีมขาย"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "คำเตือนการขาย"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"รายการในใบสั่งขายที่จะเพิ่มเวลาที่ใช้ไปเพื่อออกใบแจ้งหนี้ให้กับลูกค้าของคุณ "
-"ลบรายการใบสั่งขายสำหรับรายการบันทึกเวลาที่ไม่สามารถเรียกเก็บเงินได้ออก"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

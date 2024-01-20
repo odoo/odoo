@@ -12,8 +12,8 @@
 # Mads Søndergaard, 2023
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2024
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2024\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,14 +173,14 @@ msgstr "%s - %s; %s Faktureret, %s Leveret til %s hver"
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr "%s eksklusiv moms"
+msgstr "%s Eksklusiv moms"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s inklusiv moms"
+msgstr "%s Inklusiv moms"
 
 #. module: account
 #. odoo-python
@@ -670,6 +670,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> Waiting for Payment</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> Afventer betaling</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -742,6 +744,8 @@ msgid ""
 "<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
 "or invoice_payment_term_id\"> or </span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" invisible=\"state != 'draft' "
+"or invoice_payment_term_id\">eller </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -763,6 +767,8 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"match_amount != "
 "'between'\">and</span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"match_amount != "
+"'between'\">og</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -837,6 +843,9 @@ msgid ""
 "groups=\"base.group_multi_currency\" invisible=\"move_type == 'entry'\"> in "
 "</span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3\" "
+"groups=\"base.group_multi_currency\" invisible=\"move_type == 'entry'\"> i "
+"</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -931,6 +940,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or "
+"quick_edit_mode\">kladde</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1141,7 +1152,7 @@ msgstr "<strong>Dato:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Delivery Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Leveringsdato:</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -6701,7 +6712,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr "Udenlandsk Moms ID"
+msgstr "Udenlandsk moms ID"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
@@ -6887,7 +6898,7 @@ msgstr "Genererede posteringer"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr ""
+msgstr "Generisk momsrapport"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -8625,7 +8636,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__last_tax_period
 msgid "Last Tax Period"
-msgstr ""
+msgstr "Seneste momsperiode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__write_uid
@@ -9428,7 +9439,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
 msgid "Negate Tax Balance"
-msgstr "Ophæv skattesaldo"
+msgstr "Ophæv momssaldo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
@@ -11490,7 +11501,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Reduced tax:"
-msgstr ""
+msgstr "Nedsat moms:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
@@ -11583,7 +11594,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr "Relateret Momsbeløb"
+msgstr "Relateret momsbeløb"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
@@ -13104,7 +13115,7 @@ msgstr "Moms"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "Tax 15%"
-msgstr ""
+msgstr "Moms 15%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
@@ -13202,7 +13213,7 @@ msgstr "Moms inkluderet i pris"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_key
 msgid "Tax Key"
-msgstr ""
+msgstr "Momsnøgle"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
@@ -13230,7 +13241,7 @@ msgstr "Momsnavn"
 #. module: account
 #: model:account.account,name:account.1_tax_paid
 msgid "Tax Paid"
-msgstr ""
+msgstr "Betalt moms"
 
 #. module: account
 #: model:account.account,name:account.1_tax_payable
@@ -13245,17 +13256,17 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_tax_receivable
 msgid "Tax Receivable"
-msgstr ""
+msgstr "Moms tilgodehavende"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__tax_receivable_account_id
 msgid "Tax Receivable Account"
-msgstr ""
+msgstr "Moms tilgodehavende konto"
 
 #. module: account
 #: model:account.account,name:account.1_tax_received
 msgid "Tax Received"
-msgstr ""
+msgstr "Modtaget moms"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
@@ -13289,7 +13300,7 @@ msgstr "Moms streng"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr ""
+msgstr "Momstag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -13331,12 +13342,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Ekskl. moms"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Tax incl."
-msgstr ""
+msgstr "Inkl. moms"
 
 #. module: account
 #. odoo-python
@@ -14633,7 +14644,7 @@ msgstr "Dette kvartal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
-msgstr ""
+msgstr "Denne momsperiode"
 
 #. module: account
 #. odoo-python
@@ -15026,7 +15037,7 @@ msgstr "I alt"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr ""
+msgstr "Total (inkl. moms)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -16858,7 +16869,7 @@ msgstr "Du bør opdatere dette dokument til at reflektere dit T&amp;C."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 msgid "Your Invoices"
-msgstr ""
+msgstr "Dine fakturaer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

@@ -5,10 +5,11 @@
 # Translators:
 # Mads Søndergaard, 2023
 # Mads Søndergaard, 2023
-# Martin Trigaux, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2024
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Ejner Sønniksen <ejner@vkdata.dk>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sammi Iversen <sammi@vkdata.dk>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,12 +38,12 @@ msgstr "# Salgsordrer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr "# af linjer"
+msgstr "# linjer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# af salgsordrer"
+msgstr "# salgsordrer"
 
 #. module: sale
 #. odoo-python
@@ -931,7 +932,7 @@ msgstr "<strong>Ekskl. moms: </strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax incl.: </strong>"
-msgstr "<strong>Iinkl. moms: </strong>"
+msgstr "<strong>Inkl. moms: </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1148,8 +1149,7 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
 
 #. module: sale
@@ -1974,14 +1974,8 @@ msgstr "Levering antal"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"Leveringsdatoen du kan love din kunde, udregnet fra minimums ledetiden for "
-"ordrelinjerne i tilfælde af service produkter. I tilfælde af forsendelser, "
-"vil der blive taget højde for forsendelsens policen for ordren, til enten at"
-" bruge minimum eller maksimum ledetiden for ordrelinjerne."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2179,6 +2173,13 @@ msgstr "Aconto (procent)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "Forudbetaling<br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3388,11 +3389,6 @@ msgid "Other Info"
 msgstr "Anden info"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3538,12 +3534,12 @@ msgstr "Eksempel"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Prisreduktion ekskl. moms"
+msgstr "Prisnedsættelse ekskl. moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Prisnedsættelse inkl. moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3769,6 +3765,11 @@ msgid "Quotation #"
 msgstr "Tilbud #"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Tilbud / ordre"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Antal tilbud"
@@ -3851,12 +3852,7 @@ msgstr "Tilbud og salg"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Bedømmelser"
+msgstr "Tilbud til gennemsyn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4219,14 +4215,6 @@ msgstr "Salgsteams"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Advarsler på salg"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4628,7 +4616,7 @@ msgstr "Tags"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax 15%"
-msgstr ""
+msgstr "Moms 15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
@@ -4639,7 +4627,7 @@ msgstr "Moms afrundingsmetode"
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_country_id
 msgid "Tax Country"
-msgstr "Skatteland"
+msgstr "Moms land"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4649,7 +4637,7 @@ msgstr "Moms ID"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Tax Total"
-msgstr "Samlet moms"
+msgstr "Moms total"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
@@ -4664,12 +4652,12 @@ msgstr "Moms udregnings afrundings metode"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Ekskl. moms"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax incl."
-msgstr ""
+msgstr "Inkl. moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4939,7 +4927,7 @@ msgstr "Der er i øjeblikket ingen tilbud til din konto."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Der er i øjeblikket ingen salgsordrer på din konto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5247,13 +5235,13 @@ msgstr "Beløb før moms"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "Faktureret beløb ex moms"
+msgstr "Faktureret beløb ekskl. moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr "Beløb til fakturering ex moms"
+msgstr "Beløb til fakturering ekskl. moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced

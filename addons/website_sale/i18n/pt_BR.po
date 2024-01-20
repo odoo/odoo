@@ -737,7 +737,7 @@ msgstr "Endereço"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
 msgid "Address Autocomplete"
-msgstr "Autocompletar endereço"
+msgstr "Preenchimento automático de endereço"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -770,7 +770,7 @@ msgstr "Permitir que usuários logados salvem produtos na lista de desejos"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
 msgid "Allow the end user to choose this price list"
-msgstr "Permitir ao usuário final escolher esta lista de preços"
+msgstr "Permitir que o usuário final escolha esta lista de preços"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1292,37 +1292,37 @@ msgstr "Componentes"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr "Calcule o custo de envio e envie com Easypost"
+msgstr "Calcular o custo de envio e envie com Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Computar custos de envio e enviar com DHL"
+msgstr "Calcular custos de envio e enviar com DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Computar custos e enviar com FedEx"
+msgstr "Calcular custos de envio e enviar com FedEx"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Computar custos de envio e enviar com UPS"
+msgstr "Calcular custos de envio e enviar com UPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Computar custos de vneio e enviar com USPS"
+msgstr "Calcular custos de envio e enviar com USPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Computar custos de envio e enviar com bpost"
+msgstr "Calcular custos de envio e enviar com bpost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr "Computar custos de envio em pedidos"
+msgstr "Calcular custos de envio nos pedidos"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
@@ -2261,6 +2261,13 @@ msgid ""
 msgstr ""
 "Já existe uma transação para o seu pedido, não é mais possível alterar o "
 "método de entrega."
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#, python-format
+msgid "Item(s) added to your cart"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -4350,10 +4357,13 @@ msgid "Visitor Product Views History"
 msgstr "Histórico de visualização de produtos do visitante"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+#, python-format
 msgid "Warning"
 msgstr "Aviso"
 

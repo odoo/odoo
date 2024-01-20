@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"คุณอาจต้องใช้เวอร์ชัน Enterprise เพื่อติดตั้งโมดูลข้อมูล กรุณาไปที่ https://www.odoo.com/pricing-plan สำหรับข้อมูลเพิ่มเติม\n"
+"หากคุณต้องการธีมของเว็บไซต์ สามารถดาวน์โหลดได้จาก https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -211,6 +214,13 @@ msgstr "แอปอย่างเป็นทางการ"
 
 #. module: base_import_module
 #. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Only administrators can install data modules."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
@@ -247,7 +257,7 @@ msgstr "การปรับแต่งสตูดิโอต้องใช
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "โมดูลต่อไปนี้จะถูกติดตั้งด้วย:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -257,6 +267,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"การติดตั้งโมดูลข้อมูลจะล้มเหลว เนื่องจากไม่พบการขึ้นต่อกันต่อไปนี้ในเส้นทาง "
+"addons:\n"
 
 #. module: base_import_module
 #. odoo-python

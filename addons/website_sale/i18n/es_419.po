@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2024
 # Lucia Pacheco, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lucia Pacheco, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2000,9 +2000,7 @@ msgstr "Muebles"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
-"Genera la factura de forma automática una vez que se confirma el pago en "
-"línea"
+msgstr "Generar la factura en automático al confirmar el pago en línea"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2271,6 +2269,13 @@ msgid ""
 msgstr ""
 "Parece que ya hay una transacción para su orden, ya no se puede cambiar el "
 "método de entrega"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#, python-format
+msgid "Item(s) added to your cart"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -4361,10 +4366,13 @@ msgid "Visitor Product Views History"
 msgstr "Historial de vistas del producto"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+#, python-format
 msgid "Warning"
 msgstr "Advertencia"
 

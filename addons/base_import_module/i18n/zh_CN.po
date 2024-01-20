@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"您可能需要企业版才能安装数据模块。请访问 https://www.odoo.com/pricing-plan 获取更多信息。\n"
+"如果需要网站主题，可从 https://github.com/odoo/design-themes 下载。\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -210,6 +214,13 @@ msgstr "官方应用程序"
 
 #. module: base_import_module
 #. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Only administrators can install data modules."
+msgstr "只有管理员才能安装数据模块。"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
@@ -246,7 +257,7 @@ msgstr "Studio 定制需要安装 Odoo Studio应用。"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "还将安装以下模块：\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -256,6 +267,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"数据模块的安装会失败，因为在 addons-path 中找不到以下依赖项：\n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python

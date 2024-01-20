@@ -5,8 +5,8 @@
 # Translators:
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Abe Manyo, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1167,15 +1167,8 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
-"Memungkinkan Anda untuk membagikan dokumen dengan pelanggan Anda dalam sale.\n"
-"Biarkan kosong bila Anda tidak ingin membagikan dokumen ini dengan pelanggan sales.\n"
-"Quotation: dokumen akan dikirim ke dan dapat diakses oleh pelanggan kapanpun juga.\n"
-"Order dikonfirmasi: dokumen akan dikirim ke dan dapat diakses oleh pelanggan.\n"
-"contoh opsi ini dapat berguna untuk membagikan User Manual atau konten digital yang dibeli pada ecommerce.\n"
-"Inside qutoe: Dokumen akan dimasukkan dalam pdf quotation di antara halaman header dan table quotation."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2003,15 +1996,8 @@ msgstr "Kuantitas Terkirim"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"Tanggal pengiriman yang Anda janjikan ke pelanggan, dihitung dari lead time "
-"minimal untuk baris order untuk kasus produk Layanan. Untuk kasus "
-"pengiriman, kebijakan pengiriman pesanan akan diperhitungkan dalam "
-"menentukan apakah lead time minimum atau maksimum dari baris order yang akan"
-" digunakan."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2210,6 +2196,13 @@ msgstr "Down Payment (persentase)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "Down payment <br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3426,11 +3419,6 @@ msgid "Other Info"
 msgstr "Info Lainnya"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "Quotation PDF"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3807,6 +3795,11 @@ msgid "Quotation #"
 msgstr "Penawaran #"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Penawaran / Order"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Jumlah Quotation"
@@ -3891,11 +3884,6 @@ msgstr "Penawaran dan Penjualan"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "Quotation untuk ditinjau"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Rating"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4262,17 +4250,6 @@ msgstr "Penjualan Tim"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Peringatan Sales"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"Item sales order yang mana waktu yang digunakan akan ditambahkan ke order "
-"untuk difaktur ke pelanggan Anda. Hapus item sales order di entri timesheet "
-"agar waktu yang digunakan tidak ditagih."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

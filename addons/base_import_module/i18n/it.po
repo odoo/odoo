@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2023
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"Potrebbe essere necessaria la versione Enterprise per installare il modulo dati. Visita il sito https://www.odoo.com/pricing-plan per maggiorni informazioni.\n"
+"Se hai bisogno di temi per siti web, è possibile scaricarli da https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -215,6 +218,13 @@ msgstr "App ufficiali"
 
 #. module: base_import_module
 #. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Only administrators can install data modules."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
@@ -251,7 +261,7 @@ msgstr "La costumizzazione richiede l'applicazione Odoo Studio"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "Verranno installati anche i seguenti moduli:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -261,6 +271,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"L'installazione del modulo dati potrebbe fallire perché non è stato "
+"possibile trovare le seguenti dipendenze nel percorso addons:\n"
 
 #. module: base_import_module
 #. odoo-python

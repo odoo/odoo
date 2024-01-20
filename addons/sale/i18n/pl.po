@@ -7,8 +7,8 @@
 # Martin Trigaux, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Anita Kosobucka, 2023
-# Wil Odoo, 2024
 # Bartłomiej Chojnacki, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Bartłomiej Chojnacki, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -912,8 +912,7 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
 
 #. module: sale
@@ -1725,14 +1724,8 @@ msgstr "Wielkość zamówienia"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"Termin dostawy, który możesz obiecać klientowi, obliczony z minimalnego "
-"czasu realizacji linii zamówienia w przypadku produktów usługowych. W "
-"przypadku wysyłki, polityka wysyłkowa zamówienia zostanie wzięta pod uwagę, "
-"aby wykorzystać minimalny lub maksymalny czas realizacji linii zamówienia."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1930,6 +1923,13 @@ msgstr "Zaliczki (procentowo)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "Zaliczka<br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3141,11 +3141,6 @@ msgid "Other Info"
 msgstr "Inne informacje"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3524,6 +3519,11 @@ msgid "Quotation #"
 msgstr " Oferta #"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Oferta / Zamówienie"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Ilość Ofert"
@@ -3607,11 +3607,6 @@ msgstr "Oferty i zamówienia"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Oceny"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3974,17 +3969,6 @@ msgstr "Zespoły sprzedaży"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Ostrzeżenia Sprzedaży"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"Pozycja zamówienia, do której zostanie dodany czas spędzony w celu "
-"zafakturowania klienta. Usuń pozycję zlecenia sprzedaży, aby wpis w "
-"ewidencji karty pracy nie podlegał fakturowaniu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

@@ -200,6 +200,11 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Enregistrez des notes</b> pour les communications internes <i>(les "
+"personnes abonnées à cette tâche ne seront pas notifiées de la note que vous"
+" enregistrez à moins que vous ne les mentionniez explicitement)</i>. "
+"Utilisez <b>@</b> pour envoyer un message à un collègue ou <b>#</b> pour "
+"communiquer avec une équipe entière."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1258,6 +1263,9 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Donnez un <b>nom</b> à votre projet. <i>Cela peut être ce que vous voulez : "
+"le nom d'un client, d'un produit, d'une équipe, d'un site de construction, "
+"etc.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3336,6 +3344,11 @@ msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
 "Oups ! Un problème est survenu. Essayez de recharger la page et de vous "
 "connecter."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5446,6 +5459,10 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Utilisez le chatter pour <b>envoyer des emails</b> et communiquer "
+"efficacement avec vos clients. Ajoutez de nouvelles personnes à la liste des"
+" abonnés pour les tenir au courant des principaux changements de cette "
+"tâche."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5458,6 +5475,13 @@ msgid ""
 "\n"
 "            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
+"Utilisez ces mots-clés dans le titre pour définir de nouvelles tâches :\n"
+"\n"
+"        #tags Définir des étiquettes sur la tâche\n"
+"        @user Assigner la tâche à un utilisateur\n"
+"        ! Donner à la tâche une priorité élevée\n"
+"\n"
+"        Assurez-vous d'utiliser le bon format et le bon ordre par ex. Améliorez l'écran de configuration #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

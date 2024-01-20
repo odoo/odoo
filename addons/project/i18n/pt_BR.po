@@ -200,6 +200,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Registre notas</b> para comunicação interna <i>(as pessoas que seguem "
+"esta tarefa não serão notificadas da nota que você está registrando, a menos"
+" que você as marque especificamente)</i>. Use @ <b>menções</b> para "
+"notificar um colega ou # <b>menções</b> para alcançar uma equipe inteira."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1255,6 +1259,9 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Escolha um <b>nome</b> para seu projeto. <i>Pode ser o que você quiser: o "
+"nome de um cliente, de um produto, de uma equipe, de um canteiro de obras, "
+"etc.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3323,6 +3330,11 @@ msgstr "Uma vez por mês"
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
 "Ops! Algo deu errado. Tente recarregar a página e fazer login novamente."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5429,6 +5441,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Use o chatter para <b>enviar e-mails</b> e se comunicar de forma eficaz com "
+"seus clientes. Adicione novas pessoas à lista de seguidores para que elas "
+"sejam informadas sobre as principais alterações da tarefa."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5441,6 +5456,13 @@ msgid ""
 "\n"
 "            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
+"Use essas palavras-chave no título para definir novas tarefas:\n"
+"\n"
+"#marcadores Definir marcadores na tarefa\n"
+"@usuário Atribuir a tarefa a um usuário\n"
+"! Definir alta prioridade para a tarefa\n"
+"\n"
+"Certifique-se de usar o formato e a ordem corretos, por exemplo: Melhorar a tela de configuração #recurso #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

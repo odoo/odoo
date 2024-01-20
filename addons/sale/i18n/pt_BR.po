@@ -3,9 +3,9 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1164,16 +1164,8 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
-"Permite que você compartilhe o documento com seus clientes em uma venda.\n"
-"Deixe em branco se não quiser compartilhar o documento com o cliente da venda.\n"
-"Cotação: o documento será enviado para e acessível por clientes a qualquer momento.\n"
-"ex.: esta opção pode ser útil para compartilhar arquivos de descrição de produto.\n"
-"Pedido confirmado: o documento será enviado para e acessível por clientes.\n"
-"ex.: esta opção pode ser útil para compartilhar manuais do usuário ou conteúdo digital comprado por e-commerce.\n"
-"Cotação interna: o documento será incluso no PDF da cotação, entre as páginas de cabeçalho e da tabela de cotação."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1585,7 +1577,7 @@ msgstr "Calcular custos e enviar pelo FedEx"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Computar custos de envio e enviar pelo Sendcloud"
+msgstr "Calcular custos de envio e enviar pelo Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1998,14 +1990,8 @@ msgstr "Quantidade entregue"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"A data de entrega prometida ao cliente, calculada a partir do menor prazo "
-"das linhas do pedido, no caso de serviços. No caso de entregas (produtos), a"
-" política de envio do pedido será levada em consideração para usar o menor "
-"ou maior prazo das linhas do pedido."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2204,6 +2190,13 @@ msgstr "Entrada (porcentagem)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "Entrada <br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -3427,11 +3420,6 @@ msgid "Other Info"
 msgstr "Outras informações"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "Cotação por PDF"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3812,6 +3800,11 @@ msgid "Quotation #"
 msgstr "Cotação nº"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Cotação/Pedido"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Contagem de cotações"
@@ -3895,11 +3888,6 @@ msgstr "Cotação e vendas"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "Cotações a revisar"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Avaliações"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4265,17 +4253,6 @@ msgid "Sales Warnings"
 msgstr "Avisos de vendas"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"Item do pedido de venda ao qual o tempo gasto será adicionado para que seja "
-"faturado ao cliente. Remova o item do pedido de venda para que a entrada na "
-"planilha de horas seja não faturável."
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
 msgstr "Preço de venda"
@@ -4436,7 +4413,7 @@ msgstr "Enviar exemplo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr "Conector do Sendcloud"
+msgstr "Conector Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
