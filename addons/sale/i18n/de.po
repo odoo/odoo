@@ -3,8 +3,8 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1171,16 +1171,8 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
-"Ermöglicht es Ihnen, das Dokument mit Ihren Kunden im Rahmen eines Verkaufs zu teilen.\n"
-"Lassen Sie das Feld leer, wenn Sie dieses Dokument nicht mit dem Kunden teilen möchten.\n"
-"Angebot: Das Dokument wird an Kunden gesendet und ist für diese jederzeit zugänglich.\n"
-"Diese Option kann z. B. nützlich sein, um Produktbeschreibungsdateien weiterzugeben.\n"
-"Bestätigter Auftrag: Das Dokument wird an den Kunden gesendet und ist für ihn zugänglich.\n"
-"Diese Option kann z. B. nützlich sein, um Benutzerhandbücher oder digitale Inhalte, die im E-Commerce gekauft wurden, weiterzugeben. \n"
-"Innerhalb des Angebots: Das Dokument wird in die PDF-Datei des Angebots zwischen den Kopfseiten und der Angebotstabelle eingefügt."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2012,15 +2004,8 @@ msgstr "Liefermenge"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
+"lead time of the order lines."
 msgstr ""
-"Liefertermin, den Sie dem Kunden zusagen können, errechnet sich bei "
-"Dienstleistungsprodukten aus der minimalen Vorlaufzeit der "
-"Auftragspositionen. Bei Versand wird die Versandbedingung des Auftrags "
-"berücksichtigt, um entweder die minimale oder maximale Vorlaufzeit der "
-"Auftragspositionen zu verwenden."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2218,6 +2203,13 @@ msgstr "Anzahlung (Prozent)"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "Anzahlung <br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment invoice"
+msgstr "Abschlagsrechnung"
 
 #. module: sale
 #. odoo-python
@@ -3445,11 +3437,6 @@ msgid "Other Info"
 msgstr "Weitere Informationen"
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "PDF-Angebot"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3827,6 +3814,11 @@ msgid "Quotation #"
 msgstr "Angebot #"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "Angebot/Auftrag"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "Anzahl Angebote"
@@ -3912,11 +3904,6 @@ msgstr "Angebote und Verkäufe"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "Zu prüfende Angebote"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "Bewertungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -4285,18 +4272,6 @@ msgstr "Verkaufsteams"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "Verkaufswarnungen"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr ""
-"Verkaufsauftragsposition, zu der die aufgewendete Zeit hinzugefügt wird, "
-"damit sie Ihrem Kunden in Rechnung gestellt werden kann. Entfernen Sie die "
-"Verkaufsauftragsposition, damit der Zeiterfassungsbogen nicht abrechenbar "
-"ist."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price

@@ -218,6 +218,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"Sisemise suhtluse <b>Logi märkused</b>  <i>(selle ülesande jälgijad ei saa "
+"märkustest teavitusi, kui sa neid vestluses eraldi ei märgi)</i>. Kasuta @ "
+"<b>märkimist</b> kolleegi teavitamiseks või # <b>märkimist</b>terve "
+"meeskonnani jõudmiseks."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1272,6 +1276,9 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Valige oma projekti jaoks <b>nimi</b>. <i>See võib olla mis tahes, mida "
+"soovite: kliendi nimi, toote nimi, meeskonna nimi, ehitusplatsi nimi "
+"jne.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1447,7 +1454,7 @@ msgstr "Kontakt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "Muuda ülesanne"
 
 #. module: project
 #. odoo-python
@@ -1455,7 +1462,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "Muuda ülesandeks/alamülesandeks"
 
 #. module: project
 #. odoo-javascript
@@ -1716,6 +1723,8 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"Kuupäev, millal teie ülesande olekut viimati muudeti.\n"
+"Selle teabe põhjal saate tuvastada ülesanded, mis seisavad ja saada statistikat selle kohta, kaua tavaliselt kulub ülesannete ühest etapist/olekust teise liigutamiseks."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1844,6 +1853,9 @@ msgid ""
 "preserve the sub-tasks, make sure to unlink them from their parent task "
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
+"Ülesande kustutamine eemaldab ka seotud alamülesanded. Kui soovid "
+"alamülesandeid säilitada, jälgi, et need oleks ülemülesandest enne lahti "
+"ühendatud. Kas oled kindel, et soovid jätkata?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1947,7 +1959,7 @@ msgstr "Kuva juurdepääsurežiim"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_in_project
 msgid "Display In Project"
-msgstr ""
+msgstr "Kuva projektis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
@@ -2017,6 +2029,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"Igal kasutajal peaks olema vähemalt üks isiklik etapp. Loo uus etapp, kuhu "
+"ülesanded üle kanda pärast valitute kustutamist."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -2138,7 +2152,7 @@ msgstr "Lemmik"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "Lemmikud projektid"
 
 #. module: project
 #. odoo-javascript
@@ -2156,12 +2170,12 @@ msgstr "Kanbanis volditud"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Jälgi ja kommenteeri oma projektide ülesandeid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "Jälgi oma projektide arengut"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2234,7 +2248,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
-msgstr ""
+msgstr "Hangi klientidelt tagasisidet ja hinda oma töötajate tulemuslikkust"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2249,6 +2263,9 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"Anna töötajatele juurdepääs oma projektile või ülesannetele lisades nad "
+"jälgijatena. Töötajad saavad automaatselt juurdepääsu neile määratud "
+"ülesannetele."
 
 #. module: project
 #. odoo-python
@@ -2259,6 +2276,9 @@ msgid ""
 "followers. Customers automatically get access to their tasks in their "
 "portal."
 msgstr ""
+"Anna portaali kasutajatele ligipääs oma projektile või ülesannetele lisades "
+"nad jälgijaks. Kliendid saavad automaatselt juurdepääsu oma ülesannetele "
+"nende portaalis."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2276,6 +2296,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"Halda ideede kogumist oma uue projekti ülesannetes ja pea arutelu ülesannete"
+" märkmetes."
 
 #. module: project
 #. odoo-javascript
@@ -2317,7 +2339,7 @@ msgstr "Ajalugu"
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "Kodu ümberkujundamine"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2532,7 +2554,7 @@ msgstr "Vigane väärtus: %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Invite Collaborators"
-msgstr ""
+msgstr "Lisa koostööpartnereid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2542,12 +2564,12 @@ msgstr "Kutsu inimesi"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "Kutsutud sisemised kasutajad (privaatne)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "Kutsutud portaali kasutajad ja kõik sisemised kasutajad (avalik)"
 
 #. module: project
 #. odoo-javascript
@@ -2585,7 +2607,7 @@ msgstr "Kas vahe-eesmärgid on ületatud"
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "Lüliti režiim"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
@@ -3321,6 +3343,11 @@ msgstr ""
 "logida."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -3350,7 +3377,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "Sea tellimustele prioriteedid, kasutades"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3417,6 +3444,7 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
+"Kliendi ettevõte ei saa olla erinev talle määratud projekti ettevõttest."
 
 #. module: project
 #. odoo-python
@@ -3424,12 +3452,15 @@ msgstr ""
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
+"Kliendi ettevõte ei saa olla erinev talle määratud ülesande ettevõttest."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"Projekti koostööpartneriks kutsutud inimesed saavad portaali kasutamise "
+"õigused."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3566,7 +3597,7 @@ msgstr "Eelmine"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "Määra prioriteedid oma ülesannetele, märkides olulistele "
 
 #. module: project
 #. odoo-python
@@ -3613,6 +3644,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project for "
 "the task to gain access to this feature."
 msgstr ""
+"Privaatseid ülesandeid ei saa muutuda alamülesanneteks. Palun määrake "
+"ülesandele projekt, et saada juurdepääs sellele funktsioonile."
 
 #. module: project
 #. odoo-javascript
@@ -3748,7 +3781,7 @@ msgstr "Projekti sildid"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "Projekti ülesande etapi kustutamise viisard"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -3899,6 +3932,9 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"Saa kiire ülevaade kinnitust vajavate ülesannete staatustest või "
+"muudatusettepanekutest ning leia liivakella ikooniga ülesanded, mis on ootel"
+" mingi sõltuvuse tõttu. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4360,7 +4396,7 @@ msgstr "Jaga projekti"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Read-only"
-msgstr ""
+msgstr "Jaga ainult lugemiseks"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4478,7 +4514,7 @@ msgstr "Etapid, mida kustutada"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "Tähtsad ülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -4550,7 +4586,7 @@ msgstr "Alamülesanded"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
 msgid "Sub-tasks Allocated Time"
-msgstr ""
+msgstr "Alamülesannetele eraldatud aeg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4751,7 +4787,7 @@ msgstr "Ülesanne:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "Ülesanne: Hindamispäring"
 
 #. module: project
 #. odoo-python
@@ -4895,6 +4931,7 @@ msgstr ""
 msgid ""
 "The project and the associated partner must be linked to the same company."
 msgstr ""
+"Projekt ja sellega seotud klient peavad olema seotud sama ettevõttega."
 
 #. module: project
 #. odoo-python
@@ -4917,6 +4954,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
+"Projekti ettevõtet ei saa muuta, kui selle analüütilisel kontol on "
+"analüütilisi ridu või kui selle külge on seotud rohkem kui üks projekt."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4937,6 +4976,7 @@ msgstr "Otsing ei toeta operaatorit%s ega väärtust %s."
 msgid ""
 "The task and the associated partner must be linked to the same company."
 msgstr ""
+"Ülesanne ja sellega seotud klient peavad olema seotud sama ettevõttega."
 
 #. module: project
 #. odoo-python
@@ -4995,6 +5035,10 @@ msgid ""
 "mode on your website. This includes leads/opportunities, quotations/sales "
 "orders, purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Nad saavad redigeerida jagatud projektiülesandeid sinu veebilehel ja vaadata"
+" konkreetseid dokumente ainult lugemisrežiimis. See hõlmab "
+"müügivihjeid/müügivõimalusi, hinnapakkumisi/müügitellimusi, ostutellimusi, "
+"müügi- ja ostuarveid, tööaja arvestuslehti ja pileteid."
 
 #. module: project
 #. odoo-python
@@ -5020,6 +5064,8 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"Siin on eelvaade, kuidas näeb projekt välja siis, kui seda jagatakse "
+"klientidega ja neil on redigeerimisõigus."
 
 #. module: project
 #. odoo-python
@@ -5032,6 +5078,10 @@ msgid ""
 "update the company information for these records to align them under the "
 "same company."
 msgstr ""
+"See projekt on seotud %s-ga, samas kui valitud etapp kuulub %s-le. Sul on "
+"kaks võimalust: kas eemaldada ettevõtte tähistus projektist/etapist või "
+"uuendada projekti/etapi ettevõtte teavet, et määrata need sama ettevõtte "
+"alla."
 
 #. module: project
 #. odoo-python
@@ -5043,6 +5093,9 @@ msgid ""
 "project's company to align with the stage's company or remove the company "
 "designation from the stage"
 msgstr ""
+"See projekt ei ole seotud ühegi ettevõttega, samas kui etapp on seotud "
+"%s-ga. On kaks võimalust: kas muuta projekti ettevõtet vastavaks etapi "
+"ettevõttega või eemaldada etapilt ettevõtte nimetus."
 
 #. module: project
 #. odoo-javascript
@@ -5140,6 +5193,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"Et muuta ülesanne alamülesandeks, määra ülemülesanne. Alternatiivselt võid "
+"jätta ülemülesande välja tühjaks, et muuta alamülesande üksikuks ülesandeks."
+" "
 
 #. module: project
 #. odoo-python
@@ -5190,6 +5246,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"Jälgi projekti kulusid, tulusid ja marginaali, määrates asjakohastele "
+"dokumentidele projektiga seotud analüütilise konto. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5197,6 +5255,8 @@ msgid ""
 "Track the profitability of your project with analytic accounting. Select the"
 " analytic plan for new projects:"
 msgstr ""
+"Jälgi oma projekti kasumlikkust analüütilise raamatupidamisega. Vali uute "
+"projektide jaoks analüütiline plaan:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5379,6 +5439,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Kasuta vestlust <b>e-kirjade saatmiseks</b> ja oma klientidega tõhusaks "
+"suhtlemiseks. Lisa jälgijate nimekirja uusi inimesi, et teavitada neid "
+"ülesandega seotud peamistest muudatustest."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5391,6 +5454,13 @@ msgid ""
 "\n"
 "            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
+"Kasuta pealkirjas uute ülesannete määramiseks neid märksõnu:\n"
+"\n"
+"            #sildid Määra ülesandele sildid\n"
+"            @kasutaja Määra ülesanne kasutajale\n"
+"            ! Märgi ülesanne tähtsaks\n"
+"\n"
+"            Veendu, et kasutad õiget formaati ja järjekorda, nt. Paranda seadistuste vaadet #funktsioon #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5488,6 +5558,8 @@ msgid ""
 "When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.\n"
 "                    Collaborators will be able to view and modify part of the tasks' information."
 msgstr ""
+"Jagades projekti redigeerimisrežiimis, annad inimestele juurdepääsu oma ülesannete kanban- ja loendivaadetele.\n"
+"Koostööpartnerid saavad vaadata ja muuta osa ülesannete teabest."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5495,6 +5567,8 @@ msgid ""
 "When sharing a project in read-only mode, you are giving people access to the tasks in their portal.\n"
 "                    These people will be able to view the tasks, but not edit them."
 msgstr ""
+"Jagades projekti lugemisvaates, annad inimestele ligipääsu ülesannetele nende portaalis\n"
+"Need inimesed saavad ülesandeid vaadata, kuid mitte muuta. "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5541,6 +5615,8 @@ msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
 msgstr ""
+"Kas soovid kõik nendes etappides sisalduvad projektid samuti arhiivist välja"
+" võtta?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
@@ -5586,6 +5662,10 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"Selle etapi ettevõtet ei saa vahetada ettevõttega %(company_name)s, sest see"
+" on sisaldab projekte, mis on seotud ettevõttega %(project_company_name)s. "
+"Vaata, et antud etapp sisaldaks ainult projekte, mis on seotud ettevõttega "
+"%(company_name)s."
 
 #. module: project
 #. odoo-python
@@ -5600,6 +5680,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
+"Projekte sisaldavaid etappe ei saa kustutada. Projektid tuleb enne "
+"arhiveerida või kustutada."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5607,6 +5689,8 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
+"Projekte sisaldavaid etappe ei saa kustutada. Kõik nende projektid tuleb "
+"enne kustutada."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5658,6 +5742,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"Sul on täielik kontroll ja saad portaali juurdepääsu igal ajal tühistada. "
+"Kas oled valmis jätkama?"
 
 #. module: project
 #. odoo-python
@@ -5678,7 +5764,7 @@ msgstr "Sa pead olema "
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "Sinu juhid otsustavad, milline tagasiside on aktsepteeritud."
 
 #. module: project
 #. odoo-javascript
@@ -5801,6 +5887,9 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or canceled, all of its dependencies will be unblocked."
 msgstr ""
+"ikoonil, et näha ülesandeid, mis ootavad teiste ülesannete järele. Kui "
+"ülesanne on märgitud lõpetatuks või tühistatuks, siis kõik sellest sõltuvad "
+"ülesanded avanevad."
 
 #. module: project
 #. odoo-javascript
@@ -5824,7 +5913,7 @@ msgstr "menüü vaade Minu ülesanded"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "perioodiliselt"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -5920,7 +6009,7 @@ msgstr "täppe, et anda märku oma idee hetkeseisust."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "jõudes antud etappi"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

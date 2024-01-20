@@ -199,6 +199,10 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>หมายเหตุของบันทึก</b> สำหรับการสื่อสารภายใน "
+"<i>(ผู้ที่ติดตามงานนี้จะไม่ได้รับการแจ้งเตือนเกี่ยวกับบันทึกที่คุณกำลังบันทึก"
+" ยกเว้นในกรณีที่คุณแท็กพวกเขาโดยเฉพาะ)</i> ใช้ @ <b>กล่าวถึง</b> "
+"เพื่อแท็กเพื่อนร่วมงานหรือ # <b>กล่าวถึง</b> เพื่อติดต่อทีมทั้งหมด"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1253,6 +1257,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"เลือก <b>ชื่อ</b> สำหรับโปรเจ็กต์ของคุณ <i>สามารถเป็นอะไรก็ได้: "
+"ชื่อของลูกค้า, ชื่อสินค้า, ชื่อทีม, ชื่อสถานที่ก่อสร้าง เป็นต้น</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3295,6 +3301,11 @@ msgstr "เดือนละครั้ง"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "อ๊ะ! มีบางอย่างผิดพลาด ลองโหลดหน้านี้อีกครั้งและเข้าสู่ระบบ"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5369,6 +5380,8 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"ใช้ช่องแชทเพื่อ<b>ส่งอีเมล</b>และสื่อสารอย่างมีประสิทธิภาพกับลูกค้าของคุณ "
+"ให้เพิ่มคนใหม่ในรายชื่อผู้ติดตามเพื่อให้พวกเขาทราบถึงการเปลี่ยนแปลงหลักเกี่ยวกับงานนี้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5381,6 +5394,13 @@ msgid ""
 "\n"
 "            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
+"ใช้คีย์เวิร์ดเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
+"\n"
+"            #แท็ก ตั้งค่าแท็กในงาน\n"
+"            @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
+"            ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
+"\n"
+"            ตรวจสอบว่าคุณใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับปรุงหน้าจอการกำหนดค่า #feature #v16 @Mitchell!"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

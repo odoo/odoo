@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2024
 # Lucia Pacheco, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lucia Pacheco, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,6 +203,8 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>Registre notas</b> para comunicaciones internas <i>(las personas que sigan esta tarea no serán notificadas \n"
+"    de la nota que está registrando a menos que las etiquete específicamente)</i>. Utilice @ <b>menciones</b> para hacer ping a un colega o # <b>menciones</b> para llegar a todo un equipo."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1260,6 +1262,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"Elija un <b>nombre</b> para su proyecto, <i>puede ser el que usted quiera: "
+"el nombre de un cliente, de un producto, de un equipo, de una obra, etc.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3335,6 +3339,11 @@ msgstr "Mensualmente"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "¡Uy! Ocurrió un error. Intente actualizar la página e inicie sesión."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5447,6 +5456,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Utilice el chatter para <b>enviar correos electrónicos</b> y comunicarse de "
+"manera eficiente con sus clientes. Agregue nuevas personas a la lista de "
+"seguidores para que estén al tanto de los cambios principales de esta tarea."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5459,6 +5471,13 @@ msgid ""
 "\n"
 "            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
+"Utilice estas palabras claves en el título para establecer nuevas tareas:\n"
+"\n"
+"            #etiquetas asigna etiquetas a la tarea\n"
+"            @usuario asigna la tarea a un usuario\n"
+"            ! asigna mayor prioridad a la tarea\n"
+"\n"
+"            Asegúrse de usar el formato y el orden correctos. Por ejemplo: Mejorar la pantalla de configuración #función #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

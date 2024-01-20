@@ -5328,6 +5328,8 @@ msgid ""
 "\n"
 "Generates a new website in Odoo, with the goal of recreating an external website as close as possible.\n"
 msgstr ""
+"\n"
+"在 Odoo 中生成一个新网站，目的是尽可能接近地重新创建一个外部网站。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -5562,6 +5564,29 @@ msgid ""
 "print the amount in words (special Chinese characters for numbers)\n"
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 msgstr ""
+"\n"
+"Includes the following data for the Chinese localization\n"
+"========================================================\n"
+"\n"
+"Account Type/科目类型\n"
+"\n"
+"State Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    增加大企业会计科目表\n"
+"\n"
+"We added the option to print a voucher which will also\n"
+"print the amount in words (special Chinese characters for numbers)\n"
+"correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -6620,6 +6645,13 @@ msgid ""
 "https://erhvervsstyrelsen.dk/sites/default/files/2023-01/Technical-description-SAFT-Financial-data-version-1-0-nov2022_U.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"用于导入丹麦 SAF-T 文件的模块，可用于导入会计历史记录。\n"
+"添加丹麦 SAF-T 的特殊性。\n"
+"\n"
+"官方技术规范\n"
+"https://erhvervsstyrelsen.dk/sites/default/files/2023-01/Technical-description-SAFT-Financial-data-version-1-0-nov2022_U.pdf \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_saft_import
@@ -6629,6 +6661,10 @@ msgid ""
 "Adds specificities for the Lithuanian SAF-T\n"
 "\n"
 msgstr ""
+"\n"
+"立陶宛 SAF-T 文件导入模块，用于导入会计历史记录。\n"
+"添加立陶宛 SAF-T 的特殊性。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft_import
@@ -6638,6 +6674,10 @@ msgid ""
 "Adds specificities for the Romanian SAF-T\n"
 "\n"
 msgstr ""
+"\n"
+"罗马尼亚 SAF-T 文件导入模块，用于导入会计历史记录。\n"
+"添加罗马尼亚 SAF-T 的特殊性\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_saft_import
@@ -6648,6 +6688,11 @@ msgid ""
 "SAF-T files are the standard accounting reports that businesses in some countries have to submit to the tax authorities.\n"
 "This module allows the import of accounts, journals, partners, taxes and moves from these files.\n"
 msgstr ""
+"\n"
+"导入 SAF-T 文件的模块，用于导入会计历史记录。\n"
+"\n"
+"SAF-T 文件是某些国家/地区的企业必须向税务机关提交的标准会计报告。\n"
+"该模块允许从这些文件中导入账目、日记账、合作伙伴、税收和移动。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -7319,6 +7364,8 @@ msgid ""
 "\n"
 "Patch module to fix the missing Administrative Centers in the Facturae EDI.\n"
 msgstr ""
+"\n"
+"补丁模块，用于修复 Facturae EDI 中缺失的行政中心。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal
@@ -8177,6 +8224,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Japan is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"日本的 UBL PINT 电子发票格式基于 Peppol International (PINT) Billing 模型。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9795,6 +9844,8 @@ msgid ""
 "\n"
 "This module contains all that is needed for the Bookkeeping Act\n"
 msgstr ""
+"\n"
+"该模块包含簿记法所需的所有内容\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -9825,6 +9876,13 @@ msgid ""
 "\n"
 "for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
 msgstr ""
+"\n"
+"该模块创建向国家行政管理总局发送发票信息所需的 Facturae 文件。\n"
+"允许导出和签署 Facturae 文件。\n"
+"目前支持的Facturae版本为3.2.2。\n"
+"\n"
+"更多信息，请参阅 https://www.facturae.gob.es/face/Paginas/FACE.aspx\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bacs
@@ -11310,6 +11368,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ and\n"
 "https://razorpay.com/docs/payments/payments/test-upi-details/ for the list of test payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## 实施细节\n"
+"\n"
+"### 支持功能\n"
+"\n"
+"- 直接支付流程\n"
+"- 代币化\n"
+"- 手动捕获\n"
+"- 部分退款\n"
+"- 多种支付方式，如借记卡/信用卡、网银、UPI 等。(https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"### API 和网关\n"
+"\n"
+"我们选择整合\n"
+"[Razorpay Recurring Payments](https://razorpay.com/docs/api/payments/recurring-payments/)，处理起来较\n"
+"[Razorpay Hosted Checkout]更加复杂，(https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted)\n"
+"因为它可以作为直接支付流使用，支持代币化。其他网关已被排除；有关其他网关的详细信息，请参阅原始任务的开发说明。\n"
+"\n"
+"本模块实现的 API 版本为 v1。\n"
+"\n"
+"## 模块历史\n"
+"\n"
+"- 模块的第一个版本在任务中指定\n"
+"  [2800823](https://www.odoo.com/web#id=2800823&model=project.task) 并与 `saas-15.5`中的PR\n"
+"  odoo/odoo#92848合并。\n"
+"- 在`17.0`中，API 已更改为循环支付 API，以支持 PR odoo/odoo#143525 中的标记化。\n"
+"\n"
+"## 测试说明\n"
+"\n"
+"- 合作伙伴的电话号码必须是有效的印度电话号码。例如 +911234567890\n"
+"- 合作伙伴的国家必须是印度，支付货币必须是印度卢比（INR），以支持印度的支付方式。\n"
+"\n"
+"请参阅 https://razorpay.com/docs/payments/payments/test-card-upi-details/ and\n"
+"https://razorpay.com/docs/payments/payments/test-upi-details/ 了解测试和付款详情。\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -11573,6 +11667,10 @@ msgid ""
 "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- 联系人： 用于组织特定公司员工（如首席执行官、首席财务官......）的详细联系信息。\n"
+"- 发票地址： 所有发票的首选地址。当您为属于该公司的订单开具发票时，默认选择该地址。\n"
+"- 送货地址： 所有送货的首选地址。当您交付属于本公司的订单时，默认选择该地址。\n"
+"- 其他： 公司的其他地址（如子公司......）。"
 
 #. module: base
 #. odoo-python
@@ -12789,7 +12887,7 @@ msgstr "访问未经授权或无效的公司。"
 #: model:ir.module.module,shortdesc:base.module_account_audit_trail
 #: model:ir.module.module,summary:base.module_account_audit_trail
 msgid "Account Audit Trail"
-msgstr ""
+msgstr "账户审计轨迹"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -13804,7 +13902,7 @@ msgstr "允许在课程上链接一个论坛"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
 msgid "Allows to register withholdings during the payment of an invoice."
-msgstr ""
+msgstr "允许在支付发票时登记预扣款项。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sms
@@ -14221,7 +14319,7 @@ msgstr "阿根廷 - 会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_withholding
 msgid "Argentina - Payment Withholdings"
-msgstr ""
+msgstr "Argentina - Payment Withholdings"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_pos
@@ -15164,7 +15262,7 @@ msgstr "博内尔岛，圣尤斯特歇斯和萨巴"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_dk_bookkeeping
 msgid "Bookkeeping Act"
-msgstr ""
+msgstr "簿记法"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__boolean
@@ -15234,7 +15332,7 @@ msgstr "巴西 - 销售"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_website_sale
 msgid "Brazil - Website Sale"
-msgstr ""
+msgstr "Brazil - Website Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
@@ -15244,12 +15342,12 @@ msgstr "巴西 - 会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi
 msgid "Brazilian Accounting EDI"
-msgstr ""
+msgstr "Brazilian Accounting EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_sale
 msgid "Brazilian Accounting EDI For Sale"
-msgstr ""
+msgstr "Brazilian Accounting EDI For Sale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -15259,7 +15357,7 @@ msgstr "使用租赁应用程序桥接符号功能"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_website_sale
 msgid "Bridge Website Sale for Brazil"
-msgstr ""
+msgstr "Bridge Website Sale for Brazil"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_crm
@@ -17958,7 +18056,7 @@ msgstr "Denmark - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_bookkeeping
 msgid "Denmark - Bookkeeping Act"
-msgstr ""
+msgstr "Denmark - Bookkeeping Act"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_oioubl
@@ -17973,7 +18071,7 @@ msgstr "丹麦 - 电子发票"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_saft_import
 msgid "Denmark - SAF-T Import"
-msgstr ""
+msgstr "Denmark - SAF-T Import"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -18255,7 +18353,7 @@ msgstr "显示相关单据上的选项以打印此报表"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_pricer
 msgid "Display and change your products information on electronic Pricer tags"
-msgstr ""
+msgstr "在电子价格标签上显示和更改产品信息"
 
 #. module: base
 #. odoo-python
@@ -21847,7 +21945,7 @@ msgstr "Import Accounting Data from FEC files"
 #: model:ir.module.module,summary:base.module_l10n_lt_saft_import
 #: model:ir.module.module,summary:base.module_l10n_ro_saft_import
 msgid "Import Accounting Data from SAF-T files"
-msgstr ""
+msgstr "从 SAF-T 文件导入会计数据"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_se_sie_import
@@ -21901,7 +21999,7 @@ msgstr "导入翻译"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_generator
 msgid "Import a pre-existing website"
-msgstr ""
+msgstr "导入预先存在的网站"
 
 #. module: base
 #: model:ir.module.module,description:base.module_currency_rate_live
@@ -21985,7 +22083,7 @@ msgstr "印度"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_documents
 msgid "India - Documents"
-msgstr ""
+msgstr "India - Documents"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll_account
@@ -22277,7 +22375,7 @@ msgstr "将您的 POS 系统与 Stripe 支付终端集成"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_viva_wallet
 msgid "Integrate your POS with a Viva Wallet payment terminal"
-msgstr ""
+msgstr "将您的 POS 与 Viva Wallet 支付终端集成"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
@@ -22436,6 +22534,9 @@ msgid ""
 "\n"
 " %(e)s"
 msgstr ""
+"无效上下文：%(expr)r 不是有效的 Python 表达式\n"
+"\n"
+" %(e)s"
 
 #. module: base
 #. odoo-python
@@ -22793,7 +22894,7 @@ msgstr "日本 - 会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_jp_ubl_pint
 msgid "Japan - UBL PINT"
-msgstr ""
+msgstr "Japan - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.je
@@ -23535,7 +23636,7 @@ msgstr "立陶宛 - 工资与会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft_import
 msgid "Lithuania - SAF-T Import"
-msgstr ""
+msgstr "Lithuania - SAF-T Import"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
@@ -28477,7 +28578,7 @@ msgstr "POS PayTM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_pricer
 msgid "POS Pricer"
-msgstr ""
+msgstr "POS 价钱显示器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_adyen
@@ -28537,7 +28638,7 @@ msgstr "POS Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_viva_wallet
 msgid "POS Viva Wallet"
-msgstr ""
+msgstr "POS Viva Wallet"
 
 #. module: base
 #. odoo-python
@@ -30840,7 +30941,7 @@ msgstr "罗马尼亚 - 工资与会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_saft_import
 msgid "Romania - SAF-T Import"
-msgstr ""
+msgstr "Romania - SAF-T Import"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_saft
@@ -30936,7 +31037,7 @@ msgstr "S - 其他服务活动"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft_import
 msgid "SAF-T Import"
-msgstr ""
+msgstr "SAF-T 导入"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
@@ -32454,7 +32555,7 @@ msgstr "西班牙 - Facturae EDI"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_facturae_adm_centers
 msgid "Spain - Facturae EDI - Administrative Centers Patch"
-msgstr ""
+msgstr "Spain - Facturae EDI - Administrative Centers Patch"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_pos
@@ -34557,7 +34658,7 @@ msgid ""
 "This is the legacy integration with UPS that is no longer supported."
 "         Please install the new \"UPS Shipping\" module and uninstall this "
 "one as soon as possible. This integration will stop working in 2024."
-msgstr ""
+msgstr "这是与 UPS 的传统集成，已不再支持。 请安装新的 \"UPS 送货\" 模块，并尽快卸载此模块。该集成将于 2024 年停止工作。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -37323,7 +37424,7 @@ msgstr ""
 msgid ""
 "You cannot archive the language in which Odoo was setup as it is used by "
 "automated processes."
-msgstr ""
+msgstr "您不能将设置 Odoo 时使用的语言存档，因为自动程序会使用该语言。"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

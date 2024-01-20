@@ -201,6 +201,8 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>日志笔记</b> 用于内部通信 <i>（除非您特别标记，否则关注此任务的人员不会收到您正在记录的笔记的通知）</i>。使用@ <b>提及</b> "
+"来提醒同事或使用# <b>提及</b> 来联系整个团队。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1241,7 +1243,7 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
-msgstr ""
+msgstr "为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名称、团队名称、建筑工地名称等。</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3235,6 +3237,11 @@ msgstr "一个月一次"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "出错。请尝试重新加载页面并登录。"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5255,7 +5262,7 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your "
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
-msgstr ""
+msgstr "利用聊天工具<b>发送电子邮件</b> ，与客户进行高效沟通。将新人添加到关注者列表中，让他们了解有关这项任务的主要变化。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5268,6 +5275,13 @@ msgid ""
 "\n"
 "            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !"
 msgstr ""
+"在标题中使用这些关键字来设置新任务： \n"
+"\n"
+"#tags 为任务设置标签\n"
+"@user 将任务分配给某个用户 !\n"
+"! 将任务设置为高优先级\n"
+"\n"
+"确保使用正确的格式和顺序，例如改进配置屏幕 #feature #v16 @Mitchell ！"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
