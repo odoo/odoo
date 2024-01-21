@@ -30,6 +30,7 @@
 # Hamid Ahmadimoghaddam, 2023
 # saeed raesi <saeed.raesi2020@gmail.com>, 2023
 # rahim agh <rahim.aghareb@gmail.com>, 2023
+# Morteza Hosseini, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: rahim agh <rahim.aghareb@gmail.com>, 2023\n"
+"Last-Translator: Morteza Hosseini, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,6 +234,8 @@ msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
+"مقدار سند ثبت شده %s با رکورد گزارش مربوطه نامعتبر میباشد .\n"
+"برای سازگاری ، مقادیر سند باید همیشه دقیقاً یک یک رکورد سند داشته باشد که شامل حساب بانکی/نقدی باشد."
 
 #. module: account
 #. odoo-python
@@ -440,6 +443,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"عزیز\n"
+"<t t-if=\"object.partner_id.parent_id\">\n"
+"<t t-out=\"object.partner_id.name or ''\">براندون فریمن(<t t-out=\"object.partner_id.parent_id.name or ''\">داخلی لاجوردی</t>),\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"object.partner_id.name or ''\">براندون فریمن</t>,\n"
+"</t>\n"
+"<br/><br/>\n"
+"اینجا متعلق به شماست\n"
+"<t t-if=\"object.name\">\n"
+"یادداشت اعتباری<strong t-out=\"object.name or ''\">RINV/2021/05/0001</strong>\n"
+"<t t-else=\"\">\n"
+"<t t-if=\"object.invoice_origin\">\n"
+"(با ارجاع:<t t-out=\"object.invoice_origin or ''\">SUB003</t>),\n"
+"</t>\n"
+"مقدار در<strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"از<t t-out=\"object.company_id.name or ''\">کمپانی شما</t>\n"
+"<br/><br/>\n"
+"در صورت داشتن هرگونه سوال با ما تماس بگیرید.\n"
+"<t t-if=\"object.invoice_user_id.signature\">\n"
+"<br/>\n"
+"<t t-out=\"object.invoice_user_id.signature or ''\">--<br/>مدیر میچل</t>\n"
+"</t>\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice

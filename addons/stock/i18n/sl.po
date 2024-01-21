@@ -12,11 +12,11 @@
 # Boris Kodelja <boris@hbs.si>, 2022
 # matjaz k <matjaz@mentis.si>, 2022
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
-# Jasmina Macur <jasmina@hbs.si>, 2022
 # Tadej Lupšina <tadej@hbs.si>, 2022
 # Martin Trigaux, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Grega Vavtar <grega@hbs.si>, 2023
+# Jasmina Macur <jasmina@hbs.si>, 2024
 # Katja Deržič, 2024
 # 
 msgid ""
@@ -5190,7 +5190,7 @@ msgstr "Izvorni povratni premik"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr ""
+msgstr "Prvotna lokacija"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
@@ -6110,7 +6110,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, python-format
 msgid "Putaway Rules"
-msgstr ""
+msgstr "Pravila odlaganja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6120,7 +6120,7 @@ msgstr "Odlagališče:"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
 msgid "Putaways Rules"
-msgstr ""
+msgstr "Pravila odlaganja"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
@@ -6435,7 +6435,7 @@ msgstr "Prejeta količina"
 #: model:ir.actions.report,name:stock.stock_reception_report_action
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_reception_report
 msgid "Reception Report"
-msgstr ""
+msgstr "Poročilo o sprejemu"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking
@@ -6912,7 +6912,7 @@ msgstr "Zagon razporejevalnika"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
 msgid "SMS Confirmation"
-msgstr ""
+msgstr "Potrditev SMS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_sms_error
@@ -9129,7 +9129,7 @@ msgstr "Opozorila"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
-msgstr ""
+msgstr "Opozorila za zaloge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_wave
@@ -9401,6 +9401,8 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
+"Premikov izdelkov ne morete izbrisati, če je dokument že potrjen. "
+"Popravljate lahko samo opravljene količine."
 
 #. module: stock
 #. odoo-python
