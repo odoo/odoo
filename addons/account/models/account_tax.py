@@ -643,7 +643,7 @@ class AccountTax(models.Model):
 
         # Get product tags, account.account.tag objects that need to be injected in all
         # the tax_tag_ids of all the move lines created by the compute all for this product.
-        product_tag_ids = product.account_tag_ids.ids if product else []
+        product_tag_ids = product.sudo().account_tag_ids.ids if product else []
 
         taxes_vals = []
         i = 0

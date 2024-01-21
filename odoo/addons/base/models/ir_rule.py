@@ -15,6 +15,7 @@ class IrRule(models.Model):
     _description = 'Record Rule'
     _order = 'model_id DESC,id'
     _MODES = ['read', 'write', 'create', 'unlink']
+    _allow_sudo_commands = False
 
     name = fields.Char(index=True)
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
