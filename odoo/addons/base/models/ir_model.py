@@ -147,6 +147,7 @@ class IrModel(models.Model):
     _name = 'ir.model'
     _description = "Models"
     _order = 'model'
+    _allow_sudo_commands = False
 
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
@@ -460,6 +461,7 @@ class IrModelFields(models.Model):
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     complete_name = fields.Char(index=True)
@@ -1186,6 +1188,7 @@ class IrModelSelection(models.Model):
     _name = 'ir.model.fields.selection'
     _order = 'sequence, id'
     _description = "Fields Selection"
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one("ir.model.fields",
         required=True, ondelete="cascade", index=True,
@@ -1473,6 +1476,7 @@ class IrModelConstraint(models.Model):
     """
     _name = 'ir.model.constraint'
     _description = 'Model Constraint'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
@@ -1626,6 +1630,7 @@ class IrModelRelation(models.Model):
     """
     _name = 'ir.model.relation'
     _description = 'Relation Model'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
@@ -1688,6 +1693,7 @@ class IrModelAccess(models.Model):
     _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
@@ -1876,6 +1882,7 @@ class IrModelData(models.Model):
     _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='External Identifier', required=True,
                        help="External Key/Identifier that can be used for "

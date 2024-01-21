@@ -76,6 +76,7 @@ class ModuleCategory(models.Model):
     _name = "ir.module.category"
     _description = "Application"
     _order = 'name'
+    _allow_sudo_commands = False
 
     @api.depends('module_ids')
     def _compute_module_nr(self):
@@ -158,6 +159,7 @@ class Module(models.Model):
     _rec_name = "shortdesc"
     _description = "Module"
     _order = 'application desc,sequence,name'
+    _allow_sudo_commands = False
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -977,6 +979,7 @@ DEP_STATES = STATES + [('unknown', 'Unknown')]
 class ModuleDependency(models.Model):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
+    _allow_sudo_commands = False
 
     # the dependency name
     name = fields.Char(index=True)
@@ -1019,6 +1022,7 @@ class ModuleDependency(models.Model):
 class ModuleExclusion(models.Model):
     _name = "ir.module.module.exclusion"
     _description = "Module exclusion"
+    _allow_sudo_commands = False
 
     # the exclusion name
     name = fields.Char(index=True)

@@ -135,6 +135,7 @@ class Partner(models.Model):
     _inherit = ['format.address.mixin', 'image.mixin']
     _name = "res.partner"
     _order = "display_name ASC, id DESC"
+    _allow_sudo_commands = False
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
