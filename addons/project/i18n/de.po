@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Ralf Hilgenstock <rh@dialoge.info>, 2021
-# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -262,7 +262,7 @@ msgstr "31"
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
 msgstr ""
-"Verschieben Sie die Karte per <b>Drag-und-Drop</b> in eine andere Phase."
+"Verschieben Sie die Karte per <b>Drag-und-Drop</b> in eine andere Stufe."
 
 #. module: project
 #. openerp-web
@@ -404,10 +404,10 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Wir schätzen Ihr Feedback. Es hilft uns, uns kontinuierlich zu verbessern..\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wurde versandt, weil Ihre Aufgabe in die Phase <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> verschoben wurde</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wurde versandt, weil Ihre Aufgabe in die Stufe <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> verschoben wurde</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wird <b t-out=\"object.project_id.rating_status_period or ''\">Wöchentlich</b> versandt, solange sich die Aufgabe in der Phase <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> befindet.</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wird <b t-out=\"object.project_id.rating_status_period or ''\">Wöchentlich</b> versandt, solange sich die Aufgabe in der Stufe <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> befindet.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -494,7 +494,7 @@ msgstr "<p><em>Anzahl der Aufgaben: %(tasks_count)s</em></p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Stage:</small>"
-msgstr "<small class=\"text-right\">Phase:</small>"
+msgstr "<small class=\"text-right\">Stufe:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -695,14 +695,14 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
-"Eine persönliche Phase kann nicht mit einem Projekt verknüpft werden, da sie"
+"Eine persönliche Stufe kann nicht mit einem Projekt verknüpft werden, da sie"
 " nur für den entsprechenden Benutzer sichtbar ist."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr ""
-"Eine Aufgabe kann nur eine einzige persönliche Phase pro Benutzer haben."
+"Eine Aufgabe kann nur eine einzige persönliche Stufe pro Benutzer haben."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -799,7 +799,7 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Fügen Sie Spalten hinzu, um Ihre Aufgaben in verschiedenen <b>Phasen</b> zu "
+"Fügen Sie Spalten hinzu, um Ihre Aufgaben in verschiedenen <b>Stufen</b> zu "
 "organisieren <i>z. B. Neu - In Bearbeitung - Abgeschlossen</i>."
 
 #. module: project
@@ -949,7 +949,7 @@ msgstr "Archivieren"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr "Phasen archivieren"
+msgstr "Stufen archivieren"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -978,7 +978,7 @@ msgstr "Sind Sie sicher, dass Sie fortfahren möchten?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr "Sind Sie sicher, dass Sie diese Phasen löschen möchten?"
+msgstr "Sind Sie sicher, dass Sie diese Stufen löschen möchten?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1070,8 +1070,8 @@ msgid ""
 "At each stage, employees can block tasks or mark them as ready for the next step.\n"
 "                                    You can customize here the labels for each state."
 msgstr ""
-"In jeder Phase können die Mitarbeiter Aufgaben blockieren oder sie als bereit für den nächsten Schritt markieren.\n"
-"Sie können hier die Bezeichnungen für jede Phase anpassen."
+"In jeder Stufe können die Mitarbeiter Aufgaben blockieren oder sie als bereit für den nächsten Schritt markieren.\n"
+"Sie können hier die Bezeichnungen für jede Stufe anpassen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1101,7 +1101,7 @@ msgstr "Autor"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr "Erstellen Sie automatisch Aufgaben für regelmäßige Aktivitäten."
+msgstr "Erstellen Sie automatisch Aufgaben für regelmäßige Aktivitäten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1115,8 +1115,8 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Ändern Sie den Kanban-Status automatisch, wenn der Kunde auf Feedback für diese Phase antwortet.\n"
-"* Positives Feedback des Kunden aktualisiert den Kanban-Status auf „Bereit für die neue Phase“ (grüner Punkt).\n"
+"Ändern Sie den Kanban-Status automatisch, wenn der Kunde auf Feedback für diese Stufe antwortet.\n"
+"* Positives Feedback des Kunden aktualisiert den Kanban-Status auf „Bereit für die neue Stufe“ (grüner Punkt).\n"
 "* Neutrales oder negatives Feedback setzt den Kanban-Status auf „Blockiert“ (roter Punkt).\n"
 
 #. module: project
@@ -1363,7 +1363,7 @@ msgstr "Konfiguration"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr "Phasen konfigurieren"
+msgstr "Stufen konfigurieren"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1432,7 +1432,7 @@ msgstr "Ein Projekt erstellen"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr "Neue Phase in der Aufgaben-Pipeline hinzufügen"
+msgstr "Neue Stufe in der Aufgaben-Pipeline hinzufügen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1698,7 +1698,7 @@ msgid ""
 msgstr ""
 "Definieren Sie die Projektphasen von der Erstellung einer Aufgabe\n"
 "                bis zum Abschluss.\n"
-"                Mithilfe der Phasen können Sie den Fortschritt Ihres Projekts\n"
+"                Mithilfe der Stufen können Sie den Fortschritt Ihres Projekts\n"
 "                im Detail verfolgen."
 
 #. module: project
@@ -1759,7 +1759,7 @@ msgstr "Lösche Projekt"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr "Phase löschen"
+msgstr "Stufe löschen"
 
 #. module: project
 #. openerp-web
@@ -1802,7 +1802,7 @@ msgstr "Design"
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
 msgstr ""
-"Bestimmen Sie die Reihenfolge, in der Aufgaben bearbeitet werden sollen."
+"Bestimmen Sie die Reihenfolge, in der Aufgaben bearbeitet werden sollen"
 
 #. module: project
 #. openerp-web
@@ -1876,7 +1876,7 @@ msgstr "Projekt anzeigen"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
-"Übersicht des Benutzers."
+"Übersicht des Benutzers"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1930,7 +1930,7 @@ msgstr "Bearbeiten"
 #: code:addons/project/static/src/js/project_kanban.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr "Persönliche Phase bearbeiten"
+msgstr "Persönliche Stufe bearbeiten"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1944,7 +1944,7 @@ msgid ""
 " in a distinct color."
 msgstr ""
 "Aufgabenbeschreibung kollaborativ in Echtzeit bearbeiten. Jede:r Autor:in "
-"wird in eigener Farbe dargestellt. "
+"wird in eigener Farbe dargestellt."
 
 #. module: project
 #. openerp-web
@@ -2167,7 +2167,7 @@ msgstr "Dinge zu erledigen (GTD)"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr "Anzeige der Reihenfolge bei Ausgabe der Liste von Projekten"
+msgstr "Anzeige der Reihenfolge bei Ausgabe der Liste von Projekten."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__sequence
@@ -2255,10 +2255,10 @@ msgid ""
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
 "Wie erhalten Sie Kunden-Feedback?\n"
-"-Bewertung bei Wechsel zur nächsten Phase: Eine E-Mail wird gesendet, wenn eine Aufgabe in eine andere Phase gezogen wird.\n"
+"-Bewertung bei Wechsel zur nächsten Stufe: Eine E-Mail wird gesendet, wenn eine Aufgabe in eine andere Stufe gezogen wird.\n"
 "- Regelmäßige Bewertung: Es wird regelmäßig eine E-Mail versendet.\n"
 "\n"
-"Vergessen Sie nicht, die E-Mail-Vorlagen für die Phasen einzurichten, für die Sie Kundenfeedback erhalten möchten."
+"Vergessen Sie nicht, die E-Mail-Vorlagen für die Stufen einzurichten, für die Sie Kundenfeedback erhalten möchten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -2348,7 +2348,7 @@ msgid ""
 "this step."
 msgstr ""
 "Wenn diese Option festgelegt wurde und für das Projekt die "
-"Bewertungseinstellung „Bewertung beim Phasenwechsel“ aktiviert ist, wird "
+"Bewertungseinstellung „Bewertung beim Stufenwechsel“ aktiviert ist, wird "
 "eine E-Mail an den Kunden gesendet, wenn die Aufgabe diesen Schritt "
 "erreicht."
 
@@ -2359,7 +2359,7 @@ msgid ""
 "step."
 msgstr ""
 "Bei dieser Einstellung wird der Kunde benachrichtigt, wenn das Projekt diese"
-" Phase erreicht."
+" Stufe erreicht."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2368,7 +2368,7 @@ msgid ""
 " this step."
 msgstr ""
 "Bei dieser Einstellung wird der Kunde per E-Mail benachrichtigt, sobald die "
-"Aufgabe oder das Problem diese Phase erreicht."
+"Aufgabe oder das Problem diese Stufe erreicht."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2494,7 +2494,7 @@ msgstr "Leute einladen"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr "Laden Sie Angestellte ein."
+msgstr "Eingeladene Mitarbeiter"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -2570,7 +2570,7 @@ msgstr "Juni"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Erläuterung zu gesperrtem Kanban "
+msgstr "Erläuterung zu gesperrtem Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
@@ -2592,7 +2592,7 @@ msgstr "Kanban Statuslabel"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Erläuterung zu gültigem Kanban "
+msgstr "Erläuterung zu gültigem Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2645,7 +2645,7 @@ msgstr "Letzter Monat"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "Letzte Phasenaktualisierung"
+msgstr "Letzte Stufenaktualisierung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_id
@@ -2834,7 +2834,7 @@ msgid ""
 msgstr ""
 "Verwalten Sie den Lebenszyklus Ihres Projekts in der Kanban-Ansicht. Fügen "
 "Sie neue Projekte hinzu, weisen Sie sie zu und definieren Sie mit %s und %s,"
-" ob das Projekt für die nächste Phase bereit ist. %s"
+" ob das Projekt für die nächste Stufe bereit ist. %s"
 
 #. module: project
 #. openerp-web
@@ -3144,7 +3144,7 @@ msgstr "Keine Projekte gefunden. Erstellen Sie eins!"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "Keine Phasen gefunden. Erstellen Sie eine!"
+msgstr "Keine Stufen gefunden. Erstellen Sie eine!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3258,7 +3258,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_update__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl der Nachrichten mit einem Zustellungsfehler"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_unread_counter
@@ -3446,12 +3446,12 @@ msgstr "Regelmäßige Bewertung"
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr "Persönliche Phase"
+msgstr "Persönliche Stufe"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr "Status der persönlichen Phase"
+msgstr "Status der persönlichen Stufe"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -3476,7 +3476,7 @@ msgid ""
 "more accurately"
 msgstr ""
 "Plane die Besetzung über Projekte und Aufgaben hinweg, und schätze Deadlines"
-" dadurch genauer ab."
+" dadurch genauer ab"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -3536,7 +3536,7 @@ msgid ""
 msgstr ""
 "Priorisieren Sie Aufgaben mit Hilfe des %s- Symbols. %sVerwenden Sie die "
 "%s-Schaltfläche, um Ihren Kollegen mitzuteilen, dass eine Aufgabe für die "
-"nächste Phase bereit ist. %s Mit %s können Sie auf ein Problem oder "
+"nächste Stufe bereit ist. %s Mit %s können Sie auf ein Problem oder "
 "Diskussionsbedarf bei einer Aufgabe hinweisen.%s"
 
 #. module: project
@@ -3550,7 +3550,7 @@ msgid ""
 msgstr ""
 "Priorisieren Sie Aufgaben, indem Sie das %s Icon verwenden.%s Nutzen Sie den"
 " %s Button, um Ihren Kollegen zu signalisieren, dass eine Aufgabe für die "
-"nächste Phase bereit ist. %s Mit %s können Sie auf Probleme oder "
+"nächste Stufe bereit ist. %s Mit %s können Sie auf Probleme oder "
 "Gesprächsbedarf bzgl. einer Aufgabe hinweisen.%s"
 
 #. module: project
@@ -3878,7 +3878,7 @@ msgstr "Anzahl Bewertungen"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr "Bewertung bei Phasenwechsel"
+msgstr "Bewertung bei Stufenwechsel"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
@@ -3946,7 +3946,7 @@ msgstr "Bereit"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for Next Stage"
-msgstr "Bereit für nächste Phase"
+msgstr "Bereit für nächste Stufe"
 
 #. module: project
 #: model:project.task.type,legend_done:project.project_stage_3
@@ -4011,7 +4011,7 @@ msgstr "Rote Kanban-Kennzeichnung"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Ref"
-msgstr "Ref."
+msgstr "Ref"
 
 #. module: project
 #. openerp-web
@@ -4247,7 +4247,7 @@ msgstr "In Ref. suchen"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "In Phasen suchen"
+msgstr "In Stufen suchen"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4296,7 +4296,7 @@ msgstr "Titelbild festlegen"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr "Bewertungs-E-Mail-Vorlage für Phasen festlegen"
+msgstr "Bewertungs-E-Mail-Vorlage für Stufen festlegen"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4414,37 +4414,37 @@ msgstr "Sprint in Bearbeitung"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Stage"
-msgstr "Phase"
+msgstr "Stufe"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Phase geändert"
+msgstr "Stufe geändert"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr "Phasenbeschreibung und Tooltipps"
+msgstr "Stufenbeschreibung und Tooltipps"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr "Phasenbesitzer"
+msgstr "Stufenbesitzer"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Phase geändert"
+msgstr "Stufe geändert"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr "Aktive Phasen"
+msgstr "Aktive Stufen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr "Löschbare Phasen"
+msgstr "Löschbare Stufen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -4695,7 +4695,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr "Aufgabe bereit für nächste Phase"
+msgstr "Aufgabe bereit für nächste Stufe"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -4785,7 +4785,7 @@ msgstr "Wiederholende Aufgaben"
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_project_task_type__is_closed
 msgid "Tasks in this stage are considered as closed."
-msgstr "Aufgaben in dieser Phase werden als geschlossen angesehen."
+msgstr "Aufgaben in dieser Stufe werden als geschlossen angesehen."
 
 #. module: project
 #. openerp-web
@@ -4797,7 +4797,7 @@ msgstr "Tests"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr "Die persönliche Phase des aktuellen Benutzers."
+msgstr "Die persönliche Stufe des aktuellen Benutzers."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
@@ -4900,7 +4900,7 @@ msgstr "Es gibt keine Aufgaben."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
 msgid "These people will receive email."
-msgstr "Diese Personen erhalten E-Mails"
+msgstr "Diese Personen erhalten E-Mails."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__third
@@ -4939,13 +4939,13 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Diese Phase ist eingeklappt, wenn es keine anzuzeigenden Daten in dieser "
-"Phase gibt. "
+"Diese Stufe ist zugeklappt, wenn es keine anzuzeigenden Daten in dieser "
+"Stufe gibt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
 msgid "This stage is folded in the kanban view."
-msgstr "Diese Phase ist in der Kanban-Ansicht verborgen."
+msgstr "Diese Stufe ist in der Kanban-Ansicht verborgen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4965,7 +4965,7 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
-"Damit werden die Phasen und alle darin enthaltenen Aufgaben aus den "
+"Damit werden die Stufen und alle darin enthaltenen Aufgaben aus den "
 "folgenden Projekten archiviert:"
 
 #. module: project
@@ -4996,7 +4996,7 @@ msgstr ""
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr "Tipp: Passen Sie Aufgaben und Phasen je nach Projekt an"
+msgstr "Tipp: Passen Sie Aufgaben und Stufen je nach Projekt an"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -5062,7 +5062,7 @@ msgstr "Heutige Aktivitäten"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "Verfolgen Sie die Kundenzufriedenheit bei Aufgaben."
+msgstr "Verfolgen Sie die Kundenzufriedenheit auf Aufgaben"
 
 #. module: project
 #. openerp-web
@@ -5083,7 +5083,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr "Verfolgen Sie den Fortschritt Ihrer Projekte."
+msgstr "Verfolgen Sie den Fortschritt Ihrer Projekte"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
@@ -5103,7 +5103,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Verfolgen Sie die für Projekte und Aufgaben aufgewendete Zeit."
+msgstr "Verfolgen Sie die für Projekte und Aufgaben aufgewendete Zeit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -5343,7 +5343,7 @@ msgstr "Wochen"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr "Ob dieses Projekt auf Ihrem Dashboard angezeigt werden soll"
+msgstr "Ob dieses Projekt auf Ihrem Dashboard angezeigt werden soll."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5410,7 +5410,7 @@ msgid ""
 " and purpose of the stage."
 msgstr ""
 "Sie können auch eine Beschreibung eingeben, damit Ihre Kollegen den "
-"Hintergrund und Zweck dieser Phase verstehen."
+"Hintergrund und Zweck dieser Stufe verstehen."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5462,8 +5462,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
-"Sie können keine Phasen löschen, die Aufgaben enthalten. Archivieren Sie die"
-" Phasen stattdessen oder löschen Sie zunächst alle enthaltenen Aufgaben."
+"Sie können keine Stufen löschen, die Aufgaben enthalten. Archivieren Sie die"
+" Stufen stattdessen oder löschen Sie zunächst alle enthaltenen Aufgaben."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5471,7 +5471,7 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
-"Sie können keine Phasen löschen, die Aufgaben enthalten. Löschen Sie "
+"Sie können keine Stufen löschen, die Aufgaben enthalten. Löschen Sie "
 "zunächst die Aufgaben."
 
 #. module: project
@@ -5497,7 +5497,7 @@ msgstr "Sie wurden zugewiesen für %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "You have been assigned to the"
-msgstr "Ihnen wurde folgende Aufgabe zugewiesen:"
+msgstr "Ihnen wurde folgende Aufgabe zugewiesen"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5512,8 +5512,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
-"Sie sollten mindestens eine persönliche Phase haben. Erstellen Sie eine neue"
-" Phase, in die Aufgaben geschoben werden können, nachdem diese gelöscht "
+"Sie sollten mindestens eine persönliche Stufe haben. Erstellen Sie eine neue"
+" Stufe, in die Aufgaben geschoben werden können, nachdem diese gelöscht "
 "wurde."
 
 #. module: project
@@ -5550,7 +5550,7 @@ msgstr "in Priorität:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in stage:"
-msgstr "in Phase:"
+msgstr "in Stufe:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list

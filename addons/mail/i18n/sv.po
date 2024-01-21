@@ -16,9 +16,7 @@
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
 # Fredrik Arvas <fredrik.arvas@vertel.se>, 2021
-# Kristoffer Grundström <lovaren@gmail.com>, 2021
 # Patrik Lermon <patrik.lermon@gmail.com>, 2021
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # Lisa <lisa.oskoma@vertel.se>, 2021
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Martin Trigaux, 2021
@@ -32,6 +30,8 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
+# Kristoffer Grundström <lovaren@gmail.com>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3654,7 +3654,7 @@ msgstr "Är följare"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "Är Medlem"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
@@ -4001,9 +4001,9 @@ msgstr "Lägg till en notering"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
+#: code:addons/mail/static/src/components/welcome_view/welcome_view.js:0
 #, python-format
-msgid "Logged as"
+msgid "Logged in as %s"
 msgstr ""
 
 #. module: mail
@@ -4635,7 +4635,7 @@ msgstr "Nästa"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Next (Right-Arrow)"
-msgstr ""
+msgstr "Nästa (Höger pil)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -5503,7 +5503,7 @@ msgstr "Föregående"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Previous (Left-Arrow)"
-msgstr ""
+msgstr "Föregående (Vänster pil)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -5941,7 +5941,7 @@ msgstr "Återställ Zoom"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Reset Zoom (0)"
-msgstr ""
+msgstr "Återställ zoom (0)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -6005,7 +6005,7 @@ msgstr "Rotera"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Rotate (r)"
-msgstr ""
+msgstr "Rotera (r)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__rtc_session_ids
@@ -6116,7 +6116,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/messaging_menu/messaging_menu.js:0
 #, python-format
 msgid "Search user..."
-msgstr ""
+msgstr "Sök efter en användare"
 
 #. module: mail
 #. openerp-web
@@ -6748,7 +6748,7 @@ msgstr "Mallar"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Text file"
-msgstr ""
+msgstr "Text-fil"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -7770,7 +7770,7 @@ msgstr "Du är i kanal <b>#%s</b>."
 #: code:addons/mail/controllers/discuss.py:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
-msgstr ""
+msgstr "Du har inte tillåtelse att ladda upp en bilaga här."
 
 #. module: mail
 #. openerp-web
@@ -7974,7 +7974,7 @@ msgstr "Zooma in"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Zoom In (+)"
-msgstr ""
+msgstr "Zooma in (+)"
 
 #. module: mail
 #. openerp-web
@@ -7989,7 +7989,7 @@ msgstr "Zooma ut"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Zoom Out (-)"
-msgstr ""
+msgstr "Zooma ut (-)"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
