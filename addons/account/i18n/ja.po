@@ -11,16 +11,16 @@
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
-# Wil Odoo, 2023
 # Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.2+e\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 14:39+0000\n"
+"POT-Creation-Date: 2024-01-11 09:13+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -188,6 +188,13 @@ msgstr "%s 税込"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s 取引明細書%s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
@@ -203,13 +210,6 @@ msgid ""
 msgstr ""
 "%s が関連する明細行が無効な状態に達しました。\n"
 "一貫性を保つために、仕訳項目には常に必ず1つの仮項目がある必要があります。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s 取引明細書%s"
 
 #. module: account
 #. odoo-python
@@ -238,6 +238,12 @@ msgstr "(コピー)"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "(included)."
 msgstr "(含まれている)。"
+
+#. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "(object._get_report_base_filename())"
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -626,6 +632,14 @@ msgstr "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> メールサーバ�
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> 印刷"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
+msgid ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
+"[('send_mail_readonly', '=', False)]}\"/>"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1078,11 +1092,6 @@ msgstr "<span>閲覧</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">小計</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>請求額</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4413,13 +4422,6 @@ msgstr "クレジットノート"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You can only send sales documents"
-msgstr "販売ドキュメントのみ送ることができます。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Credit Note Created"
 msgstr "クレジットノートが作成されました"
 
@@ -4440,6 +4442,12 @@ msgstr "クレジットノート: 送信中"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
 msgstr "クレジットノート"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__credit_to_invoice
+#: model:ir.model.fields,field_description:account.field_res_users__credit_to_invoice
+msgid "Credit To Invoice"
+msgstr "請求対象貸方"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -5381,7 +5389,6 @@ msgstr "返金の配布"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
-#: model:ir.model.fields,help:account.field_account_tax__repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
 msgstr "税が還付に使用されているディストリビューション"
 
@@ -5825,7 +5832,7 @@ msgstr "必要なEpd"
 msgid ""
 "Error while loading the localization. You should probably update your "
 "localization app first."
-msgstr ""
+msgstr "ローカライズの読み込み中にエラーが発生しました。まずローカライズアプリをアップデートして下さい。"
 
 #. module: account
 #. odoo-javascript
@@ -7309,6 +7316,11 @@ msgid "Invalid fiscal year last day"
 msgstr "無効な会計年度最終日"
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "在庫評価"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "反転タグ"
@@ -8646,6 +8658,11 @@ msgid "Memo:"
 msgstr "メモ:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "パートナーをマージするウィザード"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_journal__message_has_error
@@ -9874,6 +9891,13 @@ msgid "Partners"
 msgstr "取引先"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "ハッシュ化された記帳で使用されている取引先はマージできません。"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "Euro SEPAサービスで、仕入先請求書をワンクリックで支払います"
@@ -10224,13 +10248,6 @@ msgstr "フィッシングリスク：高"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "フィッシングリスク：中"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "Please add an email address for your partner"
-msgstr "取引先用にEメールアドレスを追加して下さい"
 
 #. module: account
 #. odoo-python
@@ -11525,7 +11542,6 @@ msgstr "選択"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.server,name:account.invoice_send
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__outbound
@@ -13097,15 +13113,6 @@ msgstr "次のエラーにより、適格として検出されたにもかかわ
 
 #. module: account
 #. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid ""
-"The following invoice(s) will not be sent by email, because the customers "
-"don't have email address: "
-msgstr "顧客がメールアドレスを持っていないので、次の請求書はメールで送信できません。"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -13238,6 +13245,7 @@ msgstr ""
 "例:.*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13307,6 +13315,15 @@ msgstr "前回の請求・支払照合以来、取引先には少なくとも一
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr "仕訳の会社の取引先は、関連銀行口座と不一致しています。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The partners on the following invoices have no email address, so those "
+"invoices will not be sent: %s"
+msgstr "以下の請求書に記載されている取引先はメールアドレスがないため、これらの請求書は送信されません: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative
@@ -13525,6 +13542,21 @@ msgid ""
 msgstr ""
 "シーケンスがリセットされることはありません。\n"
 "この場合の次の数は'%(formatted_seq)s'です。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"この付番は、会計年度が始まるたびに1から始まります。\n"
+"ここで検出される会計年度開始は '%(year)s'.\n"
+"ここで検出された会計年度決算期は '%(year_end)s'.\n"
+"この場合のインクリメント数は '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -13927,8 +13959,7 @@ msgstr "この仕訳は、記帳日で記帳されます:%(date)s"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "この処理により付番にギャップが生じます。"
@@ -15119,13 +15150,6 @@ msgstr "記帳済仕訳項目のみに期間・勘定科目を変更すること
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr "購買ドキュメントは元のドキュメントのみ印刷できます。"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -15160,19 +15184,19 @@ msgid "You can only send from the same company."
 msgstr "同じ会社からのみ送付できます。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr "販売ドキュメントのみ送ることができます。"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr "ここで、検証後に顧客の請求書に表示されるデフォルト参照を設定できます。これで、顧客が決済する時に請求書を参照できるようになります。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "You can't send invoice(s) in draft state."
-msgstr "ドラフトの状態で請求書を送ることはできません。"
 
 #. module: account
 #. odoo-python
@@ -15289,6 +15313,13 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr "すべてがインバウンド又はすべてがアウトバウンドの仕訳項目に対しての支払は登録できません。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr "ドラフトの状態で請求書を送ることはできません。"
 
 #. module: account
 #. odoo-python
@@ -15491,6 +15522,13 @@ msgid ""
 msgstr ""
 "開始仕訳（%s）がすでに記帳されている場合は「開始残高（opening_balance）」をインポートすることはできません。"
 "                         どうしても口座の開始残高を変更したい場合は、仕訳を下書きに設定し直して下さい。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "アカウントをマージできません。"
 
 #. module: account
 #. odoo-python

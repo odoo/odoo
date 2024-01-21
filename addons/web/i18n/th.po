@@ -9,19 +9,19 @@
 # Amin Cheloh <amincheloh@gmail.com>, 2023
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2023
 # Wichanon Jamwutthipreecha, 2023
-# Wil Odoo, 2023
 # Martin Trigaux, 2023
 # Krisa C, 2023
 # Ped Sansiri, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-24 06:00+0000\n"
+"POT-Creation-Date: 2024-01-11 09:13+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -317,8 +317,10 @@ msgstr "<span class=\"text-nowrap\">ภาษี 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>สหรัฐอเมริกา</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2035,6 +2037,7 @@ msgstr "องค์กร"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "ผิดพลาด"
@@ -2191,7 +2194,6 @@ msgstr "ไฟล์"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "อัปโหลดไฟล์"
@@ -3081,7 +3083,7 @@ msgstr "อีเวนต์ใหม่"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "New Property"
-msgstr ""
+msgstr "คุณสมบัติใหม่"
 
 #. module: web
 #. odoo-javascript
@@ -3103,14 +3105,14 @@ msgstr "เทมเพลตใหม่"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "New:"
-msgstr ""
+msgstr "ใหม่:"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "New: %s"
-msgstr ""
+msgstr "ใหม่: %s"
 
 #. module: web
 #. odoo-javascript
@@ -3176,7 +3178,7 @@ msgstr "ไม่มีสี"
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "No command found"
-msgstr ""
+msgstr "ไม่พบคำสั่ง"
 
 #. module: web
 #. odoo-javascript
@@ -3197,7 +3199,7 @@ msgstr "ไม่มีข้อมูลให้แสดง"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "No debug command found"
-msgstr ""
+msgstr "ไม่พบคำสั่งแก้ไขข้อบกพร่อง"
 
 #. module: web
 #. odoo-javascript
@@ -3405,7 +3407,7 @@ msgstr "ของ %d บันทึกที่ถูกเลือก เฉ�
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Oh snap!"
-msgstr ""
+msgstr "โอ้ว!"
 
 #. module: web
 #. odoo-javascript
@@ -3592,6 +3594,11 @@ msgid "Password"
 msgstr "ใส่รหัส"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr "การสื่อสารการชำระเงิน: <b><span>INV/2023/00003</span></b>"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -3603,7 +3610,7 @@ msgstr "คำเชิญที่รอดำเนินการ:"
 #: code:addons/web/static/src/views/fields/percent_pie/percent_pie_field.js:0
 #, python-format
 msgid "PercentPie"
-msgstr ""
+msgstr "เปอร์เซ็นต์พาย"
 
 #. module: web
 #. odoo-javascript
@@ -3711,23 +3718,11 @@ msgid ""
 msgstr "โปรดใช้ปุ่มคัดลอกเพื่อรายงานข้อผิดพลาดไปยังบริการสนับสนุนของคุณ"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
-msgstr "การสื่อสารการชำระเงิน: <b><span>INV/2023/00003</span></b>"
-
-#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Please, scan again!"
-msgstr ""
+msgstr "กรุณาสแกนอีกครั้ง!"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -3866,14 +3861,14 @@ msgstr "คุณสมบัติ"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Property %s"
-msgstr ""
+msgstr "คุณสมบัติ %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Property Name"
-msgstr ""
+msgstr "ชื่อคุณสมบัติ"
 
 #. module: web
 #. odoo-javascript
@@ -4003,7 +3998,7 @@ msgstr "บันทึกร่องรอย"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Recording..."
-msgstr ""
+msgstr "กำลังบันทึก..."
 
 #. module: web
 #. odoo-javascript
@@ -4066,7 +4061,7 @@ msgstr "ความสัมพันธ์:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "ตารางเชิงสัมพันธ์"
 
 #. module: web
 #. odoo-javascript
@@ -4101,7 +4096,7 @@ msgstr "นำภาพหน้าปกออก"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Remove Property"
-msgstr ""
+msgstr "ลบคุณสมบัติ"
 
 #. module: web
 #. odoo-javascript
@@ -4157,6 +4152,13 @@ msgstr "ดูตัวอย่างเค้าโครงรายงาน
 #, python-format
 msgid "Request timeout"
 msgstr "หมดเวลาการร้องขอ"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "รีเซ็ตโดเมน"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -4275,7 +4277,7 @@ msgstr "บันทึกค่าเริ่มต้น"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
-msgstr ""
+msgstr "บันทึกด้วยตนเอง"
 
 #. module: web
 #. odoo-javascript
@@ -4332,7 +4334,7 @@ msgstr "ค้นหาคำสั่ง..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "Search for a menu..."
-msgstr ""
+msgstr "ค้นหาเมนู..."
 
 #. module: web
 #. odoo-javascript
@@ -4346,14 +4348,14 @@ msgstr "ค้นหาบันทึก"
 #: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.js:0
 #, python-format
 msgid "Search user..."
-msgstr ""
+msgstr "ค้นหาผู้ใช้..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.js:0
 #, python-format
 msgid "Search users..."
-msgstr ""
+msgstr "ค้นหาผู้ใช้..."
 
 #. module: web
 #. odoo-javascript
@@ -4426,7 +4428,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Select Default"
-msgstr ""
+msgstr "เลือกค่าเริ่มต้น"
 
 #. module: web
 #. odoo-javascript
@@ -4461,7 +4463,7 @@ msgstr "เลือกฟิลด์"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Select records"
-msgstr ""
+msgstr "เลือกบันทึก"
 
 #. module: web
 #. odoo-javascript
@@ -4515,7 +4517,7 @@ msgstr "กำหนดเขตเวลาสำหรับผู้ใช้
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Set kanban state as %s"
-msgstr ""
+msgstr "ตั้งสถานะของคัมบังเป็น %s"
 
 #. module: web
 #. odoo-javascript
@@ -4552,7 +4554,7 @@ msgstr "คีย์ลัด"
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 #, python-format
 msgid "Show %s view"
-msgstr ""
+msgstr "แสดงมุมมอง %s"
 
 #. module: web
 #. odoo-javascript
@@ -4624,7 +4626,7 @@ msgstr "เริ่มพิมพ์..."
 #: code:addons/web/static/src/views/fields/stat_info/stat_info_field.js:0
 #, python-format
 msgid "Stat Info"
-msgstr ""
+msgstr "สถิติข้อมูล"
 
 #. module: web
 #. odoo-javascript
@@ -4638,7 +4640,7 @@ msgstr "สถานะ"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
-msgstr ""
+msgstr "อยู่ที่นี่"
 
 #. module: web
 #. odoo-javascript
@@ -4675,7 +4677,7 @@ msgstr "สไตล์"
 #: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
 #, python-format
 msgid "Style error"
-msgstr ""
+msgstr "ข้อผิดพลาดในรูปแบบ"
 
 #. module: web
 #. odoo-javascript
@@ -4696,7 +4698,7 @@ msgstr "ผลรวม"
 #: code:addons/web/static/src/views/graph/graph_model.js:0
 #, python-format
 msgid "Sum (%s)"
-msgstr ""
+msgstr "ผลรวม (%s)"
 
 #. module: web
 #. odoo-javascript
@@ -4724,7 +4726,7 @@ msgstr "ข้อผิดพลาดทางไวยากรณ์"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
-msgstr ""
+msgstr "เคล็ดลับ"
 
 #. module: web
 #. odoo-javascript
@@ -4813,8 +4815,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "ไฟล์ที่เลือก (%sB) มีขนาดเกินขนาดไฟล์สูงสุดที่อนุญาต (%sB)"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "ไฟล์ที่ถูกเลือกมีขนาดใหญ่เกิน %s"
@@ -4828,6 +4836,8 @@ msgid ""
 "or developer error that must be fixed for the entire database before "
 "continuing working."
 msgstr ""
+"การรวบรวมสไตล์ล้มเหลว ดูข้อผิดพลาดด้านล่าง "
+"นี่เป็นข้อผิดพลาดของผู้ดูแลระบบหรือนักพัฒนาที่ต้องแก้ไขสำหรับฐานข้อมูลทั้งหมดก่อนที่จะทำงานต่อ"
 
 #. module: web
 #. odoo-python
@@ -4859,7 +4869,7 @@ msgstr "พบปัญหาในขณะที่อัปโหลดไฟ
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "There was a problem while uploading your file."
-msgstr ""
+msgstr "เกิดปัญหาขณะอัปโหลดไฟล์ของคุณ"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
@@ -4893,14 +4903,14 @@ msgstr "ไม่รองรับโดเมนนี้"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "This field is already first"
-msgstr ""
+msgstr "ช่องนี้เป็นช่องแรกแล้ว"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "This field is already last"
-msgstr ""
+msgstr "ช่องนี้เป็นข้อมูลล่าสุดแล้ว"
 
 #. module: web
 #. odoo-javascript
@@ -4934,7 +4944,7 @@ msgstr "นี่คือตัวอย่างของรายงานภ
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "This tag is already available"
-msgstr ""
+msgstr "แท็กนี้มีอยู่แล้ว"
 
 #. module: web
 #. odoo-javascript
@@ -5055,7 +5065,7 @@ msgstr "อังคาร"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #, python-format
 msgid "Type a default text or press ENTER"
-msgstr ""
+msgstr "พิมพ์ข้อความเริ่มต้นหรือกด ENTER"
 
 #. module: web
 #. odoo-javascript
@@ -5063,7 +5073,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Type your name to sign"
-msgstr ""
+msgstr "พิมพ์ชื่อของคุณเพื่อลงนาม"
 
 #. module: web
 #. odoo-javascript
@@ -5192,7 +5202,7 @@ msgstr "ไม่มีชื่อ"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_view.xml:0
 #, python-format
 msgid "Unsaved changes"
-msgstr ""
+msgstr "การเปลี่ยนแปลงที่ไม่ได้บันทึก"
 
 #. module: web
 #. odoo-javascript
@@ -5296,7 +5306,7 @@ msgstr "กำลังอัปโหลด..."
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "Uploading... (%s%)"
-msgstr ""
+msgstr "อัปโหลด... (%s%)"
 
 #. module: web
 #. odoo-javascript
@@ -5455,7 +5465,7 @@ msgstr "สัปดาห์"
 #: code:addons/web/static/src/core/effects/effect_service.js:0
 #, python-format
 msgid "Well Done!"
-msgstr ""
+msgstr "ทำได้ดีมาก!"
 
 #. module: web
 #. odoo-javascript
@@ -5470,7 +5480,7 @@ msgstr "วิดเจ็ต:"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_controller.js:0
 #, python-format
 msgid "Would you like to save your changes?"
-msgstr ""
+msgstr "คุณต้องการบันทึกการเปลี่ยนแปลงของคุณหรือไม่?"
 
 #. module: web
 #. odoo-javascript
@@ -5534,7 +5544,7 @@ msgstr "เมื่อวาน"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "You are logged in."
-msgstr ""
+msgstr "คุณเข้าสู่ระบบแล้ว"
 
 #. module: web
 #. odoo-python
@@ -5555,7 +5565,7 @@ msgstr "คุณไม่สามารถติดตามความสั
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "You do not have access to the model \"%s\"."
-msgstr ""
+msgstr "คุณไม่มีสิทธิ์เข้าถึงโมเดล \"%s\""
 
 #. module: web
 #. odoo-javascript
@@ -5577,7 +5587,7 @@ msgstr "คุณอาจไม่เชื่อมัน <br />แต่ม�
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "You need to be able to edit parent first to add property tags"
-msgstr ""
+msgstr "คุณต้องสามารถแก้ไขพาเรนต์ก่อนจึงจะเพิ่มแท็กคุณสมบัติได้"
 
 #. module: web
 #. odoo-javascript
@@ -5604,7 +5614,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
-msgstr ""
+msgstr "คุณต้องเลือกรุ่นก่อนที่จะเปิดตัวเลือกตัวยึดตำแหน่งแบบไดนามิก"
 
 #. module: web
 #. odoo-javascript
@@ -6034,8 +6044,8 @@ msgstr "มันยังคงโหลด..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
