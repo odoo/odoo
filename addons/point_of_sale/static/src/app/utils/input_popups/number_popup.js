@@ -101,6 +101,6 @@ export class NumberPopup extends Component {
         if (this.state.payload != startingPayload) {
             return this.state.payload;
         }
-        return this.numberBuffer.get();
+        return this.numberBuffer.get() ?? "";
     }
 }
