@@ -5,21 +5,6 @@ import { today, serializeDate } from "@web/core/l10n/dates";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
-    async _performRPC(route, args) {
-        if (args.model === "res.users" && args.method === "systray_get_activities") {
-            const groups = this._mockResUsers_getActivityGroups();
-            return {
-                Store: {
-                    activityCounter: groups.reduce(
-                        (counter, group) => counter + (group.total_count || 0),
-                        0
-                    ),
-                    activityGroups: groups,
-                },
-            };
-        }
-        return super._performRPC(route, args);
-    },
     /**
      * Simulates `_init_messaging` on `res.users`.
      *

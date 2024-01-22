@@ -65,7 +65,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
 
 
 @tagged('multi_company')
-class TestMultiCompanySetup(TestMailMCCommon):
+class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 
     @users('employee_c2')
     @mute_logger('odoo.addons.base.models.ir_rule')
@@ -253,19 +253,21 @@ class TestMultiCompanySetup(TestMailMCCommon):
                 subtype_xmlid='mail.mt_comment',
             )
 
+    @users("admin")
     def test_systray_get_activities(self):
         self.env["mail.activity"].search([]).unlink()
-        user_admin = self.user_admin.with_user(self.user_admin)
         test_records = self.env["mail.test.multi.company.with.activity"].create(
             [
-                {"name": "Test1", "company_id": user_admin.company_id.id},
+                {"name": "Test1", "company_id": self.user_admin.company_id.id},
                 {"name": "Test2", "company_id": self.company_2.id},
             ]
         )
-        test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
-        test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=self.user_admin.id)
+        test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=self.user_admin.id)
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        data = self.make_jsonrpc_request("/mail/data", {"systray_get_activities": True})
         test_activity = next(
-            a for a in user_admin.systray_get_activities()["Store"]["activityGroups"]
+            a for a in data["Store"]["activityGroups"]
             if a['model'] == 'mail.test.multi.company.with.activity'
         )
         self.assertEqual(
@@ -283,9 +285,13 @@ class TestMultiCompanySetup(TestMailMCCommon):
                 "view_type": "list",
             }
         )
-
+        params = {
+            "systray_get_activities": True,
+            "context": {"allowed_company_ids": [self.company_2.id]},
+        }
+        data = self.make_jsonrpc_request("/mail/data", params)
         test_activity = next(
-            a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()["Store"]["activityGroups"]
+            a for a in data["Store"]["activityGroups"]
             if a['model'] == 'mail.test.multi.company.with.activity'
         )
         self.assertEqual(

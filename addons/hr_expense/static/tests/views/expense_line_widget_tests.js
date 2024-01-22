@@ -21,6 +21,7 @@ QUnit.module("Views", {}, function () {
     QUnit.module("ExpenseLineWidget");
 
     const OpenPreparedView = async (size, sheet) => {
+        const pyEnv = await startServer();
         const views = {
             "hr.expense.sheet,false,form": `<form>
                     <sheet name="Expenses">
@@ -56,7 +57,14 @@ QUnit.module("Views", {}, function () {
                 step(`${route} - ${JSON.stringify(args)}`);
             },
         });
-        await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+        await assertSteps([
+            `/mail/action - ${JSON.stringify({
+                init_messaging: true,
+                failures: true,
+                systray_get_activities: true,
+                context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+            })}`,
+        ]);
         await openView({
             res_model: "hr.expense.sheet",
             res_id: sheet,

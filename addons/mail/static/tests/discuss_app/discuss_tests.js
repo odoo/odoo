@@ -32,6 +32,7 @@ import {
 QUnit.module("discuss");
 
 QUnit.test("sanity check", async () => {
+    const pyEnv = await startServer();
     const { openDiscuss } = await start({
         mockRPC(route, args, originRPC) {
             if (route.startsWith("/mail") || route.startsWith("/discuss")) {
@@ -40,10 +41,20 @@ QUnit.test("sanity check", async () => {
             return originRPC(route, args);
         },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     await openDiscuss();
     await assertSteps([
-        '/mail/data - {"channels_as_member":true}',
+        `/mail/data - ${JSON.stringify({
+            channels_as_member: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
     await contains(".o-mail-DiscussSidebar");

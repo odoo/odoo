@@ -18,7 +18,6 @@ import {
     registryNamesToCloneWithCleanup,
     prepareRegistriesWithCleanup,
 } from "@web/../tests/helpers/mock_env";
-import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
@@ -172,21 +171,6 @@ export async function start(param0 = {}) {
     });
     param0["target"] = target;
     const pyEnv = await getPyEnv();
-    const userSession = {
-        name: pyEnv.currentUser?.name,
-        partnerId: pyEnv.currentPartnerId,
-        userId: pyEnv.currentUserId,
-    };
-    if (!pyEnv.currentGuest && pyEnv.currentUser) {
-        const userSettings = pyEnv.mockServer._mockResUsersSettings_FindOrCreateForUser(
-            pyEnv.currentUser.id
-        );
-        const settings = pyEnv.mockServer._mockResUsersSettings_ResUsersSettingsFormat(
-            userSettings.id
-        );
-        Object.assign(userSession, { settings });
-    }
-    patchUserWithCleanup(userSession);
     patchWithCleanup(session, { self: pyEnv.getSelfData() });
     if (browser.Notification && !browser.Notification.isPatched) {
         patchBrowserNotification("denied");
