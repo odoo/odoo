@@ -74,6 +74,39 @@ class TestEventSale(TestEventSaleCommon):
         )
 
     @users('user_sales_salesman')
+    def test_adjusted_quantity_in_sale_order(self):
+        """ This test ensures that when reducing the quantity of tickets for an event, we will cancel the
+        registrations for those tickets too.
+        """
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket = self.event_0.event_ticket_ids[0]
+
+        customer_so.write({
+            'order_line': [
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket.id,
+                    'product_id': ticket.product_id.id,
+                    'product_uom_qty': 3,
+                    'price_unit': 10,
+                })
+            ]
+        })
+
+        editor = self.env['registration.editor'].with_context({'default_sale_order_id': customer_so.id}).create({})
+        editor.action_make_registration()
+
+        registration_to_cancel = self.event_0.registration_ids[0]
+        registration_to_cancel.action_cancel()
+
+        registrations = self.env['event.registration'].search([('sale_order_id', '=', customer_so.id)])
+
+        expected_states = ['draft', 'draft', 'cancel']
+        actual_states = registrations.sorted('id').mapped('state')
+
+        self.assertListEqual(actual_states, expected_states, "One of the registrations should be cancelled.")
+
+    @users('user_sales_salesman')
     def test_event_crm_sale(self):
         TICKET1_COUNT, TICKET2_COUNT = 3, 1
         customer_so = self.customer_so.with_user(self.env.user)
