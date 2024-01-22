@@ -14,7 +14,7 @@ class WebsiteSaleDelivery(WebsiteSale):
     @http.route()
     def shop_payment(self, **post):
         order = request.website.sale_get_order()
-        if order and (request.httprequest.method == 'POST' or not order.carrier_id):
+        if order and not order.only_services and (request.httprequest.method == 'POST' or not order.carrier_id):
             # Update order's carrier_id (will be the one of the partner if not defined)
             # If a carrier_id is (re)defined, redirect to "/shop/payment" (GET method to avoid infinite loop)
             carrier_id = post.get('carrier_id')
@@ -265,9 +265,8 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     def _get_shop_payment_errors(self, order):
         errors = super()._get_shop_payment_errors(order)
-        has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
 
-        if not order._get_delivery_methods() and has_storable_products:
+        if not order.only_services and not order._get_delivery_methods():
             errors.append((
                 _('Sorry, we are unable to ship your order'),
                 _('No shipping method is available for your current order and shipping address. '
