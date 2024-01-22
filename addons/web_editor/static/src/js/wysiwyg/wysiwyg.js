@@ -66,6 +66,7 @@ const getRangePosition = OdooEditorLib.getRangePosition;
 const childNodeIndex = OdooEditorLib.childNodeIndex;
 const fillEmpty = OdooEditorLib.fillEmpty;
 const isVisible = OdooEditorLib.isVisible;
+const insertText = OdooEditorLib.insertText;
 
 function getJqueryFromDocument(doc) {
     if (doc.defaultView && doc.defaultView.$) {
@@ -493,6 +494,9 @@ export class Wysiwyg extends Component {
             preHistoryUndo: () => {
                 this.destroyLinkTools();
             },
+            dynamicPlaceholderProps: this.props.options.dynamicPlaceholder,
+            openLinkTool: this.toggleLinkTools,
+            openMediaDialog: this.openMediaDialog,
             commands: powerboxOptions.commands,
             categories: powerboxOptions.categories,
             plugins: options.editorPlugins,
@@ -647,6 +651,7 @@ export class Wysiwyg extends Component {
         // because if snippetMenu is loaded in an iframe, binding of the color
         // buttons must use the jquery loaded in that iframe.
         this._configureToolbar(options);
+        this._configureMagicbuttons();
 
         $(this.odooEditor.editable).on('mouseup', this._updateEditorUI.bind(this));
         $(this.odooEditor.editable).on('keydown', this._updateEditorUI.bind(this));
@@ -860,6 +865,7 @@ export class Wysiwyg extends Component {
         this.toolbarEl = toolbarEl;
         this.odooEditor.setupToolbar(toolbarEl);
         this._configureToolbar(this.options)
+        this._configureMagicbuttons();
         this._updateEditorUI();
     }
     /**
@@ -1833,6 +1839,7 @@ export class Wysiwyg extends Component {
             textColorPaletteProps: this.colorPalettesProps.text,
             backgroundColorPaletteProps: this.colorPalettesProps.background,
             showRemoveFormat: this.state.snippetsMenuFolded || !this.options.snippets,
+            showDynamicplaceholder: this.options.dynamicPlaceholder?.show,
         };
     }
     _configureToolbar(options) {
@@ -1906,6 +1913,7 @@ export class Wysiwyg extends Component {
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
         $toolbar.find('#open-chatgpt').click(openTools);
+        $toolbar.find('#open-dynamic-placeholder').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
             if (!this.lastMediaClicked) {
                 return;
@@ -2015,6 +2023,42 @@ export class Wysiwyg extends Component {
             // Scroll event does not bubble.
             document.addEventListener('scroll', this._onScroll, true);
         }
+    }
+
+    _configureMagicbuttons() {
+        const magicButton = this.odooEditor.magicButtonUiContainer;
+        const openTools = (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            switch (e.currentTarget.id) {
+                case 'create-magic-link':
+                    this.toggleLinkTools({ forceDialog: true });
+                    break;
+                case 'open-dynamic-placeholder':
+                    this.props.options.dynamicPlaceholder.placeholderCallback();
+                    break;
+                case 'insert-image':
+                    this.openMediaDialog();
+                    break;
+                case 'more-options':
+                    const inputEvent = new InputEvent('input', {
+                        data: "/",
+                        inputType: "insertText",
+                        bubbles: true,
+                        cancelable: true,
+                    });
+                    const sel = this.odooEditor.document.getSelection();
+                    insertText(sel, "/");
+                    sel.collapseToEnd();
+                    this.odooEditor.editable.dispatchEvent(inputEvent);
+                    break;
+            }
+        };
+        magicButton.querySelector("#create-magic-link")?.addEventListener('mousedown', openTools);
+        magicButton.querySelector("#open-dynamic-placeholder")?.addEventListener('mousedown', openTools);
+        magicButton.querySelector("#insert-image")?.addEventListener('mousedown', openTools);
+        magicButton.querySelector("#more-options")?.addEventListener('mousedown', openTools);
     }
 
     _showImageCrop() {

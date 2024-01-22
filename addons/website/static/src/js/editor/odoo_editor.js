@@ -35,4 +35,12 @@ patch(OdooEditor.prototype, {
             e.clipboardData.setData("text/odoo-editor", html);
         }
     },
+    /**
+     * Since we do not want to show the magic buttons,
+     * we just return from here.
+     * @override
+     */
+    _positionMagicButtons() {
+        return;
+    }
 });
