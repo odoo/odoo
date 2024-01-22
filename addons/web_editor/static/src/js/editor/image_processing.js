@@ -434,7 +434,9 @@ function _getImageSizeFromCache(src) {
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
 export async function activateCropper(image, aspectRatio, dataset) {
-    image.src = await _loadImageObjectURL(image.getAttribute('src'));
+    const oldSrc = image.src;
+    const newSrc = await _loadImageObjectURL(image.getAttribute('src'));
+    image.src = newSrc;
     $(image).cropper({
         viewMode: 2,
         dragMode: 'move',
@@ -446,6 +448,9 @@ export async function activateCropper(image, aspectRatio, dataset) {
         minContainerWidth: 1,
         minContainerHeight: 1,
     });
+    if (oldSrc === newSrc && image.complete) {
+        return;
+    }
     return new Promise(resolve => image.addEventListener('ready', resolve, {once: true}));
 }
 /**
