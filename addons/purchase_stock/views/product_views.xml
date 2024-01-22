@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="property_account_expense_id" position="after">
-                <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" readonly="purchase_ok == 0" groups="account.group_account_readonly"/>
+                <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" groups="account.group_account_readonly"/>
             </field>
         </field>
     </record>
