@@ -148,10 +148,24 @@ export class FillTemporalPeriod {
      * @param {DateTime} bound the DateTime to be formatted (this.start or this.end)
      */
     _getFormattedServerDate(bound) {
+<<<<<<< HEAD
         if (this.field.type === "date") {
             return serializeDate(bound);
+||||||| parent of cd6adf9a424e (temp)
+        if (bound.isUTC() || this.field.type === "date") {
+            return bound.format(FIELD_TYPE_TABLE[this.field.type].format);
+=======
+        if (bound.isUTC() || this.field.type === "date") {
+            return bound.clone().locale("en").format(FIELD_TYPE_TABLE[this.field.type].format);
+>>>>>>> cd6adf9a424e (temp)
         } else {
+<<<<<<< HEAD
             return serializeDateTime(bound);
+||||||| parent of cd6adf9a424e (temp)
+            return moment.utc(bound).format(FIELD_TYPE_TABLE[this.field.type].format);
+=======
+            return moment.utc(bound).locale("en").format(FIELD_TYPE_TABLE[this.field.type].format);
+>>>>>>> cd6adf9a424e (temp)
         }
     }
     /**
