@@ -47,6 +47,25 @@ function toggleDropdown($toggles, show) {
 }
 
 /**
+ * Checks if the classes that changed during the mutation are all to be ignored.
+ * (The mutation can be discarded if it is the case, when filtering the mutation
+ * records).
+ *
+ * @param {Object} record the current mutation
+ * @param {Array} excludedClasses the classes to ignore
+ * @returns {Boolean}
+ */
+function checkForExcludedClasses(record, excludedClasses) {
+    const classBefore = (record.oldValue && record.oldValue.split(" ")) || [];
+    const classAfter = [...record.target.classList];
+    const changedClasses = [
+        ...classBefore.filter(c => c && !classAfter.includes(c)),
+        ...classAfter.filter(c => c && !classBefore.includes(c)),
+    ];
+    return changedClasses.every(c => excludedClasses.includes(c));
+}
+
+/**
  * This component adapts the Wysiwyg widget from @web_editor/wysiwyg.js.
  * It encapsulate it so that this legacy widget can work in an OWL framework.
  */
@@ -172,7 +191,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // Since bootstrap 5.1.3, removing bsToggle is not sufficient anymore.
         $dropdownMenuToggles.siblings(".dropdown-menu").addClass("o_wysiwyg_submenu");
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
-            this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -189,10 +207,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     if (!this.options.enableTranslation) {
                         this._toggleMegaMenu($toggle[0]);
                     }
-                })
-                // FIXME this is not right, the observer should not be inactive
-                // for async periods of time.
-                .then(() => this.odooEditor.observerActive());
+                });
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -203,6 +218,66 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             }
         }
         await super.startEdition();
+
+        // Overriding the `filterMutationRecords` function so it can be used to
+        // filter website-specific mutations.
+        const webEditorFilterMutationRecords = this.odooEditor.options.filterMutationRecords;
+        Object.assign(this.odooEditor.options, {
+            /**
+             * @override
+             */
+            filterMutationRecords(records) {
+                const filteredRecords = webEditorFilterMutationRecords(records);
+
+                // Dropdown attributes to ignore.
+                const dropdownClasses = ["show"];
+                const dropdownToggleAttributes = ["aria-expanded"];
+                const dropdownMenuAttributes = ["data-popper-placement", "style", "data-bs-popper"];
+                // Offcanvas attributes to ignore.
+                const offcanvasClasses = ["show"];
+                const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+
+                return filteredRecords.filter(record => {
+                    if (record.type === "attributes") {
+                        if (record.target.closest("header#top")) {
+                            // Do not record when showing/hiding a dropdown.
+                            if (record.target.matches(".dropdown-toggle, .dropdown-menu")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, dropdownClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".dropdown-menu")
+                                    && dropdownMenuAttributes.includes(record.attributeName)) {
+                                return false;
+                            } else if (record.target.matches(".dropdown-toggle")
+                                    && dropdownToggleAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+
+                            // Do not record when showing/hiding an offcanvas.
+                            if (record.target.matches(".offcanvas, .offcanvas-backdrop")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, offcanvasClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".offcanvas")
+                                    && offcanvasAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
+                    } else if (record.type === "childList") {
+                        const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
+                        // Do not record the addition/removal of the offcanvas
+                        // backdrop.
+                        if (addedOrRemovedNode.nodeType === Node.ELEMENT_NODE
+                                && addedOrRemovedNode.matches(".offcanvas-backdrop")) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            }
+        });
 
         // Disable OdooEditor observer's while setting up classes
         this.odooEditor.observerUnactive();
@@ -979,7 +1054,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
             return this.snippetsMenu.activateSnippet(false);
         }
+        this.odooEditor.observerUnactive("toggleMegaMenu");
         megaMenuEl.classList.add('o_no_parent_editor');
+        this.odooEditor.observerActive("toggleMegaMenu");
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
     }
     /**
