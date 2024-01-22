@@ -556,7 +556,7 @@ class Channel(models.Model):
                     'type': 'customer',
                     'uid': False,
                     'ushare': False,
-                } for partner in self.channel_member_ids.filtered(
+                } for partner in self.sudo().channel_member_ids.filtered(
                     lambda member: (
                         not member.mute_until_dt and
                         member.partner_id.id not in already_in_ids
