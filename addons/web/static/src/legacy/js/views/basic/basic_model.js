@@ -2509,11 +2509,19 @@ var BasicModel = AbstractModel.extend({
                 resourceRef.hasChanged = false;
                 return Promise.resolve(resourceRef);
             } else {
-                const result = await this._rpc({
-                    model: 'ir.model',
-                    method: 'read',
-                    args: [modelId, ['id', 'model']],
-                });
+                let result;
+                if ('default_model_id' in record.context && 'default_model_name' in record.context) {
+                    result = [{
+                        id: record.context.default_model_id,
+                        model: record.context.default_model_name,
+                    }];
+                } else {
+                    result = await this._rpc({
+                        model: 'ir.model',
+                        method: 'read',
+                        args: [modelId, ['id', 'model']],
+                    });
+                }
                 // Checks the case where the data on the backend side are not synchronized
                 // (modelFieldName != referenceFieldName) when opening the edit view (!_changes).
                 // We want to avoid resynchronization in order not to modify the data 

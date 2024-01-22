@@ -977,6 +977,76 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("ReferenceField with context", async function (assert) {
+        serverData.models.partner.onchanges = {
+            bar(record) {
+                record.model_id = 20;
+            }
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            context: {
+                default_model_id: 20,
+                default_model_name: 'product',
+            },
+            arch: `
+                <form>
+                    <field name="bar" />
+                    <field name="model_id" />
+                    <field name="reference" options="{'model_field': 'model_id'}" />
+                </form>`,
+            mockRPC: (_, { model, method, args }) => {
+                if (model === "ir.model" && method === "read") {
+                    assert.step("read_ir_model");
+                }
+                if (model === "partner" && method === "create") {
+                    assert.step("create_partner");
+                    assert.strictEqual(args[0].model_id, 20);
+                }
+            },
+        });
+
+        await clickSave(target);
+
+        assert.verifySteps(["create_partner"]); // No read on `ir_model`
+    });
+
+    QUnit.test("ReferenceField without context", async function (assert) {
+        serverData.models.partner.onchanges = {
+            bar(record) {
+                record.model_id = 20;
+            }
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar" />
+                    <field name="model_id" />
+                    <field name="reference" options="{'model_field': 'model_id'}" />
+                </form>`,
+            mockRPC: (_, { model, method, args }) => {
+                if (model === "ir.model" && method === "read") {
+                    assert.step("read_ir_model");
+                }
+                if (model === "partner" && method === "create") {
+                    assert.step("create_partner");
+                    assert.strictEqual(args[0].model_id, 20);
+                }
+            },
+        });
+
+        await clickSave(target);
+
+        assert.verifySteps(["read_ir_model", "create_partner"]);
+    });
+
     QUnit.test(
         "edit a record containing a ReferenceField with model_field option (list in form view)",
         async function (assert) {
