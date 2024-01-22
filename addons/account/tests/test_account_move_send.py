@@ -911,3 +911,46 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.create_send_and_print(invoice_draft)
         with self.assertRaises(UserError):
             self.create_send_and_print(invoice_posted + invoice_draft)
+
+    def test_link_pdf_webservice_fails_after(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        def _call_web_service_after_invoice_pdf_render(self, invoices_data):
+            for move_data in invoices_data.values():
+                move_data['error'] = 'service_failed_after'
+
+        # Process.
+        with patch(
+                'odoo.addons.account.wizard.account_move_send.AccountMoveSend._call_web_service_after_invoice_pdf_render',
+                _call_web_service_after_invoice_pdf_render,
+        ):
+            wizard.action_send_and_print(allow_fallback_pdf=True)
+
+        # The PDF is generated and linked
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        # Not a proforma
+        self.assertFalse(self.env['ir.attachment'].search([
+            ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
+        ]))
+
+    def test_link_pdf_webservice_fails_before(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        def _call_web_service_before_invoice_pdf_render(self, invoices_data):
+            for move_data in invoices_data.values():
+                move_data['error'] = 'service_failed_before'
+
+        # Process.
+        with patch(
+                'odoo.addons.account.wizard.account_move_send.AccountMoveSend._call_web_service_before_invoice_pdf_render',
+                _call_web_service_before_invoice_pdf_render,
+        ):
+            wizard.action_send_and_print(allow_fallback_pdf=True)
+
+        # The PDF is not generated but a proforma.
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertTrue(self.env['ir.attachment'].search([
+            ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
+        ]))

@@ -542,10 +542,7 @@ class AccountMoveSend(models.Model):
             form = invoice_data['_form']
             if form._need_invoice_document(invoice):
                 form._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-                invoice_data['blocking_error'] = invoice_data.get('error') \
-                                                 and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
-                if invoice_data['blocking_error']:
-                    continue
+                invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
 
         invoices_data_web_service = {
             invoice: invoice_data
@@ -558,7 +555,7 @@ class AccountMoveSend(models.Model):
         invoices_data_pdf = {
             invoice: invoice_data
             for invoice, invoice_data in invoices_data.items()
-            if not invoice_data.get('error') or not invoice_data.get('blocking_error', True)
+            if not invoice_data.get('error') or invoice_data.get('error_but_continue')
         }
         for invoice, invoice_data in invoices_data_pdf.items():
             form = invoice_data['_form']
@@ -587,10 +584,10 @@ class AccountMoveSend(models.Model):
         if invoices_data_web_service:
             self._call_web_service_after_invoice_pdf_render(invoices_data_web_service)
 
-        # Create and link the generated documents to the invoice if the web-service didn't failed.
-        for invoice, invoice_data in invoices_data_pdf.items():
+        # Create and link the generated documents to the invoice if the "before" web-service didn't failed.
+        for invoice, invoice_data in invoices_data_web_service.items():
             form = invoice_data['_form']
-            if not invoice_data.get('error') and form._need_invoice_document(invoice):
+            if form._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf):
                 form._link_invoice_documents(invoice, invoice_data)
 
     def _generate_invoice_fallback_documents(self, invoices_data):
