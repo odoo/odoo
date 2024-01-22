@@ -10,3 +10,4 @@ from . import test_groupby_week
 from . import test_private_read_group
 from . import test_inherits
 from . import test_read_progress_bar
+from . import test_related

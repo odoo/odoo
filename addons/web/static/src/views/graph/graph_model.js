@@ -582,10 +582,10 @@ export class GraphModel extends Model {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { sortable, type, store } = fields[fieldName];
+            const { groupable, type } = fields[fieldName];
             if (
-                // many2many is groupable precisely when it is stored (cf. groupable in odoo/fields.py)
-                (type === "many2many" ? !store : !sortable) ||
+                // cf. _description_groupable in odoo/fields.py
+                !groupable ||
                 ["id", "__count"].includes(fieldName) ||
                 !GROUPABLE_TYPES.includes(type)
             ) {

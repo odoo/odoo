@@ -1026,6 +1026,9 @@ export class MockServer {
                 if (!fields[fieldName]) {
                     return;
                 }
+                if (!fields[fieldName].aggregator && !func) {
+                    return;
+                }
                 if (groupByFieldNames.includes(fieldName)) {
                     // grouped fields are not aggregated
                     return;

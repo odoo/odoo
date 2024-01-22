@@ -1715,11 +1715,6 @@ class AccountMoveLine(models.Model):
             date_maturity=super()._field_to_sql(alias, "date_maturity", query, flush),
         )
 
-    def _order_field_to_sql(self, alias: str, field_name: str, direction: SQL, nulls: SQL, query: Query) -> SQL:
-        if field_name != 'payment_date':
-            return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
-        return SQL("%s %s %s", self._field_to_sql(alias, field_name, query), direction, nulls)
-
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
         if field_name != 'account_root_id' or set_count:
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)

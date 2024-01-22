@@ -2628,7 +2628,7 @@ class Model(models.AbstractModel):
         elif view_type == 'graph':
             models[self._name].union(fname for fname, field in self._fields.items() if field.type in ('integer', 'float'))
         elif view_type == 'pivot':
-            models[self._name].union(fname for fname, field in self._fields.items() if field.groupable)
+            models[self._name].union(fname for fname, field in self._fields.items() if field._description_groupable(self.env))
         return models
 
     @api.model
@@ -2644,7 +2644,7 @@ class Model(models.AbstractModel):
         return [
             'change_default', 'context', 'currency_field', 'definition_record', 'definition_record_field', 'digits', 'domain', 'aggregator', 'groups',
             'help', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
-            'sortable', 'store', 'string', 'translate', 'trim', 'type',
+            'sortable', 'store', 'string', 'translate', 'trim', 'type', 'groupable',
         ]
 
     def get_formview_id(self, access_uid=None):
