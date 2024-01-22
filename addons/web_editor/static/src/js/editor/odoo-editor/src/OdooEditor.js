@@ -1389,6 +1389,7 @@ export class OdooEditor extends EventTarget {
                     const node = this.idFind(mutation.id);
                     if (node) {
                         node.remove();
+                        node.ouid = undefined;
                     }
                 }
             }
