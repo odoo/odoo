@@ -8,3 +8,9 @@ class Company(models.Model):
     _inherit = "res.company"
 
     check_account_audit_trail = fields.Boolean(string='Audit Trail')
+
+    def cache_invalidation_fields(self):
+        # EXTENDS base
+        fields = super().cache_invalidation_fields()
+        fields.add('check_account_audit_trail')
+        return fields
