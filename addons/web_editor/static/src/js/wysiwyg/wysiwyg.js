@@ -24,8 +24,6 @@ import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
-import { registry } from "@web/core/registry";
-import { FileViewer } from "@web/core/file_viewer/file_viewer";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Mutex } from "@web/core/utils/concurrency";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

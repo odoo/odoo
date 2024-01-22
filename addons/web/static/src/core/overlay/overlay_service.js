@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { reactive } from "@odoo/owl";
+import { markRaw, reactive } from "@odoo/owl";
 import { registry } from "../registry";
 
 const servicesRegistry = registry.category("services");
@@ -30,7 +30,7 @@ export const overlayService = {
             overlays[id] = {
                 id,
                 component,
-                props,
+                props: markRaw(props),
                 remove: removeCurrentOverlay,
                 sequence: options.sequence ?? 50,
             };
