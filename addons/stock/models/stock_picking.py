@@ -359,19 +359,45 @@ class PickingType(models.Model):
 
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
+        context = {}
+
         if self:
             action['display_name'] = self.display_name
-
-        context = {
-            'search_default_picking_type_id': [self.id],
-            'default_picking_type_id': self.id,
-            'default_company_id': self.company_id.id,
-        }
+            context.update({
+                'search_default_picking_type_id': [self.id],
+                'default_picking_type_id': self.id,
+                'default_company_id': self.company_id.id,
+            })
+        else:
+            allowed_company_ids = self.env.context.get('allowed_company_ids', [])
+            if allowed_company_ids:
+                context.update({
+                    'default_company_id': allowed_company_ids[0],
+                })
 
         action_context = literal_eval(action['context'])
         context = {**action_context, **context}
         action['context'] = context
+
+        action['help'] = self.env['ir.ui.view']._render_template(
+            'stock.help_message_template', {
+                'picking_type_code': context.get('restricted_picking_type_code') or self.code,
+            }
+        )
+
         return action
+
+    @api.model
+    def get_action_picking_tree_incoming(self):
+        return self._get_action('stock.action_picking_tree_incoming')
+
+    @api.model
+    def get_action_picking_tree_outgoing(self):
+        return self._get_action('stock.action_picking_tree_outgoing')
+
+    @api.model
+    def get_action_picking_tree_internal(self):
+        return self._get_action('stock.action_picking_tree_internal')
 
     def get_action_picking_tree_late(self):
         return self._get_action('stock.action_picking_tree_late')
@@ -821,6 +847,14 @@ class Picking(models.Model):
                 '|', ('move_orig_ids', '=', False),
                      ('move_orig_ids', 'in', lines.ids)], limit=1):
                 return True
+
+    @api.model
+    def get_empty_list_help(self, help_message):
+        return self.env['ir.ui.view']._render_template(
+            'stock.help_message_template', {
+                'picking_type_code': self._context.get('restricted_picking_type_code') or self.picking_type_code,
+            }
+        )
 
     @api.model
     def _search_delay_alert_date(self, operator, value):

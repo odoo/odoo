@@ -15,6 +15,7 @@
         'report/vendor_delay_report.xml',
         'views/purchase_views.xml',
         'views/stock_views.xml',
+        'views/stock_picking_views.xml',
         'views/stock_rule_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
