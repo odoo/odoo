@@ -254,6 +254,40 @@ class Users(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
+    @api.model
+    def _init_store_data(self):
+        """Initialize the store of the user."""
+        res = {
+            "Store": {
+            },
+        }
+        self_data = self._get_self_data()
+        if self_data:
+            res["Store"]["self"] = self_data
+        return res
+
+    @api.model
+    def _get_self_data(self):
+        if not self.env.user._is_public():
+            return {
+                "id": self.env.user.partner_id.id,
+                "isAdmin": self.env.user._is_admin(),
+                "isInternalUser": not self.env.user.share,
+                "name": self.env.user.partner_id.name,
+                "notification_preference": self.env.user.notification_type,
+                "type": "partner",
+                "userId": self.env.user.id,
+                "write_date": fields.Datetime.to_string(self.env.user.write_date),
+            }
+        guest = self.env["mail.guest"]._get_guest_from_context()
+        if guest:
+            return {
+                "id": guest.id,
+                "name": guest.name,
+                "type": "guest",
+                "write_date": fields.Datetime.to_string(guest.write_date),
+            }
+
     def _init_messaging(self):
         self.ensure_one()
         self = self.with_user(self)

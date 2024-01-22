@@ -171,7 +171,7 @@ export async function start(param0 = {}) {
     });
     param0["target"] = target;
     const pyEnv = await getPyEnv();
-    patchWithCleanup(session, { self: pyEnv.getSelfData() });
+    patchWithCleanup(session, { storeData: { Store: { self: pyEnv.getSelfData() } } });
     if (browser.Notification && !browser.Notification.isPatched) {
         patchBrowserNotification("denied");
     }

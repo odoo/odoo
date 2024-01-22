@@ -9,6 +9,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
+    _query_count_init_store = 0
     _query_count = 66
     _query_count_discuss_channels = 69
 
@@ -132,6 +133,37 @@ class TestDiscussFullPerformance(HttpCase):
         session = self.env["discuss.channel.rtc.session"].sudo().create(data)
         member_0.rtc_inviting_session_id = session
         self.channel_channel_group_1_inviting_session = session
+
+    @users('emp')
+    @warmup
+    def test_init_store_data(self):
+        """Test performance of `init_messaging`."""
+        self._setup_test()
+        self.maxDiff = None
+        self.env.flush_all()
+        self.env.invalidate_all()
+        with self.assertQueryCount(emp=self._query_count_init_store):
+            store_data = self.env["res.users"].with_user(self.users[0])._init_store_data()
+        self.assertEqual(store_data, self._get_init_store_data_result())
+
+    def _get_init_store_data_result(self):
+        """Returns the result of a call to init_messaging.
+        The point of having a separate getter is to allow it to be overriden.
+        """
+        return {
+            "Store": {
+                "self": {
+                    "id": self.users[0].partner_id.id,
+                    "isAdmin": False,
+                    "isInternalUser": True,
+                    "name": "Ernest Employee",
+                    "notification_preference": "inbox",
+                    "type": "partner",
+                    "userId": self.users[0].id,
+                    "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
+                },
+            },
+        }
 
     @users('emp')
     @warmup
