@@ -89,8 +89,9 @@ class Manager(Thread):
         """
 
         helpers.start_nginx_server()
-        if platform.system() == 'Linux':
+        if platform.system() == 'Linux' and helpers.get_odoo_server_url():
             helpers.check_git_branch()
+            helpers.generate_password()
         is_certificate_ok, certificate_details = helpers.get_certificate_status()
         if not is_certificate_ok:
             _logger.warning("An error happened when trying to get the HTTPS certificate: %s",
