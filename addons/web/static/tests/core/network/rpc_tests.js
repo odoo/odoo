@@ -22,7 +22,7 @@ async function testRPC(route, params) {
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
 
     if (isDeployed) {
-        clearRegistryWithCleanup(registry.category("main_components"));
+        clearRegistryWithCleanup(registry.category("overlays"));
     }
     await makeTestEnv({ serviceRegistry });
     isDeployed = true;

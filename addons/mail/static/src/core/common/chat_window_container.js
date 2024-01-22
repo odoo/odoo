@@ -85,6 +85,4 @@ export class ChatWindowContainer extends Component {
     }
 }
 
-registry
-    .category("main_components")
-    .add("mail.ChatWindowContainer", { Component: ChatWindowContainer });
+registry.category("overlays").add("mail.ChatWindowContainer", { component: ChatWindowContainer });

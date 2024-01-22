@@ -9,7 +9,7 @@ import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from '@web/core/templates';
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { browser } from '@web/core/browser/browser';
 import { _t } from "@web/core/l10n/translation";
 import { App, Component, whenReady } from "@odoo/owl";
@@ -309,7 +309,7 @@ export async function createPublicRoot(RootWidget) {
     Component.env = env;
     await env.services.public_component.mountComponents();
     const publicRoot = new RootWidget(null, env);
-    const app = new App(MainComponentsContainer, {
+    const app = new App(OverlayContainer, {
         getTemplate,
         env,
         dev: env.debug,

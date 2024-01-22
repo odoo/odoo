@@ -3,7 +3,7 @@
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
@@ -18,7 +18,7 @@ export class WebClient extends Component {
     static components = {
         ActionContainer,
         NavBar,
-        MainComponentsContainer,
+        OverlayContainer,
     };
 
     setup() {

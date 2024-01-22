@@ -26,19 +26,29 @@ const AUTOCLOSE_DELAY = 4000;
 
 export const notificationService = {
     notificationContainer: NotificationContainer,
+    dependencies: ["overlay"],
 
-    start() {
+    start(_, { overlay }) {
         let notifId = 0;
         const notifications = reactive({});
 
-        registry.category("main_components").add(
-            this.notificationContainer.name,
-            {
-                Component: this.notificationContainer,
-                props: { notifications },
-            },
-            { sequence: 100 }
-        );
+        let removeContainer = null;
+        const addContainer = () => {
+            if (removeContainer) {
+                return;
+            }
+            const remove = overlay.add(
+                this.notificationContainer,
+                { notifications },
+                { sequence: 100 }
+            );
+            removeContainer = () => {
+                if (!Object.keys(notifications).length) {
+                    remove();
+                    removeContainer = null;
+                }
+            };
+        };
 
         /**
          * @param {string} message
@@ -72,6 +82,7 @@ export const notificationService = {
                 freeze,
             };
             notifications[id] = notification;
+            addContainer();
             if (!sticky) {
                 closeTimeout = browser.setTimeout(closeFn, AUTOCLOSE_DELAY);
             }
@@ -97,6 +108,7 @@ export const notificationService = {
                     notification.onClose();
                 }
                 delete notifications[id];
+                removeContainer?.();
             }
         }
 

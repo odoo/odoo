@@ -9,7 +9,7 @@ import { App } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { registry } from "@web/core/registry";
 
-registry.category("main_components").remove("mail.ChatWindowContainer");
+registry.category("overlays").remove("mail.ChatWindowContainer");
 
 export const livechatBootService = {
     dependencies: ["mail.messaging"],

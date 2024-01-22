@@ -67,12 +67,12 @@ export const websiteService = {
             document.body.classList.toggle('o_website_fullscreen', fullscreen);
             bus.trigger(fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE');
         }, { global: true });
-        registry.category('main_components').add('FullscreenIndication', {
-            Component: FullscreenIndication,
+        registry.category("overlays").add('FullscreenIndication', {
+            component: FullscreenIndication,
             props: { bus },
         });
-        registry.category('main_components').add('WebsiteLoader', {
-            Component: WebsiteLoader,
+        registry.category("overlays").add('WebsiteLoader', {
+            component: WebsiteLoader,
             props: { bus },
         });
         return {

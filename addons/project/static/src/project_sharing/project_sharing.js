@@ -2,14 +2,14 @@
 
 import { useBus, useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
 import { Component, markup, useEffect, useExternalListener, useState } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
     static props = {};
-    static components = { ActionContainer, MainComponentsContainer };
+    static components = { ActionContainer, OverlayContainer };
     static template = "project.ProjectSharingWebClient";
 
     setup() {

@@ -36,8 +36,8 @@ const renderService = {
     start() {
         const toBeRenderedComponentData = reactive({});
         let elem, resolver;
-        registry.category("main_components").add("RenderContainer", {
-            Component: RenderContainer,
+        registry.category("overlays").add("RenderContainer", {
+            component: RenderContainer,
             props: {
                 comp: toBeRenderedComponentData,
                 onRendered: (el) => {

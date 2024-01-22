@@ -4,16 +4,14 @@ import { Dropzone } from "@mail/core/common/dropzone";
 
 import { useEffect, useExternalListener } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
-const componentRegistry = registry.category("main_components");
-
-let id = 1;
 export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
-    const dropzoneId = `mail.dropzone_${id++}`;
     let dragCount = 0;
     let hasTarget = false;
+    let removeDropzone = null;
 
+    const overlay = useService("overlay");
     useExternalListener(document, "dragenter", onDragEnter);
     useExternalListener(document, "dragleave", onDragLeave);
     // Prevents the browser to open or download the file when it is dropped
@@ -27,15 +25,11 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
 
     function updateDropzone() {
         const shouldDisplayDropzone = dragCount && hasTarget && isDropzoneEnabled();
-        const hasDropzone = componentRegistry.contains(dropzoneId);
-        if (shouldDisplayDropzone && !hasDropzone) {
-            componentRegistry.add(dropzoneId, {
-                Component: Dropzone,
-                props: { extraClass, onDrop, ref: targetRef },
-            });
+        if (shouldDisplayDropzone && !removeDropzone) {
+            removeDropzone = overlay.add(Dropzone, { extraClass, onDrop, ref: targetRef });
         }
-        if (!shouldDisplayDropzone && hasDropzone) {
-            componentRegistry.remove(dropzoneId);
+        if (!shouldDisplayDropzone && removeDropzone) {
+            removeDropzone();
         }
     }
 

@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { reactive } from "@odoo/owl";
+import { markRaw, reactive } from "@odoo/owl";
 import { registry } from "../registry";
-import { OverlayContainer } from "./overlay_container";
 
-const mainComponents = registry.category("main_components");
-const services = registry.category("services");
+const servicesRegistry = registry.category("services");
+const overlaysRegistry = registry.category("overlays");
 
 /**
  * @typedef {{
@@ -19,11 +18,6 @@ export const overlayService = {
         let nextId = 0;
         const overlays = reactive({});
 
-        mainComponents.add("OverlayContainer", {
-            Component: OverlayContainer,
-            props: { overlays },
-        });
-
         const remove = (id, onRemove = () => {}) => {
             if (id in overlays) {
                 onRemove();
@@ -31,27 +25,48 @@ export const overlayService = {
             }
         };
 
-        /**
-         * @param {typeof Component} component
-         * @param {object} props
-         * @param {OverlayServiceAddOptions} [options]
-         * @returns {() => void}
-         */
-        const add = (component, props, options = {}) => {
-            const id = ++nextId;
+        const _add = (id, component, props = {}, options = {}) => {
             const removeCurrentOverlay = () => remove(id, options.onRemove);
             overlays[id] = {
                 id,
                 component,
-                props,
+                props: markRaw(props),
                 remove: removeCurrentOverlay,
                 sequence: options.sequence ?? 50,
             };
             return removeCurrentOverlay;
         };
 
+        /**
+         * @param {typeof Component} component
+         * @param {object} [props]
+         * @param {OverlayServiceAddOptions} [options]
+         * @returns {() => void}
+         */
+        const add = (component, props = {}, options = {}) => {
+            return _add(++nextId, component, props, options);
+        };
+
+        for (const [key, value] of overlaysRegistry.getEntries()) {
+            _add(key, value.component, value.props);
+        }
+
+        overlaysRegistry.addEventListener("UPDATE", (ev) => {
+            const { operation, key, value } = ev.detail;
+            switch (operation) {
+                case "add": {
+                    _add(key, value.component, value.props);
+                    break;
+                }
+                case "delete": {
+                    remove(key);
+                    break;
+                }
+            }
+        });
+
         return { add, overlays };
     },
 };
 
-services.add("overlay", overlayService);
+servicesRegistry.add("overlay", overlayService);

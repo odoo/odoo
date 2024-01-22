@@ -18,6 +18,7 @@ import {
     triggerHotkey,
 } from "../../helpers/utils";
 import { backspaceSearchBar, editSearchBar } from "./command_service_tests";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 import { Component, xml } from "@odoo/owl";
 
@@ -30,15 +31,13 @@ class FooterComponent extends Component {
 }
 
 class TestComponent extends Component {
+    static components = { OverlayContainer };
     static template = xml`
       <div>
         <div class="o_dialog_container"/>
-        <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+        <OverlayContainer/>
       </div>
     `;
-    get OverlayContainer() {
-        return registry.category("main_components").get("OverlayContainer");
-    }
 }
 
 QUnit.module("Command Palette", {

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Transition } from "@web/core/transition";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
@@ -11,7 +11,7 @@ import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
  */
 export class Chrome extends Component {
     static template = "point_of_sale.Chrome";
-    static components = { Transition, MainComponentsContainer, Navbar };
+    static components = { Transition, OverlayContainer, Navbar };
     static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();

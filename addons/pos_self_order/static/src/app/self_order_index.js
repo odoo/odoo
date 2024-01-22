@@ -3,7 +3,7 @@ import { Component, whenReady, App } from "@odoo/owl";
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { Router } from "@pos_self_order/app/router";
 import { LandingPage } from "@pos_self_order/app/pages/landing_page/landing_page";
@@ -34,7 +34,7 @@ class selfOrderIndex extends Component {
         StandNumberPage,
         LandingPage,
         LoadingOverlay,
-        MainComponentsContainer,
+        OverlayContainer,
     };
 
     setup() {

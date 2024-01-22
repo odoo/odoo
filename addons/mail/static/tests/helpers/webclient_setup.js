@@ -35,14 +35,14 @@ const mailServicesRegistry = registry.category("mail.services");
 const webServicesRegistry = registry.category("services");
 
 const mailMainComponentsRegistry = registry.category("mail.main_components");
-const webMainComponentsRegistry = registry.category("main_components");
+const webOverlaysRegistry = registry.category("overlays");
 
 const mailSystrayRegistry = registry.category("mail.systray");
 const webSystrayRegistry = registry.category("systray");
 
 QUnit.begin(() => {
     copyRegistry(webServicesRegistry, mailServicesRegistry);
-    copyRegistry(webMainComponentsRegistry, mailMainComponentsRegistry);
+    copyRegistry(webOverlaysRegistry, mailMainComponentsRegistry);
     copyRegistry(webSystrayRegistry, mailSystrayRegistry);
 });
 
@@ -87,7 +87,7 @@ export const setupManager = {
      */
     setupMainComponentRegistry() {
         for (const [name, component] of mailMainComponentsRegistry.getEntries()) {
-            webMainComponentsRegistry.add(name, component);
+            webOverlaysRegistry.add(name, component);
         }
         if (!registry.category("actions").contains("mail.action_discuss")) {
             registry.category("actions").add("mail.action_discuss", DiscussClientAction);

@@ -12,6 +12,7 @@ declare module "services" {
     import { nameService } from "@web/core/name_service";
     import { notificationService } from "@web/core/notifications/notification_service";
     import { ormService } from "@web/core/orm_service";
+    import { overlayService } from "@web/core/overlay/overlay_service";
     import { popoverService } from "@web/core/popover/popover_service";
     import { titleService } from "@web/core/browser/title_service";
     import { uiService } from "@web/core/ui/ui_service";
@@ -32,6 +33,7 @@ declare module "services" {
         name: ReturnType<typeof nameService.start>;
         notification: ReturnType<typeof notificationService.start>;
         orm: ReturnType<typeof ormService.start>;
+        overlay: ReturnType<typeof overlayService.start>;
         popover: ReturnType<typeof popoverService.start>;
         title: ReturnType<typeof titleService.start>;
         ui: ReturnType<typeof uiService.start>;

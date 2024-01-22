@@ -4,7 +4,7 @@ import { App, Component, useState, xml } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { browser } from "@web/core/browser/browser";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
@@ -13,7 +13,7 @@ import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
 import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 
-const mainComponents = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 
 /**
  * Creates and mounts a parent component that use the "useTooltip" hook.
@@ -36,7 +36,7 @@ export async function makeParent(Child, options = {}) {
 
     // add the popover service to the registry -> will add the PopoverContainer
     // to the mainComponentRegistry
-    clearRegistryWithCleanup(mainComponents);
+    clearRegistryWithCleanup(overlaysRegistry);
 
     patchWithCleanup(browser, {
         setTimeout: options.mockSetTimeout || ((fn) => fn()),
@@ -69,9 +69,9 @@ export async function makeParent(Child, options = {}) {
         static template = xml`
             <div>
                 <Child/>
-                <MainComponentsContainer />
+                <OverlayContainer />
             </div>`;
-        static components = { Child, MainComponentsContainer };
+        static components = { Child, OverlayContainer };
     }
 
     const app = new App(Parent, {

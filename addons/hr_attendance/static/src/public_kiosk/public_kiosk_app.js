@@ -6,7 +6,7 @@ import { KioskManualSelection } from "@hr_attendance/components/manual_selection
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -23,7 +23,7 @@ class kioskAttendanceApp extends Component{
         KioskManualSelection,
         KioskGreetings,
         KioskPinCode,
-        MainComponentsContainer,
+        OverlayContainer,
     };
 
     setup() {
