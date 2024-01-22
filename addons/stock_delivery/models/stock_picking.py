@@ -37,9 +37,8 @@ class StockPicking(models.Model):
         for package in self:
             packs = set()
             if self.env['stock.move.line'].search_count([('picking_id', '=', package.id), ('result_package_id', '!=', False)]):
-                for move_line in package.move_line_ids:
-                    if move_line.result_package_id:
-                        packs.add(move_line.result_package_id.id)
+                for move_line in self.env['stock.move.line'].search([('id', 'in', package.move_line_ids.ids),('result_package_id', '!=', False)]):
+                    packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
