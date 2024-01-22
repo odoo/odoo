@@ -46,6 +46,10 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Create Task',
     run: 'text Test Create Task',
 }, {
+    content: "Check that task stages cannot be drag and dropped",
+    trigger: 'iframe .o_kanban_group:not(.o_group_draggable)',
+    isCheck: true,
+}, {
     trigger: 'iframe .o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
 }, {
