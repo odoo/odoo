@@ -18,4 +18,4 @@ export class CallInvitations extends Component {
     }
 }
 
-registry.category("main_components").add("discuss.CallInvitations", { Component: CallInvitations });
+registry.category("overlays").add("discuss.CallInvitations", { component: CallInvitations });

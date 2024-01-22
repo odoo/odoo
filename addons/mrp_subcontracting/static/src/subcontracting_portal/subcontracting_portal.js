@@ -2,13 +2,13 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
 import { Component, useEffect, useExternalListener } from "@odoo/owl";
 
 export class SubcontractingPortalWebClient extends Component {
-    static components = { ActionContainer, MainComponentsContainer };
+    static components = { ActionContainer, OverlayContainer };
     static template = "mrp_subcontracting.SubcontractingPortalWebClient";
     setup() {
         window.parent.document.body.style.margin = "0"; // remove the margin in the parent body

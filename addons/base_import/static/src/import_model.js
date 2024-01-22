@@ -8,7 +8,7 @@ import { memoize } from "@web/core/utils/functions";
 import { useState } from "@odoo/owl";
 import { ImportBlockUI } from "./import_block_ui";
 
-const mainComponentRegistry = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 
 const strftimeFormatTable = {
     d: "w",
@@ -189,10 +189,10 @@ export class BaseImportModel {
      * the UI, without modifying the core ui service to handle a generic use case
      */
     block(message, blockComponent) {
-        mainComponentRegistry.add(
+        overlaysRegistry.add(
             "ImportBlockUI",
             {
-                Component: ImportBlockUI,
+                component: ImportBlockUI,
                 props: {
                     blockComponent,
                     message,
@@ -203,7 +203,7 @@ export class BaseImportModel {
     }
 
     unblock() {
-        mainComponentRegistry.remove("ImportBlockUI");
+        overlaysRegistry.remove("ImportBlockUI");
     }
 
     async init() {
@@ -240,8 +240,11 @@ export class BaseImportModel {
             const error = await this._executeImportStep(isTest, importRes);
             if (error) {
                 const errorData = error.data || {};
-                const message = errorData.arguments && (errorData.arguments[1] || errorData.arguments[0])
-                    || _t("An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once.");
+                const message =
+                    (errorData.arguments && (errorData.arguments[1] || errorData.arguments[0])) ||
+                    _t(
+                        "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
+                    );
 
                 if (error.message) {
                     this._addMessage("danger", [error.message, message]);

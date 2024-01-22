@@ -151,7 +151,7 @@ export function listenSizeChange(callback) {
 export const uiService = {
     start(env) {
         // block/unblock code
-        registry.category("main_components").add("BlockUI", { Component: BlockUI, props: { bus } });
+        registry.category("overlays").add("BlockUI", { component: BlockUI, props: { bus } });
 
         let blockCount = 0;
         function block(data) {

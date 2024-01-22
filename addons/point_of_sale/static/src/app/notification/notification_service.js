@@ -24,8 +24,8 @@ export const notificationService = {
     start() {
         const notifications = reactive({});
         let notifId = 0;
-        registry.category("main_components").add("PosNotificationContainer", {
-            Component: NotificationContainer,
+        registry.category("overlays").add("PosNotificationContainer", {
+            component: NotificationContainer,
             props: { notifications },
         });
         return {

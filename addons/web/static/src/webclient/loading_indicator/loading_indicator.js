@@ -71,6 +71,6 @@ export class LoadingIndicator extends Component {
     }
 }
 
-registry.category("main_components").add("LoadingIndicator", {
-    Component: LoadingIndicator,
+registry.category("overlays").add("LoadingIndicator", {
+    component: LoadingIndicator,
 });

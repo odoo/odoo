@@ -16,8 +16,8 @@ export const debugService = {
                 return env.debug && internalState.widgetOpen;
             },
         });
-        registry.category("main_components").add("DebugWidget", {
-            Component: DebugWidget,
+        registry.category("overlays").add("DebugWidget", {
+            component: DebugWidget,
             props: { state },
         });
         return {
