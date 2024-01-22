@@ -1,7 +1,8 @@
 /** @odoo-module */
 
-import { Component, useExternalListener, useSubEnv, xml } from "@odoo/owl";
+import { Component, useSubEnv, xml } from "@odoo/owl";
 import { createURL, setParams, urlParams } from "../core/url";
+import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
 import { HootReporting } from "./hoot_reporting";
@@ -10,12 +11,6 @@ import { HootSearch } from "./hoot_search";
 /**
  * @typedef {{}} HootMainProps
  */
-
-//-----------------------------------------------------------------------------
-// Global
-//-----------------------------------------------------------------------------
-
-const { window } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -71,7 +66,7 @@ export class HootMain extends Component {
         useSubEnv({ runner });
 
         if (!runner.config.headless) {
-            useExternalListener(window, "keydown", this.onWindowKeyDown, { capture: true });
+            useWindowListener("keydown", this.onWindowKeyDown, { capture: true });
         }
     }
 

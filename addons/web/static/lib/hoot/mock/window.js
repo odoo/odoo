@@ -207,12 +207,14 @@ export function getTitle() {
 /**
  * @param {typeof globalThis} global
  */
-export function patchWindow(global = globalThis) {
-    applyPropertyDescriptors(global.window, WINDOW_MOCK_DESCRIPTORS);
-    mockEventListeners(global.window);
+export function patchWindow({ document, window } = globalThis) {
+    applyPropertyDescriptors(window, WINDOW_MOCK_DESCRIPTORS);
+    mockEventListeners(window);
     whenReady(() => {
-        applyPropertyDescriptors(global.document, DOCUMENT_MOCK_DESCRIPTORS);
-        mockEventListeners(global.document);
+        applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
+        for (const target of [document, document.body, document.head]) {
+            mockEventListeners(target);
+        }
     });
 }
 
@@ -239,21 +241,22 @@ export function unpatchWindow() {
  * Returns a function checking that no listeners are left on the given target, and
  * optionally removing them.
  *
- * @param {EventTarget} target
- * @returns {(cleanup: boolean) => void}
- * @example
- *  afterEach(watchListeners(window)); // Will warn if listeners are left after test
+ * @param {...EventTarget} targets
  */
-export function watchListeners(target) {
-    listenerMap.set(target, {});
+export function watchListeners(...targets) {
+    for (const target of targets) {
+        listenerMap.set(target, {});
+    }
 
     return function checkListeners() {
-        if (!isInDOM(target)) {
-            return;
-        }
-        for (const [type, callbacks] of Object.entries(listenerMap.get(target))) {
-            for (const callback of callbacks) {
-                target.removeEventListener(type, callback);
+        for (const [target, listeners] of listenerMap) {
+            if (!isInDOM(target)) {
+                continue;
+            }
+            for (const [type, callbacks] of Object.entries(listeners)) {
+                for (const callback of callbacks) {
+                    target.removeEventListener(type, callback);
+                }
             }
         }
     };

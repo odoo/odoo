@@ -1,7 +1,8 @@
 /** @odoo-module */
 
+import { useExternalListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
-import { isIterable, parseRegExp, toSelector } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { isIterable, toSelector } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { DiffMatchPatch } from "./lib/diff_match_patch";
 
 /**
@@ -57,6 +58,7 @@ const {
     setTimeout,
     String,
     TypeError,
+    window,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -91,6 +93,11 @@ const R_OBJECT = /^\[object \w+\]$/;
 
 const dmp = new DiffMatchPatch();
 const { DIFF_INSERT, DIFF_DELETE } = DiffMatchPatch;
+
+const windowTarget = {
+    addEventListener: window.addEventListener.bind(window),
+    removeEventListener: window.removeEventListener.bind(window),
+};
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -751,6 +758,11 @@ export function stringToNumber(string) {
  */
 export function title(string) {
     return string[0].toUpperCase() + string.slice(1);
+}
+
+/** @type {EventTarget["addEventListener"]} */
+export function useWindowListener(type, callback, options) {
+    return useExternalListener(windowTarget, type, callback, options);
 }
 
 export class HootError extends Error {

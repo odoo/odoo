@@ -1,7 +1,8 @@
 /** @odoo-module */
 
-import { Component, useExternalListener, useRef, useState, xml } from "@odoo/owl";
+import { Component, useRef, useState, xml } from "@odoo/owl";
 import { refresh } from "../core/url";
+import { useWindowListener } from "../hoot_utils";
 import { MockMath, generateSeed, internalRandom } from "../mock/math";
 import { toggleColorScheme, useColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
@@ -11,12 +12,6 @@ import { HootCopyButton } from "./hoot_copy_button";
  *
  * @typedef {{}} HootConfigDropdownProps
  */
-
-//-----------------------------------------------------------------------------
-// Global
-//-----------------------------------------------------------------------------
-
-const { window } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -200,13 +195,13 @@ export class HootConfigDropdown extends Component {
         this.config = useState(this.env.runner.config);
         this.state = useState({ open: false });
 
-        useExternalListener(window, "keydown", (ev) => {
+        useWindowListener("keydown", (ev) => {
             if (this.state.open && ev.key === "Escape") {
                 ev.preventDefault();
                 this.state.open = false;
             }
         });
-        useExternalListener(window, "click", (ev) => {
+        useWindowListener("click", (ev) => {
             const path = ev.composedPath();
             if (!path.includes(this.rootRef.el)) {
                 this.state.open = false;

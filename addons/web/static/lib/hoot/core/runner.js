@@ -688,7 +688,7 @@ export class TestRunner {
             const keys = this.config.watchkeys?.split(/\s*,\s*/g) || [];
             this.afterEach(watchKeys(window, keys), watchKeys(document, keys));
         }
-        this.afterEach(watchListeners(document), watchListeners(window));
+        this.afterEach(watchListeners(window, document, document.head, document.body));
 
         enableEventLogs(this.debug);
         enableNetworkLogs(this.debug);

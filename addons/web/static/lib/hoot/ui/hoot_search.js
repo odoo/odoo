@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { Component, useExternalListener, useRef, useState, xml } from "@odoo/owl";
+import { Component, useRef, useState, xml } from "@odoo/owl";
 import { isRegExpFilter, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Suite } from "../core/suite";
 import { Tag } from "../core/tag";
 import { EXCLUDE_PREFIX, refresh, setParams, subscribeToURLParams } from "../core/url";
-import { debounce, lookup, normalize, title } from "../hoot_utils";
+import { debounce, lookup, normalize, title, useWindowListener } from "../hoot_utils";
 import { HootTagButton } from "./hoot_tag_button";
 
 /**
@@ -22,7 +22,7 @@ import { HootTagButton } from "./hoot_tag_button";
 // Global
 //-----------------------------------------------------------------------------
 
-const { document, Object, window } = globalThis;
+const { document, Object } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -80,13 +80,13 @@ export class HootSearch extends Component {
                         </button>
                     </t>
                     <input
-                        type="text"
+                        type="search"
                         class="w-full rounded p-1 outline-none"
                         autofocus="autofocus"
                         placeholder="Filter suites, tests or tags"
                         t-ref="search-input"
                         t-att-disabled="isRunning"
-                        t-model.trim="state.query"
+                        t-att-value="state.query"
                         t-on-input="onSearchInputInput"
                         t-on-keydown="onSearchInputKeyDown"
                     />
@@ -124,7 +124,7 @@ export class HootSearch extends Component {
                 <t t-if="state.showDropdown">
                     <div class="hoot-search-dropdown animate-slide-down bg-base text-base absolute mt-1 px-2 py-3 shadow rounded shadow z-10">
                         <div class="flex mb-2">
-                            <t t-if="state.query">
+                            <t t-if="state.query.trim()">
                                 <button
                                     class="flex items-center gap-1"
                                     type="submit"
@@ -233,11 +233,12 @@ export class HootSearch extends Component {
     title = title;
 
     get useRegExp() {
-        return isRegExpFilter(this.state.query);
+        return isRegExpFilter(this.state.query.trim());
     }
 
     get wrappedQuery() {
-        return this.useRegExp ? this.state.query : `"${this.state.query}"`;
+        const query = this.state.query.trim();
+        return this.useRegExp ? query : `"${query}"`;
     }
 
     updateSuggestions = debounce(() => {
@@ -273,7 +274,7 @@ export class HootSearch extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        useExternalListener(window, "click", this.onWindowClick);
+        useWindowListener("click", this.onWindowClick);
     }
 
     /**
@@ -439,7 +440,12 @@ export class HootSearch extends Component {
         }
     }
 
-    onSearchInputInput() {
+    /**
+     * @param {InputEvent} ev
+     */
+    onSearchInputInput(ev) {
+        this.state.query = ev.target.value;
+
         this.updateParams(true);
         this.updateSuggestions();
     }
@@ -493,10 +499,11 @@ export class HootSearch extends Component {
     }
 
     toggleRegExp() {
+        const query = this.state.query.trim();
         if (this.useRegExp) {
-            this.state.query = this.state.query.slice(1, -1);
+            this.state.query = query.slice(1, -1);
         } else {
-            this.state.query = `/${this.state.query}/`;
+            this.state.query = `/${query}/`;
         }
         this.updateParams(true);
         this.updateSuggestions();
@@ -523,7 +530,7 @@ export class HootSearch extends Component {
         }
         if (this.useTextFilter) {
             setParams({
-                filter: this.state.query,
+                filter: this.state.query.trim(),
                 suite: null,
                 tag: null,
                 test: null,
