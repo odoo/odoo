@@ -113,7 +113,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
 
 # The maximum amount in INR that can be paid through an eMandate.
 MANDATE_MAX_AMOUNT = {
-    'card': 500000,
+    'card': 1000000,
     'upi': 100000,
 }
 
