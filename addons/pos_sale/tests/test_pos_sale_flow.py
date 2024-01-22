@@ -340,7 +340,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         #create a sale order with 2 customer notes
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'note': 'Customer note 1',
             'order_line': [(0, 0, {
                 'product_id': self.whiteboard_pen.id,
@@ -373,7 +373,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'plan_id': self.analytic_plan_projects.id,
         })
         self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.desk_pad.id,
                 'name': self.desk_pad.name,
