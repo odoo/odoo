@@ -327,12 +327,19 @@ export function getBasicEvalContext(config) {
     };
 }
 
-export function getFieldsSpec(
-    activeFields,
-    fields,
-    evalContext,
-    { parentActiveFields, withInvisible } = {}
-) {
+function getFieldContextForSpec(activeFields, fields, fieldName, evalContext) {
+    let context = activeFields[fieldName].context;
+    if (!context || context === "{}") {
+        context = fields[fieldName].context || {};
+    } else {
+        context = evalPartialContext(context, evalContext);
+    }
+    if (Object.keys(context).length > 0) {
+        return context;
+    }
+}
+
+export function getFieldsSpec(activeFields, fields, evalContext, { withInvisible } = {}) {
     const fieldsSpec = {};
     const properties = [];
     for (const fieldName in activeFields) {
@@ -340,45 +347,44 @@ export function getFieldsSpec(
             continue;
         }
         const { related, limit, defaultOrderBy, invisible } = activeFields[fieldName];
+        const isAlwaysInvisible = invisible === "True" || invisible === "1";
         fieldsSpec[fieldName] = {};
         // X2M
-        if (related && ((invisible !== "True" && invisible !== "1") || withInvisible)) {
+        if (related && (withInvisible || !isAlwaysInvisible)) {
             fieldsSpec[fieldName].fields = getFieldsSpec(
                 related.activeFields,
                 related.fields,
                 evalContext,
                 { parentActiveFields: activeFields, withInvisible }
             );
+            fieldsSpec[fieldName].context = getFieldContextForSpec(
+                activeFields,
+                fields,
+                fieldName,
+                evalContext
+            );
             fieldsSpec[fieldName].limit = limit;
             if (defaultOrderBy) {
                 fieldsSpec[fieldName].order = orderByToString(defaultOrderBy);
             }
         }
+        // Many2One/Reference
+        if (["many2one", "reference"].includes(fields[fieldName].type)) {
+            fieldsSpec[fieldName].fields = {};
+            if (!isAlwaysInvisible) {
+                fieldsSpec[fieldName].fields.display_name = {};
+                fieldsSpec[fieldName].context = getFieldContextForSpec(
+                    activeFields,
+                    fields,
+                    fieldName,
+                    evalContext
+                );
+            }
+            continue;
+        }
         // Properties
         if (fields[fieldName].type === "properties") {
             properties.push(fieldName);
-        }
-        // M2O
-        if (fields[fieldName].type === "many2one") {
-            fieldsSpec[fieldName].fields = {};
-            if (invisible !== "True" && invisible !== "1") {
-                fieldsSpec[fieldName].fields.display_name = {};
-            }
-        }
-        if (["many2one", "one2many", "many2many"].includes(fields[fieldName].type)) {
-            let context = activeFields[fieldName].context;
-            if (!context || context === "{}") {
-                context = fields[fieldName].context || {};
-            } else {
-                context = evalPartialContext(context, evalContext);
-            }
-            if (Object.keys(context).length > 0) {
-                fieldsSpec[fieldName].context = context;
-            }
-        }
-        // Reference
-        if (fields[fieldName].type === "reference") {
-            fieldsSpec[fieldName].fields = { display_name: {} };
         }
     }
 
