@@ -17,7 +17,7 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.sql_db import Cursor
-from odoo.tests import tagged
+from odoo.tests import tagged, RecordCapturer
 from odoo.tests.common import users
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
@@ -1657,6 +1657,35 @@ class TestMailgateway(TestMailCommon):
             self.assertEqual(file_content, attachment.raw.decode(encoding or 'utf-8'))
             if encoding not in ['', 'UTF-8']:
                 self.assertNotEqual(file_content, attachment.raw.decode('utf-8'))
+
+    def test_message_hebrew_iso8859_8_i(self):
+        # This subject was found inside an email of one of our customer.
+        # The charset is iso-8859-8-i which isn't natively supported by
+        # python, check that Odoo is still capable of decoding it.
+        subject = "בוקר טוב! צריך איימק ושתי מסכים"
+        encoded_subject = "=?iso-8859-8-i?B?4eX3+CDo5eEhIPb46eog4Onp7vcg5fn66SDu8evp7Q==?="
+
+        # This content was made up using google translate. The charset
+        # is iso-8859-8 which is natively supported by python.
+        charset = "iso-8859-8"
+        content = "שלום וברוכים הבאים למקרה המבחן הנפלא הזה"
+        encoded_content = base64.b64encode(content.encode(charset)).decode()
+
+        with RecordCapturer(self.env['mail.test.gateway'], []) as capture:
+            mail = test_mail_data.MAIL_FILE_ENCODING.format(
+                msg_id="<test_message_hebrew_iso8859_8_i@iron.sky>",
+                subject=encoded_subject,
+                charset=f'; charset="{charset}"',
+                content=encoded_content,
+            )
+            self.env['mail.thread'].message_process('mail.test.gateway', mail)
+
+        capture.records.ensure_one()
+        self.assertEqual(capture.records.name, subject)
+        self.assertEqual(
+            capture.records.message_ids.attachment_ids.raw.decode(charset),
+            content
+        )
 
     # --------------------------------------------------
     # Emails loop detection
