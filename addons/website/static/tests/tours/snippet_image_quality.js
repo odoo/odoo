@@ -32,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
         trigger: 'we-customizeblock-options:has(we-title:contains("Image")) .o_we_image_weight:contains(" kb"):not(:contains("41.5 kb"))',
         run() {
             // Make sure the reached size is smaller than the original one.
-            if (parseFloat(this.$anchor[0].innerText) >= 47.5) {
+            if (parseFloat(this.anchor.innerText) >= 47.5) {
                 console.error("Image size should be smaller than original");
             }
         },

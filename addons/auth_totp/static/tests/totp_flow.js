@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { click } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
@@ -54,7 +55,7 @@ function closeProfileDialog({content, totp_state}) {
         content,
         trigger,
         run() {
-            const $modal = this.$anchor.parents('.o_dialog');
+            const $modal = $(this.anchor).parents('.o_dialog');
             if ($modal.length) {
                 $modal.find('button[name=preference_cancel]').click()
             }
@@ -65,7 +66,7 @@ function closeProfileDialog({content, totp_state}) {
             while (document.querySelector('.o_dialog')) {
                 await Promise.resolve();
             }
-            this.$anchor.addClass('dialog-closed');
+            this.anchor.classList.add("dialog-closed");
         },
     }, {
         trigger: 'body.dialog-closed',
@@ -95,7 +96,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
     async run(helpers) {
-        const $secret = this.$anchor.closest('div').find('[name=secret] span:first-child');
+        const $secret = $(this.anchor).closest('div').find('[name=secret] span:first-child');
         const $copyBtn = $secret.find('button');
         $copyBtn.remove();
         const token = await rpc('/totphook', {
@@ -103,7 +104,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
         });
         helpers.text(token, '[name=code] input');
         helpers.click('button.btn-primary:contains(Activate)');
-        $('body').addClass('got-token')
+        document.querySelector("body").classList.add("got-token");
     }
 }, {
     content: 'wait for rpc',
@@ -296,20 +297,20 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
             helpers.click();
         } else {
             // else close menu
-            helpers.click($('[data-menu-xmlid="base.menu_users"]'));
+            helpers.click('[data-menu-xmlid="base.menu_users"]');
         }
     }
 }, {
     content: "Find Demo User",
     trigger: 'td.o_data_cell:contains("demo")',
     run(helpers) {
-        const $titles = this.$anchor.closest('table').find('tr:first th');
-        for (let i=0; i<$titles.length; ++i) {
-            columns[$titles[i].getAttribute('data-name')] = i;
+        const titles = this.anchor.closest('table').querySelectorAll('tr:first-child th');
+        for (let i=0; i<titles.length; ++i) {
+            columns[titles[i].getAttribute('data-name')] = i;
         }
-        const $row = this.$anchor.closest('tr');
-        const sel = $row.find('.o_list_record_selector input[type=checkbox]');
-        helpers.click(sel);
+        const row = this.anchor.closest('tr');
+        const sel = row.querySelector('.o_list_record_selector input[type=checkbox]');
+        click(sel);
     }
 }, {
     content: "Open Actions menu",

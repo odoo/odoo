@@ -23,13 +23,13 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
         },
         {
             content: "Select 2 units of `VIP` ticket type",
-            extra_trigger: 'select:eq(0):has(option:contains(1):propSelected)',
+            extra_trigger: 'select:eq(0):has(option:contains(1):selected)',
             trigger: 'select:eq(1)',
             run: 'text 2',
         },
         {
             content: "Click on `Order Now` button",
-            extra_trigger: 'select:eq(1):has(option:contains(2):propSelected)',
+            extra_trigger: 'select:eq(1):has(option:contains(2):selected)',
             trigger: '.btn-primary:contains("Register")',
         },
         {

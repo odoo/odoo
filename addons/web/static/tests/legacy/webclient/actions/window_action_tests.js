@@ -1018,7 +1018,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a"));
         // open the second record in form view
         await testUtils.dom.click(
-            $(target).find(".o_list_view .o_data_row:nth(1) .o_data_cell:first")
+            $(target).find(".o_list_view .o_data_row:eq(1) .o_data_cell:first")
         );
         assert.strictEqual(
             target.querySelector(".o_breadcrumb .active").innerText,
@@ -1218,7 +1218,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
 
         // go back using the breadcrumbs
-        await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:nth(1)"));
+        await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:eq(1)"));
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // push again the other action on top of the first one, and come back to the list view
         await doAction(webClient, 4);
@@ -1803,7 +1803,7 @@ QUnit.module("ActionManager", (hooks) => {
             await testUtils.dom.click($(target).find(".o_statusbar_buttons button[name=4]"));
             assert.containsOnce(target, ".o_kanban_view");
             // go back using the breadcrumbs
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:nth(1) a"));
+            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:eq(1) a"));
             assert.containsOnce(target, ".o_form_view");
             assert.strictEqual(
                 $(target).find(".o_field_widget[name=display_name] input").val(),
@@ -1830,7 +1830,7 @@ QUnit.module("ActionManager", (hooks) => {
             await testUtils.dom.click($(target).find(".o_statusbar_buttons button[name=4]"));
             assert.containsOnce(target, ".o_kanban_view");
             // go back using the breadcrumbs
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:nth(1) a"));
+            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:eq(1) a"));
             assert.containsOnce(target, ".o_form_view");
             assert.containsOnce(target, ".o_form_view .o_form_editable");
             assert.strictEqual(

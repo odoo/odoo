@@ -18,8 +18,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
         content: "Hover an option which has a preview",
         trigger: '[data-select-class="o_half_screen_height"]',
         run: function (actions) {
-            this.$anchor.trigger('mouseover');
-            this.$anchor.trigger('mouseenter');
+            this.anchor.dispatchEvent(new Event("mouseover"));
+            this.anchor.dispatchEvent(new Event("mouseenter"));
         },
     },
     {
@@ -34,9 +34,9 @@ wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
             // it and the mouseout and mouseleave make sense but really it
             // should not be *necessary* to simulate those for the editor flow
             // to make some sense.
-            const $previousAnchor = $('[data-select-class="o_half_screen_height"]');
-            $previousAnchor.trigger('mouseout');
-            $previousAnchor.trigger('mouseleave');
+            const previousAnchor = document.querySelector('[data-select-class="o_half_screen_height"]');
+            previousAnchor.dispatchEvent(new Event("mouseout"));
+            previousAnchor.dispatchEvent(new Event("mouseleave"));
         },
     },
     // Next, we change the end action to message and no countdown while the edit

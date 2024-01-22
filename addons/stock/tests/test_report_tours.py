@@ -13,4 +13,4 @@ class TestStockReportTour(HttpCase):
         """ Open the route diagram report."""
         url = self._get_report_url()
 
-        self.start_tour(url, 'test_stock_route_diagram_report', login='admin', timeout=180)
+        self.start_tour(url, 'test_stock_route_diagram_report', login='admin', step_delay=1000, timeout=180)

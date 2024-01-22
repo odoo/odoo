@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         {
             content: "check that we landed on correct page with correct query strings",
-            trigger: '.s_title h1:containsExact("Contact us")',
+            trigger: ".s_title h1:contains(/^Contact us$/)",
             run: function () {
                 var expectedUrl = "/contactus?utm_campaign=Sale&utm_source=Search+engine&utm_medium=Website";
                 if (window.location.pathname + window.location.search !== expectedUrl) {
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         {
             content: "visit link stats page",
-            trigger: '#o_website_links_recent_links a:containsExact("Stats"):first',
+            trigger: "#o_website_links_recent_links a:contains(/^Stats$/):first",
         },
         {
             content: "check click number and ensure graphs are initialized",

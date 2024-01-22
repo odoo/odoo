@@ -144,7 +144,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Toolbar should be shown (3)",
-        trigger: '.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:propValue(/contactus))',
+        trigger: `.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:value('/contactus'))`,
         run: function () {}, // it's a check
     },
     {
@@ -158,7 +158,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Toolbar should be shown (4)",
-        trigger: '.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:propValue(/))',
+        trigger: `.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:value('/'))`,
         run: function () {}, // it's a check
     },
     // 4. Popover should close when clicking non-link element
@@ -171,7 +171,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
         run: function (actions) {
             // Create range to simulate real double click, see pull request
             const range = document.createRange();
-            range.selectNodeContents(this.$anchor[0]);
+            range.selectNodeContents(this.anchor);
             const sel = window.getSelection();
             sel.removeAllRanges();
             sel.addRange(range);

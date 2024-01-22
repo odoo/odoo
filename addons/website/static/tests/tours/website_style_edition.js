@@ -10,20 +10,34 @@ const TARGET_BODY_COLOR = '#FF00FF';
 const TARGET_BODY_COLOR_V2 = 'rgb(255, 0, 255)';
 
 const checkFontSize = function () {
-    const style = document.defaultView.getComputedStyle(this.$anchor[0]);
-    if (!weUtils.areCssValuesEqual(style.fontSize, `${TARGET_FONT_SIZE}px`, 'font-size', this.$anchor)) {
+    const style = document.defaultView.getComputedStyle(this.anchor);
+    if (
+        !weUtils.areCssValuesEqual(
+            style.fontSize,
+            `${TARGET_FONT_SIZE}px`,
+            "font-size",
+            this.anchor
+        )
+    ) {
         console.error(`Expected the font-size to be equal to ${TARGET_FONT_SIZE}px but found ${style.fontSize} instead`);
     }
 };
 const checkBodyBgColor = function () {
-    const style = document.defaultView.getComputedStyle(this.$anchor[0]);
-    if (!weUtils.areCssValuesEqual(style.backgroundColor, `${TARGET_BODY_BG_COLOR}`, 'background-color', this.$anchor)) {
+    const style = document.defaultView.getComputedStyle(this.anchor);
+    if (
+        !weUtils.areCssValuesEqual(
+            style.backgroundColor,
+            `${TARGET_BODY_BG_COLOR}`,
+            "background-color",
+            this.anchor
+        )
+    ) {
         console.error(`Expected the background color to be equal to ${TARGET_BODY_BG_COLOR} but found ${style.backgroundColor} instead`);
     }
 };
 const checkBodyColor = function () {
-    const style = document.defaultView.getComputedStyle(this.$anchor[0]);
-    if (!weUtils.areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, 'color', this.$anchor)) {
+    const style = document.defaultView.getComputedStyle(this.anchor);
+    if (!weUtils.areCssValuesEqual(style.color, `${TARGET_BODY_COLOR}`, "color", this.anchor)) {
         console.error(`Expected the color to be equal to ${TARGET_BODY_COLOR} but found ${style.color} instead`);
     }
 };

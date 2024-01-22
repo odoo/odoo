@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     extra_trigger: '.o_kanban_applicant',
     content: markup(_t("<b>Drag this card</b>, to qualify him for a first interview.")),
     position: "bottom",
-    run: "drag_and_drop .o_kanban_group:eq(1) ",
+    run: "drag_and_drop_native .o_kanban_group:eq(1) ",
 }, {
     trigger: ".oe_kanban_card",
     extra_trigger: '.o_kanban_applicant',

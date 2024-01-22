@@ -38,6 +38,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Conference Chair")) button:has(i.fa-plus)',
 }, {
     trigger: 'button:contains(Confirm)',
+    in_modal: true,
 }, {
     trigger: '.o-default-button',
     extra_trigger: '.modal-title:contains(Warning for Conference Chair (TEST))',

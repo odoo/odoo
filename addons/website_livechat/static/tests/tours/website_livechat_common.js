@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
+
 /*******************************
  *         Common Steps
  *******************************/
@@ -18,7 +20,7 @@ export const start = [
         content: "Send the message",
         trigger: ".o-mail-Composer-input",
         run() {
-            this.$anchor[0].dispatchEvent(
+            this.anchor.dispatchEvent(
                 new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
             );
         },
@@ -31,8 +33,9 @@ export const start = [
         content: "Verify there is no duplicates",
         trigger: ".o-mail-Thread",
         run() {
-            if (this.$anchor.find(".o-mail-Message:contains('Hello Sir!')").length === 1) {
-                $("body").addClass("no_duplicated_message");
+            const el = queryAll(".o-mail-Message:contains('Hello Sir!')", { root: this.anchor });
+            if (el.length === 1) {
+                document.querySelector("body").classList.add("no_duplicated_message");
             }
         },
     },
@@ -56,9 +59,9 @@ export const feedback = [
     {
         content: "Patching Livechat",
         trigger: "textarea[placeholder='Explain your note']",
-        run: function() {
+        run: function () {
             document.body.classList.add("feedback_sent");
-        }
+        },
     },
     {
         content: "Type a feedback",
@@ -103,8 +106,8 @@ export const close = [
         trigger: ".o-mail-ChatWindowContainer",
         allowInvisible: true,
         run() {
-            if (this.$anchor.find(".o-livechat-livechatButton").length === 0) {
-                $("body").addClass("tour_success");
+            if (this.anchor.querySelectorAll(".o-livechat-livechatButton").length === 0) {
+                document.querySelector("body").classList.add("tour_success");
             }
         },
     },
@@ -119,20 +122,20 @@ export const close = [
 export const goodRating = [
     {
         content: "Choose Good Rating",
-        trigger: `img[src*=rating][alt=5]`,
+        trigger: `img[src*=rating][alt="5"]`,
     },
 ];
 
 export const okRating = [
     {
         content: "Choose ok Rating",
-        trigger: `img[src*=rating][alt=3]`,
+        trigger: `img[src*=rating][alt="3"]`,
     },
 ];
 
 export const sadRating = [
     {
         content: "Choose bad Rating",
-        trigger: `img[src*=rating][alt=1]`,
+        trigger: `img[src*=rating][alt="1"]`,
     },
 ];

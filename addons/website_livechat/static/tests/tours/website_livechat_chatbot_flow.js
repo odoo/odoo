@@ -29,11 +29,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             // check question_selection message is posted and reactions are not
             // available since the thread is not yet persisted
             run() {
-                if (
-                    this.$anchor[0].querySelector(
-                        ".o-mail-Message-actions [title='Add a Reaction']"
-                    )
-                ) {
+                if (this.anchor.querySelector(".o-mail-Message-actions [title='Add a Reaction']")) {
                     console.error("Reactions should not be available before thread is persisted.");
                 }
             },
@@ -48,9 +44,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             // the thread has been persisted in the process
             run() {
                 if (
-                    !this.$anchor[0].querySelector(
-                        ".o-mail-Message-actions [title='Add a Reaction']"
-                    )
+                    !this.anchor.querySelector(".o-mail-Message-actions [title='Add a Reaction']")
                 ) {
                     console.error("Reactions should be available since thread is persisted.");
                 }
@@ -67,7 +61,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -85,7 +79,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -105,7 +99,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -121,7 +115,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -133,7 +127,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -145,7 +139,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -199,7 +193,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
@@ -215,7 +209,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },

@@ -45,13 +45,13 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: "iframe #wrapwrap",
         extra_trigger: "iframe #website_cookies_bar:not(.d-none)",
         run: function () {
-            const animatedColumnEl = this.$anchor[0].querySelector(".s_three_columns .row > :last-child");
+            const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
             // should be rounded to -1 in the following condition.
             if (Math.round(parseFloat(animatedColumnEl.style.animationDelay)) !== -1) {
                 console.error("The scroll animation in the page did not start properly with the cookies bar open.");
             }
-            this.$anchor[0].scrollTo({
+            this.anchor.scrollTo({
                 top: 0,
                 left: 0,
                 behavior: 'smooth'
@@ -67,7 +67,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
             // should be set to approximately zero when it is not visible.
             // The main goal of the following condition is to verify if the
             // animation delay is being updated as expected.
-            if (Math.round(parseFloat(this.$anchor[0].style.animationDelay)) !== 0) {
+            if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
                 console.error("The scroll animation in the page did not end properly with the cookies bar open.");
             }
         },
@@ -91,13 +91,13 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Verify the animation delay of the animated element in the popup at the beginning",
         trigger: "iframe .s_popup .modal",
         run: function () {
-            const animatedColumnEl = this.$anchor[0].querySelector(".s_three_columns .row > :last-child");
+            const animatedColumnEl = this.anchor.querySelector(".s_three_columns .row > :last-child");
             // When the animated element is fully visible, its animation delay
             // should be rounded to -1 in the following condition.
             if (Math.round(parseFloat(animatedColumnEl.style.animationDelay)) !== -1) {
                 console.error("The scroll animation in the modal did not start properly.");
             }
-            this.$anchor[0].closest(".modal").scrollTo({
+            this.anchor.closest(".modal").scrollTo({
                 top: 0,
                 left: 0,
                 behavior: 'smooth'
@@ -110,7 +110,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         run: function () {
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
-            if (Math.round(parseFloat(this.$anchor[0].style.animationDelay)) !== 0) {
+            if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
                 console.error("The scroll animation in the modal did not end properly.");
             }
         },

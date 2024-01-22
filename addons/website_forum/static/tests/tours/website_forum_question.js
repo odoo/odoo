@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('forum_question', {
         run: 'text First Question Title',
     }, {
         content: "Put your question here.",
-        extra_trigger: "#wrap:not(:has(input[name=post_name]:propValue('')))",
+        extra_trigger: "#wrap:not(:has(input[name=post_name]:value('')))",
         trigger: '.note-editable p',
         run: 'text First Question',
     }, {
@@ -25,11 +25,11 @@ registry.category("web_tour.tours").add('forum_question', {
         run: 'text Tag',
     }, {
         content: "Click to post your question.",
-        extra_trigger: "#wrap:not(:has(input[id=s2id_autogen2]:propValue('')))",
+        extra_trigger: "#wrap:not(:has(input[id=s2id_autogen2]:value('')))",
         trigger: 'button:contains("Post")',
     }, {
         content: "This page contain new created question.",
-        trigger: '#wrap:has(".fa-star")',
+        trigger: '#wrap:has(.fa-star)',
         run: function() {}, //it's a check that page has been reloaded,
     }, {
         content: "Close modal once modal animation is done.",

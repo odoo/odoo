@@ -11,7 +11,7 @@ export function clickCancel() {
     return [
         {
             content: `Click on Cancel button`,
-            trigger: `.btn.btn-cancel`,
+            trigger: `.btn.btn-cancel, button:contains(Cancel)`,
         },
         {
             content: `Click on button Cancel Order`,

@@ -25,8 +25,8 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: 'Insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
             async run(actions) {
-                actions.text(`no_model_id #`, this.$anchor);
-                this.$anchor[0].dispatchEvent(
+                actions.text(`no_model_id #`, this.anchor);
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { bubbles: true, key: "#" })
                 );
                 await contains("div[name='subject'] input[type='text']", {
@@ -73,8 +73,8 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: 'Retry insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
             run(actions) {
-                actions.text(`yes_model_id #`, this.$anchor);
-                this.$anchor[0].dispatchEvent(
+                actions.text(`yes_model_id #`, this.anchor);
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { bubbles: true, key: "#" })
                 );
             },
@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: "Check if subject value was correclty updated",
             trigger: 'div[name="subject"] input[type="text"]',
             run() {
-                const subjectValue = this.$anchor[0].value;
+                const subjectValue = this.anchor.value;
                 const correctValue = "yes_model_id {{object.name or '''defValue'''}}";
                 if (subjectValue !== correctValue) {
                     console.error(
@@ -123,14 +123,12 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Insert tesxt inside editable",
             trigger: ".note-editable.odoo-editor-editable",
-            run(actions) {
-                actions.text(`/`, this.$anchor);
-                document.querySelector(".note-editable").dispatchEvent(
-                    new InputEvent("input", {
-                        inputType: "insertText",
-                        data: "/",
-                    })
-                );
+            run: (actions) => {
+                const el = document.querySelector(".note-editable");
+                el.focus();
+                el.dispatchEvent(new KeyboardEvent("keydown", { key: "/" }));
+                document.execCommand("insertText", false, "/");
+                el.dispatchEvent(new KeyboardEvent("keyup", { key: "/" }));
             },
         },
         {

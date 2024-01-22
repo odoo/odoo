@@ -174,11 +174,12 @@ function _getNumericAndUnit(value) {
  * @param {string} value1
  * @param {string} value2
  * @param {string} [cssProp] - the css property on which the unit applies
- * @param {jQuery} [$target] - the jQuery element on which that css property
+ * @param {jQuery} [target] - the element on which that css property
  *                             may change
  * @returns {boolean}
  */
-function _areCssValuesEqual(value1, value2, cssProp, $target) {
+function _areCssValuesEqual(value1, value2, cssProp, target) {
+    const $target = $(target);
     // String comparison first
     if (value1 === value2) {
         return true;

@@ -8,8 +8,8 @@ const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     run: function () {
         // If the mega menu is displayed inside the extra menu items, it should
         // already be displayed.
-        if (!this.$anchor[0].closest('.o_extra_menu_items')) {
-            this.$anchor[0].dispatchEvent(new Event('click'))
+        if (!this.anchor.closest('.o_extra_menu_items')) {
+            this.anchor.dispatchEvent(new Event('click'))
         }
     },
 }, stepOptions);
@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Check that the last menu link was deleted",
-        trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(> :nth-child(6)))',
+        trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(:nth-child(6)))',
         run: () => null,
     },
     {
@@ -75,7 +75,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         content: "Press enter.",
         trigger: 'iframe .o_mega_menu h4',
         run: function (actions) {
-            this.$anchor[0].dispatchEvent(new window.InputEvent('input', {bubbles: true, inputType: 'insertParagraph'}));
+            this.anchor.dispatchEvent(new window.InputEvent('input', {bubbles: true, inputType: 'insertParagraph'}));
         },
     },
     {

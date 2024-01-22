@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'Click on the selected Date sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date") + * .dropdown-item.selected',
     run: function () {
-        this.$anchor[0].dispatchEvent(new Event('click'));
+        this.anchor.dispatchEvent(new Event('click'));
     },
 }, {
     content: 'A "The Burndown Chart must be grouped by Date" notification is shown when trying to remove the group by "Date: Month > Stage"',
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'Click on the first Date filter sub menu',
     trigger: '.o_filter_menu .o_menu_item:contains("Date") + * .dropdown-item:first-child',
     run: function () {
-        this.$anchor[0].dispatchEvent(new Event('click'));
+        this.anchor.dispatchEvent(new Event('click'));
     },
 }, {
     content: 'Close the Date filter menu',

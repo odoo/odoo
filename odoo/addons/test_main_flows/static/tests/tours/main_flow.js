@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
+import { queryAll } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
@@ -65,9 +66,11 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        const $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
-        if ($e.length) {
-            actions.click($e);
+        const e = queryAll(
+            ".ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active"
+        ).at(0);
+        if (e instanceof Node) {
+            actions.click(e);
         } else {
             actions.click(); // close dropdown
         }
@@ -250,7 +253,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 }, {
     mobile: false,
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
-    extra_trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth(1).o_selected_row',
+    extra_trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth-child(2).o_selected_row',
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component2",
@@ -368,9 +371,9 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t("Focus on customer taxes field."),
     run: function (actions) {
         actions.click();
-        const $e = $('.o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a');
-        if ($e.length) {
-            actions.click($e);
+        const e = queryAll('.o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a').at(0);
+        if (e instanceof Node) {
+            actions.click(e);
         } else {
             actions.click(); // close dropdown
         }
@@ -572,7 +575,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
      */
     mobile: false,
     trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
-    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row',
+    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth-child(2).o_selected_row',
     content: _t("Select a product"),
     position: "right",
     run: "text the_flow.service",
@@ -796,7 +799,10 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     content: _t("Go to the last sale order"),
     position: "bottom"
 },
-stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_breadcrumb:contains("S0")')),
+{
+    ...stepUtils.autoExpandMoreButtons('.o_control_panel .o_breadcrumb:contains("S0")'),
+    mobile: true,
+},
 {
     mobile: false,
     trigger: '.o-form-buttonbox .oe_stat_button:has(div[name=tasks_count])',
@@ -853,7 +859,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_br
 {
     mobile: false,
     trigger: '.breadcrumb-item:nth-child(2) a',
-    extra_trigger: 'div:not(".o_form_editable")', // Waiting save
+    extra_trigger: 'div:not(.o_form_editable)', // Waiting save
     content: _t('Back to the sale order'),
     position: 'bottom',
 },

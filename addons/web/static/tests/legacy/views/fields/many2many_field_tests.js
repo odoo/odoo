@@ -380,7 +380,7 @@ QUnit.module("Fields", (hooks) => {
         );
         // -> created record
         await click($(target).find(".o_field_many2many .o-kanban-button-new")[0]);
-        await click($(".modal .modal-footer .btn-primary:nth(1)")[0]);
+        await click($(".modal .modal-footer .btn-primary:eq(1)")[0]);
         assert.ok(
             $(".modal .o_form_view .o_form_editable").length,
             "should have opened a form view in edit mode, in a modal"
@@ -1518,7 +1518,7 @@ QUnit.module("Fields", (hooks) => {
             "the second record should have been added to the relation"
         );
         assert.strictEqual(
-            $(target).find(".o_data_row:nth(1) .o_tag_badge_text").text(),
+            $(target).find(".o_data_row:eq(1) .o_tag_badge_text").text(),
             "donatelloraphael",
             "inner m2m should have been fetched and correctly displayed"
         );

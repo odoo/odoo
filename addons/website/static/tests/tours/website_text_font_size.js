@@ -22,7 +22,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
         content: `Check that the computed font size for ${fontSizeClass} is correct`,
         trigger: `iframe #wrap .s_text_block .${fontSizeClass}`,
         run: function () {
-            const computedFontSize = parseInt(getComputedStyle(this.$anchor[0]).fontSize);
+            const computedFontSize = parseInt(getComputedStyle(this.anchor).fontSize);
             const expectedFontSize = classNameInfo.get(fontSizeClass)[stage];
             const gapBetweenSizes = Math.abs(computedFontSize - expectedFontSize);
             const gapTolerance = 7; // Because the font size is responsive.
@@ -56,7 +56,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         }, {
             content: `Check that the setting for ${fontSizeClass} is correct`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
-                + ` input:propValue("${classNameInfo.get(fontSizeClass).start}")`,
+                + ` input:value("${classNameInfo.get(fontSizeClass).start}")`,
             isCheck: true,
         }, {
             content: `Change the setting value of ${fontSizeClass}`,
@@ -73,7 +73,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
-                + ` input:propValue("${classNameInfo.get(fontSizeClass).end}")`,
+                + ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
             isCheck: true,
         }, {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,

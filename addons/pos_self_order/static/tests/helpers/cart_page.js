@@ -3,7 +3,7 @@
 export function clickBack() {
     return {
         content: `Click on back button`,
-        trigger: `.btn.btn-back`,
+        trigger: `.btn:contains(/^Back$/), .btn.btn-back`,
     };
 }
 

@@ -54,14 +54,14 @@ wTourUtils.dragNDrop({
         // Patch and ignore write on clipboard in tour as we don't have permissions
         const oldWriteText = browser.navigator.clipboard.writeText;
         browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
-        this.$anchor[0].click();
+        this.anchor.click();
         browser.navigator.clipboard.writeText = oldWriteText;
     }
 }, {
     content: "Check the copied url from the notification toast",
     trigger: '.o_notification_manager .o_notification_content',
     run() {
-        const { textContent } = this.$anchor[0];
+        const { textContent } = this.anchor;
         const url = textContent.substring(textContent.indexOf('/'));
 
         // The url should not target the client action
@@ -107,7 +107,7 @@ wTourUtils.dragNDrop({
     content: "The snippet should have the correct number of columns.",
     trigger: 'iframe .s_text_block .container > .row .col-lg-4:eq(3)',
     run() {
-        if (this.$anchor[0].childElementCount !== 3) {
+        if (this.anchor.childElementCount !== 3) {
             console.error("The snippet does not have the correct number of columns");
         }
     },

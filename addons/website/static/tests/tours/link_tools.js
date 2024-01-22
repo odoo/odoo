@@ -163,7 +163,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Select text",
         trigger: 'iframe #wrap .s_text_image p:contains(odoo.com)',
         run() {
-            setSelection(...boundariesIn(this.$anchor[0]), false);
+            setSelection(...boundariesIn(this.anchor), false);
         }
     },
     {
@@ -258,7 +258,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             // This does not trigger a historyStep...
             actions.text("callmemaybe.com/shops");
             // ... but this does.
-            this.$anchor[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
+            this.anchor.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
         }
     },
     {
@@ -275,7 +275,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Check Link tools URL input content is up-to-date",
         trigger: "#o_link_dialog_url_input",
         run() {
-            if (this.$anchor[0].value !== 'callmemaybe.com/shop') {
+            if (this.anchor.value !== 'callmemaybe.com/shop') {
                 throw new Error("Tour step failed");
             }
         }
@@ -359,7 +359,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Verify that the link label input does not contain ZWS",
-        trigger: "#o_link_dialog_label_input:propValue('Contact Us')",
+        trigger: "#o_link_dialog_label_input:value('Contact Us')",
         isCheck: true,
     },
     ...wTourUtils.clickOnSave(),

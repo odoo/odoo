@@ -45,11 +45,11 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
             firstLine.textContent = "Text content line A";
             const secondLine = document.createElement("i");
             secondLine.textContent = "Text content line B";
-            this.$anchor[0].replaceChildren(firstLine, document.createElement("br"), secondLine);
+            this.anchor.replaceChildren(firstLine, document.createElement("br"), secondLine);
             // Select the whole content.            
             const range = iframeDOC.createRange();
             const selection = iframeDOC.getSelection();
-            range.selectNodeContents(this.$anchor[0]);
+            range.selectNodeContents(this.anchor);
             selection.removeAllRanges();
             selection.addRange(range);
         },
@@ -60,13 +60,14 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     },
     {
         content: "Check if the text was correctly updated",
-        trigger: "iframe .s_cover span.o_text_highlight:has(.o_text_highlight_item:has(.o_text_highlight_path_underline) + br + .o_text_highlight_item:has(.o_text_highlight_path_underline))",
+        trigger: "iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",
         isCheck: true,
     },
     ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged"),
     {
         content: "When changing the text highlight, we only replace the highlight SVG with a new drawn one",
-        trigger: "iframe .s_cover span.o_text_highlight:has(.o_text_highlight_item:has(.o_text_highlight_path_jagged) + br + .o_text_highlight_item:has(.o_text_highlight_path_jagged))",
+        trigger: "iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(1)",
+        extra_trigger: "iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(3)",
         isCheck: true,
     },
     {

@@ -159,6 +159,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/*.dark.scss',
         ],
         'mail.assets_discuss_public_test_tours': [
+			'web/static/lib/hoot-dom/**/*',
             'web_tour/static/src/tour_pointer/**/*',
             # scss not needed in tests and depends on scss variables that are not in this bundle
             ('remove', 'web_tour/static/src/tour_pointer/**/*.scss'),

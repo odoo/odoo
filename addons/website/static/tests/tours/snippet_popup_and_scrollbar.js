@@ -18,7 +18,7 @@ const checkScrollbar = function (hasScrollbar) {
         content: `Check that the #wrapwrap ${hasScrollbar ? "has" : "does not have"} a vertical scrollbar.`,
         trigger: `iframe ${hasScrollbar ? "body:not(.modal-open)" : "body.modal-open"}`,
         run: function () {
-            const wrapwrapEl = this.$anchor[0].querySelector("#wrapwrap");
+            const wrapwrapEl = this.anchor.querySelector("#wrapwrap");
             const wrapwrapStyle = window.getComputedStyle(wrapwrapEl);
             if (!hasScrollbar && (wrapwrapStyle.overflow !== "hidden" || parseFloat(wrapwrapStyle.paddingRight) < 1)) {
                 console.error("error The #wrapwrap vertical scrollbar should be hidden");

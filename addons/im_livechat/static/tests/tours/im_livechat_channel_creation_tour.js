@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_messa
         {
             trigger: ".o-mail-Composer-input",
             run() {
-                this.$anchor[0].dispatchEvent(
+                this.anchor.dispatchEvent(
                     new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },

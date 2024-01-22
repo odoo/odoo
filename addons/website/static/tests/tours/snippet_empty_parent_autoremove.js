@@ -5,7 +5,8 @@ import wTourUtils from "@website/js/tours/tour_utils";
 function removeSelectedBlock() {
     return {
         content: "Remove selected block",
-        trigger: '#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove',
+        trigger: "#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove, .oe_snippet_remove.fa.fa-trash",
+        run: "click",
     };
 }
 
@@ -21,17 +22,17 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     }),
     {
         content: "Click on second column",
-        trigger: 'iframe #wrap .s_text_image .row > :nth-child(2)',
+        trigger: ':iframe #wrap .s_text_image .row > :nth-child(2)',
     },
     removeSelectedBlock(),
     {
         content: "Click on first column",
-        trigger: 'iframe #wrap .s_text_image .row > :first-child',
+        trigger: ':iframe #wrap .s_text_image .row > :first-child',
     },
     removeSelectedBlock(),
     {
         content: "Check that #wrap is empty",
-        trigger: 'iframe #wrap:empty',
+        trigger: ':iframe #wrap:empty',
     },
 
     // Cover: test that parallax, bg-filter and shape are not treated as content

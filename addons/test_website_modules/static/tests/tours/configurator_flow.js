@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "check menu and footer links are correct",
         trigger: 'body:not(.editor_enable)', // edit mode left
         run: function () {
-            const $iframe = this.$anchor.find('iframe.o_iframe:not(.o_ignore_in_tour)');
+            const $iframe = $(this.anchor).find('iframe.o_iframe:not(.o_ignore_in_tour)');
             for (const menu of ['Home', 'Events', 'Courses', 'Pricing', 'News', 'Success Stories', 'Contact us']) {
                 if (!$iframe.contents().find(`#top_menu a:contains(${menu})`).length) {
                     console.error(`Missing ${menu} menu. It should have been created by the configurator.`);

@@ -80,6 +80,7 @@
         ],
         # Assets tests
         "pos_self_order.assets_tests": [
+			'web/static/lib/hoot-dom/**/*',
             "web/static/lib/jquery/jquery.js",
             "web_tour/static/src/tour_pointer/**/*.xml",
             "web_tour/static/src/tour_pointer/**/*.js",

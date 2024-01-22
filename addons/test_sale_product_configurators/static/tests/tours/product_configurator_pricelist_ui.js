@@ -63,6 +63,7 @@ stepUtils.showAppsMenuItem(),
 {
     content: "add to SO",
     trigger: 'button:contains(Confirm)',
+    in_modal: true,
 }, {
     content: "verify SO final price excluded",
     trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',

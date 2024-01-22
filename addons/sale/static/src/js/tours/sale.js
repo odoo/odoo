@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         content: _t("Write a company name to create one, or see suggestions."),
         position: "right",
         run: function (actions) {
-            actions.text("Agrolait", this.$anchor.find("input"));
+            actions.text("Agrolait", this.anchor.querySelector("input"));
         },
     }, {
         trigger: ".ui-menu-item > a:contains('Agrolait')",
@@ -104,8 +104,8 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         content: _t("Select a product, or create a new one on the fly."),
         position: "right",
         run: function (actions) {
-            var $input = this.$anchor.find("input");
-            actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
+            var input = this.anchor.querySelector("input");
+            actions.text("DESK0001", input.length === 0 ? this.anchor : input);
             var $descriptionElement = $(".o_form_editable textarea[name='name']");
             // when description changes, we know the product has been created
             $descriptionElement.change(function () {
@@ -117,7 +117,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         trigger: "a:contains('DESK0001')",
         auto: true,
     }, {
-        trigger: ".o_field_text[name='name'] textarea:propValueContains(DESK0001)",
+        trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
         run: () => {},
         auto: true,
     }, {

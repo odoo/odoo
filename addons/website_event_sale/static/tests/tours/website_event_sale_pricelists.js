@@ -33,7 +33,7 @@
         {
             content: "Validate attendees details",
             extra_trigger: "input[name*='1-name'], input[name*='2-name']",
-            trigger: 'button[type=submit]',
+            trigger: "button[type=submit]:contains(Go to Payment)",
         },
         ...getPriceListChecksSteps({
             pricelistName: "EUR With Discount Included",

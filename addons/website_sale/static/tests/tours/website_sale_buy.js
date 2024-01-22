@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         {
             id: 'add_cart_step',
             content: "click on add to cart",
-            extra_trigger: 'label:contains(Steel) input:propChecked',
+            extra_trigger: 'label:contains(Steel) input:checked',
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
         },
             tourUtils.goToCart(),
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         },
         {
             content: "remove Storage Box",
-            extra_trigger: '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:propValue(2)',
+            extra_trigger: '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:value(2)',
             trigger: '#cart_products div:has(div>a>h6:contains("Storage Box")) a.js_add_cart_json:first',
         },
         {

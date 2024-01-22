@@ -30,7 +30,7 @@ function openAccountSettingsTab() {
                 helpers.click();
             } else {
                 // else close menu
-                helpers.click($('[data-menu-xmlid="base.menu_users"]'));
+                helpers.click('[data-menu-xmlid="base.menu_users"]');
             }
         }
     }];

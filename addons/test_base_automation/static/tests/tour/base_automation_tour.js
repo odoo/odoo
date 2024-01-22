@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             trigger: ".o_form_renderer #trigger_0",
             run() {
                 const options = Object.fromEntries(
-                    Array.from(this.$anchor[0].querySelectorAll("option")).map((el) => [
+                    Array.from(this.anchor.querySelectorAll("option")).map((el) => [
                         JSON.parse(el.value),
                         el.textContent,
                     ])
@@ -241,7 +241,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         {
             trigger: ".o_base_automation_kanban_view .o_kanban_record",
             run() {
-                const card = this.$anchor[0];
+                const card = this.anchor;
                 assertEqual(
                     card.querySelector(".o_automation_base_info").textContent,
                     "Test ruletest_base_automation.projectTag is addedtest"
@@ -270,7 +270,7 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
         {
             trigger: ".o_form_view",
             run() {
-                const form = this.$anchor[0];
+                const form = this.anchor;
                 assertEqual(
                     form.querySelector(".o_field_widget[name='trigger'] select").value,
                     '"on_tag_set"'
@@ -377,7 +377,7 @@ registry.category("web_tour.tours").add("test_resize_kanban", {
             trigger: ".o_base_automation_kanban_view",
             async run() {
                 assertEqual(
-                    this.$anchor[0].querySelector(".o_automation_actions").innerText,
+                    this.anchor.querySelector(".o_automation_actions").innerText,
                     "Set Active To False\nSet Active To False\nSet Active To False"
                 );
                 document.body.style.setProperty("width", "500px");
@@ -385,7 +385,7 @@ registry.category("web_tour.tours").add("test_resize_kanban", {
                 await nextTick();
                 await nextTick();
                 assertEqual(
-                    this.$anchor[0].querySelector(".o_automation_actions").innerText,
+                    this.anchor.querySelector(".o_automation_actions").innerText,
                     "Set Active To False\n2 actions"
                 );
             },
@@ -401,7 +401,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
                 ".o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_renderer",
             async run() {
                 assertEqual(
-                    this.$anchor[0].innerText,
+                    this.anchor.innerText,
                     "Update Active 0\nto\nNo (False)\nUpdate Active 1\nto\nNo (False)\nUpdate Active 2\nto\nNo (False)"
                 );
             },
@@ -409,7 +409,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         {
             trigger:
                 ".o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_record:nth-child(3)",
-            run: "drag_and_drop_native (.o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_record:nth-child(1))",
+            run: "drag_and_drop_native .o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_record:nth-child(1)",
         },
         ...stepUtils.saveForm(),
         {
@@ -417,7 +417,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
                 ".o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_renderer",
             async run() {
                 assertEqual(
-                    this.$anchor[0].innerText,
+                    this.anchor.innerText,
                     "Update Active 2\nto\nNo (False)\nUpdate Active 0\nto\nNo (False)\nUpdate Active 1\nto\nNo (False)"
                 );
             },
@@ -429,7 +429,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         {
             trigger: ".modal-content .o_form_renderer",
             run() {
-                const allFields = this.$anchor[0].querySelectorAll(".o_field_widget[name]");
+                const allFields = this.anchor.querySelectorAll(".o_field_widget[name]");
                 assertEqual(
                     Array.from(allFields)
                         .map((el) => el.getAttribute("name"))
@@ -472,7 +472,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                const triggerGroups = Array.from(this.$anchor[0].querySelectorAll("optgroup"));
+                const triggerGroups = Array.from(this.anchor.querySelectorAll("optgroup"));
                 assertEqual(
                     triggerGroups.map((el) => el.getAttribute("label")).join(" // "),
                     "Values Updated // Timing Conditions // Custom // External"
@@ -492,7 +492,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
                 ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(test_base_automation.project)",
             run(helpers) {
                 waitOrmCalls = observeOrmCalls();
-                helpers.click(this.$anchor);
+                helpers.click();
                 return nextTick();
             },
         },
@@ -506,7 +506,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                const triggerGroups = Array.from(this.$anchor[0].querySelectorAll("optgroup"));
+                const triggerGroups = Array.from(this.anchor.querySelectorAll("optgroup"));
                 assertEqual(
                     triggerGroups.map((el) => el.getAttribute("label")).join(" // "),
                     "Values Updated // Timing Conditions // Custom // External"
@@ -548,9 +548,9 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin))",
             run() {
-                assertEqual(this.$anchor[0].innerText, "test stage\nSearch More...");
+                assertEqual(this.anchor.innerText, "test stage\nSearch More...");
             },
         },
         {
@@ -562,9 +562,9 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin))",
             run() {
-                assertEqual(this.$anchor[0].innerText, "test tag\nSearch More...");
+                assertEqual(this.anchor.innerText, "test tag\nSearch More...");
             },
         },
         {
@@ -591,8 +591,13 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         {
             trigger: ".o_field_widget[name='trigger'] select",
             run() {
-                assertEqual(Array.from(this.$anchor[0].querySelectorAll("optgroup")).map(el => el.label).join(", "), "Values Updated, Timing Conditions, Custom, External")
-            }
+                assertEqual(
+                    Array.from(this.anchor.querySelectorAll("optgroup"))
+                        .map((el) => el.label)
+                        .join(", "),
+                    "Values Updated, Timing Conditions, Custom, External"
+                );
+            },
         },
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -603,7 +608,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
                 ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Threaded Lead Test)",
             run(helpers) {
                 waitOrmCalls = observeOrmCalls();
-                helpers.click(this.$anchor);
+                helpers.click();
                 return nextTick();
             },
         },
@@ -617,8 +622,13 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                assertEqual(Array.from(this.$anchor[0].querySelectorAll("select optgroup")).map(el => el.label).join(", "), "Values Updated, Email Events, Timing Conditions, Custom, External")
-            }
+                assertEqual(
+                    Array.from(this.anchor.querySelectorAll("select optgroup"))
+                        .map((el) => el.label)
+                        .join(", "),
+                    "Values Updated, Email Events, Timing Conditions, Custom, External"
+                );
+            },
         },
         {
             trigger: "button.o_form_button_cancel",
@@ -643,7 +653,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         trigger: ".o_field_widget[name=model_id] input",
         run: "text ir.ui.view",
     }, {
-        trigger: ".ui-menu-item > a:containsExact('View')",
+        trigger: ".ui-menu-item > a:contains(/^View$/)",
     }, {
         trigger: ".o_field_widget[name=trigger] select",
         run: 'text "on_change"',
@@ -651,7 +661,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         trigger: ".o_field_widget[name=on_change_field_ids] input",
         run: "text Active",
     }, {
-        trigger: ".ui-menu-item > a:containsExact('Active')",
+        trigger: ".ui-menu-item > a:contains(/^Active$/)",
     },
     ...stepUtils.saveForm(),
 ]});

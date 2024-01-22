@@ -558,7 +558,7 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelectorAll(".o_search_panel_category_value header")[1]);
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(1) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(1) .active");
 
         assert.deepEqual(getDomain(), ["&", ["bar", "=", true], ["company_id", "child_of", 3]]);
 
@@ -566,7 +566,7 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelectorAll(".o_search_panel_category_value header")[2]);
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
 
         assert.deepEqual(getDomain(), ["&", ["bar", "=", true], ["company_id", "child_of", 5]]);
 
@@ -813,7 +813,7 @@ QUnit.module("Search", (hooks) => {
         await click(getCategory(target, 2));
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
 
         assert.deepEqual(getDomain(), [["company_id", "child_of", 5]]);
 
@@ -821,11 +821,11 @@ QUnit.module("Search", (hooks) => {
         await click(getCategory(target, 2));
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
 
         // parent company should be folded
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
         assert.containsN(target, ".o_search_panel_category_value", 3);
 
         assert.deepEqual(getDomain(), [["company_id", "child_of", 5]]);
@@ -835,7 +835,7 @@ QUnit.module("Search", (hooks) => {
         await click(getCategory(target, 2));
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
         assert.containsN(target, ".o_search_panel_category_value", 3);
 
         assert.deepEqual(getDomain(), [["company_id", "child_of", 5]]);
@@ -871,7 +871,7 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelectorAll(".o_search_panel_category_value header")[1]);
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(1) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(1) .active");
 
         assert.deepEqual(getDomain(), [["category_id", "=", 6]]); // must use '=' operator (instead of 'child_of')
     });
@@ -1032,7 +1032,7 @@ QUnit.module("Search", (hooks) => {
         await nextTick();
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
 
         assert.deepEqual(getDomain(), ["&", ["bar", "=", true], ["company_id", "child_of", 5]]);
     });
@@ -1234,7 +1234,7 @@ QUnit.module("Search", (hooks) => {
         await nextTick();
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(3) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(3) .active");
 
         assert.deepEqual(getDomain(), [["state", "=", "ghi"]]);
 
@@ -1243,7 +1243,7 @@ QUnit.module("Search", (hooks) => {
         await nextTick();
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(3) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(3) .active");
 
         assert.deepEqual(getDomain(), [["state", "=", "ghi"]]);
     });
@@ -1626,7 +1626,7 @@ QUnit.module("Search", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_search_panel_filter_group:nth(1) .o_search_panel_filter_value",
+            ".o_search_panel_filter_group:eq(1) .o_search_panel_filter_value",
             2
         );
         assert.containsNone(target, ".o_search_panel_filter_value input:checked");
@@ -1799,14 +1799,14 @@ QUnit.module("Search", (hooks) => {
         await click(getCategory(target, 1));
 
         assert.containsOnce(target, ".o_search_panel_category_value .active");
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(1) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(1) .active");
         assert.containsOnce(target, ".o_search_panel_filter_value");
         assert.deepEqual(getFiltersContent(target), ["asustek: 1"]);
 
         // select 'silver' category
         await click(getCategory(target, 2));
 
-        assert.containsOnce(target, ".o_search_panel_category_value:nth(2) .active");
+        assert.containsOnce(target, ".o_search_panel_category_value:eq(2) .active");
         assert.containsOnce(target, ".o_search_panel_filter_value");
         assert.deepEqual(getFiltersContent(target), ["agrolait: 2"]);
 

@@ -2,6 +2,7 @@
 
 import { endDiscussion, okRating, feedback, transcript, close } from "./website_livechat_common";
 import { registry } from "@web/core/registry";
+import { queryAll } from "@odoo/hoot-dom";
 
 const chatRequest = [
     {
@@ -13,7 +14,7 @@ const chatRequest = [
         content: "Send the message",
         trigger: ".o-mail-Composer-input",
         run() {
-            this.$anchor[0].dispatchEvent(
+            this.anchor.dispatchEvent(
                 new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
             );
         },
@@ -27,8 +28,9 @@ const chatRequest = [
         trigger: ".o-mail-Thread",
         run() {
             if (
-                this.$anchor.find(
-                    ".o-mail-Message:contains('Hi ! What a coincidence! I need your help indeed.')"
+                queryAll(
+                    ".o-mail-Message:contains('Hi ! What a coincidence! I need your help indeed.')",
+                    { root: this.anchor }
                 ).length === 1
             ) {
                 $("body").addClass("no_duplicated_message");

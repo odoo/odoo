@@ -7,7 +7,7 @@ const scrollToHeading = function (position) {
         content: `Scroll to h2 number ${position}`,
         trigger: `iframe h2:eq(${position})`,
         run: function () {
-            this.$anchor[0].scrollIntoView(true);
+            this.anchor.scrollIntoView(true);
         },
     };
 };

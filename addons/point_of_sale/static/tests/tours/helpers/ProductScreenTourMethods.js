@@ -331,7 +331,7 @@ export function checkFirstLotNumber(number) {
     return [
         {
             content: "Check lot number",
-            trigger: `.popup-input:propValue(${number})`,
+            trigger: `.popup-input:value(${number})`,
             run: () => {}, // it's a check
         },
     ];

@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
         run: function (actions) {
-            actions.text("New", this.$anchor.find("input"));
+            actions.text("New", this.anchor.querySelector("input"));
         },
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
         extra_trigger: '.o_kanban_group',
         run: function (actions) {
-            actions.text("Done", this.$anchor.find("input"));
+            actions.text("Done", this.anchor.querySelector("input"));
         },
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",

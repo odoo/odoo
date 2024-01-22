@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     steps: () => [
     {
         content: "select Test Product",
-        trigger: '.oe_product_cart a:containsExact("Test Product 2")',
+        trigger: ".oe_product_cart a:contains(/^Test Product 2$/)",
     },
     {
         content: 'click on the first variant',
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add('test_09_pills_variant', {
     steps: () => [
     {
         content: "select Test Product",
-        trigger: '.oe_product_cart a:containsExact("Test Product 2")',
+        trigger: ".oe_product_cart a:contains(/^Test Product 2$/)",
     },
     {
         content: "check there are two radio boxes, both hidden",

@@ -3969,7 +3969,7 @@ QUnit.module("Fields", (hooks) => {
             "should contain 2 records"
         );
         assert.strictEqual(
-            $(target).find(".o_kanban_record:nth(1) span").text(),
+            $(target).find(".o_kanban_record:eq(1) span").text(),
             "new subrecord 1Red",
             'value of newly created subrecord should be "new subrecord 1"'
         );
@@ -3981,7 +3981,7 @@ QUnit.module("Fields", (hooks) => {
             ".modal .o_form_view .o_field_widget:nth-child(1) input",
             "new subrecord 2"
         );
-        await click($(".modal .modal-footer .btn-primary:nth(1)")[0]);
+        await click($(".modal .modal-footer .btn-primary:eq(1)")[0]);
         await editInput(
             target,
             ".modal .o_form_view .o_field_widget:nth-child(1) input",

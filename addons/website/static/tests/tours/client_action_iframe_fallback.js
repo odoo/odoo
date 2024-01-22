@@ -9,7 +9,7 @@ wTourUtils.registerWebsitePreviewTour('client_action_iframe_fallback', {
 () => [
     {
         content: "Ensure we are on the expected page",
-        trigger: 'body iframe html[data-view-xmlid="website.homepage"]',
+        trigger: 'iframe html[data-view-xmlid="website.homepage"]',
         run: () => {}, // It's a check.
     }, {
         content: "Ensure the iframe fallback is not loaded in test mode",

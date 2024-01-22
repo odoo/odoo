@@ -7,6 +7,7 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 import { markup } from "@odoo/owl";
+import { click, edit, pointerDown } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('event_tour', {
     url: '/web',
@@ -35,9 +36,11 @@ registry.category("web_tour.tours").add('event_tour', {
     trigger: '.o_event_form_view div[name="date_begin"]',
     content: _t("Open date range picker. Pick a Start date for your event"),
     run: function () {
-        this.$anchor.find('input[data-field="date_begin"]').val('09/30/2020 08:00:00').change();
-        this.$anchor.find('input[data-field="date_end"]').val('10/02/2020 23:00:00').change();
-        this.$anchor.find('input[data-field="date_end"]').click();
+        pointerDown('input[data-field="date_begin"]');
+        edit("09/30/2020 08:00:00", { confirm: true });
+        pointerDown('input[data-field="date_end"]');
+        edit("10/02/2020 23:00:00", { confirm: true });
+        click('input[data-field="date_end"]');
     },
 }, {
     content: _t("Apply change."),

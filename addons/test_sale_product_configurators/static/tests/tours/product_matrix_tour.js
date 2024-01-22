@@ -47,6 +47,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     }
 }, {
     trigger: 'button:contains("Confirm")',
+    in_modal: true,
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
@@ -76,6 +77,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     }
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
+    in_modal: true,
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 3 => check the total to be sure all qties are set to 3
@@ -93,6 +95,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     }
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
+    in_modal: true,
 }, {
     trigger: '.o_sale_order',
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
@@ -114,6 +117,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
+    in_modal: true,
 }, {
     trigger: '.o_form_button_save',
     extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
@@ -136,5 +140,6 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     }
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
+    in_modal: true,
 }, ...stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("8.20")'),
 ]});

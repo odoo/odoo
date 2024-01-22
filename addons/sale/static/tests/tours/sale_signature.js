@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add('sale_signature', {
     steps: () => [
     {
         content: "open the test SO",
-        trigger: 'a:containsExact("test SO")',
+        trigger: 'a:contains(/^test SO$/)',
     },
     {
         content: "click sign",

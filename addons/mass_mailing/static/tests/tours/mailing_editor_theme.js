@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: "Select text",
             trigger: 'iframe p:contains(content)',
             run() {
-                setSelection(...boundariesIn(this.$anchor[0]), false);
+                setSelection(...boundariesIn(this.anchor), false);
             }
         },
         {
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: "Select content",
             trigger: 'iframe p:contains(content)',
             run() {
-                setSelection(...boundariesIn(this.$anchor[0]), false);
+                setSelection(...boundariesIn(this.anchor), false);
             }
         },
         {

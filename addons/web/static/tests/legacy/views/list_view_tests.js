@@ -290,11 +290,11 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            "thead th:nth(2) .o_list_number_th",
+            "thead th:eq(2) .o_list_number_th",
             "header cells of integer fields should have o_list_number_th class"
         );
         assert.strictEqual(
-            $(target).find("tbody tr:first td:nth(2)").css("text-align"),
+            $(target).find("tbody tr:first td:eq(2)").css("text-align"),
             "right",
             "integer cells should be right aligned"
         );
@@ -3730,7 +3730,7 @@ QUnit.module("Views", (hooks) => {
             ".o_list_selection_box"
         );
         assert.strictEqual(
-            $(target).find("tfoot td:nth(2)").text(),
+            $(target).find("tfoot td:eq(2)").text(),
             "32",
             "total should be 32 (no record selected)"
         );
@@ -3744,7 +3744,7 @@ QUnit.module("Views", (hooks) => {
             ".o_list_selection_box"
         );
         assert.strictEqual(
-            $(target).find("tfoot td:nth(2)").text(),
+            $(target).find("tfoot td:eq(2)").text(),
             "10",
             "total should be 10 (first record selected)"
         );
@@ -3757,7 +3757,7 @@ QUnit.module("Views", (hooks) => {
             ".o_list_selection_box"
         );
         assert.strictEqual(
-            $(target).find("tfoot td:nth(2)").text(),
+            $(target).find("tfoot td:eq(2)").text(),
             "32",
             "total should be 32 (no more record selected)"
         );
@@ -5567,8 +5567,8 @@ QUnit.module("Views", (hooks) => {
             "both columns should have been given the same width"
         );
 
-        const firstRowHeight = $(target).find(".o_data_row:nth(0)")[0].offsetHeight;
-        const secondRowHeight = $(target).find(".o_data_row:nth(1)")[0].offsetHeight;
+        const firstRowHeight = $(target).find(".o_data_row:eq(0)")[0].offsetHeight;
+        const secondRowHeight = $(target).find(".o_data_row:eq(1)")[0].offsetHeight;
         assert.ok(
             firstRowHeight > secondRowHeight,
             "in the first row, the (long) text field should be properly displayed on several lines"
@@ -9925,14 +9925,14 @@ QUnit.module("Views", (hooks) => {
         const rows = target.querySelectorAll(".o_data_row");
         await click(rows[2].querySelector(".o_data_cell"));
         assert.ok(
-            $(target).find(".o_data_row:nth(2)").is(".o_selected_row"),
+            $(target).find(".o_data_row:eq(2)").is(".o_selected_row"),
             "third row should be in edition"
         );
 
         await clickDiscard(target);
         await click($(".o_list_button_add:visible").get(0));
         assert.ok(
-            $(target).find(".o_data_row:nth(0)").is(".o_selected_row"),
+            $(target).find(".o_data_row:eq(0)").is(".o_selected_row"),
             "first row should be in edition (creation)"
         );
 
@@ -9941,7 +9941,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(rows[2].querySelector(".o_data_cell"));
         assert.ok(
-            $(target).find(".o_data_row:nth(2)").is(".o_selected_row"),
+            $(target).find(".o_data_row:eq(2)").is(".o_selected_row"),
             "third row should be in edition"
         );
         assert.containsOnce(target, ".o_selected_row", "no other row should be selected");
@@ -10145,7 +10145,7 @@ QUnit.module("Views", (hooks) => {
         const rows = target.querySelectorAll(".o_data_row");
         await click(rows[2].querySelector(".o_data_cell"));
         assert.hasClass(
-            $(target).find(".o_data_row:nth(2)"),
+            $(target).find(".o_data_row:eq(2)"),
             "o_selected_row",
             "third row should be in edition"
         );
@@ -10156,7 +10156,7 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("Tab");
         await nextTick();
         assert.hasClass(
-            $(target).find(".o_data_row:nth(3)"),
+            $(target).find(".o_data_row:eq(3)"),
             "o_selected_row",
             "fourth row should be in edition"
         );
@@ -14298,17 +14298,17 @@ QUnit.module("Views", (hooks) => {
         // Press 'Tab' -> should go to first line of second group
         triggerHotkey("Tab");
         await nextTick();
-        assert.hasClass($(target).find(".o_data_row:nth(1)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(1)"), "o_selected_row");
 
         // Press 'Tab' -> should go to next line (still in second group)
         triggerHotkey("Tab");
         await nextTick();
-        assert.hasClass($(target).find(".o_data_row:nth(2)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(2)"), "o_selected_row");
 
         // Press 'Tab' -> should go to next line (still in second group)
         triggerHotkey("Tab");
         await nextTick();
-        assert.hasClass($(target).find(".o_data_row:nth(3)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(3)"), "o_selected_row");
 
         // Press 'Tab' -> should go back to first line of first group
         triggerHotkey("Tab");
@@ -14368,17 +14368,17 @@ QUnit.module("Views", (hooks) => {
         // Press 'Tab' -> should go to the second group
         triggerHotkey("Tab");
         await nextTick();
-        assert.hasClass($(target).find(".o_data_row:nth(1)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(1)"), "o_selected_row");
 
         // Press 'Tab' -> should go to next line (still in second group)
         triggerHotkey("Tab");
         await nextTick();
-        assert.hasClass($(target).find(".o_data_row:nth(2)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(2)"), "o_selected_row");
 
         // Press 'Tab' -> should go to next line (still in second group)
         triggerHotkey("Tab");
         await nextTick();
-        assert.hasClass($(target).find(".o_data_row:nth(3)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(3)"), "o_selected_row");
 
         // Press 'Tab' -> should go back to first line of first group
         triggerHotkey("Tab");
@@ -14535,14 +14535,14 @@ QUnit.module("Views", (hooks) => {
 
         // select and edit last row of first group
         await click(target.querySelector(".o_data_row").querySelector(".o_data_cell"));
-        assert.hasClass($(target).find(".o_data_row:nth(0)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(0)"), "o_selected_row");
         await editInput(target, '.o_selected_row [name="foo"] input', "new value");
 
         // Press 'Tab' -> should create a new record as we edited the previous one
         triggerHotkey("Tab");
         await nextTick();
         assert.containsN(target, ".o_data_row", 5);
-        assert.hasClass($(target).find(".o_data_row:nth(1)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(1)"), "o_selected_row");
 
         // fill foo field for the new record and press 'tab' -> should create another record
         await editInput(target, '.o_selected_row [name="foo"] input', "new record");
@@ -14550,14 +14550,14 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
 
         assert.containsN(target, ".o_data_row", 6);
-        assert.hasClass($(target).find(".o_data_row:nth(2)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(2)"), "o_selected_row");
 
         // leave this new row empty and press tab -> should discard the new record and move to the
         // next group
         triggerHotkey("Tab");
         await nextTick();
         assert.containsN(target, ".o_data_row", 5);
-        assert.hasClass($(target).find(".o_data_row:nth(2)"), "o_selected_row");
+        assert.hasClass($(target).find(".o_data_row:eq(2)"), "o_selected_row");
 
         assert.verifySteps([
             "get_views",
@@ -19767,23 +19767,23 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            "thead th:nth(2) .o_list_number_th",
+            "thead th:eq(2) .o_list_number_th",
             "header cells of monetary fields should have o_list_number_th class"
         );
         assert.strictEqual(
-            $(target).find("thead th:nth(2)").css("text-align"),
+            $(target).find("thead th:eq(2)").css("text-align"),
             "right",
             "header cells of monetary fields should be right alined"
         );
 
         assert.strictEqual(
-            $(target).find("tbody tr:first td:nth(2)").css("text-align"),
+            $(target).find("tbody tr:first td:eq(2)").css("text-align"),
             "right",
             "Monetary cells should be right alined"
         );
 
         assert.strictEqual(
-            $(target).find("tbody tr:first td:nth(2)").css("direction"),
+            $(target).find("tbody tr:first td:eq(2)").css("direction"),
             "ltr",
             "Monetary cells should have ltr direction"
         );

@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
         content: "Make sure there does not exist a floating toolbar",
         trigger: 'iframe',
         run: function () {
-            const iframeDocument = this.$anchor[0].contentDocument;
+            const iframeDocument = this.anchor.contentDocument;
             if (iframeDocument.querySelector('#toolbar.oe-floating')) {
                 console.error('There should not be a floating toolbar in the iframe');
             }
@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
         content: "Click and select p block inside the editor",
         trigger: 'iframe',
         run: function () {
-            const iframeWindow = this.$anchor[0].contentWindow;
+            const iframeWindow = this.anchor.contentWindow;
             const iframeDocument = iframeWindow.document;
             const p = iframeDocument.querySelector('.s_text_block p');
             p.click();

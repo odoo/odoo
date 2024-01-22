@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
     steps: () => [
     {
         content: "select Test Product 3",
-        trigger: '.oe_product_cart a:containsExact("Test Product 3")',
+        trigger: ".oe_product_cart a:contains(/^Test Product 3$/)",
     },
     {
         content: "check price",

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll, queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_survey_prefill', {
@@ -55,9 +56,9 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
     }, {
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website?") input',
         run: function () {
-            var $inputQ3 = $('div.js_question-wrapper:contains("How many times did you order products on our website?") input');
-            if ($inputQ3.val() === '42.0') {
-                $('.o_survey_title').addClass('prefilled');
+            const inputQ3 = queryAll('div.js_question-wrapper:contains("How many times did you order products on our website?") input').at(0);
+            if (inputQ3.value === "42.0") {
+                queryOne(".o_survey_title").classList.add("prefilled");
             }
         }
     }, {
@@ -83,8 +84,7 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
             if ($inputQ4.val() !== '42.0') {
                 return;
             }
-
-            $('.o_survey_title').addClass('tour_success');
+            queryOne(".o_survey_title").classList.add("tour_success");
         }
     }, {
         trigger: '.o_survey_title.tour_success'

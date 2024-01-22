@@ -1,5 +1,6 @@
 /** @odoo-module **/
     
+import { click } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -29,9 +30,9 @@ registry.category('web_tour.tours').add('mailing_campaign', {
             trigger: 'iframe',
             run(actions) {
                 // For some reason the selectors inside the iframe cannot be triggered.
-                const link = this.$anchor[0].contentDocument.querySelector('#basic');
-                actions.click(link);
-            }
+                const link = this.anchor.contentDocument.querySelector('#basic');
+                click(link);
+            },
         },
         {
             content: 'Fill in Subject',

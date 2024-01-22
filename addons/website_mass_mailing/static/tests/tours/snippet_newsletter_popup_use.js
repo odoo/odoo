@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
+import { isVisible, queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 function ensurePopupNotVisible() {
-    const $modal = this.$anchor.find('.o_newsletter_popup .modal');
-    if ($modal.length !== 1) {
+    const modals = queryAll(".o_newsletter_popup .modal", { root: this.anchor });
+    if (modals.length !== 1) {
         // Avoid the tour to succeed if the modal can't be found while
         // it should. Indeed, if the selector ever becomes wrong and the
         // expected element is actually not found anymore, the test
@@ -12,8 +13,8 @@ function ensurePopupNotVisible() {
         // always be truthy on empty jQuery element.
         console.error("Modal couldn't be found in the DOM. The tour is not working as expected.");
     }
-    if ($modal.is(':visible')) {
-        console.error('Modal should not be opened.');
+    if (isVisible(modals.at(0))) {
+        console.error("Modal should not be opened.");
     }
 }
 

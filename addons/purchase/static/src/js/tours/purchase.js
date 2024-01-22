@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t("Search a vendor name, or create one on the fly."),
             position: "bottom",
             run: function (actions) {
-                actions.text("Agrolait", this.$anchor.find("input"));
+                actions.text("Agrolait", this.anchor.querySelector("input"));
             },
         },
         {
@@ -59,12 +59,14 @@ registry.category("web_tour.tours").add("purchase_tour", {
             content: _t("Select a product, or create a new one on the fly."),
             position: "right",
             run: function (actions) {
-                var $input = this.$anchor.find("input");
-                actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
-                var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+                const input = this.anchor.querySelector("input");
+                actions.text("DESK0001", input.length === 0 ? this.anchor : input);
+                const descriptionElement = document.querySelector(
+                    '.o_form_editable textarea[name="name"]'
+                );
                 // when description changes, we know the product has been created
-                $descriptionElement.change(function () {
-                    $descriptionElement.addClass("product_creation_success");
+                descriptionElement.addEventListener("change", () => {
+                    descriptionElement.classList.add("product_creation_success");
                 });
             },
         },
@@ -94,10 +96,10 @@ registry.category("web_tour.tours").add("purchase_tour", {
             auto: true,
             run: function (actions) {
                 // Check in case user must add email to vendor
-                var $input = $(".modal-content input[name='email']");
-                if ($input.length) {
-                    actions.text("agrolait@example.com", $input);
-                    actions.click($(".modal-footer button"));
+                var input = document.querySelector(".modal-content input[name='email']");
+                if (input.length) {
+                    actions.text("agrolait@example.com", ".modal-content input[name='email']");
+                    actions.click(".modal-footer button");
                 }
             },
         },

@@ -58,7 +58,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
     () => [
         {
             content: "check that the view got fixed",
-            trigger: 'iframe p:containsExact("Test Page View")',
+            trigger: "iframe p:contains(/^Test Page View$/)",
             run: function () {}, // it's a check
         },
         {

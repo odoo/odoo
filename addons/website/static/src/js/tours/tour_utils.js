@@ -19,7 +19,7 @@ function assertCssVariable(variableName, variableValue, trigger = 'iframe body')
         trigger: trigger,
         auto: true,
         run: function () {
-            const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
+            const styleValue = getComputedStyle(this.anchor).getPropertyValue(variableName);
             if ((styleValue && styleValue.trim().replace(/["']/g, '')) !== variableValue.trim().replace(/["']/g, '')) {
                 throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
             }
@@ -239,7 +239,7 @@ function dragNDrop(snippet, position = "bottom") {
         position: position,
         // Normally no main snippet can be dropped in the default footer but
         // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop_native iframe #wrapwrap > footer",
+        run: "drag_and_drop_native :iframe #wrapwrap > footer",
     };
 }
 
@@ -305,7 +305,7 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
         content: "Click on the extra menu dropdown toggle if it is there",
         trigger: `${backend ? "iframe" : ""} #top_menu`,
         run: function () {
-            const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
+            const extraMenuButton = this.anchor.querySelector('.o_extra_menu_items a.nav-link');
             if (extraMenuButton) {
                 extraMenuButton.click();
             }
