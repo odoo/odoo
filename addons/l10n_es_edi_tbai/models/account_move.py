@@ -239,7 +239,8 @@ class AccountMove(models.Model):
             for tax in line.tax_ids.filtered(lambda t: t.l10n_es_type not in ('recargo', 'retencion')):
                 results[tax]['base_amount'] += line.balance
 
-            if ((tax := line.tax_line_id) and tax.l10n_es_type not in ('recargo', 'retencion') and
+            tax = line.tax_line_id
+            if (tax and tax.l10n_es_type not in ('recargo', 'retencion') and
                 line.tax_repartition_line_id.factor_percent != -100.0):
                 results[tax]['tax_amount'] += line.balance
         iva_values = []
