@@ -208,19 +208,37 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     // body is white, the text will not be visible on modals with a white
     // background.
 
-    // Check if the body text color is light.
-    $-is-body-text-light: color-yiq($body-color) == $yiq-text-dark;
-
     @if $modal-content-color == null {
-        color: if(
-            $-is-body-text-light,
-            color-yiq($modal-content-bg, $light: $body-color, $dark: $yiq-text-dark),
-            color-yiq($modal-content-bg, $light: $yiq-text-light, $dark: $body-color)
-        );
+        color: adjust-color-to-background($body-color, $modal-content-bg);
     }
-    @if $-is-body-text-light {
-        .text-muted {
-            color: color-yiq($modal-content-bg, $light: $text-muted, $dark: mute-color($yiq-text-dark)) !important;
+
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $modal-content-bg, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
+    }
+}
+
+// Popover
+.popover {
+    // The popover can have a different background color than that of the body.
+    // Here, we adjust the text color of the popover in case the body color
+    // (used by default for the text color of popovers) is not visible inside a
+    // popover due to a lack of contrast (e.g. on a website with a dark
+    // background).
+    @if $popover-header-color == null {
+        .popover-header {
+            color: adjust-color-to-background($body-color, $popover-header-bg);
         }
+    }
+    @if $popover-body-color == $body-color {
+        .popover-body {
+            color: adjust-color-to-background($body-color, $popover-bg);
+        }
+    }
+}
+
+// Badge
+.badge-light {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $light, mute-color($yiq-text-light), mute-color($yiq-text-dark)) !important;
     }
 }
