@@ -19,10 +19,10 @@
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="!message.isTransient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 ms-2">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75">
                                 <t t-esc="messageService.dateSimple(message)"/>
                             </small>
-                            <div t-else="" class="ms-2">
+                            <div t-else="">
                                 <MessageSeenIndicator
                                     t-if="props.message.isSelfAuthored and props.thread"
                                     message="props.message"
