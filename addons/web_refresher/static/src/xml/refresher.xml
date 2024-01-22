@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2022 Tecnativa - Alexandre Díaz
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<template>
+    <t t-name="web_refresher.Button" owl="1">
+        <nav class="oe_refresher" aria-label="Pager">
+            <span aria-atomic="true">
+                <button
+                    class="fa fa-refresh btn btn-icon oe_pager_refresh"
+                    aria-label="Refresh"
+                    t-on-click="_doRefresh"
+                    title="Refresh"
+                    tabindex="-1"
+                />
+            </span>
+        </nav>
+    </t>
+</template>

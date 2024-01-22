@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2023 Onestein - Anjeel Haria
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<templates xml:space="preserve">
+    <!-- Modifying the ChatterTopBar for Mobile View -->
+    <t
+        t-name="web.Responsivemail.ChatterTopbar"
+        t-inherit="mail.ChatterTopbar"
+        owl="1"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//div[contains(@class, 'o_ChatterTopbar')]" position="replace">
+            <t t-if="ui.isSmall">
+                <div
+                    class="o_ChatterTopbar_rightSection d-flex border-bottom"
+                    style="max-height:45%"
+                >
+                    <button
+                        t-if="chatterTopbar.chatter.thread.allAttachments.length === 0"
+                        class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-light btn-primary"
+                        type="button"
+                        t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                        t-on-click="chatterTopbar.chatter.onClickButtonAddAttachments"
+                        style="width:41%"
+                    >
+                        <i
+                            class="fa fa-paperclip fa-lg me-1"
+                            role="img"
+                            aria-label="Attachments"
+                        />
+                        <t t-if="chatterTopbar.chatter.isShowingAttachmentsLoading">
+                            <i
+                                class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin"
+                                aria-label="Attachment counter loading..."
+                            />
+                        </t>
+                    </button>
+                    <button
+                        t-if="chatterTopbar.chatter.thread.allAttachments.length > 0"
+                        class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-light btn-primary"
+                        type="button"
+                        t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasReadAccess"
+                        t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'"
+                        t-on-click="chatterTopbar.chatter.onClickButtonToggleAttachments"
+                        style="width:41%"
+                    >
+                        <i
+                            class="fa fa-paperclip fa-lg me-1"
+                            role="img"
+                            aria-label="Attachments"
+                        />
+                        <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
+                            <span
+                                class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount"
+                                t-esc="chatterTopbar.attachmentButtonText"
+                            />
+                        </t>
+                        <t t-if="chatterTopbar.chatter.isShowingAttachmentsLoading">
+                            <i
+                                class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin"
+                                aria-label="Attachment counter loading..."
+                            />
+                        </t>
+                    </button>
+                    <t
+                        t-if="chatterTopbar.chatter.hasFollowers and chatterTopbar.chatter.thread"
+                    >
+                        <FollowerListMenu
+                            className="'o_ChatterTopbar_followerListMenu w-26'"
+                            record="chatterTopbar.chatter.followerListMenuView"
+                        />
+                            <t t-if="chatterTopbar.chatter.followButtonView">
+                                <FollowButton
+                                className="'o_ChatterTopbar_followButton'"
+                                record="chatterTopbar.chatter.followButtonView"
+                            />
+                            </t>
+                    </t>
+                </div>
+            </t>
+            <div
+                class="o_ChatterTopbar justify-content-between d-flex"
+                t-attf-class="{{ className }}"
+                t-ref="root"
+            >
+                <div
+                    class="o_ChatterTopbar_actions flex-fill d-flex border-transparent"
+                >
+                    <div
+                        class="o_ChatterTopbar_controllers d-flex pe-2"
+                        t-if="chatterTopbar.chatter.threadView"
+                    >
+                        <button
+                            class="o_ChatterTopbar_button o_ChatterTopbar_buttonSendMessage btn text-nowrap me-2"
+                            type="button"
+                            t-att-class="{
+                                'o-active btn-odoo': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog,
+                                'btn-odoo': !chatterTopbar.chatter.composerView,
+                                'btn-light': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
+                            }"
+                            t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                            data-hotkey="m"
+                            t-on-click="chatterTopbar.chatter.onClickSendMessage"
+                        >
+                            Send message
+                        </button>
+                        <button
+                            class="o_ChatterTopbar_button o_ChatterTopbar_buttonLogNote btn text-nowrap"
+                            type="button"
+                            t-att-class="{
+                                'o-active btn-odoo': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
+                                'btn-light': chatterTopbar.chatter.composerView and !chatterTopbar.chatter.composerView.composer.isLog or !chatterTopbar.chatter.composerView,
+                            }"
+                            t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                            t-on-click="chatterTopbar.chatter.onClickLogNote"
+                            data-hotkey="shift+m"
+                        >
+                            Log note
+                        </button>
+                    </div>
+                    <div
+                        class="o_ChatterTopbar_tools position-relative d-flex flex-grow-1 border-bottom"
+                        t-att-class="{
+                            'border-start ps-2': chatterTopbar.chatter.hasActivities,
+                        }"
+                    >
+                        <t t-if="chatterTopbar.chatter.hasActivities">
+                            <button
+                                class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-light text-nowrap"
+                                type="button"
+                                t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                                t-on-click="chatterTopbar.chatter.onClickScheduleActivity"
+                                data-hotkey="shift+a"
+                            >
+                                <i class="fa fa-clock-o me-1" />
+                                <span>Activities</span>
+                            </button>
+                        </t>
+                        <div
+                            class="flex-grow-1 border-start pe-2"
+                            t-att-class="{
+                                'ms-2': chatterTopbar.chatter.hasActivities,
+                            }"
+                        />
+                        <t t-if="!ui.isSmall">
+                            <div
+                                class="o_ChatterTopbar_rightSection flex-grow-1 flex-shrink-0 justify-content-end d-flex"
+                            >
+                                <button
+                                    t-if="chatterTopbar.chatter.thread.allAttachments.length === 0"
+                                    class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-light btn-primary"
+                                    type="button"
+                                    t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                                    t-on-click="chatterTopbar.chatter.onClickButtonAddAttachments"
+                                >
+                                    <i
+                                        class="fa fa-paperclip fa-lg me-1"
+                                        role="img"
+                                        aria-label="Attachments"
+                                    />
+                                    <t
+                                        t-if="chatterTopbar.chatter.isShowingAttachmentsLoading"
+                                    >
+                                        <i
+                                            class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin"
+                                            aria-label="Attachment counter loading..."
+                                        />
+                                    </t>
+                                </button>
+                                <button
+                                    t-if="chatterTopbar.chatter.thread.allAttachments.length > 0"
+                                    class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-light btn-primary"
+                                    type="button"
+                                    t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasReadAccess"
+                                    t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'"
+                                    t-on-click="chatterTopbar.chatter.onClickButtonToggleAttachments"
+                                >
+                                    <i
+                                        class="fa fa-paperclip fa-lg me-1"
+                                        role="img"
+                                        aria-label="Attachments"
+                                    />
+                                    <t
+                                        t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading"
+                                    >
+                                        <span
+                                            class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount"
+                                            t-esc="chatterTopbar.attachmentButtonText"
+                                        />
+                                    </t>
+                                    <t
+                                        t-if="chatterTopbar.chatter.isShowingAttachmentsLoading"
+                                    >
+                                        <i
+                                            class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin"
+                                            aria-label="Attachment counter loading..."
+                                        />
+                                    </t>
+                                </button>
+                                <t
+                                    t-if="chatterTopbar.chatter.hasFollowers and chatterTopbar.chatter.thread"
+                                >
+                                    <FollowerListMenu
+                                        className="'o_ChatterTopbar_followerListMenu'"
+                                        record="chatterTopbar.chatter.followerListMenuView"
+                                    />
+                                    <t t-if="chatterTopbar.chatter.followButtonView">
+                                        <FollowButton
+                                            className="'o_ChatterTopbar_followButton'"
+                                            record="chatterTopbar.chatter.followButtonView"
+                                        />
+                                    </t>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

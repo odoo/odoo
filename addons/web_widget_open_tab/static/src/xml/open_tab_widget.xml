@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="web_widget_open_tab.openTab" owl="1">
+        <a
+            class="btn open_tab_widget fa fa-external-link"
+            t-att-href="_getReference()"
+            target="_blank"
+            t-on-click="openNewTab"
+            t-att-title="props.title"
+            t-on-mouseenter="ev => this.loadAttrs(ev)"
+        >
+        </a>
+    </t>
+</template>

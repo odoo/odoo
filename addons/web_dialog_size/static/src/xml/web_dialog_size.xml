@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <!-- This is for old Dialog template.
+    Because Odoo haven't done every template to OWL. -->
+    <t t-extend="web.DialogWidget">
+        <t t-jquery="button.btn-close" t-operation="inner">
+            <i class="fa fa-close" />
+        </t>
+        <t t-jquery="button.btn-close" t-operation="before">
+            <button type="button" class="dialog_button_extend btn btn-secondary">
+                <i class="fa fa-expand" />
+            </button>
+            <button type="button" class="dialog_button_restore btn btn-secondary">
+                <i class="fa fa-compress" />
+            </button>
+        </t>
+    </t>
+
+    <t t-inherit="web.LegacyAdaptedActionDialog" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('modal-content')]" position="before">
+            <DialogDraggable />
+        </xpath>
+        <DialogDraggable position="inside">
+            <xpath expr="//div[hasclass('modal-content')]" position="move" />
+        </DialogDraggable>
+    </t>
+
+    <t t-inherit="web.Dialog" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('modal-content')]" position="before">
+            <DialogDraggable />
+        </xpath>
+        <DialogDraggable position="inside">
+            <xpath expr="//div[hasclass('modal-content')]" position="move" />
+        </DialogDraggable>
+    </t>
+
+    <t t-inherit="web.ActionDialog" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('modal-content')]" position="before">
+            <DialogDraggable />
+        </xpath>
+        <DialogDraggable position="inside">
+            <xpath expr="//div[hasclass('modal-content')]" position="move" />
+        </DialogDraggable>
+    </t>
+
+    <t t-inherit="web.ActionDialog.header" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[hasclass('btn-close')]" position="before">
+            <ExpandButton getsize="getSize" setsize="setSize" t-if="!isFullscreen" />
+        </xpath>
+    </t>
+
+    <t t-inherit="web.Dialog.header" t-inherit-mode="extension" owl="1">
+        <xpath expr="//button[hasclass('btn-close')]" position="before">
+            <ExpandButton
+                getsize="getSize"
+                setsize="setSize"
+                t-if="!isFullscreen and getSize and setSize"
+            />
+        </xpath>
+    </t>
+
+    <t t-inherit="web.SelectCreateDialog" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dialog" position="attributes">
+            <attribute name="size">props.size</attribute>
+        </xpath>
+    </t>
+
+</templates>

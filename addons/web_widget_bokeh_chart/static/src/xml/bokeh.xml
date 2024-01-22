@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-ref="widget" t-name="web_widget_bokeh_chart.BokehChartField" owl="1">
+        <t t-out="json_value.div" />
+    </div>
+     <div t-ref="widget" t-name="web_widget_bokeh_chart.BokehChartlJsonField" owl="1">
+         <t t-out="markup(props.value.div)" />
+     </div>
+</templates>

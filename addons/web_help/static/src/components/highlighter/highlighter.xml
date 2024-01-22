@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="web_help.Highlighter" owl="1">
+        <div class="web_help_highlighter">
+            <div
+                class="web_help_overlay"
+                t-att-class="{'d-none': !state.visible}"
+                t-ref="overlay"
+            >
+                <div class="web_help_highlight" t-ref="highlightRef" />
+            </div>
+        </div>
+    </t>
+</templates>

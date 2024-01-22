@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2017 Jairo Llopis <jairo.llopis@tecnativa.com>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+
+
+    <t
+        t-name="web_m2x_options.AutoComplete"
+        t-inherit="web.AutoComplete"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//t[@t-foreach='source.options']/li/a" position="attributes">
+            <attribute name="t-attf-style">{{ option.style }}</attribute>
+        </xpath>
+    </t>
+
+    <t
+        t-name="web_m2x_options.Many2ManyTagsField"
+        t-inherit="web.Many2ManyTagsField"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="nodeOptions">props.nodeOptions</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="web_m2x_options.Many2OneField.CreateConfirmationDialog" owl="1">
+        <Dialog title="title" size="'md'">
+            <div>
+                You are creating a new <strong t-esc="props.value" /> as a new <t
+                    t-esc="props.name"
+                />, are you sure it does not exist yet?
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onCreate">Create</button>
+                <button
+                    class="btn btn-primary"
+                    t-on-click="onCreateEdit"
+                >Create and Edit</button>
+                <button class="btn" t-on-click="() => props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

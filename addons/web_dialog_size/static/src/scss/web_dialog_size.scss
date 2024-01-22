@@ -1,0 +1,16 @@
+.modal {
+    .modal-dialog_full_screen {
+        @include media-breakpoint-up(sm) {
+            max-width: 100%;
+            width: calc(100% - 50px);
+        }
+    }
+
+    .dialog_button_restore,
+    .dialog_button_extend {
+        margin-left: auto;
+        + .btn-close {
+            margin: -8px -8px -8px 0px;
+        }
+    }
+}

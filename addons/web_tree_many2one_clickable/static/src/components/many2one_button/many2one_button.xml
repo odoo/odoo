@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="web_tree_many2one_clickable.Button" owl="1">
+        <button
+            class="btn btn-sm btn-secondary fa fa-arrow-right web_tree_many2one_clickable"
+            t-on-click="onClick"
+        >
+        </button>
+    </t>
+
+    <t t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//Field" position="after">
+            <TreeMany2oneClickableButton
+                record="record"
+                field="record.fields[column.name]"
+                value="record.data[column.name]"
+                t-if="record.fields[column.name].type == 'many2one' and record.data[column.name] and canUseFormatter(column, record) and !props.archInfo.fieldNodes[column.name].options.no_open"
+            />
+        </xpath>
+    </t>
+</templates>

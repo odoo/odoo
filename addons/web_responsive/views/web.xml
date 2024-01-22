@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2018 Alexandre Díaz
+    Copyright 2021 ITerra - Sergey Shebanin
+    Copyright 2023 Onestein - Anjeel Haria
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <template
+        id="responsive_web_layout"
+        inherit_id="web.layout"
+        name="Responsive Layout"
+    >
+        <xpath expr="//meta[last()]" position="after">
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, user-scalable=no"
+            />
+        </xpath>
+    </template>
+</odoo>
