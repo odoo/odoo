@@ -88,9 +88,6 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="property_account_expense_id" position="attributes">
-                    <attribute name="readonly">purchase_ok == 0</attribute>
-                </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" readonly="purchase_ok == 0" context="{'default_type_tax_use':'purchase'}"/>
                 </field>
