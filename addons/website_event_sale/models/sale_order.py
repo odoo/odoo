@@ -29,8 +29,9 @@ class SaleOrder(models.Model):
             event_ticket_id = self.env.context.get("event_ticket_id")
         else:
             product = self.env['product.product'].browse(product_id)
-            if product.event_ticket_ids:
-                event_ticket_id = product.event_ticket_ids[0].id
+            event_ticket_id = fields.first(product.event_ticket_ids.filtered(
+                lambda x: not x.event_id.is_finished and not x.event_id.is_ongoing
+            )).id
 
         if event_ticket_id:
             ticket = self.env['event.event.ticket'].browse(event_ticket_id)
