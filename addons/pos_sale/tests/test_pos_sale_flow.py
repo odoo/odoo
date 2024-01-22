@@ -320,7 +320,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         #create a sale order with product_a
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
@@ -361,6 +361,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderWithNote', login="accountman")
+
     def test_pos_invoice_analytic_account(self):
         #create a sale order with product_a
         self.analytic_plan_projects = self.env['account.analytic.plan'].create({'name': 'Projects'})
@@ -372,7 +373,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'plan_id': self.analytic_plan_projects.id,
         })
         self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.desk_pad.id,
                 'name': self.desk_pad.name,
