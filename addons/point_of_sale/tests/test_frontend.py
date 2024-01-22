@@ -165,7 +165,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'barcode': '2300002000007',
         })
-        configurable_chair = env['product.product'].create({
+        cls.configurable_chair = env['product.product'].create({
             'name': 'Configurable Chair',
             'available_in_pos': True,
             'list_price': 10,
@@ -202,7 +202,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'html_color': '#0000ff',
         })
         chair_color_line = env['product.template.attribute.line'].create({
-            'product_tmpl_id': configurable_chair.product_tmpl_id.id,
+            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_color_attribute.id,
             'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
         })
@@ -222,7 +222,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'attribute_id': chair_legs_attribute.id,
         })
         chair_legs_line = env['product.template.attribute.line'].create({
-            'product_tmpl_id': configurable_chair.product_tmpl_id.id,
+            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_legs_attribute.id,
             'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
         })
@@ -242,7 +242,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'is_custom': True,
         })
         chair_fabrics_line = env['product.template.attribute.line'].create({
-            'product_tmpl_id': configurable_chair.product_tmpl_id.id,
+            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
             'attribute_id': chair_fabrics_attribute.id,
             'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_other.id])]
         })
