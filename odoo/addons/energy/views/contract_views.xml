@@ -8,44 +8,73 @@
             <field name="arch" type="xml">
                 <form string="Energy Trading Contract">
                 <header>
-                    <field name="status" widget="statusbar" statusbar_visible="initial,executing,finished"/>
+                    <button name="activate_contract" string="Activate Contract" type="object"
+                        attrs="{'invisible' : [('status', '!=', 'initial')]}"/>
+                    <button name="finish_contract" string="Finish Contract" type="object"
+                        attrs="{'invisible' : [('status', '!=', 'executing')]}"/>
+                    <button string="Distribute Energy" type="action"
+                            name="%(action_wizard_energy_distribution)d"
+                            attrs="{'invisible': ['|', ('is_transit', '=', True), ('status', '!=', 'executing')]}"
+                            context="{'default_contract_id': id, 'default_delivery_point_id': delivery_point_id, 'contract_type': position}"
+                            class="oe_highlight"/>
+                    <field name="status" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="initial,executing,finished"/>
                 </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box" groups="base.group_user">
+                            <button name="action_open_transit_contracts"
+                                    attrs="{'invisible': [('is_transit', '=', True)]}"
+                                    type="object" class="oe_stat_button" icon="fa-refresh" >
+                                <span class="o_stat_text">
+                                    Transit
+                                </span>
+                            </button>
+                            <button name="%(energy.action_distribution_order_lines)d"
+                                    attrs="{'invisible': [('is_transit', '=', True)]}"
+                                    type="action" class="oe_stat_button" icon="fa-line-chart">
+                                <span class="o_stat_text">
+                                    Distributions
+                                </span>
+                            </button>
+                        </div>
                         <group col="2">
                             <group>
                                 <field name="category"/>
                                 <field name="type"/>
                                 <field name="position"/>
-                                <field name="master_contract_id"/>
+                                <field name="master_contract_id" attrs="{'invisible': [('is_transit', '!=', False)]}"/>
+                                <field name="parent_contract_id" attrs="{'invisible': [('is_transit', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="name"/>
+                                <field name="is_transit"/>
                                 <field name="start_date"/>
-                                <field name="end_date"/>
+                                <field name="end_date" attrs="{'invisible': [('is_transit', '!=', False)]}"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Power and Value">
-                            <group col="2">
-                                <group>
-                                   <field name="power" string="Power Per Time/Unit"/>
-                                    <field name="powerUnit" string="Power Unit"/>
-                                    <field name="timeUnit" string="Time Unit"/>
-                                </group>
-                                <group>
-                                    <field name="total_contract_power" string="Total Contract Power"/>
-                                    <field name="total_contract_value" string="Total Contract Value - no VAT"/>
-                                    <field name="vat" string="VAT"/>
-                                    <field name="total_contract_value_with_vat" string="Total Contract Value - with VAT"/>
-                                </group>
-                            </group>    
-                            </page>
-                            <page string="Delivery">
-                                <group>
-                                    <field name="delivery_point_id" string="Delivery Point"/>
+                            <page string="Power and Value" attrs="{'invisible': [('is_transit', '!=', False)]}">
+                                <group col="2">
+                                    <group>
+                                       <field name="power" string="Power Per Time/Unit"/>
+                                        <field name="powerUnit" string="Power Unit"/>
+                                        <field name="timeUnit" string="Time Unit"/>
+                                    </group>
+                                    <group>
+                                        <field name="total_contract_power" string="Total Contract Power"/>
+                                        <field name="total_contract_value" string="Total Contract Value - no VAT"/>
+                                        <field name="vat" string="VAT"/>
+                                        <field name="total_contract_value_with_vat" string="Total Contract Value - with VAT"/>
+                                    </group>
                                 </group>
                             </page>
-                            <page string="Price">
+                            <page string="Delivery" attrs="{'invisible': [('is_transit', '!=', False)]}">
+                                <group>
+                                    <field name="delivery_point_id"
+                                           attrs="{'required': [('is_transit', '=', False)]}"
+                                           string="Delivery Point"/>
+                                </group>
+                            </page>
+                            <page string="Price" attrs="{'invisible': [('is_transit', '!=', False)]}">
                                 <group>
                                     <field name="price" string="Price per time unit "  />
                                 </group>
@@ -57,7 +86,7 @@
                                 </tree>
                                 </field>
                             </page>
-                            <page string="LoadShape">
+                            <page string="LoadShape" attrs="{'invisible': [('is_transit', '!=', False)]}">
                                 <group col="2">
                                  <group>
                                     <field name="profile_id" string="Profile"/>
@@ -76,7 +105,26 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Payment Terms">
+                            <page string="Distributions" attrs="{'invisible': [('is_transit', '=', False)]}">
+                                <field name="distribution_order_ids" widget="one2many">
+                                    <tree>
+                                        <field name="power_date"/>
+                                        <field name="power_hour"/>
+                                        <field name="total_power" sum="total_power"/>
+                                        <field name="distributed_power" sum="distributed_power"/>
+                                        <field name="actual_power" sum="actual_power"/>
+                                        <field name="distribution_line_ids" string="Distributions"  mode="tree"
+                                               widget="many2many_tags" options="{'no_create': True}" >
+                                            <tree>
+                                                <field name="power_hour"/>
+                                                <field name="delivery_point_id"/>
+                                                <field name="power"/>
+                                            </tree>
+                                        </field>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Payment Terms" attrs="{'invisible': [('is_transit', '!=', False)]}">
                                 <group>
                                  <field name="payment_terms_id" string="Payment Terms"/>
                                 </group>
@@ -97,6 +145,7 @@
                     <field name="name"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
+                    <field name="is_transit"/>
                 </tree>
             </field>
         </record>
@@ -108,6 +157,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name" string="Contract Name"/>
+                    <field name="is_transit"/>
                 </search>
             </field>
         </record>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Distribution Views -->
+        <record id="view_distribution_form" model="ir.ui.view">
+            <field name="name">distribution.order.form</field>
+            <field name="model">distribution.order</field>
+            <field name="arch" type="xml">
+                <form string="Distribution Details">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="contract_id" />
+                                <field name="power_date"/>
+                                <field name="power_hour"/>
+                            </group>
+                            <group>
+                                <field name="order_type"/>
+                                <field name="delivery_point_id"/>
+                                <field name="total_power"/>
+                                <field name="distributed_power"/>
+                                <field name="actual_power"/>
+                            </group>
+                        </group>
+                        <separator string="Distribution Lines" colspan="4"/>
+                        <field name="distribution_line_ids">
+                            <tree>
+                                <field name="power_hour"/>
+                                <field name="delivery_point_id"/>
+                                <field name="power"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_distribution_tree" model="ir.ui.view">
+            <field name="name">distribution.order.tree</field>
+            <field name="model">distribution.order</field>
+            <field name="arch" type="xml">
+                <tree string="Distributions" >
+                    <field name="name"/>
+                    <field name="contract_id" />
+                    <field name="order_type"/>
+                    <field name="power_date"/>
+                    <field name="power_hour"/>
+                    <field name="delivery_point_id" string="Contract Delivery Point"/>
+                    <field name="distribution_line_ids" string="Distributions"  mode="tree"
+                           widget="many2many_tags" options="{'no_create': True}" >
+                        <tree>
+                            <field name="power_hour"/>
+                            <field name="delivery_point_id"/>
+                            <field name="power"/>
+                        </tree>
+                    </field>
+                    <field name="total_power"/>
+                    <field name="distributed_power"/>
+                    <field name="actual_power"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_distribution_order_search" model="ir.ui.view">
+            <field name="name">distribution.order.search</field>
+            <field name="model">distribution.order</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="contract_id" />
+                    <field name="order_type"/>
+                    <field name="power_date"/>
+                    <field name="delivery_point_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Distribution Line Views -->
+        <record id="view_distribution_line_form" model="ir.ui.view">
+            <field name="name">distribution.order.line.form</field>
+            <field name="model">distribution.order.line</field>
+            <field name="arch" type="xml">
+                <form string="Distribution Line Details">
+                    <sheet>
+                        <group>
+                            <field name="contract_id"/>
+                            <field name="distribution_id"/>
+                            <field name="order_type"/>
+                            <field name="power_date"/>
+                            <field name="power_hour"/>
+                        </group>
+                        <group>
+                            <field name="contract_delivery_point_id"/>
+                            <field name="delivery_point_id"/>
+                            <field name="total_power"/>
+                            <field name="power"/>
+                            <field name="actual_power"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_distribution_line_tree" model="ir.ui.view">
+            <field name="name">distribution.order.line.tree</field>
+            <field name="model">distribution.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Distribution Lines" >
+                    <field name="contract_id" />
+                    <field name="distribution_id"/>
+                    <field name="order_type"/>
+                    <field name="power_date"/>
+                    <field name="power_hour"/>
+                    <field name="contract_delivery_point_id"/>
+                    <field name="delivery_point_id"/>
+                    <field name="total_power"/>
+                    <field name="power"/>
+                    <field name="actual_power"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_distribution_line_search" model="ir.ui.view">
+            <field name="name">distribution.order.line.search</field>
+            <field name="model">distribution.order.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="contract_id" />
+                    <field name="distribution_id"/>
+                    <field name="order_type"/>
+                    <field name="power_date"/>
+                    <field name="power_hour"/>
+                    <field name="contract_delivery_point_id"/>
+                    <field name="delivery_point_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Distribution Order Action -->
+        <record id="action_sale_distribution" model="ir.actions.act_window">
+            <field name="name">Distribution Sale Order</field>
+            <field name="res_model">distribution.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('order_type', '=', 'sell')]</field>
+            <field name="context">{'default_order_type': 'sell'}</field>
+        </record>
+        <record id="action_purchase_distribution" model="ir.actions.act_window">
+            <field name="name">Distribution Purchase Order</field>
+            <field name="res_model">distribution.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('order_type', '=', 'buy')]</field>
+            <field name="context">{'default_order_type': 'buy'}</field>
+        </record>
+
+        <!-- Distribution Order Line Action -->
+        <record id="action_distribution_order_lines" model="ir.actions.act_window">
+            <field name="name">Distribution Order Lines</field>
+            <field name="res_model">distribution.order.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'group_by': 'order_type'}</field>
+        </record>
+
+    </data>
+</odoo>

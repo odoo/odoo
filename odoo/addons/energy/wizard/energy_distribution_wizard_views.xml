@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_energy_distribution" model="ir.ui.view">
+            <field name="name">Distribute Energy</field>
+            <field name="model">energy.distribution.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Distribute Energy">
+                    <group>
+                        <field name="contract_id" invisible="1"/>
+                        <field name="delivery_point_id"/>
+                        <field name="power_date"/>
+                        <field
+                            name="distribution_line_ids"
+                            widget="x2many_2d_matrix"
+                            field_x_axis="delivery_point_id"
+                            field_y_axis="power_hour"
+                            field_value="power">
+                            <tree editable="bottom">
+                                <field name="delivery_point_id" />
+                                <field name="power_hour" />
+                                <field name="power" />
+                            </tree>
+                        </field>
+
+                    </group>
+                    <footer>
+                        <button name="action_distribute" string="Distribute" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="z" string="Cancel" type="object" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_energy_distribution" model="ir.actions.act_window">
+            <field name="name">Energy Distribution</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">energy.distribution.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -10,16 +10,26 @@ import pandas as pd
 class Contract(models.Model):
     _name = "contract"
     _description = "Description of the Contract model"
-    name = fields.Char()
-    category = fields.Selection([('trading', 'Trading'), ('supplying', 'Supplying')
-                             ], 'Category'
-                             )
-    type = fields.Selection([('efet', 'EFET'), ('other', 'OTHER')],
-                            'Type')
-    product = fields.Selection([('energy', 'Energy'), ('cbc', 'Capacity')],
-                               'Product')
-    position = fields.Selection([('buy', 'Buy'), ('sell', 'Sell')],
-                                'Position')
+
+    name = fields.Char(string='Name', required=True, copy=False,
+                       default=lambda self: self.env['ir.sequence'].next_by_code('contract'))
+    category = fields.Selection([
+        ('trading', 'Trading'),
+        ('supplying', 'Supplying')
+    ], 'Category')
+    is_transit = fields.Boolean()
+    type = fields.Selection([
+        ('efet', 'EFET'),
+        ('other', 'OTHER')
+    ], 'Type')
+    product = fields.Selection([
+        ('energy', 'Energy'),
+        ('cbc', 'Capacity')
+    ], 'Product')
+    position = fields.Selection([
+        ('buy', 'Buy'),
+        ('sell', 'Sell')
+    ], 'Position', required=True)
     start_date = fields.Date(string='Start Date')
     end_date = fields.Date(string='End Date')
     power = fields.Float(string='Power per time unit')
@@ -30,13 +40,20 @@ class Contract(models.Model):
     total_contract_value = fields.Float(string='Total Contract Value - no VAT')
     vat = fields.Boolean(string='VAT')
     total_contract_value_with_vat = fields.Float(string='Total Contract Value - with VAT')
-    status = fields.Selection([('initial', 'Initial'), ('executing', 'Executing'),('finished', 'Finished')], 'Status')
+    status = fields.Selection([
+        ('initial', 'Initial'),  # draft
+        ('executing', 'Executing'),  # running | active
+        ('finished', 'Finished')  # done
+    ], 'Status', required=True, default='initial')
     master_contract_id = fields.Many2one('master_contract', string='Master Contract')
+    parent_contract_id = fields.Many2one('contract', string='Parent Contract', domain="[('is_transit','=', False)]",
+                                         help='When transit, the contract is derived from a parent contract')
     delivery_point_id = fields.Many2one('border', string='Delivery Point')
     cai_code = fields.Char(string='CAI Code')
     profile_id = fields.Many2one('profile', string='Profile')
     period_id = fields.Many2one('period', string='Period')
     loadshape_details_ids = fields.One2many('loadshape_details', 'contract_id', string='Load Shape Details')
+    distribution_order_ids = fields.One2many('distribution.order', 'contract_id', string='Distribution Details')
     external_id = fields.Char(string='External ID')
     risk = fields.Selection([('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], 'Risk')
     cai_code = fields.Char(string='CAI Code')
@@ -44,7 +61,7 @@ class Contract(models.Model):
     excel_file = fields.Binary(string="Excel File", attachment=True, help="Upload your Excel file here.")
     payment_terms_id = fields.Many2one('payment_terms', string='Payment Terms')
 
-    @api.onchange('start_date', 'end_date','period_id','profile_id')
+    @api.onchange('start_date', 'end_date', 'period_id', 'profile_id')
     def _compute_loadshape_details(self):
         for record in self:
             if record.start_date and record.end_date:
@@ -70,7 +87,7 @@ class Contract(models.Model):
 
                 #record.loadshape_details_ids = loadshape_details
     
-    @api.onchange('contract_price_ids','loadshape_details_ids','vat')
+    @api.onchange('contract_price_ids', 'loadshape_details_ids', 'vat')
     def _compute_value_total(self):
         for record in self:
             record.total_contract_value = 0
@@ -87,7 +104,7 @@ class Contract(models.Model):
     def _compute_price(self):
         for record in self:
             record.price = 0
-            for item in  record.contract_price_ids:
+            for item in record.contract_price_ids:
                 record.price = record.price + item.value
 
     def action_delete_detail(self):
@@ -130,4 +147,22 @@ class Contract(models.Model):
                 'title': 'Import Successful',
                 'message': 'Excel data imported successfully!',
             }
+        }
+
+    def activate_contract(self):
+        self.write({'status': 'executing'})
+
+    def finish_contract(self):
+        # TODO: cron job - every once a day check - if contract is active based on start-end date
+        self.write({'status': 'finished'})
+
+    def action_open_transit_contracts(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,form',
+            'res_model': 'contract',
+            'type': 'ir.actions.act_window',
+            'context': {'default_parent_contract_id': self.id},
+            'domain': [('parent_contract_id', '=', self.id)],
         }

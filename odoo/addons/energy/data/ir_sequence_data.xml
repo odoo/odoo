@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="sequence_energy_contract" model="ir.sequence">
+            <field name="name">Energy Contract Sequence</field>
+            <field name="code">contract</field>
+            <field name="prefix">C</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="sequence_energy_distribution_order" model="ir.sequence">
+            <field name="name">Energy Distribution Order Sequence</field>
+            <field name="code">distribution.order</field>
+            <field name="prefix">D</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>
