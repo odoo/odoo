@@ -82,7 +82,7 @@ export class ForecastSearchModel extends SearchModel {
                 startMoment = moment.utc(startMoment);
             }
             const format = DATE_FORMAT[type];
-            this.forecastStart = startMoment.format(format);
+            this.forecastStart = startMoment.locale("en").format(format);
         }
         return this.forecastStart;
     }
