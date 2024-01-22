@@ -80,7 +80,7 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" multi_edit="1" sample="1">
+                <tree string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
                     <header>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign" type="object" string="Check Availability"/>
@@ -398,13 +398,6 @@
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0]}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p><p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
 
         <record id="action_picking_tree_incoming" model="ir.actions.act_window">
@@ -413,15 +406,8 @@
             <field name="path">receipts</field>
             <field name="view_mode">tree,kanban,form,calendar,activity</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}</field>
+            <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No receipt found. Let's create one!
-                </p><p>
-                    Receipts allow you to get products from a partner.
-                </p>
-            </field>
         </record>
 
         <record id="action_picking_tree_outgoing" model="ir.actions.act_window">
@@ -430,15 +416,8 @@
             <field name="path">deliveries</field>
             <field name="view_mode">tree,kanban,form,calendar,activity</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
+            <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No delivery found. Let's create one!
-                </p><p>
-                    Deliveries allow you to send products from your stock to a partner.
-                </p>
-            </field>
         </record>
 
         <record id="action_picking_tree_internal" model="ir.actions.act_window">
@@ -446,15 +425,8 @@
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'internal', 'search_default_internal': 1}</field>
+            <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'internal', 'search_default_internal': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No internal transfer found. Let's create one!
-                </p><p>
-                    Internal transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
 
         <record id="action_validate_picking" model="ir.actions.server">
@@ -517,30 +489,41 @@
             <field name="binding_view_types">list</field>
         </record>
 
+        <record id="method_action_picking_tree_incoming" model="ir.actions.server">
+            <field name="name">stock.method_action_picking_tree_incoming</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="state">code</field>
+            <field name="code">action = model.get_action_picking_tree_incoming()</field>
+        </record>
+
+        <record id="method_action_picking_tree_outgoing" model="ir.actions.server">
+            <field name="name">stock.method_action_picking_tree_outgoing</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="state">code</field>
+            <field name="code">action = model.get_action_picking_tree_outgoing()</field>
+        </record>
+
+        <record id="method_action_picking_tree_internal" model="ir.actions.server">
+            <field name="name">stock.method_action_picking_tree_internal</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="state">code</field>
+            <field name="code">action = model.get_action_picking_tree_internal()</field>
+        </record>
+
         <menuitem id="in_picking" name="Receipts" parent="menu_stock_transfers"
-                  action="action_picking_tree_incoming" sequence="20"
+                  action="stock.method_action_picking_tree_incoming" sequence="20"
                   groups="stock.group_stock_manager,stock.group_stock_user"/>
         <menuitem id="out_picking" name="Deliveries" parent="menu_stock_transfers"
-                  action="action_picking_tree_outgoing" sequence="21"
+                  action="stock.method_action_picking_tree_outgoing" sequence="21"
                   groups="stock.group_stock_manager,stock.group_stock_user"/>
         <menuitem id="int_picking" name="Internal" parent="menu_stock_transfers"
-                  action="action_picking_tree_internal" sequence="22"
+                  action="stock.method_action_picking_tree_internal" sequence="22"
                   groups="stock.group_stock_multi_locations"/>
 
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
             <field name="name">All Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address'}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p><p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
 
         <record id="action_picking_tree_ready" model="ir.actions.act_window">
@@ -549,14 +532,6 @@
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p><p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
        </record>
 
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
@@ -565,14 +540,6 @@
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_waiting': 1}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p><p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
 
         <record id="action_picking_tree_late" model="ir.actions.act_window">
@@ -581,14 +548,6 @@
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_planning_issues': 1}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p><p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
 
         <record id="action_picking_tree_backorder" model="ir.actions.act_window">
@@ -597,15 +556,6 @@
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
-            <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p>
-                <p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
 
         <record id="action_get_picking_type_ready_moves" model="ir.actions.act_window">
@@ -616,6 +566,42 @@
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
             <field name="context">{'search_default_ready': 1}</field>
         </record>
+
+        <template id="help_message_template" name="Help Message" groups="base.group_user">
+            <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
+                <t name="receipt_message">
+                    <t t-if="picking_type_code == 'incoming'">
+                        No receipt yet! Create a new one.
+                    </t>
+                </t>
+                <t name="delivery_message">
+                    <t t-if="picking_type_code == 'outgoing'">
+                        No delivery to do!
+                    </t>
+                </t>
+                <t name="transfer_message">
+                    <t t-if="picking_type_code not in ['incoming', 'outgoing']">
+                        No transfer found. Let's create one!
+                    </t>
+                </t>
+            </p>
+            <p name="bottom_help_message" class="text-muted">
+                <t name="receipt_message">
+                    <t t-if="picking_type_code == 'incoming'">
+                        Reduce stockouts with alerts, barcode app, replenishment propositions,
+                        locations management traceability, quality control, etc.
+                    </t>
+                </t>
+                <t name="delivery_message">
+                    <t t-if="picking_type_code == 'outgoing'"></t>
+                </t>
+                <t name="transfer_message">
+                    <t t-if="picking_type_code not in ['incoming', 'outgoing']">
+                        Transfers allow you to move products from one location to another.
+                    </t>
+                </t>
+            </p>
+        </template>
 
         <record id="action_get_picking_type_operations" model="ir.actions.act_window">
             <field name="name">Operations</field>
@@ -649,14 +635,6 @@
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No transfer found. Let's create one!
-                </p>
-                <p>
-                    Transfers allow you to move products from one location to another.
-                </p>
-            </field>
         </record>
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Transfers for Groups</field>
