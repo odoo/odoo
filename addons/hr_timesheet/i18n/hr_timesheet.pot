@@ -22,6 +22,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
+<<<<<<< 17.0
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(effective)s %(uom_name)s"
@@ -51,6 +52,10 @@ msgstr ""
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
+||||||| 12d3164325b7ddee5ece24db7dab6b84fd4aef4b
+=======
+#: code:addons/hr_timesheet/models/project.py:0
+>>>>>>> 2ec2c6a5468956157869c859e3c10dc25ab42b0e
 #, python-format
 msgid "%(name)s's Timesheets"
 msgstr ""
@@ -648,6 +653,14 @@ msgid "Job Title"
 msgstr ""
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -739,6 +752,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No timesheets found. Let's create one!"
 msgstr ""
 
 #. module: hr_timesheet
@@ -1367,9 +1386,23 @@ msgid "Total:"
 msgstr ""
 
 #. module: hr_timesheet
+<<<<<<< 17.0
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+||||||| 12d3164325b7ddee5ece24db7dab6b84fd4aef4b
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Track your time from anywhere, even offline, with our web/mobile apps"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+=======
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Track your time from anywhere, even offline, with our web/mobile apps"
+msgstr ""
+
+#. module: hr_timesheet
+>>>>>>> 2ec2c6a5468956157869c859e3c10dc25ab42b0e
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
