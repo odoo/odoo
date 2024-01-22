@@ -93,6 +93,22 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").not.toHaveValue();
     });
 
+    test("clear: files", () => {
+        mount(/* html */ `<input type="file" />`);
+        const file = new File([""], "file.txt");
+
+        expect("input").not.toHaveValue();
+
+        click("input");
+        fill(file);
+
+        expect("input").toHaveValue([file]);
+
+        clear();
+
+        expect("input").not.toHaveValue();
+    });
+
     test("click", () => {
         mount(/* html */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
