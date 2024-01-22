@@ -183,12 +183,9 @@ class LivechatController(http.Controller):
             if guest:
                 channel_info['guest_token'] = guest._format_auth_cookie()
         channel_info.update(isLoaded=not persisted or not chatbot_script)
-        store = {}
-        request.env["ir.http"]._add_self_to_session_info(store)
-        return {
-            "Store": store,
-            "Thread": channel_info,
-        }
+        res = request.env["res.users"]._init_store_data()
+        res["Thread"] = channel_info
+        return res
 
     def _post_feedback_message(self, channel, rating, reason):
         reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")

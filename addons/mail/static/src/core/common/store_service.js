@@ -228,11 +228,11 @@ export class Store extends BaseStore {
 
     /**
      * @template T
-     * @param {T} dataByModelName
+     * @param {T} [dataByModelName={}]
      * @param {Object} [options={}]
      * @returns {{ [K in keyof T]: T[K] extends Array ? import("models").Models[K][] : import("models").Models[K] }}
      */
-    insert(dataByModelName, options = {}) {
+    insert(dataByModelName = {}, options = {}) {
         const store = this;
         return Record.MAKE_UPDATE(function storeInsert() {
             const res = {};
@@ -300,11 +300,8 @@ export const storeService = {
     start(env, services) {
         const store = makeStore(env);
         store.discuss = { activeTab: "main" };
-        if (session.self) {
-            store.self = session.self;
-        } else {
-            store.self = { id: -1, type: "guest" };
-        }
+        store.insert(session.storeData);
+        store.self ??= { id: -1, type: "guest" };
         store.settings = user.settings;
         Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
