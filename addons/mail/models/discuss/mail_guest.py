@@ -133,7 +133,6 @@ class MailGuest(models.Model):
         odoobot = self.env.ref('base.partner_root').sudo()
         return {
             "Store": {
-                "companyName": self.env.company.name,
                 # sudo: ir.config_parameter: safe to check for existence of tenor api key
                 "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),

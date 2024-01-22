@@ -73,7 +73,6 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
-    companyName = "";
     odoobot = Record.one("Persona");
     /** @type {boolean} */
     odoobotOnboarding;

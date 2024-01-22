@@ -7,7 +7,7 @@
             <span t-if="props.data.channelData.defaultDisplayMode === 'video_full_screen'">You've been invited to a meeting!</span>
             <span t-else="">You've been invited to a chat!</span>
         </h1>
-        <h2 class="m-5" t-esc="store.companyName"/>
+        <h2 class="m-5" t-esc="props.data.companyName"/>
         <div class="d-flex justify-content-center">
             <div t-if="props.data.channelData.defaultDisplayMode === 'video_full_screen'" class="position-relative d-flex justify-content-center me-5" t-ref="root">
                 <video class="shadow rounded bg-dark" height="480" width="640" autoplay="" t-ref="video"/>
