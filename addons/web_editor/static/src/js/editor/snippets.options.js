@@ -5707,7 +5707,9 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const targetOrder = parseInt(targetMobileOrder[1]);
 
             [...this.$target[0].parentElement.children].forEach(el => {
-                const elOrder = parseInt(this._getItemMobileOrder(el)[1]);
+                const elClassOrder = this._getItemMobileOrder(el);
+                if (!elClassOrder) return;
+                const elOrder = parseInt(elClassOrder[1]);
                 if (elOrder > targetOrder) {
                     el.classList.replace(`order-${elOrder}`, `order-${elOrder - 1}`);
                 }
