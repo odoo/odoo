@@ -55,11 +55,11 @@
             <td t-if="not project or project.allow_timesheets" class="text-end">
                 <t t-if="task.allow_timesheets">
                     <t t-if="is_uom_day">
-                        <t t-out="timesheet_ids._convert_hours_to_days(task.effective_hours)"/>
+                        <t t-out="timesheet_ids._convert_hours_to_days(task.total_hours_spent)"/>
                         <span t-if="task.allocated_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.allocated_hours)"/></span>
                     </t>
                     <t t-else="">
-                        <span t-field="task.effective_hours" t-options='{"widget": "float_time"}'/>
+                        <span t-field="task.total_hours_spent" t-options='{"widget": "float_time"}'/>
                         <t t-if="task.allocated_hours > 0">
                             /
                             <span t-field="task.allocated_hours" t-options='{"widget": "float_time"}'/>
