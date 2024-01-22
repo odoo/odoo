@@ -60,6 +60,7 @@ class AccountPaymentTerm(models.Model):
             else:
                 discount_amount_currency = self.currency_id.round(total_amount - (total_amount * (1 - (percentage))))
             return total_amount - discount_amount_currency
+        return total_amount
 
     @api.depends('company_id')
     def _compute_discount_computation(self):
