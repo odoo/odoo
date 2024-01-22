@@ -22,7 +22,9 @@ class ResCompany(models.Model):
         is_disabling_overtime = False
         # If we disable overtime
         if 'hr_attendance_overtime' in vals and not vals['hr_attendance_overtime'] and overtime_enabled_companies:
-            delete_domain = [('company_id', 'in', overtime_enabled_companies.ids)]
+            delete_domain = [
+                ('adjustment', '=', False),
+                ('company_id', 'in', overtime_enabled_companies.ids)]
             vals['overtime_start_date'] = False
             is_disabling_overtime = True
 
@@ -50,6 +52,7 @@ class ResCompany(models.Model):
                 # If we move the start date into the future
                 elif start_date and company.overtime_start_date < start_date:
                     delete_domain = OR([delete_domain, [
+                        ('adjustment', '=', False),
                         ('company_id', '=', company.id),
                         ('date', '<', start_date)]])
 

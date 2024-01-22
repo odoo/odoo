@@ -264,3 +264,32 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
         self.assertFalse(overtime, 'Overtime entry should be unlinked since both overtime cancel each other.')
+
+    def test_overtime_disable(self):
+        self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 9, 0),
+            'check_out': datetime(2021, 1, 4, 21, 0),
+        }]) # 4 hours of overtime created
+        self.env['hr.attendance.overtime'].create([{
+            'employee_id': self.employee.id,
+            'duration': -1.0,
+            'date': date(2021, 1, 11),
+            'adjustment': True,
+        }]) # 1 hour of overtime subtracted
+
+        start_date = self.company.overtime_start_date
+        overtime = self.employee.total_overtime
+        self.assertEqual(overtime, 3.0, # == 4 - 1
+            "Overtime should be created & adjusted correctly.")
+
+        self.company.hr_attendance_overtime = False
+        self.assertEqual(self.employee.total_overtime, 0,
+            "Overtime should be disabled.")
+
+        self.company.write({
+            'hr_attendance_overtime': True,
+            'overtime_start_date': start_date,
+        })
+        self.assertEqual(self.employee.total_overtime, overtime,
+            "Overtime should be restored.")
