@@ -68,10 +68,10 @@ class Applicant(models.Model):
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
-        store=True, readonly=False, index='btree_not_null')
+        store=True, readonly=False, index='btree_not_null', inverse='_inverse_partner_email')
     partner_phone_sanitized = fields.Char(string='Sanitized Phone Number', compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null')
     partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
-        store=True, readonly=False, index='btree_not_null')
+        store=True, readonly=False, index='btree_not_null', inverse='_inverse_partner_email')
     partner_mobile_sanitized = fields.Char(string='Sanitized Mobile Number', compute='_compute_partner_mobile_sanitized', store=True, index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
@@ -317,8 +317,21 @@ class Applicant(models.Model):
                 applicant.partner_mobile = applicant.partner_id.mobile
 
     def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from):
-            applicant.partner_id.email = applicant.email_from
+        for applicant in self:
+            if not applicant.partner_id:
+                if not applicant.partner_name:
+                    raise UserError(_('You must define a Contact Name for this applicant.'))
+                applicant.partner_id = self.env['res.partner'].create({
+                    'is_company': False,
+                    'name': applicant.partner_name,
+                    'email': applicant.email_from,
+                    'mobile': applicant.partner_mobile,
+                    'phone': applicant.partner_phone,
+                })
+            else:
+                applicant.partner_id.email = applicant.email_from
+                applicant.partner_id.mobile = applicant.partner_mobile
+                applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends('partner_phone')
     def _compute_partner_phone_sanitized(self):
