@@ -514,7 +514,7 @@ class PosOrder(models.Model):
             return session.config_id.sequence_id._next()
 
     def _compute_order_name(self):
-        return self._compute_order_name_from_vals(self.session_id, {'refunded_order_ids': self.refunded_order_ids})
+        return self._compute_order_name_from_vals(self.session_id, {'refunded_order_id': self.refunded_order_id})
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -1235,15 +1235,72 @@ class PosOrder(models.Model):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
 
-    def accept_delivery_order(self, service):
+    def accept_delivery_order(self):
         self.ensure_one()
-        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', service)])._accept_order(self.delivery_id)
-        self.delivery_status = 'preparing'
+        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._accept_order(self.delivery_id)
+        self._post_delivery_accept_order()
 
-    def reject_delivery_order(self, service, reject_reason):
+    def _post_delivery_accept_order(self):
+        self.delivery_status = 'preparing'
+        self.session_id.config_id._send_delivery_order_count(self.id)
+
+    def reject_delivery_order(self, reject_reason):
         self.ensure_one()
-        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', service)])._reject_order(self.delivery_id, reject_reason)
+        self.env['pos.delivery.service'].search([('config_ids', 'in', self.config_id.id), ('service', 'ilike', self.delivery_service_id.name)])._reject_order(self.delivery_id, reject_reason)
+        self._post_delivery_reject_order()
+
+    def _post_delivery_reject_order(self):
+        refund_order = self._refund()
+        self.env['pos.payment'].create({
+            'pos_order_id': refund_order.id,
+            'amount': self.amount_paid,
+            'payment_date': self.date_order,
+            'payment_method_id': self.payment_ids.payment_method_id.id,
+        })
+        refund_order.state = 'paid'
         self.delivery_status = 'cancelled'
+        self.session_id.config_id._send_delivery_order_count(self.id)
+
+    # def _prepare_delivery_reject_fields(self):
+    #     return {
+    #         'delivery_id': self.delivery_id,
+    #         'delivery_display': self.delivery_display,
+    #         'delivery_service_id': self.delivery_service_id.id,
+    #         'company_id': self.company_id.id,
+    #         'session_id': self.session_id.id,
+    #         # the creation of lines should be more precise (taxes and other fields)
+    #         'lines': [
+    #             (0,0,{
+    #                 'product_id':   line.product_id.id,
+    #                 'qty':          -line.qty,
+    #                 'price_unit':   -line.price_unit,
+    #                 'price_extra':  -line.price_extra, # Price per unit according to the menu (can be different from Unit Price in case of more expensive substitutions, for example)
+    #                 'discount': 0,
+    #                 'price_subtotal': -line.price_subtotal,
+    #                 'price_subtotal_incl': -line.price_subtotal_incl,
+    #                 'refunded_orderline_id': line.id,
+    #             })
+    #             for line in self.lines
+    #         ],
+    #         # should take into account the "child lines"
+    #         # 'partner_id': False,
+    #         'date_order': date_order,
+    #         'amount_paid':  amount_paid,
+    #         'amount_total':  formatPrice(order['partner_order_total']),
+    #         'amount_tax': 0,
+    #         'amount_return': 0,
+    #         'state': 'paid',
+    #         'delivery_note': notes,
+    #         'payment_ids': [(0,0,{
+    #             'amount': amount_paid,
+    #             'payment_date': date_order,
+    #             'payment_method_id': pos_delivery_service_sudo.payment_method_id.id,
+    #         })],
+    #         'last_order_preparation_change': '{}',
+    #     }
+
+    # def _create_refund_order_for_delivery(self):
+    #     self.create(self._prepare_delivery_reject_fields())
 
 class PosOrderLine(models.Model):
     _name = "pos.order.line"

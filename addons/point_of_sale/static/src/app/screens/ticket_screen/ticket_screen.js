@@ -799,20 +799,24 @@ export class TicketScreen extends Component {
     }
     async _acceptDeliveryOrder(order) {
         this._state.ui.acceptDeliveryOrderLoading = true;
-        await this.orm.call("pos.order", "accept_delivery_order", [order.server_id, "deliveroo"]);
+        await this.pos.data.call("pos.order", "accept_delivery_order", [order.server_id]);
         this._state.ui.acceptDeliveryOrderLoading = false;
         order.delivery_status = "preparing";
     }
 
     async _rejectDeliveryOrder(order) {
+        const confirmed = await ask(this.dialog, {
+            title: _t("Reject order"),
+            body: _t("Are you sure you want to reject this order?"),
+        });
+        if (!confirmed) {
+            return false;
+        }
         this._state.ui.acceptDeliveryOrderLoading = true;
-        await this.orm.call("pos.order", "reject_delivery_order", [
-            order.server_id,
-            "deliveroo",
-            "busy",
-        ]);
+        await this.pos.data.call("pos.order", "reject_delivery_order", [order.server_id, "busy"]);
         this._state.ui.acceptDeliveryOrderLoading = false;
         order.delivery_status = "cancelled";
+        return true;
     }
 
     _markAsPreparedDeliveryOrder(order) {

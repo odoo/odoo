@@ -938,7 +938,7 @@ class PosConfig(models.Model):
         #}
         return {}
     
-    def _send_delivery_order_count(self):
-        # overriden by pos_delivery modules
-        # should send the delivery order count to the frontend via websocket
-        pass
+    def _send_delivery_order_count(self, order_id):
+        order_count = self.get_delivery_order_count()
+        if self.current_session_id:
+            self._notify('DELIVERY_ORDER_COUNT', order_count, private=False)

@@ -6,13 +6,14 @@ import { Order } from "@point_of_sale/app/store/models";
 patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
-        this.delivery_order_count.deliveroo = {
-            awaiting: 0,
-            preparing: 0,
-        };
+        this.bus.subscribe("DELIVERY_ORDER_COUNT", (payload) => {
+            if (this.config.raw.delivery_service_ids) {
+                this.ws_syncDeliveryCount(payload);
+            }
+        });
     },
     async _fetchDeliverooOrderCount() {
-        this.delivery_order_count.deliveroo = await this.orm.call(
+        this.delivery_order_count.deliveroo = await this.data.call(
             "pos.config",
             "get_deliveroo_order_count",
             [this.config.id],
@@ -25,7 +26,9 @@ patch(PosStore.prototype, {
         res["prepare_for"] = new Date(order.delivery_prepare_for).toLocaleString();
         return res;
     },
-
+    ws_syncDeliveryCount(data) {
+        this.delivery_order_count = data;
+    },
 });
 
 patch(Order.prototype, {
@@ -35,4 +38,3 @@ patch(Order.prototype, {
         this.delivery_prepare_for = json.delivery_prepare_for;
     },
 });
-

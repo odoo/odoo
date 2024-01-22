@@ -40,7 +40,7 @@ class PosDeliverooController(http.Controller):
                 if notes:
                     notes += '\n'
                 notes += order['cutlery_notes']
-            request.env["pos.order"].sudo().create({
+            delivery_order = request.env["pos.order"].sudo().create({
                 # TODO: add all the missing fields
                 # 'user_id':      ui_order['user_id'] or False,
                 'delivery_id': order['id'],
@@ -55,7 +55,7 @@ class PosDeliverooController(http.Controller):
                 # the creation of lines should be more precise (taxes and other fields)
                 'lines': [
                     (0,0,{
-                        'product_id':   line['pos_item_id'],
+                        'product_id':   int(line['pos_item_id']),
                         'qty':          line['quantity'],
                         'price_unit':   formatPrice(line['unit_price']),
                         'price_extra':  formatPrice(line['menu_unit_price']) - formatPrice(line['unit_price']), # Price per unit according to the menu (can be different from Unit Price in case of more expensive substitutions, for example)
@@ -79,8 +79,9 @@ class PosDeliverooController(http.Controller):
                     'payment_date': date_order,
                     'payment_method_id': pos_delivery_service_sudo.payment_method_id.id,
                 })],
+                'last_order_preparation_change': '{}',
             })
-            pos_config_sudo._send_delivery_order_count()
+            pos_config_sudo._send_delivery_order_count(delivery_order.id)
         else:
             #See what we should do if the order already exists (like an update or something)
             pass
