@@ -476,7 +476,12 @@ export async function loadImageInfo(img, rpc, attachmentSrc = '') {
     // the URL object if the src of the img is a relative or protocol relative
     // URL. The original attachment linked to the img is then retrieved thanks
     // to the path of the built URL object.
-    const srcUrl = new URL(src, img.ownerDocument.defaultView.location.href);
+    let docHref = img.ownerDocument.defaultView.location.href;
+    if (docHref === "about:srcdoc") {
+        docHref = window.location.href;
+    }
+
+    const srcUrl = new URL(src, docHref);
     const relativeSrc = srcUrl.pathname;
 
     const {original} = await rpc('/web_editor/get_image_info', {src: relativeSrc});
