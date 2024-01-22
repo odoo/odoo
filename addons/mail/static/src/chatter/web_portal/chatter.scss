@@ -15,6 +15,13 @@
     }
 }
 
+.o-mail-Chatter-top, .o-mail-Chatter-content {
+    --Chatter-default-padding-x: #{$o-spacer};
+
+    padding-left: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
+    padding-right: var(--Chatter-default-padding-x);
+}
+
 .o-mail-Chatter-recipientListButton:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }

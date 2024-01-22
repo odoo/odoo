@@ -8,11 +8,11 @@
     <div t-ref="composer">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
                 t-att-class="{
-                    'px-3 pb-2': extended and !props.composer.message,
+                    'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
                     'p-3': normal,
-                    'o-hasSelfAvatar px-3': !env.inChatWindow and thread,
+                    'o-hasSelfAvatar': !env.inChatWindow and thread,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
