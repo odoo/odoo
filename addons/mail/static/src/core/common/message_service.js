@@ -158,13 +158,13 @@ export class MessageService {
     }
 
     scheduledDateSimple(message) {
-        return message.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE, {
+        return message.scheduledDate.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang?.replace("_", "-"),
         });
     }
 
     dateSimple(message) {
-        return message.datetime.toLocaleString(DateTime.TIME_SIMPLE, {
+        return message.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang?.replace("_", "-"),
         });
     }
