@@ -220,6 +220,10 @@ export class Store extends BaseStore {
 
     async _fetchDataDebounced() {
         const fetchDeferred = this.fetchDeferred;
+        this.fetchParams.context = {
+            ...user.context,
+            ...this.fetchParams.context,
+        };
         rpc(this.fetchReadonly ? "/mail/data" : "/mail/action", this.fetchParams, {
             silent: this.fetchSilent,
         }).then(

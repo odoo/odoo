@@ -9,6 +9,7 @@ from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 class WebclientController(http.Controller):
     """Routes for the web client."""
+
     @http.route("/mail/action", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_action(self, **kwargs):
@@ -26,21 +27,25 @@ class WebclientController(http.Controller):
         return self._process_request(**kwargs)
 
     def _process_request(self, **kwargs):
+        request.update_context(**kwargs.get("context", {}))
         res = {}
         if kwargs.get("init_messaging"):
-            context = kwargs.get("context", {})
             if not request.env.user._is_public():
                 user = request.env.user.sudo(False)
-                user_with_context = user.with_context(**context)
-                self._add_to_res(res, user_with_context._init_messaging())
+                self._add_to_res(res, user._init_messaging())
             else:
                 guest = request.env["mail.guest"]._get_guest_from_context()
                 if guest:
-                    guest_with_context = guest.with_context(**context)
-                    self._add_to_res(res, guest_with_context._init_messaging())
+                    self._add_to_res(res, guest._init_messaging())
                 else:
                     raise NotFound()
-        if kwargs.get("failures") and not request.env.user._is_public():
+        if not request.env.user._is_public():
+            self._add_to_res(res, self._process_request_for_logged_in_user(**kwargs))
+        return res
+
+    def _process_request_for_logged_in_user(self, **kwargs):
+        res = {}
+        if kwargs.get("failures"):
             domain = [
                 ("author_id", "=", request.env.user.partner_id.id),
                 ("notification_status", "in", ("bounce", "exception")),
@@ -53,6 +58,17 @@ class WebclientController(http.Controller):
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             messages_format = notifications.mail_message_id._message_notification_format()
             self._add_to_res(res, {"Message": messages_format})
+        if kwargs.get("systray_get_activities"):
+            groups = request.env["res.users"]._get_activity_groups()
+            self._add_to_res(
+                res,
+                {
+                    "Store": {
+                        "activityCounter": sum(group.get("total_count", 0) for group in groups),
+                        "activityGroups": groups,
+                    }
+                },
+            )
         return res
 
     def _add_to_res(self, res, data):

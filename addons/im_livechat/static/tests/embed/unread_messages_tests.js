@@ -45,7 +45,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
         `/mail/action - ${JSON.stringify({
             init_messaging: true,
             failures: true, // called because mail/core/web is loaded in qunit bundle
-            context: { is_for_livechat: true },
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, is_for_livechat: true },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
@@ -91,7 +91,7 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
         `/mail/action - ${JSON.stringify({
             init_messaging: true,
             failures: true, // called because mail/core/web is loaded in qunit bundle
-            context: { is_for_livechat: true },
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, is_for_livechat: true },
         })}`,
     ]);
     // send after init_messaging because bus subscription is done after init_messaging

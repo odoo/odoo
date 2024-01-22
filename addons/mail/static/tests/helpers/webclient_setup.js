@@ -13,7 +13,6 @@ import { createWebClient } from "@web/../tests/webclient/helpers";
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
     "/web/dataset/call_kw/res.users/load_views",
-    "/web/dataset/call_kw/res.users/systray_get_activities",
     "/hr_attendance/attendance_user_data",
 ];
 const WEBCLIENT_PARAMETER_NAMES = new Set(["mockRPC", "serverData", "target", "webClientClass"]);
