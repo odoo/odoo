@@ -115,7 +115,9 @@ async function autoHideMenu(el, options) {
         const wysiwyg = window.$ && $('#wrapwrap').data('wysiwyg');
         const odooEditor = wysiwyg && wysiwyg.odooEditor;
         if (odooEditor) {
+            odooEditor.observerUnactive("adapt");
             odooEditor.withoutRollback(__adapt);
+            odooEditor.observerActive("adapt");
             return;
         }
         __adapt();
