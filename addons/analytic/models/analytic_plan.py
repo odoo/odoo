@@ -246,7 +246,7 @@ class AccountAnalyticPlan(models.Model):
         return super().unlink()
 
     def _find_plan_column(self):
-        return self.env['ir.model.fields'].search([
+        return self.env['ir.model.fields'].sudo().search([
             ('name', 'in', [plan._strict_column_name() for plan in self]),
             ('model', '=', 'account.analytic.line'),
         ])
@@ -261,7 +261,7 @@ class AccountAnalyticPlan(models.Model):
                 prev.field_description = plan.name
             elif not plan.parent_id:
                 column = plan._strict_column_name()
-                self.env['ir.model.fields'].with_context(update_custom_fields=True).create({
+                self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
                     'name': column,
                     'field_description': plan.name,
                     'state': 'manual',
