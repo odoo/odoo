@@ -111,6 +111,7 @@ class PublicPageController(http.Controller):
             {
                 "data": {
                     "channelData": channel._channel_info()[0],
+                    "companyName": request.env.company.name,
                     "discussPublicViewData": dict(
                         {
                             "shouldDisplayWelcomeViewInitially": channel.default_display_mode == "video_full_screen",

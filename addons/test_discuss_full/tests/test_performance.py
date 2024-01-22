@@ -166,7 +166,6 @@ class TestDiscussFullPerformance(HttpCase):
             ],
             "Store": {
                 "action_discuss_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.action_discuss"),
-                "companyName": "YourCompany",
                 "discuss": {
                     "inbox": {"counter": 1, "id": "inbox", "model": "mail.box"},
                     "starred": {"counter": 1, "id": "starred", "model": "mail.box"},
