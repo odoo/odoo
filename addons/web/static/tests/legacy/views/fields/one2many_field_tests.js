@@ -380,6 +380,29 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_dialog");
     });
 
+    QUnit.test("do not send context in unity spec if field is invisible", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" invisible="1" context="{'x': 2}"/>
+                </form>`,
+            resId: 1,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "web_read") {
+                    assert.deepEqual(kwargs.specification, {
+                        display_name: {},
+                        p: {},
+                    });
+                }
+            },
+        });
+    });
+
     QUnit.test(
         "O2M List with pager, decoration and default_order: add and cancel adding",
         async function (assert) {
