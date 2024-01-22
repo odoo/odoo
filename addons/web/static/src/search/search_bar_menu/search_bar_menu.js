@@ -116,9 +116,9 @@ export class SearchBarMenu extends Component {
      * @returns {boolean}
      */
     validateField(fieldName, field) {
-        const { sortable, store, type } = field;
+        const { groupable, type } = field;
         return (
-            (type === "many2many" ? store : sortable) &&
+            groupable &&
             fieldName !== "id" &&
             GROUPABLE_TYPES.includes(type)
         );

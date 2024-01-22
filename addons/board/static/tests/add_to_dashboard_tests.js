@@ -92,6 +92,7 @@ QUnit.module("Board", (hooks) => {
         assert.expect(6);
 
         serverData.models.partner.fields.foo.sortable = true;
+        serverData.models.partner.fields.foo.groupable = true;
 
         serverData.views = {
             "partner,false,list": '<list><field name="foo"/></list>',

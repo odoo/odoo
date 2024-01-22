@@ -109,3 +109,54 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     date = fields.Date()
+
+
+class RelatedBar(models.Model):
+    _name = 'test_read_group.related_bar'
+    _description = "RelatedBar"
+
+    name = fields.Char(aggregator="count_distinct")
+
+    foo_ids = fields.One2many('test_read_group.related_foo', 'bar_id')
+    foo_names_sudo = fields.Char('name_one2many_related', related='foo_ids.name')
+
+    base_ids = fields.Many2many('test_read_group.related_base')
+
+
+class RelatedFoo(models.Model):
+    _name = 'test_read_group.related_foo'
+    _description = "RelatedFoo"
+
+    name = fields.Char()
+    bar_id = fields.Many2one('test_read_group.related_bar')
+
+    bar_name_sudo = fields.Char('bar_name_sudo', related='bar_id.name')
+    bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
+
+    bar_base_ids = fields.Many2many('bar_name', related='bar_id.base_ids')
+
+
+class RelatedBase(models.Model):
+    _name = 'test_read_group.related_base'
+    _description = "RelatedBase"
+
+    name = fields.Char()
+    value = fields.Integer()
+    foo_id = fields.Many2one('test_read_group.related_foo')
+
+    foo_id_name = fields.Char("foo_id_name", related='foo_id.name', related_sudo=False)
+    foo_id_name_sudo = fields.Char("foo_id_name_sudo", related='foo_id.name')
+
+    foo_id_bar_id_name = fields.Char('foo_bar_name_sudo', related='foo_id.bar_id.name')
+    foo_id_bar_name = fields.Char('foo_bar_name_sudo_1', related='foo_id.bar_name')
+    foo_id_bar_name_sudo = fields.Char('foo_bar_name_sudo_2', related='foo_id.bar_name_sudo')
+
+
+class RelatedInherits(models.Model):
+    _name = 'test_read_group.related_inherits'
+    _description = "RelatedInherits"
+    _inherits = {
+        'test_read_group.related_base': 'base_id',
+    }
+
+    base_id = fields.Many2one('test_read_group.related_base', required=True, ondelete='cascade')

@@ -4,6 +4,7 @@ import { MockServerError } from "./mock_server_utils";
  *  compute?: (() => void) | string;
  *  default?: RecordFieldValue | ((record: ModelRecord) => RecordFieldValue);
  *  aggregator?: Aggregator;
+ *  groupable: boolean;
  *  name: string;
  *  onChange?: (record: ModelRecord) => void;
  *  readonly: boolean;
@@ -111,6 +112,7 @@ const makeFieldGenerator = (type, { groupOperator, requiredKeys = [] } = {}) => 
         searchable: true,
         sortable: true,
         store: true,
+        groupable: true,
     };
     if (groupOperator) {
         defaultDef.aggregator = groupOperator;
@@ -149,6 +151,12 @@ const makeFieldGenerator = (type, { groupOperator, requiredKeys = [] } = {}) => 
                 // By default: computed fields are readonly and not stored
                 fieldDefinition.readonly ??= true;
                 fieldDefinition.store ??= false;
+            }
+
+            // Remove aggregator for no-store expect related ones
+            if (!fullDef.store && !fullDef.related) {
+                fieldDefinition.aggregator ??= undefined;
+                fieldDefinition.groupable ??= false;
             }
 
             return Object.assign(fieldGetter, { [FIELD_SYMBOL]: true });
