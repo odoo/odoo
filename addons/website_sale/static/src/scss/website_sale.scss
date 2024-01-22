@@ -159,6 +159,13 @@ $input-border-color: $gray-400;
             max-width: $o-wsale-input-max-width;
         }
     }
+
+    // Extra price badge
+    .text-bg-light .variant_price_extra.text-muted {
+        // Needed to be visible on a dark <body> background.
+        color: adjust-color-to-background($text-muted, $light, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+
     input.js_quantity {
         min-width: 48px;
         text-align: center;
