@@ -4859,6 +4859,34 @@ X[]
                 })
             });
         });
+        describe('undo', () => {
+            it('should be able to write after undo', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        editor.execCommand('columnize', 2);
+                        undo(editor);
+                        await insertText(editor, 'x');
+                    },
+                    contentAfter: '<p>x[]</p>',
+                });
+            });
+            it('should work properly after undo and then redo', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>',
+                    stepFunction: async editor => {
+                        editor.execCommand('columnize', 2);
+                        undo(editor);
+                        redo(editor);
+                        await insertText(editor, 'x');
+                    },
+                    contentAfter: columnsContainer(
+                        column(6, '<p>x[]</p>') +
+                        column(6, '<p><br></p>')
+                    ) + '<p><br></p>',
+                });
+            });
+        });
     });
 
     describe('tables', () => {
