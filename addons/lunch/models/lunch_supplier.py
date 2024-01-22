@@ -286,8 +286,10 @@ class LunchSupplier(models.Model):
         } for site in sites]
 
         self.env.ref('lunch.lunch_order_mail_supplier').with_context(
+            email_notification_force_header=True,
+            email_notification_force_footer=True,
             order=order, lines=email_orders, sites=email_sites
-        ).send_mail(self.id)
+        ).send_mail(self.id, email_layout_xmlid='mail.mail_notification_layout', subtitles=[_("Lunch Order")])
 
         orders.action_send()
 
