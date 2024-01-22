@@ -34,7 +34,6 @@ export class LoadableDataSource {
          */
         this._loadPromise = undefined;
         this._isFullyLoaded = false;
-        this._loadError = undefined;
     }
 
     /**
@@ -61,10 +60,16 @@ export class LoadableDataSource {
                 .finally(() => {
                     this._lastUpdate = Date.now();
                     this._isFullyLoaded = true;
-                    this._notify();
+                    // this._notify();
                 });
         }
+        const loadable = new Loadable(this._loadPromise);
+        loadable.promise.finally(() => this._notify());
         return this._loadPromise;
+    }
+
+    lazyLoad() {
+
     }
 
     get lastUpdate() {

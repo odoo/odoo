@@ -137,7 +137,7 @@ export class ServerData {
             const promise = this.orm
                 .call(resModel, method, args)
                 .finally(() => this.dataFetchedCallback());
-            this.cache[request.key] = Loadable(promise);
+            this.cache[request.key] = new Loadable(promise);
         }
         return this.cache[request.key];
     }

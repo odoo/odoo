@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { CellErrorType } from "@odoo/o-spreadsheet";
 /**
  * Generic class to represent a loadable value
@@ -38,7 +40,7 @@ export class Loadable {
             .then((value) => {
                 this.value = value;
                 this.status = Loadable.resolved;
-                return value;
+                // return value;
             })
             .catch((error) => {
                 this.message = error?.message ?? error.toString();
@@ -53,7 +55,14 @@ export class Loadable {
      * @returns {Loadable<U>}
      */
     map(fn) {
-        return new Loadable(this.promise.then(fn));
+        if (this.status === Loadable.resolved) {
+            const value = fn(this.value);
+            const loadable = new Loadable(Promise.resolve(value));
+            Object.assign(loadable, this);
+            loadable.value = value;
+            return loadable;
+        }
+        return this;
     }
 
     /**

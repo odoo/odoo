@@ -15,7 +15,7 @@ import { orderByToString } from "@web/search/utils/order_by";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Loadable } from "../data_sources/loadable";
 
-const { toNumber } = spreadsheet.helpers;
+const { toNumber, lazy } = spreadsheet.helpers;
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 /**
@@ -46,7 +46,11 @@ export class ListDataSource extends OdooViewsDataSource {
         this.maxPosition = params.limit;
         this.maxPositionFetched = 0;
         /** @type {() => Loadable<any[]>} */
-        this.data = lazy(() => new Loadable(this.load()));
+        this.data = lazy(() => {
+            const loadable = new Loadable(this.load());
+            loadable.promise.finally(() => this._notify())
+            return loadable;
+        });
     }
 
     /**
@@ -63,7 +67,7 @@ export class ListDataSource extends OdooViewsDataSource {
             return [];
         }
         const { domain, orderBy, context } = this._searchParams;
-        data = await this._orm.searchRead(
+        const data = await this._orm.searchRead(
             this._metaData.resModel,
             domain,
             this._getFieldsToFetch(),
@@ -74,7 +78,7 @@ export class ListDataSource extends OdooViewsDataSource {
             }
         );
         this.maxPositionFetched = this.maxPosition;
-        return this.data;
+        return data;
     }
 
     /**
@@ -113,7 +117,8 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string|number|undefined}
      */
     getListCellValue(position, fieldName) {
-        return this.data().map((data) => {
+        const res = this.data().map((data) => {
+            debugger
             if (position >= this.maxPositionFetched) {
                 this.increaseMaxPosition(position + 1);
                 // A reload is needed because the asked position is not already loaded.
@@ -166,11 +171,13 @@ export class ListDataSource extends OdooViewsDataSource {
                     return properties.map((property) => property.string).join(", ");
                 }
                 case "json":
-                    throw new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
+                    return new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
                 default:
                     return record[fieldName] || "";
             }
         });
+        debugger
+        return res
     }
 
     //--------------------------------------------------------------------------
@@ -204,7 +211,7 @@ export class ListDataSource extends OdooViewsDataSource {
         }
         this._fetchingPromise = Promise.resolve().then(() => {
             new Promise((resolve) => {
-                this.data = lazy(() => new Loadable(this.load({ reload: true })));
+                this.data = lazy(new Loadable(this.load({ reload: true })));
                 this._fetchingPromise = undefined;
                 resolve();
             });

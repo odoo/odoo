@@ -6,6 +6,9 @@ import { user } from "@web/core/user";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { SpreadsheetPivotModel } from "./pivot_model";
 import { Loadable } from "../data_sources/loadable";
+import { helpers } from "@odoo/o-spreadsheet";
+
+const { lazy } = helpers;
 
 export class PivotDataSource extends OdooViewsDataSource {
     /**
