@@ -15,15 +15,28 @@ class AliasDomain(models.Model):
     _description = "Email Domain"
     _order = 'sequence ASC, id ASC'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char(
+        'Name', required=True,
+        help="Email domain e.g. 'example.com' in 'odoo@example.com'")
     company_ids = fields.One2many(
-        'res.company', 'alias_domain_id', string='Companies')
+        'res.company', 'alias_domain_id', string='Companies',
+        help="Companies using this domain as default for sending mails")
     sequence = fields.Integer(default=10)
-    bounce_alias = fields.Char('Bounce Alias', default='bounce', required=True)
+    bounce_alias = fields.Char(
+        'Bounce Alias', default='bounce', required=True,
+        help="Local-part of email used for Return-Path used when emails bounce e.g. "
+             "'bounce' in 'bounce@example.com'")
     bounce_email = fields.Char('Bounce Email', compute='_compute_bounce_email')
-    catchall_alias = fields.Char('Catchall Alias', default='catchall', required=True)
+    catchall_alias = fields.Char(
+        'Catchall Alias', default='catchall', required=True,
+        help="Local-part of email used for Reply-To to catch answers e.g. "
+             "'catchall' in 'catchall@example.com'")
     catchall_email = fields.Char('Catchall Email', compute='_compute_catchall_email')
-    default_from = fields.Char('Default From Alias', default='notifications')
+    default_from = fields.Char(
+        'Default From Alias', default='notifications',
+        help="Default from when it does not match outgoing server filters. Can be either "
+             "a local-part e.g. 'notifications' either a complete email address e.g. "
+             "'notifications@example.com' to override all outgoing emails.")
     default_from_email = fields.Char('Default From', compute='_compute_default_from_email')
 
     _sql_constraints = [
