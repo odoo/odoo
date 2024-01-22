@@ -1512,10 +1512,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
         // the image intrinsic min-height.
         const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
         for (const imgEl of imgEls) {
-            // Write initial min-height on the dataset, so that it can also
-            // be properly restored on widget destroy.
-            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
-            imgEl.style.minHeight = '1px';
+            this._updateImgMinHeight(imgEl);
             wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
                 if (this.isDestroyed()) {
                     return;
@@ -1545,8 +1542,34 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
      * @param {HTMLImageElement} imgEl
      */
     _restoreImage(imgEl) {
-        imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
-        delete imgEl.dataset.lazyLoadingInitialMinHeight;
+        this._updateImgMinHeight(imgEl, true);
+    },
+    /**
+     * Updates the image element style with the corresponding min-height.
+     * If the editor is enabled, it deactivates the observer during the CSS
+     * update.
+     *
+     * @param {HTMLElement} imgEl - The image element to update the minimum
+     *        height of.
+     * @param {boolean} [reset=false] - Whether to remove the minimum height
+     *        and restore the initial value.
+     */
+    _updateImgMinHeight(imgEl, reset = false) {
+        if (this.options.wysiwyg) {
+            this.options.wysiwyg.odooEditor.observerUnactive('_updateImgMinHeight');
+        }
+        if (reset) {
+            imgEl.style.minHeight = imgEl.dataset.lazyLoadingInitialMinHeight;
+            delete imgEl.dataset.lazyLoadingInitialMinHeight;
+        } else {
+            // Write initial min-height on the dataset, so that it can also
+            // be properly restored on widget destroy.
+            imgEl.dataset.lazyLoadingInitialMinHeight = imgEl.style.minHeight;
+            imgEl.style.minHeight = '1px';
+        }
+        if (this.options.wysiwyg) {
+            this.options.wysiwyg.odooEditor.observerActive('_updateImgMinHeight');
+        }
     },
 });
 
