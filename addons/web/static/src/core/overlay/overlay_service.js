@@ -25,7 +25,7 @@ export const overlayService = {
             }
         };
 
-        const _add = (id, component, props, options = {}) => {
+        const _add = (id, component, props = {}, options = {}) => {
             const removeCurrentOverlay = () => remove(id, options.onRemove);
             overlays[id] = {
                 id,
@@ -39,11 +39,11 @@ export const overlayService = {
 
         /**
          * @param {typeof Component} component
-         * @param {object} props
+         * @param {object} [props]
          * @param {OverlayServiceAddOptions} [options]
          * @returns {() => void}
          */
-        const add = (component, props, options = {}) => {
+        const add = (component, props = {}, options = {}) => {
             return _add(++nextId, component, props, options);
         };
 
