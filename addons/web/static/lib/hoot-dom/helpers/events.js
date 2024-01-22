@@ -508,6 +508,9 @@ const triggerFocus = (target) => {
     return events;
 };
 
+/**
+ * @param {HTMLInputElement | HTMLTextAreaElement} target
+ */
 const deleteSelection = (target) => {
     const { selectionStart, selectionEnd, value } = target;
     return value.slice(0, selectionStart) + value.slice(selectionEnd);
@@ -524,10 +527,12 @@ const _clear = (target, options) => {
     // Simulates 2 key presses:
     // - Ctrl + A: selects all the text
     // - Backspace: deletes the text
+    fullClear = true;
     const events = [
         _press(target, { ctrlKey: true, key: "a" }),
         _press(target, { key: "Backspace" }),
     ];
+    fullClear = false;
 
     registerForChange(target, initialValue);
 
@@ -618,7 +623,13 @@ const _keyDown = (target, eventInit) => {
             switch (eventInit.key) {
                 case "Backspace": {
                     const { selectionStart, selectionEnd, value } = target;
-                    if (selectionStart === selectionEnd) {
+                    if (fullClear) {
+                        // Remove all characters
+                        nextValue = "";
+                    } else if (selectionStart === null || selectionEnd === null) {
+                        // Remove last character
+                        nextValue = value.slice(0, -1);
+                    } else if (selectionStart === selectionEnd) {
                         // Remove previous character from target value
                         nextValue = value.slice(0, selectionStart - 1) + value.slice(selectionEnd);
                     } else {
@@ -630,7 +641,13 @@ const _keyDown = (target, eventInit) => {
                 }
                 case "Delete": {
                     const { selectionStart, selectionEnd, value } = target;
-                    if (selectionStart === selectionEnd) {
+                    if (fullClear) {
+                        // Remove all characters
+                        nextValue = "";
+                    } else if (selectionStart === null || selectionEnd === null) {
+                        // Remove first character
+                        nextValue = value.slice(1);
+                    } else if (selectionStart === selectionEnd) {
                         // Remove next character from target value
                         nextValue = value.slice(0, selectionStart) + value.slice(selectionEnd + 1);
                     } else {
@@ -649,8 +666,14 @@ const _keyDown = (target, eventInit) => {
                             ? eventInit.key.toUpperCase()
                             : eventInit.key.toLowerCase();
                         // Insert character in target value
-                        nextValue =
-                            value.slice(0, selectionStart) + inputData + value.slice(selectionEnd);
+                        if (selectionStart === null && selectionEnd === null) {
+                            nextValue += inputData;
+                        } else {
+                            nextValue =
+                                value.slice(0, selectionStart) +
+                                inputData +
+                                value.slice(selectionEnd);
+                        }
                         inputType = isComposing ? "insertCompositionText" : "insertText";
                     }
                 }
@@ -911,9 +934,15 @@ const SPECIAL_EVENTS = ["blur", "focus", "select", "submit"];
 let allowLogs = false;
 /** @type {Event[]} */
 let currentEvents = [];
+let fullClear = false;
 
 // Keyboard global variables
-const specialKeys = { altKey: false, ctrlKey: false, metaKey: false, shiftKey: false };
+const specialKeys = {
+    altKey: false,
+    ctrlKey: false,
+    metaKey: false,
+    shiftKey: false,
+};
 let isComposing = false;
 let removeChangeTargetListeners = [];
 

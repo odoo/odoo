@@ -24,6 +24,7 @@ import {
     isNil,
     isOfType,
     match,
+    strictEqual,
 } from "../hoot_utils";
 import { Test } from "./test";
 
@@ -525,7 +526,7 @@ export class Matchers {
         return this.#resolve({
             name: "toBe",
             acceptedType: "any",
-            predicate: (actual) => actual === expected,
+            predicate: (actual) => strictEqual(actual, expected),
             message: (pass) =>
                 options?.message ||
                 (pass
@@ -772,7 +773,7 @@ export class Matchers {
             name: "toEqual",
             acceptedType: "any",
             predicate: (actual) => {
-                if (actual === expected) {
+                if (strictEqual(actual, expected)) {
                     console.warn(
                         ...hootLog(
                             `Called \`'toEqual()\` on strictly equal values. Did you mean to use \`toBe()\`?`
@@ -1354,7 +1355,8 @@ export class Matchers {
             name: "toHaveCount",
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
-            predicate: (node) => (amount === false ? node.length > 0 : node.length === amount),
+            predicate: (node) =>
+                amount === false ? node.length > 0 : strictEqual(node.length, amount),
             message: (pass) =>
                 options?.message ||
                 (pass
@@ -1396,7 +1398,7 @@ export class Matchers {
             acceptedType: ["string", "node", "node[]"],
             transform: queryAll,
             predicate: each((node) =>
-                expectsValue ? node[property] === value : !isNil(node[property])
+                expectsValue ? strictEqual(node[property], value) : !isNil(node[property])
             ),
             message: (pass) =>
                 options?.message ||
@@ -1494,7 +1496,7 @@ export class Matchers {
                     if (text instanceof RegExp) {
                         return text.test(nodeText);
                     }
-                    return nodeText === text;
+                    return strictEqual(nodeText, text);
                 });
             }),
             message: (pass) =>
@@ -1552,11 +1554,8 @@ export class Matchers {
                     );
                 }
                 const nodeValue = getNodeValue(node);
-                if (expectsValue) {
-                    if (isIterable(nodeValue)) {
-                        return [...nodeValue].length > 0;
-                    }
-                    return !isNil(nodeValue);
+                if (!expectsValue) {
+                    return isIterable(nodeValue) ? [...nodeValue].length > 0 : node.value !== "";
                 }
                 if (isIterable(nodeValue)) {
                     return deepEqual(nodeValue, values);
@@ -1565,7 +1564,7 @@ export class Matchers {
                     if (value instanceof RegExp) {
                         return value.test(nodeValue);
                     }
-                    return nodeValue === value;
+                    return strictEqual(nodeValue, value);
                 });
             }),
             message: (pass) =>

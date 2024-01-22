@@ -42,7 +42,7 @@ const monitorEvents = (target) => {
 };
 
 describe(parseUrl(import.meta.url), () => {
-    test("clear", async () => {
+    test("clear", () => {
         mount(/* xml */ `<input type="text" value="Test" />`);
         monitorEvents("input");
 
@@ -71,7 +71,29 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("click", async () => {
+    test("clear: email", () => {
+        mount(/* xml */ `<input type="email" value="john@doe.com" />`);
+
+        expect("input").toHaveValue("john@doe.com");
+
+        click("input");
+        clear();
+
+        expect("input").toHaveValue("");
+    });
+
+    test("clear: number", () => {
+        mount(/* xml */ `<input type="number" value="421" />`);
+
+        expect("input").toHaveValue(421);
+
+        click("input");
+        clear();
+
+        expect("input").not.toHaveValue();
+    });
+
+    test("click", () => {
         mount(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
@@ -87,7 +109,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("drag", async () => {
+    test("drag", () => {
         mount(/* xml */ `
             <ul class="list">
                 <li class="item" draggable="true">Item 1</li>
@@ -110,7 +132,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("fill", async () => {
+    test("fill", () => {
         mount(/* xml */ `<input type="text" value="" />`);
         monitorEvents("input");
 
@@ -139,7 +161,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("hover", async () => {
+    test("hover", () => {
         mount(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
@@ -155,7 +177,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("keyDown", async () => {
+    test("keyDown", () => {
         mount(/* xml */ `<input type="text" />`);
         monitorEvents("input");
 
@@ -182,7 +204,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(["input.keyup"]).toVerifySteps();
     });
 
-    test("leave", async () => {
+    test("leave", () => {
         mount(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
@@ -198,7 +220,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("pointerDown", async () => {
+    test("pointerDown", () => {
         mount(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
@@ -211,7 +233,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(["button.pointerup", "button.mouseup", "button.click"]).toVerifySteps();
     });
 
-    test("press key on text input", async () => {
+    test("press key on text input", () => {
         mount(/* xml */ `<input type="text" />`);
         monitorEvents("input");
 
@@ -235,7 +257,22 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Enter' on form input", async () => {
+    test("press key on number input", () => {
+        mount(/* xml */ `<input type="number" />`);
+
+        expect("input").not.toHaveValue();
+
+        click("input");
+        press("4");
+
+        expect("input").toHaveValue(4);
+
+        press("2");
+
+        expect("input").toHaveValue(42);
+    });
+
+    test("press 'Enter' on form input", () => {
         mount(/* xml */ `
             <form t-on-submit.prevent="">
                 <input type="text" />
@@ -265,7 +302,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Enter' on form button", async () => {
+    test("press 'Enter' on form button", () => {
         mount(/* xml */ `
             <form t-on-submit.prevent="">
                 <button type="button" />
@@ -296,7 +333,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Enter' on form submit button", async () => {
+    test("press 'Enter' on form submit button", () => {
         mount(/* xml */ `
             <form t-on-submit.prevent="">
                 <button type="submit" />
@@ -326,7 +363,7 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("press 'Space' on checkbox input", async () => {
+    test("press 'Space' on checkbox input", () => {
         mount(/* xml */ `<input type="checkbox" checked="" />`);
         monitorEvents("input");
 
@@ -361,11 +398,26 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test.todo("scroll", async () => {
+    test("press 'Backspace' on number input", () => {
+        mount(/* xml */ `<input type="number" value="421" />`);
+
+        expect("input").toHaveValue(421);
+
+        click("input");
+        press("Backspace");
+
+        expect("input").toHaveValue(42);
+
+        press("Backspace");
+
+        expect("input").toHaveValue(4);
+    });
+
+    test.todo("scroll", () => {
         expect(scroll()).toBeTruthy();
     });
 
-    test("select", async () => {
+    test("select", () => {
         mount(/* xml */ `
             <select>
                 <option value="a">A</option>

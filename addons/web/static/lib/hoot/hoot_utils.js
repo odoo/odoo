@@ -224,7 +224,7 @@ export function debounce(fn, delay) {
  * @returns {boolean}
  */
 export function deepEqual(a, b, cache = new Set()) {
-    if (a === b || cache.has(a)) {
+    if (strictEqual(a, b) || cache.has(a)) {
         return true;
     }
     const aType = typeof a;
@@ -740,6 +740,18 @@ export async function paste() {
     } catch (err) {
         console.warn("Could not paste from clipboard:", err);
     }
+}
+
+/**
+ * @param {unknown} a
+ * @param {unknown} b
+ * @returns {boolean}
+ */
+export function strictEqual(a, b) {
+    if (Number.isNaN(a) && Number.isNaN(b)) {
+        return true;
+    }
+    return a === b;
 }
 
 /**
