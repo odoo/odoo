@@ -290,6 +290,11 @@ const hasTouch = () => ontouchstart !== undefined || matchMedia("(pointer:coarse
 const isMacOS = () => /Mac/i.test(navigator.userAgent);
 
 /**
+ * @param {unknown} value
+ */
+const isNil = (value) => value === null || value === undefined;
+
+/**
  * @param {Event} event
  */
 const isPrevented = (event) => event && event.defaultPrevented;
@@ -344,37 +349,6 @@ const logEvents = (actionName) => {
     }
     console.groupEnd(...groupName);
     return events;
-};
-
-/**
- * @param {EventTarget} target
- */
-const mockEventListeners = (target) => {
-    const { addEventListener, removeEventListener } = target;
-
-    /** @type {typeof addEventListener} */
-    target.addEventListener = function mockedAddEventListener(type, callback, options) {
-        if (options?.once) {
-            const originalCallback = callback;
-            callback = (...args) => {
-                unregisterListener(target, type, callback);
-                return originalCallback(...args);
-            };
-        }
-        registerListener(target, type, callback);
-        return addEventListener.call(target, type, callback, options);
-    };
-
-    /** @type {typeof removeEventListener} */
-    target.removeEventListener = function mockedRemoveEventListener(type, callback, options) {
-        unregisterListener(target, type, callback);
-        return removeEventListener.call(target, type, callback, options);
-    };
-
-    return function restoreEventListeners() {
-        target.addEventListener = addEventListener;
-        target.removeEventListener = removeEventListener;
-    };
 };
 
 /**
@@ -504,6 +478,9 @@ const triggerFocus = (target) => {
     }
     if (isFocusable(target)) {
         events.push(dispatch(target, "focus", { relatedTarget: previous }));
+        if (!isNil(target.selectionStart) && !isNil(target.selectionEnd)) {
+            target.selectionStart = target.selectionEnd = target.value.length;
+        }
     }
     return events;
 };
@@ -566,6 +543,12 @@ const _fill = (target, value, options) => {
 
     if (getTag(target) === "input" && target.type === "file") {
         const dataTransfer = new DataTransfer();
+        if (target.multiple) {
+            // Keep previous files
+            for (const file of target.files) {
+                dataTransfer.items.add(file);
+            }
+        }
         for (const file of ensureArray(value)) {
             if (!(file instanceof File)) {
                 throw new TypeError(`file input only accept 'File' objects`);
@@ -584,7 +567,7 @@ const _fill = (target, value, options) => {
                 // Simulates the start of a composition
                 events.push(dispatch(target, "compositionstart"));
             }
-            for (const char of value) {
+            for (const char of String(value)) {
                 const key = char.toLowerCase();
                 events.push(..._press(target, { key, shiftKey: key !== char }));
             }
@@ -626,7 +609,7 @@ const _keyDown = (target, eventInit) => {
                     if (fullClear) {
                         // Remove all characters
                         nextValue = "";
-                    } else if (selectionStart === null || selectionEnd === null) {
+                    } else if (isNil(selectionStart) || isNil(selectionEnd)) {
                         // Remove last character
                         nextValue = value.slice(0, -1);
                     } else if (selectionStart === selectionEnd) {
@@ -644,7 +627,7 @@ const _keyDown = (target, eventInit) => {
                     if (fullClear) {
                         // Remove all characters
                         nextValue = "";
-                    } else if (selectionStart === null || selectionEnd === null) {
+                    } else if (isNil(selectionStart) || isNil(selectionEnd)) {
                         // Remove first character
                         nextValue = value.slice(1);
                     } else if (selectionStart === selectionEnd) {
@@ -666,7 +649,7 @@ const _keyDown = (target, eventInit) => {
                             ? eventInit.key.toUpperCase()
                             : eventInit.key.toLowerCase();
                         // Insert character in target value
-                        if (selectionStart === null && selectionEnd === null) {
+                        if (isNil(selectionStart) && isNil(selectionEnd)) {
                             nextValue += inputData;
                         } else {
                             nextValue =

@@ -43,7 +43,7 @@ const monitorEvents = (target) => {
 
 describe(parseUrl(import.meta.url), () => {
     test("clear", () => {
-        mount(/* xml */ `<input type="text" value="Test" />`);
+        mount(/* html */ `<input type="text" value="Test" />`);
         monitorEvents("input");
 
         expect("input").toHaveValue("Test");
@@ -72,7 +72,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("clear: email", () => {
-        mount(/* xml */ `<input type="email" value="john@doe.com" />`);
+        mount(/* html */ `<input type="email" value="john@doe.com" />`);
 
         expect("input").toHaveValue("john@doe.com");
 
@@ -83,7 +83,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("clear: number", () => {
-        mount(/* xml */ `<input type="number" value="421" />`);
+        mount(/* html */ `<input type="number" value="421" />`);
 
         expect("input").toHaveValue(421);
 
@@ -94,7 +94,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("click", () => {
-        mount(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+        mount(/* html */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
         click("button");
@@ -110,7 +110,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("drag", () => {
-        mount(/* xml */ `
+        mount(/* html */ `
             <ul class="list">
                 <li class="item" draggable="true">Item 1</li>
                 <li class="item" draggable="true">Item 2</li>
@@ -132,8 +132,8 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
-    test("fill", () => {
-        mount(/* xml */ `<input type="text" value="" />`);
+    test("fill: text", () => {
+        mount(/* html */ `<input type="text" value="" />`);
         monitorEvents("input");
 
         expect("input").not.toHaveValue();
@@ -161,8 +161,78 @@ describe(parseUrl(import.meta.url), () => {
         ]).toVerifySteps();
     });
 
+    test("fill: text with previous value", () => {
+        mount(/* html */ `<input type="text" value="Test" />`);
+
+        expect("input").toHaveValue("Test");
+
+        click("input");
+        fill(" value");
+
+        expect("input").toHaveValue("Test value");
+    });
+
+    test("fill: number", () => {
+        mount(/* html */ `<input type="number" />`);
+
+        expect("input").not.toHaveValue();
+
+        click("input");
+        fill(42);
+
+        expect("input").toHaveValue(42);
+    });
+
+    test("fill: email", () => {
+        mount(/* html */ `<input type="email" />`);
+
+        expect("input").not.toHaveValue();
+
+        click("input");
+        fill("john@doe.com");
+
+        expect("input").toHaveValue("john@doe.com");
+    });
+
+    test("fill: single file", () => {
+        mount(/* html */ `<input type="file" />`);
+        const file1 = new File([""], "file1.txt");
+        const file2 = new File([""], "file2.txt");
+
+        expect("input").not.toHaveValue();
+
+        click("input");
+        fill(file1);
+
+        expect("input").toHaveValue(/file1\.txt/);
+        expect("input").toHaveValue([file1]);
+
+        fill(file2);
+
+        expect("input").toHaveValue(/file2\.txt/);
+        expect("input").toHaveValue([file2]);
+    });
+
+    test("fill: multiple files", () => {
+        mount(/* html */ `<input type="file" multiple>`);
+        const file1 = new File([""], "file1.txt");
+        const file2 = new File([""], "file2.txt");
+
+        expect("input").not.toHaveValue();
+
+        click("input");
+        fill(file1);
+
+        expect("input").toHaveValue(/file1\.txt/);
+        expect("input").toHaveValue([file1]);
+
+        fill(file2);
+
+        expect("input").toHaveValue([file1, file2]);
+    });
+
     test("hover", () => {
-        mount(/* xml */ `<button type="button">Click me</button>`);
+        mount(/* html */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
         hover("button");
@@ -178,7 +248,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("keyDown", () => {
-        mount(/* xml */ `<input type="text" />`);
+        mount(/* html */ `<input type="text" />`);
         monitorEvents("input");
 
         click("input");
@@ -205,7 +275,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("leave", () => {
-        mount(/* xml */ `<button type="button">Click me</button>`);
+        mount(/* html */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
         leave("button");
@@ -221,7 +291,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("pointerDown", () => {
-        mount(/* xml */ `<button type="button">Click me</button>`);
+        mount(/* html */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
         pointerDown("button");
@@ -234,7 +304,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press key on text input", () => {
-        mount(/* xml */ `<input type="text" />`);
+        mount(/* html */ `<input type="text" />`);
         monitorEvents("input");
 
         click("input");
@@ -258,7 +328,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press key on number input", () => {
-        mount(/* xml */ `<input type="number" />`);
+        mount(/* html */ `<input type="number" />`);
 
         expect("input").not.toHaveValue();
 
@@ -273,7 +343,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on form input", () => {
-        mount(/* xml */ `
+        mount(/* html */ `
             <form t-on-submit.prevent="">
                 <input type="text" />
             </form>
@@ -303,7 +373,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on form button", () => {
-        mount(/* xml */ `
+        mount(/* html */ `
             <form t-on-submit.prevent="">
                 <button type="button" />
             </form>
@@ -334,7 +404,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Enter' on form submit button", () => {
-        mount(/* xml */ `
+        mount(/* html */ `
             <form t-on-submit.prevent="">
                 <button type="submit" />
             </form>
@@ -364,7 +434,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Space' on checkbox input", () => {
-        mount(/* xml */ `<input type="checkbox" checked="" />`);
+        mount(/* html */ `<input type="checkbox" checked="" />`);
         monitorEvents("input");
 
         expect("input").toHaveProperty("checked", true);
@@ -399,7 +469,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("press 'Backspace' on number input", () => {
-        mount(/* xml */ `<input type="number" value="421" />`);
+        mount(/* html */ `<input type="number" value="421" />`);
 
         expect("input").toHaveValue(421);
 
@@ -418,7 +488,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("select", () => {
-        mount(/* xml */ `
+        mount(/* html */ `
             <select>
                 <option value="a">A</option>
                 <option value="b">B</option>

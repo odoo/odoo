@@ -1553,12 +1553,15 @@ export class Matchers {
                         `cannot call \`toHaveValue()\` on a checkbox or radio input: use \`toBeChecked()\` instead`
                     );
                 }
-                const nodeValue = getNodeValue(node);
+                let nodeValue = getNodeValue(node);
                 if (!expectsValue) {
                     return isIterable(nodeValue) ? [...nodeValue].length > 0 : node.value !== "";
                 }
                 if (isIterable(nodeValue)) {
-                    return deepEqual(nodeValue, values);
+                    if (isIterable(value)) {
+                        return deepEqual(nodeValue, values);
+                    }
+                    nodeValue = node.value;
                 }
                 return values.every((value) => {
                     if (value instanceof RegExp) {
