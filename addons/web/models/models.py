@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from typing import Dict, List
+from __future__ import annotations
 
 import babel.dates
 import base64
-import copy
 import itertools
 import json
 import pytz
@@ -67,7 +66,7 @@ class Base(models.AbstractModel):
             'records': records,
         }
 
-    def web_save(self, vals, specification: Dict[str, Dict], next_id=None) -> List[Dict]:
+    def web_save(self, vals, specification: dict[str, dict], next_id=None) -> list[dict]:
         if self:
             self.write(vals)
         else:
@@ -77,7 +76,7 @@ class Base(models.AbstractModel):
         return self.with_context(bin_size=True).web_read(specification)
 
     @api.readonly
-    def web_read(self, specification: Dict[str, Dict]) -> List[Dict]:
+    def web_read(self, specification: dict[str, dict]) -> list[dict]:
         fields_to_read = list(specification) or ['id']
 
         if fields_to_read == ['id']:
@@ -85,12 +84,12 @@ class Base(models.AbstractModel):
             # this also avoid a call to read on the co-model that might have different access rules
             values_list = [{'id': id_} for id_ in self._ids]
         else:
-            values_list: List[Dict] = self.read(fields_to_read, load=None)
+            values_list: list[dict] = self.read(fields_to_read, load=None)
 
         if not values_list:
             return values_list
 
-        def cleanup(vals: Dict) -> Dict:
+        def cleanup(vals: dict) -> dict:
             """ Fixup vals['id'] of a new record. """
             if not vals['id']:
                 vals['id'] = vals['id'].origin or False
@@ -890,7 +889,7 @@ class Base(models.AbstractModel):
 
             return { 'values': field_range, }
 
-    def onchange(self, values: Dict, field_names: List[str], fields_spec: Dict):
+    def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """
         Perform an onchange on the given fields, and return the result.
 
@@ -1157,7 +1156,7 @@ class RecordSnapshot(dict):
     """ A dict with the values of a record, following a prefix tree. """
     __slots__ = ['record', 'fields_spec']
 
-    def __init__(self, record: BaseModel, fields_spec: Dict, fetch=True):
+    def __init__(self, record: BaseModel, fields_spec: dict, fetch=True):
         # put record in dict to include it when comparing snapshots
         super().__init__()
         self.record = record
