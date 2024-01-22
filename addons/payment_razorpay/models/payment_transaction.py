@@ -125,7 +125,7 @@ class PaymentTransaction(models.Model):
             if self.tokenize:
                 payload['token'] = {
                     'max_amount': payment_utils.to_minor_currency_units(
-                        self._get_mandate_max_amount(), self.currency_id
+                        self._razorpay_get_mandate_max_amount(), self.currency_id
                     ),
                     'expire_at': time.mktime(
                         (datetime.today() + relativedelta(years=10)).timetuple()
@@ -147,20 +147,23 @@ class PaymentTransaction(models.Model):
             })
         return payload
 
-    def _get_mandate_max_amount(self):
+    def _razorpay_get_mandate_max_amount(self):
         """ Return the eMandate's maximum amount to define.
 
         :return: The eMandate's maximum amount.
         :rtype: int
         """
-        mandate_values = self._get_mandate_values()
-        if 'amount' in mandate_values:
-            max_amount = mandate_values['amount'] * 5  # FP's rule of thumb for a good max amount.
+        pm_code = (
+            self.payment_method_id.primary_payment_method_id or self.payment_method_id
+        ).code
+        pm_max_amount = const.MANDATE_MAX_AMOUNT.get(pm_code, 100000)
+        mandate_values = self._get_mandate_values()  # The linked document's values.
+        if 'amount' in mandate_values and 'MRR' in mandate_values:
+            max_amount = min(
+                pm_max_amount, max(mandate_values['amount'] * 1.5, mandate_values['MRR'] * 5)
+            )
         else:
-            pm_code = (
-                self.payment_method_id.primary_payment_method_id or self.payment_method_id
-            ).code
-            max_amount = const.MANDATE_MAX_AMOUNT.get(pm_code, 100000)
+            max_amount = pm_max_amount
         return max_amount
 
     def _send_payment_request(self):

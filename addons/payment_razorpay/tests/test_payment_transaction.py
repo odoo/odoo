@@ -36,7 +36,7 @@ class TestPaymentTransaction(RazorpayCommon):
                 expected_payload['token'] = {
                     'expire_at': token_expiry_timestamp,
                     'frequency': 'as_presented',
-                    'max_amount': 50000000,
+                    'max_amount': 100000000,
                 }
             self.assertDictEqual(request_payload, expected_payload)
 
