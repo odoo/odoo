@@ -16,3 +16,14 @@
         background: transparent url(/stock/static/img/replenishment.svg) no-repeat center;
     }
 }
+
+.o_nocontent_help {
+    .o_view_nocontent_smiling_face.o_view_nocontent_stock:before {
+        @extend %o-nocontent-init-image;
+        width: 200px;
+        height: 200px;
+        background: transparent url(/stock/static/img/empty_list.png) no-repeat center;
+        background-size: 200px 200px;
+        resize: both;
+    }
+}
