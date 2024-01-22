@@ -846,7 +846,14 @@ QUnit.test("channel - states: open from the bus", async () => {
             }
         },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
@@ -986,7 +993,14 @@ QUnit.test("chat - states: open from the bus", async () => {
             }
         },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");

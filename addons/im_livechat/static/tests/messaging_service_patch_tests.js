@@ -40,7 +40,14 @@ QUnit.test("Notify message received out of focus", async () => {
             }),
         },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await pyEnv.withGuest(guestId, () =>
         rpc("/im_livechat/chat_post", {

@@ -13,7 +13,9 @@ patch(ActivityMenu.prototype, {
                 for (const meeting of group.meetings) {
                     if (meeting.start) {
                         const date = deserializeDateTime(meeting.start);
-                        meeting.formattedStart = formatDateTime(date, { format: localization.timeFormat });
+                        meeting.formattedStart = formatDateTime(date, {
+                            format: localization.timeFormat,
+                        });
                     }
                 }
             }

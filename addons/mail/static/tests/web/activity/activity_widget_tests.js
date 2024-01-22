@@ -34,7 +34,14 @@ QUnit.test("list activity widget with no activity", async () => {
         serverData: { views },
         session: { uid: pyEnv.currentUserId },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
@@ -105,7 +112,14 @@ QUnit.test("list activity widget with activities", async () => {
         },
         serverData: { views },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
@@ -177,7 +191,14 @@ QUnit.test("list activity widget with exception", async () => {
         },
         serverData: { views },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],
@@ -276,7 +297,14 @@ QUnit.test("list activity widget: open dropdown", async () => {
             };
         },
     });
-    await assertSteps(['/mail/action - {"init_messaging":true,"failures":true}']);
+    await assertSteps([
+        `/mail/action - ${JSON.stringify({
+            init_messaging: true,
+            failures: true,
+            systray_get_activities: true,
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId },
+        })}`,
+    ]);
     await openView({
         res_model: "res.users",
         views: [[false, "list"]],

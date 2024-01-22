@@ -5,7 +5,9 @@ import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { registry } from "@web/core/registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeMockServer } from "@web/../tests/helpers/mock_server";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
+
 const { DateTime } = luxon;
 
 const modelDefinitionsPromise = new Promise((resolve) => {
@@ -92,6 +94,12 @@ export const pyEnvTarget = {
             throw new Error("Unauthorized");
         }
         this.cookie.set("sid", user.id);
+        const userSession = {
+            name: user.name,
+            partnerId: user.partner_id,
+            userId: user.id,
+        };
+        patchUserWithCleanup(userSession);
     },
     /**
      * Authenticate a user on the mock server given its login
@@ -111,6 +119,9 @@ export const pyEnvTarget = {
         )[0];
         this._authenticate(user);
         this.cookie.set("authenticated_user_sid", this.cookie.get("sid"));
+    },
+    getUserSettings() {
+        return {}; // dummy method to be overriden
     },
     /**
      * Logout the current user.
@@ -328,6 +339,15 @@ export async function startServer({ actions, views = {} } = {}) {
     if ("res.users" in pyEnv.mockServer.models) {
         const adminUser = pyEnv["res.users"].searchRead([["id", "=", pyEnv.adminUserId]])[0];
         pyEnv.authenticate(adminUser.login, adminUser.password);
+        const settings = new Proxy(
+            {},
+            {
+                get(target, key) {
+                    return pyEnv.getUserSettings()[key];
+                },
+            }
+        );
+        patchUserWithCleanup({ settings });
     }
     return pyEnv;
 }

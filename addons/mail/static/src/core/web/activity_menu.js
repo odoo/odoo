@@ -26,11 +26,7 @@ export class ActivityMenu extends Component {
     }
 
     async fetchSystrayActivities() {
-        const dataByModelName = await this.env.services.orm.call(
-            "res.users",
-            "systray_get_activities"
-        );
-        this.store.insert(dataByModelName);
+        await this.store.fetchData({ systray_get_activities: true });
     }
 
     onBeforeOpen() {

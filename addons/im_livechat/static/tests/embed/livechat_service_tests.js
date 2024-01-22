@@ -109,10 +109,10 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
         `/mail/action - ${JSON.stringify({
             init_messaging: true,
             failures: true, // called because mail/core/web is loaded in qunit bundle
-            context: { is_for_livechat: true },
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, is_for_livechat: true },
         })}`,
         `/mail/message/post - ${JSON.stringify({
-            context: { lang: "en", tz: "taht", uid: 7, temporary_id: 0.81 },
+            context: { lang: "en", tz: "taht", uid: pyEnv.currentUserId, temporary_id: 0.81 },
             post_data: {
                 body: "Hello!",
                 attachment_ids: [],

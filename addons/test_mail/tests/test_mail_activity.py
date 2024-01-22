@@ -14,8 +14,8 @@ import random
 from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
+from odoo.tests import Form, HttpCase, users
 from odoo.tools import mute_logger
-from odoo.tests import Form, users
 
 
 class TestActivityCommon(MailCommon):
@@ -743,22 +743,25 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(test_record_1, record)
 
 
-@tests.tagged('mail_activity')
-class TestActivitySystray(TestActivityCommon):
+@tests.tagged("mail_activity")
+class TestActivitySystray(TestActivityCommon, HttpCase):
     """Test for systray_get_activities"""
 
+    @users("employee")
     def test_systray_activities_for_archived_records(self):
         """Check that activities made on archived records are shown in the
-        systray activities. """
-        test_record = self.test_record.with_user(self.user_employee)
-        test_record.action_archive()
-        test_record.activity_schedule(
-            'test_mail.mail_act_test_todo',
-            user_id=self.env.user.id,
+        systray activities."""
+        self.test_record.action_archive()
+        self.test_record.activity_schedule(
+            "test_mail.mail_act_test_todo",
+            user_id=self.user_employee.id,
         )
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        data = self.make_jsonrpc_request("/mail/data", {"systray_get_activities": True})
         total_count = sum(
-            record['total_count'] for record in self.env.user.systray_get_activities()["Store"]["activityGroups"]
-            if record.get('model') == test_record._name
+            record["total_count"]
+            for record in data["Store"]["activityGroups"]
+            if record.get("model") == self.test_record._name
         )
         self.assertEqual(total_count, 1)
 
