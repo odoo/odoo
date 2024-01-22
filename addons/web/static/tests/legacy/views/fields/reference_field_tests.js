@@ -1058,8 +1058,12 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_list_table td.o_list_many2one");
             await click(target, ".o_list_table .o_list_many2one input");
             //Select the "Partner" option, different from original "Product"
-            const dropdownItems = [...target.querySelectorAll(".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item")];
-            await click(dropdownItems.filter(item => item.text === "Partner")[0]);
+            const dropdownItems = [
+                ...target.querySelectorAll(
+                    ".o_list_table .o_list_many2one .o_input_dropdown .dropdown-item"
+                ),
+            ];
+            await click(dropdownItems.filter((item) => item.text === "Partner")[0]);
             await nextTick();
             assert.strictEqual(target.querySelector(".reference_field input").value, "");
             assert.strictEqual(target.querySelector(".o_list_many2one input").value, "Partner");
@@ -1152,5 +1156,27 @@ QUnit.module("Fields", (hooks) => {
 
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
+    });
+
+    QUnit.test("do not ask for display_name if field is invisible", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="reference" invisible="1"/></form>`,
+            async mockRPC(route, args) {
+                if (args.method === "web_read") {
+                    assert.deepEqual(args.kwargs.specification, {
+                        display_name: {},
+                        reference: {
+                            fields: {},
+                        },
+                    });
+                }
+            },
+        });
     });
 });
