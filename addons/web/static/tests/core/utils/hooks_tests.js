@@ -25,6 +25,8 @@ import { Component, onMounted, useState, xml } from "@odoo/owl";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { CommandPalette } from "@web/core/commands/command_palette";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
+
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
@@ -279,18 +281,16 @@ QUnit.module("utils", () => {
             "useAutofocus: autofocus outside of active element doesn't work (CommandPalette)",
             async function (assert) {
                 class MyComponent extends Component {
+                    static components = { OverlayContainer };
                     static template = xml`
                         <div>
                             <input type="text" t-ref="autofocus" />
                             <div class="o_dialog_container"/>
-                            <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+                            <OverlayContainer/>
                         </div>
                     `;
                     setup() {
                         this.inputRef = useAutofocus();
-                    }
-                    get OverlayContainer() {
-                        return registry.category("main_components").get("OverlayContainer");
                     }
                 }
 

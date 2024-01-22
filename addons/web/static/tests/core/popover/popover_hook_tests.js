@@ -9,33 +9,28 @@ import { click, destroy, getFixture, mount, nextTick } from "../../helpers/utils
 import { Component, xml } from "@odoo/owl";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 let env;
 let target;
 let popoverTarget;
 
-const mainComponents = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 
 class PseudoWebClient extends Component {
+    static components = { OverlayContainer };
     static template = xml`
         <div>
             <div id="anchor">Anchor</div>
             <div id="close">Close</div>
-            <div>
-                <t t-foreach="Components" t-as="Component" t-key="Component[0]">
-                    <t t-component="Component[1].Component" t-props="Component[1].props"/>
-                </t>
-            </div>
+            <OverlayContainer/>
         </div>
     `;
-    setup() {
-        this.Components = mainComponents.getEntries();
-    }
 }
 
 QUnit.module("Popover hook", {
     async beforeEach() {
-        clearRegistryWithCleanup(mainComponents);
+        clearRegistryWithCleanup(overlaysRegistry);
         registry
             .category("services")
             .add("popover", popoverService)

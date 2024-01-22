@@ -7,35 +7,30 @@ import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 let env;
 let fixture;
 let popovers;
 let popoverTarget;
 
-const mainComponents = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 
 class PseudoWebClient extends Component {
+    static components = { OverlayContainer };
     static template = xml`
         <div>
             <div id="anchor">Anchor</div>
             <div id="close">Close</div>
             <div id="sibling">Sibling</div>
-            <div>
-                <t t-foreach="Components" t-as="C" t-key="C[0]">
-                    <t t-component="C[1].Component" t-props="C[1].props"/>
-                </t>
-            </div>
+            <OverlayContainer/>
         </div>
     `;
-    setup() {
-        this.Components = mainComponents.getEntries();
-    }
 }
 
 QUnit.module("Popover service", {
     async beforeEach() {
-        clearRegistryWithCleanup(mainComponents);
+        clearRegistryWithCleanup(overlaysRegistry);
         registry
             .category("services")
             .add("popover", popoverService)

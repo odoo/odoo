@@ -22,31 +22,28 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { Component, onMounted, xml } from "@odoo/owl";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 let env;
 let target;
 const serviceRegistry = registry.category("services");
-const mainComponentRegistry = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 
 class PseudoWebClient extends Component {
+    static components = { OverlayContainer };
     static template = xml`
         <div>
             <div>
-                <t t-foreach="Components" t-as="C" t-key="C[0]">
-                    <t t-component="C[1].Component" t-props="C[1].props"/>
-                </t>
+                <OverlayContainer/>
             </div>
         </div>
     `;
-    setup() {
-        this.Components = mainComponentRegistry.getEntries();
-    }
 }
 
 QUnit.module("DialogManager", {
     async beforeEach() {
         target = getFixture();
-        clearRegistryWithCleanup(mainComponentRegistry);
+        clearRegistryWithCleanup(overlaysRegistry);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);

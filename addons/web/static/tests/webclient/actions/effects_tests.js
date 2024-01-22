@@ -10,7 +10,7 @@ import { patchUserWithCleanup } from "../../helpers/mock_services";
 let serverData;
 let target;
 
-const mainComponentRegistry = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
@@ -23,7 +23,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("rainbowman integrated to webClient", async function (assert) {
         assert.expect(10);
         patchUserWithCleanup({ showEffect: true });
-        clearRegistryWithCleanup(mainComponentRegistry);
+        clearRegistryWithCleanup(overlaysRegistry);
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
@@ -61,7 +61,7 @@ QUnit.module("ActionManager", (hooks) => {
                 });
             }
         };
-        clearRegistryWithCleanup(mainComponentRegistry);
+        clearRegistryWithCleanup(overlaysRegistry);
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 6);
@@ -86,7 +86,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return Promise.resolve(false);
             }
         };
-        clearRegistryWithCleanup(mainComponentRegistry);
+        clearRegistryWithCleanup(overlaysRegistry);
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 6);

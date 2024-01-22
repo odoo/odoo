@@ -30,6 +30,7 @@ import { getPickerCell } from "./datetime/datetime_test_helpers";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 import { Dialog } from "@web/core/dialog/dialog";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 const serviceRegistry = registry.category("services");
 
@@ -1428,25 +1429,17 @@ QUnit.module("Components", ({ beforeEach }) => {
             </Dialog>`;
         CustomDialog.components = { Dialog, Dropdown, DropdownItem };
 
-        const mainComponentRegistry = registry.category("main_components");
-        clearRegistryWithCleanup(mainComponentRegistry);
+        const overlaysRegistry = registry.category("overlays");
+        clearRegistryWithCleanup(overlaysRegistry);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("l10n", makeFakeLocalizationService());
 
         class PseudoWebClient extends Component {
-            setup() {
-                this.Components = mainComponentRegistry.getEntries();
-            }
-            clicked() {
-                env.services.dialog.add(CustomDialog);
-            }
-        }
-        PseudoWebClient.template = xml`
+            static components = { Dropdown, OverlayContainer };
+            static template = xml`
                 <div>
                     <div>
-                        <t t-foreach="Components" t-as="C" t-key="C[0]">
-                            <t t-component="C[1].Component" t-props="C[1].props"/>
-                        </t>
+                        <OverlayContainer/>
                     </div>
                     <div>
                         <Dropdown>
@@ -1456,7 +1449,10 @@ QUnit.module("Components", ({ beforeEach }) => {
                     </div>
                 </div>
             `;
-        PseudoWebClient.components = { Dropdown };
+            clicked() {
+                env.services.dialog.add(CustomDialog);
+            }
+        }
 
         env = await makeTestEnv();
         await mount(PseudoWebClient, target, { env });

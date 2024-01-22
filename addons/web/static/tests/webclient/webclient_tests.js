@@ -15,7 +15,7 @@ import { fakeTitleService } from "../helpers/mock_services";
 import { destroy, getFixture, mount, patchWithCleanup, triggerEvent } from "../helpers/utils";
 
 import { Component, xml } from "@odoo/owl";
-const mainComponentRegistry = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 const serviceRegistry = registry.category("services");
 
 let baseConfig;
@@ -45,13 +45,13 @@ QUnit.test("can be rendered", async (assert) => {
     assert.containsOnce(target, "header > nav.o_main_navbar");
 });
 
-QUnit.test("can render a main component", async (assert) => {
+QUnit.test("can render an overlay", async (assert) => {
     assert.expect(1);
     class MyComponent extends Component {
         static template = xml`<span class="chocolate">MyComponent</span>`;
     }
-    clearRegistryWithCleanup(mainComponentRegistry);
-    mainComponentRegistry.add("mycomponent", { Component: MyComponent });
+    clearRegistryWithCleanup(overlaysRegistry);
+    overlaysRegistry.add("mycomponent", { component: MyComponent });
     const env = await makeTestEnv(baseConfig);
     await mount(WebClient, target, { env });
     assert.containsOnce(target, ".chocolate");
@@ -95,8 +95,8 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
     destroy(standaloneComponent);
 
     // Register the component as a main one, mount the webclient and control-click the <a href/>
-    clearRegistryWithCleanup(mainComponentRegistry);
-    mainComponentRegistry.add("mycomponent", { Component: MyComponent });
+    clearRegistryWithCleanup(overlaysRegistry);
+    overlaysRegistry.add("mycomponent", { Component: MyComponent });
     env = await makeTestEnv(baseConfig);
     await mount(WebClient, target, { env });
     assert.verifySteps([]);

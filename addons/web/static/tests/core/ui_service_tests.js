@@ -27,7 +27,7 @@ QUnit.module("UI service", {
 
 QUnit.test("block and unblock once ui with ui service", async (assert) => {
     const env = await makeTestEnv({ ...baseConfig });
-    ({ Component: BlockUI, props } = registry.category("main_components").get("BlockUI"));
+    ({ component: BlockUI, props } = registry.category("overlays").get("BlockUI"));
     const ui = env.services.ui;
     await mount(BlockUI, target, { env, props });
     let blockUI = target.querySelector(".o_blockUI");
@@ -44,7 +44,7 @@ QUnit.test("block and unblock once ui with ui service", async (assert) => {
 
 QUnit.test("use block and unblock several times to block ui with ui service", async (assert) => {
     const env = await makeTestEnv({ ...baseConfig });
-    ({ Component: BlockUI, props } = registry.category("main_components").get("BlockUI"));
+    ({ component: BlockUI, props } = registry.category("overlays").get("BlockUI"));
     const ui = env.services.ui;
     await mount(BlockUI, target, { env, props });
     let blockUI = target.querySelector(".o_blockUI");

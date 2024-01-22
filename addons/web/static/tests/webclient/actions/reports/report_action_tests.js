@@ -34,7 +34,7 @@ QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
         target = getFixture();
-        clearRegistryWithCleanup(registry.category("main_components"));
+        clearRegistryWithCleanup(registry.category("overlays"));
         registerCleanup(() => {
             delete downloadReport.wkhtmltopdfStatusProm;
         });

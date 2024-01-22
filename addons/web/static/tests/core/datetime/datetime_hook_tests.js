@@ -11,6 +11,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 const { DateTime } = luxon;
 
@@ -24,29 +25,26 @@ const mountInput = async (setup) => {
 };
 
 class Root extends Component {
-    static components = { DateTimeInput };
+    static components = { DateTimeInput, OverlayContainer };
 
     static template = xml`
         <input type="text" class="datetime_hook_input" t-ref="start-date" />
-        <t t-foreach="mainComponentEntries" t-as="comp" t-key="comp[0]">
-            <t t-component="comp[1].Component" t-props="comp[1].props" />
-        </t>
+        <OverlayContainer/>
     `;
 
     setup() {
-        this.mainComponentEntries = mainComponentRegistry.getEntries();
         this.props.setup();
     }
 }
 
-const mainComponentRegistry = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 const serviceRegistry = registry.category("services");
 
 let fixture;
 
 QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(() => {
-        clearRegistryWithCleanup(mainComponentRegistry);
+        clearRegistryWithCleanup(overlaysRegistry);
 
         serviceRegistry
             .add("hotkey", hotkeyService)

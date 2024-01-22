@@ -66,9 +66,9 @@ patch(App.prototype, {
  */
 export async function start({ mockRPC } = {}) {
     setupManager.setupServiceRegistries();
-    const mainComponentRegistry = registry.category("main_components");
-    mainComponentRegistry.add("LivechatButton", { Component: LivechatButton });
-    mainComponentRegistry.add("ChatWindowContainer", { Component: ChatWindowContainer });
+    const overlaysRegistry = registry.category("overlays");
+    overlaysRegistry.add("LivechatButton", { Component: LivechatButton });
+    overlaysRegistry.add("ChatWindowContainer", { Component: ChatWindowContainer });
     const pyEnv = await getPyEnv();
     pyEnv.logout();
     const { env } = await createWebClient({

@@ -9,7 +9,7 @@ import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 export function makeEnv(services = {}) {
-    clearRegistryWithCleanup(registry.category("main_components"));
+    clearRegistryWithCleanup(registry.category("overlays"));
     setupViewRegistries();
     services = Object.assign(
         {

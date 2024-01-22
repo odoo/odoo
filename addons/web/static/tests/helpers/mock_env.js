@@ -74,7 +74,7 @@ export const utils = {
         clearRegistryWithCleanup(registry.category("error_dialogs"));
         clearRegistryWithCleanup(registry.category("favoriteMenu"));
         clearRegistryWithCleanup(registry.category("ir.actions.report handlers"));
-        clearRegistryWithCleanup(registry.category("main_components"));
+        clearRegistryWithCleanup(registry.category("overlays"));
 
         clearRegistryWithCleanup(registry.category("services"));
         clearServicesMetadataWithCleanup();

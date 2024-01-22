@@ -25,6 +25,7 @@ import {
     zoomOut,
 } from "./datetime_test_helpers";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 const { DateTime } = luxon;
 
@@ -42,28 +43,22 @@ const mountInput = async (props) => {
 };
 
 class Root extends Component {
-    static components = { DateTimeInput };
+    static components = { DateTimeInput, OverlayContainer };
 
     static template = xml`
         <DateTimeInput t-props="props" />
-        <t t-foreach="mainComponentEntries" t-as="comp" t-key="comp[0]">
-            <t t-component="comp[1].Component" t-props="comp[1].props" />
-        </t>
+        <OverlayContainer/>
     `;
-
-    setup() {
-        this.mainComponentEntries = mainComponentRegistry.getEntries();
-    }
 }
 
-const mainComponentRegistry = registry.category("main_components");
+const overlaysRegistry = registry.category("overlays");
 const serviceRegistry = registry.category("services");
 
 let fixture;
 
 QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(() => {
-        clearRegistryWithCleanup(mainComponentRegistry);
+        clearRegistryWithCleanup(overlaysRegistry);
 
         serviceRegistry
             .add("hotkey", hotkeyService)
@@ -506,28 +501,31 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(input.value, "١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣");
     });
 
-    QUnit.test("check datepicker in localization with textual month format", async function (assert) {
-        assert.expect(3);
-        let onChangeDate;
+    QUnit.test(
+        "check datepicker in localization with textual month format",
+        async function (assert) {
+            assert.expect(3);
+            let onChangeDate;
 
-        Object.assign(localization, {
-            dateFormat: 'MMM/dd/yyyy',
-            timeFormat: 'HH:mm:ss',
-            dateTimeFormat: 'MMM/dd/yyyy HH:mm:ss',
-        });
+            Object.assign(localization, {
+                dateFormat: "MMM/dd/yyyy",
+                timeFormat: "HH:mm:ss",
+                dateTimeFormat: "MMM/dd/yyyy HH:mm:ss",
+            });
 
-        const input = await mountInput({
-            value: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy"),
-            type: "date",
-            onChange: date => onChangeDate = date,
-        });
+            const input = await mountInput({
+                value: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy"),
+                type: "date",
+                onChange: (date) => (onChangeDate = date),
+            });
 
-        assert.strictEqual(input.value, "Jan/09/1997");
+            assert.strictEqual(input.value, "Jan/09/1997");
 
-        await click(input);
-        await click(getPickerCell("5").at(0));
+            await click(input);
+            await click(getPickerCell("5").at(0));
 
-        assert.strictEqual(input.value, "Jan/05/1997");
-        assert.strictEqual(onChangeDate.toFormat("dd/MM/yyyy"), "05/01/1997");
-    });
+            assert.strictEqual(input.value, "Jan/05/1997");
+            assert.strictEqual(onChangeDate.toFormat("dd/MM/yyyy"), "05/01/1997");
+        }
+    );
 });

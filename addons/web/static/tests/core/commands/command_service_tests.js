@@ -21,6 +21,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../../helpers/utils";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 
 import { Component, xml } from "@odoo/owl";
 
@@ -42,14 +43,12 @@ export async function backspaceSearchBar() {
 }
 
 class TestComponent extends Component {
+    static components = { OverlayContainer };
     static template = xml`
       <div>
-        <t t-component="OverlayContainer.Component" t-props="OverlayContainer.props" />
+        <OverlayContainer/>
       </div>
     `;
-    get OverlayContainer() {
-        return registry.category("main_components").get("OverlayContainer");
-    }
 }
 
 QUnit.module("Command Service", {
