@@ -20,6 +20,7 @@
           - functional
 
 """
+from __future__ import annotations
 
 import collections
 import contextlib
@@ -41,7 +42,6 @@ from collections.abc import MutableMapping, Iterable
 from contextlib import closing
 from inspect import getmembers
 from operator import attrgetter, itemgetter
-from typing import Dict, List
 
 import babel
 import babel.dates
@@ -528,10 +528,7 @@ class BaseModel(metaclass=MetaModel):
     """
     __slots__ = ['env', '_ids', '_prefetch_ids']
 
-    env: api.Environment
-    _ids: tuple[int | NewId]
-    _prefetch_ids: Iterable[int | NewId]
-
+    _fields: dict[str, Field]
     _auto = False
     """Whether a database table should be created.
     If set to ``False``, override :meth:`~odoo.models.BaseModel.init`
@@ -3953,7 +3950,7 @@ class BaseModel(metaclass=MetaModel):
             if forbidden:
                 raise self.env['ir.rule']._make_access_error('read', forbidden)
 
-    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> List["Field"]:
+    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> list[Field]:
         """
         Return the fields to fetch from database among the given field names,
         and following the dependencies of computed fields. The method is used
@@ -5881,7 +5878,7 @@ class BaseModel(metaclass=MetaModel):
     #  - the global cache is only an index to "resolve" a record 'id'.
     #
 
-    def __init__(self, env, ids, prefetch_ids):
+    def __init__(self, env: api.Environment, ids: tuple[int | NewId], prefetch_ids: Iterable[int | NewId]):
         """ Create a recordset instance.
 
         :param env: an environment
@@ -6978,7 +6975,7 @@ class BaseModel(metaclass=MetaModel):
                     res['warning'].get('type') or "",
                 ))
 
-    def onchange(self, values: Dict, field_names: List[str], fields_spec: Dict):
+    def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         raise NotImplementedError("onchange() is implemented in module 'web'")
 
     def _get_placeholder_filename(self, field):

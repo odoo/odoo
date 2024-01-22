@@ -20,6 +20,7 @@ import warnings
 import psycopg2
 
 import odoo
+from odoo.models import BaseModel
 from odoo.modules.db import FunctionStatus
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
@@ -139,7 +140,7 @@ class Registry(Mapping):
         return registry
 
     def init(self, db_name):
-        self.models = {}    # model name/model instance mapping
+        self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
         self._database_translated_fields = ()  # names of translated fields in database
@@ -219,7 +220,7 @@ class Registry(Mapping):
         """ Return an iterator over all model names. """
         return iter(self.models)
 
-    def __getitem__(self, model_name):
+    def __getitem__(self, model_name: str) -> type[BaseModel]:
         """ Return the model with the given name or raise KeyError if it doesn't exist."""
         return self.models[model_name]
 

@@ -29,12 +29,12 @@ try:
 except ImportError:
     from decorator import decorator
 
-from odoo.sql_db import Cursor, TestCursor
 from .exceptions import AccessError, CacheMiss
 from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL, StackMap
 from .tools.translate import _
 
 if TYPE_CHECKING:
+    from odoo.sql_db import Cursor, TestCursor
     from odoo.models import BaseModel
 
 _logger = logging.getLogger(__name__)
@@ -482,6 +482,9 @@ class Environment(Mapping):
     uid: int
     context: frozendict
     su: bool
+    registry: Registry
+    cache: Cache
+    transaction: Transaction
 
     def reset(self):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
@@ -529,7 +532,7 @@ class Environment(Mapping):
         """ Test whether the given model exists. """
         return model_name in self.registry
 
-    def __getitem__(self, model_name) -> BaseModel:
+    def __getitem__(self, model_name: str) -> BaseModel:
         """ Return an empty recordset from the given model. """
         return self.registry[model_name](self, (), ())
 
