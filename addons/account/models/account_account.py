@@ -671,7 +671,7 @@ class AccountAccount(models.Model):
             container = {'records': self.env['account.move']}
             manager = self.env['account.move']._check_balanced(container)
         else:
-            manager = nullcontext
+            manager = nullcontext()
         with manager:
             rslt = super(AccountAccount, self).load(fields, data)
             if importing:
