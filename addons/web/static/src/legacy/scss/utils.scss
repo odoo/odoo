@@ -124,6 +124,17 @@
     }
 }
 
+// This function checks if the color ($color) has enough contrast to be visible
+// on a background with the color ($background-color). If not, it is replaced
+// with $light (if too dark) or $dark (if too light).
+@function adjust-color-to-background($color, $background-color, $light: $yiq-text-light, $dark: $yiq-text-dark) {
+    @return if(
+        color-yiq($color) == $yiq-text-dark,
+        color-yiq($background-color, $color, $dark),
+        color-yiq($background-color, $light, $color)
+    );
+}
+
 // ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
