@@ -93,6 +93,17 @@
     }
 }
 
+// This function checks if the color ($color) has enough contrast to be visible
+// on a background with the color ($background-color). If not, it is replaced
+// with $light (if too dark) or $dark (if too light).
+@function adjust-color-to-background($color, $background-color, $light: $color-contrast-light, $dark: $color-contrast-dark) {
+    @return if(
+        color-contrast($color) == $color-contrast-dark,
+        color-contrast($background-color, $color, $dark),
+        color-contrast($background-color, $light, $color)
+    );
+}
+
 // ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
