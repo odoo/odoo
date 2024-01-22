@@ -89,7 +89,7 @@ export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
         __count: { name: "__count", string: _t("Count"), type: "integer" },
     };
     for (const [fieldName, field] of Object.entries(fields)) {
-        if (fieldName === "id" || !field.store) {
+        if (fieldName === "id") {
             continue;
         }
         const { isInvisible } = fieldAttrs[fieldName] || {};
@@ -98,7 +98,7 @@ export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
         }
         if (
             ["integer", "float", "monetary"].includes(field.type) &&
-            field.aggregator !== undefined
+            field.aggregator
         ) {
             measures[fieldName] = field;
         }

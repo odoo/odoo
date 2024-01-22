@@ -5,7 +5,6 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time
-from lxml import etree, html
 from operator import attrgetter
 from xmlrpc.client import MAXINT
 import ast
@@ -41,7 +40,6 @@ from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
-from odoo import SUPERUSER_ID
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
@@ -770,13 +768,6 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the base field of an inherited field, or ``self``. """
         return self.inherited_field.base_field if self.inherited_field else self
 
-    @property
-    def groupable(self):
-        """
-        Return whether the field may be used for grouping in :meth:`~odoo.models.BaseModel.read_group`.
-        """
-        return self.store and self.column_type
-
     #
     # Company-dependent fields
     #
@@ -899,7 +890,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_required = property(attrgetter('required'))
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
-    _description_aggregator = property(attrgetter('aggregator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
     _description_exportable = property(attrgetter('exportable'))
 
@@ -910,9 +900,42 @@ class Field(MetaField('DummyField', (object,), {})):
     def _description_searchable(self):
         return bool(self.store or self.search)
 
-    @property
-    def _description_sortable(self):
-        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
+    def _description_sortable(self, env):
+        if self.column_type and self.store:  # shortcut
+            return True
+
+        model = env[self.model_name]
+        query = model._as_query(ordered=False)
+        try:
+            model._order_field_to_sql(model._table, self.name, SQL(), SQL(), query)
+            return True
+        except (ValueError, AccessError):
+            return False
+
+    def _description_groupable(self, env):
+        if self.column_type and self.store:  # shortcut
+            return True
+
+        model = env[self.model_name]
+        query = model._as_query(ordered=False)
+        groupby = self.name if self.type not in ('date', 'datetime') else f"{self.name}:month"
+        try:
+            model._read_group_groupby(groupby, query)
+            return True
+        except (ValueError, AccessError):
+            return False
+
+    def _description_aggregator(self, env):
+        if not self.aggregator or self.column_type and self.store:  # shortcut
+            return self.aggregator
+
+        model = env[self.model_name]
+        query = model._as_query(ordered=False)
+        try:
+            model._read_group_select(f"{self.name}:{self.aggregator}", query)
+            return self.aggregator
+        except (ValueError, AccessError):
+            return None
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -4812,10 +4835,6 @@ class Many2many(_RelationalMulti):
                 self.relation, self.column2, comodel._table, 'id', self.ondelete,
                 model, self._module,
             )
-
-    @property
-    def groupable(self):
-        return self.store
 
     def read(self, records):
         context = {'active_test': False}

@@ -63,14 +63,27 @@ QUnit.module("Views", (hooks) => {
                             searchable: true,
                             aggregator: "sum",
                         },
-                        bar: { string: "bar", type: "boolean", store: true, sortable: true },
-                        date: { string: "Date", type: "date", store: true, sortable: true },
+                        bar: {
+                            string: "bar",
+                            type: "boolean",
+                            store: true,
+                            sortable: true,
+                            groupable: true,
+                        },
+                        date: {
+                            string: "Date",
+                            type: "date",
+                            store: true,
+                            groupable: true,
+                            sortable: true,
+                        },
                         product_id: {
                             string: "Product",
                             type: "many2one",
                             relation: "product",
                             store: true,
                             sortable: true,
+                            groupable: true,
                         },
                         other_product_id: {
                             string: "Other Product",
@@ -78,6 +91,7 @@ QUnit.module("Views", (hooks) => {
                             relation: "product",
                             store: true,
                             sortable: true,
+                            groupable: true,
                         },
                         non_stored_m2o: {
                             string: "Non Stored M2O",
@@ -90,6 +104,7 @@ QUnit.module("Views", (hooks) => {
                             relation: "customer",
                             store: true,
                             sortable: true,
+                            groupable: true,
                         },
                         computed_field: {
                             string: "Computed and not stored",
@@ -107,6 +122,7 @@ QUnit.module("Views", (hooks) => {
                             searchable: true,
                             sortable: true,
                             store: true,
+                            groupable: true,
                         },
                         price_nonaggregatable: {
                             string: "Price non-aggregatable",
@@ -314,7 +330,7 @@ QUnit.module("Views", (hooks) => {
                 )
             ).map((e) => e.textContent);
 
-            assert.deepEqual(measures, ["bouh", "Foo", "Count"]);
+            assert.deepEqual(measures, ["bouh", "Computed and not stored", "Foo", "Count"]);
         }
     );
 
@@ -441,6 +457,7 @@ QUnit.module("Views", (hooks) => {
         Object.assign(serverData.models.partner.fields, {
             foo: { string: "Foo", type: "integer", store: true, aggregator: "sum" },
             foo2: { string: "Foo2", type: "integer", store: true, aggregator: "sum" },
+            computed_field: { aggregator: null },
         });
 
         await makeView({
@@ -926,6 +943,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("without measures, pivot view uses __count by default", async function (assert) {
+        serverData.models.partner.fields.computed_field.aggregator = undefined;
+        serverData.models.partner.fields.foo.aggregator = undefined;
         assert.expect(4);
 
         await makeView({
@@ -1467,8 +1486,7 @@ QUnit.module("Views", (hooks) => {
             }
 
             // Keep product_id but make it ungroupable
-            delete serverData.models.partner.fields.product_id.sortable;
-            delete serverData.models.partner.fields.product_id.store;
+            serverData.models.partner.fields.product_id.groupable = false;
 
             serverData.models.partner.records = [
                 {
@@ -3169,6 +3187,9 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("pivot still handles __count__ measure", async function (assert) {
+        serverData.models.partner.fields.computed_field.aggregator = undefined;
+        serverData.models.partner.fields.foo.aggregator = undefined;
+
         // for retro-compatibility reasons, the pivot view still handles
         // '__count__' measure.
         assert.expect(4);
@@ -3200,6 +3221,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("not use a many2one as a measure by default", async function (assert) {
+        serverData.models.partner.fields.computed_field.aggregator = undefined;
+        serverData.models.partner.fields.foo.aggregator = undefined;
         assert.expect(3);
 
         await makeView({
@@ -3391,6 +3414,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("pivot measures should be alphabetically sorted", async function (assert) {
+        serverData.models.partner.fields.computed_field.aggregator = undefined;
         assert.expect(1);
 
         // It's important to compare capitalized and lowercased words
@@ -3490,6 +3514,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("rendering of pivot view with comparison", async function (assert) {
+        serverData.models.partner.fields.computed_field.aggregator = undefined;
+
         serverData.models.partner.records[0].date = "2016-12-15";
         serverData.models.partner.records[1].date = "2016-12-17";
         serverData.models.partner.records[2].date = "2016-11-22";

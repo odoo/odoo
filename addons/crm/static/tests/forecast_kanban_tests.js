@@ -307,7 +307,7 @@ QUnit.module('Crm Forecast main flow with progressBars', (hooks) => {
                         fields: {
                             color: {string: 'Color', type: 'string'},
                             date_deadline: {string: 'Expected Closing', type: 'date'},
-                            int_field: {string: 'Value', type: 'integer', sortable: true},
+                            int_field: {string: 'Value', type: 'integer', aggregator: 'sum'},
                             name: {string: 'Name', type: 'char'},
                         },
                     },

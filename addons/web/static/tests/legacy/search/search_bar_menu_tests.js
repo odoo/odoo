@@ -53,18 +53,26 @@ QUnit.module("Search", (hooks) => {
                 foo: {
                     fields: {
                         bar: { string: "Bar", type: "many2one", relation: "partner" },
-                        foo: { string: "Foo", type: "char", store: true, sortable: true },
+                        foo: { 
+                            string: "Foo",
+                            type: "char",
+                            store: true,
+                            sortable: true,
+                            groupable: true,
+                        },
                         birthday: {
                             string: "Birthday",
                             type: "date",
                             store: true,
                             sortable: true,
+                            groupable: true,
                         },
                         date_field: {
                             string: "Date",
                             type: "date",
                             store: true,
                             sortable: true,
+                            groupable: true,
                         },
                         properties: {
                             string: "Properties",
