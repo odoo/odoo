@@ -53,31 +53,29 @@ export function useInputField(params) {
      * However, if the field is invalid, the new value will not be committed to the model.
      */
     function onChange(ev) {
-        if (isDirty) {
-            isDirty = false;
-            let isInvalid = false;
-            let val = ev.target.value;
-            if (params.parse) {
-                try {
-                    val = params.parse(val);
-                } catch {
-                    component.props.record.setInvalidField(component.props.name);
-                    isInvalid = true;
-                }
+        isDirty = false;
+        let isInvalid = false;
+        let val = ev.target.value;
+        if (params.parse) {
+            try {
+                val = params.parse(val);
+            } catch {
+                component.props.record.setInvalidField(component.props.name);
+                isInvalid = true;
             }
-
-            if (!isInvalid) {
-                pendingUpdate = true;
-                Promise.resolve(
-                    component.props.record.update({ [component.props.name]: val })
-                ).then(() => {
-                    pendingUpdate = false;
-                });
-                lastSetValue = ev.target.value;
-            }
-
-            component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
         }
+
+        if (!isInvalid) {
+            pendingUpdate = true;
+            Promise.resolve(
+                component.props.record.update({ [component.props.name]: val })
+            ).then(() => {
+                pendingUpdate = false;
+            });
+            lastSetValue = ev.target.value;
+        }
+
+        component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
     }
     function onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
