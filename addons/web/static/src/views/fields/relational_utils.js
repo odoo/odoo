@@ -298,7 +298,7 @@ export class Many2XAutocomplete extends Component {
             display_name: option.displayName,
         };
         if (option.write_date) {
-            record.write_date = option.write_date;
+            record.avatar_128_cache_key = option.avatar_128_cache_key;
         }
         this.props.update([record], params);
     }
@@ -310,7 +310,7 @@ export class Many2XAutocomplete extends Component {
             args: this.props.getDomain(),
             limit: this.props.searchLimit + 1,
             context: this.props.context,
-            extra_fields: ["write_date"],
+            extra_fields: ["avatar_128_cache_key"],
         });
     }
     mapRecordToOption(result) {
@@ -407,7 +407,7 @@ export class Many2XAutocomplete extends Component {
                 operator: "ilike",
                 limit: this.props.searchMoreLimit,
                 context,
-                extra_fields: ["write_date"],
+                extra_fields: ["avatar_128_cache_key"],
             });
 
             dynamicFilters = [
@@ -441,7 +441,7 @@ export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
             resModel: this.props.resModel,
             write_date: result[2]?.write_date,
             img: imageUrl(this.props.resModel, result[0], "avatar_128", {
-                unique: result[2]?.write_date,
+                unique: result[2]?.avatar_128_cache_key,
             }),
         };
     }

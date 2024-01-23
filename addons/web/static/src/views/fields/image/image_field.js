@@ -51,7 +51,7 @@ export class ImageField extends Component {
     }
 
     get rawCacheKey() {
-        return this.props.record.data.write_date;
+        return this.props.record.data.avatar_128_cache_key || "";
     }
 
     get sizeStyle() {
@@ -71,9 +71,7 @@ export class ImageField extends Component {
         return style;
     }
     get hasTooltip() {
-        return (
-            this.props.enableZoom && this.props.record.data[this.props.name]
-        );
+        return this.props.enableZoom && this.props.record.data[this.props.name];
     }
     get tooltipAttributes() {
         return {

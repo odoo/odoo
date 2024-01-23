@@ -214,7 +214,7 @@ class Partner(models.Model):
     def mail_partner_format(self, fields=None):
         partners_format = dict()
         if not fields:
-            fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'is_company': True, 'user': {}, "write_date": True}
+            fields = {'id': True, 'name': True, 'email': True, 'active': True, 'im_status': True, 'is_company': True, 'user': {}, "avatar_128_cache_key": True}
         for partner in self:
             data = {}
             if 'id' in fields:
@@ -229,8 +229,8 @@ class Partner(models.Model):
                 data['im_status'] = partner.im_status
             if 'is_company' in fields:
                 data['is_company'] = partner.is_company
-            if "write_date" in fields:
-                data["write_date"] = odoo.fields.Datetime.to_string(partner.write_date)
+            if "avatar_128_cache_key" in fields:
+                data["avatar_128_cache_key"] = partner.avatar_128_cache_key
             if 'user' in fields:
                 internal_users = partner.user_ids - partner.user_ids.filtered('share')
                 main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']

@@ -50,7 +50,7 @@ export function m2oTupleFromData(data) {
         const _name = data.name;
         name = Array.isArray(_name) ? _name[1] : _name;
     }
-    if ("write_date" in data) {
+    if ("avatar_128_cache_key" in data) {
         extra = { write_date: data.write_date };
     }
     if (extra) {

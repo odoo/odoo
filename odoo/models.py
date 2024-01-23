@@ -1774,7 +1774,7 @@ class BaseModel(metaclass=MetaModel):
             records = self.browse(ids)
             records.fetch(['display_name', *extra_fields])
         res = []
-        allowed_extra_fields = ['write_date']
+        allowed_extra_fields = ['avatar_128_cache_key']
         for record in records.sudo():
             extra = ({field: record[field] for field in extra_fields if field in allowed_extra_fields})
             if bool(extra):

@@ -376,6 +376,10 @@ export function getFieldsSpec(
                 }
             }
         }
+        // Automatically fetch the avatar_cache_key if the field is avatar_128
+        if (fieldName === "avatar_128") {
+            fieldsSpec["avatar_128_cache_key"] = {};
+        }
         if (["many2one", "one2many", "many2many"].includes(fields[fieldName].type)) {
             let context = activeFields[fieldName].context;
             if (!context || context === "{}") {

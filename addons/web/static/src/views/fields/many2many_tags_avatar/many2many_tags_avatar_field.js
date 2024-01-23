@@ -25,7 +25,7 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
         return {
             ...super.getTagProps(record),
             img: imageUrl(this.relation, record.resId, "avatar_128", {
-                unique: record.data.write_date,
+                unique: record.data.avatar_128_cache_key,
             }),
         };
     }
@@ -37,7 +37,7 @@ export const many2ManyTagsAvatarField = {
     relatedFields: (fieldInfo) => {
         return [
             ...many2ManyTagsField.relatedFields(fieldInfo),
-            { name: "write_date", type: "string" },
+            { name: "avatar_128_cache_key", type: "string" },
         ];
     },
     extractProps({ viewType }, dynamicInfo) {

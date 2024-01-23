@@ -16,7 +16,7 @@ export class Many2OneAvatarField extends Many2OneField {
     };
     get img() {
         return imageUrl(this.relation, this.props.record.data[this.props.name][0], "avatar_128", {
-            unique: this.props.record.data[this.props.name][2]?.write_date,
+            unique: this.props.record.data[this.props.name][2]?.avatar_128_cache_key,
         });
     }
 }
@@ -24,7 +24,7 @@ export class Many2OneAvatarField extends Many2OneField {
 export const many2OneAvatarField = {
     ...many2OneField,
     component: Many2OneAvatarField,
-    fieldsTofetch: ["write_date"],
+    fieldsTofetch: ["avatar_128_cache_key"],
     extractProps(fieldInfo) {
         const props = many2OneField.extractProps(...arguments);
         props.canOpen = fieldInfo.viewType === "form";

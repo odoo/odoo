@@ -30,6 +30,7 @@ class AvatarMixin(models.AbstractModel):
     avatar_512 = fields.Image("Avatar 512", compute="_compute_avatar_512")
     avatar_256 = fields.Image("Avatar 256", compute="_compute_avatar_256")
     avatar_128 = fields.Image("Avatar 128", compute="_compute_avatar_128")
+    avatar_128_cache_key = fields.Char(compute="_compute_avatar_128_cache_key")
 
     def _compute_avatar(self, avatar_field, image_field):
         for record in self:
@@ -77,3 +78,11 @@ class AvatarMixin(models.AbstractModel):
 
     def _avatar_get_placeholder(self):
         return file_open(self._avatar_get_placeholder_path(), 'rb').read()
+
+    @api.depends('avatar_128')
+    def _compute_avatar_128_cache_key(self):
+        for record in self:
+            if not record.avatar_128:
+                record.avatar_128_cache_key = 'no-avatar'
+            else:
+                record.avatar_128_cache_key = sha512(record.avatar_128).hexdigest()

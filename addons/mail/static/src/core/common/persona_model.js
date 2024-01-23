@@ -54,7 +54,7 @@ export class Persona extends Record {
     isAdmin = false;
     isInternalUser = false;
     /** @type {string} */
-    write_date;
+    avatar_128_cache_key;
 
     /**
      * @returns {boolean}
@@ -73,13 +73,19 @@ export class Persona extends Record {
 
     get avatarUrl() {
         if (this.type === "partner") {
-            return imageUrl("res.partner", this.id, "avatar_128", { unique: this.write_date });
+            return imageUrl("res.partner", this.id, "avatar_128", {
+                unique: this.avatar_128_cache_key,
+            });
         }
         if (this.type === "guest") {
-            return imageUrl("mail.guest", this.id, "avatar_128", { unique: this.write_date });
+            return imageUrl("mail.guest", this.id, "avatar_128", {
+                unique: this.avatar_128_cache_key,
+            });
         }
         if (this.userId) {
-            return imageUrl("res.users", this.userId, "avatar_128", { unique: this.write_date });
+            return imageUrl("res.users", this.user.id, "avatar_128", {
+                unique: this.avatar_128_cache_key,
+            });
         }
         return DEFAULT_AVATAR;
     }
