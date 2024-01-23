@@ -18820,7 +18820,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.bar.records[0].definitions = [definition];
         for (const record of serverData.models.foo.records) {
             if (record.m2o === 1) {
-                record.properties = [{ ...definition, value: 123.45 }];
+                record.properties = [{ ...definition, value: record.id === 4 ? false : 123.45 }];
             }
         }
 
@@ -18859,8 +18859,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_cell.o_float_cell").textContent, "3.21");
         assert.strictEqual(
             target.querySelector(".o_list_footer .o_list_number").textContent,
-            "250.11",
-            "First property is 3.21, second is zero because it has a different parent and the 2 others are 123.45 so the total should be 3.21 + 123.45 * 2 = 250.11"
+            "126.66",
+            "First property is 3.21, second is zero because it has a different parent the other is 123.45 and the last one zero because it is false so the total should be 3.21 + 123.45 = 126.66"
         );
     });
 
