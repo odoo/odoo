@@ -126,8 +126,8 @@ function getRoute(urlObj) {
     // 1. It is an anchor link, in that case, we ignore it, as it will not have a keys/values format
     //    the sanitizeHash function will remove it from the hash object.
     // 2. It has one or more keys/values, in that case, we merge it with the search.
-    const hash = sanitizeHash(parseHash(urlObj.hash));
-    if (Object.keys(hash).length > 0 || (splitPath.length === 1 && splitPath[0] === "web")) {
+    if (urlObj.pathname === "web") {
+        const hash = sanitizeHash(parseHash(urlObj.hash));
         Object.assign(state, hash);
         const url = browser.location.origin + routeToUrl(state);
         browser.history.replaceState({}, "", url);
