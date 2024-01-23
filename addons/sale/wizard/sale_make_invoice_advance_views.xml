@@ -53,7 +53,7 @@
                 <footer>
                     <button name="create_invoices" type="object"
                         id="create_invoice_open"
-                        string="Create Draft Invoice"
+                        string="Create Draft"
                         class="btn-primary" data-hotkey="q"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
@@ -62,7 +62,7 @@
     </record>
 
     <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-        <field name="name">Create invoices</field>
+        <field name="name">Create invoice(s)</field>
         <field name="res_model">sale.advance.payment.inv</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
