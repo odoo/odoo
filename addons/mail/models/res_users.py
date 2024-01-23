@@ -257,9 +257,12 @@ class Users(models.Model):
     @api.model
     def _init_store_data(self, store):
         """Initialize the store of the user."""
+        # sudo: res.partner - exposing OdooBot data
+        odoobot = self.env.ref("base.partner_root").sudo()
         store.add({
             "Store": {
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
+                "odoobot": odoobot.mail_partner_format().get(odoobot),
             },
         })
         self_data = {}
@@ -288,7 +291,6 @@ class Users(models.Model):
     def _init_messaging(self, store):
         self.ensure_one()
         self = self.with_user(self)
-        odoobot = self.env.ref('base.partner_root')
         store.add({
             "CannedResponse": self.env["mail.shortcode"].sudo().search_read([], ["source", "substitution"]),
             "Store": {
@@ -300,7 +302,6 @@ class Users(models.Model):
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
-                "odoobot": odoobot.sudo().mail_partner_format().get(odoobot),
             },
         })
 

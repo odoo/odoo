@@ -13,6 +13,7 @@ patch(MockServer.prototype, {
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 hasMessageTranslationFeature: true,
+                odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
                 self: this._mockResUsers__get_self_data(),
             },
         };
@@ -78,7 +79,6 @@ patch(MockServer.prototype, {
                 initBusId: this.lastBusNotificationId,
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
-                odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
             },
             Thread: this._mockDiscussChannelChannelInfo(
                 this._mockDiscussChannel__get_init_channels(user, context).map(
