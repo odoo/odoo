@@ -357,7 +357,6 @@ QUnit.module("ActionManager", (hooks) => {
         let currentState = router.current;
         assert.deepEqual(currentState, {
             action: 3,
-            model: "partner",
             view_type: "list",
         });
         assert.verifySteps(["push_state"], "should have pushed the final state");
@@ -367,7 +366,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(currentState, {
             action: 3,
             id: 1,
-            model: "partner",
             view_type: "form",
         });
         assert.verifySteps(["push_state"], "should push the state of it changes afterwards");
