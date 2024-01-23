@@ -42,7 +42,8 @@ functionRegistry
         description: _t("Return the current value of a spreadsheet filter."),
         args: [arg("filter_name (string)", _t("The label of the filter whose value to return."))],
         compute: function (filterName) {
-            return this.getters.getFilterDisplayValue(filterName);
+            const unEscapedFilterName = toString(filterName).replaceAll('\\"', '"');
+            return this.getters.getFilterDisplayValue(unEscapedFilterName);
         },
         returns: ["STRING"],
     })
