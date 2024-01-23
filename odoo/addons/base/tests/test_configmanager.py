@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import odoo
 from odoo.tests import TransactionCase
@@ -21,6 +21,12 @@ class TestConfigManager(TransactionCase):
         patcher.start()
         self.addCleanup(patcher.stop)
         self.config = configmanager()
+
+    def parse_reset(self, args=None):
+        options = dict(self.config.options)
+        with patch.dict(self.config.options, options):
+            cli = self.config._parse_config(args)
+        return cli, options
 
     def test_00_setUp(self):
         self.assertEqual(self.config.rcfile, EMPTY_CONFIG_PATH)
@@ -189,7 +195,7 @@ class TestConfigManager(TransactionCase):
 
             # logging
             'logfile': '/foo/bar/odoo.log',
-            'syslog': True,
+            'syslog': False,
             'log_handler': [':DEBUG'],
             'log_db': True,
             'log_db_level': 'debug',
@@ -394,3 +400,35 @@ class TestConfigManager(TransactionCase):
         config._warn_deprecated_options()
         config._parse_config()
         config._warn_deprecated_options()
+
+    @patch('optparse.OptionParser.error')
+    def test_06_syslog_logfile_exclusive_cli(self, error):
+        self.parse_reset(['--syslog', '--logfile', 'logfile'])
+        self.parse_reset(['-c', file_path('base/tests/config/sysloglogfile.conf')])
+        error.assert_has_calls(2 * [call("the syslog and logfile options are exclusive")])
+
+    @patch('optparse.OptionParser.error')
+    def test_07_translate_in_requires_language_and_db_name(self, error):
+        self.parse_reset(['--i18n-import', '/path/to/file.csv'])
+        self.parse_reset(['--i18n-import', '/path/to/file.csv', '-d', 'dbname'])
+        self.parse_reset(['--i18n-import', '/path/to/file.csv', '-l', 'fr_FR'])
+        error.assert_has_calls(3 * [call("the i18n-import option cannot be used without the language (-l) and the database (-d) options")])
+
+    @patch('optparse.OptionParser.error')
+    def test_08_overwrite_existing_translations_incompatible_with_translate_in_or_update(self, error):
+        self.parse_reset(['--i18n-overwrite', '-l', 'fr_FR'])
+        self.parse_reset(['--i18n-overwrite', '-u', 'base'])
+        error.assert_has_calls(2 * [call("the i18n-overwrite option cannot be used without the i18n-import option or without the update option")])
+
+    @patch('optparse.OptionParser.error')
+    def test_09_translate_out_requires_db_name(self, error):
+        self.parse_reset(['--i18n-export', '/path/to/file.csv'])
+        error.assert_has_calls(1 * [call("the i18n-export option cannot be used without the database (-d) option")])
+
+    @patch('optparse.OptionParser.error')
+    def test_10_init_update_incompatible_with_multidb(self, error):
+        self.parse_reset(['-d', 'db1,db2', '-i', 'base'])
+        self.parse_reset(['-d', 'db1,db2', '-u', 'base'])
+        self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-i', 'base'])
+        self.parse_reset(['-c', file_path('base/tests/config/multidb.conf'), '-u', 'base'])
+        error.assert_has_calls(4 * [call("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")])

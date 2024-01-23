@@ -432,18 +432,6 @@ class configmanager:
         # Ensures no illegitimate argument is silently discarded (avoids insidious "hyphen to dash" problem)
         die(args, "unrecognized parameters: '%s'" % " ".join(args))
 
-        die(bool(opt.syslog) and bool(opt.logfile),
-            "the syslog and logfile options are exclusive")
-
-        die(opt.translate_in and (not opt.language or not opt.db_name),
-            "the i18n-import option cannot be used without the language (-l) and the database (-d) options")
-
-        die(opt.overwrite_existing_translations and not (opt.translate_in or opt.update),
-            "the i18n-overwrite option cannot be used without the i18n-import option or without the update option")
-
-        die(opt.translate_out and (not opt.db_name),
-            "the i18n-export option cannot be used without the database (-d) option")
-
         # Check if the config file exists (-c used, but not -s)
         die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
@@ -541,8 +529,21 @@ class configmanager:
             elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        ismultidb = ',' in (self.options.get('db_name') or '')
-        die(ismultidb and (opt.init or opt.update), "Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
+        die(bool(self.options['syslog']) and bool(self.options['logfile']),
+            "the syslog and logfile options are exclusive")
+
+        die(self.options['translate_in'] and (not self.options['language'] or not self.options['db_name']),
+            "the i18n-import option cannot be used without the language (-l) and the database (-d) options")
+
+        die(self.options['overwrite_existing_translations'] and not (self.options['translate_in'] or self.options['update']),
+            "the i18n-overwrite option cannot be used without the i18n-import option or without the update option")
+
+        die(self.options['translate_out'] and (not self.options['db_name']),
+            "the i18n-export option cannot be used without the database (-d) option")
+
+        die(',' in (self.options.get('db_name') or '') and (opt.init or opt.update),
+            "Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
+
         self.options['root_path'] = self._normalize(os.path.join(os.path.dirname(__file__), '..'))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
