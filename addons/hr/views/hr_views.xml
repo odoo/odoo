@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <menuitem
             id="menu_hr_root"
             name="Employees"
@@ -55,6 +54,14 @@
             parent="menu_hr_root"
             groups="hr.group_hr_user"
             sequence="100"/>
+
+            <menuitem
+                id="menu_config_plan_plan"
+                name="Activity Plan"
+                action="mail_activity_plan_action"
+                parent="menu_human_resources_configuration"
+                groups="group_hr_manager"
+                sequence="9"/>
 
             <menuitem
                 id="menu_config_employee"
@@ -125,21 +132,6 @@
                     parent="menu_config_recruitment"
                     sequence="2"
                     groups="group_hr_user"/>
-
-            <menuitem
-                id="menu_config_plan"
-                name="Activity Planning"
-                parent="menu_human_resources_configuration"
-                groups="group_hr_manager"
-                sequence="100"/>
-
-                <menuitem
-                    id="menu_config_plan_plan"
-                    name="On/Offboarding Plans"
-                    action="mail_activity_plan_action"
-                    parent="menu_config_plan"
-                    groups="group_hr_manager"
-                    sequence="100"/>
 
     </data>
 </odoo>
