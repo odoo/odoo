@@ -27,10 +27,10 @@ class ThreadController(http.Controller):
         return messages.message_format()
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
-    def mail_thread_partner_from_email(self, emails):
+    def mail_thread_partner_from_email(self, emails, additional_values=None):
         partners = [
             {"id": partner.id, "name": partner.name, "email": partner.email}
-            for partner in request.env["res.partner"]._find_or_create_from_emails(emails)
+            for partner in request.env["res.partner"]._find_or_create_from_emails(emails, additional_values)
         ]
         return partners
 
@@ -96,10 +96,9 @@ class ThreadController(http.Controller):
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         new_partners = []
         if "partner_emails" in post_data:
-            new_partners = [
-                record.id
-                for record in request.env["res.partner"]._find_or_create_from_emails(post_data["partner_emails"])
-            ]
+            new_partners = [record.id for record in request.env["res.partner"]._find_or_create_from_emails(
+                post_data["partner_emails"], post_data.get("partner_additional_values", {})
+            )]
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
         message_data = thread.message_post(
             **{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
