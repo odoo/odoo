@@ -91,11 +91,11 @@ patch(MockServer.prototype, {
         if (!channelVals) {
             return false;
         }
-        const res = this._mockResUsers__init_store_data();
         if (!persisted) {
             const [operatorPartner] = this.pyEnv["res.partner"].searchRead([
                 ["id", "=", channelVals.livechat_operator_id],
             ]);
+            const res = this._mockResUsers__init_store_data();
             return Object.assign(res, {
                 Thread: {
                     id: -1,
@@ -121,6 +121,7 @@ patch(MockServer.prototype, {
             ["guest_id", "!=", false],
         ]);
         this.pyEnv["discuss.channel.member"].write([guestMemberId], { fold_state: "open" });
+        const res = this._mockResUsers__init_store_data();
         return Object.assign(res, {
             Thread: {
                 isLoaded: true,

@@ -15,7 +15,6 @@ patch(MockServer.prototype, {
                 hasGifPickerFeature: true,
                 initBusId: this.lastBusNotificationId,
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
-                settings: {},
             },
             Thread: this._mockDiscussChannelChannelInfo(channels.map((channels) => channels.id)),
         };

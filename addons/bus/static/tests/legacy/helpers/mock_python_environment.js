@@ -120,9 +120,6 @@ export const pyEnvTarget = {
         this._authenticate(user);
         this.cookie.set("authenticated_user_sid", this.cookie.get("sid"));
     },
-    getUserSettings() {
-        return {}; // dummy method to be overriden
-    },
     /**
      * Logout the current user.
      */
@@ -339,15 +336,6 @@ export async function startServer({ actions, views = {} } = {}) {
     if ("res.users" in pyEnv.mockServer.models) {
         const adminUser = pyEnv["res.users"].searchRead([["id", "=", pyEnv.adminUserId]])[0];
         pyEnv.authenticate(adminUser.login, adminUser.password);
-        const settings = new Proxy(
-            {},
-            {
-                get(target, key) {
-                    return pyEnv.getUserSettings()[key];
-                },
-            }
-        );
-        patchUserWithCleanup({ settings });
     }
     return pyEnv;
 }
