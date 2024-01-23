@@ -68,7 +68,8 @@ const ODOO_FILTER_VALUE = /** @satisfies {CustomFunctionDescription} */ ({
      * @param {FPayload} filterName
      */
     compute: function (filterName) {
-        return this.getters.getFilterDisplayValue(filterName.value);
+        const unEscapedFilterName = toString(filterName).replaceAll('\\"', '"');
+        return this.getters.getFilterDisplayValue(unEscapedFilterName);
     },
     returns: ["STRING"],
 });
