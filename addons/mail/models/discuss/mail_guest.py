@@ -129,17 +129,10 @@ class MailGuest(models.Model):
 
     def _init_messaging(self, store):
         self.ensure_one()
-        # sudo: res.partner - exposing OdooBot name and id
-        odoobot = self.env.ref('base.partner_root').sudo()
         store.add({
             "Store": {
                 # sudo: bus.bus: reading non-sensitive last id
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
-                "odoobot": {
-                    "id": odoobot.id,
-                    "name": odoobot.name,
-                    "type": "partner",
-                },
             },
             "Thread": self.env["discuss.channel"]._get_init_channels()._channel_info(),
         })
