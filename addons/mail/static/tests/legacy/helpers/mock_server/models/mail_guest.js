@@ -12,7 +12,6 @@ patch(MockServer.prototype, {
         const channels = this._mockDiscussChannel__get_init_channels(undefined, context);
         return {
             Store: {
-                hasGifPickerFeature: true,
                 initBusId: this.lastBusNotificationId,
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
             },

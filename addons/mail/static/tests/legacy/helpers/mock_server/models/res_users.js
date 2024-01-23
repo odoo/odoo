@@ -10,7 +10,9 @@ patch(MockServer.prototype, {
     _mockResUsers__init_store_data() {
         return {
             Store: {
+                hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
+                hasMessageTranslationFeature: true,
                 self: this._mockResUsers__get_self_data(),
             },
         };
@@ -73,8 +75,6 @@ patch(MockServer.prototype, {
                         model: "mail.box",
                     },
                 },
-                hasGifPickerFeature: true,
-                hasMessageTranslationFeature: true,
                 initBusId: this.lastBusNotificationId,
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
