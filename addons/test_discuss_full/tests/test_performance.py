@@ -10,8 +10,13 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
-    _query_count_init_store = 3
-    _query_count = 58
+    # Queries for _query_count_init_store:
+    #     1: hasGifPickerFeature
+    #     1: hasLinkPreviewFeature
+    #     1: hasMessageTranslationFeature
+    #     6: odoobot format
+    _query_count_init_store = 9
+    _query_count = 52
     _query_count_discuss_channels = 68
 
     def setUp(self):
@@ -157,6 +162,19 @@ class TestDiscussFullPerformance(HttpCase):
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
                 "hasMessageTranslationFeature": False,
+                "odoobot": {
+                    "active": False,
+                    "email": "odoobot@example.com",
+                    "id": self.user_root.partner_id.id,
+                    "im_status": "bot",
+                    "is_company": False,
+                    "name": "OdooBot",
+                    "out_of_office_date_end": False,
+                    "type": "partner",
+                    "userId": False,
+                    "isInternalUser": False,
+                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
+                },
                 "self": {
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
@@ -211,19 +229,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "initChannelsUnreadCounter": 1,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
-                "odoobot": {
-                    "active": False,
-                    "email": "odoobot@example.com",
-                    "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "is_company": False,
-                    "name": "OdooBot",
-                    "out_of_office_date_end": False,
-                    "type": "partner",
-                    "userId": False,
-                    "isInternalUser": False,
-                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
-                },
                 "odoobotOnboarding": False,
             },
             "Thread": [

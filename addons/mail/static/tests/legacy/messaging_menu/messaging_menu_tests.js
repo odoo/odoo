@@ -1124,8 +1124,6 @@ QUnit.test("can open messaging menu even if messaging is not initialized", async
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-DiscussSystray", { text: "No conversation yet..." });
-    def.resolve();
     await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });
 

@@ -13,7 +13,6 @@ patch(MockServer.prototype, {
         return {
             Store: {
                 initBusId: this.lastBusNotificationId,
-                odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
             },
             Thread: this._mockDiscussChannelChannelInfo(channels.map((channels) => channels.id)),
         };
