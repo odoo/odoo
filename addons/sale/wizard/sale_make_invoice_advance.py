@@ -164,12 +164,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     self._prepare_down_payment_section_values(order)
                 )
 
-            down_payment_lines = SaleOrderline.create(
-                self._prepare_down_payment_lines_values(order)
-            )
+            values, accounts = self._prepare_down_payment_lines_values(order)
+            down_payment_lines = SaleOrderline.create(values)
 
             invoice = self.env['account.move'].sudo().create(
-                self._prepare_invoice_values(order, down_payment_lines)
+                self._prepare_invoice_values(order, down_payment_lines, accounts)
             ).with_user(self.env.uid)  # Unsudo the invoice after creation
 
             # Ensure the invoice total is exactly the expected fixed amount.
@@ -246,7 +245,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return so_values
 
     def _prepare_down_payment_lines_values(self, order):
-        """ Create one down payment line per tax or unique taxes combination.
+        """ Create one down payment line per tax or unique taxes combination and per account.
             Apply the tax(es) to their respective lines.
 
             :param order: Order for which the down payment lines are created.
@@ -255,11 +254,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self.ensure_one()
 
         if self.advance_payment_method == 'percentage':
-            percentage = self.amount / 100
+            ratio = self.amount / 100
         else:
-            percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
+            ratio = self.fixed_amount / order.amount_total if order.amount_total else 1
 
-        order_lines = order.order_line.filtered(lambda l: not l.display_type)
+        order_lines = order.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
 
         tax_base_line_dicts = [
@@ -273,12 +272,16 @@ class SaleAdvancePaymentInv(models.TransientModel):
             tax_base_line_dicts)
         down_payment_values = []
         for line, tax_repartition in computed_taxes['base_lines_to_update']:
+            account = line['product'].product_tmpl_id.get_product_accounts(
+                fiscal_pos=order.fiscal_position_id
+            ).get('income')
             taxes = line['taxes'].flatten_taxes_hierarchy()
             fixed_taxes = taxes.filtered(lambda tax: tax.amount_type == 'fixed')
             down_payment_values.append([
                 taxes - fixed_taxes,
                 line['analytic_distribution'],
-                tax_repartition['price_subtotal']
+                tax_repartition['price_subtotal'],
+                account,
             ])
             for fixed_tax in fixed_taxes:
                 # Fixed taxes cannot be set as taxes on down payments as they always amounts to 100%
@@ -293,25 +296,28 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 down_payment_values.append([
                     pct_tax,
                     line['analytic_distribution'],
-                    line['quantity'] * fixed_tax.amount
+                    line['quantity'] * fixed_tax.amount,
+                    account
                 ])
 
         downpayment_line_map = {}
-        for tax_id, analytic_distribution, price_subtotal in down_payment_values:
+        for tax_id, analytic_distribution, price_subtotal, account in down_payment_values:
             grouping_key = frozendict({
                 'tax_id': tuple(sorted(tax_id.ids)),
                 'analytic_distribution': analytic_distribution,
+                'account_id': account,
             })
             downpayment_line_map.setdefault(grouping_key, {
                 **base_downpayment_lines_values,
-                **grouping_key,
+                'tax_id': grouping_key['tax_id'],
+                'analytic_distribution': grouping_key['analytic_distribution'],
                 'product_uom_qty': 0.0,
                 'price_unit': 0.0,
             })
             downpayment_line_map[grouping_key]['price_unit'] += \
-                order.currency_id.round(price_subtotal * percentage)
+                order.currency_id.round(price_subtotal * ratio)
 
-        return list(downpayment_line_map.values())
+        return list(downpayment_line_map.values()), [key['account_id'] for key in downpayment_line_map]
 
     def _prepare_base_downpayment_line_values(self, order):
         self.ensure_one()
@@ -329,7 +335,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         del context
         return so_values
 
-    def _prepare_invoice_values(self, order, so_lines):
+    def _prepare_invoice_values(self, order, so_lines, accounts):
         self.ensure_one()
         return {
             **order._prepare_invoice(),
@@ -337,8 +343,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 line._prepare_invoice_line(
                     name=self._get_down_payment_description(order),
                     quantity=1.0,
+                    **({'account_id': account.id} if account else {}),
                 )
-            ) for line in so_lines],
+            ) for line, account in zip(so_lines, accounts)],
         }
 
     def _get_down_payment_description(self, order):
