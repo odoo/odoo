@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <tree string="Activities">
                     <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
-                    <field name="summary"/>
+                    <field name="summary" placeholder="e.g. Discuss Proposal"/>
                     <field name="responsible_type"/>
                 </tree>
             </field>
@@ -23,10 +23,10 @@
                     <sheet>
                         <group>
                             <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
-                            <field name="summary"/>
+                            <field name="summary" placeholder="e.g. Discuss Proposal"/>
                             <field name="responsible_type"/>
                             <field name="responsible_id" invisible="responsible_type != 'other'"/>
-                            <field name="note"/>
+                            <field name="note" placeholder="e.g. Log a note"/>
                         </group>
                     </sheet>
                 </form>

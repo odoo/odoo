@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import clean_context, format_date
+from odoo.osv import expression
 
 
 class MailActivitySchedule(models.TransientModel):
@@ -320,10 +321,11 @@ class MailActivitySchedule(models.TransientModel):
 
     def _get_plan_available_base_domain(self):
         self.ensure_one()
-        return [
-            '&', '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
-            '|', ('res_model', '=', False), ('res_model', '=', self.res_model)
-        ]
+        return expression.AND([
+            ['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)],
+            ['|', ('res_model', '=', False), ('res_model', '=', self.res_model)],
+            [('template_ids', '!=', False)],  # exclude plan without activities
+        ])
 
     def _plan_filter_activity_templates_to_schedule(self):
         return self.plan_id.template_ids
