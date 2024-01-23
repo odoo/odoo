@@ -1,16 +1,35 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _lt
+from odoo import api, fields, models, _lt
 from odoo.osv import expression
 
 
 class Project(models.Model):
     _inherit = "project.project"
 
-    production_count = fields.Integer(related="analytic_account_id.production_count", groups='mrp.group_mrp_user')
-    workorder_count = fields.Integer(related="analytic_account_id.workorder_count", groups='mrp.group_mrp_user')
-    bom_count = fields.Integer(related="analytic_account_id.bom_count", groups='mrp.group_mrp_user')
+    production_count = fields.Integer(compute="_compute_production_count", groups='mrp.group_mrp_user')
+    workorder_count = fields.Integer(compute="_compute_workorder_count", groups='mrp.group_mrp_user')
+    bom_count = fields.Integer(compute="_compute_bom_count", groups='mrp.group_mrp_user')
+
+    @api.depends('analytic_account_id.production_ids')
+    def _compute_production_count(self):
+        for project in self:
+            production_ids = project.analytic_account_id.production_ids.filtered(lambda p: p.company_id in self.env.companies)
+            project.production_count = len(production_ids)
+
+    @api.depends('analytic_account_id.workcenter_ids.order_ids', 'analytic_account_id.production_ids.workorder_ids')
+    def _compute_workorder_count(self):
+        for project in self:
+            order_ids = project.analytic_account_id.workcenter_ids.order_ids.filtered(lambda p: p.company_id in self.env.companies)
+            workorder_ids = project.analytic_account_id.production_ids.workorder_ids.filtered(lambda p: p.company_id in self.env.companies)
+            project.workorder_count = len(order_ids | workorder_ids)
+
+    @api.depends('analytic_account_id.bom_ids')
+    def _compute_bom_count(self):
+        for project in self:
+            bom_ids = project.analytic_account_id.bom_ids.filtered(lambda p: p.company_id in self.env.companies)
+            project.bom_count = len(bom_ids)
 
     def action_view_mrp_production(self):
         self.ensure_one()

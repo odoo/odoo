@@ -28,7 +28,7 @@ class Project(models.Model):
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly')
-    vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
+    vendor_bill_count = fields.Integer(compute='_compute_vendor_bill_count', groups='account.group_account_readonly')
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons')
     sale_order_state = fields.Selection(related='sale_order_id.state')
@@ -94,19 +94,33 @@ class Project(models.Model):
     def _compute_sale_order_count(self):
         sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]})
         for project in self:
-            sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line'])
+            sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line']).filtered(lambda sol: sol.company_id in self.env.companies)
             project.sale_order_line_count = len(sale_order_lines)
             project.sale_order_count = len(sale_order_lines.order_id)
 
-    def _compute_invoice_count(self):
+    def _get_move_counts(self, move_types):
         data = self.env['account.move.line']._read_group(
-            [('move_id.move_type', 'in', ['out_invoice', 'out_refund']), ('analytic_distribution', 'in', self.analytic_account_id.ids)],
+            [
+                ('move_id.move_type', 'in', move_types),
+                ('analytic_distribution', 'in', self.analytic_account_id.ids),
+                ('company_id', 'in', self.env.companies.ids),
+            ],
             groupby=['analytic_distribution'],
             aggregates=['move_id:count_distinct'],
         )
-        data = {int(account_id): move_count for account_id, move_count in data}
+        return {int(account_id): move_count for account_id, move_count in data}
+
+    @api.depends('analytic_account_id')
+    def _compute_invoice_count(self):
+        data = self._get_move_counts(['out_invoice', 'out_refund'])
         for project in self:
             project.invoice_count = data.get(project.analytic_account_id.id, 0)
+
+    @api.depends('analytic_account_id')
+    def _compute_vendor_bill_count(self):
+        data = self._get_move_counts(['in_invoice', 'in_refund'])
+        for project in self:
+            project.vendor_bill_count = data.get(project.analytic_account_id.id, 0)
 
     @api.depends('allow_billable', 'partner_id')
     def _compute_display_sales_stat_buttons(self):

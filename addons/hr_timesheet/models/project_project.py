@@ -226,8 +226,28 @@ class Project(models.Model):
         encode_uom = self.env.company.timesheet_encode_uom_id
         uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
 
+        # Get the total timesheet time of the companies selected in the company selector
+        timesheets_read_group = self.env['account.analytic.line']._read_group(
+            [
+                ('project_id', '=', self.id),
+                ('company_id', 'in', self.env.companies.ids),
+            ],
+            ['project_id', 'product_uom_id'],
+            ['unit_amount:sum'],
+        )
+        timesheet_time_dict = defaultdict(list)
+        for project, product_uom, unit_amount_sum in timesheets_read_group:
+            timesheet_time_dict[project.id].append((product_uom, unit_amount_sum))
+
+        total_time = 0.0
+        for product_uom, unit_amount in timesheet_time_dict[self.id]:
+            factor = (product_uom or self.timesheet_encode_uom_id).factor_inv
+            total_time += unit_amount * (1.0 if self.encode_uom_in_days else factor)
+        total_time *= self.timesheet_encode_uom_id.factor
+        total_timesheet_time = int(round(total_time))
+
         allocated = self.allocated_hours / uom_ratio
-        effective = self.total_timesheet_time / uom_ratio
+        effective = total_timesheet_time / uom_ratio
         color = ""
         if allocated:
             number = f"{round(effective)} / {round(allocated)} {encode_uom.name}"
