@@ -5,18 +5,6 @@ import { pyEnvTarget } from "@bus/../tests/helpers/mock_python_environment";
 import { patch } from "@web/core/utils/patch";
 
 patch(pyEnvTarget, {
-    getUserSettings() {
-        if (!this.currentGuest && this.currentUser) {
-            const userSettings = this.mockServer._mockResUsersSettings_FindOrCreateForUser(
-                this.currentUser.id
-            );
-            const settings = this.mockServer._mockResUsersSettings_ResUsersSettingsFormat(
-                userSettings.id
-            );
-            return settings;
-        }
-        return super.getUserSettings();
-    },
     async withGuest(guestId, fn) {
         const [guest] = await this.mockServer.getRecords("mail.guest", [["id", "=", guestId]]);
         const originalGuest = this.cookie.get("dgid");

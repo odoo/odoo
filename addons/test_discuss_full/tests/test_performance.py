@@ -10,7 +10,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
     _query_count_init_store = 1
-    _query_count = 66
+    _query_count = 59 + 1  # full install on runbot requires +1
     _query_count_discuss_channels = 69
 
     def setUp(self):
@@ -223,19 +223,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 "odoobotOnboarding": False,
-                "settings": {
-                    "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
-                    "is_discuss_sidebar_category_channel_open": True,
-                    "is_discuss_sidebar_category_chat_open": True,
-                    "is_discuss_sidebar_category_livechat_open": True,
-                    "livechat_lang_ids": [],
-                    "livechat_username": False,
-                    "push_to_talk_key": False,
-                    "use_push_to_talk": False,
-                    "user_id": {"id": self.users[0].id},
-                    "voice_active_duration": 0,
-                    "volumes": [["ADD", []]],
-                },
             },
             "Thread": [
                 self._expected_result_for_channel(self.channel_channel_group_1),

@@ -19,6 +19,7 @@ import {
     registryNamesToCloneWithCleanup,
     prepareRegistriesWithCleanup,
 } from "@web/../tests/helpers/mock_env";
+import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
@@ -174,6 +175,15 @@ export async function start(param0 = {}) {
     patchWithCleanup(session, {
         storeData: pyEnv.mockServer._mockResUsers__init_store_data(),
     });
+    if (!pyEnv.currentUser._is_public()) {
+        const userSettings = pyEnv.mockServer._mockResUsersSettings_FindOrCreateForUser(
+            pyEnv.currentUser.id
+        );
+        const settings = pyEnv.mockServer._mockResUsersSettings_ResUsersSettingsFormat(
+            userSettings.id
+        );
+        patchUserWithCleanup({ settings });
+    }
     if (browser.Notification && !browser.Notification.isPatched) {
         patchBrowserNotification("denied");
     }
