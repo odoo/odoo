@@ -13,7 +13,7 @@ from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import date_utils, unique
 from odoo.tools.misc import OrderedSet, get_lang
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
 
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
@@ -188,7 +188,10 @@ class Base(models.AbstractModel):
                         co_record = co_record.with_context(**field_spec['context'])
 
                     if 'fields' in field_spec:
-                        reference_read = co_record.web_read(field_spec['fields'])
+                        try:
+                            reference_read = co_record.web_read(field_spec['fields'])
+                        except AccessError:
+                            reference_read = [{'id': co_record.id, 'display_name': _("You don't have access to this record")}]
                         if any(fname != 'id' for fname in field_spec['fields']):
                             # we can infer that if we can read fields for the co-record, it exists
                             co_record_exists = bool(reference_read)
