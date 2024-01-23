@@ -500,7 +500,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_id ====
 
         role = "Customer" if invoice_form.journal_id.type == 'sale' else "Supplier"
-        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID', tree)
+        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
         phone = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
         mail = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
         name = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name', tree)
