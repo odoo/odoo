@@ -125,6 +125,11 @@
                         <h5>No results found for "<span t-out="post.get('search', '')"/>"</h5>
                         <a href="/customers">See all customers</a>
                     </div>
+                    <div t-elif="fallback_all_countries" class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <i class="fa fa-info-circle me-2"/>
+                        There are no matching customers found for the selected country. Displaying results across all countries instead.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     <t t-foreach="partners" t-as="partner">
                         <div class="col-md-4 col-xl-3 col-12 mb-4">
                             <div class="card h-100 text-decoration-none">

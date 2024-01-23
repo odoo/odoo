@@ -85,15 +85,15 @@ class WebsiteCustomer(http.Controller):
         countries = Partner.sudo().read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
         country_count = Partner.sudo().search_count(domain)
 
+        fallback_all_countries = False
         if country:
-            domain += [('country_id', '=', country.id)]
-            if country.id not in (x['country_id'][0] for x in countries if x['country_id']):
-                if country.exists():
-                    countries.append({
-                        'country_id_count': 0,
-                        'country_id': (country.id, country.name)
-                    })
-                    countries.sort(key=lambda d: (d['country_id'] or (0, ""))[1])
+            if country_count > 0 and country.id not in (x['country_id'][0] for x in countries if x['country_id']):
+                # fallback on all countries if no customer found for the country
+                # and there are matching customers for other countries
+                fallback_all_countries = True
+                country = None
+            else:
+                domain += [('country_id', '=', country.id)]
 
         countries.insert(0, {
             'country_id_count': country_count,
@@ -123,8 +123,8 @@ class WebsiteCustomer(http.Controller):
 
         values = {
             'countries': countries,
-            'current_country_id': country.id if country else 0,
-            'current_country': country or False,
+            'current_country_id': country.id if country and partners else 0,
+            'current_country': country if partners and country else False,
             'industries': industries,
             'current_industry_id': industry.id if industry else 0,
             'current_industry': industry or False,
@@ -136,6 +136,7 @@ class WebsiteCustomer(http.Controller):
             'tag': tag,
             'tags': tags,
             'google_maps_api_key': google_maps_api_key,
+            'fallback_all_countries': fallback_all_countries,
         }
         return request.render("website_customer.index", values)
 
