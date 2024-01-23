@@ -93,6 +93,40 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         self.company_data['default_journal_misc'].type_control_ids |= self.company_data['default_account_revenue'].user_type_id
         self.env['account.move'].create(move_vals)
 
+    def test_account_and_type_control_on_journal(self):
+        move_vals = {
+            'line_ids': [
+                (0, 0, {
+                    'name': 'debit',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                }),
+                (0, 0, {
+                    'name': 'credit',
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                }),
+            ],
+        }
+        # Allow 'Payable' account type
+        self.company_data['default_journal_misc'].type_control_ids = self.company_data['default_account_payable'].user_type_id.ids
+        # Allow accounts '400000 Product Sales' (type: 'Income') and '121000 Account Receivable' (type: 'Receivable')
+        self.company_data['default_journal_misc'].account_control_ids = \
+            self.company_data['default_account_revenue'] + self.company_data['default_account_expense']
+        # Should not fail since both accounts are allowed in account_control_ids
+        self.env['account.move'].create(move_vals).unlink()  # (unlink to allow modifying the allowed accounts below)
+
+        # Opposite case
+        # Allow 'Income' and 'Receivable' account types
+        self.company_data['default_journal_misc'].type_control_ids = \
+            (self.company_data['default_account_revenue'] + self.company_data['default_account_expense']).user_type_id.ids
+        # Allow account '211000 Account Payable' (type: 'Payable')
+        self.company_data['default_journal_misc'].account_control_ids = self.company_data['default_account_payable'].ids
+        # Should not fail since both accounts are allowed in type_control_ids
+        self.env['account.move'].create(move_vals)
+
     def test_account_control_existing_journal_entry(self):
         self.env['account.move'].create({
             'line_ids': [
