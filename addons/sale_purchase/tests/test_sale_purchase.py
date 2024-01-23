@@ -343,3 +343,38 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         self.assertEqual(purchase_line1.analytic_distribution, {str(self.sale_order_1.analytic_account_id.id): 100}, "Analytic Distribution in PO should be same as Analytic Account set in SO")
         self.assertEqual(purchase_line2.analytic_distribution, {str(self.test_analytic_account_2.id): 100}, "Analytic Distribution in PO should be same as Analytic Distribution set in SOL")
+
+    def test_sale_order_multi_comp(self):
+        ''' Test that the purchase service is done on the right company (the one of the SO) '''
+        company_a, company_b = self.company_data["company"], self.company_data_2["company"]
+
+        service_purchase = self.env['product.product'].with_company(company_a).create({
+            'name': "service 1",
+            'purchase_ok': True,
+            'sale_ok': True,
+            'list_price': 50,
+            'type': 'service',
+            'service_to_purchase': True,
+            'seller_ids': [
+                (0, 0, {'partner_id': self.partner_b.id, 'price': 100, 'company_id': company_a.id}),
+            ],
+        })
+        self.assertFalse(service_purchase.with_company(company_b).service_to_purchase)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': service_purchase.name,
+                    'product_id': service_purchase.id,
+                    'product_uom_qty': 1,
+                })
+            ],
+        })
+
+        self.env.user.company_id = company_b
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_b.id)], limit=1)
+        self.assertTrue(po)
