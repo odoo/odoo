@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+    import { queryOne } from "@odoo/hoot-dom";
     import wTourUtils from "@website/js/tours/tour_utils";
 
     // Visibility possible values:
@@ -368,7 +369,7 @@
             content: "Insure the history step of the editor is not checking for unbreakable",
             trigger: 'iframe #wrapwrap',
             run: () => {
-                const wysiwyg = $('iframe:not(.o_ignore_in_tour)').contents().find('#wrapwrap').data('wysiwyg');
+                const wysiwyg = queryOne(":iframe:not(.o_ignore_in_tour) #wrapwrap").wysiwyg;
                 wysiwyg.odooEditor.historyStep(true);
             },
         },
@@ -387,12 +388,12 @@
             content: "Change button's style",
             trigger: '.dropdown:has([name="link_style_color"]) > button',
             run: () => {
-                $('.dropdown:has([name="link_style_color"]) > button').click();
-                $('[data-value="secondary"]').click();
-                $('.dropdown:has([name="link_style_shape"]) > button').click();
-                $('[data-value="rounded-circle"]').click();
-                $('.dropdown:has([name="link_style_size"]) > button').click();
-                $('[data-value="sm"]').click();
+                queryOne('.dropdown:has([name="link_style_color"]) > button').click();
+                queryOne('[data-value="secondary"]').click();
+                queryOne('.dropdown:has([name="link_style_shape"]) > button').click();
+                queryOne('[data-value="rounded-circle"]').click();
+                queryOne('.dropdown:has([name="link_style_size"]) > button').click();
+                queryOne('[data-value="sm"]').click();
             },
         }, {
             content: "Check the resulting button",
@@ -586,7 +587,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: 'text_blur **',
+            run: 'text **',
         }, {
             content: "Check that the recipient email is correct",
             trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -611,15 +612,14 @@
             content: "Select the form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
             trigger: 'iframe section.s_website_form input',
-            run: function (actions) {
+            run(actions) {
                 actions.auto();
-
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
                 // of field stays the same.
-                const requiredFields = this.anchor
-                    .closest("[data-snippet]")
-                    .querySelectorAll(".s_website_form_required");
+                const requiredFields = document.querySelectorAll(
+                    "[data-snippet] .s_website_form_required"
+                );
                 if (requiredFields.length !== NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM) {
                     console.error('The amount of required fields seems to have changed');
                 }
@@ -630,11 +630,11 @@
             for (let i = 0; i < NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM; i++) {
                 steps.push({
                     content: "Select required field to remove",
-                    trigger: 'iframe .s_website_form_required .s_website_form_input',
+                    trigger: ':iframe .s_website_form_required .s_website_form_input',
                 });
                 steps.push({
                     content: "Remove required field",
-                    trigger: 'iframe .oe_overlay .oe_snippet_remove',
+                    trigger: ':iframe .oe_overlay .oe_snippet_remove',
                 });
             }
             return steps;
@@ -720,7 +720,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: 'text_blur **',
+            run: 'text **',
         },
     ]));
 

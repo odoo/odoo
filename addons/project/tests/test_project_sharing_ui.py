@@ -65,4 +65,4 @@ class TestProjectSharingUi(HttpCase):
                 'stage_id': self.project_portal.type_ids.filtered(lambda stage: stage.sequence == 10)[:1].id,
             })],
         })
-        self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1')
+        self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1', step_delay=1000)

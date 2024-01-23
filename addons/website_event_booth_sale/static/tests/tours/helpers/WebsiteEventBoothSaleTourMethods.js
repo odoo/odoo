@@ -20,7 +20,7 @@
                 content: 'Select the booth',
                 trigger: '.o_wbooth_booths input[name="event_booth_ids"]',
                 run: function () {
-                    $('.o_wbooth_booths input[name="event_booth_ids"]:lt(1)').click();
+                    document.querySelector('.o_wbooth_booths input[name="event_booth_ids"]:nth-child(1)').click();
                 },
             },
             {

@@ -33,7 +33,7 @@ const chatRequest = [
                     { root: this.anchor }
                 ).length === 1
             ) {
-                $("body").addClass("no_duplicated_message");
+                document.body.classList.add("no_duplicated_message");
             }
         },
     },

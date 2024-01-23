@@ -48,7 +48,9 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         content: "ensure custom snippet appeared",
         trigger: "#oe_snippets.o_loaded .oe_snippet[name='Custom Banner']",
         run: function () {
-            $("#oe_snippets .oe_snippet[name='Custom Banner'] .o_rename_btn").attr("style", "display: block;");
+            document.querySelector(
+                "#oe_snippets .oe_snippet[name='Custom Banner'] .o_rename_btn"
+            ).style.display = "block";
             // hover is needed for rename button to appear
         },
     },
@@ -76,7 +78,9 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         content: "ensure custom banner section exists",
         trigger: "iframe #wrap section[data-name='Bruce Banner']",
         run: function () {
-            $("#oe_snippets .oe_snippet[name='Bruce Banner'] .o_delete_btn").attr("style", "display: block;");
+            document.querySelector(
+                "#oe_snippets .oe_snippet[name='Bruce Banner'] .o_delete_btn"
+            ).style.display = "block";
             // hover is needed for delete button to appear
         },
     },

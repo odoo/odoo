@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { waitFor } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -73,6 +74,17 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
     ],
 });
 
+const clickOnTheEvent = {
+    content: "Click on the event (focus + waiting)",
+    trigger: 'a .fc-content:contains("Test Event")',
+    run: async (helpers) => {
+        helpers.anchor.click();
+        await new Promise((r) => setTimeout(r, 1000));
+        document.querySelector(".o_cw_custom_highlight").click();
+        await waitFor(".o_cw_popover", { timeout: 8000 });
+    },
+};
+
 registry.category("web_tour.tours").add("test_calendar_delete_tour", {
     test: true,
     steps: () => [
@@ -80,15 +92,7 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
             content: "Select filter (everybody)",
             trigger: 'div[data-value="all"] input',
         },
-        {
-            content: "Click on the event (focus + waiting)",
-            trigger: 'a .fc-content:contains("Test Event")',
-            async run() {
-                $('a .fc-content:contains("Test Event")').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a .fc-content:contains("Test Event")').click();
-            },
-        },
+        clickOnTheEvent,
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
@@ -96,8 +100,8 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
         {
             content: "Validate the deletion",
             trigger: 'button:contains("Delete")',
-            async run() {
-                $('button:contains("Delete")').click();
+            run: async (helpers) => {
+                helpers.anchor.click();
                 await new Promise((r) => setTimeout(r, 1000));
             },
         },
@@ -107,15 +111,7 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
 registry.category("web_tour.tours").add("test_calendar_decline_tour", {
     test: true,
     steps: () => [
-        {
-            content: "Click on the event (focus + waiting)",
-            trigger: 'a .fc-content:contains("Test Event")',
-            async run() {
-                $('a .fc-content:contains("Test Event")').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a .fc-content:contains("Test Event")').click();
-            },
-        },
+        clickOnTheEvent,
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
@@ -135,15 +131,7 @@ registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_fi
             content: "Select filter (everybody)",
             trigger: 'div[data-value="all"] input',
         },
-        {
-            content: "Click on the event (focus + waiting)",
-            trigger: 'a .fc-content:contains("Test Event")',
-            async run() {
-                $('a .fc-content:contains("Test Event")').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a .fc-content:contains("Test Event")').click();
-            },
-        },
+        clickOnTheEvent,
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",

@@ -13,6 +13,7 @@ function patchSurveyWidget() {
     });
 }
 
+import { queryAll, queryOne } from "@odoo/hoot-dom";
 /**
  * This tour will test that, for the demo certification allowing 2 attempts, a user can
  * try and fail twice and will no longer be able to take the certification.
@@ -102,8 +103,8 @@ var retrySteps = [{
 var lastSteps = [{
     trigger: 'h1:contains("Thank you!")',
     run: function () {
-        if ($('a:contains("Retry")').length === 0) {
-            $('h1:contains("Thank you!")').addClass('tour_success');
+        if (queryAll('a:contains("Retry")').length === 0) {
+            queryOne('h1:contains("Thank you!")').classList.add("tour_success");
         }
     }
 }, {

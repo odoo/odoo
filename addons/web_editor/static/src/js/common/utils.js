@@ -174,7 +174,7 @@ function _getNumericAndUnit(value) {
  * @param {string} value1
  * @param {string} value2
  * @param {string} [cssProp] - the css property on which the unit applies
- * @param {jQuery} [target] - the element on which that css property
+ * @param {Node} [target] - the element on which that css property
  *                             may change
  * @returns {boolean}
  */

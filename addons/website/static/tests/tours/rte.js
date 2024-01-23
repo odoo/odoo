@@ -123,8 +123,8 @@ wTourUtils.dragNDrop({
         actionHelper.text('translated Parseltongue text');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange($(this.anchor).contents()[0], 22);
-        $(this.anchor).trigger($.Event("keyup", {key: '_'}));
-        $(this.anchor).trigger('input');
+        this.anchor.dispatchEvent(new Event("keyup", { key: "_" }));
+        this.anchor.dispatchEvent(new Event("input"));
     },
 }, {
     content: "translate text with special char",
@@ -134,8 +134,8 @@ wTourUtils.dragNDrop({
         this.anchor.prepend('&lt;{translated}&gt;');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange($(this.anchor).contents()[0], 0);
-        $(this.anchor).trigger($.Event("keyup", {key: '_'}));
-        $(this.anchor).trigger('input');
+        this.anchor.dispatchEvent(new Event("keyup", { key: "_" }));
+        this.anchor.dispatchEvent(new Event("input"));
     },
 }, {
     content: "click on input",

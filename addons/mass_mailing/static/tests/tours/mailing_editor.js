@@ -16,15 +16,17 @@ registry.category("web_tour.tours").add('mailing_editor', {
     trigger: 'div[name="contact_list_ids"] .ui-state-active'
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
-    trigger: '[name="body_arch"] iframe #empty',
+    trigger: '[name="body_arch"] :iframe #empty',
 }, {
     content: 'wait for the editor to be rendered',
-    trigger: '[name="body_arch"] iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
+    trigger: '[name="body_arch"] :iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
     run: () => {},
 }, {
     content: 'drag the "Title" snippet from the design panel and drop it in the editor',
     trigger: '[name="body_arch"] #oe_snippets [name="Title"] .oe_snippet_thumbnail',
-    run: `drag_and_drop [name="body_arch"] :iframe .o_editable`,
+    run(helpers) {
+        helpers.drag_and_drop_native(`[name="body_arch"] :iframe .o_editable`);
+    } 
 }, 
     {
             content: `only check that "Title" has been well dropped by drag_and_drop run action.`,

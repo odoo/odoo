@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from '@odoo/hoot-dom';
 import wTourUtils from '@website/js/tours/tour_utils';
 import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 
@@ -84,7 +85,11 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     trigger: 'iframe span:contains("Dschinghis Khan - Dschinghis Khan (1979)")',  // wait for slide to appear
     // trigger: 'span.o_wslides_js_slide_toggle_is_preview:first',
     run: function () {
-        $('.o_website_preview iframe').contents().find('span.o_wslides_js_slide_toggle_is_preview:first')[0].click();
+        queryAll(
+            ".o_website_preview :iframe span.o_wslides_js_slide_toggle_is_preview:first"
+        )
+            .at(0)
+            .click();
     }
 }]
 //     [

@@ -1,12 +1,27 @@
 /** @odoo-module **/
 
+import { click, waitFor } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
 import wTourUtils from "@website/js/tours/tour_utils";
 
-function removeSelectedBlock() {
+function removeSelectedBlock(selectedBlock) {
     return {
         content: "Remove selected block",
-        trigger: "#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove, .oe_snippet_remove.fa.fa-trash",
-        run: "click",
+        trigger: `:iframe #wrap ${selectedBlock}`,
+        async run(helpers) {
+            const trashButton =
+                "#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove";
+            // Select block
+            click(helpers.anchor);
+            await waitFor(trashButton, { timeout: 5000 });
+            // click on trash
+            await new Promise((resolve) => {
+                browser.setTimeout(() => {
+                    click(trashButton);
+                    resolve();
+                }, 1000);
+            });
+        },
     };
 }
 
@@ -20,16 +35,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
         id: 's_text_image',
         name: 'Text - Image',
     }),
-    {
-        content: "Click on second column",
-        trigger: ':iframe #wrap .s_text_image .row > :nth-child(2)',
-    },
-    removeSelectedBlock(),
-    {
-        content: "Click on first column",
-        trigger: ':iframe #wrap .s_text_image .row > :first-child',
-    },
-    removeSelectedBlock(),
+    removeSelectedBlock('.s_text_image .row div:nth-child(2)'),
+    removeSelectedBlock('.s_text_image .row div:nth-child(1)'),
     {
         content: "Check that #wrap is empty",
         trigger: ':iframe #wrap:empty',
@@ -64,11 +71,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     // Add a column
     wTourUtils.changeOption('layout_column', 'we-toggler'),
     wTourUtils.changeOption('layout_column', '[data-select-count="1"]'),
-    {
-        content: "Click on the created column",
-        trigger: 'iframe #wrap .s_cover .row > :first-child',
-    },
-    removeSelectedBlock(),
+    removeSelectedBlock('.s_cover .row:first-child'),
     {
         content: "Check that #wrap is empty",
         trigger: 'iframe #wrap:empty',

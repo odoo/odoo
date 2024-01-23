@@ -42,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Label value should contain odoo.com",
         trigger: '#o_link_dialog_label_input',
         run: () => {
-            if ($('#o_link_dialog_label_input').val() !== 'odoo.com') {
+            if (document.querySelector('#o_link_dialog_label_input').value !== 'odoo.com') {
                 throw new Error('Label value should contain odoo.com');
             }
         },
@@ -70,7 +70,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Label value should contain odoo website",
         trigger: '#o_link_dialog_label_input',
         run: () => {
-            if ($('#o_link_dialog_label_input').val() !== 'odoo website') {
+            if (document.querySelector('#o_link_dialog_label_input').value !== 'odoo website') {
                 throw new Error('Label value should contain odoo website');
             }
         },

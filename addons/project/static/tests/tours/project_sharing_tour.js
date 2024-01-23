@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import * as hoot from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -40,7 +42,13 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: ':iframe button.o-kanban-button-new',
     content: 'Click "Create" button',
-    run: 'click',
+    async run(helpers) {
+        helpers.anchor.click();
+        await new Promise((r) => browser.setTimeout(r, 1000));
+        await hoot.waitFor(`:iframe .o_kanban_quick_create`, {
+            timeout: 5000,
+        });
+    },
 }, {
     trigger: ':iframe .o_kanban_quick_create .o_field_widget[name="name"] input',
     content: 'Create Task',
@@ -49,7 +57,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: ':iframe .o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
 }, {
-    trigger: ':iframe div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
+    trigger: `:iframe div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)`,
     content: 'Change the stage of the task.',
 }, {
     trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',

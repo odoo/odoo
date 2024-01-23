@@ -18,7 +18,6 @@ registry.category("web_tour.tours").add('shop_zoom', {
     {
         content: "click on the image",
         trigger: imageSelector,
-        run: 'clicknoleave',
     },
     {
         content: "check that the image viewer opened",
@@ -41,7 +40,6 @@ registry.category("web_tour.tours").add('shop_zoom', {
     {
         content: "click on the image",
         trigger: imageSelector,
-        run: 'clicknoleave',
     },
     {
         content: "check there is a zoom on that big image",

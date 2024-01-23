@@ -51,7 +51,10 @@ wTourUtils.goToTheme(),
 {
     content: "Change font size",
     trigger: '[data-variable="font-size-base"] input',
-    run: `text_blur ${TARGET_FONT_SIZE}`,
+    run(helpers) {
+        helpers.text_blur(TARGET_FONT_SIZE);
+        debugger
+    },
 }, {
     content: "Check the font size was properly adapted",
     trigger: 'iframe #wrapwrap',
@@ -73,7 +76,7 @@ wTourUtils.goToTheme(),
     trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_BG_COLOR}"]`,
 }, {
     content: "Check the body background color was properly adapted",
-    trigger: 'iframe body',
+    trigger: ':iframe body',
     extra_trigger: `
         .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0) .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR}"],
         .o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0) .o_we_color_preview[style*="${TARGET_BODY_BG_COLOR_V2}"]

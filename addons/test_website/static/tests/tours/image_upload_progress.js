@@ -105,7 +105,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         trigger: ".o_notification",
         in_modal: false,
         run: () => {
-            const notificationCount = $('.o_notification').length;
+            const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
                 console.error("There should be one noficiation toaster opened, and only one.");
             }
@@ -143,7 +143,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         trigger: ".o_notification",
         in_modal: false,
         run: () => {
-            const notificationCount = $('.o_notification').length;
+            const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
                 console.error("There should be one noficiation toaster opened, and only one.");
             }
@@ -191,7 +191,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         trigger: ".o_notification",
         in_modal: false,
         run: () => {
-            const notificationCount = $('.o_notification').length;
+            const notificationCount = document.querySelectorAll(".o_notification").length;
             if (notificationCount !== 1) {
                 console.error("There should be one noficiation toaster opened, and only one.");
             }

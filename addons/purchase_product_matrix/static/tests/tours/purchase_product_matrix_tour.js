@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -28,7 +29,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.o_matrix_input_table',
     run: function () {
         // fill the whole matrix with 1's
-        $('.o_matrix_input').val(1);
+        queryAll(".o_matrix_input").forEach((el) => el.value = 1);
     }
 }, {
     trigger: 'button:contains("Confirm")',
@@ -47,7 +48,9 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.o_matrix_input_table',
     run: function () {
         // update some of the matrix values.
-        $('.o_matrix_input').slice(8, 16).val(4);
+        queryAll(".o_matrix_input")
+            .slice(8, 16)
+            .forEach((el) => (el.value = 4));
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: 'button:contains("Confirm")',
@@ -70,7 +73,9 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: 'input[value="4"]',
     run: function () {
         // update some values of the matrix
-        $("input[value='4']").slice(0, 4).val(8.2);
+        queryAll("input[value='4']")
+            .slice(0, 4)
+            .forEach((el) => (el.value = 8.2));
     }
 }, {
     trigger: 'button:contains("Confirm")',

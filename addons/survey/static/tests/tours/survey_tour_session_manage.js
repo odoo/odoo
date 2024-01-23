@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
 import { TourError } from "@web_tour/tour_service/tour_utils";
 import { accessSurveysteps } from "./survey_tour_session_tools";
+import { dispatch } from "@odoo/hoot-dom";
 
 let rootWidget = null;
 
@@ -35,15 +36,11 @@ const getChartData = () => {
 };
 
 const nextScreen = () => {
-    const e = $.Event('keydown');
-    e.key = "ArrowRight";
-    $(document).trigger(e);
+    dispatch(document, "keydown", { key: "ArrowRight" });
 };
 
 const previousScreen = () => {
-    const e = $.Event('keydown');
-    e.key = "ArrowLeft";
-    $(document).trigger(e);
+    dispatch(document, "keydown", { key: "ArrowLeft" });
 };
 
 const REGULAR_ANSWER_COLOR = '#212529';

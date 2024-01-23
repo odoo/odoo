@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { accessSurveysteps } from "./survey_tour_session_tools";
+import { dispatch } from "@odoo/hoot-dom";
 
 /**
  * Small tour that will open the session manager and check
@@ -19,9 +20,7 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
 }, {
     trigger: 'h1',
     run: function () {
-        var e = $.Event('keydown');
-        e.key = "ArrowRight";
-        $(document).trigger(e); // start session
+        dispatch(document, "keydown", { key: "ArrowRight" });
     }
 }, {
     trigger: 'h1:contains("Nickname")',

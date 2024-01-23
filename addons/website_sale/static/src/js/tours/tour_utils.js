@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { queryOne } from "@odoo/hoot-dom";
 import { _t } from "@web/core/l10n/translation";
 import wTourUtils from "@website/js/tours/tour_utils";
 
@@ -86,13 +87,13 @@ function fillAdressForm(adressParams = {
         content: "Address filling",
         trigger: 'select[name="country_id"]',
         run: () => {
-            $('input[name="name"]').val(adressParams.name);
-            $('input[name="phone"]').val(adressParams.phone);
-            $('input[name="email"]').val(adressParams.email);
-            $('input[name="street"]').val(adressParams.street);
-            $('input[name="city"]').val(adressParams.city);
-            $('input[name="zip"]').val(adressParams.zip);
-            $('#country_id option:eq(1)').attr('selected', true);
+            document.querySelector('input[name="name"]').value = adressParams.name;
+            document.querySelector('input[name="phone"]').value = adressParams.phone;
+            document.querySelector('input[name="email"]').value = adressParams.email;
+            document.querySelector('input[name="street"]').value = adressParams.street;
+            document.querySelector('input[name="city"]').value = adressParams.city;
+            document.querySelector('input[name="zip"]').value = adressParams.zip;
+            queryOne("#country_id option:eq(1)").selected = true;
         }
     });
     steps.push({

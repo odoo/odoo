@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "remove URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "remove_text",
+        run: "clear",
     },
     ...selectImageSteps,
     {
@@ -74,7 +74,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "remove URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "remove_text",
+        run: "clear",
     },
     ...selectImageSteps,
     {

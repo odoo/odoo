@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
                             )
                         )
                         .then(function () {
-                            $(".pos").addClass("done-testing");
+                            document.querySelector(".pos").classList.add("done-testing");
                         });
                 },
             },

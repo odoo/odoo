@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         content: 'Select the booth',
         trigger: '.o_wbooth_booths input[name="event_booth_ids"]',
         run: function () {
-            $('.o_wbooth_booths input[name="event_booth_ids"]:lt(1)').click();
+            document.querySelector('.o_wbooth_booths input[name="event_booth_ids"]:nth-child(1)').click();
         },
     },
     {
@@ -32,8 +32,8 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         content: 'Fill in your contact information',
         trigger: 'input[name="contact_name"]',
         run: function () {
-            $('input[name="contact_name"]').val('John Doe');
-            $('input[name="contact_email"]').val('jdoe@example.com');
+            document.querySelector('input[name="contact_name"]').value = 'John Doe';
+            document.querySelector('input[name="contact_email"]').value = 'jdoe@example.com';
         },
     },
     {

@@ -268,9 +268,9 @@ switchTo('gradient'),
         trigger: '.colorpicker .o_slider_multi input.active',
         content: 'Move step',
         run: () => {
-            const slider = $('.colorpicker .o_slider_multi input.active');
-            slider.val(45);
-            slider.trigger('click');
+            const slider = document.querySelector('.colorpicker .o_slider_multi input.active');
+            slider.value = 45;
+            slider.click();
         },
     },
     checkGradient: 'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(203, 94, 238) 45%, rgb(75, 225, 236) 100%)',
@@ -296,7 +296,7 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker input[data-name="angle"]',
         content: 'Change angle',
-        run: 'text_blur 50',
+        run: 'text 50',
     },
     checkGradient: 'linear-gradient(50deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),
@@ -313,7 +313,7 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker input[data-name="positionX"]',
         content: 'Change X position',
-        run: 'text_blur 33',
+        run: 'text 33',
     },
     checkGradient: 'radial-gradient(circle farthest-side at 33% 25%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),
@@ -321,7 +321,7 @@ switchTo('gradient'),
     updateStep: {
         trigger: '.colorpicker input[data-name="positionY"]',
         content: 'Change Y position',
-        run: 'text_blur 75',
+        run: 'text 75',
     },
     checkGradient: 'radial-gradient(circle farthest-side at 33% 75%, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
 }),

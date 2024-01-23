@@ -9,7 +9,7 @@ const patchWysiwygAdapter = () => {
         _trigger_up(ev) {
             super._trigger_up(...arguments);
             if (ev.name === 'snippet_removed') {
-                $('body').attr('test-dd-snippet-removed', true);
+                document.body.setAttribute("test-dd-snippet-removed", true);
             }
         }
     });
@@ -57,7 +57,7 @@ for (const snippet of snippetsNames) {
         extra_trigger: 'body[test-dd-snippet-removed]',
         trigger: ".o_we_add_snippet_btn",
         run: function (actions) {
-            $('body').removeAttr('test-dd-snippet-removed');
+            document.body.removeAttribute("test-dd-snippet-removed");
             actions.auto();
         },
     }];
