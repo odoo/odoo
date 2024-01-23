@@ -3220,7 +3220,7 @@ class MailThread(models.AbstractModel):
                 msg_vals=msg_vals,
                 render_values=render_values,
             )
-            recipients_ids = recipients_group.pop('recipients')
+            recipients_ids = recipients_group.pop('partner_ids')
 
             # create email
             for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
@@ -3821,8 +3821,11 @@ class MailThread(models.AbstractModel):
                              string};
             'has_button_access': display access document main button in email;
             'notification_group_name': name of the group, to ease usage;
-            'recipients': list of partner IDs, will be fillup when evaluating
-                          groups;
+            'partner_ids': list of partner IDs, will be fillup when evaluating
+                          groups, extracted from 'recipients_data' to ease
+                          future processing;
+            'recipients_data': list of recipients data (dict), as returned by
+                               'Follower._get_recipient_data()';
            }
 
         Default groups:
@@ -3907,7 +3910,8 @@ class MailThread(models.AbstractModel):
             group_data.setdefault('actions', [])
             group_data.setdefault('has_button_access', is_thread_message)
             group_data.setdefault('notification_group_name', group_name)
-            group_data.setdefault('recipients', [])
+            group_data.setdefault('partner_ids', [])
+            group_data.setdefault('recipients_data', [])
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
@@ -3943,14 +3947,22 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries;
 
         :return list: list of groups (see '_notify_get_recipients_groups')
-          with 'recipients' key filled with matching partners, like
+          with 'partner_ids' and 'recipients_data' keys filled with matching
+          partners IDS and recipients data, like
             [{
                 'active': True,
                 'actions': [],
                 'button_access': {},
                 'has_button_access': False,
                 'notification_group_name': 'user',
-                'recipients': [11],
+                'partner_ids': [11],
+                'recipients_data': [{
+                    ...
+                    'id': 11,
+                    'is_active': True,
+                    'is_follower': False,
+                    ...
+                }],
              }, {...}]
         """
         # keep a local copy of msg_vals as it may be modified to include more
@@ -3968,14 +3980,15 @@ class MailThread(models.AbstractModel):
         for recipient_data in recipients_data:
             for _group_name, group_func, group_data in groups:
                 if group_data['active'] and group_func(recipient_data):
-                    group_data['recipients'].append(recipient_data['id'])
+                    group_data['partner_ids'].append(recipient_data['id'])
+                    group_data['recipients_data'].append(recipient_data)
                     break
 
         # filter out groups without recipients
         return [
             group_data
             for _group_name, _group_func, group_data in groups
-            if group_data['recipients']
+            if group_data['recipients_data']
         ]
 
     def _notify_get_action_link(self, link_type, **kwargs):
