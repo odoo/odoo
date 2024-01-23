@@ -18,7 +18,7 @@ import { App, EventBus, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
 import { cookie } from "@web/core/browser/cookie";
 import { router } from "@web/core/browser/router";
-import { registry } from "@web/core/registry";
+import { registerTemplateProcessor } from "@web/core/templates";
 
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
@@ -261,7 +261,7 @@ function replaceAttr(attrName, prefix, element) {
     element.setAttribute(`${prefix}data-${attrName}`, attrValue);
 }
 
-registry.category("template_processors").add("removeUnwantedAttrs", (template) => {
+registerTemplateProcessor((template) => {
     // We remove all the attributes `src` and `alt` from the template and replace them by
     // data attributes (e.g. `src` to `data-src`, `alt` to `data-alt`).
     // alt attribute causes issues with scroll tests. Indeed, alt is

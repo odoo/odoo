@@ -1,12 +1,15 @@
 /** @odoo-module */
 
 import { applyInheritance } from "@web/core/template_inheritance";
-import { registry } from "@web/core/registry";
 
 const parser = new DOMParser();
+/** @type {((document: Document) => void)[]} */
+const templateProcessors = [];
+/** @type {((url: string) => boolean)[]} */
+let urlFilters = [];
 function getParsedTemplate(templateString) {
     const doc = parser.parseFromString(templateString, "text/xml");
-    for (const processor of registry.category("template_processors").getAll()) {
+    for (const processor of templateProcessors) {
         processor(doc);
     }
     return doc.firstChild;
@@ -55,6 +58,20 @@ export function registerTemplateExtension(inheritFrom, url, templateString) {
     });
 }
 
+/**
+ * @param {(document: Document) => void} processor
+ */
+export function registerTemplateProcessor(processor) {
+    templateProcessors.push(processor);
+}
+
+/**
+ * @param {typeof urlFilters} filters
+ */
+export function setUrlFilters(filters) {
+    urlFilters = filters;
+}
+
 function _getTemplate(name, blockId = null) {
     if (!(name in parsedTemplates)) {
         if (!(name in templates)) {
@@ -99,6 +116,9 @@ function _getTemplate(name, blockId = null) {
             }
         }
         for (const { template, url } of parsedTemplateExtensions[name][otherBlockId]) {
+            if (!urlFilters.every((filter) => filter(url))) {
+                continue;
+            }
             processedTemplate = applyInheritance(
                 inheritFrom ? processedTemplate : getClone(processedTemplate),
                 getClone(template),
@@ -110,6 +130,19 @@ function _getTemplate(name, blockId = null) {
     return processedTemplate;
 }
 
+/** @type {Record<string, Element>} */
+let processedTemplates = {};
+
+/**
+ * @param {string} name
+ */
 export function getTemplate(name) {
-    return _getTemplate(name);
+    if (!processedTemplates[name]) {
+        processedTemplates[name] = _getTemplate(name);
+    }
+    return processedTemplates[name];
+}
+
+export function clearProcessedTemplates() {
+    processedTemplates = {};
 }
