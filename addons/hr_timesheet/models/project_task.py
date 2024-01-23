@@ -247,3 +247,9 @@ class Task(models.Model):
         uom_hour = self.env.ref('uom.product_uom_hour')
         uom_day = self.env.ref('uom.product_uom_day')
         return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
+
+    def _get_total_effective_hours(self):
+        return sum(record.effective_hours for record in self)
+
+    def _get_total_allocated_hours(self):
+        return sum(record.allocated_hours for record in self)
