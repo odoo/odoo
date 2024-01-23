@@ -3,6 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
+import { parseEmail } from "@mail/js/utils";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 
 patch(MockServer.prototype, {
@@ -90,6 +91,17 @@ patch(MockServer.prototype, {
         return new Map(records.map((record) => [record.id, record.name || ""]));
     },
     /**
+     * Simulates `_get_customer_information` on `mail.thread`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockMailThread_GetCustomerInformation(model, ids) {
+        return {};
+    },
+    /**
      * Simulates `_message_add_suggested_recipient` on `mail.thread`.
      *
      * @private
@@ -106,11 +118,20 @@ patch(MockServer.prototype, {
         model,
         ids,
         result,
-        { email, partner, reason = "" } = {}
+        { email, partner, lang, reason = "" } = {}
     ) {
-        const record = this.getRecords(model, [["id", "in", "ids"]])[0];
-        // for simplicity
-        result[record.id].push([partner, email, reason]);
+        const record = this.getRecords(model, [["id", "in", ids]])[0];
+        if (email !== undefined && partner === undefined) {
+            const partnerInfo = parseEmail(email);
+            partner = this.getRecords("res.partner", [["email", "=", partnerInfo[1]]])[0];
+        }
+        if (partner) {
+            result[record.id].push([partner.id, partner.display_name, lang, reason, {}]);
+        } else {
+            const partnerCreateValues = this._mockMailThread_GetCustomerInformation(model, ids);
+            result[record.id].push([false, email, reason, lang, partnerCreateValues]);
+        }
+
         return result;
     },
     /**
@@ -159,11 +180,12 @@ patch(MockServer.prototype, {
                 const user = this.getRecords("res.users", [["id", "=", record.user_id]]);
                 if (user.partner_id) {
                     const reason = this.models[model].fields["user_id"].string;
-                    this._mockMailThread_MessageAddSuggestedRecipient(
-                        result,
-                        user.partner_id,
-                        reason
-                    );
+                    const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]]);
+                    this._mockMailThread_MessageAddSuggestedRecipient(model, ids, result, {
+                        email: partner.email,
+                        partner,
+                        reason,
+                    });
                 }
             }
         }
@@ -181,6 +203,22 @@ patch(MockServer.prototype, {
      */
     _mockMailThreadMessagePost(model, ids, kwargs, context) {
         const id = ids[0]; // ensure_one
+        if (kwargs.partner_emails) {
+            kwargs.partner_ids = kwargs.partner_ids || [];
+            for (const email of kwargs.partner_emails) {
+                const partner = this.getRecords("res.partner", [["email", "=", email]]);
+                if (partner.length !== 0) {
+                    kwargs.partner_ids.push(partner[0].id);
+                } else {
+                    const partner_id = this.pyEnv["res.partner"].create(
+                        Object.assign({ email }, kwargs.partner_additional_values[email] || {})
+                    );
+                    kwargs.partner_ids.push(partner_id);
+                }
+            }
+        }
+        delete kwargs.partner_emails;
+        delete kwargs.partner_additional_values;
         if (context?.["mail_post_autofollow"] && kwargs["partner_ids"].length > 0) {
             this._mockMailThreadMessageSubscribe(model, ids, kwargs["partner_ids"]);
         }
@@ -270,10 +308,10 @@ patch(MockServer.prototype, {
                     });
                 }
                 this.pyEnv[model].write(ids, {
-                    message_follower_ids: [followerId],
+                    message_follower_ids: [[4, followerId]],
                 });
                 this.pyEnv["res.partner"].write([partner_id], {
-                    message_follower_ids: [followerId],
+                    message_follower_ids: [[4, followerId]],
                 });
             }
         }

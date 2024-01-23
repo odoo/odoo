@@ -439,17 +439,25 @@ export class Composer extends Component {
     async onClickFullComposer(ev) {
         if (this.props.type !== "note") {
             // auto-create partners of checked suggested partners
-            const emailsWithoutPartners = this.thread.suggestedRecipients
-                .filter((recipient) => recipient.checked && !recipient.persona)
-                .map((recipient) => recipient.email);
-            if (emailsWithoutPartners.length !== 0) {
+            const newPartners = this.thread.suggestedRecipients.filter(
+                (recipient) => recipient.checked && !recipient.persona
+            );
+            if (newPartners.length !== 0) {
+                const recipientEmails = [];
+                const recipientAdditionalValues = {};
+                newPartners.forEach((recipient) => {
+                    recipientEmails.push(recipient.email);
+                    recipientAdditionalValues[recipient.email] =
+                        recipient.defaultCreateValues || {};
+                });
                 const partners = await this.rpc("/mail/partner/from_email", {
-                    emails: emailsWithoutPartners,
+                    emails: recipientEmails,
+                    additional_values: recipientAdditionalValues,
                 });
                 for (const index in partners) {
                     const partnerData = partners[index];
                     const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
-                    const email = emailsWithoutPartners[index];
+                    const email = recipientEmails[index];
                     const recipient = this.thread.suggestedRecipients.find(
                         (recipient) => recipient.email === email
                     );
