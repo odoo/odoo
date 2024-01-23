@@ -17,14 +17,7 @@ patch(MockServer.prototype, {
     },
     /** Simulates `_get_self_data` on `res.users`. */
     _mockResUsers__get_self_data() {
-        if (this.pyEnv.currentGuest) {
-            return {
-                id: this.pyEnv.currentGuest.id,
-                name: this.pyEnv.currentGuest.name,
-                type: "guest",
-                write_date: this.pyEnv.currentGuest.write_date,
-            };
-        } else if (this.pyEnv.currentUser) {
+        if (!this.pyEnv.currentUser._is_public()) {
             return {
                 id: this.pyEnv.currentUser.partner_id,
                 isAdmin: true, // mock server simplification
@@ -34,6 +27,13 @@ patch(MockServer.prototype, {
                 type: "partner",
                 userId: this.pyEnv.currentUser.id,
                 write_date: this.pyEnv.currentUser.write_date,
+            };
+        } else if (this.pyEnv.currentGuest) {
+            return {
+                id: this.pyEnv.currentGuest.id,
+                name: this.pyEnv.currentGuest.name,
+                type: "guest",
+                write_date: this.pyEnv.currentGuest.write_date,
             };
         }
     },
@@ -47,7 +47,6 @@ patch(MockServer.prototype, {
      */
     _mockResUsers_InitMessaging(ids, context) {
         const user = this.getRecords("res.users", [["id", "in", ids]])[0];
-        const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         const channels = this._mockDiscussChannel__get_channels_as_member();
         const members = this.getRecords("discuss.channel.member", [
             ["channel_id", "in", channels.map((channel) => channel.id)],
@@ -80,7 +79,6 @@ patch(MockServer.prototype, {
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
-                settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
             },
             Thread: this._mockDiscussChannelChannelInfo(
                 this._mockDiscussChannel__get_init_channels(user, context).map(

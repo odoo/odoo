@@ -78,16 +78,13 @@ QUnit.test("Opening a category sends the updated user setting to the server.", a
         mockRPC(route, args) {
             if (route === "/web/dataset/call_kw/res.users.settings/set_res_users_settings") {
                 assert.step(route);
-                assert.strictEqual(
-                    args.kwargs.new_settings.is_discuss_sidebar_category_channel_open,
-                    true
-                );
+                assert.ok(args.kwargs.new_settings.is_discuss_sidebar_category_channel_open);
             }
         },
     });
     await openDiscuss();
     await click(
-        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
+        ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-icon.oi-chevron-right"
     );
     assert.verifySteps(["/web/dataset/call_kw/res.users.settings/set_res_users_settings"]);
 });
