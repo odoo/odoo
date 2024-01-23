@@ -496,7 +496,7 @@ class Applicant(models.Model):
             'res_model': 'ir.attachment',
             'name': _('Documents'),
             'context': {
-                'default_res_model': 'hr.job',
+                'default_res_model': 'hr.applicant',
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },
