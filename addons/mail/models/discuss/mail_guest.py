@@ -133,9 +133,6 @@ class MailGuest(models.Model):
         odoobot = self.env.ref('base.partner_root').sudo()
         store.add({
             "Store": {
-                # sudo: ir.config_parameter: safe to check for existence of tenor api key
-                "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
-                "hasMessageTranslationFeature": False,
                 # sudo: bus.bus: reading non-sensitive last id
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "odoobot": {
