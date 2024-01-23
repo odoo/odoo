@@ -3240,6 +3240,8 @@ class Many2oneReference(Integer):
 
     _related_model_field = property(attrgetter('model_field'))
 
+    _description_model_field = property(attrgetter('model_field'))
+
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
         if isinstance(value, BaseModel):

@@ -674,6 +674,24 @@ class TestUnityRead(TransactionCase):
             }
         ])
 
+    def test_many2one_reference_without_value(self):
+        read = self.course_no_author.web_read(
+            {
+                'm2o_reference_id':
+                    {
+                        'fields':
+                            {
+                                'display_name': {},
+                            },
+                    },
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course_no_author.id,
+                'm2o_reference_id': False,
+            }
+        ])
+
     def test_reference_without_values(self):
         read = self.course_no_author.web_read(
             {
