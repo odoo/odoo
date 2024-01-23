@@ -17,7 +17,11 @@ class RecruitmentSource(models.Model):
 
     def _compute_has_domain(self):
         for source in self:
-            source.has_domain = bool(source.alias_id.alias_domain)
+            if source.alias_id:
+                source.has_domain = bool(source.alias_id.alias_domain_id)
+            else:
+                source.has_domain = bool(source.job_id.company_id.alias_domain_id
+                                         or self.env.company.alias_domain_id)
 
     def create_alias(self):
         campaign = self.env.ref('hr_recruitment.utm_campaign_job')
