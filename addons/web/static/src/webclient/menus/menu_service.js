@@ -107,7 +107,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         if (!menu) {
             if (app) {
                 state.menu_id = app.id;
-                return { state, continue: true };
+                return { state, splitPath: splitPath.slice(1) };
             }
             return false;
         }
@@ -125,7 +125,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
                 state.id = parseInt(splitPath[2]);
             }
         }
-        return { state };
+        return { state, splitPath: splitPath.slice(3) };
     }
 
     registry.category("routeToUrl").add("menuRouteToUrl", _menuRouteToUrl, { sequence: 1 });

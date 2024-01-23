@@ -400,11 +400,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             // "/web/tests?test=42", // This one was not push to the history because it's the current url (see router.js)
             "window_reload",
-            "/web/tests?action=2",
+            "/apps/2",
             "window_reload",
-            "/web/tests?menu_id=1",
+            "/apps/menu_1",
             "window_reload",
-            "/web/tests?menu_id=2&action=1",
+            "/apps/menu_2/1",
             "window_reload",
         ]);
     });
