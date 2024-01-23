@@ -6,9 +6,9 @@ import wsTourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('onsite_payment_tour', {
         test: true,
-        url: '/web',
+        url: '/shop',
         steps: () => [
-        ...wsTourUtils.addToCart({productName: 'Chair floor protection'}),
+        ...wsTourUtils.addToCart({productName: 'Test Product'}),
         wsTourUtils.goToCart(),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
@@ -17,15 +17,15 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
             '"Pay on site"',
             'input[name="o_payment_radio"][data-payment-method-code="pay_on_site"]',
         ),
-        wTourUtils.clickOnElement('pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
+        wsTourUtils.pay(),
         {
             content: "Check if the payment is successful",
             trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products)',
         },
 
         // Test multi products (Either physical or not)
-        ...wsTourUtils.addToCart({productName: 'Customizable Desk', productHasVariants: true}),
-        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        ...wsTourUtils.addToCart({productName: 'Test Product'}),
+        ...wsTourUtils.addToCart({productName: 'Test Service Product'}),
         wsTourUtils.goToCart({quantity: 2}),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
@@ -34,20 +34,26 @@ registry.category("web_tour.tours").add('onsite_payment_tour', {
             '"Pay on site"',
             'input[name="o_payment_radio"][data-payment-method-code="pay_on_site"]',
         ),
-        wTourUtils.clickOnElement('Pay button', 'button[name="o_payment_submit_button"]:visible:not(:disabled)'),
+        wsTourUtils.pay(),
         {
             content: "Check if the payment is successful",
             trigger: 'p:contains(Your order has been saved. Please come to the store to pay for your products)',
         },
 
         // Test without any physical product (option pay on site should not appear)
-        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        ...wsTourUtils.addToCart({productName: 'Test Service Product'}),
         wsTourUtils.goToCart(),
         wsTourUtils.goToCheckout(),
         ...wsTourUtils.fillAdressForm(),
         {
-            content: 'Assert pay on site is NOT an option',
-            trigger: 'body:not(:contains("Test Payment Provider"))',
+            content: 'Assert there is no carrier choice since the order only contains services',
+            trigger: 'body:not(.o_delivery_carrier_select)',
+            extra_trigger: '#address_on_payment',
+            isCheck: true,
+        },
+        {
+            content: 'Assert pay on site is NOT a payment option',
+            trigger: 'body:not(:contains("Pay on site"))',
             isCheck: true,
         },
     ]
