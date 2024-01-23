@@ -259,6 +259,7 @@ class Users(models.Model):
         """Initialize the store of the user."""
         res = {
             "Store": {
+                "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
             },
         }
         self_data = self._get_self_data()
@@ -300,7 +301,6 @@ class Users(models.Model):
                     "inbox": {"counter": self.partner_id._get_needaction_count(), "id": "inbox", "model": "mail.box"},
                     "starred": {"counter": self.env["mail.message"].search_count([("starred_partner_ids", "in", self.partner_id.ids)]), "id": "starred", "model": "mail.box"},
                 },
-                "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),

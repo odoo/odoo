@@ -171,7 +171,9 @@ export async function start(param0 = {}) {
     });
     param0["target"] = target;
     const pyEnv = await getPyEnv();
-    patchWithCleanup(session, { storeData: { Store: { self: pyEnv.getSelfData() } } });
+    patchWithCleanup(session, {
+        storeData: pyEnv.mockServer._mockResUsers__init_store_data(),
+    });
     if (browser.Notification && !browser.Notification.isPatched) {
         patchBrowserNotification("denied");
     }
