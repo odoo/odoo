@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import logging
 
 from unittest.mock import patch
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, loaded_demo_data
+from odoo.tests import tagged
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal, TransactionCaseWithUserDemo
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
-_logger = logging.getLogger(__name__)
 
 ''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -33,79 +29,86 @@ Try to keep one call to `get_pricelist_available` by test method.
 
 
 @tagged('post_install', '-at_install')
-class TestWebsitePriceList(TransactionCase):
+class TestWebsitePriceList(WebsiteSaleCommon):
 
-    def setUp(self):
-        super(TestWebsitePriceList, self).setUp()
-        self.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
-        self.website = self.env.ref('website.default_website')
-        self.website.user_id = self.env.user
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
+        cls.website.user_id = cls.env.user
 
-        self.env['product.pricelist'].search([]).action_archive()
-        self.env['product.pricelist'].create({'name': 'Public Pricelist'})
-        self.benelux = self.env['res.country.group'].create({
+        cls.pricelist.name = "Public Pricelist" # reduce diff in existing tests
+        cls.country_be = cls.env.ref('base.be')
+        cls.benelux = cls.env['res.country.group'].create({
             'name': 'BeNeLux',
-            'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
+            'country_ids': [Command.set((cls.country_be + cls.env.ref('base.lu') + cls.env.ref('base.nl')).ids)]
         })
-        self.list_benelux = self.env['product.pricelist'].create({
+        cls.curr_eur = cls._enable_currency('EUR')
+        cls.list_benelux = cls.env['product.pricelist'].create({
             'name': 'Benelux',
             'selectable': True,
-            'website_id': self.website.id,
-            'country_group_ids': [(4, self.benelux.id)],
+            'website_id': cls.website.id,
+            'country_group_ids': [Command.link(cls.benelux.id)],
+            'currency_id': cls.curr_eur.id,
             'sequence': 2,
-        })
-        item_benelux = self.env['product.pricelist.item'].create({
-            'pricelist_id': self.list_benelux.id,
-            'compute_price': 'percentage',
-            'base': 'list_price',
-            'percent_price': 10,
-            'currency_id': self.env.ref('base.EUR').id,
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'percentage',
+                    'base': 'list_price',
+                    'percent_price': 10,
+                }),
+            ]
         })
 
-
-        self.list_christmas = self.env['product.pricelist'].create({
+        cls.europe = cls.env.ref('base.europe')
+        cls.list_christmas = cls.env['product.pricelist'].create({
             'name': 'Christmas',
             'selectable': False,
-            'website_id': self.website.id,
-            'country_group_ids': [(4, self.env.ref('base.europe').id)],
+            'website_id': cls.website.id,
+            'country_group_ids': [Command.link(cls.europe.id)],
             'sequence': 20,
-        })
-        item_christmas = self.env['product.pricelist.item'].create({
-            'pricelist_id': self.list_christmas.id,
-            'compute_price': 'formula',
-            'base': 'list_price',
-            'price_discount': 20,
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'formula',
+                    'base': 'list_price',
+                    'price_discount': 20,
+                }),
+            ]
         })
 
-        list_europe = self.env['product.pricelist'].create({
+        cls.list_europe = cls.env['product.pricelist'].create({
             'name': 'EUR',
             'selectable': True,
-            'website_id': self.website.id,
-            'country_group_ids': [(4, self.env.ref('base.europe').id)],
+            'website_id': cls.website.id,
+            'country_group_ids': [Command.link(cls.europe.id)],
             'sequence': 3,
-            'currency_id': self.env.ref('base.EUR').id,
-        })
-        item_europe = self.env['product.pricelist.item'].create({
-            'pricelist_id': list_europe.id,
-            'compute_price': 'formula',
-            'base': 'list_price',
+            'currency_id': cls.curr_eur.id,
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'formula',
+                    'base': 'list_price',
+                }),
+            ]
         })
 
-        ca_group = self.env['res.country.group'].create({
+        ca_group = cls.env['res.country.group'].create({
             'name': 'Canada',
-            'country_ids': [(6, 0, [self.ref('base.ca')])]
+            'country_ids': [Command.set([cls.env.ref('base.ca').id])]
         })
-        self.env['product.pricelist'].create({
+        cls.env['product.pricelist'].create({
             'name': 'Canada',
             'selectable': True,
-            'website_id': self.website.id,
-            'country_group_ids': [(6, 0, [ca_group.id])],
+            'website_id': cls.website.id,
+            'country_group_ids': [Command.set(ca_group.ids)],
             'sequence': 10
         })
-        self.args = {
+        cls.args = {
             'show': False,
             'current_pl': False,
         }
+
+    def setUp(self):
+        super().setUp()
         patcher = patch('odoo.addons.website_sale.models.website.Website.get_pricelist_available', wraps=self._get_pricelist_available)
         self.startPatcher(patcher)
 
@@ -178,7 +181,7 @@ class TestWebsitePriceList(TransactionCase):
 
     def test_get_pricelist_available_show_with_auto_property(self):
         show = True
-        self.env.user.partner_id.country_id = self.env.ref('base.be')  # Add EUR pricelist auto
+        self.env.user.partner_id.country_id = self.country_be  # Add EUR pricelist auto
         current_pl = False
 
         country_list = {
@@ -199,11 +202,9 @@ class TestWebsitePriceList(TransactionCase):
             'list_price': 100,
             'taxes_id': False,
         })
-        current_website = self.env['website'].get_current_website()
-        website_pricelist = current_website.pricelist_id
-        website_pricelist.write({
+        self.website.pricelist_id.write({
             'discount_policy': 'with_discount',
-            'item_ids': [(5, 0, 0), (0, 0, {
+            'item_ids': [Command.clear(), Command.create({
                 'applied_on': '1_product',
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'min_quantity': 500,
@@ -214,18 +215,19 @@ class TestWebsitePriceList(TransactionCase):
         promo_pricelist = self.env['product.pricelist'].create({
             'name': 'Super Pricelist',
             'discount_policy': 'without_discount',
-            'item_ids': [(0, 0, {
+            'item_ids': [Command.create({
                 'applied_on': '1_product',
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'base': 'pricelist',
-                'base_pricelist_id': website_pricelist.id,
+                'base_pricelist_id': self.website.pricelist_id.id,
                 'compute_price': 'formula',
                 'price_discount': 25
             })]
         })
         so = self.env['sale.order'].create({
             'partner_id': self.env.user.partner_id.id,
-            'order_line': [(0, 0, {
+            'website_id': self.website.id,
+            'order_line': [Command.create({
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 1,
@@ -233,13 +235,11 @@ class TestWebsitePriceList(TransactionCase):
                 'price_unit': product.list_price,
                 'tax_id': False,
             })],
-            'website_id': current_website.id,
         })
         sol = so.order_line
         self.assertEqual(sol.price_total, 100.0)
         so.pricelist_id = promo_pricelist
-        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
-            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
+        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
         self.assertEqual(sol.price_unit, 100.0, 'Both reductions should be applied')
         self.assertEqual(sol.discount, 72.25, 'Both reductions should be applied')
         self.assertEqual(sol.price_total, 13875)
@@ -250,21 +250,24 @@ class TestWebsitePriceList(TransactionCase):
             'list_price': 0,
             'taxes_id': False,
         })
-        current_website = self.env['website'].get_current_website()
-        website_pricelist = current_website.pricelist_id
-        website_pricelist.write({
+        self.website.pricelist_id.write({
             'discount_policy': 'without_discount',
-            'item_ids': [(5, 0, 0), (0, 0, {
-                'applied_on': '1_product',
-                'product_tmpl_id': product.product_tmpl_id.id,
-                'min_quantity': 0,
-                'compute_price': 'fixed',
-                'fixed_price': 10,
-            })]
+            'item_ids': [
+                Command.clear(),
+                Command.create({
+                    'applied_on': '1_product',
+                    'product_tmpl_id': product.product_tmpl_id.id,
+                    'min_quantity': 0,
+                    'compute_price': 'fixed',
+                    'fixed_price': 10,
+                }),
+            ]
         })
         so = self.env['sale.order'].create({
             'partner_id': self.env.user.partner_id.id,
-            'order_line': [(0, 0, {
+            'website_id': self.website.id,
+            'pricelist_id': self.website.pricelist_id.id,
+            'order_line': [Command.create({
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 5,
@@ -275,9 +278,7 @@ class TestWebsitePriceList(TransactionCase):
         })
         sol = so.order_line
         self.assertEqual(sol.price_total, 0)
-        so.pricelist_id = website_pricelist
-        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
-            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
+        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
         self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
         self.assertEqual(sol.discount, 0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_total, 60.0)
@@ -288,15 +289,14 @@ class TestWebsitePriceList(TransactionCase):
         when the product is tax included.
         """
         self.env.company.country_id = self.env.ref('base.us')
-        tax = self.env['account.tax'].create({
-            'name': "Tax 10",
-            'amount': 10,
-        })
 
         product = self.env['product.template'].create({
             'name': 'Event Product',
             'list_price': 10.0,
-            'taxes_id': tax,
+            'taxes_id': [Command.create({
+                'name': "Tax 10",
+                'amount': 10,
+            })],
         })
 
         prices = product._get_sales_prices(self.list_christmas, self.env['account.fiscal.position'])
@@ -316,8 +316,10 @@ class TestWebsitePriceList(TransactionCase):
         })
 
         pa = self.env['product.attribute'].create({'name': 'Attribute'})
-        pav1 = self.env['product.attribute.value'].create({'name': 'Value1', 'attribute_id': pa.id})
-        pav2 = self.env['product.attribute.value'].create({'name': 'Value2', 'attribute_id': pa.id})
+        pav1, pav2 = self.env['product.attribute.value'].create([
+            {'name': 'Value1', 'attribute_id': pa.id},
+            {'name': 'Value2', 'attribute_id': pa.id},
+        ])
 
         product_template = self.env['product.template'].create({
             'name': 'Product Template', 'list_price': 10.0, 'standard_price': 5.0
@@ -345,6 +347,44 @@ class TestWebsitePriceList(TransactionCase):
             pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
         self.assertEqual(price, 18, msg)
 
+    def test_base_price_with_discount_on_pricelist_tax_included(self):
+        """
+        Tests that the base price of a product with tax included
+        and discount from a price list is correctly displayed in the shop
+
+        ex: A product with a price of $61.98 ($75 tax incl. of 21%) and a discount of 20%
+        should display the base price of $75
+        """
+        self.env['res.config.settings'].create({                  # Set Settings:
+            'show_line_subtotals_tax_selection': 'tax_included',  # Set "Tax Included" on the "Display Product Prices"
+            'product_pricelist_setting': 'advanced',              # advanced pricelist (discounts, etc.)
+            'group_product_price_comparison': True,               # price comparison
+        }).execute()
+
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Test Product',
+            'type': 'consu',
+            'list_price': 61.98,  # 75 tax incl.
+            'taxes_id': [
+                Command.create({
+                    'name': '21%',
+                    'type_tax_use': 'sale',
+                    'amount': 21,
+                })
+            ],
+            'is_published': True,
+        })
+        self.pricelist.write({
+            'discount_policy': 'without_discount',
+            'item_ids': [Command.create({
+                'price_discount': 20,
+                'compute_price': 'formula',
+                'product_tmpl_id': product_tmpl.id,
+            })],
+        })
+        res = product_tmpl._get_sales_prices(self.pricelist, self.env['account.fiscal.position'])
+        self.assertEqual(res[product_tmpl.id]['base_price'], 75)
+
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
     def get_request_website():
@@ -354,66 +394,67 @@ def simulate_frontend_context(self, website_id=1):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsitePriceListAvailable(TransactionCase):
-    def setUp(self):
-        super(TestWebsitePriceListAvailable, self).setUp()
-        Pricelist = self.env['product.pricelist']
-        Website = self.env['website']
+class TestWebsitePriceListAvailable(WebsiteSaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Pricelist = cls.env['product.pricelist']
+        Website = cls.env['website']
 
         # Set up 2 websites
-        self.website = Website.browse(1)
-        self.website2 = Website.create({'name': 'Website 2'})
+        cls.website2 = Website.create({'name': 'Website 2'})
 
         # Remove existing pricelists and create new ones
         existing_pricelists = Pricelist.search([])
-        self.backend_pl = Pricelist.create({
+        cls.backend_pl = Pricelist.create({
             'name': 'Backend Pricelist',
             'website_id': False,
         })
-        self.generic_pl_select = Pricelist.create({
+        cls.generic_pl_select = Pricelist.create({
             'name': 'Generic Selectable Pricelist',
             'selectable': True,
             'website_id': False,
         })
-        self.generic_pl_code = Pricelist.create({
+        cls.generic_pl_code = Pricelist.create({
             'name': 'Generic Code Pricelist',
             'code': 'GENERICCODE',
             'website_id': False,
         })
-        self.generic_pl_code_select = Pricelist.create({
+        cls.generic_pl_code_select = Pricelist.create({
             'name': 'Generic Code Selectable Pricelist',
             'code': 'GENERICCODESELECT',
             'selectable': True,
             'website_id': False,
         })
-        self.w1_pl = Pricelist.create({
+        cls.w1_pl = Pricelist.create({
             'name': 'Website 1 Pricelist',
-            'website_id': self.website.id,
+            'website_id': cls.website.id,
         })
-        self.w1_pl_select = Pricelist.create({
+        cls.w1_pl_select = Pricelist.create({
             'name': 'Website 1 Pricelist Selectable',
-            'website_id': self.website.id,
+            'website_id': cls.website.id,
             'selectable': True,
         })
-        self.w1_pl_code_select = Pricelist.create({
+        cls.w1_pl_code_select = Pricelist.create({
             'name': 'Website 1 Pricelist Code Selectable',
-            'website_id': self.website.id,
+            'website_id': cls.website.id,
             'code': 'W1CODESELECT',
             'selectable': True,
         })
-        self.w1_pl_code = Pricelist.create({
+        cls.w1_pl_code = Pricelist.create({
             'name': 'Website 1 Pricelist Code',
-            'website_id': self.website.id,
+            'website_id': cls.website.id,
             'code': 'W1CODE',
         })
-        self.w2_pl = Pricelist.create({
+        cls.w2_pl = Pricelist.create({
             'name': 'Website 2 Pricelist',
-            'website_id': self.website2.id,
+            'website_id': cls.website2.id,
         })
-        existing_pricelists.write({'active': False})
+        existing_pricelists.action_archive()
 
-        self.website = self.env['website'].browse(1)
-
+    def setUp(self):
+        super().setUp()
         simulate_frontend_context(self)
 
     def test_get_pricelist_available(self):
@@ -434,7 +475,7 @@ class TestWebsitePriceListAvailable(TransactionCase):
         # Real case if for public user. His `property_product_pricelist` need to be set as it is passed
         # through `_get_pl_partner_order` as the `website_pl` when searching for available pricelists
         # for active users.
-        public_partner = self.env.ref('base.public_partner')
+        public_partner = self.public_partner
         self.assertFalse(public_partner.active, "Ensure public partner is inactive (purpose of this test)")
         pl = public_partner.property_product_pricelist
         self.assertEqual(len(pl), 1, "Inactive partner should still get a `property_product_pricelist`")
@@ -443,7 +484,7 @@ class TestWebsitePriceListAvailable(TransactionCase):
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def setUp(self):
-        super(TestWebsitePriceListAvailableGeoIP, self).setUp()
+        super().setUp()
         # clean `property_product_pricelist` for partner for this test (clean setup)
         self.env['ir.property'].search([('res_id', '=', 'res.partner,%s' % self.env.user.partner_id.id)]).unlink()
 
@@ -456,13 +497,15 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
 
         self.BE = self.env.ref('base.be')
         NL = self.env.ref('base.nl')
-        c_BE = self.env['res.country.group'].create({'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]})
-        c_NL = self.env['res.country.group'].create({'name': 'Netherlands', 'country_ids': [(6, 0, [NL.id])]})
+        c_BE, c_NL = self.env['res.country.group'].create([
+            {'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]},
+            {'name': 'Netherlands', 'country_ids': [(6, 0, [NL.id])]},
+        ])
 
-        (self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.w1_pl_select).write({'country_group_ids': [(6, 0, [c_BE.id])]})
-        (self.generic_pl_code_select + self.w1_pl + self.w2_pl).write({'country_group_ids': [(6, 0, [c_BENELUX.id])]})
-        (self.w1_pl_code).write({'country_group_ids': [(6, 0, [c_EUR.id])]})
-        (self.w1_pl_code_select).write({'country_group_ids': [(6, 0, [c_NL.id])]})
+        (self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.w1_pl_select).write({'country_group_ids': [Command.set(c_BE.ids)]})
+        (self.generic_pl_code_select + self.w1_pl + self.w2_pl).write({'country_group_ids': [Command.set(c_BENELUX.ids)]})
+        (self.w1_pl_code).write({'country_group_ids': [Command.set(c_EUR.ids)]})
+        (self.w1_pl_code_select).write({'country_group_ids': [Command.set(c_NL.ids)]})
 
         #        pricelist        | selectable | website | code | country group |
         # ----------------------------------------------------------------------|
@@ -551,7 +594,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         - Set website's company to company 2
         - Demo user will still be in company 1
         '''
-        super(TestWebsitePriceListMultiCompany, self).setUp()
+        super().setUp()
 
         self.demo_user = self.user_demo
 
@@ -648,6 +691,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # archive should not raise an error
         self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
 
+
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleSession(HttpCaseWithUserPortal):
 
@@ -656,9 +700,6 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',

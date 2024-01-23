@@ -1,15 +1,32 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
+
+from dateutil.relativedelta import relativedelta
+
 from odoo.tests import tagged
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+
+from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.addons.mail.models.mail_template import MailTemplate
 
 
-class TestWebsiteSaleCartAbandonedCommon(HttpCaseWithUserPortal):
+class TestWebsiteSaleCartAbandonedCommon(TransactionCaseWithUserPortal):
+
+    def send_mail_patched(self, sale_order_id):
+        email_got_sent = False
+
+        def check_send_mail_called(this, res_id, email_values, *args, **kwargs):
+            nonlocal email_got_sent
+            if res_id == sale_order_id:
+                email_got_sent = True
+
+        with patch.object(MailTemplate, 'send_mail', check_send_mail_called):
+            self.env['website']._send_abandoned_cart_email()
+        return email_got_sent
+
+@tagged('post_install', '-at_install')
+class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -108,20 +125,6 @@ class TestWebsiteSaleCartAbandonedCommon(HttpCaseWithUserPortal):
             'order_line': add_order_line,
         })
 
-    def send_mail_patched(self, sale_order_id):
-        email_got_sent = False
-
-        def check_send_mail_called(this, res_id, email_values, *args, **kwargs):
-            nonlocal email_got_sent
-            if res_id == sale_order_id:
-                email_got_sent = True
-
-        with patch.object(MailTemplate, 'send_mail', check_send_mail_called):
-            self.env['website']._send_abandoned_cart_email()
-        return email_got_sent
-
-@tagged('post_install', '-at_install')
-class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
     def test_search_abandoned_cart(self):
         """Make sure the search for abandoned carts uses the delay and public partner specified in each website."""
         SaleOrder = self.env['sale.order']

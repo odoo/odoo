@@ -1,44 +1,37 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase
+from odoo.tests import HttpCase, tagged
 
 
 @tagged('post_install', '-at_install')
 class TestStockNotificationWishlist(HttpCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        Warehouse = cls.env['stock.warehouse']
-        Product = cls.env['product.product']
-        Pricelist = cls.env['product.pricelist']
-        Wishlist = cls.env['product.wishlist']
-        Partner = cls.env['res.partner']
 
-        warehouse = Warehouse.create({
+        cls.warehouse = cls.env['stock.warehouse'].create({
             'name': 'Wishlist Warehouse',
             'code': 'W_WH'
         })
         current_website = cls.env['website'].get_current_website()
-        current_website.warehouse_id = warehouse
+        current_website.warehouse_id = cls.warehouse
 
-        cls.warehouse = warehouse
         cls.current_website = current_website
 
-        cls.product = Product.create({
+        cls.product = cls.env['product.product'].create({
             'name': 'Macbook Pro',
             'website_published': True,
             'type': 'product',
             'allow_out_of_stock_order': False,
 
         })
-        cls.pricelist = Pricelist.create({
+        cls.pricelist = cls.env['product.pricelist'].create({
             'name': 'Public Pricelist',
         })
         cls.currency = cls.env.ref("base.USD")
-        cls.partner = Partner.search([('id', '=', 3)])
-        Wishlist.create({
+        cls.partner = cls.env['res.partner'].search([('id', '=', 3)])
+        cls.env['product.wishlist'].create({
             'partner_id': cls.partner.id,
             'product_id': cls.product.id,
             'website_id': current_website.id,
