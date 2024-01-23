@@ -392,6 +392,11 @@ class HrExpenseSheet(models.Model):
                 sheet.is_editable = False
                 continue
 
+            if is_hr_admin:
+                # Administrator-level users are not restricted
+                sheet.is_editable = True
+                continue
+
             employee = sheet.employee_id
 
             is_own_sheet = employee.user_id == self.env.user
@@ -405,11 +410,6 @@ class HrExpenseSheet(models.Model):
                 managers |= self.env.user
             if not is_own_sheet and self.env.user in managers:
                 # If Approver-level or designated manager, can edit other people sheet
-                sheet.is_editable = True
-                continue
-
-            if is_hr_admin and sheet.state in {'draft', 'submit', 'approve'}:
-                # Administrator-level users are not restricted
                 sheet.is_editable = True
                 continue
             sheet.is_editable = False
