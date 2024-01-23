@@ -1411,7 +1411,7 @@ export function makeActionManager(env, router = _router) {
     function actionRouteToUrl(route) {
         if ((route.action && typeof route.action === "number") || route.model) {
             let pathname = "";
-            if (route.action) {
+            if (route.action && typeof route.action === "number") {
                 pathname = `/${route.action}`;
                 delete route.action;
                 delete route.model;
