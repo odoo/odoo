@@ -283,6 +283,7 @@ class SaleOrderLine(models.Model):
         """
         sale_line_purchase_map = {}
         for line in self:
+            line = line.with_company(line._purchase_service_get_company())
             # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
             if line.product_id.service_to_purchase and not line.purchase_line_count:
                 result = line._purchase_service_create()
