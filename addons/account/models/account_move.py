@@ -4618,8 +4618,10 @@ class AccountMoveLine(models.Model):
 
             is_account_control_ok = not journal.account_control_ids or account in journal.account_control_ids
             is_type_control_ok = not journal.type_control_ids or account.user_type_id in journal.type_control_ids
-
-            if not is_account_control_ok and not is_type_control_ok:
+            failed_check = not is_type_control_ok
+            if failed_check and journal.account_control_ids:
+                failed_check = not is_account_control_ok
+            if failed_check:
                 raise UserError(_("You cannot use this account (%s) in this journal, check the section 'Control-Access' under "
                                   "tab 'Advanced Settings' on the related journal.", account.display_name))
 
