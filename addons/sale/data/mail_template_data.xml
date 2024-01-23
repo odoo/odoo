@@ -29,7 +29,27 @@
             </t>
             amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
         </t>
-        <br/><br/>
+        <br/>
+        <t t-set="documents" t-value="object._get_product_documents()"/>
+        <t t-if="documents">
+            <br/> 
+            <t t-if="len(documents)>1">
+                Here are some additional documents that may interest you:
+            </t>
+            <t t-else="">
+                Here is an additional document that may interest you:
+            </t>
+            <ul style="margin-bottom: 0;">
+                <t t-foreach="documents" t-as="document">
+                    <li style="font-size: 13px;">
+                        <a t-out="document.ir_attachment_id.name"
+                            t-att-href="object.get_portal_url('/document/' + str(document.id))"
+                            t-att-target="target"/>
+                    </li>
+                </t>
+            </ul>
+        </t>
+        <br/>
         Do not hesitate to contact us if you have any questions.
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
@@ -68,7 +88,27 @@
                 Your payment reference is <span style="font-weight:bold;" t-out="object.reference or ''"></span>.
             </t>
         </t>
-        <br/><br/>
+        <br/>
+        <t t-set="documents" t-value="object._get_product_documents()"/>
+        <t t-if="documents">
+            <br/> 
+            <t t-if="len(documents)>1">
+                Here are some additional documents that may interest you:
+            </t>
+            <t t-else="">
+                Here is an additional document that may interest you:
+            </t>
+            <ul style="margin-bottom: 0;">
+                <t t-foreach="documents" t-as="document">
+                    <li style="font-size: 13px;">
+                        <a t-out="document.ir_attachment_id.name"
+                            t-att-href="object.get_portal_url('/document/' + str(document.id))"
+                            t-att-target="target"/>
+                    </li>
+                </t>
+            </ul>
+        </t>
+        <br/>
         Do not hesitate to contact us if you have any questions.
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
