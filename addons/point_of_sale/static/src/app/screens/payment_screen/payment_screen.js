@@ -177,7 +177,7 @@ export class PaymentScreen extends Component {
             nbrDecimal: this.pos.currency.decimal_places,
             inputSuffix: this.pos.currency.symbol,
             getPayload: (num) => {
-                this.currentOrder.set_tip(parseFloat(num));
+                this.currentOrder.set_tip(parseFloat(num ?? ""));
             },
         });
     }
