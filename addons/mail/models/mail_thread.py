@@ -2171,6 +2171,14 @@ class MailThread(models.AbstractModel):
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
+    def message_post_batch(self, bodies):
+        for record, body in zip(self, bodies):
+            record.message_post(
+                body=body,
+                notify_skip=True,
+            )
+        return False
+
     def _message_post_after_hook(self, message, msg_values):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
@@ -2932,6 +2940,7 @@ class MailThread(models.AbstractModel):
             'mail_auto_delete',
             'model_description',
             'notify_author',
+            'notify_skip',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -3024,6 +3033,11 @@ class MailThread(models.AbstractModel):
 
           * ``scheduled_date``: delay notification sending if set in the future.
             This is done using the ``mail.message.schedule`` intermediate model;
+          * ``notify_skip``: skip notification process, when one wants to post
+            a message but does not want to trigger the notification process
+            e.g. if it will be handled separately, manually or just should be
+            skipped. It is managed here as some models handle business code in
+            overrides even if the notification process itself is skipped;
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
@@ -3037,6 +3051,10 @@ class MailThread(models.AbstractModel):
         msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
         if not recipients_data:
+            return recipients_data
+
+        # explicitly asked to skip notification
+        if kwargs.get('notify_skip'):
             return recipients_data
 
         # if scheduled for later: add in queue instead of generating notifications
@@ -3066,7 +3084,7 @@ class MailThread(models.AbstractModel):
           * create inbox notifications for users;
           * send bus notifications;
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [
@@ -3082,7 +3100,7 @@ class MailThread(models.AbstractModel):
             'ushare': are users shared (if users, all users are shared);
           }, {...}]. See ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         """
         bus_notifications = []
         inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
@@ -3115,7 +3133,7 @@ class MailThread(models.AbstractModel):
                                  **kwargs):
         """ Method to send emails notifications linked to a message.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like [
@@ -3131,7 +3149,7 @@ class MailThread(models.AbstractModel):
             'ushare': are users shared (if users, all users are shared);
           }, {...}]. See ``MailThread._notify_get_recipients()``;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
 
         :param bool mail_auto_delete: delete notification emails once sent;
 
@@ -3257,23 +3275,24 @@ class MailThread(models.AbstractModel):
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
             subtitles=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
-        of recipients informations. Purpose of this method is to group them by
+        of recipients information. Purpose of this method is to group them by
         main usage ('user', 'portal_user', 'follower', 'customer', ... see
         @_notify_get_recipients_classify) and lang. Each group is linked to
         an evaluation context to render the notification layout.
 
-        :param message: ``mail.message`` record to notify;
+        :param <mail.message> message: message record being notified. May be
+          void as 'msg_vals' superseeds it;
         :param list recipients_data: see ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries if given;
 
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
-        :param record force_email_company: <res.company> record used when rendering
+        :param <res.company> force_email_company: record used when rendering
           notification layout. Otherwise computed based on current record;
-        :param str force_email_lang: when no specific lang is found this is the
-          default lang to use notably to compute model name or translate access
-          buttons;
+        :param str force_email_lang: whe no no specific lang is found this is the
+          default lang used when rendering content, used notably to compute model
+          name or translate access buttons;
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
@@ -3338,9 +3357,9 @@ class MailThread(models.AbstractModel):
                                                    force_email_lang=False):
         """ Prepare rendering context for notification email.
 
-        Signature: if asked a default signature is computed based on author. Either
-        it has an user and we use the user's signature. Either we do not find any
-        user and we compute a default one based on the author's name.
+        Signature: if asked a default signature is computed based on author. If
+        it has an user we use the user's signature. Otherwise we compute a default
+        one based on the author's name.
 
         Company: either there is one defined on the record (company_id field set
         with a value), either we use env.company. A new parameter allows to force
@@ -3353,13 +3372,13 @@ class MailThread(models.AbstractModel):
         notification layout in the same language as the email content. A new
         parameter allows to force its value.
 
-        :param record message: <mail.message> record being notified. May be
+        :param <mail.message> message: message record being notified. May be
           void as 'msg_vals' superseeds it;
         :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries;
+          skip message usage and spare some queries if given;
         :param str model_description: description of current model, given to
           avoid fetching it and easing translation support;
-        :param record force_email_company: <res.company> record used when rendering
+        :param <res.company> force_email_company: record used when rendering
           notification layout. Otherwise computed based on current record;
         :param str force_email_lang: lang used when rendering content, used
           notably to compute model name or translate access buttons;

@@ -1303,8 +1303,15 @@ class MailCommon(common.TransactionCase, MailCase):
         country_id = cls.env.ref('base.be').id
 
         base_values = [
-            {'name': f'{prefix}Test_{idx}',
-             **additional_values,
+            {
+                'name': f'{prefix}Test_{idx}',
+                # generate email if available
+                **(
+                    {
+                        'email': f'{prefix}test.email.from.{idx}@example.com',
+                    } if 'email' in records else {}
+                ),
+                **additional_values,
             } for idx in range(count)
         ]
 
