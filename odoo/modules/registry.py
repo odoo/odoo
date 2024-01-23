@@ -642,7 +642,7 @@ class Registry(Mapping):
                     # unaccent is added only in these cases when searching
                     if self.has_unaccent == FunctionStatus.INDEXABLE:
                         column_expression = self.unaccent(column_expression)
-                    else:
+                    elif self.has_unaccent:
                         warnings.warn(
                             "PostgreSQL function 'unaccent' is present but not immutable, "
                             "therefore trigram indexes may not be effective.",
