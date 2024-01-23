@@ -226,3 +226,8 @@ class AccountMove(models.Model):
             ]
             if rec.search(domain):
                 raise ValidationError(_('Vendor bill number must be unique per vendor and company.'))
+
+    def _compute_made_sequence_hole(self):
+        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        manual_documents.made_sequence_hole = False
+        super(AccountMove, self - manual_documents)._compute_made_sequence_hole()
