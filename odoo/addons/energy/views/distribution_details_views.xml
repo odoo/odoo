@@ -47,7 +47,7 @@
                     <field name="power_date"/>
                     <field name="power_hour"/>
                     <field name="delivery_point_id" string="Contract Delivery Point"/>
-                    <field name="distribution_line_ids" string="Distributions"  mode="tree"
+                    <field name="distribution_line_ids" invisible="1" string="Distributions"  mode="tree"
                            widget="many2many_tags" options="{'no_create': True}" >
                         <tree>
                             <field name="power_hour"/>

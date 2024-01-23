@@ -50,7 +50,7 @@ class DistributionOrderLine(models.Model):
     distribution_id = fields.Many2one('distribution.order', string='Distribution', ondelete='cascade',
                                       index=True, copy=False)
     power_date = fields.Date(string='Power Date', related="distribution_id.power_date", store=True)
-    power_hour = fields.Integer(string='Power Hour', )
+    power_hour = fields.Integer(string='Power Hour', related="distribution_id.power_hour", store=True)
     total_power = fields.Float(string='Total Power')
     actual_power = fields.Float(string='Actual Power')
     power = fields.Float("Power")
@@ -79,9 +79,3 @@ class DistributionOrderLine(models.Model):
             record.total_power = total_power
             record.distributed_power = sum(record.distribution_line_ids.mapped("value"))
             record.actual_power = record.total_power - record.distributed_power
-
-    @api.onchange('distribution_id', 'distribution_id.power_hour')
-    def _get_power_hour(self):
-        for rec in self:
-            if rec.distribution_id and rec.distribution_id.power_hour:
-                rec.power_hour = rec.distribution_id.power_hour
