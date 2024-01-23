@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from collections import defaultdict
 import hashlib
 import hmac
 import io
@@ -305,44 +306,40 @@ class MassMailing(models.Model):
             'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
-        if not self.ids:
-            return
-        # ensure traces are sent to db
-        self.env['mailing.trace'].flush_model()
-        self.env['mailing.mailing'].flush_model()
-        self.env.cr.execute("""
-            SELECT
-                m.id as mailing_id,
-                COUNT(s.id) AS expected,
-                COUNT(s.sent_datetime) AS sent,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'outgoing') AS scheduled,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'cancel') AS canceled,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'process') AS process,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'pending') AS pending,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('sent', 'open', 'reply')) AS delivered,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('open', 'reply')) AS opened,
-                COUNT(s.links_click_datetime) AS clicked,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'reply') AS replied,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'bounce') AS bounced,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'error') AS failed
-            FROM
-                mailing_trace s
-            RIGHT JOIN
-                mailing_mailing m
-                ON (m.id = s.mass_mailing_id)
-            WHERE
-                m.id IN %s
-            GROUP BY
-                m.id
-        """, (tuple(self.ids), ))
-        for row in self.env.cr.dictfetchall():
-            total = (row['expected'] - row['canceled']) or 1
-            total_no_error = (row['expected'] - row['canceled'] - row['bounced'] - row['failed']) or 1
-            row['received_ratio'] = float_round(100.0 * row['delivered'] / total, precision_digits=2)
-            row['opened_ratio'] = float_round(100.0 * row['opened'] / total_no_error, precision_digits=2)
-            row['replied_ratio'] = float_round(100.0 * row['replied'] / total_no_error, precision_digits=2)
-            row['bounced_ratio'] = float_round(100.0 * row['bounced'] / total, precision_digits=2)
-            self.browse(row.pop('mailing_id')).update(row)
+
+        result = self.env["mailing.trace"].sudo()._read_group(
+            [("mass_mailing_id", "in", self.ids)],
+            ['mass_mailing_id', 'trace_status'],
+            ['__count', 'links_click_datetime:count', 'sent_datetime:count'])
+
+        result_per_mailing = defaultdict(lambda: defaultdict(int))
+        for mailing, trace_status, count, links_click_datetime, sent_datetime in result:
+            result_per_mailing[mailing][trace_status] = count
+            result_per_mailing[mailing]['links_click_datetime'] += links_click_datetime
+            result_per_mailing[mailing]['sent_datetime'] += sent_datetime
+
+        for mailing in self:
+            line = result_per_mailing[mailing]
+            values = {
+                'scheduled': line['outgoing'],
+                'expected': sum(v for k, v in line.items() if k not in ('links_click_datetime', 'sent_datetime')),
+                'canceled': line['cancel'],
+                'pending': line['pending'],
+                'delivered': line['sent'] + line['open'] + line['reply'],
+                'opened': line['open'] + line['reply'],
+                'replied': line['reply'],
+                'bounced': line['bounce'],
+                'failed': line['error'],
+                'clicked': line['links_click_datetime'],
+                'sent': line['sent_datetime'],
+            }
+            total = (values['expected'] - values['canceled']) or 1
+            total_no_error = (values['expected'] - values['canceled'] - values['bounced'] - values['failed']) or 1
+            values['received_ratio'] = float_round(100.0 * values['delivered'] / total, precision_digits=2)
+            values['opened_ratio'] = float_round(100.0 * values['opened'] / total_no_error, precision_digits=2)
+            values['replied_ratio'] = float_round(100.0 * values['replied'] / total_no_error, precision_digits=2)
+            values['bounced_ratio'] = float_round(100.0 * values['bounced'] / total, precision_digits=2)
+            mailing.update(values)
 
     @api.depends('schedule_date', 'state')
     def _compute_next_departure(self):
