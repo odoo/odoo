@@ -2469,6 +2469,33 @@ export class MockServer {
                     }
                     break;
                 }
+                case "many2one_reference": {
+                    for (const record of records) {
+                        const id = record[fieldName];
+                        if (!id) {
+                            record[fieldName] = 0;
+                            continue;
+                        }
+                        if (!relatedFields) {
+                            continue;
+                        }
+                        // the field isn't necessarily in the view, so get the model by looking
+                        // in "db"
+                        const dbRecord = this.models[modelName].records.find(
+                            (r) => r.id === record.id
+                        );
+                        const model = dbRecord[field.model_field];
+                        record[fieldName] = {};
+                        if (relatedFields && Object.keys(relatedFields).length) {
+                            const result = this.mockWebRead(model, [[id]], {
+                                specification: relatedFields,
+                                context: spec[fieldName].context,
+                            });
+                            record[fieldName] = result[0];
+                        }
+                    }
+                    break;
+                }
                 case "one2many":
                 case "many2many": {
                     if (relatedFields && Object.keys(relatedFields).length) {

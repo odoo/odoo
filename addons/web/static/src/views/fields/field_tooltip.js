@@ -22,6 +22,7 @@ export function getTooltipInfo(params) {
             required: params.fieldInfo.required,
             changeDefault: params.field.change_default,
             relation: params.field.relation,
+            model_field: params.field.model_field,
             selection: params.field.selection,
             default: params.field.default,
         },
