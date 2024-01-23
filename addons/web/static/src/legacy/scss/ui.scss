@@ -16,6 +16,12 @@
     @include o-text-overflow;
 }
 
+.dropdown-menu {
+    max-height: 70vh;
+    overflow: auto;
+    background-clip: border-box;
+}
+
 .ui-autocomplete {
     z-index: $zindex-modal + 1;
     max-width: 600px;
