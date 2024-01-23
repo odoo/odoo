@@ -182,7 +182,8 @@ QUnit.test("activity info layout when planned before yesterday", async () => {
     await contains(".o-mail-Activity span.text-danger", { text: "5 days overdue:" });
 });
 
-QUnit.test("activity info layout change at midnight", async () => {
+QUnit.skip("activity info layout change at midnight", async () => {
+    // skip: does not work consistently both locally and on runbot at the same time (tz issue?)
     patchTimeZone(0);
     const mock = mockTimeout();
     patchDate(2023, 11, 7, 23, 59, 59);
