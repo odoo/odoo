@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.test_notify_security_update import TestNotifySecurityUpdate
+from odoo.addons.mail.tests.test_notify_security_update import MailCommon
 from odoo.tests import users
 
 
-class TestNotifySecurityUpdateTotp(TestNotifySecurityUpdate):
+class TestNotifySecurityUpdateTotp(MailCommon):
     @users('employee')
     def test_security_update_totp_enabled_disabled(self):
         recipients = [self.env.user.email_formatted]
