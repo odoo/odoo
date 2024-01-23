@@ -121,6 +121,7 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
                 partner_ids: [],
                 subtype_xmlid: "mail.mt_comment",
                 partner_emails: [],
+                partner_additional_values: {},
             },
             thread_id: threadId,
             thread_model: "discuss.channel",
