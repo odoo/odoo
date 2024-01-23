@@ -736,10 +736,13 @@ class MrpProduction(models.Model):
                     ]
                 continue
             # delete to remove existing moves from database and clear to remove new records
-            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
+            byproducts = production.move_byproduct_ids
+            byproduct_ids = production.move_byproduct_ids.mapped(lambda m: m.product_id)
+            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.filtered(lambda m: m.product_id not in byproduct_ids).ids]
             production.move_finished_ids = [Command.clear()]
             if production.product_id:
                 production._create_update_move_finished()
+                production.move_finished_ids += byproducts
             else:
                 production.move_finished_ids = [
                     Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id

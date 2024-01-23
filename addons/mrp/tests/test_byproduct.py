@@ -407,3 +407,51 @@ class TestMrpByProduct(common.TransactionCase):
         mo.move_byproduct_ids[0].quantity_done = 1
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+
+    def test_maintain_by_products_onchange_workorders(self):
+        # Create new MO
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_a
+        mo_form.product_qty = 2.0
+        mo = mo_form.save()
+
+        # Create product
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product'
+        })
+
+        # Create byproduct
+        byproduct = self.env['stock.move'].create({
+            'name': 'Test By-Product',
+            'product_id': product.id,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'production_id': mo.id,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom_qty': 0,
+            'quantity_done': 0
+        })
+
+        # Add the Byproduct
+        mo.write({'move_byproduct_ids': [(4, byproduct.id)]})
+
+        # Create a Work order
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'Test Workcenter',
+        })
+
+        wo = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test work order',
+                'workcenter_id': workcenter.id,
+                'product_uom_id': self.ref('uom.product_uom_unit'),
+                'production_id': mo.id,
+            },
+        ])
+
+        # Add the work order
+        mo.write({'workorder_ids': [(4, wo.id)]})
+
+        # Check that the Byproudct still exists
+        self.assertTrue(byproduct.id in mo.move_byproduct_ids.ids)
