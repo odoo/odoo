@@ -185,7 +185,7 @@ class Followers(models.Model):
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
            sub_followers.res_id as res_id,
-           sub_followers.is_follower as _insert_followerslower
+           sub_followers.is_follower as is_follower
       FROM res_partner partner
       JOIN sub_followers ON sub_followers.pid = partner.id
                         AND (sub_followers.internal IS NOT TRUE OR partner.partner_share IS NOT TRUE)
@@ -208,7 +208,7 @@ class Followers(models.Model):
 """
             params = [subtype_id, records._name, tuple(records.ids), list(pids or []), list(pids or [])]
             self.env.cr.execute(query, tuple(params))
-            res = self.env.cr.fetchall()
+            res = self.env.cr.dictfetchall()
         # partner_ids and records: no sub query for followers but check for follower status
         elif pids and records:
             params = []
@@ -250,18 +250,23 @@ class Followers(models.Model):
 """
             params = [records._name, tuple(records.ids), tuple(pids)]
             self.env.cr.execute(query, tuple(params))
-            simplified_res = self.env.cr.fetchall()
+            simplified_res = self.env.cr.dictfetchall()
             # simplified query contains res_ids -> flatten it by making it a list
             # with res_id and add follower status
             res = []
-            for item in simplified_res:
-                res_ids = item[-1]
+            for data in simplified_res:
+                res_ids = data.pop('res_ids', [])
                 if not res_ids:  # keep res_ids Falsy (global), set as not follower
-                    flattened = [list(item) + [False]]
+                    data['is_follower'] = False
+                    data['res_id'] = False
+                    inner_list = [data]
                 else:  # generate an entry for each res_id with partner being follower
-                    flattened = [list(item[:-1]) + [res_id, True]
-                                 for res_id in res_ids]
-                res += flattened
+                    data['is_follower'] = True
+                    inner_list = [
+                        dict(res_id=res_id, **data)
+                        for res_id in res_ids
+                    ]
+                res += inner_list
         # only partner ids: no follower status involved, fetch only direct recipients information
         elif pids:
             query = """
@@ -300,39 +305,47 @@ class Followers(models.Model):
 """
             params = [tuple(pids)]
             self.env.cr.execute(query, tuple(params))
-            res = self.env.cr.fetchall()
+            res = self.env.cr.dictfetchall()
         else:
             res = []
 
         res_ids = records.ids if records else [0]
         doc_infos = dict((res_id, {}) for res_id in res_ids)
-        for (partner_id, is_active, lang, pshare, uid, ushare, notif, groups, res_id, is_follower) in res:
-            to_update = [res_id] if res_id else res_ids
+        for recipient_data in res:
+            to_update = [recipient_data['res_id']] if recipient_data.get('res_id') else res_ids
             for res_id_to_update in to_update:
                 # avoid updating already existing information, unnecessary dict update
-                if not res_id and partner_id in doc_infos[res_id_to_update]:
+                if not recipient_data.get('res_id') and recipient_data['pid'] in doc_infos[res_id_to_update]:
                     continue
-                follower_data = {
-                    'active': is_active,
-                    'id': partner_id,
-                    'is_follower': is_follower,
-                    'lang': lang,
-                    'groups': set(groups or []),
-                    'notif': notif,
-                    'share': pshare,
-                    'uid': uid,
-                    'ushare': ushare,
-                }
-                # additional information
-                if follower_data['ushare']:  # any type of share user
-                    follower_data['type'] = 'portal'
-                elif follower_data['share']:  # no user, is share -> customer (partner only)
-                    follower_data['type'] = 'customer'
-                else:  # has a user not share -> internal user
-                    follower_data['type'] = 'user'
-                doc_infos[res_id_to_update][partner_id] = follower_data
 
+                local_data = dict(recipient_data)  # local copy as otherwise could be shared through res_ids
+                local_data['groups'] = set(local_data.get('groups') or [])
+                # naming compatibility, check me
+                local_data['id'] = local_data.pop('pid')
+                local_data['share'] = local_data.pop('pshare')
+                # additional information
+                if local_data['ushare']:  # any type of share user
+                    local_data['type'] = 'portal'
+                elif local_data['share']:  # no user, is share -> customer (partner only)
+                    local_data['type'] = 'customer'
+                else:  # has a user not share -> internal user
+                    local_data['type'] = 'user'
+                doc_infos[res_id_to_update][local_data['id']] = local_data
+
+        self._get_recipient_data_sanity_check(doc_infos, records, message_type)
         return doc_infos
+
+    def _get_recipient_data_sanity_check(self, doc_infos, records, message_type):
+        """ Be sure to send a valid structure. Better safe than sorry. """
+        for recipient_data in [r for followers in doc_infos.values() for r in followers.values()]:
+            keys = recipient_data.keys()
+            expected = {'active', 'id', 'is_follower', 'lang', 'groups', 'res_id', 'notif', 'share', 'type', 'uid', 'ushare'}
+            extra = keys - expected
+            missing = expected - keys
+            if extra or missing:
+                raise ValueError(
+                    f'Invalid recipient data: extra {extra}, missing {missing}'
+                )
 
     def _get_subscription_data(self, doc_data, pids, include_pshare=False, include_active=False):
         """ Private method allowing to fetch follower data from several documents of a given model.

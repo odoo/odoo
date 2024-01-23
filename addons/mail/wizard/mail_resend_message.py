@@ -126,7 +126,7 @@ class PartnerResend(models.TransientModel):
         email_partners_data = [
             pdata
             for pid, pdata in recipients_data[0].items()
-            if pid and pdata.get('notif', 'email') == 'email'
+            if pid and pdata['notif'] == 'email'
         ]
 
         record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
