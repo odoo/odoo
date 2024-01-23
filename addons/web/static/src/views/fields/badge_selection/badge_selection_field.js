@@ -11,7 +11,12 @@ export class BadgeSelectionField extends Component {
     static props = {
         ...standardFieldProps,
         domain: { type: Array, optional: true },
-        size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg"].includes(s), default: "md"},
+        size: {
+            type: String,
+            optional: true,
+            validate: (s) => ["sm", "md", "lg"].includes(s),
+            default: "md",
+        },
     };
 
     setup() {
@@ -73,7 +78,14 @@ export class BadgeSelectionField extends Component {
                 }
                 break;
             case "selection":
-                this.props.record.update({ [this.props.name]: value });
+                if (value === this.value) {
+                    const { required } = this.props.record.fields[this.props.name];
+                    if (!required) {
+                        this.props.record.update({ [this.props.name]: false });
+                    }
+                } else {
+                    this.props.record.update({ [this.props.name]: value });
+                }
                 break;
         }
     }
@@ -91,9 +103,10 @@ export const badgeSelectionField = {
             choices: [
                 { label: "Small", value: "sm" },
                 { label: "Medium", value: "md" },
-                { label: "Large", value: "lg" },],
+                { label: "Large", value: "lg" },
+            ],
             default: "md",
-        }
+        },
     ],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: (fieldInfo, dynamicInfo) => ({
