@@ -145,8 +145,13 @@ class Followers(models.Model):
         self.env['res.groups'].flush_model(['users'])
         # if we have records and a subtype: we have to fetch followers, unless being
         # in user notification mode (contact only pids)
+        additional_fields = self._get_recipient_data_partner_fields(records, message_type)
+        additional_query = ', '.join(
+            f'partner.{fname} as {fname}'
+            for fname in additional_fields if fname in self.env['res.partner']
+        )
         if message_type != 'user_notification' and records and subtype_id:
-            query = """
+            query = f"""
     WITH sub_followers AS (
         SELECT fol.partner_id AS pid,
                fol.id AS fid,
@@ -179,7 +184,9 @@ class Followers(models.Model):
     SELECT partner.id as pid,
            partner.active as active,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
+           {additional_query + ',' if additional_query else ''}
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
@@ -212,11 +219,13 @@ class Followers(models.Model):
         # partner_ids and records: no sub query for followers but check for follower status
         elif pids and records:
             params = []
-            query = """
+            query = f"""
     SELECT partner.id as pid,
            partner.active as active,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
+           {additional_query + ',' if additional_query else ''}
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
@@ -269,11 +278,14 @@ class Followers(models.Model):
                 res += inner_list
         # only partner ids: no follower status involved, fetch only direct recipients information
         elif pids:
-            query = """
+            query = f"""
     SELECT partner.id as pid,
            partner.active as active,
+           {additional_query + ',' if additional_query else ''}
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
+           {additional_query + ',' if additional_query else ''}
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
@@ -339,13 +351,20 @@ class Followers(models.Model):
         """ Be sure to send a valid structure. Better safe than sorry. """
         for recipient_data in [r for followers in doc_infos.values() for r in followers.values()]:
             keys = recipient_data.keys()
-            expected = {'active', 'id', 'is_follower', 'lang', 'groups', 'res_id', 'notif', 'share', 'type', 'uid', 'ushare'}
+            expected = {'active', 'id', 'is_follower', 'lang', 'name', 'groups', 'res_id', 'notif', 'share', 'type', 'uid', 'ushare'}
+            expected |= set(self._get_recipient_data_partner_fields(records, message_type))
             extra = keys - expected
             missing = expected - keys
             if extra or missing:
                 raise ValueError(
                     f'Invalid recipient data: extra {extra}, missing {missing}'
                 )
+
+    def _get_recipient_data_partner_fields(self, records, message_type):
+        """ Give additional fields to fetch on 'res.partner' model when fetching
+        recipients information, notably for notification purpose: email, phone
+        number, ... """
+        return ['email', 'email_normalized']
 
     def _get_subscription_data(self, doc_data, pids, include_pshare=False, include_active=False):
         """ Private method allowing to fetch follower data from several documents of a given model.
