@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_address
+from . import test_common
 from . import test_customize
 from . import test_delivery_controller
 from . import test_delivery_express_checkout_flows
@@ -21,8 +22,6 @@ from . import test_website_sale_image
 from . import test_website_sequence
 from . import test_website_sale_show_compare_list_price
 from . import test_website_sale_visitor
-from . import test_website_sale_product
 from . import test_website_editor
 from . import test_website_sale_reorder_from_portal
 from . import test_website_sale_snippets
-from . import test_website_sale_fiscal_position
