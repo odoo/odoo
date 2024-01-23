@@ -23,7 +23,7 @@
                 Find a reseller <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
             </h4>
             <div class="dropdown d-none d-lg-block">
-                <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light #{'d-none' if not partners else ''}" aria-expanded="true" aria-label="Open categories dropdown">
+                <a role="button" href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open categories dropdown">
                     <t t-foreach="grades" t-as="grade">
                         <span t-if="grade['active']" t-out="grade['grade_id'][1]"/>
                     </t>
@@ -36,9 +36,9 @@
                 </div>
             </div>
             <div class="dropdown d-none d-lg-block">
-                <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light #{'d-none' if not partners else ''}" aria-expanded="true" aria-label="Open countries dropdown">
+                <a role="button" href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open countries dropdown">
                     <t t-foreach="countries" t-as="country">
-                        <span t-if="partners and country['active']" t-out="country['country_id'][1]"/>
+                        <span t-if="country['active']" t-out="country['country_id'][1]"/>
                     </t>
                 </a>
                 <div class="dropdown-menu">
@@ -138,6 +138,11 @@
             <div class="my-5 py-5 text-center" t-if="not partners">
                 <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
                 <a href="/partners">See all resellers</a>
+            </div>
+            <div t-elif="fallback_all_countries" class="mt-4 alert alert-primary alert-dismissible fade show" role="alert">
+                <i class="fa fa-info-circle me-2"/>
+                There are no matching partners found for the selected country. Displaying results across all countries instead.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             <t t-set="last_grade" t-value="None"/>
             <t t-foreach="partners" t-as="partner">

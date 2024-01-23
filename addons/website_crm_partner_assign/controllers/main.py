@@ -243,9 +243,11 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             country_domain, ["id", "country_id"],
             groupby="country_id", orderby="country_id")
 
-        # Fallback: Show all partners when country has no associates.
+        # Fallback on all countries if no partners found for the country and
+        # there are matching partners for other countries.
         country_ids = [c['country_id'][0] for c in countries]
-        if country and country.id not in country_ids:
+        fallback_all_countries = country and country.id not in country_ids
+        if fallback_all_countries:
             country = None
 
         # Group by grade
@@ -322,6 +324,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             'searches': post,
             'search_path': "%s" % werkzeug.urls.url_encode(post),
             'google_maps_api_key': google_maps_api_key,
+            'fallback_all_countries': fallback_all_countries,
         }
         return request.render("website_crm_partner_assign.index", values, status=partners and 200 or 404)
 
