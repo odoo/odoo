@@ -305,3 +305,38 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         sale_order.action_confirm()
         pol = sale_order._get_purchase_orders().order_line
         self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
+
+    def test_sale_order_multi_comp(self):
+        ''' Test that the purchase service is done on the right company (the one of the SO) '''
+        company_a, company_b = self.company_data["company"], self.company_data_2["company"]
+
+        service_purchase = self.env['product.product'].with_company(company_a).create({
+            'name': "service 1",
+            'purchase_ok': True,
+            'sale_ok': True,
+            'list_price': 50,
+            'type': 'service',
+            'service_to_purchase': True,
+            'seller_ids': [
+                (0, 0, {'partner_id': self.partner_b.id, 'price': 100, 'company_id': company_a.id}),
+            ],
+        })
+        self.assertFalse(service_purchase.with_company(company_b).service_to_purchase)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': service_purchase.name,
+                    'product_id': service_purchase.id,
+                    'product_uom_qty': 1,
+                })
+            ],
+        })
+
+        self.env.user.company_id = company_b
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_b.id)], limit=1)
+        self.assertTrue(po)
