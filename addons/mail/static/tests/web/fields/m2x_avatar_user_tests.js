@@ -412,8 +412,14 @@ QUnit.test("avatar card preview", async (assert) => {
         im_status: "online",
     });
     const mockRPC = (route, args) => {
-        if (route === "/web/dataset/call_kw/res.users/read") {
-            assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status", "share"]);
+        if (route === "/web/dataset/call_kw/res.users/web_read") {
+            assert.deepEqual(args.kwargs.specification, {
+                name: {},
+                email: {},
+                phone: {},
+                im_status: {},
+                share: {},
+            });
             assert.step("user read");
         }
     };

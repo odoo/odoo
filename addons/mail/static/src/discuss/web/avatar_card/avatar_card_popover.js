@@ -15,8 +15,13 @@ export class AvatarCardPopover extends Component {
     setup() {
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.users");
-        onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+        this.record = {};
+        onWillStart(this.onWillStart);
+    }
+
+    async onWillStart() {
+        [this.record.data] = await this.orm.webRead(this.model, [this.props.id], {
+            specification: this.fieldSpecification,
         });
     }
 
@@ -24,15 +29,32 @@ export class AvatarCardPopover extends Component {
         return ["name", "email", "phone", "im_status", "share"];
     }
 
+    get fieldSpecification() {
+        const fieldSpec = {};
+        this.fieldNames.forEach((fieldName) => {
+            fieldSpec[fieldName] = {};
+        });
+        return fieldSpec;
+    }
+
+    get model() {
+        //TODO: integrate this in props ???
+        return "res.users";
+    }
+
     get email() {
-        return this.user.email;
+        return this.record.data.email;
     }
 
     get phone() {
-        return this.user.phone;
+        return this.record.data.phone;
+    }
+
+    get im_status() {
+        return this.record.data.im_status; //TODO: refactor this ? not ideal
     }
 
     onSendClick() {
-        this.openChat(this.user.id);
+        this.openChat(this.record.data.id);
     }
 }

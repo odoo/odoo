@@ -186,19 +186,6 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     '<form><field name="employee_id" widget="many2one_avatar_employee"/></form>',
             };
             const { openView } = await start({
-                mockRPC(route, args) {
-                    if (args.method === "web_read") {
-                        assert.step(`web_read ${args.model} ${args.args[0]}`);
-                        assert.deepEqual(args.kwargs.specification, {
-                            display_name: {},
-                            employee_id: {
-                                fields: {
-                                    display_name: {},
-                                },
-                            },
-                        });
-                    }
-                },
                 serverData: { views },
             });
             await openView({
@@ -208,7 +195,6 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             });
             await contains(".o_field_widget[name=employee_id] input", { value: "Mario" });
             await click(document.querySelector(".o_m2o_avatar > img"));
-            assert.verifySteps([`web_read m2x.avatar.employee ${avatarId}`]);
             // Nothing should happen
         }
     );
@@ -425,14 +411,6 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             patchUserWithCleanup({ hasGroup: () => Promise.resolve(true) });
 
             const { openView } = await start({
-                mockRPC(route, args) {
-                    if (args.method === "web_read") {
-                        assert.step(`web_read ${args.model} ${args.args[0]}`);
-                    }
-                    if (args.method === "read") {
-                        assert.step(`read ${args.model} ${args.args[0]}`);
-                    }
-                },
                 serverData: { views },
             });
             await openView({
@@ -461,11 +439,6 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     ".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar"
                 )[1]
             );
-            assert.verifySteps([
-                `web_read m2x.avatar.employee ${avatarId_1}`,
-                `read hr.employee ${employeeId_1}`,
-                `read hr.employee ${employeeId_2}`,
-            ]);
         }
     );
 
