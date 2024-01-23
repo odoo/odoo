@@ -512,7 +512,7 @@
                             <group>
                                 <field name="display_name"/>
                                 <field name="model"/>
-                                <field name="res_id"/>
+                                <field name="res_id" widget="many2one_reference_integer"/>
                                 <field name="reference" widget="reference" string="Record"/>
                             </group>
                         </group>
@@ -528,7 +528,7 @@
                     <field name="display_name"/>
                     <field name="model" groups="base.group_no_one"/>
                     <field name="module" column_invisible="True"/>
-                    <field name="res_id"/>
+                    <field name="res_id" widget="many2one_reference_integer"/>
                 </tree>
             </field>
         </record>

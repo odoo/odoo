@@ -253,6 +253,10 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 activeField.required = "False";
             }
         }
+        if (fields[fieldName].type === "many2one_reference" && fieldNode.views) {
+            const viewDescr = fieldNode.views.default;
+            activeField.related = extractFieldsFromArchInfo(viewDescr, viewDescr.fields);
+        }
 
         if (fieldName in activeFields) {
             patchActiveFields(activeFields[fieldName], activeField);
@@ -349,42 +353,63 @@ export function getFieldsSpec(activeFields, fields, evalContext, { withInvisible
         const { related, limit, defaultOrderBy, invisible } = activeFields[fieldName];
         const isAlwaysInvisible = invisible === "True" || invisible === "1";
         fieldsSpec[fieldName] = {};
-        // X2M
-        if (related && (withInvisible || !isAlwaysInvisible)) {
-            fieldsSpec[fieldName].fields = getFieldsSpec(
-                related.activeFields,
-                related.fields,
-                evalContext,
-                { parentActiveFields: activeFields, withInvisible }
-            );
-            fieldsSpec[fieldName].context = getFieldContextForSpec(
-                activeFields,
-                fields,
-                fieldName,
-                evalContext
-            );
-            fieldsSpec[fieldName].limit = limit;
-            if (defaultOrderBy) {
-                fieldsSpec[fieldName].order = orderByToString(defaultOrderBy);
+        switch (fields[fieldName].type) {
+            case "one2many":
+            case "many2many": {
+                if (related && (withInvisible || !isAlwaysInvisible)) {
+                    fieldsSpec[fieldName].fields = getFieldsSpec(
+                        related.activeFields,
+                        related.fields,
+                        evalContext,
+                        { withInvisible }
+                    );
+                    fieldsSpec[fieldName].context = getFieldContextForSpec(
+                        activeFields,
+                        fields,
+                        fieldName,
+                        evalContext
+                    );
+                    fieldsSpec[fieldName].limit = limit;
+                    if (defaultOrderBy) {
+                        fieldsSpec[fieldName].order = orderByToString(defaultOrderBy);
+                    }
+                }
+                break;
             }
-        }
-        // Many2One/Reference
-        if (["many2one", "reference"].includes(fields[fieldName].type)) {
-            fieldsSpec[fieldName].fields = {};
-            if (!isAlwaysInvisible) {
-                fieldsSpec[fieldName].fields.display_name = {};
-                fieldsSpec[fieldName].context = getFieldContextForSpec(
-                    activeFields,
-                    fields,
-                    fieldName,
-                    evalContext
-                );
+            case "many2one":
+            case "reference": {
+                fieldsSpec[fieldName].fields = {};
+                if (!isAlwaysInvisible) {
+                    fieldsSpec[fieldName].fields.display_name = {};
+                    fieldsSpec[fieldName].context = getFieldContextForSpec(
+                        activeFields,
+                        fields,
+                        fieldName,
+                        evalContext
+                    );
+                }
+                break;
             }
-            continue;
-        }
-        // Properties
-        if (fields[fieldName].type === "properties") {
-            properties.push(fieldName);
+            case "many2one_reference": {
+                if (related && !isAlwaysInvisible) {
+                    fieldsSpec[fieldName].fields = getFieldsSpec(
+                        related.activeFields,
+                        related.fields,
+                        evalContext
+                    );
+                    fieldsSpec[fieldName].context = getFieldContextForSpec(
+                        activeFields,
+                        fields,
+                        fieldName,
+                        evalContext
+                    );
+                }
+                break;
+            }
+            case "properties": {
+                properties.push(fieldName);
+                break;
+            }
         }
     }
 
@@ -445,6 +470,20 @@ export function parseServerValue(field, value) {
             return {
                 resId: value.id.id,
                 resModel: value.id.model,
+                displayName: value.display_name,
+            };
+        }
+        case "many2one_reference": {
+            if (value === 0) {
+                // unset many2one_reference fields' value is 0
+                return false;
+            }
+            if (typeof value === "number") {
+                // many2one_reference fetched without "fields" key in spec -> only returns the id
+                return { resId: value };
+            }
+            return {
+                resId: value.id,
                 displayName: value.display_name,
             };
         }

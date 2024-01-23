@@ -25,6 +25,10 @@
                     <span class="o-tooltip--technical--title">Type:</span>
                     <t t-esc="field.type"/>
                 </li>
+                <li t-if="field.model_field" data-item="model_field">
+                    <span class="o-tooltip--technical--title">Model field:</span>
+                    <t t-esc="field.model_field"/>
+                </li>
                 <li t-if="field.widget" data-item="widget">
                     <span class="o-tooltip--technical--title">Widget:</span>
                     <t t-if="field.widgetDescription" t-esc="field.widgetDescription"/>

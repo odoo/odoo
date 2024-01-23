@@ -278,7 +278,7 @@ export function formatMonetary(value, options = {}) {
         const dataValue = options.data[currencyField];
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
-    return formatCurrency(value, currencyId, options)
+    return formatCurrency(value, currencyId, options);
 }
 
 /**
@@ -321,6 +321,16 @@ function formatProperties(value, field) {
  */
 export function formatReference(value, options) {
     return formatMany2one(value ? [value.resId, value.displayName] : false, options);
+}
+
+/**
+ * Returns a string representing the value of the many2one_reference field.
+ *
+ * @param {Object|false} value Object with keys "resId" and "displayName"
+ * @returns {string}
+ */
+export function formatMany2oneReference(value) {
+    return value ? formatMany2one([value.resId, value.displayName]) : "";
 }
 
 /**
@@ -376,7 +386,7 @@ registry
     .add("integer", formatInteger)
     .add("json", formatJson)
     .add("many2one", formatMany2one)
-    .add("many2one_reference", formatInteger)
+    .add("many2one_reference", formatMany2oneReference)
     .add("one2many", formatX2many)
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)

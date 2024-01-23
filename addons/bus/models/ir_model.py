@@ -16,7 +16,7 @@ class IrModel(models.Model):
                 for fname, field_data in model.fields_get(
                     attributes={
                         'name', 'type', 'relation', 'required', 'readonly', 'selection',
-                        'string', 'definition_record', 'definition_record_field',
+                        'string', 'definition_record', 'definition_record_field', 'model_field',
                     },
                 ).items()
                 if not field_data.get('relation') or field_data['relation'] in model_names_to_fetch
