@@ -323,8 +323,7 @@
                             <field name="user_ids"
                                 class="o_task_user_field"
                                 options="{'no_open': True, 'no_quick_create': True}"
-                                widget="many2many_avatar_user"
-                                domain="[('share', '=', False), ('active', '=', True)]"/>
+                                widget="many2many_avatar_user"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                         </group>
                         <group>
@@ -382,7 +381,7 @@
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
                                     />
                                     <field name="partner_id" optional="hide" widget="res_partner_many2one" attrs="{'invisible': [('project_id', '=', False)]}"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="hide"/>
@@ -419,7 +418,7 @@
                                     />
                                     <field name="partner_id" optional="hide" widget="res_partner_many2one" attrs="{'invisible': [('project_id', '=', False)]}"/>
                                     <field name="parent_id" optional="hide" groups="base.group_no_one"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="company_id" invisible="1"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="hide" />
@@ -494,7 +493,7 @@
                                class="o_project_task_project_field"
                                domain="[('type_ids', 'in', context['default_stage_id'])] if context.get('default_stage_id') else []"
                         />
-                        <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
+                        <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}"
                             widget="many2many_avatar_user"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
@@ -649,7 +648,7 @@
                     <field name="project_id" widget="project_private_task" optional="show" readonly="1" options="{'no_open': 1}" invisible="context.get('default_project_id')"/>
                     <field name="milestone_id" attrs="{'invisible': [('allow_milestones', '=', False)]}" context="{'default_project_id': project_id}" groups="project.group_project_milestone" optional="hide"/>
                     <field name="partner_id" optional="hide" widget="res_partner_many2one" attrs="{'invisible': [('project_id', '=', False)]}"/>
-                    <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" invisible="context.get('default_project_id')"/>
                     <field name="company_id" invisible="1"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
