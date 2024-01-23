@@ -22,15 +22,10 @@ export class ActivityMenu extends Component {
         this.action = useService("action");
         this.userId = user.userId;
         this.ui = useState(useService("ui"));
-        this.fetchSystrayActivities();
-    }
-
-    async fetchSystrayActivities() {
-        await this.store.fetchData({ systray_get_activities: true });
     }
 
     onBeforeOpen() {
-        this.fetchSystrayActivities();
+        this.store.fetchData({ systray_get_activities: true });
     }
 
     availableViews(group) {

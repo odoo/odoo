@@ -41,6 +41,8 @@ class WebclientController(http.Controller):
                     raise NotFound()
         if not request.env.user._is_public():
             self._add_to_res(res, self._process_request_for_logged_in_user(**kwargs))
+        if request.env.user._is_internal():
+            self._add_to_res(res, self._process_request_for_internal_user(**kwargs))
         return res
 
     def _process_request_for_logged_in_user(self, **kwargs):
@@ -58,6 +60,10 @@ class WebclientController(http.Controller):
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             messages_format = notifications.mail_message_id._message_notification_format()
             self._add_to_res(res, {"Message": messages_format})
+        return res
+
+    def _process_request_for_internal_user(self, **kwargs):
+        res = {}
         if kwargs.get("systray_get_activities"):
             groups = request.env["res.users"]._get_activity_groups()
             self._add_to_res(

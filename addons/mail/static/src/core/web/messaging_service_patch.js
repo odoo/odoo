@@ -9,6 +9,7 @@ patch(Messaging.prototype, {
         return {
             ...super.initMessagingParams,
             failures: true,
+            systray_get_activities: true,
         };
     },
 });
