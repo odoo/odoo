@@ -218,17 +218,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             return invoice
 
-    def _prepare_down_payment_product_values(self):
-        self.ensure_one()
-        return {
-            'name': _('Down payment'),
-            'type': 'service',
-            'invoice_policy': 'order',
-            'company_id': self.company_id.id,
-            'property_account_income_id': self.deposit_account_id.id,
-            'taxes_id': [Command.set(self.deposit_taxes_id.ids)],
-        }
-
     def _prepare_down_payment_section_values(self, order):
         context = {'lang': order.partner_id.lang}
 
