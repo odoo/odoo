@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.models import Command
-from odoo.tests.common import tagged, JsonRpcException
+from odoo.tests.common import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon

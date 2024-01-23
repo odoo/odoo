@@ -1,62 +1,58 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import odoo.tests
+
+from odoo.fields import Command
+from odoo.tests import HttpCase, tagged
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
-class TestUi(odoo.tests.HttpCase):
+@tagged('-at_install', 'post_install')
+class TestWishlistProcess(HttpCase):
+
     def test_01_wishlist_tour(self):
-
         self.env['product.template'].search([]).write({'website_published': False})
         # Setup attributes and attributes values
-        self.product_attribute_1 = self.env['product.attribute'].create({
-            'name': 'Legs',
-            'sequence': 10,
-        })
-        product_attribute_value_1 = self.env['product.attribute.value'].create({
-            'name': 'Steel',
-            'attribute_id': self.product_attribute_1.id,
-            'sequence': 1,
-        })
-        product_attribute_value_2 = self.env['product.attribute.value'].create({
-            'name': 'Aluminium',
-            'attribute_id': self.product_attribute_1.id,
-            'sequence': 2,
-        })
-        product_attribute_2 = self.env['product.attribute'].create({
-            'name': 'Color',
-            'sequence': 20,
-        })
-        product_attribute_value_3 = self.env['product.attribute.value'].create({
-            'name': 'White',
-            'attribute_id': product_attribute_2.id,
-            'sequence': 1,
-        })
-        product_attribute_value_4 = self.env['product.attribute.value'].create({
-            'name': 'Black',
-            'attribute_id': product_attribute_2.id,
-            'sequence': 2,
-        })
+        attributes = self.env['product.attribute'].create([
+            {
+                'name': 'Legs',
+                'sequence': 10,
+                'value_ids': [
+                    Command.create({
+                        'name': 'Steel',
+                        'sequence': 1,
+                    }),
+                    Command.create({
+                        'name': 'Aluminium',
+                        'sequence': 2,
+                    }),
+                ],
+            }, {
+                'name': 'Color',
+                'sequence': 20,
+                'value_ids': [
+                    Command.create({
+                        'name': 'White',
+                        'sequence': 1,
+                    }),
+                    Command.create({
+                        'name': 'Black',
+                        'sequence': 2,
+                    }),
+                ],
+            },
+        ])
 
         # Create product template
-        self.product_product_4_product_template = self.env['product.template'].create({
+        self.env['product.template'].create({
             'name': 'Customizable Desk (TEST)',
             'standard_price': 500.0,
             'list_price': 750.0,
             'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)]
+                }) for attribute in attributes
+            ],
         })
-
-        # Generate variants
-        self.env['product.template.attribute.line'].create([{
-            'product_tmpl_id': self.product_product_4_product_template.id,
-            'attribute_id': self.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
-        }, {
-            'product_tmpl_id': self.product_product_4_product_template.id,
-            'attribute_id': product_attribute_2.id,
-            'value_ids': [(4, product_attribute_value_3.id), (4, product_attribute_value_4.id)],
-
-        }])
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
@@ -67,26 +63,20 @@ class TestUi(odoo.tests.HttpCase):
             'name': 'color',
             'display_type': 'color',
             'create_variant': 'always',
+            'value_ids': [
+                Command.create({'name': 'red'}),
+                Command.create({'name': 'blue'}),
+                Command.create({'name': 'black'}),
+            ]
         })
         self.env['product.template'].create({
             'name': 'Rock',
             'is_published': True,
-            'attribute_line_ids': [(0, 0, {
-                'attribute_id': attribute.id,
-                'value_ids': [
-                    (0, 0, {
-                        'name': 'red',
-                        'attribute_id': attribute.id,
-                    }),
-                    (0, 0, {
-                        'name': 'blue',
-                        'attribute_id': attribute.id,
-                    }),
-                    (0, 0, {
-                        'name': 'black',
-                        'attribute_id': attribute.id,
-                    }),
-                ],
-            })],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                }),
+            ],
         })
         self.start_tour("/", 'shop_wishlist_admin', login="admin")

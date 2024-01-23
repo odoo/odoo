@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo.fields import Command
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -53,22 +54,23 @@ class TestUi(odoo.tests.HttpCase):
             'delivery_type': 'base_on_rule',
             'product_id': self.product_delivery_poste.id,
             'website_published': True,
+            'price_rule_ids': [
+                Command.create({
+                    'max_value': 5,
+                    'list_base_price': 20,
+                }),
+                Command.create({
+                    'operator': '>=',
+                    'max_value': 5,
+                    'list_base_price': 50,
+                }),
+                Command.create({
+                    'operator': '>=',
+                    'max_value': 300,
+                    'variable': 'price',
+                    'list_base_price': 0,
+                }),
+            ]
         })
-        self.env['delivery.price.rule'].create([{
-            'carrier_id': self.carrier.id,
-            'max_value': 5,
-            'list_base_price': 20,
-        }, {
-            'carrier_id': self.carrier.id,
-            'operator': '>=',
-            'max_value': 5,
-            'list_base_price': 50,
-        }, {
-            'carrier_id': self.carrier.id,
-            'operator': '>=',
-            'max_value': 300,
-            'variable': 'price',
-            'list_base_price': 0,
-        }])
 
         self.start_tour("/", 'check_free_delivery', login="admin")

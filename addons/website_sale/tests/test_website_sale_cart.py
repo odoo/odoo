@@ -3,25 +3,24 @@
 from unittest.mock import patch
 
 from odoo.exceptions import UserError
-from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.fields import Command
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import tagged
 
+from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class WebsiteSaleCart(TransactionCaseWithUserPortal):
+class TestWebsiteSaleCart(BaseUsersCommon, WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(WebsiteSaleCart, cls).setUpClass()
-        cls.website = cls.env['website'].browse(1)
+        super().setUpClass()
         cls.WebsiteSaleController = WebsiteSale()
-        cls.public_user = cls.env.ref('base.public_user')
 
     def test_add_cart_deleted_product(self):
         # Create a published product then unlink it
@@ -172,3 +171,120 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
+
+    def test_cart_update_with_fpos(self):
+        # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
+        pricelist = self.pricelist
+        # Add 10% tax on product
+        tax10, tax6 = self.env['account.tax'].create([
+            {'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent'},
+            {'name': "Test tax 6", 'amount': 6, 'price_include': True, 'amount_type': 'percent'},
+        ])
+
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 110,
+            'taxes_id': [Command.set([tax10.id])],
+        })
+
+        # Add discount of 50% for pricelist
+        pricelist.write({
+            'discount_policy': 'without_discount',
+            'item_ids': [
+                Command.create({
+                    'base': "list_price",
+                    'compute_price': "percentage",
+                    'percent_price': 50,
+                }),
+            ],
+        })
+
+        # Create fiscal position mapping taxes 10% -> 6%
+        fpos = self.env['account.fiscal.position'].create({
+            'name': 'test',
+            'tax_ids': [
+                Command.create({
+                    'tax_src_id': tax10.id,
+                    'tax_dest_id': tax6.id,
+                })
+            ]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'product_id': test_product.id,
+                })
+            ]
+        })
+        sol = so.order_line
+        self.assertEqual(round(sol.price_total), 55.0, "110$ with 50% discount 10% included tax")
+        self.assertEqual(round(sol.price_tax), 5.0, "110$ with 50% discount 10% included tax")
+
+        so.fiscal_position_id = fpos
+        so._recompute_taxes()
+        so._cart_update(product_id=test_product.id, line_id=sol.id, set_qty=2)
+        self.assertEqual(round(sol.price_total), 106, "2 units @ 100$ with 50% discount + 6% tax (mapped from fp 10% -> 6%)")
+
+    def test_cart_update_with_fpos_no_variant_product(self):
+        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
+        # Add 10% tax on product
+        tax10, tax0 = self.env['account.tax'].create([
+            {'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent'},
+            {'name': "Test tax 0", 'amount': 0, 'price_include': True, 'amount_type': 'percent'},
+        ])
+
+        # Create fiscal position mapping taxes 10% -> 0%
+        fpos = self.env['account.fiscal.position'].create({
+            'name': 'test',
+            'tax_ids': [
+                Command.create({
+                    'tax_src_id': tax10.id,
+                    'tax_dest_id': tax0.id,
+                }),
+            ],
+        })
+
+        # create an attribute with one variant
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'test_attr',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({
+                    'name': 'pa_value',
+                    'sequence': 1,
+                }),
+            ],
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'prod_no_variant',
+            'list_price': 110,
+            'taxes_id': [Command.set([tax10.id])],
+            'is_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attribute.id,
+                    'value_ids': [Command.set(product_attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        product = product_template.product_variant_id
+
+        # create a so for user using the fiscal position
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                })
+            ]
+        })
+        sol = so.order_line
+        self.assertEqual(round(sol.price_total), 110.0, "110$ with 10% included tax")
+
+        so.fiscal_position_id = fpos
+        so._recompute_taxes()
+        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
+        self.assertEqual(round(sol.price_total), 200, "200$ with public price+ 0% tax (mapped from fp 10% -> 0%)")

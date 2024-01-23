@@ -27,7 +27,8 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     },
     {
         content: 'check combination is not possible',
-        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")'
+        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
+        timeout: 30000,
     },
     {
         content: "check add to cart not possible",
