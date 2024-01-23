@@ -168,6 +168,12 @@ const ODOO_RESIDUAL_ARGS = () => [
     ),
 ];
 
+const ODOO_PARTNER_BALANCE_ARGS = () => {
+    const partner_arg = arg("partner_ids (string)", _t("The partner ids (separated by a comma)."));
+    const residual_args = ODOO_RESIDUAL_ARGS();
+    return [partner_arg].concat(residual_args);
+}
+
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
@@ -442,6 +448,82 @@ functionRegistry.add("ODOO.RESIDUAL", {
                 _offset,
                 _companyId,
                 _includeUnposted
+            ),
+            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
+        };
+    },
+})
+
+functionRegistry.add("ODOO.PARTNER.BALANCE", {
+    description: _t("Return the balance of partners for the specified account(s) and period"),
+    args: ODOO_PARTNER_BALANCE_ARGS(),
+    category: "Odoo",
+    returns: ["NUMBER"],
+    compute: function (
+        partnerIds,
+        accountCodes,
+        dateFrom,
+        dateTo,
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
+    ) {
+        const _partnerIds = toString(partnerIds)
+            .split(",")
+            .map((code) => toNumber(code, this.locale))
+            .sort();
+        const _accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
+        const _offset = toNumber(offset, this.locale);
+
+        if ( !dateFrom?.value ) {
+            const d = new Date();
+            dateFrom = { value: d.getFullYear() }
+        }
+        else {
+            if (dateFrom?.format) {
+                dateFrom = { ...dateFrom };
+                dateFrom.value = formatValue(dateFrom.value, {
+                    format: dateFrom.format,
+                    locale: this.locale,
+                });
+            }
+        }
+        const _dateFrom = parseAccountingDate(dateFrom?.value, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: dateFrom?.value }
+        } else {
+            if (dateTo?.format) {
+                dateTo = { ...dateTo };
+                dateTo.value = formatValue(dateTo.value, {
+                    format: dateTo.format,
+                    locale: this.locale,
+                });
+            }
+        }
+        const _dateTo = parseAccountingDate(dateTo?.value, this.locale);
+        const _companyId = toNumber(companyId, this.locale);
+        const _includeUnposted = toBoolean(includeUnposted);
+        return {
+            value: this.getters.getAccountPrefixDebit(
+                _accountCodes,
+                _dateFrom,
+                _dateTo,
+                _offset,
+                _companyId,
+                _includeUnposted,
+                _partnerIds
+            ) -
+            this.getters.getAccountPrefixCredit(
+                _accountCodes,
+                _dateFrom,
+                _dateTo,
+                _offset,
+                _companyId,
+                _includeUnposted,
+                _partnerIds
             ),
             format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
         };

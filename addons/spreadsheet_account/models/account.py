@@ -165,7 +165,7 @@ class AccountMove(models.Model):
         """
         all_accounts, all_lines = self._get_accounts_and_lines_for_all_cells(
             args_list,
-            extra_aggregates=['debit:array_agg', 'credit:array_agg']
+            extra_aggregates=['partner_id:array_agg', 'debit:array_agg', 'credit:array_agg']
         )
 
         lines_dict = defaultdict(
@@ -177,8 +177,9 @@ class AccountMove(models.Model):
 
         for args in args_list:
             subcodes = {subcode for subcode in args["codes"] if subcode}
+            partner_ids = args.get('partner_ids', [])
 
-            if not subcodes:
+            if not subcodes and not partner_ids:
                 results.append({'credit': 0, 'debit': 0})
                 continue
 
@@ -193,17 +194,23 @@ class AccountMove(models.Model):
             )
 
             accounts = self.env['account.account']
-            for subcode in subcodes:
-                accounts += all_accounts.filtered(lambda acc: acc.code.startswith(subcode))
+            if subcodes:
+                for subcode in subcodes:
+                    accounts += all_accounts.filtered(lambda acc: acc.code.startswith(subcode))
+            else:
+                accounts += all_accounts.filtered(lambda acc: acc.account_type in ["liability_payable", "asset_receivable"])
 
             cell_debit = 0.0
             cell_credit = 0.0
             for account in accounts:
                 include_initial_balance = account.include_initial_balance
                 for state in states:
-                    for line_date, line_debit, line_credit in zip(*lines_dict[(company_id, state, account.id)]):
+                    for line_date, line_partner_id, line_debit, line_credit in zip(*lines_dict[(company_id, state, account.id)]):
                         if (include_initial_balance and line_date > end) \
                            or (not include_initial_balance and (line_date < start or line_date > end)):
+                            continue
+
+                        if partner_ids and line_partner_id not in partner_ids:
                             continue
 
                         cell_debit += line_debit
