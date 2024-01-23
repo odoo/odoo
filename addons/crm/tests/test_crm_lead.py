@@ -303,6 +303,48 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.date_closed, datetime.now(), "Closed date is updated after marking lead as lost")
 
     @users('user_sales_manager')
+    def test_crm_lead_message_post_leads_same_email_from(self):
+        """ Test that when we post a message on a lead without a partner,
+            all leads with the same`email_from` will have their partner_id
+            set to the same partner."""
+
+        leads = self.env['crm.lead'].create([{
+            'name': 'TestLead',
+            'email_from': 'raoulette@test.example.com',
+        } for _ in range(2)])
+
+        partner = self.env['res.partner'].find_or_create('raoulette@test.example.com')
+        leads[0].message_post(body='Test', subtype_xmlid='mail.mt_comment', partner_ids=[partner.id])
+
+        for lead in leads:
+            self.assertEqual(lead.partner_id, partner, 'Partner should be set on all leads with same `email_from`')
+
+    @users('user_sales_manager')
+    def test_crm_lead_message_post_partner_email(self):
+        """ Test that a message posted on a lead with the default partner
+            from suggested partner (who has only an email) in the chatter
+            will update the partner name with the contact name on the lead. """
+        lead = self.env['crm.lead'].create({
+            'name': 'TestLead',
+            'contact_name': 'Raoulette TestContact',
+            'email_from': 'raoulette@test.example.com',
+        })
+        contact_name = lead.contact_name
+
+        # Simulate partner creation on message post
+        # with default suggested partner in the chatter
+        partner = self.env['res.partner'].search([('email', '=', 'raoulette@test.example.com')])
+        self.assertFalse(partner)
+        partner = self.env['res.partner'].find_or_create('raoulette@test.example.com')
+        self.assertEqual(partner.email, partner.name)
+        self.assertEqual(partner.email, lead.email_normalized)
+        lead.message_post(body='Test', subtype_xmlid='mail.mt_comment', partner_ids=[partner.id])
+
+        # Lead should have the same contact name as partner
+        self.assertEqual(partner.name, lead.contact_name)
+        self.assertEqual(partner.name, contact_name)
+
+    @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
         lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
         partner_email, partner_phone = self.contact_2.email, self.contact_2.phone

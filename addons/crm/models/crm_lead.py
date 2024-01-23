@@ -2027,6 +2027,9 @@ class Lead(models.Model):
                 lambda partner: partner.email == self.email_from or (self.email_normalized and partner.email_normalized == self.email_normalized)
             )
             if new_partner:
+                customer_info = self._get_customer_information().get(self.email_normalized or self.email_from, {})
+                if customer_info and new_partner[0].email == new_partner[0].name != customer_info.get('name'):
+                    new_partner[0].update(customer_info)
                 if new_partner[0].email_normalized:
                     email_domain = ('email_normalized', '=', new_partner[0].email_normalized)
                 else:
