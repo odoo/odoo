@@ -1406,13 +1406,6 @@
 
         // Color Pickers
         .o_we_so_color_palette.o_we_user_value_widget {
-            // Add a margin between color pickers and button groups / widgets
-            // when next to another without impacting the margin of sibling
-            // color pickers
-            + .o_we_user_value_widget:not(.o_we_so_color_palette) {
-                margin-left: $o-we-sidebar-content-field-multi-spacing * 4 !important;
-            }
-
             .o_we_color_preview {
                 @extend %o-preview-alpha-background;
                 flex: 0 0 auto;
@@ -1812,6 +1805,13 @@
                 we-title {
                     font-weight: 600;
                 }
+            }
+
+            // Add a margin between color pickers and button groups / widgets
+            // when next to another without impacting the margin of sibling
+            // color pickers
+            .o_we_so_color_palette.o_we_user_value_widget + .o_we_user_value_widget:not(.o_we_so_color_palette) {
+                margin-left: $o-we-sidebar-content-field-multi-spacing * 4 !important;
             }
         }
 
