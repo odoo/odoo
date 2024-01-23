@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
 import { getDashboardServerData } from "../utils/data";
 
@@ -75,6 +75,55 @@ QUnit.test("displays figures in first sheet", async (assert) => {
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
     assert.containsOnce(fixture, ".o-chart-container");
+});
+
+QUnit.test("double clicking on a figure doesn't open the side panel", async (assert) => {
+    const figure = {
+        tag: "chart",
+        height: 500,
+        width: 500,
+        x: 100,
+        y: 100,
+        data: {
+            type: "line",
+            dataSetsHaveTitle: false,
+            dataSets: ["A1"],
+            legendPosition: "top",
+            verticalAxisPosition: "left",
+            title: "",
+        },
+    };
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                figures: [{ ...figure, id: "figure1" }],
+            },
+        ],
+    };
+    const serverData = getDashboardServerData();
+    serverData.models["spreadsheet.dashboard.group"].records = [
+        {
+            dashboard_ids: [789],
+            id: 1,
+            name: "Chart",
+        },
+    ];
+    serverData.models["spreadsheet.dashboard"].records = [
+        {
+            id: 789,
+            name: "Spreadsheet with chart figure",
+            json_data: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
+            dashboard_group_id: 1,
+        },
+    ];
+    const fixture = getFixture();
+    await createSpreadsheetDashboard({ serverData });
+    await triggerEvent(fixture, ".o-chart-container", "focus");
+    await triggerEvent(fixture, ".o-chart-container", "dblclick");
+    assert.containsOnce(fixture, ".o-chart-container");
+    assert.containsNone(fixture, ".o-sidePanel");
 });
 
 QUnit.test("can switch dashboard", async (assert) => {
