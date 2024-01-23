@@ -120,10 +120,8 @@ var SnippetEditor = Widget.extend({
                 // _initDragAndDrop function. So adding it here is probably
                 // useless. To check. The fact that that class is added in any
                 // case should probably reviewed in master anyway (TODO).
-                this.options.wysiwyg.odooEditor.observerUnactive('image_drag_and_drop');
                 this.$target[0].classList.add("o_draggable");
                 this.draggableComponentImgs = this._initDragAndDrop("img", ".o_draggable", this.$target[0]);
-                this.options.wysiwyg.odooEditor.observerActive('image_drag_and_drop');
             }
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
