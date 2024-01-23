@@ -73,10 +73,10 @@
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.company_id.phone}
                     % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
+                        | <a href="${'mailto:%s' % object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
                     % endif
                     % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
+                        | <a href="${object.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.company_id.website}
                     </a>
                     % endif
@@ -171,10 +171,10 @@
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.company_id.phone}
                     % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
+                        | <a href="${'mailto:%s' % object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
                     % endif
                     % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
+                        | <a href="${object.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.company_id.website}
                     </a>
                     % endif
@@ -317,10 +317,10 @@
                 <tr><td valign="middle" align="left" style="opacity: 0.7;">
                     ${object.company_id.phone}
                     % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
+                        | <a href="${'mailto:%s' % object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
                     % endif
                     % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
+                        | <a href="${object.company_id.website}" style="text-decoration:none; color: #454748;">
                         ${object.company_id.website}
                     </a>
                     % endif
