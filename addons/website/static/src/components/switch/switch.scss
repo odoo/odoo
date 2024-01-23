@@ -6,6 +6,11 @@ $o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
     font-weight: normal;
     cursor: pointer;
 
+    &.o_switch_disabled {
+        opacity: 50%;
+        pointer-events: none;
+    }
+
     > input {
         display: none;
 
