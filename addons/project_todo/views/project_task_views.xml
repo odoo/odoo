@@ -170,8 +170,7 @@
                         <field name="user_ids"
                                class="o_task_user_field"
                                options="{'no_open': True, 'no_quick_create': True}"
-                               widget="many2many_avatar_user"
-                               domain="[('share', '=', False), ('active', '=', True)]"/>
+                               widget="many2many_avatar_user"/>
                         <field name="tag_ids" widget="many2many_tags"
                                options="{'color_field': 'color', 'no_create_edit': True}"
                                context="{'project_id': project_id}"
