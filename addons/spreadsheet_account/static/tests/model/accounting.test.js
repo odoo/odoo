@@ -59,6 +59,7 @@ test("evaluation with reference to a month period", async () => {
                             year: 2022,
                         },
                         include_unposted: false,
+                        partner_ids: [],
                     },
                 ]);
                 expect.step("spreadsheet_fetch_debit_credit");
@@ -197,6 +198,7 @@ test("Server requests", async () => {
                 codes: ["100"],
                 companyId: null,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -206,6 +208,7 @@ test("Server requests", async () => {
                 codes: ["100"],
                 companyId: null,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -215,6 +218,7 @@ test("Server requests", async () => {
                 codes: ["100"],
                 companyId: null,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -224,6 +228,7 @@ test("Server requests", async () => {
                 codes: ["10"],
                 companyId: null,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -233,6 +238,7 @@ test("Server requests", async () => {
                 codes: ["5"],
                 companyId: 2,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -242,6 +248,7 @@ test("Server requests", async () => {
                 codes: ["5"],
                 companyId: null,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -251,6 +258,7 @@ test("Server requests", async () => {
                 codes: ["5"],
                 companyId: null,
                 includeUnposted: false,
+                partner_ids: [],
             })
         ),
         JSON.stringify(
@@ -260,6 +268,7 @@ test("Server requests", async () => {
                 codes: ["100"],
                 companyId: null,
                 includeUnposted: true,
+                partner_ids: [],
             })
         ),
     ]);
