@@ -10,22 +10,24 @@
                     <field name="group_l10n_in_reseller"/>
                 </setting>
             </block>
-            <xpath expr="//app[@name='account']" position="inside">
-                <div id="india_integration_section">
-                    <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
-                        <setting id="gsp_setting" string="Setup E-invoice" help="Check the documentation to get credentials" documentation="/applications/finance/fiscal_localizations/india.html#e-invoice-system" company_dependent="1">
-                            <field name="module_l10n_in_edi"/>
-                        </setting>
-                        <setting id="l10n_in_eway_iap" string="Setup Electronic Waybill" help="Check the documentation to get credentials" documentation="/applications/finance/fiscal_localizations/india.html#e-way-bill" company_dependent="1">
-                            <field name="module_l10n_in_edi_ewaybill"/>
-                        </setting>
-                        <setting id="l10n_in_gst_iap" string="Indian GST" help="Setup GST Service for this company" documentation="/applications/finance/fiscal_localizations/india.html#indian-gst-return-filing" company_dependent="1">
-                            <field name="module_l10n_in_reports_gstr" widget="upgrade_boolean"/>
-                        </setting>
-                    </block>
-                </div>
-            </xpath>
             <app name="account" position="inside">
+                <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
+                    <setting id="l10n_in_edi_setting" string="Setup E-invoice" help="Check the documentation to get credentials" documentation="/applications/finance/fiscal_localizations/india.html#e-invoice-system" company_dependent="1">
+                        <field name="module_l10n_in_edi"/>
+                    </setting>
+                    <setting id="l10n_in_edi_ewaybill_setting" string="Setup Electronic Waybill" help="Check the documentation to get credentials" documentation="/applications/finance/fiscal_localizations/india.html#e-way-bill" company_dependent="1">
+                        <field name="module_l10n_in_edi_ewaybill"/>
+                    </setting>
+                    <setting id="l10n_in_reports_gstr_setting" string="Indian GST" help="Setup GST Service for this company" documentation="/applications/finance/fiscal_localizations/india.html#indian-gst-return-filing" company_dependent="1">
+                        <field name="module_l10n_in_reports_gstr" widget="upgrade_boolean"/>
+                    </setting>
+                    <setting id="l10n_in_edi_env_setting" string="Environment" invisible="module_l10n_in_edi == module_l10n_in_edi_ewaybill == module_l10n_in_reports_gstr == False">
+                        <field name="l10n_in_edi_env" widget="radio" options="{'horizontal':true}"/>
+                        <div>
+                            <button name="l10n_in_edi_buy_iap" title="Costs 1 credit per transaction. Free 200 credits will be available for the first time." icon="oi-arrow-right" type="object" string="Buy credits" class="btn-link"/>
+                        </div>
+                    </setting>
+                </block>
                 <block title="Product" name="l10n_in_product_setting_container" invisible="country_code != 'IN'">
                     <setting string="Enable HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
                         <field name="l10n_in_hsn_code_digit"/>

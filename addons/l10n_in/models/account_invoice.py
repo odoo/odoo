@@ -30,6 +30,14 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
+    l10n_in_edi_cancel_reason = fields.Selection(selection=[
+        ("1", "Duplicate"),
+        ("2", "Data Entry Mistake"),
+        ("3", "Order Cancelled"),
+        ("4", "Others"),
+        ], string="Cancel reason", copy=False)
+    l10n_in_edi_cancel_remarks = fields.Char("Cancel remarks", copy=False)
+    l10n_in_edi_show_cancel = fields.Boolean(compute="_compute_l10n_in_edi_show_cancel", string="E-invoice(IN) is sent?")
 
     @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment')
     def _compute_l10n_in_gst_treatment(self):
@@ -60,6 +68,14 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
+
+    @api.depends('edi_document_ids')
+    def _compute_l10n_in_edi_show_cancel(self):
+        for invoice in self:
+            invoice.l10n_in_edi_show_cancel = bool(invoice.edi_document_ids.filtered(
+                lambda i: i.edi_format_id.code == "in_einvoice_1_03"
+                and i.state in ("sent", "to_cancel", "cancelled")
+            ))
 
     @api.onchange('name')
     def _onchange_name_warning(self):
