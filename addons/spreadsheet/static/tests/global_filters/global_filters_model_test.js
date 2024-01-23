@@ -945,6 +945,21 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
     });
 
     QUnit.test(
+        "ODOO.FILTER.VALUE with escaped quotes in the filter label",
+        async function (assert) {
+            const model = await createModelWithDataSource();
+            await addGlobalFilter(model, {
+                id: "42",
+                type: "text",
+                label: 'my "special" filter',
+                defaultValue: "Jean-Jacques",
+            });
+            setCellContent(model, "A1", '=ODOO.FILTER.VALUE("my \\"special\\" filter")');
+            assert.equal(getCellValue(model, "A1"), "Jean-Jacques");
+        }
+    );
+
+    QUnit.test(
         "ODOO.FILTER.VALUE formulas are updated when filter label is changed",
         async function (assert) {
             assert.expect(1);
