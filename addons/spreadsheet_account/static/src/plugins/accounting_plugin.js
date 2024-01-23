@@ -46,10 +46,11 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
      * @returns {number}
      */
-    getAccountPrefixCredit(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted);
+    getAccountPrefixCredit(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds=[]) {
+        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds);
         return data.credit;
     }
 
@@ -61,10 +62,11 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
      * @returns {number}
      */
-    getAccountPrefixDebit(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted);
+    getAccountPrefixDebit(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds=[]) {
+        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds);
         return data.debit;
     }
 
@@ -103,9 +105,10 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific companyId to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {number[]} partnerIds ids of the partners
      * @returns {{ debit: number, credit: number }}
      */
-    _fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
+    _fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted, partnerIds) {
         dateFrom.year += offset;
         dateTo.year += offset;
         // Excel dates start at 1899-12-30, we should not support date ranges
@@ -121,7 +124,7 @@ export class AccountingPlugin extends OdooUIPlugin {
         return this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_debit_credit",
-            camelToSnakeObject({ dateFrom, dateTo, codes, companyId, includeUnposted })
+            camelToSnakeObject({ dateFrom, dateTo, codes, companyId, includeUnposted, partnerIds })
         );
     }
 
