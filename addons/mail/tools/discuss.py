@@ -20,3 +20,36 @@ def get_sfu_url(env) -> str | None:
 
 def get_sfu_key(env) -> str | None:
     return env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
+
+
+class StoreData():
+    """Helper to build a dict of data for sending to web client.
+    It supports merging of data from multiple sources, either through list extend or dict update.
+    The keys of data are the name of models as defined in mail JS code, and the values are any
+    format supported by store.insert() method (single dict or list of dict for each model name)."""
+    def __init__(self):
+        self.data = {}
+
+    def add(self, data):
+        """Adds data to the store."""
+        for key, val in data.items():
+            if not val:
+                continue
+            if not isinstance(val, dict) and not isinstance(val, list):
+                assert False, f"unsupported data type: {val}"
+            if not key in self.data:
+                self.data[key] = val
+            else:
+                if isinstance(val, list):
+                    if not isinstance(self.data[key], list):
+                        self.data[key] = [self.data[key]]
+                    self.data[key].extend(val)
+                elif isinstance(val, dict):
+                    if isinstance(self.data[key], dict):
+                        self.data[key].update(val)
+                    else:
+                        self.data[key].append(val)
+
+    def get_result(self):
+        """Gets resulting data built from adding all data together."""
+        return self.data
