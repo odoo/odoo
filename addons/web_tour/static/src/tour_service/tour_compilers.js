@@ -7,11 +7,12 @@ import { tourState } from "./tour_state";
 import {
     callWithUnloadCheck,
     getConsumeEventType,
-    getFirstVisibleElement,
-    getJQueryElementFromSelector,
+    getFirstVisibleNode,
+    getNodesFromSelector,
     getScrollParent,
     RunningTourActionHelper,
 } from "./tour_utils";
+import { queryAll } from "@odoo/hoot-dom";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -36,38 +37,54 @@ import {
  * @param {string|undefined} shadowDOM - selector of the shadow root host
  * @returns {Element | undefined}
  */
-function findTrigger(selector, inModal, shadowDOM) {
-    const $target = $(shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document);
-    const $visibleModal = $target.find(".modal:visible").last();
-    let $el;
-    if (inModal !== false && $visibleModal.length) {
-        $el = $visibleModal.find(selector);
-    } else {
-        $el = getJQueryElementFromSelector(selector, $target);
+function findTrigger(selector, shadowDOM, inModal) {
+    const target = shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document;
+    let nodes;
+    if (inModal !== false) {
+        const visibleModal = queryAll(".modal", { root: target, visible: true }).at(-1);
+        if (visibleModal instanceof Node) {
+            nodes = queryAll(selector, { root: visibleModal });
+        }
     }
-    return getFirstVisibleElement($el).get(0);
+    if (!nodes) {
+        nodes = getNodesFromSelector(selector, target);
+    }
+    const firstVisibleNode = getFirstVisibleNode(nodes);
+    return firstVisibleNode;
 }
 
 /**
- * @param {string|undefined} shadowDOM - selector of the shadow root host
+ * @param {Tour} tour
+ * @param {TourStep} step
+ * @param {"trigger"|"extra_trigger"|"alt_trigger"|"skip_trigger"} what
+ * @returns {HTMLElement|null}
  */
-function findExtraTrigger(selector, shadowDOM) {
-    const $target = $(shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document);
-    const $el = getJQueryElementFromSelector(selector, $target);
-    return getFirstVisibleElement($el).get(0);
+function tryFindTrigger(tour, step, what) {
+    const selector = step[what];
+    const in_modal = what === "extra_trigger" ? false : step.in_modal;
+    try {
+        return findTrigger(selector, step.shadow_dom, in_modal);
+    } catch {
+        const error = `${tour.name} > ${step.content} > ${what} not found : ${selector}`;
+        if (tourState.get(tour.name, "devTools")) {
+            console.error(error);
+            // eslint-disable-next-line no-debugger
+            debugger;
+            findTrigger(selector, step.shadow_dom, in_modal);
+        }
+        throw new Error(error);
+    }
 }
 
-function findStepTriggers(step) {
-    const triggerEl = findTrigger(step.trigger, step.in_modal, step.shadow_dom);
-    const altEl = findTrigger(step.alt_trigger, step.in_modal, step.shadow_dom);
-    const skipEl = findTrigger(step.skip_trigger, step.in_modal, step.shadow_dom);
-
+function findStepTriggers(tour, step) {
+    const triggerEl = tryFindTrigger(tour, step, "trigger");
+    const altEl = tryFindTrigger(tour, step, "alt_trigger");
+    const skipEl = tryFindTrigger(tour, step, "skip_trigger");
     // `extraTriggerOkay` should be true when `step.extra_trigger` is undefined.
     // No need for it to be in the modal.
     const extraTriggerOkay = step.extra_trigger
-        ? findExtraTrigger(step.extra_trigger, step.shadow_dom)
+        ? tryFindTrigger(tour, step, "extra_trigger")
         : true;
-
     return { triggerEl, altEl, extraTriggerOkay, skipEl };
 }
 
@@ -151,14 +168,12 @@ function canContinue(el, step) {
             ? el.ownerDocument.contains(rootNode.host)
             : el.ownerDocument.contains(el);
     const isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
-    const isBlocked = document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
-    return (
-        isInDoc &&
-        isElement &&
-        !isBlocked &&
-        (!step.allowInvisible ? isVisible(el) : true) &&
-        (!el.disabled || step.isCheck)
-    );
+    const isDisplayed = !step.allowInvisible ? isVisible(el) : true;
+    const isBlocked =
+        document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
+    const isEnabled = !el.disabled || step.isCheck;
+    const check = isInDoc && isElement && isDisplayed && isEnabled && !isBlocked;
+    return check;
 }
 
 /**
@@ -222,7 +237,7 @@ export function compileStepManual(stepIndex, step, options) {
                     return proceedWith;
                 }
 
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
+                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(tour, step);
 
                 if (skipEl) {
                     return skipEl;
@@ -274,53 +289,75 @@ let tourTimeout;
 
 /** @type {TourStepCompiler} */
 export function compileStepAuto(stepIndex, step, options) {
-    const { tour, pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } = options;
+    const { tour, pointer, stepDelay } = options;
+    const { keepWatchBrowser, showPointerDuration, onStepConsummed } = options;
+
     let skipAction = false;
+
+    const triggerStep = () => {
+        const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(tour, step);
+
+        let stepEl = extraTriggerOkay && (triggerEl || altEl);
+
+        if (skipEl) {
+            skipAction = true;
+            stepEl = skipEl;
+        }
+
+        if (!stepEl) {
+            return false;
+        }
+
+        const check = canContinue(stepEl, step);
+        if (tourState.get(tour.name, "devTools")) {
+            console.log(`Trigger found for ${step.trigger}`);
+            console.log(`Can continue ? ${check}`);
+        }
+        return check && stepEl;
+    };
+
     return [
+        {
+            action: () => {
+                if (step.break) {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                }
+            },
+        },
         {
             action: async () => {
                 // This delay is important for making the current set of tour tests pass.
                 // IMPROVEMENT: Find a way to remove this delay.
-                await new Promise(resolve => requestAnimationFrame(resolve))
+                await new Promise((resolve) => requestAnimationFrame(resolve));
             },
         },
         {
             action: async () => {
                 skipAction = false;
                 console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
-                if (!keepWatchBrowser) {
-                    browser.clearTimeout(tourTimeout);
+                browser.clearTimeout(tourTimeout);
+                if (!keepWatchBrowser && !step.freeze) {
                     tourTimeout = browser.setTimeout(() => {
                         // The logged text shows the relative position of the failed step.
                         // Useful for finding the failed step.
                         console.warn(describeFailedStepDetailed(step, tour));
                         // console.error notifies the test runner that the tour failed.
                         console.error(describeFailedStepSimple(step, tour));
+                        if (tourState.get(tour.name, "devTools")) {
+                            // eslint-disable-next-line no-debugger
+                            debugger;
+                            triggerStep();
+                        }
                     }, (step.timeout || 10000) + stepDelay);
                 }
                 await new Promise((resolve) => browser.setTimeout(resolve, stepDelay));
             },
         },
         {
-            trigger: () => {
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(step);
-
-                let stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-                if (skipEl) {
-                    skipAction = true;
-                    stepEl = skipEl;
-                }
-
-                if (!stepEl) {
-                    return false;
-                }
-
-                return canContinue(stepEl, step) && stepEl;
-            },
+            trigger: triggerStep,
             action: async (stepEl) => {
                 tourState.set(tour.name, "currentIndex", stepIndex + 1);
-
                 if (skipAction) {
                     return;
                 }
@@ -328,45 +365,56 @@ export function compileStepAuto(stepIndex, step, options) {
                 const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
                 // When in auto mode, we are not waiting for an event to be consumed, so the
                 // anchor is just the step element.
-                const $anchorEl = $(stepEl);
+                const anchorEl = stepEl;
 
                 if (showPointerDuration > 0) {
                     // Useful in watch mode.
-                    pointer.pointTo($anchorEl.get(0), step);
+                    pointer.pointTo(anchorEl, step);
                     await new Promise((r) => browser.setTimeout(r, showPointerDuration));
                     pointer.hide();
                 }
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                const actionHelper = new RunningTourActionHelper({
+                const actionHelper = new RunningTourActionHelper(tour.name, step, {
                     consume_event: consumeEvent,
-                    $anchor: $anchorEl,
+                    anchor: anchorEl,
                 });
 
                 let result;
                 if (typeof step.run === "function") {
                     const willUnload = await callWithUnloadCheck(() =>
-                        // `this.$anchor` is expected in many `step.run`.
-                        step.run.call({ $anchor: $anchorEl }, actionHelper)
+                        step.run.call({ anchor: anchorEl }, actionHelper)
                     );
                     result = willUnload && "will unload";
-                } else if (step.run !== undefined) {
-                    const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
+                } else if (typeof step.run === "string") {
+                    const m = step.run.match(/^(\w+) *(.*?)$/);
                     actionHelper[m[1]](m[2]);
                 } else if (!step.isCheck) {
                     if (stepIndex === tour.steps.length - 1) {
-                        console.warn('Tour %s: ignoring action (auto) of last step', tour.name);
+                        console.warn("Tour %s: ignoring action (auto) of last step", tour.name);
                     } else {
                         actionHelper.auto();
                     }
                 }
-
                 return result;
             },
         },
         {
             action: () => {
                 onStepConsummed(tour, step);
+            },
+        },
+        {
+            action: async () => {
+                if (step.freeze) {
+                    await new Promise((resolve) => {
+                        const freezeTimeOut = browser.setTimeout(resolve, 1e10);
+                        window.next = () => {
+                            browser.clearTimeout(freezeTimeOut);
+                            resolve();
+                        };
+                    });
+                }
             },
         },
     ];

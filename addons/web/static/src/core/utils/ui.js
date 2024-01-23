@@ -33,7 +33,7 @@ export function closest(elements, targetPos) {
  * @returns {boolean}
  */
 export function isVisible(el) {
-    if (el === document || el === window) {
+    if (el === document || el === window || el?.tagName === "HEAD") {
         return true;
     }
     if (!el) {
@@ -69,7 +69,7 @@ export function isVisible(el) {
  * @returns {boolean}
  */
 export function _legacyIsVisible(el) {
-    if (el === document || el === window) {
+    if (el === document || el === window || el?.tagName === "HEAD") {
         return true;
     }
     if (!el) {

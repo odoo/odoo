@@ -18,9 +18,11 @@ Odoo Web tours.
     ],
     'assets': {
         'web.assets_backend': [
+			'web/static/lib/hoot-dom/**/*',
             'web_tour/static/src/**/*',
         ],
         'web.assets_frontend': [
+			'web/static/lib/hoot-dom/**/*',
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
         ],

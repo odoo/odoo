@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
+import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { utils } from "@web/core/ui/ui_service";
 import { _legacyIsVisible } from "@web/core/utils/ui";
+import { tourState } from "./tour_state";
 
 /**
  * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
@@ -39,34 +41,42 @@ export function callWithUnloadCheck(func, ...args) {
     }
 }
 
-export function getFirstVisibleElement($elements) {
-    for (var i = 0; i < $elements.length; i++) {
-        var $i = $elements.eq(i);
-        if (_legacyIsVisible($i[0])) {
-            return $i;
-        }
-    }
-    return $();
+export function getFirstVisibleNode(nodes) {
+    return (nodes || []).find((node) => _legacyIsVisible(node));
 }
 
 /**
- * @param {JQuery|undefined} target
+ * @param {NodeList|HTMLElement|string} selector
+ * @param {HTMLElement} target
+ * @returns {Node[]}
  */
-export function getJQueryElementFromSelector(selector, $target) {
-    $target = $target || $(document);
-    const iframeSplit = typeof selector === "string" && selector.match(/(.*\biframe[^ ]*)(.*)/);
-    if (iframeSplit && iframeSplit[2]) {
-        var $iframe = $target.find(`${iframeSplit[1]}:not(.o_ignore_in_tour)`);
-        if ($iframe.is('[is-ready="false"]')) {
-            return $();
+export function getNodesFromSelector(selector, target = document) {
+    if (typeof selector === "string") {
+        const iframeRegex = /(?<iframe>.*\biframe[^ ]*)(?<selector>.*)/;
+        const iframeSplit = typeof selector === "string" && selector.match(iframeRegex);
+        if (iframeSplit?.groups?.selector && !iframeSplit?.groups?.iframe.includes(":iframe")) {
+            const iframeSelector = `${iframeSplit.groups?.iframe}:not(.o_ignore_in_tour)`;
+            const iframe = hoot.queryAll(iframeSelector, { root: target }).at(0);
+            if (iframe instanceof Node) {
+                if (iframe.matches(`[is-ready="false"]`)) {
+                    return [];
+                } else {
+                    return hoot.queryAll(iframeSplit.groups?.selector, {
+                        root: iframe.contentWindow.document,
+                    });
+                }
+            } else {
+                return [];
+            }
+        } else {
+            return hoot.queryAll(selector, { root: target });
         }
-        var $el = $iframe.contents().find(iframeSplit[2]);
-        $el.iframeContainer = $iframe[0];
-        return $el;
-    } else if (typeof selector === "string") {
-        return $target.find(selector);
+    } else if (selector instanceof HTMLElement) {
+        return [selector];
+    } else if (selector instanceof NodeList) {
+        return [...selector];
     } else {
-        return $(selector);
+        return [];
     }
 }
 
@@ -128,24 +138,24 @@ export function getConsumeEventType(element, runCommand) {
     return "click";
 }
 
-/**
- * ! This function is a copy-paste of its namesake in @web/../tests/helpers/utils
- * TODO: Unify utils for tests and tours since they're doing the exact same thing
- * @param {Node} n1
- * @param {Node} n2
- * @returns {Node[]}
- */
-export function getDifferentParents(n1, n2) {
-    const parents = [n2];
-    while (parents[0].parentNode) {
-        const parent = parents[0].parentNode;
-        if (parent.contains(n1)) {
-            break;
-        }
-        parents.unshift(parent);
-    }
-    return parents;
-}
+// /**
+//  * ! This function is a copy-paste of its namesake in @web/../tests/helpers/utils
+//  * TODO: Unify utils for tests and tours since they're doing the exact same thing
+//  * @param {Node} n1
+//  * @param {Node} n2
+//  * @returns {Node[]}
+//  */
+// export function getDifferentParents(n1, n2) {
+//     const parents = [n2];
+//     while (parents[0].parentNode) {
+//         const parent = parents[0].parentNode;
+//         if (parent.contains(n1)) {
+//             break;
+//         }
+//         parents.unshift(parent);
+//     }
+//     return parents;
+// }
 
 /**
  * @param {HTMLElement} element
@@ -183,243 +193,199 @@ export const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additional
 };
 
 export class RunningTourActionHelper {
-    constructor(tip_widget) {
+    constructor(tourName, step, tip_widget) {
+        this.tourName = tourName;
+        this.step = step;
         this.tip_widget = tip_widget;
-    }
-    click(element) {
-        this._click(this._get_action_values(element));
-    }
-    dblclick(element) {
-        this._click(this._get_action_values(element), 2);
-    }
-    tripleclick(element) {
-        this._click(this._get_action_values(element), 3);
-    }
-    clicknoleave(element) {
-        this._click(this._get_action_values(element), 1, false);
-    }
-    text(text, element) {
-        this._text(this._get_action_values(element), text);
-    }
-    remove_text(text, element) {
-        this._text(this._get_action_values(element), "\n");
-    }
-    text_blur(text, element) {
-        this._text_blur(this._get_action_values(element), text);
-    }
-    range(text, element) {
-        this._range(this._get_action_values(element), text);
-    }
-    drag_and_drop(to, element) {
-        this._drag_and_drop_jquery(this._get_action_values(element), to);
-    }
-    drag_and_drop_native(toSel, element) {
-        const to = getJQueryElementFromSelector(toSel)[0];
-        this._drag_and_drop(this._get_action_values(element).$element[0], to);
-    }
-    keydown(keyCodes, element) {
-        this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
-    }
-    auto(element) {
-        var values = this._get_action_values(element);
-        if (values.consume_event === "input") {
-            this._text(values);
-        } else {
-            this._click(values);
-        }
-    }
-    _get_action_values(element) {
-        var $e = getJQueryElementFromSelector(element);
-        var $element = element ? getFirstVisibleElement($e) : this.tip_widget.$anchor;
-        if ($element.length === 0) {
-            $element = $e.first();
-        }
-        var consume_event = element
-            ? getConsumeEventType($element[0])
-            : this.tip_widget.consume_event;
-        return {
-            $element: $element,
-            consume_event: consume_event,
+        this.anchor = this.tip_widget.anchor;
+        this.consume_event = this.tip_widget.consume_event;
+        this.devTools = tourState.get(this.tourName, "devTools");
+        this.getActionError = (actionName, selector) => {
+            return `${this.tourName} > ${this.step.content} > Impossible to ${actionName}(${selector})`;
         };
-    }
-    _click(values, nb, leave) {
-        const target = values.$element[0];
-        triggerPointerEvent(target, "pointerover", true);
-        triggerPointerEvent(target, "pointerenter", false);
-        triggerPointerEvent(target, "pointermove", true);
-        for (let i = 1; i <= (nb || 1); i++) {
-            triggerPointerEvent(target, "pointerdown", true);
-            triggerPointerEvent(target, "pointerup", true);
-            triggerPointerEvent(target, "click", true, { detail: i });
-            if (i % 2 === 0) {
-                triggerPointerEvent(target, "dblclick", true);
-            }
-        }
-        if (leave !== false) {
-            triggerPointerEvent(target, "pointerout", true);
-            triggerPointerEvent(target, "pointerleave", false);
-        }
-    }
-    _text(values, text) {
-        this._click(values);
-
-        text = text || "Test";
-        if (values.consume_event === "input") {
-            values.$element
-                .trigger({ type: "keydown", key: text[text.length - 1] })
-                .val(text)
-                .trigger({ type: "keyup", key: text[text.length - 1] });
-            values.$element[0].dispatchEvent(
-                new InputEvent("input", {
-                    bubbles: true,
-                })
-            );
-        } else if (values.$element.is("select")) {
-            var $options = values.$element.find("option");
-            $options.prop("selected", false).removeProp("selected");
-            var $selectedOption = $options.filter(function () {
-                return $(this).val() === text;
-            });
-            if ($selectedOption.length === 0) {
-                $selectedOption = $options.filter(function () {
-                    return $(this).text().trim() === text;
-                });
-            }
-            const regex = /option\s+([0-9]+)/;
-            if ($selectedOption.length === 0 && regex.test(text)) {
-                // Extract position as 1-based, as the nth selectors.
-                const position = parseInt(regex.exec(text)[1]);
-                $selectedOption = $options.eq(position - 1); // eq is 0-based.
-            }
-            $selectedOption.prop("selected", true);
-            this._click(values);
-            // For situations where an `oninput` is defined.
-            values.$element.trigger("input");
-        } else {
-            values.$element.focusIn();
-            values.$element.trigger($.Event("keydown", { key: "_" }));
-            values.$element.text(text).trigger("input");
-            values.$element.focusInEnd();
-            values.$element.trigger($.Event("keyup", { key: "_" }));
-        }
-        values.$element[0].dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
-    }
-    _text_blur(values, text) {
-        this._text(values, text);
-        values.$element.trigger("focusout");
-        values.$element.trigger("blur");
-    }
-    _range(values, text) {
-        values.$element[0].value = text;
-        values.$element[0].dispatchEvent(new Event('change', { bubbles: true, cancelable: false }));
-    }
-    _calculateCenter($el, selector) {
-        const center = $el.offset();
-        if (selector && selector.indexOf("iframe") !== -1) {
-            const iFrameOffset = $("iframe").offset();
-            center.left += iFrameOffset.left;
-            center.top += iFrameOffset.top;
-        }
-        center.left += $el.outerWidth() / 2;
-        center.top += $el.outerHeight() / 2;
-        return center;
-    }
-    _drag_and_drop_jquery(values, to) {
-        var $to;
-        const elementCenter = this._calculateCenter(values.$element);
-        if (to) {
-            $to = getJQueryElementFromSelector(to);
-        } else {
-            $to = $(document.body);
-        }
-
-        values.$element.trigger($.Event("mouseenter"));
-        // Make the web_studio tour test happy. My guess is that 50%+ of the length of the dragged element
-        // must be situated to the right of the $to element.
-        values.$element.trigger(
-            $.Event("mousedown", {
-                which: 1,
-                pageX: elementCenter.left + 1,
-                pageY: elementCenter.top,
-            })
-        );
-        // Some tests depends on elements present only when the element to drag
-        // start to move while some other tests break while moving.
-        if (!$to.length) {
-            values.$element.trigger(
-                $.Event("mousemove", {
-                    which: 1,
-                    pageX: elementCenter.left + 1,
-                    pageY: elementCenter.top,
-                })
-            );
-            $to = getJQueryElementFromSelector(to);
-        }
-
-        let toCenter = this._calculateCenter($to, to);
-        values.$element.trigger(
-            $.Event("mousemove", { which: 1, pageX: toCenter.left, pageY: toCenter.top })
-        );
-        // Recalculate the center as the mousemove might have made the element bigger.
-        toCenter = this._calculateCenter($to, to);
-        values.$element.trigger(
-            $.Event("mouseup", { which: 1, pageX: toCenter.left, pageY: toCenter.top })
-        );
     }
     /**
-     * ! This function is a reduced version of "drag" in @web/../tests/helpers/utils
-     * TODO: Unify utils for tests and tours since they're doing the exact same thing
-     * @param {HTMLElement} source
-     * @param {HTMLElement} target
+     * Fire action depending on the type of element
+     * @param {string} selector DOM Selector (HooT QueryAll)
      */
-    _drag_and_drop(source, target) {
-        const sourceRect = source.getBoundingClientRect();
-        const sourcePosition = {
-            clientX: sourceRect.x + sourceRect.width / 2,
-            clientY: sourceRect.y + sourceRect.height / 2,
-        };
-
-        const targetRect = target.getBoundingClientRect();
-        const targetPosition = {
-            clientX: targetRect.x + targetRect.width / 2,
-            clientY: targetRect.y + targetRect.height / 2,
-        };
-
-        triggerPointerEvent(source, "pointerdown", true, sourcePosition);
-        triggerPointerEvent(source, "pointermove", true, targetPosition);
-
-        for (const parent of getDifferentParents(source, target)) {
-            triggerPointerEvent(parent, "pointerenter", false, targetPosition);
+    auto(selector) {
+        const element = this._get_action_element(selector);
+        const consume_event = this._get_action_consume_event(element);
+        if (consume_event === "input") {
+            this._text(element);
+        } else {
+            this.click(selector);
         }
-
-        triggerPointerEvent(target, "pointerup", true, targetPosition);
     }
-    _keydown(values, keyCodes) {
-        while (keyCodes.length) {
-            const eventOptions = {};
-            const keyCode = keyCodes.shift();
-            let insertedText = null;
-            if (isNaN(keyCode)) {
-                eventOptions.key = keyCode;
-            } else {
-                const code = parseInt(keyCode, 10);
-                if (
-                    code === 32 || // spacebar
-                    (code > 47 && code < 58) || // number keys
-                    (code > 64 && code < 91) || // letter keys
-                    (code > 95 && code < 112) || // numpad keys
-                    (code > 185 && code < 193) || // ;=,-./` (in order)
-                    (code > 218 && code < 223) // [\]' (in order))
-                ) {
-                    insertedText = String.fromCharCode(code);
-                }
-            }
-            values.$element.trigger(Object.assign({ type: "keydown" }, eventOptions));
-            if (insertedText) {
-                document.execCommand("insertText", 0, insertedText);
-            }
-            values.$element.trigger(Object.assign({ type: "keyup" }, eventOptions));
+    /**
+     * @param {string|Node} selector DOM Selector or Node
+     */
+    click(selector) {
+        try {
+            const element = this._get_action_element(selector);
+            hoot.click(element);
+        } catch {
+            throw new Error(this.getActionError("click", selector));
         }
+    }
+    /**
+     * @param {string|Node} selector DOM Selector or Node
+     */
+    dblclick(selector) {
+        try {
+            const element = this._get_action_element(selector);
+            hoot.dblclick(element);
+        } catch {
+            throw new Error(this.getActionError("dblclick", selector));
+        }
+    }
+    /**
+     * @param {string} text
+     * @param {string|Node} selector DOM Selector or Node
+     */
+    text(text, selector) {
+        const element = this._get_action_element(selector);
+        this._text(element, text);
+    }
+    /**
+     * @param {string} text
+     * @param {string|Node} selector DOM Selector or Node
+     */
+    text_blur(text, selector) {
+        const element = this._get_action_element(selector);
+        hoot.click(element);
+        hoot.edit(text, { confirm: true });
+        element.dispatchEvent(
+            new InputEvent("input", {
+                bubbles: true,
+            })
+        );
+        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
+        element.dispatchEvent(new Event("focusout"));
+        element.dispatchEvent(new Event("blur"));
+    }
+    /**
+     * @param {string} text
+     * @param {string|Node} selector DOM Selector or Node
+     */
+    edit(text, selector) {
+        const element = this._get_action_element(selector);
+        hoot.click(element);
+        hoot.edit(text);
+        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
+    }
+    /**
+     * @param {string|Node} selector DOM Selector or Node
+     */
+    clear(selector) {
+        const element = this._get_action_element(selector);
+        hoot.pointerDown(element);
+        hoot.clear();
+    }
+    range(text, selector) {
+        const element = this._get_action_element(selector);
+        element.value = text;
+        hoot.dispatch(element, "change", { bubbles: true, cancelable: false });
+    }
+    drag_and_drop_native(target, source) {
+        const to = this._get_action_element(target);
+        const from = this._get_action_element(source);
+        try {
+            hoot.drag(from).drop(to);
+        } catch {
+            throw new Error(`Error when try to drag('${source}').moveTo('${target}').drop()`);
+        }
+    }
+    // drag_and_drop(toSel, fromSel) {
+    //     const from = this._get_action_element(fromSel);
+    //     const to = getNodesFromSelector(toSel)[0];
+    //     this._drag_and_drop(from, to);
+    // }
+    // _drag_and_drop(source, target) {
+    //     const sourceRect = source.getBoundingClientRect();
+    //     const sourcePosition = {
+    //         clientX: sourceRect.x + sourceRect.width / 2,
+    //         clientY: sourceRect.y + sourceRect.height / 2,
+    //     };
+
+    //     const targetRect = target.getBoundingClientRect();
+    //     const targetPosition = {
+    //         clientX: targetRect.x + targetRect.width / 2,
+    //         clientY: targetRect.y + targetRect.height / 2,
+    //     };
+
+    //     triggerPointerEvent(source, "pointerdown", true, sourcePosition);
+    //     triggerPointerEvent(source, "pointermove", true, targetPosition);
+
+    //     for (const parent of getDifferentParents(source, target)) {
+    //         triggerPointerEvent(parent, "pointerenter", false, targetPosition);
+    //     }
+    //     triggerPointerEvent(target, "pointerup", true, targetPosition);
+    //     document.body.focus();
+    // }
+    /**
+     * Get Node for a selector, return this.anchor by default
+     * @param {string|Node} selector
+     * @returns {Node}
+     */
+    _get_action_element(selector) {
+        if (typeof selector === "string" && selector?.length > 0) {
+            const nodes = getNodesFromSelector(selector);
+            const node = getFirstVisibleNode(nodes);
+            return !(node instanceof Node) ? nodes.at(0) : node;
+        } else if (selector instanceof Node) {
+            return selector;
+        }
+        return this.anchor;
+    }
+    /**
+     * Get Event to consume on selector, return this.consume_event by default
+     * @param {Node} element
+     * @returns {string}
+     */
+    _get_action_consume_event(element) {
+        if (element instanceof Node) {
+            return getConsumeEventType(element);
+        }
+        return this.consume_event;
+    }
+    _text(element, text) {
+        text = text || "Test";
+        const consume_event = this._get_action_consume_event(element);
+        hoot.click(element);
+
+        if (consume_event === "input") {
+            hoot.edit(text);
+        } else if (element.matches("select")) {
+            const options = hoot.queryAll("option", { root: element });
+            options.forEach((option) => {
+                delete option.selected;
+            });
+            let selectedOption = options.find((option) => option.value === text);
+            if (!(selectedOption instanceof Node)) {
+                selectedOption = options.find(
+                    (option) => String(option.textContent).trim() === text
+                );
+            }
+            const regex = /option\s+([0-9]+)/;
+            if (!(selectedOption instanceof Node) && regex.test(text)) {
+                // Extract position as 1-based, as the nth selectors.
+                const position = parseInt(regex.exec(text)[1]);
+                selectedOption = options.at(position - 1); // eq is 0-based.
+            }
+            selectedOption.selected = true;
+            hoot.click(element);
+            // For situations where an `oninput` is defined.
+            element.dispatchEvent(new Event("input"));
+        } else {
+            element.dispatchEvent(new Event("focusin"));
+            element.dispatchEvent(new KeyboardEvent("keydown", { key: "_" }));
+            element.textContent = text;
+            element.dispatchEvent(new Event("input", { bubbles: true }));
+            element.dispatchEvent(new Event("focusout"));
+            element.dispatchEvent(new KeyboardEvent("keyup", { key: "_" }));
+        }
+        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     }
 }
 
@@ -434,16 +400,6 @@ export const stepUtils = {
         } else {
             step.debugHelp = helpMessage;
         }
-        return step;
-    },
-
-    editionEnterpriseModifier(step) {
-        step.edition = "enterprise";
-        return step;
-    },
-
-    mobileModifier(step) {
-        step.mobile = true;
         return step;
     },
 
@@ -467,13 +423,14 @@ export const stepUtils = {
 
     autoExpandMoreButtons(extra_trigger) {
         return {
+            content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
             extra_trigger: extra_trigger,
             auto: true,
             run: (actions) => {
-                const $more = $(".o-form-buttonbox .o_button_more");
-                if ($more.length) {
-                    actions.click($more);
+                const more = hoot.queryOne(".o-form-buttonbox .o_button_more");
+                if (more instanceof Node) {
+                    hoot.click(more);
                 }
             },
         };
@@ -533,9 +490,11 @@ export const stepUtils = {
                 trigger: ".o_statusbar_buttons",
                 extra_trigger: extraTrigger,
                 run: (actions) => {
-                    const $action = $(".o_statusbar_buttons .btn.dropdown-toggle:contains(Action)");
-                    if ($action.length) {
-                        actions.click($action);
+                    const node = hoot.queryOne(
+                        ".o_statusbar_buttons .btn.dropdown-toggle:contains(Action)"
+                    );
+                    if (node instanceof Node) {
+                        hoot.click(node);
                     }
                 },
             },
@@ -563,14 +522,15 @@ export const stepUtils = {
             trigger: ".o_searchview_input",
             extra_trigger: ".modal:not(.o_inactive_modal) .dropdown-menu.o_searchview_autocomplete",
             position: "bottom",
-            run: (action) => {
-                const keyEventEnter = new KeyboardEvent("keydown", {
-                    bubbles: true,
-                    cancelable: true,
-                    key: "Enter",
-                    code: "Enter",
-                });
-                action.tip_widget.$anchor[0].dispatchEvent(keyEventEnter);
+            run: () => {
+                this.anchor.dispatchEvent(
+                    new KeyboardEvent("keydown", {
+                        bubbles: true,
+                        cancelable: true,
+                        key: "Enter",
+                        code: "Enter",
+                    })
+                );
             },
             debugHelp: this._getHelpMessage("simulateEnterKeyboardInSearchModal"),
         };

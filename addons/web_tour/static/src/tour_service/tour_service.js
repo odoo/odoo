@@ -12,6 +12,7 @@ import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_c
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
+import * as hoot from "@odoo/hoot-dom";
 
 /**
  * @typedef {string} JQuerySelector
@@ -45,11 +46,12 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {number} [width]
  * @property {number} [timeout]
  * @property {boolean} [consumeVisibleOnly]
- * @property {boolean} [noPrepend]
+ * @property {boolean} [noPrepend] still used ?
  * @property {string} [consumeEvent]
  * @property {boolean} [mobile]
  * @property {string} [title]
  * @property {string|false|undefined} [shadow_dom]
+ * @property {boolean} [allowInvisible] can be provided in a step to allow consuming the trigger element even if it is invisible
  *
  * @typedef {"manual" | "auto"} TourMode
  */
@@ -316,6 +318,7 @@ export const tourService = {
                 startUrl: "",
                 showPointerDuration: 0,
                 redirect: true,
+                devTools: false,
             };
             options = Object.assign(defaultOptions, options);
             const tour = tours[tourName];
@@ -325,9 +328,16 @@ export const tourService = {
             tourState.set(tourName, "currentIndex", 0);
             tourState.set(tourName, "stepDelay", options.stepDelay);
             tourState.set(tourName, "keepWatchBrowser", options.keepWatchBrowser);
+            tourState.set(tourName, "devTools", options.devTools);
             tourState.set(tourName, "showPointerDuration", options.showPointerDuration);
             tourState.set(tourName, "mode", options.mode);
             tourState.set(tourName, "sequence", tour.sequence);
+            if (options.devTools) {
+                window.hoot = hoot;
+                console.info(`It's time to select your devTools preferences.`);
+                // eslint-disable-next-line no-debugger
+                debugger;
+            }
             const pointer = createPointer(tourName, {
                 bounce: !(options.mode === "auto" && options.keepWatchBrowser),
             });
@@ -360,11 +370,15 @@ export const tourService = {
             const tour = tours[tourName];
             const stepDelay = tourState.get(tourName, "stepDelay");
             const keepWatchBrowser = tourState.get(tourName, "keepWatchBrowser");
+            const devTools = tourState.get(tourName, "devTools");
             const showPointerDuration = tourState.get(tourName, "showPointerDuration");
             const mode = tourState.get(tourName, "mode");
             const pointer = createPointer(tourName, {
                 bounce: !(mode === "auto" && keepWatchBrowser),
             });
+            if (devTools) {
+                window.hoot = hoot;
+            }
             const macro = convertToMacro(tour, pointer, {
                 mode,
                 stepDelay,

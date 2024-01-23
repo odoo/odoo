@@ -35,6 +35,9 @@ const ALLOWED_KEYS = {
 
     // Used to order the tours.
     sequence: INTEGER,
+
+    // Open DevTools at the first step of the tour.
+    devTools: BOOLEAN,
 };
 
 function getPrefixedName(tourName, key) {
