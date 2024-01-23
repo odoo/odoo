@@ -103,7 +103,10 @@ class TestSaleOrderDownPayment(TestSaleCommon):
     def _assert_invoice_lines_values(self, lines, expected):
         return self.assertRecordValues(lines, [dict(zip(expected[0], x)) for x in expected[1:]])
 
-    def test_tax_breakdown(self):
+    def test_tax_and_account_breakdown(self):
+        income_acc_2 = self.revenue_account.copy()
+        self.sale_order.order_line[1].product_id.product_tmpl_id.property_account_income_id = income_acc_2
+
         self.sale_order.order_line[0].tax_id = self.tax_15 + self.tax_10
         self.sale_order.order_line[1].tax_id = self.tax_10
         self.sale_order.order_line[2].tax_id = self.tax_10
@@ -116,7 +119,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             ['account_id',               'tax_ids',                      'balance',     'price_total'],
             # base lines
             [self.revenue_account.id,    (self.tax_15 + self.tax_10).ids, -100,         125          ],
-            [self.revenue_account.id,    self.tax_10.ids,                 -200,         220          ],
+            [income_acc_2.id,            self.tax_10.ids,                 -100,         110          ],
+            [self.revenue_account.id,    self.tax_10.ids,                 -100,         110          ],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100          ],
             # taxes
             [self.tax_account.id,        self.env['account.tax'],         -30,          0            ],
