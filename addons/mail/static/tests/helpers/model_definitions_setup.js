@@ -37,8 +37,9 @@ addModelNamesToFetch([
 addFakeModel("res.fake", {
     message_ids: { string: "Messages", type: "one2many", relation: "mail.message" },
     activity_ids: { string: "Activities", type: "one2many", relation: "mail.activity" },
-    message_follower_ids: { string: "Followers", type: "char" },
+    message_follower_ids: { string: "Followers", type: "one2many", relation: "mail.followers" },
     email_cc: { type: "char" },
+    phone: { type: "char" },
     partner_ids: { relation: "res.partner", string: "Related partners", type: "one2many" },
 });
 
