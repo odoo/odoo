@@ -181,18 +181,25 @@
 
             </menuitem>
 
-            <menuitem id="sale_menu_config_activity_type"
-                action="mail_activity_type_action_config_sale"
-                groups="base.group_no_one"
-                sequence="60"
-                />
+            <menuitem
+                id="sale_menu_config_activities"
+                name="Activities"
+                sequence="55">
 
-            <menuitem id="sale_menu_config_activity_plan"
-                name="Activity Plans"
-                action="mail_activity_plan_action_sale_order"
-                groups="sales_team.group_sale_manager"
-                sequence="70"
-                />
+                <menuitem id="sale_menu_config_activity_type"
+                    action="mail_activity_type_action_config_sale"
+                    groups="base.group_no_one"
+                    sequence="10"
+                    />
+
+                <menuitem id="sale_menu_config_activity_plan"
+                    name="Activity Plans"
+                    action="mail_activity_plan_action_sale_order"
+                    groups="sales_team.group_sale_manager"
+                    sequence="20"
+                    />
+
+            </menuitem>
 
         </menuitem>
     </menuitem>
