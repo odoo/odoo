@@ -196,7 +196,7 @@ export class PaymentScreen extends Component {
         });
 
         if (confirmed) {
-            this.currentOrder.set_tip(parseFloat(payload));
+            this.currentOrder.set_tip(parseFloat(payload ?? ""));
         }
     }
     async toggleShippingDatePicker() {
