@@ -357,12 +357,14 @@ function cardToTable(editable) {
             superCol.append(subTable);
             superRow.append(superCol);
             table.append(superRow);
-            const hasImgTop = [child, ...child.querySelectorAll('.card-img-top')].some(node => (
-                node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
-            ));
-            if (hasImgTop) {
-                // Collect .card-img-top superRows to manipulate their heights.
-                cardImgTopSuperRows.push(superRow);
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                const hasImgTop = [child, ...child.querySelectorAll('.card-img-top')].some(node => (
+                    node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
+                ));
+                if (hasImgTop) {
+                    // Collect .card-img-top superRows to manipulate their heights.
+                    cardImgTopSuperRows.push(superRow);
+                }
             }
         }
         // We expect successive .card-img-top to have the same height so the
