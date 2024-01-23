@@ -191,14 +191,15 @@
                             type="object"
                             help="List view of detailed operations">
                             <div class="o_form_field o_stat_info">
-                                <span class="o_stat_text">Detailed Operations</span>
+                                <span class="o_stat_text">Moves</span>
                             </div>
                         </button>
                     </div>
                     <div class="oe_title">
                         <h1 class="d-flex">
-                            <field name="priority" widget="priority" class="me-3" invisible="name == '/'"/>
-                            <field name="name" invisible="name == '/'"/>
+                            <field name="priority" widget="priority" class="me-3"/>
+                            <div invisible="id">New <field name="picking_type_code"/></div>
+                            <field name="name" invisible="not id"/>
                         </h1>
                     </div>
                     <group>
@@ -211,7 +212,7 @@
                                 <label for="partner_id" string="Contact" style="font-weight:bold;"
                                        invisible="picking_type_code in ['incoming', 'outgoing']"/>
                             </div>
-                            <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']"/>
+                            <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']" placeholder="e.g. Lumber Inc"/>
                             <field name="picking_type_id" options="{'no_open': True}"
                                    invisible="hide_picking_type"
                                    readonly="state != 'draft' and id"
