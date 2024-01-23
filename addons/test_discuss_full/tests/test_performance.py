@@ -4,14 +4,15 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
+from odoo.addons.mail.tools.discuss import StoreData
 from odoo.tests.common import users, tagged, HttpCase, warmup
 
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
     _query_count_init_store = 1
-    _query_count = 59 + 1  # full install on runbot requires +1
-    _query_count_discuss_channels = 69
+    _query_count = 60
+    _query_count_discuss_channels = 68
 
     def setUp(self):
         super().setUp()
@@ -142,9 +143,10 @@ class TestDiscussFullPerformance(HttpCase):
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
+        store = StoreData()
         with self.assertQueryCount(emp=self._query_count_init_store):
-            store_data = self.env["res.users"].with_user(self.users[0])._init_store_data()
-        self.assertEqual(store_data, self._get_init_store_data_result())
+            self.env["res.users"].with_user(self.users[0])._init_store_data(store)
+        self.assertEqual(store.get_result(), self._get_init_store_data_result())
 
     def _get_init_store_data_result(self):
         """Returns the result of a call to init_messaging.

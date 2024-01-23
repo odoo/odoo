@@ -5,7 +5,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-
+from odoo.addons.mail.tools.discuss import StoreData
 
 class WebclientController(http.Controller):
     """Routes for the web client."""
@@ -27,26 +27,28 @@ class WebclientController(http.Controller):
         return self._process_request(**kwargs)
 
     def _process_request(self, **kwargs):
+        store = StoreData()
         request.update_context(**kwargs.get("context", {}))
-        res = {}
+        self._process_request_for_all(store, **kwargs)
+        if not request.env.user._is_public():
+            self._process_request_for_logged_in_user(store, **kwargs)
+        if request.env.user._is_internal():
+            self._process_request_for_internal_user(store, **kwargs)
+        return store.get_result()
+
+    def _process_request_for_all(self, store, **kwargs):
         if kwargs.get("init_messaging"):
             if not request.env.user._is_public():
                 user = request.env.user.sudo(False)
-                self._add_to_res(res, user._init_messaging())
+                user._init_messaging(store)
             else:
                 guest = request.env["mail.guest"]._get_guest_from_context()
                 if guest:
-                    self._add_to_res(res, guest._init_messaging())
+                    guest._init_messaging(store)
                 else:
                     raise NotFound()
-        if not request.env.user._is_public():
-            self._add_to_res(res, self._process_request_for_logged_in_user(**kwargs))
-        if request.env.user._is_internal():
-            self._add_to_res(res, self._process_request_for_internal_user(**kwargs))
-        return res
 
-    def _process_request_for_logged_in_user(self, **kwargs):
-        res = {}
+    def _process_request_for_logged_in_user(self, store, **kwargs):
         if kwargs.get("failures"):
             domain = [
                 ("author_id", "=", request.env.user.partner_id.id),
@@ -59,33 +61,14 @@ class WebclientController(http.Controller):
             # sudo: mail.notification - return only failures of current user as author
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             messages_format = notifications.mail_message_id._message_notification_format()
-            self._add_to_res(res, {"Message": messages_format})
-        return res
+            store.add({"Message": messages_format})
 
-    def _process_request_for_internal_user(self, **kwargs):
-        res = {}
+    def _process_request_for_internal_user(self, store, **kwargs):
         if kwargs.get("systray_get_activities"):
             groups = request.env["res.users"]._get_activity_groups()
-            self._add_to_res(
-                res,
-                {
-                    "Store": {
-                        "activityCounter": sum(group.get("total_count", 0) for group in groups),
-                        "activityGroups": groups,
-                    }
-                },
-            )
-        return res
-
-    def _add_to_res(self, res, data):
-        for key, val in data.items():
-            if val:
-                if not key in res:
-                    res[key] = val
-                else:
-                    if isinstance(val, list):
-                        res[key].extend(val)
-                    elif isinstance(val, dict):
-                        res[key].update(val)
-                    else:
-                        assert False, "unsupported return type"
+            store.add({
+                "Store": {
+                    "activityCounter": sum(group.get("total_count", 0) for group in groups),
+                    "activityGroups": groups,
+                }
+            })

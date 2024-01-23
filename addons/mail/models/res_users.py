@@ -255,22 +255,16 @@ class Users(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def _init_store_data(self):
+    def _init_store_data(self, store):
         """Initialize the store of the user."""
-        res = {
+        store.add({
             "Store": {
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
             },
-        }
-        self_data = self._get_self_data()
-        if self_data:
-            res["Store"]["self"] = self_data
-        return res
-
-    @api.model
-    def _get_self_data(self):
+        })
+        self_data = {}
         if not self.env.user._is_public():
-            return {
+            self_data = {
                 "id": self.env.user.partner_id.id,
                 "isAdmin": self.env.user._is_admin(),
                 "isInternalUser": not self.env.user.share,
@@ -282,18 +276,20 @@ class Users(models.Model):
             }
         guest = self.env["mail.guest"]._get_guest_from_context()
         if guest:
-            return {
+            self_data = {
                 "id": guest.id,
                 "name": guest.name,
                 "type": "guest",
                 "write_date": fields.Datetime.to_string(guest.write_date),
             }
+        if self_data:
+            store.add({"Store": {"self": self_data}})
 
-    def _init_messaging(self):
+    def _init_messaging(self, store):
         self.ensure_one()
         self = self.with_user(self)
         odoobot = self.env.ref('base.partner_root')
-        values = {
+        store.add({
             "CannedResponse": self.env["mail.shortcode"].sudo().search_read([], ["source", "substitution"]),
             "Store": {
                 "action_discuss_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.action_discuss"),
@@ -306,8 +302,7 @@ class Users(models.Model):
                 "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": odoobot.sudo().mail_partner_format().get(odoobot),
             },
-        }
-        return values
+        })
 
     @api.model
     def _get_activity_groups(self):
