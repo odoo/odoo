@@ -6,6 +6,37 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 import { DISCUSS_ACTION_ID } from "../../test_constants";
 
 patch(MockServer.prototype, {
+    /** Simulates `_init_store_data` on `res.users`. */
+    _mockResUsers__init_store_data() {
+        return {
+            Store: {
+                hasLinkPreviewFeature: true,
+                self: this._mockResUsers__get_self_data(),
+            },
+        };
+    },
+    /** Simulates `_get_self_data` on `res.users`. */
+    _mockResUsers__get_self_data() {
+        if (this.pyEnv.currentGuest) {
+            return {
+                id: this.pyEnv.currentGuest.id,
+                name: this.pyEnv.currentGuest.name,
+                type: "guest",
+                write_date: this.pyEnv.currentGuest.write_date,
+            };
+        } else if (this.pyEnv.currentUser) {
+            return {
+                id: this.pyEnv.currentUser.partner_id,
+                isAdmin: true, // mock server simplification
+                isInternalUser: !this.pyEnv.currentUser.share,
+                name: this.pyEnv.currentUser.name,
+                notification_preference: this.pyEnv.currentUser.notification_type,
+                type: "partner",
+                userId: this.pyEnv.currentUser.id,
+                write_date: this.pyEnv.currentUser.write_date,
+            };
+        }
+    },
     /**
      * Simulates `_init_messaging` on `res.users`.
      *
@@ -44,7 +75,6 @@ patch(MockServer.prototype, {
                     },
                 },
                 hasGifPickerFeature: true,
-                hasLinkPreviewFeature: true,
                 hasMessageTranslationFeature: true,
                 initBusId: this.lastBusNotificationId,
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)

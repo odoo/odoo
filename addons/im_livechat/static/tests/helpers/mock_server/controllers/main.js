@@ -91,14 +91,12 @@ patch(MockServer.prototype, {
         if (!channelVals) {
             return false;
         }
+        const res = this._mockResUsers__init_store_data();
         if (!persisted) {
             const [operatorPartner] = this.pyEnv["res.partner"].searchRead([
                 ["id", "=", channelVals.livechat_operator_id],
             ]);
-            return {
-                Store: {
-                    self: this.pyEnv.getSelfData(),
-                },
+            return Object.assign(res, {
                 Thread: {
                     id: -1,
                     model: "discuss.channel",
@@ -111,7 +109,7 @@ patch(MockServer.prototype, {
                     ),
                     channel_type: "livechat",
                 },
-            };
+            });
         }
         const channelId = this.pyEnv["discuss.channel"].create(channelVals);
         this._mockDiscussChannel__findOrCreatePersonaForChannel(
@@ -123,15 +121,12 @@ patch(MockServer.prototype, {
             ["guest_id", "!=", false],
         ]);
         this.pyEnv["discuss.channel.member"].write([guestMemberId], { fold_state: "open" });
-        return {
-            Store: {
-                self: this.pyEnv.getSelfData(),
-            },
+        return Object.assign(res, {
             Thread: {
                 isLoaded: true,
                 ...this._mockDiscussChannelChannelInfo([channelId])[0],
             },
-        };
+        });
     },
     _mock__getGuestName() {
         return "Visitor";

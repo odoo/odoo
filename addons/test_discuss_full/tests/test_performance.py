@@ -9,7 +9,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
-    _query_count_init_store = 0
+    _query_count_init_store = 1
     _query_count = 66
     _query_count_discuss_channels = 69
 
@@ -152,6 +152,7 @@ class TestDiscussFullPerformance(HttpCase):
         """
         return {
             "Store": {
+                "hasLinkPreviewFeature": True,
                 "self": {
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
@@ -203,7 +204,6 @@ class TestDiscussFullPerformance(HttpCase):
                     "starred": {"counter": 1, "id": "starred", "model": "mail.box"},
                 },
                 "hasGifPickerFeature": False,
-                "hasLinkPreviewFeature": True,
                 "hasMessageTranslationFeature": False,
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "initChannelsUnreadCounter": 1,
