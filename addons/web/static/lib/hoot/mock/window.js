@@ -25,12 +25,13 @@ import {
     mockedSetInterval,
     mockedSetTimeout,
 } from "./time";
+import { createMock } from "../hoot_utils";
 
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
 
-const { console, Object, document } = globalThis;
+const { Object, document } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -195,6 +196,20 @@ const WINDOW_MOCK_DESCRIPTORS = {
 // Exports
 //-----------------------------------------------------------------------------
 
+export function cleanupWindow() {
+    // Listeners
+    for (const [target, listeners] of listenerMap) {
+        if (!isInDOM(target)) {
+            continue;
+        }
+        for (const [type, callbacks] of Object.entries(listeners)) {
+            for (const callback of callbacks) {
+                target.removeEventListener(type, callback);
+            }
+        }
+    }
+}
+
 export function getTitle() {
     const titleDescriptor = findOriginalDescriptor(document, "title");
     if (titleDescriptor) {
@@ -230,6 +245,9 @@ export function setTitle(value) {
     }
 }
 
+/**
+ * TODO: is this useful?
+ */
 export function unpatchWindow() {
     for (const { descriptor, owner, property } of originalDescriptors) {
         Object.defineProperty(owner, property, descriptor);
@@ -248,16 +266,7 @@ export function watchListeners(...targets) {
         listenerMap.set(target, {});
     }
 
-    return function checkListeners() {
-        for (const [target, listeners] of listenerMap) {
-            if (!isInDOM(target)) {
-                continue;
-            }
-            for (const [type, callbacks] of Object.entries(listeners)) {
-                for (const callback of callbacks) {
-                    target.removeEventListener(type, callback);
-                }
-            }
-        }
+    return function unwatchListeners() {
+        listenerMap.clear();
     };
 }

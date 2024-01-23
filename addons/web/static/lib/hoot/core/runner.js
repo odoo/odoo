@@ -21,7 +21,7 @@ import { MockMath, internalRandom } from "../mock/math";
 import { cleanupNavigator } from "../mock/navigator";
 import { enableNetworkLogs } from "../mock/network";
 import { cleanupTime, setFrameRate } from "../mock/time";
-import { watchListeners } from "../mock/window";
+import { cleanupWindow, watchListeners } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpectFunction } from "./expect";
 import { makeFixtureManager } from "./fixture";
@@ -680,15 +680,21 @@ export class TestRunner {
         // Register default hooks
         this.afterAll(
             on(window, "error", (ev) => this.#onError(ev)),
-            on(window, "unhandledrejection", (ev) => this.#onError(ev))
+            on(window, "unhandledrejection", (ev) => this.#onError(ev)),
+            watchListeners(window, document, document.head, document.body)
         );
         this.beforeEach(this.fixture.setup);
-        this.afterEach(cleanupTime, cleanupObservers, this.fixture.cleanup, cleanupNavigator);
+        this.afterEach(
+            cleanupTime,
+            cleanupObservers,
+            this.fixture.cleanup,
+            cleanupNavigator,
+            cleanupWindow
+        );
         if (this.config.watchkeys) {
             const keys = this.config.watchkeys?.split(/\s*,\s*/g) || [];
             this.afterEach(watchKeys(window, keys), watchKeys(document, keys));
         }
-        this.afterEach(watchListeners(window, document, document.head, document.body));
 
         enableEventLogs(this.debug);
         enableNetworkLogs(this.debug);

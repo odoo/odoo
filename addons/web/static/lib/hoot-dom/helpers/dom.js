@@ -201,11 +201,6 @@ const isNodeDisplayed = (node) => {
 };
 
 /**
- * @param {Node} node
- */
-const isNodeFocusable = (node) => isNodeDisplayed(node) && node.matches?.(FOCUSABLE_SELECTOR);
-
-/**
  * @param {Window | Node} node
  * @param {"x" | "y"} axis
  */
@@ -767,8 +762,14 @@ export function defineRootNode(node) {
  * @param {Node} [node]
  */
 export function getActiveElement(node) {
-    const active = getDocument(node).activeElement;
-    return active.contentDocument ? getActiveElement(active.contentDocument) : active;
+    const { activeElement } = getDocument(node);
+    if (activeElement.contentDocument) {
+        return getActiveElement(activeElement.contentDocument);
+    }
+    if (activeElement.shadowRoot) {
+        return activeElement.shadowRoot.activeElement;
+    }
+    return activeElement;
 }
 
 export function getDefaultRootNode() {
@@ -1140,7 +1141,19 @@ export function isInDOM(target) {
         return false;
     }
     const frame = getParentFrame(target);
-    return frame ? isInDOM(frame) : document.contains(target);
+    if (frame) {
+        return isInDOM(frame);
+    }
+    while (target) {
+        if (target === document) {
+            return true;
+        }
+        target = target.parentNode;
+        if (target.host) {
+            target = target.host.parentNode;
+        }
+    }
+    return false;
 }
 
 /**
@@ -1152,6 +1165,13 @@ export function isInDOM(target) {
  */
 export function isNode(object) {
     return typeof object === "object" && Boolean(object?.nodeType);
+}
+
+/**
+ * @param {Node} node
+ */
+export function isNodeFocusable(node) {
+    return isNodeDisplayed(node) && node.matches?.(FOCUSABLE_SELECTOR);
 }
 
 /**

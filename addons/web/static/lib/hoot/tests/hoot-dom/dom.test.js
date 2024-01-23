@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { getActiveElement, getParentFrame } from "../../../hoot-dom/helpers/dom";
-import { click, pointerDown } from "../../../hoot-dom/helpers/events";
+import { click } from "../../../hoot-dom/helpers/events";
 import {
     getFocusableElements,
     getNextFocusableElement,
@@ -20,7 +20,7 @@ import {
     waitUntil,
 } from "../../../hoot-dom/hoot-dom";
 import { describe, expect, getFixture, test } from "../../hoot";
-import { delay, tick } from "../../hoot-mock";
+import { tick } from "../../hoot-mock";
 import { mount, parseUrl } from "../local_helpers";
 
 /**
@@ -167,16 +167,39 @@ describe`ui`(parseUrl(import.meta.url), () => {
     });
 
     test("getActiveElement", async () => {
-        mount(/* html */ `
-            <iframe srcdoc="&lt;input &gt;"></iframe>
-        `);
+        mount(/* html */ `<iframe srcdoc="&lt;input &gt;"></iframe>`);
 
         await waitForIframes();
 
+        expect(":iframe input").not.toBeFocused();
+
         const input = queryOne(":iframe input");
-        pointerDown(input);
+        click(input);
 
         expect(":iframe input").toBeFocused();
+        expect(getActiveElement()).toBe(input);
+    });
+
+    test("getActiveElement: shadow dom", () => {
+        customElements.define(
+            "shadow-input",
+            class extends HTMLElement {
+                constructor() {
+                    super();
+                    this.attachShadow({ mode: "open" });
+                    this.shadowRoot.innerHTML = /* html */ `<input>`;
+                }
+            }
+        );
+
+        mount(/* html */ `<shadow-input></shadow-input>`);
+
+        expect("shadow-input:shadow input").not.toBeFocused();
+
+        const input = queryOne("shadow-input:shadow input");
+        click(input);
+
+        expect("shadow-input:shadow input").toBeFocused();
         expect(getActiveElement()).toBe(input);
     });
 

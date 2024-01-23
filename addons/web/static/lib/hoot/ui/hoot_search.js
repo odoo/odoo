@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Component, useRef, useState, xml } from "@odoo/owl";
+import { getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
 import { isRegExpFilter, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { Suite } from "../core/suite";
 import { Tag } from "../core/tag";
@@ -392,15 +393,11 @@ export class HootSearch extends Component {
          */
         const navigate = (inc) => {
             ev.preventDefault();
-            let activeElement = document.activeElement;
-            if (activeElement.shadowRoot) {
-                activeElement = activeElement.shadowRoot.activeElement;
-            }
             const elements = [
                 this.searchInputRef.el,
                 ...this.rootRef.el.querySelectorAll("input[type=radio]:checked"),
             ];
-            let nextIndex = elements.findIndex((el) => el === activeElement) + inc;
+            let nextIndex = elements.indexOf(getActiveElement()) + inc;
             if (nextIndex >= elements.length) {
                 nextIndex = 0;
             } else if (nextIndex < -1) {

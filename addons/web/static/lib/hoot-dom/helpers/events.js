@@ -11,7 +11,7 @@ import {
     isCheckable,
     isEditable,
     isEventTarget,
-    isFocusable,
+    isNodeFocusable,
     parsePosition,
     queryAll,
     queryOne,
@@ -311,7 +311,6 @@ const logEvents = (actionName) => {
     const groupName = [`${actionName}: dispatched`, events.length, `events`];
     console.groupCollapsed(...groupName);
     for (const event of events) {
-        const { target } = event;
         /** @type {(keyof typeof LOG_COLORS)[]} */
         const colors = ["blue"];
 
@@ -323,20 +322,22 @@ const logEvents = (actionName) => {
         }
         [...Array(typeList.length)].forEach(() => colors.push("orange"));
 
-        const targetParts = toSelector(target, { object: true });
-        colors.push("blue");
-        if (targetParts.id) {
-            colors.push("orange");
-        }
-        if (targetParts.class) {
-            colors.push("lightBlue");
-        }
-
         const typeString = typeList.map((t) => `%c"${t}"%c`).join(", ");
-        const targetString = Object.values(targetParts)
-            .map((part) => `%c${part}%c`)
-            .join("");
-        const message = `%c${event.constructor.name}%c<${typeString}> @${targetString}`;
+        let message = `%c${event.constructor.name}%c<${typeString}>`;
+        if (event.target) {
+            const targetParts = toSelector(event.target, { object: true });
+            colors.push("blue");
+            if (targetParts.id) {
+                colors.push("orange");
+            }
+            if (targetParts.class) {
+                colors.push("lightBlue");
+            }
+            const targetString = Object.values(targetParts)
+                .map((part) => `%c${part}%c`)
+                .join("");
+            message += ` @${targetString}`;
+        }
         const messageColors = colors.flatMap((color) => [
             `color: ${LOG_COLORS[color]}; font-weight: normal`,
             `color: ${LOG_COLORS.reset}`,
@@ -467,16 +468,16 @@ const triggerClick = (target, pointerInit) => {
  * @param {EventTarget} target
  */
 const triggerFocus = (target) => {
-    const previous = getActiveElement(target);
-    if (previous === target) {
-        return [];
-    }
     /** @type {Event[]} */
     const events = [];
+    const previous = getActiveElement(target);
+    if (previous === target) {
+        return events;
+    }
     if (previous !== target.ownerDocument.body) {
         events.push(dispatch(previous, "blur", { relatedTarget: target }));
     }
-    if (isFocusable(target)) {
+    if (isNodeFocusable(target)) {
         events.push(dispatch(target, "focus", { relatedTarget: previous }));
         if (!isNil(target.selectionStart) && !isNil(target.selectionEnd)) {
             target.selectionStart = target.selectionEnd = target.value.length;
@@ -958,6 +959,7 @@ const mapBubblingCancelableEvent = (eventInit) => ({
  * @param {EventInit} [eventInit]
  */
 const mapBubblingEvent = (eventInit) => ({
+    composed: true,
     ...eventInit,
     bubbles: true,
 });
@@ -968,6 +970,7 @@ const mapBubblingEvent = (eventInit) => ({
  * @param {EventInit} [eventInit]
  */
 const mapNonBubblingEvent = (eventInit) => ({
+    composed: true,
     ...eventInit,
     bubbles: false,
 });
@@ -1013,7 +1016,6 @@ const mapWheelEvent = (eventInit) => ({
 const mapCancelableTouchEvent = (eventInit) => ({
     view: getWindow(),
     ...mapBubblingCancelableEvent(eventInit),
-    composed: true,
     touches: eventInit?.touches ? [...eventInit.touches.map((e) => new Touch(e))] : undefined,
 });
 

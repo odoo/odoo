@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, markRaw, onWillRender, toRaw, useState, xml } from "@odoo/owl";
+import { Component, markRaw, onWillRender, useState, xml } from "@odoo/owl";
 import { parseRegExp } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { EXCLUDE_PREFIX, subscribeToURLParams } from "../core/url";
