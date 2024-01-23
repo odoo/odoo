@@ -1,92 +1,79 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, Form
+from odoo.fields import Command
+from odoo.tests import Form, tagged
 from odoo.tools import float_compare
 
+from odoo.addons.delivery.tests.common import DeliveryCommon
+from odoo.addons.sale.tests.common import SaleCommon
 
-@common.tagged('post_install', '-at_install')
-class TestDeliveryCost(common.TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        self.env.company.write({
-            'country_id': self.env.ref('base.us').id,
-        })
-        self.SaleOrder = self.env['sale.order']
-        self.SaleOrderLine = self.env['sale.order.line']
-        self.AccountAccount = self.env['account.account']
-        self.SaleConfigSetting = self.env['res.config.settings']
-        self.Product = self.env['product.product']
+@tagged('post_install', '-at_install')
+class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
-        self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
-        self.product_4 = self.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
-        self.product_uom_unit = self.env.ref('uom.product_uom_unit')
-        self.product_delivery_normal = self.env['product.product'].create({
-            'name': 'Normal Delivery Charges',
-            'type': 'service',
-            'list_price': 10.0,
-            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls._enable_uom()
+
+        # the tests hereunder assume all the prices in USD
+        cls._use_currency('USD')
+        cls.env.company.country_id = cls.env.ref('base.us').id
+
+        cls.product.weight = 1.0
+        cls.product_delivery_normal = cls._prepare_carrier_product(
+            name='Normal Delivery Charges',
+            list_price=10.0,
+        )
+        cls.normal_delivery = cls._prepare_carrier(
+            product=cls.product_delivery_normal,
+            name='Normal Delivery Charges',
+            delivery_type='fixed',
+            fixed_price=10.0,
+        )
+        cls.partner_4 = cls.env['res.partner'].create({
+            'name': 'Another Customer',
+            'child_ids': [
+                Command.create({
+                    'name': "Another Customer's Address",
+                })
+            ]
         })
-        self.normal_delivery = self.env['delivery.carrier'].create({
-            'name': 'Normal Delivery Charges',
-            'fixed_price': 10,
-            'delivery_type': 'fixed',
-            'product_id': self.product_delivery_normal.id,
-        })
-        self.partner_4 = self.env['res.partner'].create({'name': 'Another Customer'})
-        self.partner_address_13 = self.env['res.partner'].create({
-            'name': "Another Customer's Address",
-            'parent_id': self.partner_4.id,
-        })
-        self.product_uom_hour = self.env.ref('uom.product_uom_hour')
-        self.account_tag_operating = self.env.ref('account.account_tag_operating')
-        self.product_2 = self.env['product.product'].create({'name': 'Zizizaproduct', 'weight': 1.0})
-        self.product_category = self.env.ref('product.product_category_all')
-        self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
-        # as the tests hereunder assume all the prices in USD, we must ensure
-        # that the company actually uses USD
-        # We do an invalidation so the cache is aware of it too.
-        self.env.company.invalidate_recordset()
-        self.env.cr.execute(
-            "UPDATE res_company SET currency_id = %s WHERE id = %s",
-            [self.env.ref('base.USD').id, self.env.company.id])
-        self.env.user.groups_id |= self.env.ref('uom.group_uom')
+        cls.partner_address_13 = cls.partner_4.child_ids
+        cls.product_uom_hour = cls.env.ref('uom.product_uom_hour')
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
         # Create sales order with Normal Delivery Charges
 
-        self.sale_normal_delivery_charges = self.SaleOrder.create({
-            'partner_id': self.partner_18.id,
-            'partner_invoice_id': self.partner_18.id,
-            'partner_shipping_id': self.partner_18.id,
-            'order_line': [(0, 0, {
-                'name': 'PC Assamble + 2GB RAM',
-                'product_id': self.product_4.id,
-                'product_uom_qty': 1,
-                'product_uom': self.product_uom_unit.id,
-                'price_unit': 750.00,
-            })],
+        self.sale_normal_delivery_charges = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'price_unit': 750.00,
+                })
+            ],
         })
         # I add delivery cost in Sales order
 
-        self.a_sale = self.AccountAccount.create({
+        self.a_sale = self.env['account.account'].create({
             'code': 'X2020',
             'name': 'Product Sales - (test)',
             'account_type': 'income',
-            'tag_ids': [(6, 0, {
-                self.account_tag_operating.id
-            })]
+            'tag_ids': [Command.set(self.env.ref('account.account_tag_operating').ids)]
         })
 
-        self.product_consultant = self.Product.create({
+        self.product_consultant = self.env['product.product'].create({
             'sale_ok': True,
             'list_price': 75.0,
             'standard_price': 30.0,
             'uom_id': self.product_uom_hour.id,
             'uom_po_id': self.product_uom_hour.id,
             'name': 'Service',
-            'categ_id': self.product_category.id,
             'type': 'service'
         })
 
@@ -100,7 +87,7 @@ class TestDeliveryCost(common.TransactionCase):
 
         # I check sales order after added delivery cost
 
-        line = self.SaleOrderLine.search([('order_id', '=', self.sale_normal_delivery_charges.id),
+        line = self.sale_normal_delivery_charges.order_line.filtered_domain([
             ('product_id', '=', self.normal_delivery.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
 
@@ -113,24 +100,23 @@ class TestDeliveryCost(common.TransactionCase):
         self.sale_normal_delivery_charges.action_confirm()
 
         # Create one more sales order with Free Delivery Charges
-
-        self.delivery_sale_order_cost = self.SaleOrder.create({
+        self.delivery_sale_order_cost = self.env['sale.order'].create({
             'partner_id': self.partner_4.id,
             'partner_invoice_id': self.partner_address_13.id,
             'partner_shipping_id': self.partner_address_13.id,
-            'order_line': [(0, 0, {
-                'name': 'Service on demand',
-                'product_id': self.product_consultant.id,
-                'product_uom_qty': 24,
-                'product_uom': self.product_uom_hour.id,
-                'price_unit': 75.00,
-            }), (0, 0, {
-                'name': 'On Site Assistance',
-                'product_id': self.product_2.id,
-                'product_uom_qty': 30,
-                'product_uom': self.product_uom_unit.id,
-                'price_unit': 38.25,
-            })],
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_consultant.id,
+                    'product_uom_qty': 24,
+                    'product_uom': self.product_uom_hour.id,
+                    'price_unit': 75.00,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 30,
+                    'price_unit': 38.25,
+                })
+            ],
         })
 
         # I add free delivery cost in Sales order
@@ -142,7 +128,7 @@ class TestDeliveryCost(common.TransactionCase):
         choose_delivery_carrier.button_confirm()
 
         # I check sales order after adding delivery cost
-        line = self.SaleOrderLine.search([('order_id', '=', self.delivery_sale_order_cost.id),
+        line = self.delivery_sale_order_cost.order_line.filtered_domain([
             ('product_id', '=', self.free_delivery.product_id.id)])
 
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
@@ -150,10 +136,7 @@ class TestDeliveryCost(common.TransactionCase):
             "Delivery cost is not correspond.")
 
         # I set default delivery policy
-
-        self.default_delivery_policy = self.SaleConfigSetting.create({})
-
-        self.default_delivery_policy.execute()
+        self.env['res.config.settings'].create({}).execute()
 
     def test_01_delivery_cost_from_pricelist(self):
         """ This test aims to validate the use of a pricelist to compute the delivery cost in the case the associated
@@ -162,7 +145,7 @@ class TestDeliveryCost(common.TransactionCase):
         # Create pricelist with a custom price for the standard shipping method
         my_pricelist = self.env['product.pricelist'].create({
             'name': 'shipping_cost_change',
-            'item_ids': [(0, 0, {
+            'item_ids': [Command.create({
                 'compute_price': 'fixed',
                 'fixed_price': 5,
                 'applied_on': '0_product_variant',
@@ -171,14 +154,12 @@ class TestDeliveryCost(common.TransactionCase):
         })
 
         # Create sales order with Normal Delivery Charges
-        sale_pricelist_based_delivery_charges = self.SaleOrder.create({
-            'partner_id': self.partner_18.id,
+        sale_pricelist_based_delivery_charges = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
             'pricelist_id': my_pricelist.id,
-            'order_line': [(0, 0, {
-                'name': 'PC Assamble + 2GB RAM',
-                'product_id': self.product_4.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -191,8 +172,8 @@ class TestDeliveryCost(common.TransactionCase):
         self.assertEqual(delivery_wizard.delivery_price, 5.0, "Delivery cost does not correspond to 5.0 in wizard")
         delivery_wizard.save().button_confirm()
 
-        line = self.SaleOrderLine.search([('order_id', '=', sale_pricelist_based_delivery_charges.id),
-                                          ('product_id', '=', self.normal_delivery.product_id.id)])
+        line = sale_pricelist_based_delivery_charges.order_line.filtered_domain([
+            ('product_id', '=', self.normal_delivery.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost hasn't been added to SO")
         self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
 
@@ -203,7 +184,7 @@ class TestDeliveryCost(common.TransactionCase):
         # Create pricelist with a custom price for the standard shipping method
         my_pricelist = self.env['product.pricelist'].create({
             'name': 'shipping_cost_change',
-            'item_ids': [(0, 0, {
+            'item_ids': [Command.create({
                 'compute_price': 'fixed',
                 'fixed_price': 5,
                 'applied_on': '0_product_variant',
@@ -213,14 +194,12 @@ class TestDeliveryCost(common.TransactionCase):
         })
 
         # Create sales order with Normal Delivery Charges
-        sale_pricelist_based_delivery_charges = self.SaleOrder.create({
-            'partner_id': self.partner_18.id,
+        sale_pricelist_based_delivery_charges = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
             'pricelist_id': my_pricelist.id,
-            'order_line': [(0, 0, {
-                'name': 'PC Assamble + 2GB RAM',
-                'product_id': self.product_4.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_uom_unit.id,
                 'price_unit': 750.00,
             })],
         })
@@ -233,8 +212,8 @@ class TestDeliveryCost(common.TransactionCase):
         self.assertEqual(delivery_wizard.delivery_price, 5.0, "Delivery cost does not correspond to 5.0 in wizard")
         delivery_wizard.save().button_confirm()
 
-        line = self.SaleOrderLine.search([('order_id', '=', sale_pricelist_based_delivery_charges.id),
-                                          ('product_id', '=', self.normal_delivery.product_id.id)])
+        line = sale_pricelist_based_delivery_charges.order_line.filtered_domain([
+            ('product_id', '=', self.normal_delivery.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost hasn't been added to SO")
         self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
 
@@ -243,20 +222,19 @@ class TestDeliveryCost(common.TransactionCase):
 
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
 
-        tax_price_include = self.env['account.tax'].create({
+        tax_price_include, tax_price_exclude = self.env['account.tax'].create([{
             'name': '10% inc',
             'type_tax_use': 'sale',
             'amount_type': 'percent',
             'amount': 10,
             'price_include': True,
             'include_base_amount': True,
-        })
-        tax_price_exclude = self.env['account.tax'].create({
+        }, {
             'name': '15% exc',
             'type_tax_use': 'sale',
             'amount_type': 'percent',
             'amount': 15,
-        })
+        }])
 
         fiscal_position = self.env['account.fiscal.position'].create({
             'name': 'fiscal_pos_a',
@@ -275,14 +253,13 @@ class TestDeliveryCost(common.TransactionCase):
         # Required to see `pricelist_id` in the view
         self.env.user.groups_id += self.env.ref('product.group_product_pricelist')
         order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
-        order_form.partner_id = self.partner_18
+        order_form.partner_id = self.partner
         order_form.fiscal_position_id = fiscal_position
 
         # Try adding delivery product as a normal product
         with order_form.order_line.new() as line:
             line.product_id = self.normal_delivery.product_id
             line.product_uom_qty = 1.0
-            line.product_uom = self.product_uom_unit
         sale_order = order_form.save()
 
         self.assertRecordValues(sale_order.order_line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
@@ -293,10 +270,9 @@ class TestDeliveryCost(common.TransactionCase):
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
 
-        line = self.SaleOrderLine.search([
-            ('order_id', '=', sale_order.id),
+        line = sale_order.order_line.filtered_domain([
             ('product_id', '=', self.normal_delivery.product_id.id),
-            ('is_delivery', '=', True)
+            ('is_delivery', '=', True),
         ])
 
         self.assertRecordValues(line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
@@ -306,20 +282,18 @@ class TestDeliveryCost(common.TransactionCase):
         Test that negative qty SO lines are not included in the estimated weight calculation
         of delivery carriers (since it's used when calculating their rates).
         """
-        sale_order = self.SaleOrder.create({
-            'partner_id': self.partner_18.id,
-            'name': 'SO - neg qty',
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
             'order_line': [
-                (0, 0, {
-                    'product_id': self.product_4.id,
+                Command.create({
+                    'product_id': self.product.id,
                     'product_uom_qty': 1,
-                    'product_uom': self.product_uom_unit.id,
                 }),
-                (0, 0, {
-                    'product_id': self.product_2.id,
+                Command.create({
+                    'product_id': self.product.id,
                     'product_uom_qty': -1,
-                    'product_uom': self.product_uom_unit.id,
-                })],
+                }),
+            ],
         })
         shipping_weight = sale_order._get_estimated_weight()
-        self.assertEqual(shipping_weight, self.product_4.weight, "Only positive quantity products' weights should be included in estimated weight")
+        self.assertEqual(shipping_weight, self.product.weight, "Only positive quantity products' weights should be included in estimated weight")
