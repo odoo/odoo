@@ -152,6 +152,91 @@
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-salmon-avocado.jpg"/>
         </record>
 
+         <record id="pos_food_pizza" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">7.0</field>
+            <field name="name">Pizza</field>
+            <field name="weight">0.01</field>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
+            <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
+            <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza-ma.jpg"/>
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                        'xml_id': 'pos_restaurant.pos_food_pizza_product_template',
+                        'record': obj().env.ref('pos_restaurant.pos_food_pizza').product_tmpl_id,
+                        'noupdate': True,
+                    }]" />
+        </function>
+
+        <record id="topping_variants" model="product.attribute">
+            <field name="name">Toppings</field>
+            <field name="sequence">30</field>
+            <field name="display_type">radio</field>
+            <field name="create_variant">no_variant</field>
+        </record>
+
+        <record id="topping_variant_1" model="product.attribute.value">
+            <field name="name">Pepperoni</field>
+            <field name="sequence">3</field>
+            <field name="attribute_id" ref="topping_variants" />
+        </record>
+        <record id="topping_variant_2" model="product.attribute.value">
+            <field name="name">Mozzarella Cheese</field>
+            <field name="sequence">3</field>
+            <field name="attribute_id" ref="topping_variants" />
+        </record>
+        <record id="topping_variant_3" model="product.attribute.value">
+            <field name="name">Olives</field>
+            <field name="sequence">3</field>
+            <field name="attribute_id" ref="topping_variants" />
+        </record>
+        <record id="topping_variant_4" model="product.attribute.value">
+            <field name="name">Mushrooms</field>
+            <field name="sequence">3</field>
+            <field name="attribute_id" ref="topping_variants" />
+        </record>
+
+        <record id="pizza_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="pos_restaurant.pos_food_pizza_product_template" />
+            <field name="attribute_id" ref="topping_variants" />
+            <field name="value_ids" eval="[(6, 0, [ref('topping_variant_1'), ref('topping_variant_2'), ref('topping_variant_3'), ref('topping_variant_4')])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'pos_restaurant.pos_food_pizza_topping_value_1',
+                'record': obj().env.ref('pos_restaurant.pizza_attribute_1_product_template_attribute_line').product_template_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'pos_restaurant.pos_food_pizza_topping_value_2',
+                'record': obj().env.ref('pos_restaurant.pizza_attribute_1_product_template_attribute_line').product_template_value_ids[1],
+                'noupdate': True,
+            }, {
+                'xml_id': 'pos_restaurant.pos_food_pizza_topping_value_3',
+                'record': obj().env.ref('pos_restaurant.pizza_attribute_1_product_template_attribute_line').product_template_value_ids[2],
+                'noupdate': True,
+            }, {
+                'xml_id': 'pos_restaurant.pos_food_pizza_topping_value_4',
+                'record': obj().env.ref('pos_restaurant.pizza_attribute_1_product_template_attribute_line').product_template_value_ids[3],
+                'noupdate': True,
+            },]"/>
+        </function>
+
+        <record id="pos_restaurant.pos_food_pizza_topping_value_1" model="product.template.attribute.value">
+            <field name="price_extra">1.50</field>
+        </record>
+        <record id="pos_restaurant.pos_food_pizza_topping_value_2" model="product.template.attribute.value">
+            <field name="price_extra">1.50</field>
+        </record>
+        <record id="pos_restaurant.pos_food_pizza_topping_value_3" model="product.template.attribute.value">
+            <field name="price_extra">0.90</field>
+        </record>
+        <record id="pos_restaurant.pos_food_pizza_topping_value_4" model="product.template.attribute.value">
+            <field name="price_extra">0.90</field>
+        </record>
+
         <!-- Drinks -->
         <record id="coke" model="product.product">
             <field name="available_in_pos">True</field>
