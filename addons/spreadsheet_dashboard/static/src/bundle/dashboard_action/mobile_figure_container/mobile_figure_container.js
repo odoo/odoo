@@ -11,6 +11,7 @@ export class MobileFigureContainer extends Component {
         useSubEnv({
             model: this.props.spreadsheetModel,
             isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),
+            openSidePanel: () => {},
         });
     }
 
