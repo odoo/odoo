@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
@@ -19,8 +18,6 @@ class SaleCommon(
         super().setUpClass()
 
         cls.env.company.country_id = cls.env.ref('base.us')
-        cls.env.ref('base.main_company').currency_id = cls.env.ref('base.USD')
-        cls.currency = cls.env.ref('base.USD')
 
         # Not defined in product common because only used in sale
         cls.group_discount_per_so_line = cls.env.ref('product.group_discount_per_so_line')
