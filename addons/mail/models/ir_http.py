@@ -3,6 +3,7 @@
 import odoo
 from odoo import api, models, fields
 from odoo.http import request
+from odoo.addons.mail.tools.discuss import StoreData
 
 
 class IrHttp(models.AbstractModel):
@@ -11,7 +12,9 @@ class IrHttp(models.AbstractModel):
     def session_info(self):
         """Override to add the current user data (partner or guest) if applicable."""
         result = super().session_info()
-        result["storeData"] = self.env["res.users"]._init_store_data()
+        store = StoreData()
+        self.env["res.users"]._init_store_data(store)
+        result["storeData"] = store.get_result()
         guest = self.env['mail.guest']._get_guest_from_context()
         if not request.session.uid and guest:
             user_context = {'lang': guest.lang}
@@ -21,10 +24,3 @@ class IrHttp(models.AbstractModel):
             result['cache_hashes']['translations'] = translation_hash
             result["user_context"] = user_context
         return result
-
-    @api.model
-    def get_frontend_session_info(self):
-        """Override to add the current user data (partner or guest) if applicable."""
-        res = super().get_frontend_session_info()
-        res["storeData"] = self.env["res.users"]._init_store_data()
-        return res

@@ -42,7 +42,7 @@ class ResUsers(models.Model):
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()
 
-    def _init_messaging(self):
+    def _init_messaging(self, store):
         self = self.with_user(self)
         channels = self.env["discuss.channel"]._get_channels_as_member()
         domain = [("channel_id", "in", channels.ids), ("is_self", "=", True)]
@@ -54,11 +54,12 @@ class ResUsers(models.Model):
         # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return
         # whether the feature is enabled
         get_param = self.env["ir.config_parameter"].sudo().get_param
-        res = super()._init_messaging()
-        res["Store"].update({
-            "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
-            "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
-            "initChannelsUnreadCounter": len(members_with_unread),
+        super()._init_messaging(store)
+        store.add({
+            "Store": {
+                "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
+                "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
+                "initChannelsUnreadCounter": len(members_with_unread),
+            },
+            "Thread": channels_info
         })
-        res["Thread"] = channels_info
-        return res
