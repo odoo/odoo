@@ -170,7 +170,9 @@ export class Orderline extends PosModel {
         this.saved_quantity = json.qty;
         this.uuid = json.uuid;
         this.skipChange = json.skip_change;
-        this.combo_line_id = json.combo_line_id;
+        this.combo_line_id = json.combo_line_id
+            ? this.pos.data["pos.combo.line"][json.combo_line_id]
+            : false;
 
         // FIXME rename to orderline_children_ids
         this.combo_line_ids = json.combo_line_ids;
@@ -1686,7 +1688,7 @@ export class Order extends PosModel {
             attributes_prices[parentLine.id] = this.compute_child_lines(
                 parentLine.product,
                 parentLine.combo_line_ids.map((childLine) => {
-                    const comboLineCopy = { ...childLine.combo_line_id };
+                    const comboLineCopy = { ...childLine };
                     if (childLine.attribute_value_ids) {
                         comboLineCopy.configuration = {
                             attribute_value_ids: childLine.attribute_value_ids,
@@ -1703,7 +1705,7 @@ export class Order extends PosModel {
         combo_children_lines.forEach((line) => {
             line.set_unit_price(
                 attributes_prices[line.combo_parent_id.id].find(
-                    (item) => item.combo_line_id.id === line.combo_line_id.id
+                    (item) => item.comboLine.id === line.combo_line_id.id
                 ).price
             );
             self.fix_tax_included_price(line);

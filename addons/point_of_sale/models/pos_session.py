@@ -116,7 +116,7 @@ class PosSession(models.Model):
                 'domain': lambda data: [('order_id', 'in', [order['id'] for order in data['pos.order']])],
                 'fields': [
                     'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id',
-                    'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids'],
+                    'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id'],
             },
             'pos.session': {
                 'domain': [('id', '=', self.id)],
