@@ -2,7 +2,6 @@
 
 import { cleanTerm } from "@mail/utils/common/format";
 
-import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -56,14 +55,6 @@ export class Messaging {
     }
 
     initMessagingCallback() {
-        if (!this.store.discuss.isActive) {
-            if (router.current.action === "mail.action_discuss") {
-                this.store.discuss.isActive = true;
-            } else if (this.store.action_discuss_id) {
-                this.store.discuss.isActive =
-                    this.store.action_discuss_id === router.current.action;
-            }
-        }
         this.isReady.resolve();
         this.store.isMessagingReady = true;
     }

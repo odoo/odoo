@@ -40,7 +40,7 @@ export class ChatWindowContainer extends Component {
         this.hiddenMenuRef = useRef("hiddenMenu");
         useEffect(
             () => this.setHiddenMenuOffset(),
-            () => [this.chatWindowService.hidden, this.store.isMessagingReady]
+            () => [this.chatWindowService.hidden]
         );
         onMounted(() => this.setHiddenMenuOffset());
 

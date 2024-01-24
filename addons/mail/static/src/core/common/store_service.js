@@ -2,6 +2,7 @@
 
 import { BaseStore, makeStore, Record } from "@mail/core/common/record";
 
+import { router } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -56,6 +57,8 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
+    /** @type {number} */
+    action_discuss_id;
     lastChannelSubscription = "";
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
@@ -77,8 +80,9 @@ export class Store extends BaseStore {
     /** @type {boolean} */
     odoobotOnboarding;
     users = {};
-    internalUserGroupId = null;
-    /** @type {string} */
+    /** @type {number} */
+    internalUserGroupId;
+    /** @type {number} */
     mt_comment_id;
     /** @type {boolean} */
     hasMessageTranslationFeature;
@@ -303,6 +307,11 @@ export const storeService = {
         store.insert(session.storeData);
         store.self ??= { id: -1, type: "guest" };
         store.settings = user.settings;
+        const discussActionIds = ["mail.action_discuss"];
+        if (store.action_discuss_id) {
+            discussActionIds.push(store.action_discuss_id);
+        }
+        store.discuss.isActive ||= discussActionIds.includes(router.current.action);
         Record.onChange(store.Thread, "records", () => store.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             store.discuss.activeTab = "main";

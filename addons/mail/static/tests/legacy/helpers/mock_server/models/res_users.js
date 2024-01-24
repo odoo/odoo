@@ -10,6 +10,7 @@ patch(MockServer.prototype, {
     _mockResUsers__init_store_data() {
         return {
             Store: {
+                action_discuss_id: DISCUSS_ACTION_ID,
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 hasMessageTranslationFeature: true,
@@ -60,7 +61,6 @@ patch(MockServer.prototype, {
                 fields: ["source", "substitution"],
             }),
             Store: {
-                action_discuss_id: DISCUSS_ACTION_ID,
                 current_user_id: this.pyEnv.currentUserId,
                 discuss: {
                     inbox: {
