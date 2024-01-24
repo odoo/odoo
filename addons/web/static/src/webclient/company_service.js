@@ -58,14 +58,15 @@ function accessErrorHandler(env, error, originalError) {
         return false;
     }
     if (originalError?.exceptionName === "odoo.exceptions.AccessError") {
-        const { model, id, view_type } = router.current;
-        if (!model || !id || view_type !== "form") {
+        const { id, view_type, actionStack } = router.current;
+        if (!actionStack || !id || view_type !== "form") {
             return false;
         }
         if (error.event) {
             error.event.preventDefault();
         }
-        router.pushState({ id: undefined, view_type: undefined }, { reload: true });
+        actionStack.pop();
+        router.pushState({ id: undefined, view_type: undefined, actionStack }, { reload: true });
         return true;
     }
     return false;

@@ -72,6 +72,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App2");
         assert.deepEqual(router.current, {
             action: 1001,
+            actionStack: [
+                {
+                    action: 1001,
+                },
+            ],
             menu_id: 2,
         });
     });
@@ -358,7 +363,11 @@ QUnit.module("ActionManager", (hooks) => {
         let currentState = router.current;
         assert.deepEqual(currentState, {
             action: 3,
-            model: "partner",
+            actionStack: [
+                {
+                    action: 3,
+                },
+            ],
             view_type: "list",
         });
         assert.verifySteps(["push_state"], "should have pushed the final state");
@@ -368,7 +377,15 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(currentState, {
             action: 3,
             id: 1,
-            model: "partner",
+            actionStack: [
+                {
+                    action: 3,
+                },
+                {
+                    action: 3,
+                    resId: 1,
+                },
+            ],
             view_type: "form",
         });
         assert.verifySteps(["push_state"], "should push the state of it changes afterwards");

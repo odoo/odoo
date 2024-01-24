@@ -405,7 +405,7 @@ export class FormController extends Component {
     }
 
     updateURL() {
-        router.pushState({ id: this.model.root.resId || undefined });
+        router.pushState({ id: this.model.root.resId || "new" });
     }
 
     getStaticActionMenuItems() {

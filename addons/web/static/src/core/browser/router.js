@@ -97,25 +97,221 @@ export function parseSearchQuery(search) {
  * @param {{ [key: string]: any }} route
  * @returns
  */
-export function routeToUrl(route) {
-    const search = objectToUrlEncodedString(route);
-    return browser.location.pathname + (search ? "?" + search : "");
+export function stateToUrl(state) {
+    const tmpState = Object.assign({}, state);
+    const pathname = ["/apps"];
+    if (tmpState.actionStack) {
+        const breadcrumb = [];
+        for (const actIndex in tmpState.actionStack) {
+            const action = tmpState.actionStack[actIndex];
+            if (action.resId && actIndex > 0) {
+                const previousAction = tmpState.actionStack[actIndex - 1];
+                if (
+                    action.action === previousAction.action &&
+                    action.model === previousAction.model &&
+                    action.active_id === previousAction.active_id
+                ) {
+                    breadcrumb.push(1);
+                    pathname.push(action.resId);
+                    continue;
+                }
+            }
+            if (action.active_id) {
+                if (
+                    actIndex === 0 ||
+                    action.active_id !== tmpState.actionStack[actIndex - 1]?.resId
+                ) {
+                    breadcrumb.push(0);
+                    pathname.push(action.active_id);
+                }
+            }
+            if (action.action) {
+                if (typeof action.action === "number" || action.action.includes(".")) {
+                    breadcrumb.push(1);
+                    pathname.push(`act-${action.action}`);
+                } else {
+                    breadcrumb.push(1);
+                    pathname.push(action.action);
+                }
+            } else if (action.model) {
+                // Note that the shourtcut don't have "."
+                breadcrumb.push(1);
+                if (action.model.includes(".")) {
+                    pathname.push(action.model);
+                } else {
+                    pathname.push(`m-${action.model}`);
+                }
+            }
+            if (action.resId) {
+                breadcrumb.pop();
+                breadcrumb.push(0);
+                breadcrumb.push(1);
+                pathname.push(action.resId);
+            }
+        }
+        tmpState.b = parseInt(breadcrumb.join(""), 2).toString(16);
+        // tmpState.breadcrumbTEST = breadcrumb.join("");
+        if (tmpState.actionStack[tmpState.actionStack.length - 1].view_type) {
+            tmpState.view_type = tmpState.actionStack[tmpState.actionStack.length - 1].view_type;
+        }
+        delete tmpState.action;
+        delete tmpState.active_id;
+        delete tmpState.actionStack;
+        if (tmpState.id) {
+            pathname.pop();
+            pathname.push(tmpState.id);
+            delete tmpState.id;
+        }
+    } else {
+        delete tmpState.b;
+        if (tmpState.action || tmpState.model) {
+            // This is done for retro-compatibility in case of the state has only action or model and not actionStack
+            const breadcrumb = [];
+            if (tmpState.active_id) {
+                breadcrumb.push(0);
+                pathname.push(tmpState.active_id);
+                delete tmpState.active_id;
+            }
+            if (tmpState.action) {
+                if (typeof tmpState.action === "number" || tmpState.action.includes(".")) {
+                    breadcrumb.push(1);
+                    pathname.push(`act-${tmpState.action}`);
+                } else {
+                    breadcrumb.push(1);
+                    pathname.push(tmpState.action);
+                }
+                delete tmpState.action;
+            } else if (tmpState.model) {
+                // Note that the shourtcut don't have "."
+                breadcrumb.push(1);
+                if (tmpState.model.includes(".")) {
+                    pathname.push(tmpState.model);
+                } else {
+                    pathname.push(`m-${tmpState.model}`);
+                }
+                delete tmpState.model;
+            }
+            if (tmpState.resId) {
+                breadcrumb.pop();
+                breadcrumb.push(0);
+                breadcrumb.push(1);
+                pathname.push(tmpState.resId);
+                delete tmpState.resId;
+            }
+        }
+    }
+    // Maybe we need to remove id ! (as we remove menu_id)
+    const search = objectToUrlEncodedString(tmpState);
+    return pathname.join("/") + (search ? "?" + search : "");
 }
 
-function getRoute(urlObj) {
-    const search = parseSearchQuery(urlObj.search);
+function urlToState(urlObj) {
+    const { pathname, hash, search } = urlObj;
+    const state = parseSearchQuery(search);
 
     // If the url contains a hash, it can be for two motives:
     // 1. It is an anchor link, in that case, we ignore it, as it will not have a keys/values format
     //    the sanitizeHash function will remove it from the hash object.
     // 2. It has one or more keys/values, in that case, we merge it with the search.
-    const hash = sanitizeHash(parseHash(urlObj.hash));
-    if (Object.keys(hash).length > 0) {
-        Object.assign(search, hash);
-        const url = browser.location.origin + routeToUrl(search);
+    if (pathname === "/web") {
+        const sanitizedHash = sanitizeHash(parseHash(hash));
+        Object.assign(state, sanitizedHash);
+        const addHash = hash && !Object.keys(sanitizedHash).length;
+        const url = browser.location.origin + stateToUrl(state) + (addHash ? hash : "");
         browser.history.replaceState({}, "", url);
     }
-    return search;
+
+    const splitPath = pathname.split("/").filter(Boolean);
+
+    if (splitPath.length > 1 && splitPath[0] === "apps") {
+        splitPath.splice(0, 1);
+        let actions = [];
+        let action = {};
+        let aid = undefined;
+        for (const part of splitPath) {
+            if (aid) {
+                action.active_id = aid;
+                aid = undefined;
+            }
+            if (isNaN(parseInt(part)) && part !== "new") {
+                // part is an action (id or shortcut) or a model (when no action is found)
+                if (Object.values(action).length > 0) {
+                    // We have a new action, so we push the previous one
+                    if (action.resId) {
+                        aid = action.resId;
+                    }
+                    actions.push({ ...action });
+                }
+                action = {};
+                if (part.startsWith("act-")) {
+                    // it's an action id or an action xmlid
+                    action.action = isNaN(parseInt(part.slice(4)))
+                        ? part.slice(4)
+                        : parseInt(part.slice(4));
+                    continue;
+                } else if (part.includes(".") || part.startsWith("m-")) {
+                    // it's a model
+                    // Note that the shourtcut don't have "."
+                    if (part.startsWith("m-")) {
+                        action.model = part.slice(2);
+                    } else {
+                        action.model = part;
+                    }
+                    continue;
+                } else {
+                    // it's a shortcut of an action
+                    action.action = part;
+                    continue;
+                }
+            }
+            if (!isNaN(parseInt(part)) || part === "new") {
+                // Action with a resId
+                if (Object.values(action).length > 0) {
+                    // We push the action without the id, to have a multimodel action view
+                    actions.push({ ...action });
+                }
+                if (part === "new") {
+                    action.resId = part;
+                } else {
+                    action.resId = parseInt(part);
+                }
+                continue;
+            }
+        }
+        if (actions.length > 0 && actions[actions.length - 1].resId) {
+            action.active_id = actions[actions.length - 1].resId;
+        }
+        actions.push(action);
+        if (actions.length > 0 && state.b) {
+            let breadcrumb = parseInt(state.b, 16).toString(2);
+            if (actions.length !== breadcrumb.length) {
+                breadcrumb = breadcrumb.padStart(actions.length, "0");
+            }
+            breadcrumb = breadcrumb.split("").map((b) => Boolean(parseInt(b)));
+            actions = actions.map((action, i) => ({
+                ...action,
+                onBreadcrumb: breadcrumb[i],
+            }));
+            actions = actions.filter((a) => a.onBreadcrumb);
+            actions.map((a) => delete a.onBreadcrumb);
+            delete state.b;
+        }
+        if (actions[actions.length - 1].resId && actions[actions.length - 1].resId !== "new") {
+            state.id = actions[actions.length - 1].resId;
+        }
+        if (actions[actions.length - 1].action) {
+            state.action = actions[actions.length - 1].action;
+        }
+        if (actions[actions.length - 1].model) {
+            state.model = actions[actions.length - 1].model;
+        }
+        if (actions[actions.length - 1].active_id) {
+            state.active_id = actions[actions.length - 1].active_id;
+        }
+        state.actionStack = actions;
+    }
+
+    return state;
 }
 
 let current;
@@ -124,7 +320,7 @@ let allPushArgs;
 let _lockedKeys;
 
 export function startRouter() {
-    current = getRoute(browser.location);
+    current = urlToState(browser.location);
     pushTimeout = null;
     allPushArgs = [];
     _lockedKeys = new Set(["debug"]);
@@ -139,7 +335,7 @@ browser.addEventListener("popstate", (ev) => {
     if (ev.state?.newURL) {
         browser.clearTimeout(pushTimeout);
         const loc = new URL(ev.state.newURL);
-        current = getRoute(loc);
+        current = urlToState(loc);
         routerBus.trigger("ROUTE_CHANGE");
     }
 });
@@ -161,13 +357,13 @@ function makeDebouncedPush(mode) {
         const newRoute = computeNewRoute(newSearch, replace, current);
         if (newRoute) {
             // If the route changed: pushes or replaces browser state
-            const url = browser.location.origin + routeToUrl(newRoute);
+            const url = browser.location.origin + stateToUrl(newRoute);
             if (mode === "push") {
                 browser.history.pushState({ newURL: url }, "", url);
             } else {
                 browser.history.replaceState({ newURL: url }, "", url);
             }
-            current = getRoute(browser.location);
+            current = urlToState(browser.location);
         }
         const reload = allPushArgs.some(([, options]) => options && options.reload);
         if (reload) {

@@ -176,21 +176,43 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.deepEqual(router.current, {
             action: 4,
-            model: "partner",
+            actionStack: [
+                {
+                    action: 4,
+                },
+            ],
             view_type: "kanban",
         });
         await doAction(webClient, 8);
         await nextTick();
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
+            actionStack: [
+                {
+                    action: 4,
+                },
+                {
+                    action: 8,
+                },
+            ],
             view_type: "list",
         });
         await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await nextTick();
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
+            actionStack: [
+                {
+                    action: 4,
+                },
+                {
+                    action: 8,
+                },
+                {
+                    action: 8,
+                    resId: 4,
+                },
+            ],
             view_type: "form",
             id: 4,
         });
@@ -213,7 +235,11 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.deepEqual(router.current, {
             action: 4,
-            model: "partner",
+            actionStack: [
+                {
+                    action: 4,
+                },
+            ],
             view_type: "kanban",
         });
     });
@@ -230,7 +256,11 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
+            actionStack: [
+                {
+                    action: 8,
+                },
+            ],
             view_type: "list",
         });
         await testUtils.dom.click($(target).find("tr.o_data_row:first"));
@@ -239,7 +269,11 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
+            actionStack: [
+                {
+                    action: 8,
+                },
+            ],
             view_type: "list",
         });
     });

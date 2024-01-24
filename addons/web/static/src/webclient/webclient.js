@@ -55,6 +55,7 @@ export class WebClient extends Component {
     }
 
     async loadRouterState() {
+        const firstAction = router.current.actionStack && router.current.actionStack[0].action;
         let stateLoaded = await this.actionService.loadState();
         let menuId = Number(router.current.menu_id || 0);
 
@@ -72,7 +73,18 @@ export class WebClient extends Component {
             // Determines the current menu based on the current action
             const currentController = this.actionService.currentController;
             const actionId = currentController && currentController.action.id;
-            const menu = this.menuService.getAll().find((m) => m.actionID === actionId);
+            let menu = this.menuService.getAll().find((m) => m.actionID === actionId);
+            if (!menu) {
+                // Determines the current menu based on the first action
+                if (firstAction) {
+                    menu = this.menuService
+                        .getAll()
+                        .find((m) => m.actionID === firstAction || m.actionPath === firstAction);
+                    if (menu) {
+                        router.pushState({ menu_id: menu.id });
+                    }
+                }
+            }
             menuId = menu && menu.appID;
         }
 

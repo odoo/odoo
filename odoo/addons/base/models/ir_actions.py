@@ -54,9 +54,12 @@ class IrActions(models.Model):
     _order = 'name'
     _allow_sudo_commands = False
 
+    _sql_constraints = [('path_unique', 'unique(path)', "Path to shown in the URL must be unique! Please choose another one.")]
+
     name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)
     xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
+    path = fields.Char(string="Path to show in the URL")
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
                        translate=True)
@@ -66,6 +69,21 @@ class IrActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
+
+    @api.constrains('path')
+    def _check_path(self):
+        for action in self:
+            if action.path:
+                if '/' in action.path:
+                    raise ValidationError(_('Error! Should not contain slashes.'))
+                if ' ' in action.path:
+                    raise ValidationError(_('Error! Should not contain spaces.'))
+                if action.path.isnumeric():
+                    raise ValidationError(_('Error! Should not be numeric.'))
+                # check special characters (except - and _ ) but avoid éèàçù etc.
+                # Maybe something like this : if not re.match(r'^[a-z][a-z0-9_-]*$':
+                # if self.env['ir.actions.actions'].search_count([('path', '=', action.path)]) > 1:
+                #     raise ValidationError(_('Another action already has this path on the same app.'))
 
     def _compute_xml_id(self):
         res = self.get_external_id()
@@ -334,6 +352,7 @@ class IrActionsActWindow(models.Model):
         return super()._get_readable_fields() | {
             "context", "mobile_view_mode", "domain", "filter", "groups_id", "limit",
             "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views",
+            "path",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action
             "flags"

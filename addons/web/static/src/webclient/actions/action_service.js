@@ -743,7 +743,7 @@ export function makeActionManager(env, router = _router) {
                     };
 
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    pushState(controller);
+                    pushState(controllerStack);
                     this.titleService.setParts({ action: controller.displayName });
                     browser.sessionStorage.setItem(
                         "current_action",
@@ -1391,31 +1391,59 @@ export function makeActionManager(env, router = _router) {
         return false;
     }
 
-    function pushState(controller) {
+    function pushState(controllerStack) {
         const newState = {};
-        const action = controller.action;
-        if (action.id) {
-            newState.action = action.id;
-        } else if (action.type === "ir.actions.client") {
-            newState.action = action.tag;
+        const actions = [];
+        const lastCtrl = controllerStack[controllerStack.length - 1];
+        if (lastCtrl.action.tag === "menu") {
+            router.pushState(
+                {
+                    actionStack: [
+                        {
+                            action: "menu",
+                        },
+                    ],
+                },
+                { replace: true }
+            );
+            return;
         }
-        if (action.context) {
-            const activeId = action.context.active_id;
-            if (activeId) {
-                newState.active_id = activeId;
-            }
-            const activeIds = action.context.active_ids;
-            // we don't push active_ids if it's a single element array containing
-            // the active_id to make the url shorter in most cases
-            if (activeIds && !(activeIds.length === 1 && activeIds[0] === activeId)) {
-                newState.active_ids = activeIds.join(",");
-            }
-        }
-        if (action.type === "ir.actions.act_window") {
+        for (const controller of controllerStack) {
+            const action = controller.action;
             const props = controller.props;
-            newState.model = props.resModel;
-            newState.view_type = props.type;
-            newState.id = props.resId || (props.state && props.state.resId) || undefined;
+            const actionState = {};
+            if (action.id) {
+                actionState.action = action.path || action.id;
+            } else if (action.type === "ir.actions.client") {
+                actionState.action = action.tag;
+            } else if (action.type === "ir.actions.act_window") {
+                actionState.model = props.resModel;
+            }
+            if (action.type === "ir.actions.act_window") {
+                if (props.resId || (props.state && props.state.resId)) {
+                    actionState.resId = props.resId || (props.state && props.state.resId);
+                }
+                actionState.view_type = props.type;
+                if (actionState.view_type === "form" && !actionState.resId) {
+                    actionState.resId = "new";
+                }
+            }
+            if (action.context) {
+                const activeId = action.context.active_id;
+                if (activeId) {
+                    actionState.active_id = activeId;
+                }
+                const activeIds = action.context.active_ids;
+                // we don't push active_ids if it's a single element array containing
+                // the active_id to make the url shorter in most cases
+                if (activeIds && !(activeIds.length === 1 && activeIds[0] === activeId)) {
+                    actionState.active_ids = activeIds.join(",");
+                }
+            }
+            actions.push(actionState);
+        }
+        if (actions.length) {
+            newState.actionStack = actions;
         }
         router.pushState(newState, { replace: true });
     }

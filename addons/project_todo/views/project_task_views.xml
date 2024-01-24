@@ -243,6 +243,7 @@
     <!-- Todo main action + view links-->
     <record id="project_task_action_todo" model="ir.actions.act_window">
         <field name="name">To-dos</field>
+        <field name="path">todo</field>
         <field name="res_model">project.task</field>
         <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False), ('parent_id', '=', False)]</field>
         <field name="view_mode">kanban,form,tree,activity</field>

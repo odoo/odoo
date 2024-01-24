@@ -182,7 +182,10 @@ QUnit.test("WarningDialog", async (assert) => {
         },
     });
     assert.containsOnce(target, ".o_dialog");
-    assert.strictEqual(target.querySelector("header .modal-title").textContent, "Invalid Operation");
+    assert.strictEqual(
+        target.querySelector("header .modal-title").textContent,
+        "Invalid Operation"
+    );
     assert.containsOnce(target, ".o_error_dialog");
     assert.strictEqual(target.querySelector("main").textContent, "Some strange unreadable message");
     assert.strictEqual(target.querySelector(".o_dialog footer button").textContent, "Close");
@@ -249,11 +252,9 @@ QUnit.test("Error504Dialog", async (assert) => {
 
 QUnit.test("SessionExpiredDialog", async (assert) => {
     assert.expect(7);
-    patchWithCleanup(browser, {
-        location: {
-            reload() {
-                assert.step("location reload");
-            },
+    patchWithCleanup(browser.location, {
+        reload() {
+            assert.step("location reload");
         },
     });
     env = await makeDialogTestEnv();

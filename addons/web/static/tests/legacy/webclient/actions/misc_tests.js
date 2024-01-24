@@ -221,7 +221,15 @@ QUnit.module("ActionManager", (hooks) => {
             action: "Partners Action 4",
         });
         currentState = router.current;
-        assert.deepEqual(currentState, { action: 4, model: "partner", view_type: "kanban" });
+        assert.deepEqual(currentState, {
+            action: 4,
+            actionStack: [
+                {
+                    action: 4,
+                },
+            ],
+            view_type: "kanban",
+        });
         await doAction(webClient, 8);
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
@@ -230,7 +238,18 @@ QUnit.module("ActionManager", (hooks) => {
             action: "Favorite Ponies",
         });
         currentState = router.current;
-        assert.deepEqual(currentState, { action: 8, model: "pony", view_type: "list" });
+        assert.deepEqual(currentState, {
+            action: 8,
+            actionStack: [
+                {
+                    action: 4,
+                },
+                {
+                    action: 8,
+                },
+            ],
+            view_type: "list",
+        });
         await click(target.querySelector(".o_data_row .o_data_cell"));
         await nextTick();
         currentTitle = webClient.env.services.title.getParts();
@@ -239,7 +258,23 @@ QUnit.module("ActionManager", (hooks) => {
             action: "Twilight Sparkle",
         });
         currentState = router.current;
-        assert.deepEqual(currentState, { action: 8, id: 4, model: "pony", view_type: "form" });
+        assert.deepEqual(currentState, {
+            action: 8,
+            id: 4,
+            actionStack: [
+                {
+                    action: 4,
+                },
+                {
+                    action: 8,
+                },
+                {
+                    action: 8,
+                    resId: 4,
+                },
+            ],
+            view_type: "form",
+        });
     });
 
     QUnit.test('handles "history_back" event', async function (assert) {

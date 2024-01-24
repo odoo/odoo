@@ -24,7 +24,12 @@ class Action(Controller):
                 assert action._name.startswith('ir.actions.')
                 action_id = action.id
             except Exception as exc:
-                raise MissingError(_("The action %r does not exist.", action_id)) from exc
+                try:
+                    action = Actions.search([('path', '=', action_id)], limit=1)
+                    assert action._name.startswith('ir.actions.')
+                    action_id = action.id
+                except Exception:
+                    raise MissingError(_("The action %r does not exist.", action_id)) from exc
 
         base_action = Actions.browse([action_id]).sudo().read(['type'])
         if base_action:

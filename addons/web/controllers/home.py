@@ -31,10 +31,10 @@ class Home(http.Controller):
     def index(self, s_action=None, db=None, **kw):
         if request.db and request.session.uid and not is_user_internal(request.session.uid):
             return request.redirect_query('/web/login_successful', query=request.params)
-        return request.redirect_query('/web', query=request.params)
+        return request.redirect_query('/apps', query=request.params)
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
-    @http.route('/web', type='http', auth="none")
+    @http.route(['/web', '/apps', '/apps/<path:subpath>'], type='http', auth="none")
     def web_client(self, s_action=None, **kw):
 
         # Ensure we have both a database and a user

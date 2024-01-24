@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 
 const _console = window.console;
@@ -57,13 +58,10 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
                     document.querySelector("header.o_navbar .o_menu_brand").innerText,
                     "model_multicompany_menu"
                 );
-                const url = new URL(window.location);
-                const search = new URLSearchParams(url.search);
-                assertEqual(search.get("model"), "test.model_multicompany");
-                assertEqual(search.has("action"), true);
-                assertEqual(search.has("menu_id"), true);
-                assertEqual(search.get("view_type"), "list");
-                assertEqual(search.has("_company_switching"), false);
+                assertEqual("action" in router.current, true);
+                assertEqual("menu_id" in router.current, true);
+                assertEqual(router.current.view_type, "list");
+                assertEqual("_company_switching" in router.current, false);
             },
             isCheck: true,
         },
