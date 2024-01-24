@@ -103,7 +103,6 @@ patch(MockServer.prototype, {
                     id: -1,
                     model: "discuss.channel",
                     isLoaded: true,
-                    isNewlyCreated: true,
                     name: channelVals["name"],
                     chatbot_current_step_id: channelVals.chatbot_current_step_id,
                     state: "open",
@@ -129,9 +128,8 @@ patch(MockServer.prototype, {
                 self: this.pyEnv.getSelfData(),
             },
             Thread: {
-                ...this._mockDiscussChannelChannelInfo([channelId])[0],
                 isLoaded: true,
-                isNewlyCreated: true,
+                ...this._mockDiscussChannelChannelInfo([channelId])[0],
             },
         };
     },
