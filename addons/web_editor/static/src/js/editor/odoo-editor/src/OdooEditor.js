@@ -3130,7 +3130,9 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
+        const unlinkButton = this.toolbar.querySelector('#unlink');
         if (!this.isSelectionInEditable(sel)) {
+            unlinkButton.classList.add('d-none');
             return;
         }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
@@ -3262,7 +3264,6 @@ export class OdooEditor extends EventTarget {
         linkButton && linkButton.classList.toggle('active', !!linkNode);
         // Hide unlink button if no link in selection, always hide on media
         // elements.
-        const unlinkButton = this.toolbar.querySelector('#unlink');
         unlinkButton?.classList.toggle('d-none', isInMedia || !linkNode);
         const undoButton = this.toolbar.querySelector('#undo');
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
