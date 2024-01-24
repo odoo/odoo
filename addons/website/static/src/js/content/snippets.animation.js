@@ -1047,19 +1047,6 @@ registry.anchorSlide = publicWidget.Widget.extend({
             return;
         }
         var hash = this.el.hash;
-        if (hash === '#top' || hash === '#bottom') {
-            // If the anchor targets #top or #bottom, directly call the
-            // "scrollTo" function. The reason is that the header or the footer
-            // could have been removed from the DOM. By receiving a string as
-            // parameter, the "scrollTo" function handles the scroll to the top
-            // or to the bottom of the document even if the header or the
-            // footer is removed from the DOM.
-            dom.scrollTo(hash, {
-                duration: 500,
-                extraOffset: this._computeExtraOffset(),
-            });
-            return;
-        }
         if (!hash.length) {
             return;
         }
@@ -1080,11 +1067,38 @@ registry.anchorSlide = publicWidget.Widget.extend({
             // own smooth scrolling.
             ev.preventDefault();
             Offcanvas.getInstance(offcanvasEl).hide();
-            offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
-                this._scrollTo($anchor, scrollValue);
-            });
+            offcanvasEl.addEventListener('hidden.bs.offcanvas',
+                () => {
+                    this._manageScroll(hash, $anchor, scrollValue);
+                },
+                // the listener must be automatically removed when invoked
+                { once: true }
+            );
         } else {
             ev.preventDefault();
+            this._manageScroll(hash, $anchor, scrollValue);
+        }
+    },
+    /**
+     *
+     * @param {string} hash
+     * @param {jQuery} $el the element to scroll to.
+     * @param {string} [scrollValue='true'] scroll value
+     * @private
+     */
+    _manageScroll(hash, $anchor, scrollValue = "true") {
+        if (hash === "#top" || hash === "#bottom") {
+            // If the anchor targets #top or #bottom, directly call the
+            // "scrollTo" function. The reason is that the header or the footer
+            // could have been removed from the DOM. By receiving a string as
+            // parameter, the "scrollTo" function handles the scroll to the top
+            // or to the bottom of the document even if the header or the
+            // footer is removed from the DOM.
+            dom.scrollTo(hash, {
+                duration: 500,
+                extraOffset: this._computeExtraOffset(),
+            });
+        } else {
             this._scrollTo($anchor, scrollValue);
         }
     },
