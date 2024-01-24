@@ -22,6 +22,11 @@ QUnit.test("add_link utility function", function (assert) {
         "https://www.transifex.com/odoo/odoo-11/translate/#fr/$/119303430?q=text%3ATartiflette": true,
         "https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250": true,
         "http://www.boîtenoire.be": true,
+        "https://github.com/odoo/enterprise/compare/16.0...odoo-dev:enterprise:16.0-voip-fix_demo_data-tsm?expand=1": true,
+        "https://github.com/odoo/enterprise/compare/16.0...16.0-voip-fix_demo_data-tsm?expand=1": true,
+        "https://github.com/odoo/enterprise/compare/16.0...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
+        "https://github.com/odoo/enterprise/compare/chỗgiặt...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
+        "https://github.com/odoo/enterprise/compare/@...}-voip-fix_demo_data-tsm?expand=1": true,
     };
 
     for (const [content, willLinkify] of Object.entries(testInputs)) {
