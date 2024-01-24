@@ -18,7 +18,6 @@ const basicListAction = {
     type: "ir.actions.act_window",
     name: "Partner",
     res_model: "partner",
-    view_mode: "list",
     views: [
         [false, "list"],
         [false, "form"],
@@ -37,6 +36,7 @@ QUnit.test("Can open see records on headers col", async function (assert) {
                     ...basicListAction,
                     domain: [["foo", "=", 1]],
                 });
+                assert.strictEqual(options.viewType, "list");
             },
         }),
     };
@@ -58,6 +58,7 @@ QUnit.test("Can open see records on headers row", async function (assert) {
                     ...basicListAction,
                     domain: [["bar", "=", false]],
                 });
+                assert.strictEqual(options.viewType, "list");
             },
         }),
     };
@@ -79,6 +80,7 @@ QUnit.test("Can open see records on measure headers", async function (assert) {
                     ...basicListAction,
                     domain: [["foo", "=", 1]],
                 });
+                assert.strictEqual(options.viewType, "list");
             },
         }),
     };

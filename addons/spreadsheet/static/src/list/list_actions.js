@@ -3,6 +3,7 @@
 
 import { astToFormula } from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
+import { navigateTo } from "../actions/helpers";
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
@@ -20,7 +21,7 @@ export const SEE_RECORD_LIST = async (position, env) => {
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
     const listId = env.model.getters.getListIdFromPosition(position);
-    const { model } = env.model.getters.getListDefinition(listId);
+    const { model, actionXmlId } = env.model.getters.getListDefinition(listId);
     const dataSource = await env.model.getters.getAsyncListDataSource(listId);
     const index = evaluatedArgs[1];
     if (typeof index !== "number") {
@@ -30,13 +31,17 @@ export const SEE_RECORD_LIST = async (position, env) => {
     if (!recordId) {
         return;
     }
-    await env.services.action.doAction({
-        type: "ir.actions.act_window",
-        res_model: model,
-        res_id: recordId,
-        views: [[false, "form"]],
-        view_mode: "form",
-    });
+    await navigateTo(
+        env,
+        actionXmlId,
+        {
+            type: "ir.actions.act_window",
+            res_model: model,
+            res_id: recordId,
+            views: [[false, "form"]],
+        },
+        { viewType: "form" }
+    );
 };
 
 /**

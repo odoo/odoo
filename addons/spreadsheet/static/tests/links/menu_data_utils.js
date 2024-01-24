@@ -26,15 +26,16 @@ export function getMenuServerData() {
     serverData.actions = {
         action1: {
             id: 99,
-            xml_id: "action1",
+            xml_id: "spreadsheet.action1",
             name: "action1",
             res_model: "ir.ui.menu",
             type: "ir.actions.act_window",
-            views: [[false, "list"]],
+            views: [[1, "list"], [2, "form"]],
         },
     };
     serverData.views = {};
-    serverData.views["ir.ui.menu,false,list"] = `<tree></tree>`;
+    serverData.views["ir.ui.menu,1,list"] = `<tree></tree>`;
+    serverData.views["ir.ui.menu,2,form"] = `<form></form>`;
     serverData.views["ir.ui.menu,false,search"] = `<search></search>`;
     serverData.models = {
         ...getBasicData(),
