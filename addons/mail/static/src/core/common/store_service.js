@@ -191,7 +191,6 @@ export class Store extends BaseStore {
          */
         sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
     });
-    isMessagingReady = false;
     settings = Record.one("Settings");
     openInviteThread = Record.one("Thread");
 
@@ -287,7 +286,7 @@ export class Store extends BaseStore {
             }
         }
         const channels = JSON.stringify(channelIds);
-        if (this.isMessagingReady && this.lastChannelSubscription !== channels) {
+        if (this.lastChannelSubscription !== channels) {
             this.env.services["bus_service"].forceUpdateChannels();
         }
         this.lastChannelSubscription = channels;
