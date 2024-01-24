@@ -193,6 +193,11 @@
                                 class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>
+                            <button name="action_view_link_trackers"
+                                invisible="state != 'done'"
+                                type="object" class="oe_stat_button" icon="fa-link">
+                                <field name="link_trackers_count" widget="statinfo" string="Link Trackers"/>
+                            </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group class="o_mass_mailing_mailing_group">
