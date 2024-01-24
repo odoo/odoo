@@ -7,8 +7,9 @@ import { menuService } from "@web/webclient/menus/menu_service";
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup, nextTick } from "@web/../tests/helpers/utils";
 import { getEvaluatedCell } from "../utils/getters";
+import { setCellContent } from "@spreadsheet/../tests/utils/commands";
 
 const { Model } = spreadsheet;
 const { urlRepresentation, openLink } = spreadsheet.links;
@@ -79,8 +80,6 @@ QUnit.test("click a menu link", async (assert) => {
                 doAction(action) {
                     assert.step("do-action");
                     assert.deepEqual(action, {
-                        context: undefined,
-                        domain: undefined,
                         name: "an odoo view",
                         res_model: "partner",
                         target: "current",
@@ -101,16 +100,47 @@ QUnit.test("click a menu link", async (assert) => {
             views: [[false, "list"]],
         },
     };
-    const data = {
-        sheets: [
-            {
-                cells: { A1: { content: `[a view](odoo://view/${JSON.stringify(view)})` } },
-            },
-        ],
-    };
-    const model = new Model(data, { custom: { env } });
+
+    const model = new Model({}, { custom: { env } });
+    setCellContent(model, "A1", `[a view](odoo://view/${JSON.stringify(view)})`);
     const cell = getEvaluatedCell(model, "A1");
     assert.strictEqual(urlRepresentation(cell.link, model.getters), "an odoo view");
     openLink(cell.link, env);
     assert.verifySteps(["do-action"]);
 });
+
+QUnit.test("Click a link containing an action xml id", async (assert) => {
+    const env = await makeTestEnv({ serverData: getMenuServerData() });
+    env.services.action = {
+        ...env.services.action,
+        doAction(action) {
+            assert.step("do-action");
+            assert.equal(action.name, "My Action Name");
+            assert.equal(action.res_model, "ir.ui.menu");
+            assert.equal(action.target, "current");
+            assert.equal(action.type, "ir.actions.act_window");
+            assert.deepEqual(action.views, [[1, "list"]]);
+            assert.deepEqual(action.domain, [(1, "=", 1)]);
+        },
+    };
+            
+    const view = {
+        name: "My Action Name",
+        viewType: "list",
+        action: {
+            modelName: "ir.ui.menu",
+            views: [[false, "list"]],
+            domain: [(1, "=", 1)],
+            xmlId: "spreadsheet.action1",
+        },
+    };
+
+    const model = new Model({}, { custom: { env } });
+    setCellContent(model, "A1", `[an action link](odoo://view/${JSON.stringify(view)})`);
+    const cell = getEvaluatedCell(model, "A1");
+    assert.strictEqual(urlRepresentation(cell.link, model.getters), "My Action Name");
+    await openLink(cell.link, env);
+    await nextTick();
+    assert.verifySteps(["do-action"]);
+});
+

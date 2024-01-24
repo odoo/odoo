@@ -1,6 +1,6 @@
-/** @odoo-module */
 // @ts-check
 
+import { navigateTo } from "../actions/helpers";
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
 
 /**
@@ -13,22 +13,26 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     const pivot = env.model.getters.getPivot(pivotId);
     await pivot.load();
     const { model } = pivot.definition;
-
+    const { actionXmlId } = env.model.getters.getPivotDefinition(pivotId);
     const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
     const domain = pivot.getPivotCellDomain(argsDomain);
     const name = await pivot.getModelLabel();
-    await env.services.action.doAction({
-        type: "ir.actions.act_window",
-        name,
-        res_model: model,
-        view_mode: "list",
-        views: [
-            [false, "list"],
-            [false, "form"],
-        ],
-        target: "current",
-        domain,
-    });
+    await navigateTo(
+        env,
+        actionXmlId,
+        {
+            type: "ir.actions.act_window",
+            name,
+            res_model: model,
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            target: "current",
+            domain,
+        },
+        { viewType: "list" }
+    );
 };
 
 /**

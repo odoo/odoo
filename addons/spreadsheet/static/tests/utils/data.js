@@ -73,6 +73,22 @@ export function getBasicServerData() {
             "partner,false,form": /* xml */ `<Form/>`,
             "partner,false,search": /* xml */ `<search/>`,
         },
+        actions: {
+            1: {
+                id: 1,
+                name: "partner Action",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                xml_id: "spreadsheet.partner_action",
+                views: [
+                    [false, "list"],
+                    [false, "pivot"],
+                    [false, "graph"],
+                    [false, "search"],
+                    [false, "form"],
+                ],
+            },
+        }
     };
 }
 
