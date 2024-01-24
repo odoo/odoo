@@ -55,6 +55,10 @@
          <div role="alert">
           <p class="text-prewrap">
             <p><b>An error occurred</b></p>
+            <p>
+              <div t-if="props.serverHost">Server URL: <t t-esc="props.serverHost"/></div>
+              <div t-if="props.date and props.date.getTime()">Time: <t t-esc="props.date.toISOString().split('.')[0].replace('T', ' ')"/> UTC</div>
+            </p>
             <p>Please use the copy button to report the error to your support service.</p>
           </p>
 
