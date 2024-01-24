@@ -64,50 +64,6 @@ class PosSelfKiosk(http.Controller):
                 }
             )
 
-    @http.route(
-        "/pos-self/get-category-image/<int:category_id>",
-        methods=["GET"],
-        type="http",
-        auth="public",
-    )
-    def pos_self_order_get_cat_image(self, category_id: int):
-        category = request.env["pos.category"].sudo().browse(category_id)
-
-        if not category.has_image:
-            raise werkzeug.exceptions.NotFound()
-
-        return (
-            request.env["ir.binary"]
-            ._get_image_stream_from(
-                category,
-                field_name="image_128",
-            )
-            .get_response()
-        )
-
-    @http.route(
-        [
-            "/menu/get-image/<int:product_id>",
-            "/menu/get-image/<int:product_id>/<int:image_size>",
-        ],
-        methods=["GET"],
-        type="http",
-        auth="public",
-    )
-    def pos_self_order_get_image(self, product_id, image_size=128, **kw):
-        # This controller is public and does not require an access code (access_token) because the user
-        # needs to see the product image in "menu" mode. In this mode, the user has no access_token.
-        self.get_any_pos_config_sudo()
-
-        return (
-            request.env["ir.binary"]
-            ._get_image_stream_from(
-                request.env["product.product"].sudo().browse(product_id),
-                field_name=f"image_{image_size}",
-            )
-            .get_response()
-        )
-
     def get_any_pos_config_sudo(self):
         pos_config_sudo = request.env["pos.config"].sudo().search([
             ("self_ordering_mode", "not in", ['nothing'])], limit=1)
