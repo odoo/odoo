@@ -24,6 +24,7 @@ import secrets
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
 from odoo.tools.misc import file_path
+from odoo.addons.hw_drivers import main
 
 _logger = logging.getLogger(__name__)
 
@@ -198,15 +199,17 @@ def generate_password():
     """
     Generate an unique code to secure raspberry pi
     """
-    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
-    password = ''.join(secrets.choice(alphabet) for i in range(12))
-    shadow_password = crypt.crypt(password, crypt.mksalt())
-    subprocess.call(('sudo', 'usermod', '-p', shadow_password, 'pi'))
+    if main.ssh_service:
+        alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
+        password = ''.join(secrets.choice(alphabet) for i in range(12))
+        shadow_password = crypt.crypt(password, crypt.mksalt())
+        subprocess.call(('sudo', 'usermod', '-p', shadow_password, 'pi'))
 
-    with writable():
-        subprocess.call(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'))
+        with writable():
+            subprocess.call(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'))
 
-    return password
+        return password
+    return "Enable ssh first in the db"
 
 
 def get_certificate_status(is_first=True):
@@ -408,6 +411,20 @@ def read_file_first_line(filename):
     if path.exists():
         with path.open('r') as f:
             return f.readline().strip('\n')
+
+def stop_ssh():
+    try:
+        subprocess.call(['sudo', 'systemctl', 'stop', 'ssh'])
+        subprocess.call(['sudo', 'systemctl', 'disable', 'ssh'])
+    except subprocess.CalledProcessError:
+        _logger.exception('Unexpeted error occured trying to stop ssh')
+
+def start_ssh():
+    try:
+        subprocess.call(['sudo', 'systemctl', 'start', 'ssh'])
+        subprocess.call(['sudo', 'systemctl', 'enable', 'ssh'])
+    except subprocess.CalledProcessError:
+        _logger.exception('Unexpeted error occured trying to start ssh')
 
 def unlink_file(filename):
     with writable():
