@@ -160,7 +160,7 @@
 <!-- Filter - Date -->
 <template id="event_time" inherit_id="website_event.index_topbar" name="Filter by Date">
     <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
-        <div class="dropdown d-none d-lg-block me-2 my-1">
+        <div class="dropdown d-none d-lg-block">
             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                 <t t-if="current_date" t-out="current_date"/>
                 <t t-else="">Upcoming Events</t>
@@ -168,9 +168,10 @@
             <div class="dropdown-menu">
                 <t t-foreach="dates" t-as="date">
                     <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
-                        <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
+                        <t t-set="is_active" t-value="searches.get('date') == date[0]"/>
+                        <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
                             <t t-out="date[1]"/>
-                            <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill #{searches.get('date') == date[0] and 'bg-light text-primary' or 'bg-primary'} ms-3"/>
+                            <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
                         </a>
                     </t>
                 </t>
@@ -181,30 +182,31 @@
 
 <!-- Filter - Location -->
 <template id="event_location" inherit_id="website_event.index_topbar" active="False" name="Filter by Country">
-    <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]" position="inside">
-        <li class="nav-item dropdown me-2 my-1">
+    <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]/div" position="before">
+        <div class="dropdown d-none d-lg-block">
             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fa fa-map-marker"/>
                 <t t-if="current_country" t-out="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
             <div class="dropdown-menu">
                 <t t-foreach="countries" t-as="country">
                     <t t-if="country['country_id']">
-                        <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active'}">
+                        <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
+                        <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
                             <t t-out="country['country_id'][1]"/>
-                            <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-primary ms-auto"/>
+                            <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
                         </a>
                     </t>
                     <t t-else="">
-                        <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('country') == 'online' and 'active'}">
+                        <t t-set="is_active" t-value="searches.get('country') == 'online'"/>
+                        <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
                             <span>Online Events</span>
-                            <span t-out="country['country_id_count']" class="badge rounded-pill text-bg-primary ms-3"/>
+                            <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
                         </a>
                     </t>
                 </t>
             </div>
-        </li>
+        </div>
     </xpath>
 </template>
 
