@@ -239,7 +239,7 @@
                 <t t-set="tracks_header_name" t-value="tracks_info['name']"/>
                 <t t-set="tracks" t-value="tracks_info['tracks']"/>
                 <!-- DAY HEADER -->
-                <div t-attf-class="o_we_track_day_header d-flex align-items-center py-3">
+                <div class="o_we_track_day_header d-flex align-items-center position-relative py-3">
                     <div class="d-flex flex-grow-1 flex-column" t-if="tracks_date">
                         <span class="m-0 fw-bold" t-out="tracks_date"
                             t-options="{'widget': 'date', 'format': 'EEEE '}"/>
