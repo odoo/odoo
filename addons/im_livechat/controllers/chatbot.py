@@ -15,15 +15,6 @@ class LivechatChatbotScriptController(http.Controller):
         chatbot_language = self._get_chatbot_language()
         return discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot).message_format()[0]
 
-    @http.route('/chatbot/post_welcome_steps', type="json", auth="public", cors="*")
-    def chatbot_post_welcome_steps(self, channel_uuid, chatbot_script_id):
-        discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', channel_uuid)], limit=1)
-        chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
-        if not discuss_channel or not chatbot.exists():
-            return None
-        chatbot_language = self._get_chatbot_language()
-        return chatbot.with_context(lang=chatbot_language)._post_welcome_steps(discuss_channel).message_format()
-
     @http.route('/chatbot/answer/save', type="json", auth="public", cors="*")
     def chatbot_save_answer(self, channel_uuid, message_id, selected_answer_id):
         discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', channel_uuid)], limit=1)
