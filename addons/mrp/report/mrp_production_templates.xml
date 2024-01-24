@@ -121,7 +121,6 @@
                         <span t-field="raw_line.quantity">2</span>
                     </div>
                 </td>
-                <td t-else="" class="oe_structure"></td>
                 <td t-attf-class="{{ 'text-end' if not has_product_barcode else '' }}">
                     <span t-field="raw_line.product_uom_qty">25</span>
                     <span t-field="raw_line.product_uom" groups="uom.group_uom">Pieces</span>
