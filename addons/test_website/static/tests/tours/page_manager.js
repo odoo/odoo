@@ -4,12 +4,12 @@ import tour from 'web_tour.tour';
 
 tour.register('test_website_page_manager', {
     test: true,
-    url: '/web#action=test_website.action_test_model',
+    url: '/web#action=test_website.action_test_model_multi_website',
 }, [
 // Part 1: check that the website filter is working
 {
     content: "Check that we see records from My Website",
-    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Test Model Website 1') " +
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Test Multi Model Website 1') " +
              "~ .o_data_cell[name=website_id]:contains('My Website')",
     run: () => null, // it's a check
 }, {
@@ -33,7 +33,7 @@ tour.register('test_website_page_manager', {
     // This step is just here to ensure there is more records than the 2
     // available on website 1, to ensure the test is actually testing something.
     content: "Check that we see records from My Website 2",
-    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Test Model Website 2') " +
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Test Model Multi Website 2') " +
              "~ .o_data_cell[name=website_id]:contains('My Website 2')",
     run: () => null, // it's a check
 },
@@ -53,7 +53,7 @@ tour.register('test_website_page_manager', {
 
 tour.register('test_website_page_manager_js_class_bug', {
     test: true,
-    url: '/web#action=test_website.action_test_model_js_class_bug',
+    url: '/web#action=test_website.action_test_model_multi_website_js_class_bug',
 }, [{
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
@@ -62,3 +62,16 @@ tour.register('test_website_page_manager_js_class_bug', {
     trigger: '.o_kanban_renderer',
     run: () => null, // it's a check
 }]);
+
+tour.register('test_website_page_manager_no_website_id', {
+    test: true,
+    url: '/web#action=test_website.action_test_model',
+}, [{
+    content: "Click on Kanban View",
+    trigger: '.o_cp_switch_buttons .o_kanban',
+}, {
+    content: "Wait for Kanban View to be loaded",
+    trigger: '.o_kanban_renderer',
+    run: () => null, // it's a check
+}]);
+
