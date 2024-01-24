@@ -35,6 +35,7 @@ declare module "@spreadsheet" {
         model: string;
         domain: Array;
         context: Object;
+        actionXmlId: string;
     }
 
     export interface SpreadsheetPivotDefinition extends CommonPivotDefinition {
