@@ -572,3 +572,26 @@ class TestLeadMerge(TestLeadMergeCommon):
                          'The partner was not active on the lead')
         self.assertIn(self.contact_1, master_lead.message_follower_ids.partner_id,
                       'Should not have removed follower of the destination lead')
+
+    @users('user_sales_manager')
+    def test_lead_merge_followers(self):
+        """ Test that followers are correctly merged when destination lead has same user
+            as the one of tail lead and the user set to merge the leads but has no followers. """
+
+        # Create two leads with the same partner
+        head_lead, tail_lead = self.env['crm.lead'].create([{
+            'name': 'Lead %s' % name,
+            'partner_id': self.contact_1.id
+        } for name in ['Head', 'Tail']])
+
+        head_lead.message_follower_ids.sudo().unlink()
+        self.assertFalse(head_lead.message_follower_ids)
+        self.assertEqual(len(tail_lead.message_follower_ids), 1)
+
+        leads = head_lead + tail_lead
+        merged_lead = leads._merge_opportunity(user_id=self.user_sales_manager.id, auto_unlink=True)
+
+        # Check head lead is the merged lead
+        self.assertEqual(merged_lead, head_lead)
+        # Check we have the expecting follower for the merged lead
+        self.assertEqual(self.user_sales_manager.name, merged_lead.message_follower_ids.name)

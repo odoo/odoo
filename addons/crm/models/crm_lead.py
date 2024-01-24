@@ -1533,6 +1533,7 @@ class Lead(models.Model):
         followers_to_update = self.env['mail.followers'].browse(followers_to_update).sudo()
         followers_by_old_lead = dict(groupby(followers_to_update, lambda f: f.res_id))
         followers_to_update.write({'res_id': self.id})
+        followers_to_update.flush_recordset()
         return followers_by_old_lead
 
     def _merge_log_summary(self, merged_followers, opportunities_tail):
