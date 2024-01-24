@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
                 record.service_upsell_threshold_ratio = f'(1 {record.uom_id.name} = {timesheet_encode_uom.factor / product_uom_hour.factor:.2f} {timesheet_encode_uom.name})'
 
     def _compute_visible_expense_policy(self):
-        visibility = self.user_has_groups('project.group_project_user')
+        visibility = self.env.user.has_group('project.group_project_user')
         for product_template in self:
             if not product_template.visible_expense_policy:
                 product_template.visible_expense_policy = visibility

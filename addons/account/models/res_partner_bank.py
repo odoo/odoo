@@ -60,7 +60,7 @@ class ResPartnerBank(models.Model):
         """ Block enabling the setting, but it can be set to false without the group. (For example, at creation) """
         for bank in self:
             if bank.allow_out_payment:
-                if not self.user_has_groups('account.group_validate_bank_account'):
+                if not self.env.user.has_group('account.group_validate_bank_account'):
                     raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
 
     @api.depends('partner_id.country_id', 'sanitized_acc_number', 'allow_out_payment', 'acc_type')
@@ -94,7 +94,7 @@ class ResPartnerBank(models.Model):
 
     @api.depends('acc_number')
     def _compute_user_has_group_validate_bank_account(self):
-        user_has_group_validate_bank_account = self.user_has_groups('account.group_validate_bank_account')
+        user_has_group_validate_bank_account = self.env.user.has_group('account.group_validate_bank_account')
         for bank in self:
             bank.user_has_group_validate_bank_account = user_has_group_validate_bank_account
 
@@ -247,7 +247,7 @@ class ResPartnerBank(models.Model):
     def create(self, vals_list):
         # EXTENDS base res.partner.bank
 
-        if not self.user_has_groups('account.group_validate_bank_account'):
+        if not self.env.user.has_group('account.group_validate_bank_account'):
             for vals in vals_list:
                 # force the allow_out_payment field to False in order to prevent scam payments on newly created bank accounts
                 vals['allow_out_payment'] = False
@@ -290,7 +290,7 @@ class ResPartnerBank(models.Model):
         if ('acc_number' in vals or 'partner_id' in vals) and not should_allow_changes:
             raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
 
-        if 'allow_out_payment' in vals and not self.user_has_groups('account.group_validate_bank_account'):
+        if 'allow_out_payment' in vals and not self.env.user.has_group('account.group_validate_bank_account'):
             raise UserError(_("You do not have the rights to trust or un-trust accounts."))
 
         res = super().write(vals)

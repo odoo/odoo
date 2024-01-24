@@ -838,7 +838,7 @@ class Slide(models.Model):
                 fullscreen=fullscreen
             )
             email_values = {'email_to': email}
-            if self.env.user.has_group('base.group_portal'):
+            if self.env.user._is_portal():
                 template = template.sudo()
                 email_values['email_from'] = self.env.company.catchall_formatted or self.env.company.email_formatted
 

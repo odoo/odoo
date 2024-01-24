@@ -627,7 +627,7 @@ class Users(models.Model):
         users = super(Users, self).create(vals_list)
         setting_vals = []
         for user in users:
-            if not user.res_users_settings_ids and user.has_group('base.group_user'):
+            if not user.res_users_settings_ids and user._is_internal():
                 setting_vals.append({'user_id': user.id})
             # if partner is global we keep it that way
             if user.partner_id.company_id:
@@ -1032,32 +1032,74 @@ class Users(models.Model):
             'context': ctx,
         }
 
-    @api.model
-    @api.readonly
-    def has_group(self, group_ext_id):
-        # use singleton's id if called on a non-empty recordset, otherwise
-        # context uid
-        uid = self.id
-        if uid and uid != self._uid:
-            self = self.with_user(uid)
-        return self._has_group(group_ext_id)
+    def has_groups(self, group_spec: str) -> bool:
+        """ Return whether user ``self`` satisfies the given group restrictions
+        ``group_spec``, i.e., whether it is member of at least one of the groups,
+        and is not a member of any of the groups preceded by ``!``.
 
-    @api.model
-    @tools.ormcache('self._uid', 'group_ext_id')
-    def _has_group(self, group_ext_id):
-        """Checks whether user belongs to given group.
+        Note that the group ``"base.group_no_one"`` is only effective in debug
+        mode, just like method :meth:`~.has_group` does.
+
+        :param str group_spec: comma-separated list of fully-qualified group
+            external IDs, optionally preceded by ``!``.
+            Example:``"base.group_user,base.group_portal,!base.group_system"``.
+        """
+        if group_spec == '.':
+            return False
+
+        positives = []
+        negatives = []
+        for group_ext_id in group_spec.split(','):
+            group_ext_id = group_ext_id.strip()
+            if group_ext_id.startswith('!'):
+                negatives.append(group_ext_id[1:])
+            else:
+                positives.append(group_ext_id)
+
+        # for the sake of performance, check negatives first
+        if any(self.has_group(ext_id) for ext_id in negatives):
+            return False
+        if any(self.has_group(ext_id) for ext_id in positives):
+            return True
+        return not positives
+
+    def has_group(self, group_ext_id: str) -> bool:
+        """ Return whether user ``self`` belongs to the given group (given by its
+        fully-qualified external ID).
+
+        Note that the group ``"base.group_no_one"`` is only effective in debug
+        mode: the method returns ``True`` if the user belongs to the group and
+        the current request is in debug mode.
+        """
+        self.ensure_one()
+
+        if not (self.env.su or self == self.env.user or self._has_group('base.group_user')):
+            # this prevents RPC calls from non-internal users to retrieve
+            # information about other users
+            raise AccessError(_("You can ony call user.has_group() with your current user."))
+
+        result = self._has_group(group_ext_id)
+        if group_ext_id == 'base.group_no_one':
+            result = result and bool(request and request.session.debug)
+        return result
+
+    @tools.ormcache('self.id', 'group_ext_id')
+    def _has_group(self, group_ext_id: str) -> bool:
+        """ Return whether user ``self`` belongs to the given group.
 
         :param str group_ext_id: external ID (XML ID) of the group.
            Must be provided in fully-qualified form (``module.ext_id``), as there
            is no implicit module to use..
-        :return: True if the current user is a member of the group with the
+        :return: True if user ``self`` is a member of the group with the
            given external ID (XML ID), else False.
         """
-        assert group_ext_id and '.' in group_ext_id, "External ID '%s' must be fully qualified" % group_ext_id
-        module, ext_id = group_ext_id.split('.')
+        try:
+            module, ext_id = group_ext_id.split('.')
+        except (AttributeError, ValueError):
+            raise ValueError(f"External ID {group_ext_id!r} must be fully qualified") from None
         self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s AND model='res.groups')""",
-                         (self._uid, module, ext_id))
+                         (self.id, module, ext_id))
         return bool(self._cr.fetchone())
 
     def _action_show(self):
@@ -1121,23 +1163,23 @@ class Users(models.Model):
 
     def _is_internal(self):
         self.ensure_one()
-        return not self.sudo().share
+        return self.sudo().has_group('base.group_user')
 
     def _is_portal(self):
         self.ensure_one()
-        return self.has_group('base.group_portal')
+        return self.sudo().has_group('base.group_portal')
 
     def _is_public(self):
         self.ensure_one()
-        return self.has_group('base.group_public')
+        return self.sudo().has_group('base.group_public')
 
     def _is_system(self):
         self.ensure_one()
-        return self.has_group('base.group_system')
+        return self.sudo().has_group('base.group_system')
 
     def _is_admin(self):
         self.ensure_one()
-        return self._is_superuser() or self.has_group('base.group_erp_manager')
+        return self._is_superuser() or self.sudo().has_group('base.group_erp_manager')
 
     def _is_superuser(self):
         self.ensure_one()
@@ -1741,7 +1783,7 @@ class UsersView(models.Model):
                 lambda g:
                 g.category_id not in (group.category_id | categories_to_ignore) and
                 g not in current_groups_by_category[g.category_id] and
-                (self.user_has_groups('base.group_no_one') or g.category_id)
+                (self.env.user.has_group('base.group_no_one') or g.category_id)
             )
             if missing_implied_groups:
                 # prepare missing group message, by categories
@@ -2198,7 +2240,7 @@ class APIKeyDescription(models.TransientModel):
         }
 
     def check_access_make_key(self):
-        if not self.user_has_groups('base.group_user'):
+        if not self.env.user._is_internal():
             raise AccessError(_("Only internal users can create API keys"))
 
 class APIKeyShow(models.AbstractModel):

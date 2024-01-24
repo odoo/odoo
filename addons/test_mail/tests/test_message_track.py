@@ -795,7 +795,11 @@ class TestTrackingInternals(MailCommon):
 
         # check groups, as it depends on model
         for tracking, exp_groups in zip(trackings, ['base.group_user', 'base.group_system', 'base.group_system']):
-            self.assertEqual(tracking.field_groups, exp_groups)
+            groups = 'base.group_system'
+            if tracking.field_id:
+                field = self.env[tracking.field_id.model]._fields[tracking.field_id.name]
+                groups = field.groups
+            self.assertEqual(groups, exp_groups)
 
         # check formatting, as it fetches info on model
         formatted = trackings._tracking_value_format()

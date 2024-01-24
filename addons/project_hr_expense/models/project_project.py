@@ -65,7 +65,7 @@ class Project(models.Model):
     def _get_expenses_profitability_items(self, with_action=True):
         if not self.analytic_account_id:
             return {}
-        can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
+        can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
 
         expenses_read_group = self.env['hr.expense']._read_group(
             [

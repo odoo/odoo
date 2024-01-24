@@ -294,7 +294,7 @@ class Team(models.Model):
           process. For more details about data see ``CrmTeam._allocate_leads()``
           and ``CrmTeamMember._assign_and_convert_leads``;
         """
-        if not self.env.user.has_group('sales_team.group_sale_manager') and not self.env.user.has_group('base.group_system'):
+        if not (self.env.user.has_group('sales_team.group_sale_manager') or self.env.is_system()):
             raise exceptions.UserError(_('Lead/Opportunities automatic assignment is limited to managers or administrators'))
 
         _logger.info('### START Lead Assignment (%d teams, %d sales persons, %.2f work_days)', len(self), len(self.crm_team_member_ids), work_days)
@@ -607,7 +607,7 @@ class Team(models.Model):
             user_team_id = self.search([], limit=1).id
             action['help'] = "<p class='o_view_nocontent_smiling_face'>%s</p><p>" % _("Create an Opportunity")
             if user_team_id:
-                if self.user_has_groups('sales_team.group_sale_manager'):
+                if self.env.user.has_group('sales_team.group_sale_manager'):
                     action['help'] += "<p>%s</p>" % _("""As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
                                         To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>""",
                                         self.env.ref('sales_team.crm_team_action_config').id)

@@ -106,7 +106,7 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
-        is_project_manager = self.user_has_groups('project.group_project_manager')
+        is_project_manager = self.env.user.has_group('project.group_project_manager')
         projects = self.env['project.project'].search([('sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:

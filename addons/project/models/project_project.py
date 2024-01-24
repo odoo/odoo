@@ -583,7 +583,7 @@ class Project(models.Model):
     def _track_template(self, changes):
         res = super()._track_template(changes)
         project = self[0]
-        if self.user_has_groups('project.group_project_stages') and 'stage_id' in changes and project.stage_id.mail_template_id:
+        if self.env.user.has_group('project.group_project_stages') and 'stage_id' in changes and project.stage_id.mail_template_id:
             res['stage_id'] = (project.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
@@ -749,7 +749,7 @@ class Project(models.Model):
 
     def get_panel_data(self):
         self.ensure_one()
-        if not self.user_has_groups('project.group_project_user'):
+        if not self.env.user.has_group('project.group_project_user'):
             return {}
         show_profitability = self._show_profitability()
         panel_data = {
@@ -770,7 +770,7 @@ class Project(models.Model):
         return panel_data
 
     def get_milestones(self):
-        if self.user_has_groups('project.group_project_user'):
+        if self.env.user.has_group('project.group_project_user'):
             return self._get_milestones()
         return {}
 
@@ -787,7 +787,7 @@ class Project(models.Model):
 
     def _get_user_values(self):
         return {
-            'is_project_user': self.user_has_groups('project.group_project_user'),
+            'is_project_user': self.env.user.has_group('project.group_project_user'),
         }
 
     def _show_profitability(self):
@@ -795,7 +795,7 @@ class Project(models.Model):
         return True
 
     def _show_profitability_helper(self):
-        return self.user_has_groups('analytic.group_analytic_accounting')
+        return self.env.user.has_group('analytic.group_analytic_accounting')
 
     def _get_profitability_aal_domain(self):
         return [('account_id', 'in', self.analytic_account_id.ids)]
@@ -840,7 +840,7 @@ class Project(models.Model):
             'show': True,
             'sequence': 1,
         }]
-        if self.rating_count != 0 and self.user_has_groups('project.group_project_rating'):
+        if self.rating_count != 0 and self.env.user.has_group('project.group_project_rating'):
             if self.rating_avg >= rating_data.RATING_AVG_TOP:
                 icon = 'smile-o text-success'
             elif self.rating_avg >= rating_data.RATING_AVG_OK:
@@ -856,7 +856,7 @@ class Project(models.Model):
                 'show': self.rating_active,
                 'sequence': 15,
             })
-        if self.user_has_groups('project.group_project_user'):
+        if self.env.user.has_group('project.group_project_user'):
             buttons.append({
                 'icon': 'area-chart',
                 'text': _lt('Burndown Chart'),
@@ -957,7 +957,7 @@ class Project(models.Model):
         self.ensure_one()
         if self.privacy_visibility != 'portal':
             return False
-        if self.env.user.has_group('base.group_portal'):
+        if self.env.user._is_portal():
             return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user._is_internal()
 

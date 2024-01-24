@@ -420,13 +420,12 @@ class TestFieldGroupFeedback(Feedback):
 
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation can not be completed due to security restrictions.
+            """You do not have enough rights to access the fields "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
-Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: read
 User: %s
 Fields:
-- forbidden (allowed for groups 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
+- forbidden (allowed for groups 'Extra Rights / Multi Companies', 'User types / Public', 'Test Group')"""
     % self.user.id
         )
 
@@ -435,9 +434,8 @@ Fields:
 
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation can not be completed due to security restrictions.
+            """You do not have enough rights to access the fields "forbidden3" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
-Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: read
 User: %s
 Fields:
@@ -451,16 +449,14 @@ Fields:
         })
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'forbidden': 1, 'forbidden2': 2})
-
         self.assertEqual(
             ctx.exception.args[0],
-            """The requested operation can not be completed due to security restrictions.
+            """You do not have enough rights to access the fields "forbidden,forbidden2" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
-Document type: Object For Test Access Right (test_access_right.some_obj)
 Operation: write
 User: %s
 Fields:
-- forbidden (allowed for groups 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
+- forbidden (allowed for groups 'Extra Rights / Multi Companies', 'User types / Public', 'Test Group')
 - forbidden2 (allowed for groups 'Test Group')"""
     % self.user.id
         )

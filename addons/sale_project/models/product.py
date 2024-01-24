@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
             ('ordered_prepaid', _('Prepaid/Fixed Price')),
             ('delivered_manual', _('Based on Delivered Quantity (Manual)')),
         ]
-        if self.user_has_groups('project.group_project_milestone'):
+        if self.env.user.has_group('project.group_project_milestone'):
             service_policies.insert(1, ('delivered_milestones', _('Based on Milestones')))
         return service_policies
 

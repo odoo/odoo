@@ -42,9 +42,7 @@ class MailTracking(models.Model):
             field = None
             if tracking.field_id:
                 field = env[tracking.field_id.model]._fields.get(tracking.field_id.name)
-            if not field:
-                return env.is_system()
-            return not field.groups or env.is_superuser() or self.with_env(env).user_has_groups(field.groups)
+            return field.is_accessible(env) if field else env.is_system()
 
         return self.filtered(has_field_access)
 

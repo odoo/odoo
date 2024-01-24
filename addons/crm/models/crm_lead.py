@@ -129,7 +129,7 @@ class Lead(models.Model):
     active = fields.Boolean('Active', default=True, tracking=True)
     type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], required=True, tracking=15, index=True,
-        default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity')
+        default=lambda self: 'lead' if self.env.user.has_group('crm.group_use_lead') else 'opportunity')
     # Pipeline management
     priority = fields.Selection(
         crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True,
@@ -624,7 +624,7 @@ class Lead(models.Model):
         When it's set however, we want to display it, mainly because there are a few automatic synchronizations between
         the lead and its partner (phone and email for examples), and this needs to be clear that modifying
         one of those fields will in turn modify the linked partner."""
-        is_debug_mode = self.user_has_groups('base.group_no_one')
+        is_debug_mode = self.env.user.has_group('base.group_no_one')
         for lead in self:
             lead.is_partner_visible = bool(lead.type == 'opportunity' or lead.partner_id or is_debug_mode)
 

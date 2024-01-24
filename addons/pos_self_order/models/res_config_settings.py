@@ -28,9 +28,9 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_default_user(self):
         self.ensure_one()
         if self.pos_self_ordering_default_user_id and self.pos_self_ordering_mode == 'mobile':
-            user_id = self.pos_self_ordering_default_user_id
-
-            if not user_id.has_group("point_of_sale.group_pos_user") and not user_id.has_group("point_of_sale.group_pos_manager"):
+            user = self.pos_self_ordering_default_user_id
+            if not (user.has_group("point_of_sale.group_pos_user")
+                    or user.has_group("point_of_sale.group_pos_manager")):
                 raise ValidationError(_("The user must be a POS user"))
 
     @api.onchange("pos_self_ordering_service_mode")

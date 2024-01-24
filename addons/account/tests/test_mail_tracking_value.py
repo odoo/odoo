@@ -34,6 +34,8 @@ class TestTracking(AccountTestInvoicingCommon, MailCommon):
         ])
 
         tracking_value = account_move.message_ids.sudo().tracking_value_ids
-        tracking_value._compute_field_groups()
 
-        self.assertEqual(tracking_value.field_groups, False, "There is no group on account.move.line.account_id")
+        self.assertEqual(len(tracking_value), 1)
+        self.assertTrue(tracking_value.field_id)
+        field = self.env[tracking_value.field_id.model]._fields[tracking_value.field_id.name]
+        self.assertFalse(field.groups, "There is no group on account.move.line.account_id")

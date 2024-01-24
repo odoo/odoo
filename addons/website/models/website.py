@@ -1395,7 +1395,8 @@ class Website(models.Model):
 
     @api.model
     def action_dashboard_redirect(self):
-        if self.env.user.has_group('base.group_system') or self.env.user.has_group('website.group_website_designer'):
+        if (self.env.user.has_group('base.group_system')
+                or self.env.user.has_group('website.group_website_designer')):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
@@ -1738,7 +1739,7 @@ class Website(models.Model):
             filter_is_published = (
                 'is_published' in model._fields
                 and model._fields['is_published'].base_field.model_name == model_name
-                and not self.env.user.has_group('base.group_user')
+                and not self.env.user._is_internal()
             )
             if filter_is_published:
                 query.add_where('is_published')

@@ -253,7 +253,7 @@ class PricelistItem(models.Model):
 
     @api.onchange('product_id', 'product_tmpl_id', 'categ_id')
     def _onchange_rule_content(self):
-        if not self.user_has_groups('product.group_sale_pricelist') and not self.env.context.get('default_applied_on', False):
+        if not self.env.user.has_group('product.group_sale_pricelist') and not self.env.context.get('default_applied_on', False):
             # If advanced pricelists are disabled (applied_on field is not visible)
             # AND we aren't coming from a specific product template/variant.
             variants_rules = self.filtered('product_id')

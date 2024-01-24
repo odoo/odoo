@@ -50,5 +50,5 @@ class ResConfigSettings(models.TransientModel):
             company.write({field: self[field] for field in fields_to_check})
 
     def regenerate_kiosk_key(self):
-        if self.user_has_groups("hr_attendance.group_hr_attendance_manager"):
+        if self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
             self.company_id._regenerate_attendance_kiosk_key()

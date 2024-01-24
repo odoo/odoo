@@ -25,7 +25,7 @@ class ProjectTask(models.Model):
         res = super().write(vals)
 
         if 'stage_id' in vals:
-            if self.env.user.has_group('base.group_portal') and not self.env.su:
+            if self.env.user._is_portal() and not self.env.su:
                 # sudo as sms template model is protected
                 self.sudo()._send_sms()
             else:

@@ -19,7 +19,7 @@ class AccountMove(models.Model):
 
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
-        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+        if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             self.timesheet_total_duration = 0
             return
         group_data = self.env['account.analytic.line']._read_group([

@@ -121,7 +121,7 @@ class PortalWizardUser(models.TransientModel):
             if user and user._is_internal():
                 portal_wizard_user.is_internal = True
                 portal_wizard_user.is_portal = False
-            elif user and user.has_group('base.group_portal'):
+            elif user and user._is_portal():
                 portal_wizard_user.is_internal = False
                 portal_wizard_user.is_portal = True
             else:
@@ -182,7 +182,7 @@ class PortalWizardUser(models.TransientModel):
         user_sudo = self.user_id.sudo()
 
         # remove the user from the portal group
-        if user_sudo and user_sudo.has_group('base.group_portal'):
+        if user_sudo and user_sudo._is_portal():
             user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
 
         return self.action_refresh_modal()

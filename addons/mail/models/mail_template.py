@@ -106,7 +106,7 @@ class MailTemplate(models.Model):
 
     @api.depends_context('uid')
     def _compute_is_template_editor(self):
-        self.is_template_editor = self.user_has_groups('mail.group_mail_template_editor')
+        self.is_template_editor = self.env.user.has_group('mail.group_mail_template_editor')
 
     @api.depends('active', 'description')
     def _compute_template_category(self):

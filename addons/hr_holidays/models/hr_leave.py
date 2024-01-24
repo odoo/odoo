@@ -132,7 +132,6 @@ class HolidaysRequest(models.Model):
         "\nThe status is 'Approved', when time off request is approved by manager.")
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, readonly=True, index=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_from_employee_id', store=True, readonly=False)
-    is_user_only_responsible = fields.Boolean(compute="_compute_is_user_only_responsible")
     # leave type configuration
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_from_employee_id',
@@ -319,7 +318,7 @@ class HolidaysRequest(models.Model):
         self.check_access_rights('read')
         self.check_access_rule('read')
 
-        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
             if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
@@ -328,14 +327,14 @@ class HolidaysRequest(models.Model):
                 leave.name = '*****'
 
     def _inverse_description(self):
-        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
             if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
                 leave.sudo().private_name = leave.name
 
     def _search_description(self, operator, value):
-        is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         domain = [('private_name', operator, value)]
 
         if not is_officer:
@@ -492,13 +491,6 @@ class HolidaysRequest(models.Model):
             elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
                     holiday.holiday_status_id = False
-
-    @api.depends_context('uid')
-    @api.depends('employee_id')
-    def _compute_is_user_only_responsible(self):
-        user = self.env.user
-        self.is_user_only_responsible = user.has_group('hr_holidays.group_hr_holidays_responsible')\
-            and not user.has_group('hr_holidays.group_hr_holidays_user')
 
     @api.depends('employee_id', 'holiday_type')
     def _compute_department_id(self):
@@ -841,15 +833,15 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     @api.constrains('date_from', 'date_to')
     def _check_mandatory_day(self):
-        is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         if not is_leave_user and any(leave.has_mandatory_day for leave in self):
             raise ValidationError(_('You are not allowed to request a time off on a Mandatory Day.'))
 
     def _check_double_validation_rules(self, employees, state):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
             return
 
-        is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
+        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         if state == 'validate1':
             employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
             if employees and not is_leave_user:
@@ -955,7 +947,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         now = fields.Datetime.now()
 
-        if not self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             for hol in self:
                 if hol.state not in ['draft', 'confirm', 'validate1', 'cancel']:
                     raise UserError(error_message % state_description_values.get(self[:1].state))

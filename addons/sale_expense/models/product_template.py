@@ -35,7 +35,7 @@ class ProductTemplate(models.Model):
             product_template.visible_expense_policy = False
 
         super(ProductTemplate, expense_products)._compute_visible_expense_policy()
-        visibility = self.user_has_groups('hr_expense.group_hr_expense_user')
+        visibility = self.env.user.has_group('hr_expense.group_hr_expense_user')
         for product_template in expense_products:
             if not product_template.visible_expense_policy:
                 product_template.visible_expense_policy = visibility

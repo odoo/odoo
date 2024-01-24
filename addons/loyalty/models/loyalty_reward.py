@@ -210,7 +210,7 @@ class LoyaltyReward(models.Model):
     @api.depends_context('uid')
     @api.depends("reward_type")
     def _compute_user_has_debug(self):
-        self.user_has_debug = self.user_has_groups('base.group_no_one')
+        self.user_has_debug = self.env.user.has_group('base.group_no_one')
 
     def _create_missing_discount_line_products(self):
         # Make sure we create the product that will be used for our discounts
