@@ -3,6 +3,8 @@
 
 import json
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -38,9 +40,14 @@ class AccountMove(models.Model):
                 reason_and_remarks_not_set += move
         if reason_and_remarks_not_set:
             raise UserError(_(
-                "To cancel E-invoice set cancel reason and remarks at Other info tab in invoices: \n%s",
+                "To cancel E-invoice set cancel reason and remarks : \n%s",
                 ("\n".join(reason_and_remarks_not_set.mapped("name"))),
             ))
+        body = Markup('<b>%s</b><br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>%s \
+            <br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>%s') % \
+        (_('A cancellation of the E-Invoice has been requested.'), _('Reason'), dict(self._fields['l10n_in_edi_cancel_reason'] \
+            .selection).get(move.l10n_in_edi_cancel_reason), _('Remarks'), move.l10n_in_edi_cancel_remarks)
+        self.message_post(body=body)
         return super().button_cancel_posted_moves()
 
     def _get_l10n_in_edi_response_json(self):
@@ -61,3 +68,7 @@ class AccountMove(models.Model):
         """
         param_name = 'l10n_in_edi.manage_invoice_negative_lines'
         return bool(self.env['ir.config_parameter'].sudo().get_param(param_name))
+
+    def display_cancel_einvoice_form(self):
+        action = self.env.ref('l10n_in_edi.einvoice_cancel_window').read()[0]
+        return action

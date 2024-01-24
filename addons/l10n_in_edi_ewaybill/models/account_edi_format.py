@@ -252,6 +252,11 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            body = Markup('<b>%s</b><br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"> \
+                </i>%s<br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>%s<br/>') \
+                % (_('E-way Bill Sent'), _('Ewb No'), str(response.get("data")['EwbNo']), _('Ewb Validity'), str(response.get("data") \
+                ['EwbValidTill']))
+            invoices.message_post(body=body)
         return res
 
     def _l10n_in_edi_irn_ewaybill_generate_json(self, invoice):
@@ -336,6 +341,11 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            body = Markup('<b>%s</b><br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"> \
+            </i>%s<br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>%s') % \
+            (_('E-way Bill Sent'), _('Ewb No'), str(response.get("data")['ewayBillNo']), _('Ewb Validity'), str(response.get("data") \
+            ['validUpto']))
+            invoices.message_post(body=body)
         return res
 
     def _l10n_in_edi_ewaybill_get_error_message(self, code):

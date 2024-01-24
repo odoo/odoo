@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+
+from markupsafe import Markup
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
@@ -26,7 +28,7 @@ class AccountMove(models.Model):
     l10n_in_vehicle_no = fields.Char("Vehicle Number", copy=False, tracking=True)
     l10n_in_vehicle_type = fields.Selection([
         ("R", "Regular"),
-        ("O", "ODC")],
+        ("O", "Over Dimensional Cargo")],
         string="Vehicle Type", copy=False, tracking=True)
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
@@ -83,7 +85,7 @@ class AccountMove(models.Model):
         else:
             return {}
 
-    def button_cancel_posted_moves(self):
+    def button_cancel_posted_eway(self):
         """Mark the edi.document related to this move to be canceled."""
         reason_and_remarks_not_set = self.env["account.move"]
         for move in self:
@@ -94,10 +96,31 @@ class AccountMove(models.Model):
                 reason_and_remarks_not_set += move
         if reason_and_remarks_not_set:
             raise UserError(_(
-                "To cancel E-waybill set cancel reason and remarks at E-waybill tab in: \n%s",
+                "To cancel E-waybill set cancel reason and remarks : \n%s",
                 ("\n".join(reason_and_remarks_not_set.mapped("name"))),
             ))
-        return super().button_cancel_posted_moves()
+        to_cancel_documents = self.env['account.edi.document']
+        for move in self:
+            move._check_fiscalyear_lock_date()
+            is_move_marked = False
+            for doc in move.edi_document_ids:
+                if doc.edi_format_id.code == "in_ewaybill_1_03":
+                    move_applicability = doc.edi_format_id._get_move_applicability(move)
+                    if doc.edi_format_id._needs_web_services() \
+                            and doc.state == 'sent' \
+                            and move_applicability \
+                            and move_applicability.get('cancel'):
+                        to_cancel_documents |= doc
+                        is_move_marked = True
+            if is_move_marked:
+                body = Markup('<b>%s</b><br>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"> \
+                            </i>%s<br/>%s<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>%s') % \
+                            (_('A cancellation of the E-waybill has been requested'), _('Reason'), \
+                             dict(self._fields['l10n_in_edi_cancel_reason'].selection).get(move.l10n_in_edi_cancel_reason), \
+                             _('Remarks'), move.l10n_in_edi_cancel_remarks)
+                move.message_post(body=body)
+
+        to_cancel_documents.write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
 
     def l10n_in_edi_ewaybill_send(self):
         edi_format = self.env.ref('l10n_in_edi_ewaybill.edi_in_ewaybill_json_1_03')
@@ -124,3 +147,7 @@ class AccountMove(models.Model):
                 })
         self.env['account.edi.document'].create(edi_document_vals_list)
         self.env.ref('account_edi.ir_cron_edi_network')._trigger()
+
+    def display_cancel_eway_form(self):
+        action = self.env.ref('l10n_in_edi_ewaybill.eway_cancel_window').read()[0]
+        return action
