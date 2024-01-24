@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
@@ -9,7 +8,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     events: {
         'click #o_wblog_next_container': '_onNextBlogClick',
         'click #o_wblog_post_content_jump': '_onContentAnchorClick',
-        'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
     },
 
     /**
@@ -61,30 +59,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         this._forumScrollAction($el, 500, function () {
             window.location.hash = 'blog_content';
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onShareArticle: function (ev) {
-        ev.preventDefault();
-        var url = '';
-        var $element = $(ev.currentTarget);
-        var blogPostTitle = $('#o_wblog_post_name').html() || '';
-        var articleURL = window.location.href;
-        if ($element.hasClass('o_twitter')) {
-            var tweetText = _t(
-                "Amazing blog article: %s! Check it live: %s",
-                blogPostTitle,
-                articleURL
-            );
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + encodeURIComponent(tweetText);
-        } else if ($element.hasClass('o_facebook')) {
-            url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(articleURL);
-        } else if ($element.hasClass('o_linkedin')) {
-            url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(articleURL);
-        }
-        window.open(url, '', 'menubar=no, width=500, height=400');
     },
 
     //--------------------------------------------------------------------------
