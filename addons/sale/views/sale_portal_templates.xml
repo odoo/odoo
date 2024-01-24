@@ -212,20 +212,12 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </header>
                                 <main class="modal-body" id="sign-dialog">
-                                    <p>
-                                        <span>By signing this proposal, I agree to the following terms:</span>
-                                        <ul>
-                                            <li>
-                                                <span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/>
-                                            </li>
-                                            <li>
-                                                <span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/>
-                                            </li>
-                                            <li t-if="sale_order.payment_term_id">
-                                                <span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/>
-                                            </li>
-                                        </ul>
-                                    </p>
+                                    <span>
+                                        By signing, you confirm acceptance on behalf of
+                                        <b t-field="sale_order.partner_id.commercial_partner_id"/>
+                                        for the <b data-id="total_amount" t-field="sale_order.amount_total"/> quote.
+                                    </span>
+                                    <b t-if="sale_order.payment_term_id" t-field="sale_order.payment_term_id.note"/>
                                     <t t-call="portal.signature_form">
                                         <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
                                         <t t-set="default_name" t-value="sale_order.partner_id.name"/>
@@ -246,7 +238,7 @@
                                     <!-- Display choices only if a pre payment can confirm the order. -->
                                     <div t-if="prepayment_available"
                                          id="o_sale_portal_prepayment_buttons"
-                                         class="d-flex btn-group"
+                                         class="d-flex btn-group mb-3"
                                          role="group"
                                     >
                                         <button name="o_sale_portal_amount_prepayment_button" class="btn btn-light active">
@@ -259,32 +251,29 @@
                                             <span class="fw-bold" t-field="sale_order.amount_total"/>
                                         </button>
                                     </div>
-                                    <p>
+                                    <div>
                                         <!-- The widget associated with this modal will hide and show divs in function of the amount selected. -->
-                                        <div id="o_sale_portal_use_amount_total">
-                                            By paying this proposal, I agree to the following terms:
-                                        </div>
-                                        <div t-if="prepayment_available"
-                                             id="o_sale_portal_use_amount_prepayment"
-                                        >
-                                            By paying this <u>down payment</u> of
-                                            <span t-esc="prepayment_amount" class="fw-bold"
-                                                  t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
-                                            (<b t-esc="sale_order.prepayment_percent * 100"/> %)
-                                            for this proposal, I agree to the following terms:
-                                        </div>
-                                        <ul>
-                                            <li>
-                                                <span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/>
-                                            </li>
-                                            <li>
-                                                <span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/>
-                                            </li>
-                                            <li t-if="sale_order.payment_term_id">
-                                                <span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/>
-                                            </li>
-                                        </ul>
-                                    </p>
+                                        <span t-if="prepayment_available">
+                                            <span id="o_sale_portal_use_amount_prepayment"> 
+                                                By paying a <u>down payment</u> of 
+                                                <span
+                                                    t-esc="prepayment_amount"
+                                                    t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
+                                                    class="fw-bold"
+                                                />
+                                                (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                            </span>
+                                            <span id="o_sale_portal_use_amount_total">
+                                                By paying,
+                                            </span>
+                                        </span>
+                                        <span t-else="">
+                                            By paying,
+                                        </span>
+                                        you confirm acceptance on the behalf of <b t-field="sale_order.partner_id.commercial_partner_id"/>
+                                        for the <b data-id="total_amount" t-field="sale_order.amount_total"/> quote.
+                                        <b t-if="sale_order.payment_term_id" t-field="sale_order.payment_term_id.note" class="o_sale_payment_terms"/>
+                                    </div>
                                     <div t-if="company_mismatch">
                                         <t t-call="payment.company_mismatch_warning"/>
                                     </div>
@@ -295,8 +284,7 @@
                                         <strong>No suitable payment option could be found.</strong><br/>
                                         If you believe that it is an error, please contact the website administrator.
                                     </div>
-                                    <div t-else="" id="payment_method" class="text-start">
-                                        <h3>Pay with</h3>
+                                    <div t-else="" id="payment_method" class="text-start mt-0">
                                         <t t-call="payment.form">
                                             <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
                                             <t t-set="sale_order_id" t-value="sale_order.id"/>
@@ -660,7 +648,7 @@
             <section t-if="sale_order.payment_term_id" class="mt-4">
                 <h4 class="">Payment terms</h4>
                 <hr class="mt-0 mb-1"/>
-                <span t-field="sale_order.payment_term_id"/>
+                <span t-field="sale_order.payment_term_id.note"/>
             </section>
         </div>
     </template>
