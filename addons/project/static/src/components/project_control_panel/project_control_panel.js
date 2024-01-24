@@ -10,8 +10,9 @@ export class ProjectControlPanel extends ControlPanel {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        const { active_id, show_project_update } = this.env.searchModel.globalContext;
-        this.showProjectUpdate = this.env.config.viewType === "form" || show_project_update;
+        const { active_model, active_id, show_project_update } = this.env.searchModel.globalContext;
+        this.showProjectUpdate = this.env.config.viewType === "form" ||
+            (show_project_update && active_model === "project.project");
         this.projectId = this.showProjectUpdate ? active_id : false;
 
         onWillStart(async () => {
