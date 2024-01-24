@@ -30,7 +30,7 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_main" name="Exhibitor: Main Content">
-    <div t-att-class="'o_wesponsor_exhibitor_main col-12 border mt-3 p-0 %s' % ('col-lg-10' if option_widescreen else 'col-lg-9')">
+    <div t-att-class="'o_wesponsor_exhibitor_main mt-3 px-0 %s' % ('col-lg-10' if option_widescreen else 'col-lg-9 ps-lg-3 ps-xxl-5')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not sponsor.event_id.is_ongoing">
             <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
