@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
@@ -423,6 +424,26 @@ class TestIrModel(TransactionCase):
                          "Should have the monetary field in the created ir.model")
         self.assertEqual(monetary_field.currency_field, "x_good_currency",
                          "The currency field in monetary should have x_good_currency as name")
+
+    def test_xmlid_create(self):
+        foo, bar = self.env['res.partner.category'].create([
+            {'name': 'Foo'},
+            {'name': 'Bar'}
+        ])
+
+        # Export data for 'foo' with context nohash=True
+        data_foo = foo.with_context(nohash=True).export_data(['id'])
+        xmlid_foo = data_foo.get('datas')[0][0]
+
+        # Export data for 'bar'
+        data_bar = bar.export_data(['id'])
+        xmlid_bar = data_bar.get('datas')[0][0]
+        # Assert that the XMLIDs are created with the correct format
+        pattern_foo = re.compile(r'^__export__.res_partner_category_\d+$')
+        pattern_bar = re.compile(r'^__export__.res_partner_category_\d+_[a-zA-Z0-9]{8}$')
+
+        self.assertTrue(pattern_foo.match(xmlid_foo), f"Unexpected XMLID format for 'foo': {xmlid_foo}")
+        self.assertTrue(pattern_bar.match(xmlid_bar), f"Unexpected XMLID format for 'bar': {xmlid_bar}")
 
 @tagged('-at_install', 'post_install')
 class TestIrModelEdition(TransactionCase):

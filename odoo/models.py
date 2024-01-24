@@ -1016,12 +1016,9 @@ class BaseModel(metaclass=MetaModel):
                 for record in self
             )
 
+        nohash = self._context.get('nohash')
         xids.update(
-            (r.id, (modname, '%s_%s_%s' % (
-                r._table,
-                r.id,
-                uuid.uuid4().hex[:8],
-            )))
+            (r.id, (modname, nohash and (f'{r._table}_{r.id}') or (f'{r._table}_{r.id}_{uuid.uuid4().hex[:8]}')))
             for r in missing
         )
         fields = ['module', 'model', 'name', 'res_id']
