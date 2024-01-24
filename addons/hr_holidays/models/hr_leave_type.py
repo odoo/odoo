@@ -369,7 +369,7 @@ class HolidaysType(models.Model):
         ]
         if not hidden_allocations:
             domain.append(('show_on_dashboard', '=', True))
-        leave_types = self.search(domain)
+        leave_types = self.search(domain, order='id')
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
             return leave_types.get_allocation_data(employee, target_date)[employee]
