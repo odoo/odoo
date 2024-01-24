@@ -199,4 +199,7 @@ QUnit.test("no conversation selected when opening non-existing channel in discus
     const { openDiscuss } = await start();
     await openDiscuss(200); // non-existing id
     await contains("h4", { text: "No conversation selected." });
+    await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
+    await click(".o-mail-DiscussSidebar .btn", { text: "Channels" }); // check no crash
+    await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
 });
