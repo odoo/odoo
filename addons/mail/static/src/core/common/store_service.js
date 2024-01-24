@@ -304,8 +304,14 @@ export const storeService = {
         const store = makeStore(env);
         store.discuss = { activeTab: "main" };
         store.insert(session.storeData);
+        /**
+         * Add defaults for `self` and `settings` because in livechat there could be no user and no
+         * guest yet (both undefined at init), but some parts of the code that loosely depend on
+         * these values will still be executed immediately. Providing a dummy default is enough to
+         * avoid crashes, the actual values being filled at livechat init when they are necessary.
+         */
         store.self ??= { id: -1, type: "guest" };
-        store.settings = user.settings;
+        store.settings ??= {};
         const discussActionIds = ["mail.action_discuss"];
         if (store.action_discuss_id) {
             discussActionIds.push(store.action_discuss_id);
