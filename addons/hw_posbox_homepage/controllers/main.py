@@ -18,6 +18,7 @@ from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.server_logger import check_and_update_odoo_config_log_to_server_option, close_server_log_sender_handler, get_odoo_config_log_to_server_option
 from odoo.addons.web.controllers.home import Home
 
 _logger = logging.getLogger(__name__)
@@ -114,11 +115,18 @@ class IoTboxHomepage(Home):
     def list_handlers(self, **post):
         AVAILABLE_LOG_LEVELS = ('debug', 'info', 'warning', 'error')
         if request.httprequest.method == 'POST':
+            need_config_save = False  # If the config file needed to be saved at the end
+
+            # Check and update "send logs to server"
+            need_config_save |= check_and_update_odoo_config_log_to_server_option(
+                post.get('log-to-server') == 'on' # we use .get() as if the HTML checkbox is unchecked, no value is given in the POST request
+            )
+
+            # Check and update logging levels
             IOT_LOGGING_PREFIX = 'iot-logging-'
             INTERFACE_PREFIX = 'interface-'
             DRIVER_PREFIX = 'driver-'
             AVAILABLE_LOG_LEVELS_WITH_PARENT = AVAILABLE_LOG_LEVELS + ('parent',)
-            need_config_save = False
             for post_request_key, log_level_or_parent in post.items():
                 if not post_request_key.startswith(IOT_LOGGING_PREFIX):
                     # probably a new post request payload argument not related to logging
@@ -151,6 +159,7 @@ class IoTboxHomepage(Home):
             'drivers_list': drivers_list,
             'interfaces_list': interfaces_list,
             'server': helpers.get_odoo_server_url(),
+            'is_log_to_server_activated': get_odoo_config_log_to_server_option(),
             'root_logger_log_level': self._get_logger_effective_level_str(logging.getLogger()),
             'odoo_current_log_level': self._get_logger_effective_level_str(logging.getLogger('odoo')),
             'recommended_log_level': 'warning',
@@ -230,6 +239,7 @@ class IoTboxHomepage(Home):
     @http.route('/server_clear', type='http', auth='none', cors='*', csrf=False)
     def clear_server_configuration(self):
         helpers.unlink_file('odoo-remote-server.conf')
+        close_server_log_sender_handler()
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
 
     @http.route('/handlers_clear', type='http', auth='none', cors='*', csrf=False)
