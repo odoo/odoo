@@ -64,8 +64,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="oe_structure"></div>
+                                <!-- This node is incompatible (in wkhtmltopdf) with its siblings which together take all space. We can't remove it in stable for stability reasons -->
+                                <div class="oe_structure" style="display: none;"></div>
                             </div>
+                            <div class="oe_structure"></div>
                             <h1 t-field="o.name" class="mt0">WH/OUT/00001</h1>
                             <div class="oe_structure"></div>
                             <div class="row mt32 mb32">
@@ -112,7 +114,7 @@
                                     <tr t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
                                         <td>
                                             <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
-                                            <span t-field="ml.product_id.description_picking">Description on transfer</span>
+                                            <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking">Description on transfer</span>
                                         </td>
                                         <td>
                                             <span t-field="ml.quantity">3.00</span>
