@@ -2053,11 +2053,16 @@ export class Wysiwyg extends Component {
             const last = coloredElements[coloredElements.length - 1];
 
             const sel = this.odooEditor.document.getSelection();
-            sel.removeAllRanges();
-            const range = new Range();
+            const range = sel.getRangeAt(0);
+            const isSelForward = sel.anchorNode === range.startContainer && sel.anchorOffset === range.startOffset;
             range.setStart(first, 0);
             range.setEnd(...endPos(last));
-            sel.addRange(getDeepRange(this.odooEditor.editable, { range }));
+                const { startContainer, startOffset, endContainer, endOffset } = getDeepRange(this.odooEditor.editable, { range });
+            if (isSelForward) {
+                sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
+            } else {
+                sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
+            }
         }
 
         const hexColor = this._colorToHex(color);
