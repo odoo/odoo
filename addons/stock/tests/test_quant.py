@@ -1049,6 +1049,190 @@ class StockQuant(TransactionCase):
         self.assertEqual(destruction_move_line.location_dest_id.id, creation_move_line.location_id.id)
         self.assertEqual(dummy_quant.quantity, 0)
 
+    def test_quant_gs1_barcode(self):
+        """ Checks quant's methods to generate barcode works as expected and don't
+        generate barcodes longer than the given limit and use the given separator.
+        """
+        # Initial config.
+        self.env['ir.config_parameter'].set_param('stock.agg_barcode_max_length', 400)
+        self.env['ir.config_parameter'].set_param('stock.barcode_separator', ';')
+        # Create some products with a valid EAN-13 and LN/SN for tracked ones.
+        product_ean13 = self.env['product.product'].create({
+            'name': 'Product Test EAN13',
+            'detailed_type': 'product',
+            'barcode': '0100011101014',
+        })
+        product_serial_ean13 = self.env['product.product'].create({
+            'name': 'Product Test EAN13 - Tracked by SN',
+            'detailed_type': 'product',
+            'barcode': '0200022202028',
+            'tracking': 'serial',
+        })
+        product_lot_ean13 = self.env['product.product'].create({
+            'name': 'Product Test EAN13 - Tracked by Lots',
+            'detailed_type': 'product',
+            'barcode': '0300033303032',
+            'tracking': 'lot',
+        })
+
+        serial_numbers = self.env['stock.lot'].create([{
+            'product_id': product_serial_ean13.id,
+            'name': f'tsn-00{i}',
+        } for i in range(8)])
+
+        lot_numbers = self.env['stock.lot'].create([{
+            'product_id': product_lot_ean13.id,
+            'name': f'lot-00{i}',
+        } for i in range(2)])
+
+        # Add some quants for those products.
+        common_serial_vals = {
+            'product_id': product_serial_ean13.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 1,
+        }
+        serial_vals = [{
+            **common_serial_vals,
+            'lot_id': serial_numbers[i].id,
+        } for i in range(8)]
+        quants = self.env['stock.quant'].create(serial_vals + [{
+            'product_id': product_ean13.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 123,
+        }, {
+            'product_id': product_lot_ean13.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 15,
+            'lot_id': lot_numbers[0].id,
+        }, {
+            'product_id': product_lot_ean13.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 25,
+            'lot_id': lot_numbers[1].id,
+        }])
+        quants.action_apply_inventory()
+
+        quants_product_ean13 = quants.filtered(lambda q: q.product_id == product_ean13)
+        quants_product_serial_ean13 = quants.filtered(lambda q: q.product_id == product_serial_ean13)
+        quants_product_lot_ean13 = quants.filtered(lambda q: q.product_id == product_lot_ean13)
+
+        # First, check each individual barcodes.
+        self.assertEqual(quants_product_ean13._get_gs1_barcode(), '01001000111010143000000123')
+        self.assertEqual(quants_product_serial_ean13[3]._get_gs1_barcode(), '010020002220202821tsn-003')
+        self.assertEqual(quants_product_lot_ean13[1]._get_gs1_barcode(), '0100300033303032300000002510lot-001')
+
+        # Then, check the aggregate barcode.
+        aggregate_barcodes = quants.sorted(lambda q: q.product_id.id).get_aggregate_barcodes()
+        self.assertEqual(len(aggregate_barcodes), 1)
+        self.assertEqual(
+            aggregate_barcodes[0],
+            "01001000111010143000000123;010020002220202821tsn-000;010020002220202821tsn-001;"
+            "010020002220202821tsn-002;010020002220202821tsn-003;010020002220202821tsn-004;"
+            "010020002220202821tsn-005;010020002220202821tsn-006;010020002220202821tsn-007;"
+            "0100300033303032300000001510lot-000;0100300033303032300000002510lot-001\t"
+        )
+
+        # Use another separator and set a lower aggregate barcode's max length.
+        self.env['ir.config_parameter'].set_param('stock.barcode_separator', '|')
+        self.env['ir.config_parameter'].set_param('stock.agg_barcode_max_length', 160)
+        aggregate_barcodes = quants.sorted(lambda q: q.product_id.id).get_aggregate_barcodes()
+        # Check we have now two aggregate barcodes (306 char but limit at 160).
+        self.assertEqual(len(aggregate_barcodes), 2)
+        for aggregate_barcode in aggregate_barcodes:
+            self.assertTrue(
+                len(aggregate_barcode) <= 160,
+                "Every aggregate barcode should be shorter than the barcode max size limit")
+        self.assertEqual(
+            aggregate_barcodes[0],
+            "01001000111010143000000123|010020002220202821tsn-000|010020002220202821tsn-001|"
+            "010020002220202821tsn-002|010020002220202821tsn-003|010020002220202821tsn-004\t"
+        )
+        self.assertEqual(
+            aggregate_barcodes[1],
+            "010020002220202821tsn-005|010020002220202821tsn-006|010020002220202821tsn-007|"
+            "0100300033303032300000001510lot-000|0100300033303032300000002510lot-001\t"
+        )
+
+    def test_quant_aggregate_barcode(self):
+        """ Checks quant's methods to generate barcode works for tracked products
+        regardless the product's barcode is a valid EAN or not.
+        """
+        # Initial config.
+        self.env['ir.config_parameter'].set_param('stock.agg_barcode_max_length', 400)
+        self.env['ir.config_parameter'].set_param('stock.barcode_separator', ';')
+        # Creates some product with not GS1 compliant barcodes.
+        product = self.env['product.product'].create({
+            'name': "Product Test",
+            'detailed_type': 'product',
+            'barcode': 'PRODUCT-TEST',
+        })
+        product_serial = self.env['product.product'].create({
+            'name': "Product Test - Tracked by SN",
+            'detailed_type': 'product',
+            'barcode': 'PRODUCT-SN',
+            'tracking': 'serial',
+        })
+        product_lot = self.env['product.product'].create({
+            'name': "Product Test - Tracked by Lots",
+            'detailed_type': 'product',
+            'barcode': 'PRODUCT-LN',
+            'tracking': 'lot',
+        })
+        # Creates some lot/serial numbers.
+        serial_numbers = self.env['stock.lot'].create([{
+            'product_id': product_serial.id,
+            'name': f'tsn-00{i}',
+        } for i in range(8)])
+
+        lot_numbers = self.env['stock.lot'].create([{
+            'product_id': product_lot.id,
+            'name': f'lot-00{i}',
+        } for i in range(2)])
+
+        # Add some quants for those products.
+        common_serial_vals = {
+            'product_id': product_serial.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 1,
+        }
+        serial_vals = [{
+            **common_serial_vals,
+            'lot_id': serial_numbers[i].id,
+        } for i in range(8)]
+        quants = self.env['stock.quant'].create(serial_vals + [{
+            'product_id': product.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 123,
+        }, {
+            'product_id': product_lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 15,
+            'lot_id': lot_numbers[0].id,
+        }, {
+            'product_id': product_lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 25,
+            'lot_id': lot_numbers[1].id,
+        }])
+        quants.action_apply_inventory()
+
+        quants_product = quants.filtered(lambda q: q.product_id == product)
+        quants_product_serial = quants.filtered(lambda q: q.product_id == product_serial)
+        quants_product_lot = quants.filtered(lambda q: q.product_id == product_lot)
+
+        # Check each individual barcodes.
+        self.assertEqual(quants_product._get_gs1_barcode(), '')
+        self.assertEqual(quants_product_serial[3]._get_gs1_barcode(), '21tsn-003')
+        self.assertEqual(quants_product_lot[1]._get_gs1_barcode(), '300000002510lot-001')
+
+        # Check the aggregate barcode.
+        aggregate_barcodes = quants.sorted(lambda q: q.product_id.id).get_aggregate_barcodes()
+        self.assertEqual(len(aggregate_barcodes), 1)
+        self.assertEqual(
+            aggregate_barcodes[0],
+            "PRODUCT-TEST;PRODUCT-SN;21tsn-000;21tsn-001;21tsn-002;21tsn-003;21tsn-004;"
+            "21tsn-005;21tsn-006;21tsn-007;PRODUCT-LN;300000001510lot-000;300000002510lot-001\t")
+
     def test_unpack_and_quants_history(self):
         """
         Test that after unpacking the quant history is preserved

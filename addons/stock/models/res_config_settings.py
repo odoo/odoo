@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -49,6 +49,9 @@ class ResConfigSettings(models.TransientModel):
     annual_inventory_day = fields.Integer(related='company_id.annual_inventory_day', readonly=False)
     group_stock_reception_report = fields.Boolean("Reception Report", implied_group='stock.group_reception_report')
     module_stock_dropshipping = fields.Boolean("Dropshipping")
+    barcode_separator = fields.Char(
+        "Separator", config_parameter='stock.barcode_separator',
+        help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)")
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):

@@ -135,6 +135,16 @@
                                         <div class="text-muted">Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and serial numbers.</div>
                                     </div>
                                 </div>
+                                <div class="row mt-2" invisible="not group_stock_production_lot or not group_stock_tracking_lot">
+                                    <span class="o_form_label">Scannable Package Contents</span>
+                                    <div class="col-12">
+                                        <div class="text-muted">If a separator is defined, a QR code containing all serial numbers contained in package will be generated, using the defined character(s) to separate each numbers</div>
+                                    </div>
+                                    <div class="col">
+                                        <label for="barcode_separator"/>
+                                        <field name="barcode_separator" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                    </div>
+                                </div>
                             </setting>
                             <setting id="expiration_dates_serial_numbers" help="Set expiration dates on lots &amp; serial numbers" invisible="not group_stock_production_lot" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
                                      documentation="/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/expiration_dates.html">

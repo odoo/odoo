@@ -126,5 +126,10 @@
         <function model="res.company" name="create_missing_production_location"/>
         <function model="res.company" name="create_missing_scrap_location"/>
         <function model="res.company" name="create_missing_scrap_sequence"/>
+
+        <record model="ir.config_parameter" id="barcode_separator" forcecreate="False">
+            <field name="key">stock.barcode_separator</field>
+            <field name="value">,</field>
+        </record>
     </data>
 </odoo>
