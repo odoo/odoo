@@ -796,6 +796,17 @@ class Task(models.Model):
                     error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
                 raise AccessError(error_message)
 
+    def _get_sudo_portal_vals(self, vals):
+        """ returns the values which must be written without and with sudo when a portal user creates / writes a task.
+            :param vals: dict of {field: value}, the values to create/write
+            :return: a tuple with 2 dicts:
+                - the first with the values to write without sudo
+                - the second with the values to write with sudo
+        """
+        vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
+        vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
+        return vals_no_sudo, vals_sudo
+
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
@@ -885,6 +896,14 @@ class Task(models.Model):
                     user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
                     if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
                         vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+
+            if default_personal_stage and 'personal_stage_type_id' not in vals:
+                vals['personal_stage_type_id'] = default_personal_stage[0]
+            if not vals.get('name') and vals.get('display_name'):
+                vals['name'] = vals['display_name']
+            if is_portal_user:
+                self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
+
             if project_id:
                 # set the project => "I want to display the task in the project"
                 #                 => => set `display_in_project` to True
@@ -899,13 +918,6 @@ class Task(models.Model):
                     'project_id': project_id,
                     'display_in_project': False,
                 })
-
-            if default_personal_stage and 'personal_stage_type_id' not in vals:
-                vals['personal_stage_type_id'] = default_personal_stage[0]
-            if not vals.get('name') and vals.get('display_name'):
-                vals['name'] = vals['display_name']
-            if is_portal_user:
-                self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
@@ -940,7 +952,11 @@ class Task(models.Model):
         was_in_sudo = self.env.su
         if is_portal_user:
             self = self.sudo().with_context(self._get_portal_sudo_context())
+            vals_list_no_sudo, vals_list = zip(*(self._get_sudo_portal_vals(vals) for vals in vals_list))
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        if is_portal_user:
+            for task, vals in zip(tasks, vals_list_no_sudo):
+                task.sudo(was_in_sudo).write(vals)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
@@ -1086,7 +1102,8 @@ class Task(models.Model):
         # requires the write access on others models, as rating.rating
         # in order to keep the same name than the task.
         if portal_can_write:
-            self = self.sudo().with_context(self._get_portal_sudo_context())
+            self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
+            vals_no_sudo, vals = self._get_sudo_portal_vals(vals)
 
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self.sudo()}
@@ -1095,6 +1112,8 @@ class Task(models.Model):
             del vals['personal_stage_type_id']
 
         result = super().write(vals)
+        if portal_can_write:
+            super(Task, self_no_sudo).write(vals_no_sudo)
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
