@@ -16,16 +16,17 @@
         <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
         <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
+    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+        <div class="o_mail_note_title fw-bold">Original note:</div>
+        <div t-field="activity.note"/>
+    </t>
     <div t-if="feedback">
+        <div class="fw-bold">Feedback:</div>
         <t t-foreach="feedback.split('\n')" t-as="feedback_line">
             <t t-esc="feedback_line"/>
             <br t-if="not feedback_line_last"/>
         </t>
     </div>
-    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
-        <div class="o_mail_note_title"><strong>Original note:</strong></div>
-        <div t-field="activity.note"/>
-    </t>
 </div>
         </template>
 
