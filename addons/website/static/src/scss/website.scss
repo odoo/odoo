@@ -405,6 +405,12 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 
+@for $index from 1 through 5 {
+    .o_cc#{$index} {
+        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+    }
+}
+
 h2 {
     color: map-get($colors, 'o-cc1-h2');
 }

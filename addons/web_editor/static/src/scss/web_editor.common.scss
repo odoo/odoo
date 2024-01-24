@@ -589,7 +589,6 @@ blockquote {
 }
 @for $index from 1 through length($o-color-combinations) {
     $-bg: map-get($colors, 'o-cc#{$index}-bg');
-    $-bg-gradient: o-website-value('o-cc#{$index}-bg-gradient');
     $-text: map-get($colors, 'o-cc#{$index}-text');
     $-headings: map-get($colors, 'o-cc#{$index}-headings');
     $-h2: map-get($colors, 'o-cc#{$index}-h2');
@@ -610,10 +609,6 @@ blockquote {
         // Background & Text
         $-bg-color: o-color($-bg);
         @include o-bg-color($-bg-color, o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
-        @if $-bg-gradient {
-            background-color: transparent;
-            background-image: $-bg-gradient;
-        }
 
         // In the future, we might want to use CSS variables to define all
         // colors for all components of o_cc and use them here. That way there
