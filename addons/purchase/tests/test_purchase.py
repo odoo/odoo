@@ -237,6 +237,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_form.save()
         self.assertEqual(po.order_line.product_qty, 2.0)
 
+        po.order_line[0].product_packaging_id = False
 
         with po_form.order_line.edit(0) as line:
             line.product_qty = 24.0
@@ -260,6 +261,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.product_packaging_qty, 1.0)
         po.order_line.product_packaging_qty = 2.0
         self.assertEqual(po.order_line.product_qty, 2.0)
+
+        po.order_line[0].product_packaging_id = False
 
         po.order_line.product_qty = 24.0
         self.assertEqual(po.order_line.product_packaging_id, packaging_dozen)
@@ -304,6 +307,56 @@ class TestPurchase(AccountTestInvoicingCommon):
         })
         self.assertEqual(po2.order_line.product_packaging_id, company2_pack_of_10)
         self.assertEqual(po2.order_line.product_packaging_qty, 1.0)
+
+    def test_compute_packaging_02(self):
+        """Create a PO and use packaging. Check we suggested suitable packaging
+        according to the product_qty. Also check product_qty or product_packaging
+        are correctly calculated when one of them changed.
+        """
+        packaging_pack_of_10 = self.env['product.packaging'].create({
+            'name': "PackOf10",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+        packaging_pack_of_20 = self.env['product.packaging'].create({
+            'name': "PackOf20",
+            'product_id': self.product_a.id,
+            'qty': 20.0,
+        })
+
+        po2 = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        po2_form = Form(po2)
+
+        with po2_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 10.0
+        po2_form.save()
+        self.assertEqual(po2.order_line.product_packaging_qty, 1)
+        self.assertEqual(po2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+
+        # Even though we changed the quantity of products to 40 and we have a pack_of_20, much better 
+        # in terms of quantity, but if it still matches the quantity we don't change 
+        with po2_form.order_line.edit(0) as line:
+            line.product_qty = 40.0
+        po2_form.save()
+        self.assertEqual(po2.order_line.product_packaging_qty, 4)
+        self.assertEqual(po2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+
+        # But if we have 2 packs_of_20 and we change product_uom_qty to 30, we should have a recompute for 3 packs_of_10, 
+        # because they are better and the previous option with a pack_of_20 is not suitable, because it does not match the quantity
+        with po2_form.order_line.edit(0) as line:
+            line.product_packaging_id = packaging_pack_of_20
+        po2_form.save()
+        self.assertEqual(po2.order_line.product_packaging_qty, 2)
+        self.assertEqual(po2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+
+        with po2_form.order_line.edit(0) as line:
+            line.product_qty = 30.0
+        po2_form.save()
+        self.assertEqual(po2.order_line.product_packaging_qty, 3)
+        self.assertEqual(po2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""

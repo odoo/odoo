@@ -647,6 +647,9 @@ class SaleOrderLine(models.Model):
                 line.product_packaging_id = False
             # suggest biggest suitable packaging matching the SO's company
             if line.product_id and line.product_uom_qty and line.product_uom:
+                # if a packaging already set, check if it still match the quantity
+                if line.product_packaging_id and line.product_packaging_id._check_qty(line.product_uom_qty, line.product_uom) == line.product_uom_qty:
+                    continue
                 suggested_packaging = line.product_id.packaging_ids\
                         .filtered(lambda p: p.sales and (p.product_id.company_id <= p.company_id <= line.company_id))\
                         ._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)

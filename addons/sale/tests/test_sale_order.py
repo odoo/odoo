@@ -182,6 +182,8 @@ class TestSaleOrder(SaleCommon):
         so_form.save()
         self.assertEqual(so.order_line.product_uom_qty, 2.0)
 
+        so.order_line[0].product_packaging_id = False
+
         with so_form.order_line.edit(0) as line:
             line.product_uom_qty = 24.0
         so_form.save()
@@ -209,13 +211,18 @@ class TestSaleOrder(SaleCommon):
         so2_form = Form(so2)
         with so2_form.order_line.new() as line:
             line.product_id = self.product
+        so2_form.save()
+
+        so2.order_line[0].product_packaging_id = False
+
+        with so2_form.order_line.edit(0) as line:
             line.product_uom_qty = 10
         so2_form.save()
         self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
         self.assertEqual(so2.order_line.product_packaging_qty, 1.0)
 
         with so2_form.order_line.edit(0) as line:
-            line.product_packaging_qty = 2
+            line.product_packaging_qty = 2.0
         so2_form.save()
         self.assertEqual(so2.order_line.product_uom_qty, 20)
         # we should have 2 pack of 10, as we've set the package_qty manually,
@@ -232,6 +239,36 @@ class TestSaleOrder(SaleCommon):
         # we should have 1 pack of 20, as we've set the package type manually
         self.assertEqual(so2.order_line.product_packaging_qty, 1)
         self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+
+        # we should have 1 pack of 10, as we've set the product quanity manually it should offer 
+        # a better pack (pack_of_10), and actually change the number of product_packaging_qty
+        with so2_form.order_line.edit(0) as line:
+            line.product_uom_qty = 10.0
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_qty, 1)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+
+        # Even though we changed the quantity of products to 40 and we have a pack_of_20, much better 
+        # in terms of quantity, but if it still matches the quantity we don't change 
+        with so2_form.order_line.edit(0) as line:
+            line.product_uom_qty = 40.0
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_qty, 4)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
+
+        # But if we have 2 packs_of_20 and we change product_uom_qty to 30, we should have a recompute for 3 packs_of_10, 
+        # because they are better and the previous option with a pack_of_20 is not suitable, because it does not match the quantity
+        with so2_form.order_line.edit(0) as line:
+            line.product_packaging_id = packaging_pack_of_20
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_qty, 2)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_20.id)
+
+        with so2_form.order_line.edit(0) as line:
+            line.product_uom_qty = 30.0
+        so2_form.save()
+        self.assertEqual(so2.order_line.product_packaging_qty, 3)
+        self.assertEqual(so2.order_line.product_packaging_id.id, packaging_pack_of_10.id)
 
     def test_compute_packaging_01(self):
         """Create a SO and use packaging in a multicompany environment.
