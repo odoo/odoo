@@ -45,7 +45,7 @@ class MrpProduction(models.Model):
                 production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
 
     def write(self, vals):
-        if self.env.user.has_group('base.group_portal') and not self.env.su:
+        if self.env.user._is_portal() and not self.env.su:
             unauthorized_fields = set(vals.keys()) - set(self._get_writeable_fields_portal_user())
             if unauthorized_fields:
                 raise AccessError(_("You cannot write on fields %s in mrp.production.", ', '.join(unauthorized_fields)))

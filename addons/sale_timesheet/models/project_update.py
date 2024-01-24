@@ -69,7 +69,7 @@ class ProjectUpdate(models.Model):
     @api.model
     def _get_profitability_values(self, project):
         costs_revenues = project.analytic_account_id and project.allow_billable
-        if not (self.user_has_groups('project.group_project_manager') and costs_revenues):
+        if not (self.env.user.has_group('project.group_project_manager') and costs_revenues):
             return {}
         profitability_items = project._get_profitability_items(False)
         costs = sum(profitability_items['costs']['total'].values())

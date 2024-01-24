@@ -52,7 +52,7 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/kiosk_mode_menu', auth='user', type='http')
     def kiosk_menu_item_action(self):
-        if request.env.user.user_has_groups("hr_attendance.group_hr_attendance_manager"):
+        if request.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
             # Auto log out will prevent users from forgetting to log out of their session
             # before leaving the kiosk mode open to the public. This is a prevention security
             # measure.

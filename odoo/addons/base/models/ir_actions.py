@@ -148,7 +148,7 @@ class IrActions(models.Model):
             for action in all_actions:
                 action = dict(action)
                 groups = action.pop('groups_id', None)
-                if groups and not self.user_has_groups(groups):
+                if groups and not any(self.env.user.has_group(ext_id) for ext_id in groups):
                     # the user may not perform this action
                     continue
                 res_model = action.pop('res_model', None)
@@ -188,8 +188,9 @@ class IrActions(models.Model):
                         fields.append(field)
                 action = action.read(fields)[0]
                 if action.get('groups_id'):
+                    # transform the list of ids into a list of xml ids
                     groups = self.env['res.groups'].browse(action['groups_id'])
-                    action['groups_id'] = ','.join(ext_id for ext_id in groups._ensure_xml_id().values())
+                    action['groups_id'] = list(groups._ensure_xml_id().values())
                 result[binding_type].append(frozendict(action))
             except (MissingError):
                 continue

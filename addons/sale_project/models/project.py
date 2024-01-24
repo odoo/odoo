@@ -340,7 +340,7 @@ class Project(models.Model):
         }
 
     def get_sale_items_data(self, domain=None, offset=0, limit=None, with_action=True):
-        if not self.user_has_groups('project.group_project_user'):
+        if not self.env.user.has_group('project.group_project_user'):
             return {}
         sols = self.env['sale.order.line'].sudo().search(
             domain or self._get_sale_items_domain(),
@@ -435,7 +435,7 @@ class Project(models.Model):
             ['currency_id', 'product_id', 'is_downpayment'],
             ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )
-        display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
+        display_sol_action = with_action and len(self) == 1 and self.env.user.has_group('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
         data = []
@@ -462,7 +462,11 @@ class Project(models.Model):
                     'invoiced': downpayment_amount_invoiced,
                     'to_invoice': -downpayment_amount_invoiced
                 }
-                if with_action and self.user_has_groups('sales_team.group_sale_salesman_all_leads, account.group_account_invoice, account.group_account_readonly'):
+                if with_action and (
+                    self.env.user.has_group('sales_team.group_sale_salesman_all_leads,')
+                    or self.env.user.has_group('account.group_account_invoice,')
+                    or self.env.user.has_group('account.group_account_readonly')
+                ):
                     invoices = self.env['account.move'].search([('line_ids.sale_line_ids', 'in', downpayment_sol_ids)])
                     args = ['downpayments', [('id', 'in', invoices.ids)]]
                     if len(invoices) == 1:
@@ -585,7 +589,11 @@ class Project(models.Model):
                     'invoiced': amount_invoiced,
                     'to_invoice': amount_to_invoice,
                 }
-                if with_action and self.user_has_groups('sales_team.group_sale_salesman_all_leads, account.group_account_invoice, account.group_account_readonly'):
+                if with_action and (
+                    self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
+                    or self.env.user.has_group('account.group_account_invoice')
+                    or self.env.user.has_group('account.group_account_readonly')
+                ):
                     invoices_revenues['action'] = self._get_action_for_profitability_section(invoices_move_lines.ids, section_id)
                 return {
                     'data': [invoices_revenues],
@@ -634,7 +642,7 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
+        if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'dollar',
@@ -645,7 +653,7 @@ class Project(models.Model):
                 'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
             })
-        if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
+        if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
             buttons.append({
                 'icon': 'dollar',
                 'text': _lt('Sales Order Items'),
@@ -655,7 +663,7 @@ class Project(models.Model):
                 'show': self.display_sales_stat_buttons,
                 'sequence': 28,
             })
-        if self.user_has_groups('account.group_account_readonly'):
+        if self.env.user.has_group('account.group_account_readonly'):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
@@ -666,7 +674,7 @@ class Project(models.Model):
                 'show': bool(self.analytic_account_id) and self_sudo.invoice_count > 0,
                 'sequence': 30,
             })
-        if self.user_has_groups('account.group_account_readonly'):
+        if self.env.user.has_group('account.group_account_readonly'):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',

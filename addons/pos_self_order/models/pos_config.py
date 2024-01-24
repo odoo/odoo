@@ -24,10 +24,11 @@ class PosConfig(models.Model):
         return self.env["res.lang"].get_installed()
 
     def _self_order_default_user(self):
-        user_ids = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
-        for user_id in user_ids:
-            if user_id.has_group("point_of_sale.group_pos_user") or user_id.has_group("point_of_sale.group_pos_manager"):
-                return user_id
+        users = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        for user in users:
+            if (user.sudo().has_group("point_of_sale.group_pos_user")
+                    or user.sudo().has_group("point_of_sale.group_pos_manager")):
+                return user
 
     status = fields.Selection(
         [("inactive", "Inactive"), ("active", "Active")],
@@ -161,7 +162,12 @@ class PosConfig(models.Model):
     @api.constrains('self_ordering_default_user_id')
     def _check_default_user(self):
         for record in self:
-            if record.self_ordering_mode == 'mobile' and not record.self_ordering_default_user_id.has_group("point_of_sale.group_pos_user") and not record.self_ordering_default_user_id.has_group("point_of_sale.group_pos_manager"):
+            if (
+                record.self_ordering_mode == 'mobile'
+                and record.self_ordering_default_user_id
+                and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_user")
+                and not record.self_ordering_default_user_id.sudo().has_group("point_of_sale.group_pos_manager")
+            ):
                 raise UserError(_("The Self-Order default user must be a POS user"))
 
     @api.constrains("payment_method_ids", "self_ordering_mode")

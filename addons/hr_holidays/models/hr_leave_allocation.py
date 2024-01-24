@@ -26,14 +26,14 @@ class HolidaysAllocation(models.Model):
     _mail_post_access = 'read'
 
     def _default_holiday_status_id(self):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes')]
         else:
             domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]
         return self.env['hr.leave.type'].search(domain, limit=1)
 
     def _domain_holiday_status_id(self):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             return [('requires_allocation', '=', 'yes')]
         return [('employee_requests', '=', 'yes')]
 

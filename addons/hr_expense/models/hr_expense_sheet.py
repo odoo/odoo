@@ -328,16 +328,16 @@ class HrExpenseSheet(models.Model):
 
     @api.depends('employee_id')
     def _compute_can_reset(self):
-        is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
+        is_expense_user = self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
             sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
 
     @api.depends_context('uid')
     @api.depends('employee_id')
     def _compute_can_approve(self):
-        is_team_approver = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
-        is_approver = self.user_has_groups('hr_expense.group_hr_expense_user')
-        is_hr_admin = self.user_has_groups('hr_expense.group_hr_expense_manager')
+        is_team_approver = self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
+        is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
+        is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager')
 
         for sheet in self:
             reason = False
@@ -384,8 +384,8 @@ class HrExpenseSheet(models.Model):
     @api.depends_context('uid')
     @api.depends('employee_id', 'user_id', 'state')
     def _compute_is_editable(self):
-        is_hr_admin = self.user_has_groups('hr_expense.group_hr_expense_manager')
-        is_approver = self.user_has_groups('hr_expense.group_hr_expense_user')
+        is_hr_admin = self.env.user.has_group('hr_expense.group_hr_expense_manager')
+        is_approver = self.env.user.has_group('hr_expense.group_hr_expense_user')
         for sheet in self:
             if sheet.state not in {'draft', 'submit', 'approve'}:
                 # Not editable

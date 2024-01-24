@@ -17,7 +17,7 @@ class HrDepartureWizard(models.TransientModel):
             return expired_contract.date_end
         return super()._get_employee_departure_date()
 
-    set_date_end = fields.Boolean(string="Set Contract End Date", default=lambda self: self.env.user.user_has_groups('hr_contract.group_hr_contract_manager'),
+    set_date_end = fields.Boolean(string="Set Contract End Date", default=lambda self: self.env.user.has_group('hr_contract.group_hr_contract_manager'),
         help="Set the end date on the current contract.")
 
     def action_register_departure(self):

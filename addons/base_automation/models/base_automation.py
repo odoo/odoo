@@ -594,7 +594,7 @@ class BaseAutomation(models.Model):
 
     @api.model
     def _add_postmortem(self, e):
-        if self.user_has_groups('base.group_user'):
+        if self.env.user._is_internal():
             e.context = {}
             e.context['exception_class'] = 'base_automation'
             e.context['base_automation'] = {

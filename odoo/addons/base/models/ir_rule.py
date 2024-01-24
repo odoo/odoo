@@ -218,7 +218,7 @@ class IrRule(models.Model):
 
         resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
 
-        if not self.user_has_groups('base.group_no_one') or not self.env.user.has_group('base.group_user'):
+        if not self.env.user.has_group('base.group_no_one') or not self.env.user._is_internal():
             records.invalidate_recordset()
             return AccessError(f"{operation_error}\n{failing_model}\n\n{resolution_info}")
 

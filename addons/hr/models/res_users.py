@@ -317,7 +317,7 @@ class User(models.Model):
     def action_open_employees(self):
         self.ensure_one()
         employees = self.employee_ids
-        model = 'hr.employee' if self.user_has_groups('hr.group_hr_user') else 'hr.employee.public'
+        model = 'hr.employee' if self.env.user.has_group('hr.group_hr_user') else 'hr.employee.public'
         if len(employees) > 1:
             return {
                 'name': _('Related Employees'),

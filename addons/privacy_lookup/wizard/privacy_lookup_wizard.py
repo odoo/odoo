@@ -203,7 +203,7 @@ class PrivacyLookupWizard(models.TransientModel):
             for line in wizard.line_ids:
                 records_by_model[line.res_model_id].append(line.res_id)
             wizard.records_description = '\n'.join('{model_name} ({count}): {ids_str}'.format(
-                model_name=model.name if not self.env.user.user_has_groups('base.group_no_one') else '%s - %s' % (model.name, model.model),
+                model_name=(f'{model.name} - {model.model}' if self.env.user.has_group('base.group_no_one') else model.name),
                 count=len(ids),
                 ids_str=', '.join('#%s' % (rec_id) for rec_id in ids),
             ) for model, ids in records_by_model.items())

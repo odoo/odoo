@@ -262,7 +262,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             with self.subTest(group=group, expected_date=expected_date):
                 self.env.user.groups_id = [Command.set(self.env.ref(group).ids)]
 
-                self.assertTrue(self.env.user.user_has_groups(group))
+                self.assertTrue(self.env.user.has_group(group))
 
                 invoice = self._create_invoice(
                     'out_invoice', '2023-01-02',

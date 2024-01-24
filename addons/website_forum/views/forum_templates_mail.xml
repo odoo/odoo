@@ -6,7 +6,7 @@
             t-att-data-object="object._name"
             t-att-data-follow="object.id and object.message_is_follower and 'on' or 'off'"
             t-att-data-unsubscribe="'unsubscribe' if 'unsubscribe' in request.params else None">
-            <div t-if="icons_design and not request.env.user.has_group('base.group_public')" class="js_follow_icons_container">
+            <div t-if="icons_design and not request.env.user._is_public()" class="js_follow_icons_container">
                 <button t-attf-class="btn js_unfollow_btn #{btn_classes}">
                     <i t-attf-class="fa fa-fw fa-minus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Unfollow"/>
                 </button>
@@ -14,7 +14,7 @@
                     <i t-attf-class="fa fa-fw fa-plus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow"/>
                 </button>
             </div>
-            <span t-elif="request.env.user.has_group('base.group_public') and icons_design" class="js_follow_icons_container">
+            <span t-elif="request.env.user._is_public() and icons_design" class="js_follow_icons_container">
                 <button t-attf-class="btn js_unfollow_btn #{btn_classes}">
                     <i t-attf-class="fa fa-fw fa-minus-circle #{icons_classes}" data-bs-toggle="tooltip" data-bs-placement="top" title="Unfollow"/>
                 </button>

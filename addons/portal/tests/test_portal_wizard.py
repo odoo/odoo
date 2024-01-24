@@ -69,7 +69,7 @@ class TestPortalWizard(MailCommon):
         new_user = portal_user.user_id
 
         self.assertTrue(new_user.id, 'Must create a new user')
-        self.assertTrue(new_user.has_group('base.group_portal'), 'Must add the group to the user')
+        self.assertTrue(new_user._is_portal(), 'Must add the group to the user')
         self.assertEqual(self.partner.email, 'first_email@example.com', 'Must write on the email of the partner')
         self.assertEqual(new_user.email, 'first_email@example.com', 'Must create the user with the right email')
         self.assertSentEmail(self.env.user.partner_id, [self.partner])
@@ -98,8 +98,8 @@ class TestPortalWizard(MailCommon):
         self.assertTrue(portal_user.is_portal)
         self.assertFalse(portal_user.is_internal)
 
-        self.assertTrue(self.public_user.has_group('base.group_portal'), 'Must add the group portal')
-        self.assertFalse(self.public_user.has_group('base.group_public'), 'Must remove the group public')
+        self.assertTrue(self.public_user._is_portal(), 'Must add the group portal')
+        self.assertFalse(self.public_user._is_public(), 'Must remove the group public')
         self.assertEqual(public_partner.email, 'new_email@example.com', 'Must change the email of the partner')
         self.assertEqual(self.public_user.email, 'new_email@example.com', 'Must change the email of the user')
         self.assertSentEmail(self.env.user.partner_id, [public_partner])

@@ -53,7 +53,7 @@ export function _makeUser(session) {
         return rpc("/web/dataset/call_kw/res.users/has_group", {
             model: "res.users",
             method: "has_group",
-            args: [group],
+            args: [userId, group],
             kwargs: { context },
         });
     };

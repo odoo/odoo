@@ -33,13 +33,13 @@ class TestHasGroup(TransactionCase):
         self.grp_public = self.env.ref(self.grp_public_xml_id)
 
     def test_env_uid(self):
-        Users = self.env['res.users'].with_user(self.test_user)
+        Partner = self.env['res.partner'].with_user(self.test_user)
         self.assertTrue(
-            Users.has_group(self.group0),
+            Partner.env.user.has_group(self.group0),
             "the test user should belong to group0"
         )
         self.assertFalse(
-            Users.has_group(self.group1),
+            Partner.env.user.has_group(self.group1),
             "the test user should *not* belong to group1"
         )
 
@@ -257,21 +257,21 @@ class TestHasGroup(TransactionCase):
 
         def populate_cache():
             self.test_user.has_group('test_user_has_group.group0')
-            self.assertTrue(self.registry._Registry__caches['default'], "user.has_group cache must be populated")
+            self.assertTrue(self.registry._Registry__caches['default'], "user._has_group cache must be populated")
 
         populate_cache()
 
         self.env.ref(self.group0).write({"share": True})
-        self.assertFalse(self.registry._Registry__caches['default'], "Writing on group must invalidate user.has_group cache")
+        self.assertFalse(self.registry._Registry__caches['default'], "Writing on group must invalidate user._has_group cache")
 
         populate_cache()
         # call_cache_clearing_methods is called in res.groups.write to invalidate
         # cache before calling its parent class method (`odoo.models.Model.write`)
         # as explain in the `res.group.write` comment.
         # This verifies that calling `call_cache_clearing_methods()` invalidates
-        # the ormcache of method `user.has_group()`
+        # the ormcache of method `user._has_group()`
         self.env['ir.model.access'].call_cache_clearing_methods()
         self.assertFalse(
             self.registry._Registry__caches['default'],
-            "call_cache_clearing_methods() must invalidate user.has_group cache"
+            "call_cache_clearing_methods() must invalidate user._has_group cache"
         )

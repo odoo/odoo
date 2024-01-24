@@ -2049,7 +2049,7 @@ class AccountMove(models.Model):
         for move in self:
             lock_date = move.company_id._get_user_fiscal_lock_date()
             if move.date <= lock_date:
-                if self.user_has_groups('account.group_account_manager'):
+                if self.env.user.has_group('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s.", format_date(self.env, lock_date))
                 else:
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role", format_date(self.env, lock_date))
@@ -2796,7 +2796,7 @@ class AccountMove(models.Model):
         but they can delete the moves even if it creates a sequence gap.
         """
         if not (
-            self.user_has_groups('account.group_account_manager')
+            self.env.user.has_group('account.group_account_manager')
             or self.company_id.quick_edit_mode
             or self._context.get('force_delete')
             or self.check_move_sequence_chain()

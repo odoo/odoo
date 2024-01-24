@@ -14,7 +14,7 @@ class HrApplicant(models.Model):
     @api.depends_context('uid')
     @api.depends('interviewer_ids', 'job_id.interviewer_ids')
     def _compute_is_interviewer(self):
-        is_recruiter = self.user_has_groups('hr_recruitment.group_hr_recruitment_user')
+        is_recruiter = self.env.user.has_group('hr_recruitment.group_hr_recruitment_user')
         for applicant in self:
             applicant.is_interviewer = not is_recruiter and self.env.user in (applicant.interviewer_ids | applicant.job_id.interviewer_ids)
 

@@ -77,7 +77,7 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('purchase.group_purchase_user'):
+        if self.env.user.has_group('purchase.group_purchase_user'):
             self_sudo = self.sudo()
             buttons.append({
                 'icon': 'credit-card',
@@ -118,7 +118,11 @@ class Project(models.Model):
                 ('purchase_line_id', '!=', False),
             ], ['parent_state', 'currency_id', 'price_unit', 'quantity', 'analytic_distribution'])
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
-            with_action = with_action and self.user_has_groups('purchase.group_purchase_user, account.group_account_invoice, account.group_account_readonly')
+            with_action = with_action and (
+                self.env.user.has_group('purchase.group_purchase_user')
+                or self.env.user.has_group('account.group_account_invoice')
+                or self.env.user.has_group('account.group_account_readonly')
+            )
             if invoice_lines:
                 amount_invoiced = amount_to_invoice = 0.0
                 purchase_order_line_invoice_line_ids.extend(invoice_lines.ids)

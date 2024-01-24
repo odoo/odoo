@@ -160,7 +160,7 @@ class website_form_model_fields(models.Model):
             return False
 
         # only allow users who can change the website structure
-        if not self.env['res.users'].has_group('website.group_website_designer'):
+        if not self.env.user.has_group('website.group_website_designer'):
             return False
 
         unexisting_fields = [field for field in fields if field not in self.env[model]._fields.keys()]

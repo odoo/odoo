@@ -71,7 +71,7 @@ class Project(models.Model):
             ['amount:sum'],
         )
         if mrp_aal_read_group:
-            can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
+            can_see_manufactoring_order = with_action and len(self) == 1 and self.env.user.has_group('mrp.group_mrp_user')
             total_amount = 0
             for currency, amount_summed in mrp_aal_read_group:
                 total_amount += currency._convert(amount_summed, self.currency_id, self.company_id)
@@ -91,7 +91,7 @@ class Project(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('mrp.group_mrp_user'):
+        if self.env.user.has_group('mrp.group_mrp_user'):
             self_sudo = self.sudo()
             buttons.extend([{
                 'icon': 'flask',

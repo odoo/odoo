@@ -1555,52 +1555,6 @@ class BaseModel(metaclass=MetaModel):
         return self._rec_name or 'id'
 
     @api.model
-    def user_has_groups(self, groups):
-        """Return true if the user is member of at least one of the groups in
-        ``groups``, and is not a member of any of the groups in ``groups``
-        preceded by ``!``. Typically used to resolve ``groups`` attribute in
-        view and model definitions.
-
-        :param str groups: comma-separated list of fully-qualified group
-            external IDs, e.g., ``base.group_user,base.group_system``,
-            optionally preceded by ``!``
-        :return: True if the current user is a member of one of the given groups
-            not preceded by ``!`` and is not member of any of the groups
-            preceded by ``!``
-        """
-        from odoo.http import request
-        user = self.env.user
-
-        has_groups = []
-        not_has_groups = []
-        for group_ext_id in groups.split(','):
-            group_ext_id = group_ext_id.strip()
-            if group_ext_id[0] == '!':
-                not_has_groups.append(group_ext_id[1:])
-            else:
-                has_groups.append(group_ext_id)
-
-        for group_ext_id in not_has_groups:
-            if group_ext_id == 'base.group_no_one':
-                # check: the group_no_one is effective in debug mode only
-                if user.has_group(group_ext_id) and request and request.session.debug:
-                    return False
-            else:
-                if user.has_group(group_ext_id):
-                    return False
-
-        for group_ext_id in has_groups:
-            if group_ext_id == 'base.group_no_one':
-                # check: the group_no_one is effective in debug mode only
-                if user.has_group(group_ext_id) and request and request.session.debug:
-                    return True
-            else:
-                if user.has_group(group_ext_id):
-                    return True
-
-        return not has_groups
-
-    @api.model
     @api.readonly
     def search_count(self, domain, limit=None):
         """ search_count(domain[, limit=None]) -> int
@@ -3554,7 +3508,7 @@ class BaseModel(metaclass=MetaModel):
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
                 continue
-            if field.groups and not self.env.su and not self.user_has_groups(field.groups):
+            if not field.is_accessible(self.env):
                 continue
 
             description = field.get_description(self.env, attributes=attributes)
@@ -3578,81 +3532,52 @@ class BaseModel(metaclass=MetaModel):
         if self.env.su:
             return field_names or list(self._fields)
 
-        def valid(fname):
-            """ determine whether user has access to field ``fname`` """
-            field = self._fields.get(fname)
-            if field and field.groups:
-                return self.user_has_groups(field.groups)
-            else:
-                return True
-
         if not field_names:
-            field_names = [name for name in self._fields if valid(name)]
+            field_names = [name for name, field in self._fields.items() if field.is_accessible(self.env)]
         else:
-            invalid_fields = {name for name in field_names if not valid(name)}
+            # Unknown (or virtual) fields are considered accessible because they will not be read and nothing will be written to them.
+            invalid_fields = [name for name in field_names if name in self._fields and not self._fields[name].is_accessible(self.env)]
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                              operation, self._uid, self._name, ', '.join(invalid_fields))
 
                 description = self.env['ir.model']._get(self._name).name
-                if not self.env.user.has_group('base.group_no_one'):
-                    raise AccessError(_(
-                        "You do not have enough rights to access the fields \"%(fields)s\""
-                        " on %(document_kind)s (%(document_model)s). "
-                        "Please contact your system administrator."
-                        "\n\n(Operation: %(operation)s)",
-                        fields=','.join(list(invalid_fields)),
-                        document_kind=description,
-                        document_model=self._name,
-                        operation=operation,
-                    ))
 
-                def format_groups(field):
-                    if field.groups == '.':
-                        return _("always forbidden")
-
-                    anyof = self.env['res.groups']
-                    noneof = self.env['res.groups']
-                    for g in field.groups.split(','):
-                        if g.startswith('!'):
-                            noneof |= self.env.ref(g[1:])
-                        else:
-                            anyof |= self.env.ref(g)
-                    strs = []
-                    if anyof:
-                        strs.append(_(
-                            "allowed for groups %s",
-                            ', '.join(
-                                anyof.sorted(lambda g: g.id)
-                                    .mapped(lambda g: repr(g.display_name))
-                            ),
-                        ))
-                    if noneof:
-                        strs.append(_(
-                            "forbidden for groups %s",
-                            ', '.join(
-                                noneof.sorted(lambda g: g.id)
-                                    .mapped(lambda g: repr(g.display_name))
-                            ),
-                        ))
-                    return '; '.join(strs)
-
-                raise AccessError(_(
-                    "The requested operation can not be completed due to security restrictions."
-                    "\n\nDocument type: %(document_kind)s (%(document_model)s)"
-                    "\nOperation: %(operation)s"
-                    "\nUser: %(user)s"
-                    "\nFields:"
-                    "\n%(fields_list)s",
+                error_msg = _(
+                    "You do not have enough rights to access the fields \"%(fields)s\""
+                    " on %(document_kind)s (%(document_model)s). "
+                    "Please contact your system administrator."
+                    "\n\nOperation: %(operation)s",
+                    fields=','.join(invalid_fields),
+                    document_kind=description,
                     document_model=self._name,
-                    document_kind=description or self._name,
                     operation=operation,
-                    user=self._uid,
-                    fields_list='\n'.join(
-                        '- %s (%s)' % (f, format_groups(self._fields[f]))
-                        for f in sorted(invalid_fields)
-                    ),
-                ))
+                )
+
+                if self.env.user._has_group('base.group_no_one'):
+                    def format_groups(field):
+                        if field.groups == '.':
+                            return _("always forbidden")
+
+                        groups_list = [self.env.ref(g) for g in field.groups.split(',')]
+                        groups = self.env['res.groups'].union(*groups_list).sorted('id')
+                        return _(
+                            "allowed for groups %s",
+                            ', '.join(repr(g.display_name) for g in groups),
+                        )
+
+                    error_msg += _(
+                        "\nUser: %(user)s"
+                        "\nFields:"
+                        "\n%(fields_list)s",
+                        user=self._uid,
+                        fields_list='\n'.join(
+                            '- %s (%s)' % (f, format_groups(self._fields[f]))
+                            for f in sorted(invalid_fields)
+                        ),
+                    )
+
+                raise AccessError(error_msg)
 
         return field_names
 
@@ -3909,7 +3834,7 @@ class BaseModel(metaclass=MetaModel):
                 # select fields with the same prefetch group
                 if f.prefetch == field.prefetch
                 # discard fields with groups that the user may not access
-                if not (f.groups and not self.user_has_groups(f.groups))
+                if f.is_accessible(self.env)
             ]
             if field.name not in fnames:
                 fnames.append(field.name)
@@ -4009,9 +3934,9 @@ class BaseModel(metaclass=MetaModel):
                 # optimization: fetch field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep_field = self._fields[dotname.split('.', 1)[0]]
-                    if (not dep_field.store) or (dep_field.prefetch is True and (
-                        not dep_field.groups or self.user_has_groups(dep_field.groups)
-                    )):
+                    if (not dep_field.store) or (dep_field.prefetch is True and
+                        dep_field.is_accessible(self.env)
+                    ):
                         field_names_todo.append(dep_field.name)
 
         return fields_to_fetch

@@ -96,7 +96,7 @@ class ResConfigSettings(models.TransientModel):
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
         super().set_values()
 
-        if not self.user_has_groups('stock.group_stock_manager'):
+        if not self.env.user.has_group('stock.group_stock_manager'):
             return
 
         # If we just enabled multiple locations with this settings change, we can deactivate

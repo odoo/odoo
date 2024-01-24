@@ -389,7 +389,7 @@ class Project(models.Model):
             ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id'],
             ['amount:sum', 'id:array_agg'],
         )
-        can_see_timesheets = with_action and len(self) == 1 and self.user_has_groups('hr_timesheet.group_hr_timesheet_approver')
+        can_see_timesheets = with_action and len(self) == 1 and self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver')
         revenues_dict = {}
         costs_dict = {}
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
@@ -501,7 +501,9 @@ class ProjectTask(models.Model):
         res = super()._get_default_partner_id(project, parent)
         if not res and project:
             # project in sudo if the current user is a portal user.
-            related_project = project if not self.user_has_groups('!base.group_user,base.group_portal') else project.sudo()
+            related_project = project
+            if self.env.user._is_portal() and not self.env.user._is_internal():
+                related_project = related_project.sudo()
             if related_project.pricing_type == 'employee_rate':
                 return related_project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
         return res

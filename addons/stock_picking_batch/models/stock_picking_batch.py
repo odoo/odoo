@@ -91,7 +91,7 @@ class StockPickingBatch(models.Model):
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
         self.show_allocation = False
-        if not self.user_has_groups('stock.group_reception_report'):
+        if not self.env.user.has_group('stock.group_reception_report'):
             return
         for batch in self:
             batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
@@ -243,7 +243,7 @@ class StockPickingBatch(models.Model):
         return action
 
     def action_open_label_layout(self):
-        if self.user_has_groups('stock.group_production_lot') and self.move_line_ids.lot_id:
+        if self.env.user.has_group('stock.group_production_lot') and self.move_line_ids.lot_id:
             view = self.env.ref('stock.picking_label_type_form')
             return {
                 'name': _('Choose Type of Labels To Print'),

@@ -289,7 +289,7 @@ class Message(models.Model):
             return super()._search(domain, offset, limit, order, access_rights_uid)
 
         # Non-employee see only messages with a subtype and not internal
-        if not self.env['res.users'].has_group('base.group_user'):
+        if not self.env.user._is_internal():
             domain = self._get_search_domain_share() + domain
 
         # make the search query with the default rules
@@ -406,7 +406,7 @@ class Message(models.Model):
         super().check_access_rule(operation)
 
         # Non employees see only messages with a subtype (aka, not internal logs)
-        if not self.env['res.users'].has_group('base.group_user'):
+        if not self.env.user._is_internal():
             self._cr.execute('''SELECT DISTINCT message.id, message.subtype_id, subtype.internal
                                 FROM "%s" AS message
                                 LEFT JOIN "mail_message_subtype" as subtype

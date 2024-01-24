@@ -23,12 +23,12 @@ class StockQuant(models.Model):
     _rec_name = 'product_id'
 
     def _domain_location_id(self):
-        if self.user_has_groups('stock.group_stock_user'):
+        if self.env.user.has_group('stock.group_stock_user'):
             return "[('usage', 'in', ['internal', 'transit'])] if context.get('inventory_mode') else []"
         return "[]"
 
     def _domain_lot_id(self):
-        if self.user_has_groups('stock.group_stock_user'):
+        if self.env.user.has_group('stock.group_stock_user'):
             return ("[] if not context.get('inventory_mode') else"
                 " [('product_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.product' else"
                 " [('product_id.product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
@@ -36,7 +36,7 @@ class StockQuant(models.Model):
         return "[]"
 
     def _domain_product_id(self):
-        if self.user_has_groups('stock.group_stock_user'):
+        if self.env.user.has_group('stock.group_stock_user'):
             return ("[] if not context.get('inventory_mode') else"
                 " [('type', '=', 'product'), ('product_tmpl_id', 'in', context.get('product_tmpl_ids', []) + [context.get('product_tmpl_id', 0)])] if context.get('product_tmpl_ids') or context.get('product_tmpl_id') else"
                 " [('type', '=', 'product')]")
@@ -339,7 +339,7 @@ class StockQuant(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_wrong_permission(self):
         if not self.env.is_superuser():
-            if not self.user_has_groups('stock.group_stock_manager'):
+            if not self.env.user.has_group('stock.group_stock_manager'):
                 raise UserError(_("Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."))
             self = self.with_context(inventory_mode=True)
             self.inventory_quantity = 0
@@ -380,7 +380,7 @@ class StockQuant(models.Model):
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
-        if self.user_has_groups('stock.group_stock_user') and not self.user_has_groups('stock.group_stock_manager'):
+        if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         action = {
             'name': _('Inventory Adjustments'),
@@ -979,7 +979,7 @@ class StockQuant(models.Model):
 
     def _apply_inventory(self):
         move_vals = []
-        if not self.user_has_groups('stock.group_stock_manager'):
+        if not self.env.user.has_group('stock.group_stock_manager'):
             raise UserError(_('Only a stock manager can validate an inventory adjustment.'))
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
@@ -1175,7 +1175,7 @@ class StockQuant(models.Model):
         "inventory session", meaning a mode where we need to create the stock.move
         record necessary to be consistent with the `inventory_quantity` field.
         """
-        return self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_user')
+        return self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_user')
 
     @api.model
     def _get_inventory_fields_create(self):
@@ -1240,14 +1240,14 @@ class StockQuant(models.Model):
 
     def _set_view_context(self):
         """ Adds context when opening quants related views. """
-        if not self.user_has_groups('stock.group_stock_multi_locations'):
+        if not self.env.user.has_group('stock.group_stock_multi_locations'):
             company_user = self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
                 self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=not self.env.context.get('always_show_loc', False))
 
         # If user have rights to write on quant, we set quants in inventory mode.
-        if self.user_has_groups('stock.group_stock_user'):
+        if self.env.user.has_group('stock.group_stock_user'):
             self = self.with_context(inventory_mode=True)
         return self
 
@@ -1284,7 +1284,7 @@ class StockQuant(models.Model):
             action['id'] = target_action.id
 
         form_view = self.env.ref('stock.view_stock_quant_form_editable').id
-        if self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_manager'):
+        if self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_manager'):
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
         else:
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree').id

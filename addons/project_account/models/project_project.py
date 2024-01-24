@@ -12,7 +12,10 @@ class Project(models.Model):
 
     def _add_purchase_items(self, profitability_items, with_action=True):
         domain = self._get_add_purchase_items_domain()
-        with_action = with_action and self.user_has_groups('account.group_account_invoice, account.group_account_readonly')
+        with_action = with_action and (
+            self.env.user.has_group('account.group_account_invoice')
+            or self.env.user.has_group('account.group_account_readonly')
+        )
         self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
 
     def _get_add_purchase_items_domain(self):
@@ -157,7 +160,7 @@ class Project(models.Model):
         revenues = {'id': 'other_revenues', 'sequence': profitability_sequence_per_invoice_type['other_revenues'], 'invoiced': total_revenues, 'to_invoice': 0.0}
         costs = {'id': 'other_costs', 'sequence': profitability_sequence_per_invoice_type['other_costs'], 'billed': total_costs, 'to_bill': 0.0}
 
-        if with_action and self.user_has_groups('account.group_account_readonly'):
+        if with_action and self.env.user.has_group('account.group_account_readonly'):
             costs['action'] = self._get_action_for_profitability_section(cost_ids, 'other_costs')
             revenues['action'] = self._get_action_for_profitability_section(revenue_ids, 'other_revenues')
 

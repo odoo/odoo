@@ -2307,7 +2307,7 @@ class TestViews(ViewCase):
         })
         user_demo = self.user_demo
         # Make sure demo doesn't have the base.group_system
-        self.assertFalse(self.env['res.partner'].with_user(user_demo).env.user.has_group('base.group_system'))
+        self.assertFalse(user_demo.has_group('base.group_system'))
         arch = self.env['res.partner'].with_user(user_demo).get_view(view_id=view.id)['arch']
         tree = etree.fromstring(arch)
         self.assertTrue(tree.xpath('//field[@name="name"]'))
@@ -2317,7 +2317,7 @@ class TestViews(ViewCase):
 
         user_admin = self.env.ref('base.user_admin')
         # Make sure admin has the base.group_system
-        self.assertTrue(self.env['res.partner'].with_user(user_admin).env.user.has_group('base.group_system'))
+        self.assertTrue(user_admin.has_group('base.group_system'))
         arch = self.env['res.partner'].with_user(user_admin).get_view(view_id=view.id)['arch']
         tree = etree.fromstring(arch)
         self.assertTrue(tree.xpath('//field[@name="name"]'))
@@ -4321,7 +4321,7 @@ class ViewModifiers(ViewCase):
         })
         user_demo = self.user_demo
         # Make sure demo doesn't have the base.group_system
-        self.assertFalse(self.env['res.partner'].with_user(user_demo).env.user.has_group('base.group_system'))
+        self.assertFalse(user_demo.has_group('base.group_system'))
         arch = self.env['res.partner'].with_user(user_demo).get_view(view_id=view.id)['arch']
         tree = etree.fromstring(arch)
         self.assertTrue(tree.xpath('//field[@name="name"]'))
@@ -4331,7 +4331,7 @@ class ViewModifiers(ViewCase):
 
         user_admin = self.env.ref('base.user_admin')
         # Make sure admin has the base.group_system
-        self.assertTrue(self.env['res.partner'].with_user(user_admin).env.user.has_group('base.group_system'))
+        self.assertTrue(user_admin.has_group('base.group_system'))
         arch = self.env['res.partner'].with_user(user_admin).get_view(view_id=view.id)['arch']
         tree = etree.fromstring(arch)
         self.assertTrue(tree.xpath('//field[@name="name"]'))

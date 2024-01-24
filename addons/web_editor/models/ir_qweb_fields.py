@@ -104,7 +104,7 @@ class IrQWeb(models.AbstractModel):
     def _compile_directive_install(self, el, compile_context, indent):
         key = el.attrib.pop('t-install')
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
-        if self.user_has_groups('base.group_system'):
+        if self.env.user.has_group('base.group_system'):
             module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
@@ -404,7 +404,7 @@ class HTML(models.AbstractModel):
             field = record._fields[field_name]
             if field.sanitize:
                 if field.sanitize_overridable:
-                    if record.user_has_groups('base.group_sanitize_override'):
+                    if record.env.user.has_group('base.group_sanitize_override'):
                         # Don't mark the field as 'sanitize' if the sanitize
                         # is defined as overridable and the user has the right
                         # to do so

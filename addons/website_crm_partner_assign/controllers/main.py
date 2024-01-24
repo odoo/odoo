@@ -225,7 +225,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
-        if not request.env['res.users'].has_group('website.group_website_restricted_editor'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
@@ -343,7 +343,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             current_country = request.env['res.country'].browse(int(country_id)).exists()
         if partner_id:
             partner = request.env['res.partner'].sudo().browse(partner_id)
-            is_website_restricted_editor = request.env['res.users'].has_group('website.group_website_restricted_editor')
+            is_website_restricted_editor = request.env.user.has_group('website.group_website_restricted_editor')
             if partner.exists() and (partner.website_published or is_website_restricted_editor):
                 if slug(partner) != current_slug:
                     return request.redirect('/partners/%s' % slug(partner))

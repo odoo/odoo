@@ -129,7 +129,7 @@ class AccountMove(models.Model):
 
     def _l10n_in_get_hsn_summary_table(self):
         self.ensure_one()
-        display_uom = self.env.user.user_has_groups('uom.group_uom')
+        display_uom = self.env.user.has_group('uom.group_uom')
 
         base_lines = [
             {
