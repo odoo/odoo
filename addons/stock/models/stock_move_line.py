@@ -53,6 +53,7 @@ class StockMoveLine(models.Model):
         domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
+    scheduled_date = fields.Datetime('Scheduled Date', related='move_id.date')
     owner_id = fields.Many2one(
         'res.partner', 'From Owner',
         check_company=True,
