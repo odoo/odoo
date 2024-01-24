@@ -13771,4 +13771,31 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_form_button_save");
         assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
     });
+
+    QUnit.test(
+        "Form status indicator for invalid field is updated on change/blur event",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: '<form><field name="int_field"/></form>',
+            });
+
+            const inputSelector = ".o_field_widget[name=int_field] input";
+            const statusIndicatorSelector = ".o_form_status_indicator span i.fa-warning";
+
+            assert.strictEqual(target.querySelector(inputSelector).value, "10");
+            assert.containsNone(target, statusIndicatorSelector);
+
+            await editInput(target.querySelector(inputSelector), null, "a");
+            assert.strictEqual(target.querySelector(inputSelector).value, "a");
+            assert.containsOnce(target, statusIndicatorSelector);
+
+            await editInput(target.querySelector(inputSelector), null, "10");
+            assert.strictEqual(target.querySelector(inputSelector).value, "10");
+            assert.containsNone(target, statusIndicatorSelector);
+        }
+    );
 });
