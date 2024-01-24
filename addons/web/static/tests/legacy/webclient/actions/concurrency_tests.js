@@ -1,6 +1,5 @@
 /** @odoo-module alias=@web/../tests/webclient/actions/concurrency_tests default=false */
 
-import { browser } from "@web/core/browser/browser";
 import {
     click,
     getFixture,
@@ -25,6 +24,7 @@ import {
 } from "@web/../tests/webclient/helpers";
 
 import { Component, onWillStart, xml } from "@odoo/owl";
+import { redirect } from "@web/core/utils/urls";
 const actionRegistry = registry.category("actions");
 
 function getBreadCrumbTexts(target) {
@@ -154,7 +154,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await def;
                 }
             };
-            Object.assign(browser.location, { search: "action=4&id=2&view_type=form" });
+            redirect("/web#action=4&id=2&view_type=form");
             const webClient = await createWebClient({ serverData, mockRPC });
             assert.containsOnce(target, ".o_form_view", "should display the form view of action 4");
             // click to go back to Kanban (this request is blocked)

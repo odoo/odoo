@@ -252,3 +252,19 @@ export function zip(iter1, iter2, fill = false) {
 export function zipWith(iter1, iter2, mapFn) {
     return zip(iter1, iter2).map(([e1, e2]) => mapFn(e1, e2));
 }
+/**
+ * Creates an sliding window over an array of a given width. Eg:
+ * slidingWindow([1, 2, 3, 4], 2) => [[1, 2], [2, 3], [3, 4]]
+ *
+ * @template T
+ * @param {T[]} arr the array over which to create a sliding window
+ * @param {number} width the width of the window
+ * @returns {T[][]} an array of tuples of size width
+ */
+export function slidingWindow(arr, width) {
+    const res = [];
+    for (let i = 0; i <= arr.length - width; i++) {
+        res.push(arr.slice(i, i + width));
+    }
+    return res;
+}

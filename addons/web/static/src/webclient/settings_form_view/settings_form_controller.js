@@ -20,10 +20,10 @@ export class SettingsFormController extends formView.Controller {
         this.state = useState({ displayNoContent: false });
         // Deprecated warning: a new way to point to sections or items will be
         // developed so that putting a default search value won't be necessary
-        if ("default_search_setting" in this.props.context){
-            this.searchState = useState({value: this.props.context.default_search_setting});
+        if ("default_search_setting" in this.props.context) {
+            this.searchState = useState({ value: this.props.context.default_search_setting });
         } else {
-            this.searchState = useState({value: ""});
+            this.searchState = useState({ value: "" });
         }
         this.rootRef = useRef("root");
         this.canCreate = false;
@@ -94,9 +94,6 @@ export class SettingsFormController extends formView.Controller {
 
     //This is needed to avoid the auto save when unload
     beforeUnload() {}
-
-    //This is needed to avoid writing the id on the url
-    updateURL() {}
 
     async save() {
         await this.env.onClickViewButton({

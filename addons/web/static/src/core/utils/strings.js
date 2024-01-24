@@ -331,3 +331,14 @@ export function isEmail(value) {
     const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     return re.test(value);
 }
+
+/**
+ * Return true if the string is composed of only digits
+ *
+ * @param {string} value
+ * @returns boolean
+ */
+
+export function isNumeric(value) {
+    return Boolean(value?.match(/^\d+$/));
+}

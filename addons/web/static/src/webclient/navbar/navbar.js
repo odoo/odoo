@@ -187,10 +187,6 @@ export class NavBar extends Component {
     }
 
     getMenuItemHref(payload) {
-        const parts = [`menu_id=${payload.id}`];
-        if (payload.actionID) {
-            parts.push(`action=${payload.actionID}`);
-        }
-        return "#" + parts.join("&");
+        return `/odoo/${payload.actionPath || "act-" + payload.actionID}`;
     }
 }
