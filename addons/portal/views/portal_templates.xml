@@ -847,37 +847,39 @@
         <t t-call="portal.portal_layout">
             <h3>Your Account Address</h3>
             <t t-call="portal.address_card">
-                <t t-set="_classes" t-value="'w-md-50 bg-primary'"/>
+                <t t-set="_classes" t-value="'w-md-50 bg-primary border border-primary'"/>
             </t>
             <h4 class="mt32">Other Addresses</h4>
-            <ul class="list-unstyled d-flex flex-wrap gap-3">
+            <div t-if="partner.child_ids" class="row row-cols-md-2 row-cols-lg-3 g-3 flex-nowrap flex-md-wrap mb-2">
                 <t t-foreach="partner.child_ids" t-as="partner">
                     <t t-call="portal.address_card">
-                        <t t-set="_classes" t-value="'w-md-auto'"/>
+                        <t t-set="_classes" t-value="'col-md'"/>
                     </t>
                 </t>
-            </ul>
+            </div>
             <a href="/my/addresses/new" class="btn btn-primary justify-content-start align-items-center gap-3 h-100">Add an address</a>
         </t>
     </template>
 
     <template id="address_card">
-        <div t-attf-class="card w-100 {{ _classes }}">
-            <div class="card-body">
-                <a t-attf-href="/my/account?address={{partner.id}}" t-att-title="title" class="float-end ms-2">
-                    <i class="fa fa-pencil me-1"/>
-                    Edit
-                </a>
-                <h5>
-                    <i t-if="partner.type == 'invoice'" class="fa fa-fw fa-file-text-o text-primary" role="img"/>
-                    <i t-if="partner.type == 'delivery'" class="fa fa-truck fa-fw text-primary" role="img"/>
-                    <i t-if="partner.type == 'contact'" class="fa fa-address-card-o fa-fw text-primary" role="img"/>
-                    <t t-out="partner.name"/>
-                </h5>
-                <div class="d-flex flex-column">
-                    <span t-if="partner.email" t-out="partner.email"/>
-                    <span t-if="partner.zip" t-out="partner.zip + ' ' + partner.city"/>
-                    <span t-if="partner.state_id" t-out="partner.state_id.name + ' ' + partner.country_id.name"/>
+        <div class="address_card-container">
+            <div t-attf-class="card h-100 {{ _classes }}">
+                <div class="card-body">
+                    <a t-attf-href="/my/account?address={{partner.id}}" t-att-title="title" class="float-end ms-2">
+                        <i class="fa fa-pencil me-1"/>
+                        Edit
+                    </a>
+                    <span class="fw-bold">
+                        <i t-if="partner.type == 'invoice'" class="fa fa-fw fa-file-text-o text-primary" role="img"/>
+                        <i t-if="partner.type == 'delivery'" class="fa fa-truck fa-fw text-primary" role="img"/>
+                        <i t-if="partner.type == 'contact'" class="fa fa-address-card-o fa-fw text-primary" role="img"/>
+                        <t t-out="partner.name"/>
+                    </span>
+                    <div class="d-flex flex-column mt-2">
+                        <span t-if="partner.email" t-out="partner.email" class="small"/>
+                        <span t-if="partner.zip" t-out="partner.zip + ' ' + partner.city" class="small"/>
+                        <span t-if="partner.state_id" t-out="partner.state_id.name + ' ' + partner.country_id.name" class="small"/>
+                    </div>
                 </div>
             </div>
         </div>
