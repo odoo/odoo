@@ -269,28 +269,31 @@ class Users(models.Model):
                 "odoobot": odoobot.mail_partner_format().get(odoobot),
             },
         })
-        self_data = {}
-        if not self.env.user._is_public():
-            self_data = {
-                "id": self.env.user.partner_id.id,
-                "isAdmin": self.env.user._is_admin(),
-                "isInternalUser": not self.env.user.share,
-                "name": self.env.user.partner_id.name,
-                "notification_preference": self.env.user.notification_type,
-                "type": "partner",
-                "userId": self.env.user.id,
-                "write_date": fields.Datetime.to_string(self.env.user.write_date),
-            }
         guest = self.env["mail.guest"]._get_guest_from_context()
-        if guest:
-            self_data = {
+        if not self.env.user._is_public():
+            settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
+            store.add({
+                "Store": {
+                    "self": {
+                        "id": self.env.user.partner_id.id,
+                        "isAdmin": self.env.user._is_admin(),
+                        "isInternalUser": not self.env.user.share,
+                        "name": self.env.user.partner_id.name,
+                        "notification_preference": self.env.user.notification_type,
+                        "type": "partner",
+                        "userId": self.env.user.id,
+                        "write_date": fields.Datetime.to_string(self.env.user.write_date),
+                    },
+                    "settings": settings._res_users_settings_format(),
+                },
+            })
+        elif guest:
+            store.add({"Store": {"self": {
                 "id": guest.id,
                 "name": guest.name,
                 "type": "guest",
                 "write_date": fields.Datetime.to_string(guest.write_date),
-            }
-        if self_data:
-            store.add({"Store": {"self": self_data}})
+            }}})
 
     def _init_messaging(self, store):
         self.ensure_one()

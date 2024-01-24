@@ -8,38 +8,43 @@ import { DISCUSS_ACTION_ID } from "../../test_constants";
 patch(MockServer.prototype, {
     /** Simulates `_init_store_data` on `res.users`. */
     _mockResUsers__init_store_data() {
-        return {
+        const res = {
             Store: {
                 action_discuss_id: DISCUSS_ACTION_ID,
                 hasGifPickerFeature: true,
                 hasLinkPreviewFeature: true,
                 hasMessageTranslationFeature: true,
                 odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),
-                self: this._mockResUsers__get_self_data(),
             },
         };
-    },
-    /** Simulates `_get_self_data` on `res.users`. */
-    _mockResUsers__get_self_data() {
         if (!this.pyEnv.currentUser._is_public()) {
-            return {
-                id: this.pyEnv.currentUser.partner_id,
-                isAdmin: true, // mock server simplification
-                isInternalUser: !this.pyEnv.currentUser.share,
-                name: this.pyEnv.currentUser.name,
-                notification_preference: this.pyEnv.currentUser.notification_type,
-                type: "partner",
-                userId: this.pyEnv.currentUser.id,
-                write_date: this.pyEnv.currentUser.write_date,
-            };
+            const userSettings = this._mockResUsersSettings_FindOrCreateForUser(
+                this.pyEnv.currentUser.id
+            );
+            Object.assign(res.Store, {
+                self: {
+                    id: this.pyEnv.currentUser.partner_id,
+                    isAdmin: true, // mock server simplification
+                    isInternalUser: !this.pyEnv.currentUser.share,
+                    name: this.pyEnv.currentUser.name,
+                    notification_preference: this.pyEnv.currentUser.notification_type,
+                    type: "partner",
+                    userId: this.pyEnv.currentUser.id,
+                    write_date: this.pyEnv.currentUser.write_date,
+                },
+                settings: this._mockResUsersSettings_ResUsersSettingsFormat(userSettings.id),
+            });
         } else if (this.pyEnv.currentGuest) {
-            return {
-                id: this.pyEnv.currentGuest.id,
-                name: this.pyEnv.currentGuest.name,
-                type: "guest",
-                write_date: this.pyEnv.currentGuest.write_date,
-            };
+            Object.assign(res.Store, {
+                self: {
+                    id: this.pyEnv.currentGuest.id,
+                    name: this.pyEnv.currentGuest.name,
+                    type: "guest",
+                    write_date: this.pyEnv.currentGuest.write_date,
+                },
+            });
         }
+        return res;
     },
     /**
      * Simulates `_init_messaging` on `res.users`.

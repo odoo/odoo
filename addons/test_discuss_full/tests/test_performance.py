@@ -18,7 +18,8 @@ class TestDiscussFullPerformance(HttpCase):
     #     1: internalUserGroupId
     #     1: mt_comment_id
     #     6: odoobot format
-    _query_count_init_store = 12
+    #     4: settings
+    _query_count_init_store = 16
     _query_count = 49
     _query_count_discuss_channels = 68
 
@@ -191,6 +192,19 @@ class TestDiscussFullPerformance(HttpCase):
                     "type": "partner",
                     "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
+                },
+                "settings": {
+                    "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
+                    "is_discuss_sidebar_category_channel_open": True,
+                    "is_discuss_sidebar_category_chat_open": True,
+                    "is_discuss_sidebar_category_livechat_open": True,
+                    "livechat_lang_ids": [],
+                    "livechat_username": False,
+                    "push_to_talk_key": False,
+                    "use_push_to_talk": False,
+                    "user_id": {"id": self.users[0].id},
+                    "voice_active_duration": 0,
+                    "volumes": [("ADD", [])],
                 },
             },
         }
