@@ -231,7 +231,16 @@ class SMSCase(MockSMS):
                 number = partner._phone_format()
 
             notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
-            self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
+            debug_info = ''
+            if not notif:
+                debug_info = '\n'.join(
+                    f'-To: {notif.res_partner_id.id} ({notif.res_partner_id.name}: {notif.sms_number}) - Status {notif.notification_status}'
+                    for notif in notifications
+                )
+            self.assertTrue(
+                notif,
+                f'SMS: not found notification for {partner} (number: {number}, state: {state}\n{debug_info})'
+            )
             self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
 
             if state not in {'process', 'sent', 'ready', 'canceled', 'pending'}:

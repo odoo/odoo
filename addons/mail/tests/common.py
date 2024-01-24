@@ -1317,26 +1317,36 @@ class MailCommon(common.TransactionCase, MailCase):
         country_id = cls.env.ref('base.be').id
 
         base_values = [
-            {'name': f'{prefix}Test_{idx}',
-             **additional_values,
+            {
+                'name': f'{prefix}Test_{idx}',
+                # generate email if available
+                **(
+                    {
+                        'email': f'{prefix}test.email.from.{idx}@example.com',
+                    } if 'email' in records else {}
+                ),
+                **additional_values,
             } for idx in range(count)
         ]
 
         partner_fnames = cls.env[model]._mail_get_partner_fields(introspect_fields=True)
         if partner_fname := partner_fnames[0] if partner_fnames else False:
-            partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
-                'name': f'Partner_{idx}',
-                'email': f'{prefix}test_partner_{idx}@example.com',
-                'country_id': country_id,
-                'mobile': '047500%02d%02d' % (idx, idx)
-            } for idx in range(count)])
+            partners = cls.env['res.partner'].with_context(**cls._test_context).create([
+                {
+                    'country_id': country_id,
+                    'email': f'{prefix}test_partner_{idx}@example.com',
+                    'mobile': f'047500{idx:02d}{idx:02d}',
+                    'name': f'Partner_{idx}',
+                }
+                for idx in range(count)
+            ])
             for values, partner in zip(base_values, partners):
                 values[partner_fname] = partner.id
 
         records = cls.env[model].with_context(**cls._test_context).create(base_values)
 
         cls.records = cls._reset_mail_context(records)
-        cls.partners = partners
+        cls.partners = cls._reset_mail_context(partners)
         return cls.records, cls.partners
 
     @classmethod
