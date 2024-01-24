@@ -121,10 +121,20 @@ export const websiteService = {
                     currentMetadata = {};
                 } else {
                     const { mainObject, seoObject, isPublished, canOptimizeSeo, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
-                    const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
-                        menu.dataset.menu_name,
-                        menu.dataset.content_menu_id,
-                    ]);
+                    // We ignore multiple menus with the same `content_menu_id`
+                    // in the DOM, since it's possible to have different
+                    // templates for the same content menu (E.g. used for a
+                    // different desktop / mobile UI).
+                    const contentMenus = [
+                        ...new Map(
+                            [...document.querySelectorAll("[data-content_menu_id]")].map(
+                                (menuEl) => [
+                                    menuEl.dataset.content_menu_id,
+                                    [menuEl.dataset.menu_name, menuEl.dataset.content_menu_id],
+                                ]
+                            )
+                        ).values(),
+                    ];
                     currentMetadata = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
