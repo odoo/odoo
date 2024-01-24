@@ -273,6 +273,9 @@ export class Store extends BaseStore {
         this.updateBusSubscription = debounce(this.updateBusSubscription, 0); // Wait for thread fully inserted.
     }
 
+    /** Provides an override point for when the store service has started. */
+    onStarted() {}
+
     updateBusSubscription() {
         const channelIds = [];
         const ids = Object.keys(this.Thread.records).sort(); // Ensure channels processed in same order.
@@ -328,6 +331,7 @@ export const storeService = {
                 store.discuss.activeTab = store.discuss.thread.type;
             }
         });
+        store.onStarted();
         return store;
     },
 };

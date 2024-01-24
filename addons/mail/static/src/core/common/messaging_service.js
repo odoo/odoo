@@ -49,12 +49,7 @@ export class Messaging {
      * Import data received from init_messaging
      */
     async initialize() {
-        await this.store
-            .fetchData(this.initMessagingParams, { readonly: false })
-            .then(this.initMessagingCallback.bind(this));
-    }
-
-    initMessagingCallback() {
+        await this.store.fetchData(this.initMessagingParams, { readonly: false });
         this.isReady.resolve();
     }
 
