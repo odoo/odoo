@@ -51,8 +51,6 @@ class CronMixinCase:
             'active': True,
             'interval_number': 1,
             'interval_type': 'days',
-            'numbercall': -1,
-            'doall': False,
             'nextcall': fields.Datetime.now() + timedelta(hours=1),
             'lastcall': False,
             'priority': priority,
@@ -122,18 +120,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
     def test_cron_unactive_never_ready(self):
         self.cron.active = False
         self.cron.nextcall = fields.Datetime.now()
-        self.cron._trigger()
-        self.cron.flush_recordset()
-        self.env['ir.cron.trigger'].flush_model()
-
-        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
-        self.assertNotIn(self.cron.id, [job['id'] for job in ready_jobs])
-
-    def test_cron_numbercall0_never_ready(self):
-        self.cron.numbercall = 0
-        self.cron.nextcall = fields.Datetime.now()
-        self.cron._trigger()
-        self.cron.flush_recordset()
+        self.env.flush_all()
         self.env['ir.cron.trigger'].flush_model()
 
         ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
@@ -206,38 +193,31 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
     def test_cron_process_job(self):
 
-        Setup = collections.namedtuple('Setup', ['doall', 'numbercall', 'missedcall', 'trigger'])
-        Expect = collections.namedtuple('Expect', ['call_count', 'call_left', 'active'])
+        Setup = collections.namedtuple('Setup', ['missedcall', 'trigger'])
+        Expect = collections.namedtuple('Expect', ['call_count', 'active'])
 
         matrix = [
-            (Setup(doall=False, numbercall=-1, missedcall=2, trigger=False),
-             Expect(call_count=1, call_left=-1, active=True)),
-            (Setup(doall=True, numbercall=-1, missedcall=2, trigger=False),
-             Expect(call_count=2, call_left=-1, active=True)),
-            (Setup(doall=False, numbercall=3, missedcall=2, trigger=False),
-             Expect(call_count=1, call_left=2, active=True)),
-            (Setup(doall=True, numbercall=3, missedcall=2, trigger=False),
-             Expect(call_count=2, call_left=1, active=True)),
-            (Setup(doall=True, numbercall=3, missedcall=4, trigger=False),
-             Expect(call_count=3, call_left=0, active=False)),
-            (Setup(doall=True, numbercall=3, missedcall=0, trigger=True),
-             Expect(call_count=1, call_left=2, active=True)),
+            (Setup(missedcall=2, trigger=False),
+             Expect(call_count=1, active=True)),
+            (Setup(missedcall=2, trigger=False),
+             Expect(call_count=1, active=True)),
+            (Setup(missedcall=2, trigger=False),
+             Expect(call_count=1, active=True)),
+            (Setup(missedcall=0, trigger=True),
+             Expect(call_count=1, active=True)),
         ]
 
         for setup, expect in matrix:
             with self.subTest(setup=setup, expect=expect):
                 self.cron.write({
                     'active': True,
-                    'doall': setup.doall,
-                    'numbercall': setup.numbercall,
                     'nextcall': fields.Datetime.now() - timedelta(days=setup.missedcall - 1),
                 })
                 with self.capture_triggers(self.cron.id) as capture:
                     if setup.trigger:
                         self.cron._trigger()
 
-                self.cron.flush_recordset()
-                capture.records.flush_recordset()
+                self.env.flush_all()
                 self.registry.enter_test_mode(self.cr)
                 try:
                     with patch.object(self.registry['ir.cron'], '_callback') as callback:
@@ -252,7 +232,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 capture.records.invalidate_recordset()
 
                 self.assertEqual(callback.call_count, expect.call_count)
-                self.assertEqual(self.cron.numbercall, expect.call_left)
                 self.assertEqual(self.cron.active, expect.active)
                 self.assertEqual(self.cron.lastcall, fields.Datetime.now())
                 self.assertEqual(self.cron.nextcall, fields.Datetime.now() + timedelta(days=1))
@@ -260,6 +239,88 @@ class TestIrCron(TransactionCase, CronMixinCase):
                     ('cron_id', '=', self.cron.id),
                     ('call_at', '<=', fields.Datetime.now())]
                 ), 0)
+
+    def test_cron_retrigger(self):
+        def run(self):
+            if self.env['ir.cron.progress'].search_count([('done', '=', 1)]) < 10:
+                self.env['ir.cron']._log_progress(1, 1)
+            else:
+                self.env['ir.cron']._log_progress(1, 0)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with patch.object(self.registry['ir.actions.server'], 'run', run):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    self.cron.read(load=None)[0]
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.assertEqual(self.env['ir.cron.trigger'].search_count([('cron_id', '=', self.cron.id)]), 1, "One trigger should have been kept")
+        self.assertEqual(self.env['ir.cron.progress'].search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 10,
+                         'There should be 10 progress log for this cron')
+
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with patch.object(self.registry['ir.actions.server'], 'run', run):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    self.cron.read(load=None)[0]
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.assertEqual(self.env['ir.cron.trigger'].search_count([('cron_id', '=', self.cron.id)]), 0, "No trigger should have been kept")
+        self.assertEqual(self.env['ir.cron.progress'].search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 11,
+                         'There should be 11 progress log for this cron')
+
+    def test_cron_failed_increase(self):
+        def _cb(self, cron_name, server_action_id, job_id):
+            return True
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with patch.object(self.registry['ir.cron'], '_callback', _cb):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    self.cron.read(load=None)[0]
+                )
+        finally:
+            self.registry.leave_test_mode()
+        self.cron.invalidate_recordset()
+
+        self.assertEqual(self.cron.failures, 1, 'The cron should have failed once')
+        self.assertEqual(self.cron.active, True, 'The cron should still be active')
+
+        self.cron.failures = 5
+        self.cron.first_failure_date = fields.Datetime.now() - timedelta(days=8)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with patch.object(self.registry['ir.cron'], '_callback', _cb):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    self.cron.read(load=None)[0]
+                )
+        finally:
+            self.registry.leave_test_mode()
+        self.cron.invalidate_recordset()
+
+        self.assertEqual(self.cron.failures, 0, 'The cron should have failed one more time and reset to 0')
+        self.assertEqual(self.cron.active, False, 'The cron should have been deactivated after 5 failures')
+
 
 
 @tagged('-standard', '-at_install', 'post_install', 'database_breaking')
