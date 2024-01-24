@@ -1027,9 +1027,10 @@ class ProductCategory(models.Model):
         help="Set a specific removal strategy that will be used regardless of the source location for this product category.\n\n"
              "FIFO: products/lots that were stocked first will be moved out first.\n"
              "LIFO: products/lots that were stocked last will be moved out first.\n"
-             "Closet location: products/lots closest to the target location will be moved out first.\n"
+             "Closest location: products/lots closest to the target location will be moved out first.\n"
              "FEFO: products/lots with the closest removal date will be moved out first "
-             "(the availability of this method depends on the \"Expiration Dates\" setting)."
+             "(the availability of this method depends on the \"Expiration Dates\" setting).\n"
+             "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
     )
     total_route_ids = fields.Many2many(
         'stock.route', string='Total routes', compute='_compute_total_route_ids',
