@@ -468,7 +468,7 @@ class PaymentProvider(models.Model):
             'res_model': 'payment.method',
             'view_mode': 'tree,kanban,form',
             'domain': [('id', 'in', self.with_context(active_test=False).payment_method_ids.ids)],
-            'context': {'active_test': False},
+            'context': {'active_test': False, 'create': False},
         }
 
     #=== BUSINESS METHODS ===#
