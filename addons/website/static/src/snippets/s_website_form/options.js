@@ -565,14 +565,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         this._addHiddenField(value, fieldName);
         // Existing field editors need to be rebuilt with the correct list of
         // available fields.
-        this.trigger_up("snippet_edition_request", {exec: () => {
-            for (const snippetEditor of [...this.options.wysiwyg.snippetsMenu.snippetEditors]) {
-                const snippetEditorEl = snippetEditor.$optionsSection[0];
-                if (snippetEditorEl.querySelector(".snippet-option-WebsiteFieldEditor")) {
-                    snippetEditor.destroy();
-                }
-            }
-        }});
         this.trigger_up('activate_snippet', {
             $snippet: this.$target,
         });
@@ -945,31 +937,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.rerender = true;
-    },
-    /**
-     * @override
-     */
-    willStart: async function () {
-        const _super = this._super.bind(this);
-        // Get the authorized existing fields for the form model
-        this.existingFields = await authorizedFieldsCache.get(this.formEl, this.orm).then((fields) => {
-            this.fields = {};
-            for (const [fieldName, field] of Object.entries(fields)) {
-                field.name = fieldName;
-                const fieldDomain = _getDomain(this.formEl, field.name, field.type, field.relation);
-                field.domain = fieldDomain || field.domain || [];
-                this.fields[fieldName] = field;
-            }
-            // Create the buttons for the type we-select
-            return Object.keys(fields).map(key => {
-                const field = fields[key];
-                const button = document.createElement('we-button');
-                button.textContent = field.string;
-                button.dataset.existingField = field.name;
-                return button;
-            }).sort((a, b) => a.textContent.localeCompare(b.textContent, undefined, { numeric: true, sensitivity: "base" }));
-        });
-        return _super(...arguments);
     },
     /**
      * @override
@@ -1414,6 +1381,26 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @override
      */
     _renderCustomXML: async function (uiFragment) {
+        // Get the authorized existing fields for the form model
+        // Do it on each render because of custom property fields which can
+        // change depending on the project selected.
+        this.existingFields = await authorizedFieldsCache.get(this.formEl, this.orm).then((fields) => {
+            this.fields = {};
+            for (const [fieldName, field] of Object.entries(fields)) {
+                field.name = fieldName;
+                const fieldDomain = _getDomain(this.formEl, field.name, field.type, field.relation);
+                field.domain = fieldDomain || field.domain || [];
+                this.fields[fieldName] = field;
+            }
+            // Create the buttons for the type we-select
+            return Object.keys(fields).map(key => {
+                const field = fields[key];
+                const button = document.createElement('we-button');
+                button.textContent = field.string;
+                button.dataset.existingField = field.name;
+                return button;
+            }).sort((a, b) => a.textContent.localeCompare(b.textContent, undefined, { numeric: true, sensitivity: "base" }));
+        });
         // Update available visibility dependencies
         const selectDependencyEl = uiFragment.querySelector('we-select[data-name="hidden_condition_opt"]');
         const existingDependencyNames = [];
