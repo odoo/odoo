@@ -11,7 +11,7 @@
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
             <!-- Content -->
-            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'container-fluid pb-3')">
                 <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not meeting_rooms_other else '')">
                     <t t-if="meeting_rooms_other">
                         <t t-call="website_event_meet.meeting_room_aside"/>
@@ -30,7 +30,7 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_main" name="Meeting Room: Main Content">
-    <div t-att-class="'col-12 o_wemeet_room_main border mt-3 p-0 %s' % ('col-lg-9 col-xl-10' if option_widescreen else 'col-lg-8 col-xl-9')">
+    <div t-att-class="'col-12 o_wemeet_room_main mt-3 px-0 ps-lg-3 %s' % ('col-lg-9 col-xl-10' if option_widescreen else 'col-lg-8 col-xl-9')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not meeting_room.event_id.is_ongoing">
             <div t-if="meeting_room.event_id.is_done" class="alert alert-warning text-center">
@@ -85,14 +85,14 @@
             </div>
         </div>
         <!-- ROOM DESCRIPTION -->
-        <div class="mx-3">
+        <div>
             <h5 class="mt-3" t-out="meeting_room.name"/>
             <div t-if="meeting_room.room_participant_count > 0" class="text-muted mb-3">
                 A chat among <t t-out="meeting_room.room_participant_count"/> <span t-out="meeting_room.target_audience"/>
             </div>
         </div>
         <hr class="my-0"/>
-        <div t-field="meeting_room.summary" class="my-4 mx-3 oe_no_empty"/>
+        <div t-field="meeting_room.summary" class="my-4 oe_no_empty"/>
      </div>
 </template>
 
@@ -116,7 +116,7 @@
                         <div class="flex-grow-1 mw-100">
                             <div class="text-truncate fw-bold" t-out="meeting_room_other.name"/>
                             <span class="text-muted" t-out="meeting_room_other.summary"></span>
-                            <div class="d-flex flex-column flex-xl-row flex-wrap justify-content-between align-items-start align-items-xl-center">
+                            <div class="d-flex flex-column flex-xl-row flex-wrap justify-content-between align-items-center mt-1">
                                 <p class="d-flex justify-content-between align-items-center gap-2 m-0 text-muted small">
                                     <i class="fa fa-user"></i>
                                     <t t-out="meeting_room_other.room_participant_count"/>

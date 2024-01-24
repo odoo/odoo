@@ -16,12 +16,12 @@
     <t t-set="hide_register_cta" t-value="True"/>
     <t t-call="website_event.event_details">
         <section class="h-100" t-cache="event if not editable and event.website_published else None">
-            <div class="container overflow-hidden h-100 pb-5">
+            <div class="container overflow-hidden pb-5">
                 <div class="row h-100">
-                <div class="col">
+                <div class="col pe-xxl-5">
                     <t t-call="website_event.navbar"/>
                     <!-- Show the button tickets only on mobile -->
-                    <div class="container d-lg-none py-3">
+                    <div class="container d-lg-none">
                         <t t-call="website_event.registration_template"/>
                     </div>
                     <!-- Description -->

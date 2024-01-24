@@ -55,7 +55,7 @@
                             <h4 class="mb-3">Choose your type of booth</h4>
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
-                                <div class="col-md-6 col-lg-4 mb-2">
+                                <div class="col-md-6 col-lg-4 mb-4">
                                     <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable' if booth_category_unavailable else ''}">
                                         <input type="radio" name="booth_category_id" t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
                                             t-att-checked="booth_category.id == selected_booth_category_id"/>
@@ -65,7 +65,7 @@
                                             <div class="card-body">
                                                 <h5 name="booth_category_name" class="card-title" t-out="booth_category.name"/>
                                                 <span class="booth_category_price"></span>
-                                                <div t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
+                                                <div class="mx-n3 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
                                                     t-field="booth_category.description"/>
                                             </div>
                                         </div>
@@ -101,8 +101,8 @@
                                     </div>
                                 </div>
                                 <div class="my-3" name="booth_registration_submit">
-                                    <div class="d-flex flex-column align-content-end justify-content-end pt-3 border-top">
-                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block ms-auto fw-bold" disabled="true">
+                                    <div class="d-flex align-items-center justify-content-end pt-3 border-top gap-2 mt-4 mb-5">
+                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block" disabled="true">
                                             <span>Book my Booth(s)</span>
                                         </button>
                                     </div>
