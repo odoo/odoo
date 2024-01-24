@@ -48,8 +48,7 @@ class StockRule(models.Model):
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
 
             mo = self.env['mrp.production']
-            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'))
-            if rule.route_id != mto_route and procurement.origin != 'MPS':
+            if procurement.origin != 'MPS':
                 gpo = rule.group_propagation_option
                 group = (gpo == 'fixed' and rule.group_id) or \
                         (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
