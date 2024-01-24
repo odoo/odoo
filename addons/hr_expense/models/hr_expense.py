@@ -1285,7 +1285,7 @@ class HrExpenseSheet(models.Model):
         self.ensure_one()
         return {
             'name': '/',
-            'date': self.accounting_date or max(self.expense_line_ids.mapped('date')) or fields.Date.context_today(self),
+            'date': self.accounting_date or max([expense_date for expense_date in self.expense_line_ids.mapped('date') if expense_date]) or fields.Date.context_today(self),
             'invoice_date': self.accounting_date or fields.Date.context_today(self),  # expense payment behave as bills
             'ref': self.name,
             'expense_sheet_id': [Command.set(self.ids)],
