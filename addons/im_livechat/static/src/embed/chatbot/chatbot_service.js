@@ -122,13 +122,20 @@ export class ChatBotService {
         if (!this.completed || !this.livechatService.thread) {
             return;
         }
-        const message = await this.rpc("/chatbot/restart", {
+        const rawMessage = await this.rpc("/chatbot/restart", {
             channel_uuid: this.livechatService.thread.uuid,
             chatbot_script_id: this.chatbot.scriptId,
         });
-        this.livechatService.thread?.messages.push(
-            this.messageService.insert({ ...message, body: markup(message.body) })
-        );
+        if (!this.livechatService.thread) {
+            return;
+        }
+        const message = this.messageService.insert({
+            ...rawMessage,
+            body: markup(rawMessage.body),
+        });
+        if (!this.livechatService.thread.messages.includes(message)) {
+            this.livechatService.thread.messages.push(message);
+        }
         this.currentStep = null;
         this.start();
     }
