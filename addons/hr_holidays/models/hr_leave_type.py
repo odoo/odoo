@@ -365,7 +365,7 @@ class HolidaysType(models.Model):
             '|',
             ('company_id', 'in', self.env.context.get('allowed_company_ids')),
             ('company_id', '=', False),
-        ])
+        ], order='id')
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
             return leave_types.get_allocation_data(employee, target_date)[employee]
