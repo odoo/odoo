@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 _logger = logging.getLogger('precompute_setter')
 
@@ -1886,3 +1887,13 @@ class UnsearchableO2M(models.Model):
     def _compute_parent_id(self):
         for r in self:
             r.parent_id = r.stored_parent_id
+
+
+class ModelAutovacuumed(models.Model):
+    _name = _description = 'test_new_api.autovacuumed'
+
+    expire_at = fields.Datetime('Expires at')
+
+    @api.autovacuum
+    def _gc(self):
+        self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
