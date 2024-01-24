@@ -72,7 +72,7 @@ export class PageSearchModel extends SearchModel {
      */
     async notifyWebsiteChange(websiteId) {
         let websiteDomain = [];
-        if (websiteId) {
+        if (websiteId && 'website_id' in this.searchViewFields) {
             if (this.resModel === 'website.page') {
                 // In case of `website.page`, we can't find the website pages
                 // with a regular domain (because we need to filter duplicates).
