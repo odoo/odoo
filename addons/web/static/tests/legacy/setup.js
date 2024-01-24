@@ -31,7 +31,7 @@ function forceLocaleAndTimezoneWithCleanup() {
 
 function makeMockLocation() {
     return Object.assign(document.createElement("a"), {
-        href: window.location.origin + window.location.pathname,
+        href: window.location.origin + "/odoo",
         assign(url) {
             this.href = url;
         },
@@ -83,8 +83,8 @@ function patchBrowserWithCleanup() {
     let nextAnimationFrameHandle = 1;
     const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation();
-    let historyStack = [];
-    let currentHistoryStack = 0;
+    let historyStack = [[null, mockLocation.href]];
+    let currentHistoryStack = 1;
     patchWithCleanup(browser, {
         // patch addEventListner to automatically remove listeners bound (via
         // browser.addEventListener) during a test (e.g. during the deployment of a service)
@@ -128,32 +128,35 @@ function patchBrowserWithCleanup() {
         history: {
             pushState(state, title, url) {
                 historyStack = historyStack.slice(0, currentHistoryStack);
-                historyStack.push(url);
+                historyStack.push([state, url]);
                 currentHistoryStack++;
                 mockLocation.assign(url);
             },
             replaceState(state, title, url) {
-                historyStack = [url];
-                currentHistoryStack = 1;
+                historyStack = historyStack.slice(0, currentHistoryStack);
+                historyStack[currentHistoryStack] = [state, url];
                 mockLocation.assign(url);
             },
             back() {
                 currentHistoryStack--;
-                const url = historyStack[currentHistoryStack - 1];
+                const [state, url] = historyStack[currentHistoryStack - 1];
                 if (!url) {
                     throw new Error("there is no history");
                 }
                 mockLocation.assign(url);
-                window.dispatchEvent(new PopStateEvent("popstate", { state: { newURL: url } }));
+                window.dispatchEvent(new PopStateEvent("popstate", { state }));
             },
             forward() {
                 currentHistoryStack++;
-                const url = historyStack[currentHistoryStack - 1];
+                const [state, url] = historyStack[currentHistoryStack - 1];
                 if (!url) {
                     throw new Error("No more history");
                 }
                 mockLocation.assign(url);
-                window.dispatchEvent(new PopStateEvent("popstate", { state: { newURL: url } }));
+                window.dispatchEvent(new PopStateEvent("popstate", { state }));
+            },
+            get length() {
+                return historyStack.length;
             },
         },
         // in tests, we never want to interact with the real local/session storages.

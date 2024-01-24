@@ -14,7 +14,7 @@ import { CallbackRecorder } from "./action_hook";
 import { ReportAction } from "./reports/report_action";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { router as _router } from "@web/core/browser/router";
+import { PATH_KEYS, router as _router, stateToUrl } from "@web/core/browser/router";
 
 import {
     Component,
@@ -27,6 +27,8 @@ import {
     reactive,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
+import { pick } from "@web/core/utils/objects";
+import { zip } from "@web/core/utils/arrays";
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
@@ -120,6 +122,7 @@ const CTX_KEY_REGEX =
 const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
 
 export function makeActionManager(env, router = _router) {
+    const breadcrumbCache = {};
     const keepLast = new KeepLast();
     let id = 0;
     let controllerStack = [];
@@ -148,6 +151,131 @@ export function makeActionManager(env, router = _router) {
     // ---------------------------------------------------------------------------
     // misc
     // ---------------------------------------------------------------------------
+
+    /**
+     * Create an array of virtual controllers based on the current state of the
+     * router.
+     *
+     * @returns {Promise<object[]>} an array of virtual controllers
+     */
+    async function _controllersFromState() {
+        const state = router.current;
+        if (!state?.actionStack?.length) {
+            return [];
+        }
+        // The last controller will be created by doAction and won't be virtual
+        const controllers = state.actionStack.slice(0, -1).map((actionState, index) => {
+            const controller = {
+                jsId: `controller_${++id}`,
+                displayName: actionState.displayName,
+                virtual: true,
+                action: {},
+                props: {},
+                state: { ...actionState, actionStack: state.actionStack.slice(0, index + 1) },
+            };
+            if (actionState.action) {
+                controller.action.id = actionState.action;
+                if (actionState.active_id) {
+                    controller.action.context = { active_id: actionState.active_id };
+                }
+            }
+            if (actionState.model) {
+                controller.action.type = "ir.actions.act_window";
+                controller.props.resModel = actionState.model;
+            }
+            if (actionState.resId) {
+                controller.action.type = "ir.actions.act_window";
+                controller.props.resId = actionState.resId;
+                controller.resId = () => actionState.resId;
+                controller.props.type = "form";
+            }
+            return controller;
+        });
+
+        if (state.action && state.resId && controllers.at(-1)?.action?.id === state.action) {
+            // When loading the state on a form view, we will need to load the action for it,
+            // and this will give us the display name of the corresponding multi-record view in
+            // the breadcrumb. By calling _loadAction preemptively, we can in some cases avoid
+            // _loadBreadcrumbs from doing any network request as the breadcrumbs may only contain
+            // the form view and the multi-record view.
+            const { actionRequest, options } = _getActionParams();
+            const [bcControllers, action] = await Promise.all([
+                _loadBreadcrumbs(controllers.slice(0, -1)),
+                _loadAction(actionRequest, options.additionalContext).then((action) =>
+                    _preprocessAction(action, options.additionalContext)
+                ),
+            ]);
+
+            // If the current action doesn't have a multi-record view, we don't need to add the
+            // last controller to the breadcrumb controllers
+            if (action.views.every((view) => view[1] === "form" || view[1] === "search")) {
+                return bcControllers;
+            }
+            controllers.at(-1).displayName = action.display_name || action.name || "";
+            controllers.at(-1).action = action;
+            return [...bcControllers, controllers.at(-1)];
+        }
+        return _loadBreadcrumbs(controllers);
+    }
+
+    /**
+     * Load breadcrumbs for an array of controllers. This function adds display
+     * names to controllers that the current user has access to and for which
+     * the view (and record) exist. Controllers that correspond to a deleted
+     * record or a record/view that the user can't access are removed.
+     *
+     * @param {object[]} controllers an array of controllers whose breadcrumbs
+     *  should be loaded
+     * @returns {Promise<object[]>} a new array of the displayable controllers
+     *  to which a display name was added
+     */
+    async function _loadBreadcrumbs(controllers) {
+        const toFetch = [];
+        const keys = [];
+        for (const { action, state, displayName } of controllers) {
+            if (action.id === "menu" || actionRegistry.contains(action.id)) {
+                continue;
+            }
+            const actionInfo = pick(state, "action", "model", "resId");
+            const key = JSON.stringify(actionInfo);
+            keys.push(key);
+            if (displayName) {
+                breadcrumbCache[key] = displayName;
+            }
+            if (key in breadcrumbCache) {
+                continue;
+            }
+            toFetch.push(actionInfo);
+        }
+        if (toFetch.length) {
+            const req = rpc("/web/action/load_breadcrumbs", { actions: toFetch });
+            for (const [i, info] of toFetch.entries()) {
+                const key = JSON.stringify(info);
+                breadcrumbCache[key] = req.then((res) => {
+                    breadcrumbCache[key] = res[i];
+                    return res[i];
+                });
+            }
+        }
+        const displayNames = await Promise.all(keys.map((k) => breadcrumbCache[k]));
+        const controllersToRemove = [];
+        for (const [controller, displayName] of zip(controllers, displayNames)) {
+            if (typeof displayName === "string") {
+                controller.displayName = displayName;
+            } else {
+                controllersToRemove.push(controller);
+                if (displayName?.error) {
+                    console.warn(
+                        "The following element was removed from the breadcrumb and from the url.\n",
+                        controller.state,
+                        "\nThis could be because the action wasn't found or because the user doesn't have the right to access to the record, the original error is :\n",
+                        displayName.error
+                    );
+                }
+            }
+        }
+        return controllers.filter((c) => !controllersToRemove.includes(c));
+    }
 
     /**
      * Removes the current dialog from the action service's state.
@@ -303,17 +431,20 @@ export function makeActionManager(env, router = _router) {
                     get name() {
                         return controller.displayName;
                     },
+                    get url() {
+                        return stateToUrl(controller.state);
+                    },
                 };
             });
     }
 
     /**
      * @private
-     * @returns {ActionParams | null}
+     * @param {object} [state] the state from which to get the action params
+     * @returns {{ actionRequest: object, options: object} | null}
      */
-    function _getActionParams() {
-        const state = router.current;
-        const options = { clearBreadcrumbs: true };
+    function _getActionParams(state = router.current) {
+        const options = {};
         let actionRequest = null;
         if (state.action) {
             const context = {};
@@ -339,17 +470,17 @@ export function makeActionManager(env, router = _router) {
                 context.params = state;
                 Object.assign(options, {
                     additionalContext: context,
-                    viewType: state.view_type,
+                    viewType: state.resId ? "form" : state.view_type,
                 });
-                if (state.id) {
-                    options.props = { resId: state.id };
+                if (state.resId && state.resId !== "new") {
+                    options.props = { resId: state.resId };
                 }
             }
         } else if (state.model) {
-            if (state.id) {
+            if (state.resId || state.view_type === "form") {
                 actionRequest = {
                     res_model: state.model,
-                    res_id: state.id,
+                    res_id: state.resId === "new" ? undefined : state.resId,
                     type: "ir.actions.act_window",
                     views: [[state.view_id ? state.view_id : false, "form"]],
                 };
@@ -372,8 +503,23 @@ export function makeActionManager(env, router = _router) {
                 }
             }
         }
-        // If no action => falls back on the user default action (if any).
-        if (!actionRequest && user.homeActionId) {
+        if (!actionRequest) {
+            // If the last action isn't valid (eg a model with no resId and no view_type) which can
+            // happen if the user edits the url and removes the id from the end of the url, we don't want
+            // to send him back to the home menu: we unwind the actionStack until we find a valid action
+            const { actionStack } = state;
+            if (actionStack?.length > 1) {
+                const nextState = { actionStack: actionStack.slice(0, -1) };
+                Object.assign(nextState, nextState.actionStack.at(-1));
+                const params = _getActionParams(nextState);
+                // Place the controller at the found position in the action stack to remove all the
+                // invalid virtual controllers.
+                if (params.options && params.options.index === undefined) {
+                    params.options.index = nextState.actionStack.length - 1;
+                }
+                return params;
+            }
+            // Fall back to the home action if no valid action was found
             actionRequest = user.homeActionId;
         }
         return actionRequest ? { actionRequest, options } : null;
@@ -421,37 +567,10 @@ export function makeActionManager(env, router = _router) {
     }
 
     /**
-     * @private
-     * @returns {SwitchViewParams | null}
-     */
-    function _getSwitchViewParams() {
-        const state = router.current;
-        if (state.action && !actionRegistry.contains(state.action)) {
-            const currentController = controllerStack[controllerStack.length - 1];
-            const currentActionId =
-                currentController && currentController.action && currentController.action.id;
-            // Window Action: determines model, viewType etc....
-            if (
-                currentController &&
-                currentController.action.type === "ir.actions.act_window" &&
-                currentActionId === state.action
-            ) {
-                const props = {
-                    resId: state.id || false,
-                };
-                const viewType = state.view_type || currentController.view.type;
-                return { viewType, props };
-            }
-        }
-        return null;
-    }
-
-    /**
      * @param {BaseView} view
      * @param {ActWindowAction} action
      * @param {BaseView[]} views
      * @param {Object} props
-     * @returns {{ props: ViewProps, config: Config }}
      */
     function _getViewInfo(view, action, views, props = {}) {
         const target = action.target;
@@ -496,7 +615,14 @@ export function makeActionManager(env, router = _router) {
         });
 
         if (view.type === "form") {
-            if (action.target === "new") {
+            viewProps.updateResId = (newId) => {
+                const changed = resId !== newId;
+                resId = newId;
+                if (changed && target !== "new") {
+                    pushState();
+                }
+            };
+            if (target === "new") {
                 viewProps.mode = "edit";
                 if (!viewProps.onSave) {
                     viewProps.onSave = (record, params) => {
@@ -531,15 +657,18 @@ export function makeActionManager(env, router = _router) {
         }
 
         // view specific
-        if (action.res_id && !viewProps.resId) {
-            viewProps.resId = action.res_id;
+        if (!viewProps.resId) {
+            viewProps.resId = action.res_id || false;
         }
 
         viewProps.noBreadcrumbs =
             "no_breadcrumbs" in action.context ? action.context.no_breadcrumbs : target === "new";
         delete action.context.no_breadcrumbs;
+
+        let resId = viewProps.resId;
         return {
             props: viewProps,
+            resId: () => resId,
             config: {
                 actionId: action.id,
                 actionType: "ir.actions.act_window",
@@ -559,13 +688,12 @@ export function makeActionManager(env, router = _router) {
      * @param {number} [options.index]
      */
     function _computeStackIndex(options) {
-        let index = null;
         if (options.clearBreadcrumbs) {
-            index = 0;
+            return 0;
         } else if (options.stackPosition === "replaceCurrentAction") {
             const currentController = controllerStack[controllerStack.length - 1];
             if (currentController) {
-                index = controllerStack.findIndex(
+                return controllerStack.findIndex(
                     (ct) => ct.action.jsId === currentController.action.jsId
                 );
             }
@@ -582,15 +710,13 @@ export function makeActionManager(env, router = _router) {
                 }
             }
             if (last) {
-                index = controllerStack.findIndex((ct) => ct.action.jsId === last);
+                return controllerStack.findIndex((ct) => ct.action.jsId === last);
             }
             // TODO: throw if there is no previous action?
-        } else if ("index" in options) {
-            index = options.index;
-        } else {
-            index = controllerStack.length;
+        } else if (options.index !== undefined) {
+            return options.index;
         }
-        return index;
+        return controllerStack.length;
     }
 
     /**
@@ -614,11 +740,7 @@ export function makeActionManager(env, router = _router) {
         });
         const action = controller.action;
         const index = _computeStackIndex(options);
-        const controllerArray = [controller];
-        if (options.lazyController) {
-            controllerArray.unshift(options.lazyController);
-        }
-        const nextStack = controllerStack.slice(0, index).concat(controllerArray);
+        const nextStack = [...controllerStack.slice(0, index), controller];
         // Compute breadcrumbs
         controller.config.breadcrumbs = reactive(
             action.target === "new" ? [] : _getBreadcrumbs(nextStack)
@@ -685,42 +807,32 @@ export function makeActionManager(env, router = _router) {
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
-                    Promise.resolve().then(() => {
-                        throw error;
-                    });
-                } else {
-                    reject(error);
-                    if (action.target === "new") {
-                        removeDialogFn?.();
-                    } else {
-                        const index = controllerStack.findIndex(
-                            (ct) => ct.jsId === controller.jsId
-                        );
-                        if (index > 0) {
-                            // The error occurred while rendering an existing controller,
-                            // so go back to the previous controller, of the current faulty one.
-                            // This occurs when clicking on the breadcrumbs.
-                            return restore(controllerStack[index - 1].jsId);
-                        }
-                        if (options.lazyController) {
-                            // The error occured while rendering a new controller with a lazyController
-                            // we render this lazyController instead.
-                            const updateUIOptions = { ...options };
-                            delete updateUIOptions.lazyController;
-                            return _updateUI(options.lazyController, updateUIOptions);
-                        }
-                        const lastCt = controllerStack[controllerStack.length - 1];
-                        if (lastCt) {
-                            // the error occurred while rendering a new controller,
-                            // so go back to the last non faulty controller
-                            // (the error will be shown anyway as the promise
-                            // has been rejected)
-                            restore(lastCt.jsId);
-                        } else {
-                            env.bus.trigger("ACTION_MANAGER:UPDATE", {});
-                        }
-                    }
+                    Promise.reject(error);
+                    return;
                 }
+                // forward the error to the _updateUI caller then restore the action container
+                // to an unbroken state
+                reject(error);
+                if (action.target === "new") {
+                    removeDialogFn?.();
+                    return;
+                }
+                const index = controllerStack.findIndex((ct) => ct.jsId === controller.jsId);
+                if (index > 0) {
+                    // The error occurred while rendering an existing controller,
+                    // so go back to the previous controller, of the current faulty one.
+                    // This occurs when clicking on a breadcrumbs.
+                    return restore(controllerStack[index - 1].jsId);
+                }
+                const lastController = controllerStack.at(-1);
+                if (lastController) {
+                    // the error occurred while rendering a new controller,
+                    // so go back to the last non faulty controller
+                    // (the error will be shown anyway as the promise
+                    // has been rejected)
+                    return restore(lastController.jsId);
+                }
+                env.bus.trigger("ACTION_MANAGER:UPDATE", {});
             }
             onMounted() {
                 if (action.target === "new") {
@@ -745,7 +857,7 @@ export function makeActionManager(env, router = _router) {
                     };
 
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    pushState(controller);
+                    pushState();
                     this.titleService.setParts({ action: controller.displayName });
                     browser.sessionStorage.setItem(
                         "current_action",
@@ -918,21 +1030,9 @@ export function makeActionManager(env, router = _router) {
             throw new Error(`No view found for act_window action ${action.id}`);
         }
 
-        let view = options.viewType && views.find((v) => v.type === options.viewType);
-        let lazyView;
-
-        if (view && !view.multiRecord) {
-            lazyView = views[0].multiRecord ? views[0] : undefined;
-        } else if (!view) {
-            view = views[0];
-        }
-
+        let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
         if (env.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
-            if (lazyView) {
-                lazyView =
-                    _findView(views, lazyView.multiRecord, action.mobile_view_mode) || lazyView;
-            }
         }
 
         const controller = {
@@ -945,26 +1045,14 @@ export function makeActionManager(env, router = _router) {
         };
         action.controllers[view.type] = controller;
 
-        const updateUIOptions = {
+        return _updateUI(controller, {
+            index: options.index,
             clearBreadcrumbs: options.clearBreadcrumbs,
             onClose: options.onClose,
             stackPosition: options.stackPosition,
             onActionReady: options.onActionReady,
             noEmptyTransition: options.noEmptyTransition,
-        };
-
-        if (lazyView) {
-            updateUIOptions.lazyController = {
-                jsId: `controller_${++id}`,
-                Component: View,
-                action,
-                view: lazyView,
-                views,
-                ..._getViewInfo(lazyView, action, views),
-            };
-        }
-
-        return _updateUI(controller, updateUIOptions);
+        });
     }
 
     /**
@@ -1007,13 +1095,15 @@ export function makeActionManager(env, router = _router) {
                 action,
                 ..._getActionInfo(action, options.props),
             };
-            return _updateUI(controller, {
+            const updateUIOptions = {
+                index: options.index,
                 clearBreadcrumbs: options.clearBreadcrumbs,
                 stackPosition: options.stackPosition,
                 onClose: options.onClose,
                 onActionReady: options.onActionReady,
                 noEmptyTransition: options.noEmptyTransition,
-            });
+            };
+            return _updateUI(controller, updateUIOptions);
         } else {
             const next = await clientAction(env, action);
             if (next) {
@@ -1044,11 +1134,13 @@ export function makeActionManager(env, router = _router) {
             ..._getActionInfo(action, props),
         };
 
-        return _updateUI(controller, {
+        const updateUIOptions = {
             clearBreadcrumbs: options.clearBreadcrumbs,
             stackPosition: options.stackPosition,
             onClose: options.onClose,
-        });
+            index: options.index,
+        };
+        return _updateUI(controller, updateUIOptions);
     }
 
     /**
@@ -1126,6 +1218,9 @@ export function makeActionManager(env, router = _router) {
             nextAction.help = markup(nextAction.help);
         }
         nextAction = nextAction || { type: "ir.actions.act_window_close" };
+        if (typeof nextAction === "object") {
+            nextAction.path ||= action.path;
+        }
         return doAction(nextAction, options);
     }
 
@@ -1351,6 +1446,15 @@ export function makeActionManager(env, router = _router) {
             return;
         }
         const controller = controllerStack[index];
+        if (controller.virtual) {
+            const actionParams = _getActionParams(controller.state);
+            if (!actionParams) {
+                throw new Error("Attempted to restore a virtual controller whose state is invalid");
+            }
+            const { actionRequest, options } = actionParams;
+            options.index = index;
+            return doAction(actionRequest, options);
+        }
         if (controller.action.type === "ir.actions.act_window") {
             const { action, exportedState, view, views } = controller;
             const props = { ...controller.props };
@@ -1364,61 +1468,66 @@ export function makeActionManager(env, router = _router) {
     }
 
     /**
-     * Performs a "doAction" or a "switchView" according to the current content of
-     * the URL. The id of the underlying action is be returned if one of these
-     * operations has successfully started.
+     * Restores a stack of virtual controllers from the current contents of the
+     * URL and performs a "doAction" on the last one.
      *
-     * @returns {Promise<boolean>} true iff the state could have been loaded
+     * @returns {Promise<boolean>} true if doAction was performed
      */
     async function loadState() {
-        const switchViewParams = _getSwitchViewParams();
-        if (switchViewParams) {
-            // only when we already have an action in dom
-            const { viewType, props } = switchViewParams;
-            const view = _getView(viewType);
-            if (view) {
-                // Params valid and view found => performs a "switchView"
-                await switchView(viewType, props);
-                return true;
-            }
-        } else {
-            const actionParams = _getActionParams();
-            if (actionParams) {
-                // Params valid => performs a "doAction"
-                const { actionRequest, options } = actionParams;
-                await doAction(actionRequest, options);
-                return true;
-            }
+        controllerStack = await _controllersFromState();
+        const actionParams = _getActionParams();
+        if (actionParams) {
+            // Params valid => performs a "doAction"
+            const { actionRequest, options } = actionParams;
+            await doAction(actionRequest, options);
+            return true;
         }
-        return false;
     }
 
-    function pushState(controller) {
+    function pushState() {
+        const actions = controllerStack.map((controller) => {
+            const { action, props, displayName } = controller;
+            const actionState = { displayName };
+            if (action.path || action.id) {
+                actionState.action = action.path || action.id;
+            } else if (action.type === "ir.actions.client") {
+                actionState.action = action.tag;
+            } else if (action.type === "ir.actions.act_window") {
+                actionState.model = props.resModel;
+            }
+            if (action.type === "ir.actions.act_window") {
+                actionState.view_type = props.type;
+                if (props.type === "form" && action.res_model !== "res.config.settings") {
+                    actionState.resId = controller.resId() || "new";
+                }
+            }
+            if (action.context) {
+                const activeId = action.context.active_id;
+                if (activeId) {
+                    actionState.active_id = activeId;
+                }
+                const activeIds = action.context.active_ids;
+                // we don't push active_ids if it's a single element array containing
+                // the active_id to make the url shorter in most cases
+                if (activeIds && !(activeIds.length === 1 && activeIds[0] === activeId)) {
+                    actionState.active_ids = activeIds.join(",");
+                }
+            }
+            return actionState;
+        });
         const newState = {};
-        const action = controller.action;
-        if (action.id) {
-            newState.action = action.id;
-        } else if (action.type === "ir.actions.client") {
-            newState.action = action.tag;
-        }
-        if (action.context) {
-            const activeId = action.context.active_id;
-            if (activeId) {
-                newState.active_id = activeId;
+        if (actions.length) {
+            newState.actionStack = actions;
+            const stateKeys = [...PATH_KEYS, "active_ids"];
+            const { action, props } = controllerStack.at(-1);
+            if (props.type !== "form" && props.type !== action.views?.[0][1]) {
+                // add view_type only when it's not already known implicitly
+                stateKeys.push("view_type");
             }
-            const activeIds = action.context.active_ids;
-            // we don't push active_ids if it's a single element array containing
-            // the active_id to make the url shorter in most cases
-            if (activeIds && !(activeIds.length === 1 && activeIds[0] === activeId)) {
-                newState.active_ids = activeIds.join(",");
-            }
+            Object.assign(newState, pick(newState.actionStack.at(-1), ...stateKeys));
         }
-        if (action.type === "ir.actions.act_window") {
-            const props = controller.props;
-            newState.model = props.resModel;
-            newState.view_type = props.type;
-            newState.id = props.resId || (props.state && props.state.resId) || undefined;
-        }
+
+        controllerStack.at(-1).state = newState;
         router.pushState(newState, { replace: true });
     }
     return {

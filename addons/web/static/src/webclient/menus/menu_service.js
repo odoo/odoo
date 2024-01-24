@@ -1,7 +1,6 @@
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { session } from "@web/session";
-import { router } from "@web/core/browser/router";
 
 const loadMenusUrl = `/web/webclient/load_menus`;
 
@@ -27,17 +26,11 @@ function makeMenus(env, menusData, fetchLoadMenus) {
     function _getMenu(menuId) {
         return menusData[menuId];
     }
-    function _updateURL(menuId) {
-        router.pushState({ menu_id: menuId });
-    }
-    function _setCurrentMenu(menu, updateURL = true) {
+    function setCurrentMenu(menu) {
         menu = typeof menu === "number" ? _getMenu(menu) : menu;
         if (menu && menu.appID !== currentAppId) {
             currentAppId = menu.appID;
             env.bus.trigger("MENUS:APP-CHANGED");
-            if (updateURL) {
-                _updateURL(menu.id);
-            }
         }
     }
 
@@ -70,12 +63,11 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             await env.services.action.doAction(menu.actionID, {
                 clearBreadcrumbs: true,
                 onActionReady: () => {
-                    _setCurrentMenu(menu, false);
+                    setCurrentMenu(menu);
                 },
             });
-            _updateURL(menu.id);
         },
-        setCurrentMenu: (menu) => _setCurrentMenu(menu),
+        setCurrentMenu,
         async reload() {
             if (fetchLoadMenus) {
                 menusData = await fetchLoadMenus(true);
@@ -88,7 +80,6 @@ function makeMenus(env, menusData, fetchLoadMenus) {
 export const menuService = {
     dependencies: ["action"],
     async start(env) {
-        router.addLockedKey("menu_id");
         const fetchLoadMenus = makeFetchLoadMenus();
         const menusData = await fetchLoadMenus();
         return makeMenus(env, menusData, fetchLoadMenus);

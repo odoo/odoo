@@ -31,16 +31,16 @@ class Home(http.Controller):
     def index(self, s_action=None, db=None, **kw):
         if request.db and request.session.uid and not is_user_internal(request.session.uid):
             return request.redirect_query('/web/login_successful', query=request.params)
-        return request.redirect_query('/web', query=request.params)
+        return request.redirect_query('/odoo', query=request.params)
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
-    @http.route('/web', type='http', auth="none")
+    @http.route(['/web', '/odoo', '/odoo/<path:subpath>'], type='http', auth="none")
     def web_client(self, s_action=None, **kw):
 
         # Ensure we have both a database and a user
         ensure_db()
         if not request.session.uid:
-            return request.redirect_query('/web/login', query=request.params, code=303)
+            return request.redirect_query('/web/login', query={'redirect': request.httprequest.full_path}, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
         if not security.check_session(request.session, request.env):

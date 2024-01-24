@@ -2,12 +2,13 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { router } from "@web/core/browser/router";
+import { router, startRouter } from "@web/core/browser/router";
 import testUtils from "@web/../tests/legacy_tests/helpers/test_utils";
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { Component, xml } from "@odoo/owl";
+import { redirect } from "@web/core/utils/urls";
 
 let serverData;
 let target;
@@ -17,13 +18,18 @@ QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
         target = getFixture();
+        patchWithCleanup(browser.location, {
+            origin: "http://example.com",
+        });
+        redirect("/odoo");
+        startRouter();
     });
 
     QUnit.module("Push State");
 
     QUnit.test("basic action as App", async (assert) => {
-        assert.expect(5);
         await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
         let urlState = router.current;
         assert.deepEqual(urlState, {});
         await click(target, ".o_navbar_apps_menu button");
@@ -32,7 +38,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(urlState.menu_id, 2);
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1002");
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -41,8 +47,8 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("do action keeps menu in url", async (assert) => {
-        assert.expect(9);
         const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
         let urlState = router.current;
         assert.deepEqual(urlState, {});
         await click(target, ".o_navbar_apps_menu button");
@@ -50,8 +56,8 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await nextTick();
         urlState = router.current;
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1002");
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(urlState.menu_id, 2);
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -59,9 +65,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App2");
         await doAction(webClient, 1001, { clearBreadcrumbs: true });
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1001");
         urlState = router.current;
         assert.strictEqual(urlState.action, 1001);
-        assert.strictEqual(urlState.menu_id, 2);
         assert.strictEqual(
             target.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 1"
@@ -70,7 +76,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("actions can push state", async (assert) => {
-        assert.expect(5);
         class ClientActionPushes extends Component {
             static template = xml`
                 <div class="test_client_action" t-on-click="_actionPushState">
@@ -83,22 +88,33 @@ QUnit.module("ActionManager", (hooks) => {
         }
         actionRegistry.add("client_action_pushes", ClientActionPushes);
         const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         let urlState = router.current;
         assert.deepEqual(urlState, {});
         await doAction(webClient, "client_action_pushes");
         await nextTick();
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/client_action_pushes"
+        );
+        assert.strictEqual(browser.history.length, 2);
         urlState = router.current;
         assert.strictEqual(urlState.action, "client_action_pushes");
         assert.strictEqual(urlState.menu_id, undefined);
         await click(target, ".test_client_action");
         await nextTick();
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/client_action_pushes?arbitrary=actionPushed"
+        );
+        assert.strictEqual(browser.history.length, 3);
         urlState = router.current;
         assert.strictEqual(urlState.action, "client_action_pushes");
         assert.strictEqual(urlState.arbitrary, "actionPushed");
     });
 
     QUnit.test("actions override previous state", async (assert) => {
-        assert.expect(5);
         class ClientActionPushes extends Component {
             static template = xml`
                 <div class="test_client_action" t-on-click="_actionPushState">
@@ -111,23 +127,36 @@ QUnit.module("ActionManager", (hooks) => {
         }
         actionRegistry.add("client_action_pushes", ClientActionPushes);
         const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         let urlState = router.current;
         assert.deepEqual(urlState, {});
         await doAction(webClient, "client_action_pushes");
+        await nextTick(); // wait for pushState because it's unrealistic to click before it
         await click(target, ".test_client_action");
         await nextTick();
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/client_action_pushes?arbitrary=actionPushed"
+        );
+        assert.strictEqual(browser.history.length, 3); // Two history entries
         urlState = router.current;
         assert.strictEqual(urlState.action, "client_action_pushes");
         assert.strictEqual(urlState.arbitrary, "actionPushed");
         await doAction(webClient, 1001);
         await nextTick();
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/act-1001",
+            "client_action_pushes removed from url because action 1001 is in target main"
+        );
+        assert.strictEqual(browser.history.length, 4);
         urlState = router.current;
         assert.strictEqual(urlState.action, 1001);
         assert.strictEqual(urlState.arbitrary, undefined);
     });
 
     QUnit.test("actions override previous state from menu click", async (assert) => {
-        assert.expect(3);
         class ClientActionPushes extends Component {
             static template = xml`
                 <div class="test_client_action" t-on-click="_actionPushState">
@@ -140,6 +169,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
         actionRegistry.add("client_action_pushes", ClientActionPushes);
         const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
         let urlState = router.current;
         assert.deepEqual(urlState, {});
         await doAction(webClient, "client_action_pushes");
@@ -148,13 +178,12 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target, ".o-dropdown-item:nth-child(3)");
         await nextTick();
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-1002");
         urlState = router.current;
         assert.strictEqual(urlState.action, 1002);
-        assert.strictEqual(urlState.menu_id, 2);
     });
 
     QUnit.test("action in target new do not push state", async (assert) => {
-        assert.expect(1);
         serverData.actions[1001].target = "new";
         patchWithCleanup(browser, {
             history: Object.assign({}, browser.history, {
@@ -164,35 +193,82 @@ QUnit.module("ActionManager", (hooks) => {
             }),
         });
         const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         await doAction(webClient, 1001);
         assert.containsOnce(target, ".modal .test_client_action");
         await nextTick();
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo",
+            "url did not change"
+        );
+        assert.strictEqual(browser.history.length, 1, "did not create a history entry");
+        assert.deepEqual(router.current, {});
     });
 
     QUnit.test("properly push state", async function (assert) {
-        assert.expect(3);
         const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         await doAction(webClient, 4);
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4");
+        assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 4,
-            model: "partner",
-            view_type: "kanban",
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+            ],
         });
         await doAction(webClient, 8);
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4/act-8");
+        assert.strictEqual(browser.history.length, 3);
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
-            view_type: "list",
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+                {
+                    action: 8,
+                    displayName: "Favorite Ponies",
+                    view_type: "list",
+                },
+            ],
         });
         await testUtils.dom.click($(target).find("tr .o_data_cell:first"));
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4/act-8/4");
+        assert.strictEqual(browser.history.length, 4);
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
-            view_type: "form",
-            id: 4,
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+                {
+                    action: 8,
+                    displayName: "Favorite Ponies",
+                    view_type: "list",
+                },
+                {
+                    action: 8,
+                    displayName: "Twilight Sparkle",
+                    resId: 4,
+                    view_type: "form",
+                },
+            ],
+            resId: 4,
         });
     });
 
@@ -204,43 +280,157 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         doAction(webClient, 4);
         await nextTick();
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         assert.deepEqual(router.current, {});
         def.resolve();
         await nextTick();
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-4");
+        assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 4,
-            model: "partner",
-            view_type: "kanban",
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+            ],
         });
     });
 
     QUnit.test("do not push state when action fails", async function (assert) {
-        assert.expect(3);
         const mockRPC = async function (route, args) {
             if (args && args.method === "read") {
                 return Promise.reject();
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
         await doAction(webClient, 8);
         await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-8");
+        assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
-            view_type: "list",
+            actionStack: [
+                {
+                    action: 8,
+                    displayName: "Favorite Ponies",
+                    view_type: "list",
+                },
+            ],
         });
         await testUtils.dom.click($(target).find("tr.o_data_row:first"));
         // we make sure here that the list view is still in the dom
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
-        await nextTick();
+        await nextTick(); // wait for possible debounced pushState
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-8");
+        assert.strictEqual(browser.history.length, 2);
         assert.deepEqual(router.current, {
             action: 8,
-            model: "pony",
-            view_type: "list",
+            actionStack: [
+                {
+                    action: 8,
+                    displayName: "Favorite Ponies",
+                    view_type: "list",
+                },
+            ],
         });
     });
+
+    QUnit.test("view_type is in url when not the default one", async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
+        await doAction(webClient, 3);
+        await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
+        assert.strictEqual(browser.history.length, 2);
+        assert.deepEqual(router.current, {
+            action: 3,
+            actionStack: [
+                {
+                    action: 3,
+                    displayName: "Partners",
+                    view_type: "list",
+                },
+            ],
+        });
+        assert.containsNone(target, ".breadcrumb");
+        await doAction(webClient, 3, { viewType: "kanban" });
+        await nextTick();
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/act-3?view_type=kanban"
+        );
+        assert.strictEqual(browser.history.length, 3, "created a history entry");
+        assert.containsOnce(target, ".breadcrumb", "created a breadcrumb entry");
+        assert.deepEqual(router.current, {
+            action: 3,
+            view_type: "kanban", // view_type is on the state when it's not the default one
+            actionStack: [
+                {
+                    action: 3,
+                    displayName: "Partners",
+                    view_type: "list",
+                },
+                {
+                    action: 3,
+                    displayName: "Partners",
+                    view_type: "kanban",
+                },
+            ],
+        });
+    });
+
+    QUnit.test(
+        "switchView pushes the stat but doesn't add to the breadcrumbs",
+        async function (assert) {
+            const webClient = await createWebClient({ serverData });
+            assert.strictEqual(browser.location.href, "http://example.com/odoo");
+            assert.strictEqual(browser.history.length, 1);
+            await doAction(webClient, 3);
+            await nextTick();
+            assert.strictEqual(browser.location.href, "http://example.com/odoo/act-3");
+            assert.strictEqual(browser.history.length, 2);
+            assert.deepEqual(router.current, {
+                action: 3,
+                actionStack: [
+                    {
+                        action: 3,
+                        displayName: "Partners",
+                        view_type: "list",
+                    },
+                ],
+            });
+            assert.containsNone(target, ".breadcrumb");
+            await webClient.env.services.action.switchView("kanban");
+            await nextTick();
+            assert.strictEqual(
+                browser.location.href,
+                "http://example.com/odoo/act-3?view_type=kanban"
+            );
+            assert.strictEqual(browser.history.length, 3, "created a history entry");
+            assert.containsNone(target, ".breadcrumb", "didn't create a breadcrumb entry");
+            assert.deepEqual(router.current, {
+                action: 3,
+                view_type: "kanban", // view_type is on the state when it's not the default one
+                actionStack: [
+                    {
+                        action: 3,
+                        displayName: "Partners",
+                        view_type: "kanban",
+                    },
+                ],
+            });
+        }
+    );
 });

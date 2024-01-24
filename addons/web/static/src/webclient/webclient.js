@@ -54,9 +54,22 @@ export class WebClient extends Component {
     }
 
     async loadRouterState() {
-        let stateLoaded = await this.actionService.loadState();
+        // ** url-retrocompatibility **
+        // the menu_id in the url is only possible if we came from an old url
         let menuId = Number(router.current.menu_id || 0);
+        const firstAction = router.current.actionStack?.[0]?.action;
+        if (!menuId && firstAction) {
+            menuId = this.menuService
+                .getAll()
+                .find((m) => m.actionID === firstAction || m.actionPath === firstAction)?.appID;
+        }
+        if (menuId) {
+            this.menuService.setCurrentMenu(menuId);
+        }
+        let stateLoaded = await this.actionService.loadState();
 
+        // ** url-retrocompatibility **
+        // when there is only menu_id in url
         if (!stateLoaded && menuId) {
             // Determines the current actionId based on the current menu
             const menu = this.menuService.getAll().find((m) => menuId === m.id);
@@ -67,17 +80,16 @@ export class WebClient extends Component {
             }
         }
 
+        // Setting the menu based on the action after it was loaded (eg when the action in url is an xmlid)
         if (stateLoaded && !menuId) {
             // Determines the current menu based on the current action
             const currentController = this.actionService.currentController;
             const actionId = currentController && currentController.action.id;
-            const menu = this.menuService.getAll().find((m) => m.actionID === actionId);
-            menuId = menu && menu.appID;
-        }
-
-        if (menuId) {
-            // Sets the menu according to the current action
-            this.menuService.setCurrentMenu(menuId);
+            menuId = this.menuService.getAll().find((m) => m.actionID === actionId)?.appID;
+            if (menuId) {
+                // Sets the menu according to the current action
+                this.menuService.setCurrentMenu(menuId);
+            }
         }
 
         if (!stateLoaded) {

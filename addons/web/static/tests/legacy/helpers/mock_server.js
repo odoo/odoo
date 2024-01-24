@@ -571,6 +571,8 @@ export class MockServer {
                 return this.mockLoadMenus();
             case "/web/action/load":
                 return this.mockLoadAction(args);
+            case "/web/action/load_breadcrumbs":
+                return this.mockLoadBreadcrumbs(args);
             case "/web/dataset/resequence":
                 return this.mockResequence(args);
         }
@@ -747,16 +749,38 @@ export class MockServer {
         return fields;
     }
 
-    mockLoadAction(kwargs) {
-        const action = this.actions[kwargs.action_id] || Object.values(this.actions).find((action) => action.xml_id === kwargs.action_id);
+    mockLoadAction({ action_id } = {}) {
+        const action =
+            this.actions[action_id] ||
+            Object.values(this.actions).find((action) => action.xml_id === action_id) ||
+            Object.values(this.actions).find((a) => a.path === action_id);
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
             console.warn(
-                `No action found for ID ${kwargs.action_id} during test ${QUnit.config.current.testName}`
+                `No action found for ID ${action_id} during test ${QUnit.config.current.testName}`
             );
         }
         return action || false;
+    }
+
+    mockLoadBreadcrumbs({ actions }) {
+        return actions.map(({ action: action_id, model, resId }) => {
+            if (action_id) {
+                const act = this.mockLoadAction({ action_id });
+                if (resId) {
+                    return this.mockRead(act.res_model, [[resId], ["display_name"]])[0]
+                        .display_name;
+                }
+                return act.name;
+            } else if (model) {
+                if (resId) {
+                    return this.models[model].records[resId].display_name;
+                }
+                throw new Error("Actions with a model should also have a resId");
+            }
+            throw new Error("Actions should have either an action (id or path) or a model");
+        });
     }
 
     mockLoadMenus() {
