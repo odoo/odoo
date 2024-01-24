@@ -4804,8 +4804,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         line_4 = self.create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2016-01-01')
         line_4.move_id.button_draft()
         line_5 = self.create_line_for_reconciliation(200.0, 200.0, comp_curr, '2016-01-01')
-        (line_1 + line_2 + line_3).matching_number = 'I11111'
-        (line_4 + line_5).matching_number = 'I22222'
+        (line_1 + line_2 + line_3).matching_number = '11111'  # Will be converted to a temporary number
+        (line_4 + line_5).matching_number = '22222'  # Will be converted to a temporary number
         # posting triggers the matching of the imported values
         (line_1 + line_4).move_id.action_post()
         self.assertRegex(line_1.matching_number, r'^P\d+')
