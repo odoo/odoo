@@ -337,7 +337,7 @@ class HolidaysAllocation(models.Model):
     def _compute_type_request_unit(self):
         for allocation in self:
             if allocation.allocation_type == "accrual" and allocation.accrual_plan_id:
-                allocation.type_request_unit = allocation.accrual_plan_id.added_value_type
+                allocation.type_request_unit = allocation.accrual_plan_id.sudo().added_value_type
             elif allocation.allocation_type == "regular":
                 allocation.type_request_unit = allocation.holiday_status_id.request_unit
             else:
