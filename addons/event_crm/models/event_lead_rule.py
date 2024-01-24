@@ -102,7 +102,7 @@ class EventLeadRule(models.Model):
     # Lead default_value fields
     lead_type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], string="Lead Type", required=True,
-        default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
+        default=lambda self: 'lead' if self.env.user.has_group('crm.group_use_lead') else 'opportunity',
         help="Default lead type when this rule is applied.")
     lead_sales_team_id = fields.Many2one(
         'crm.team', string='Sales Team', ondelete="set null",

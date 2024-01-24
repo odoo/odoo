@@ -234,9 +234,9 @@ class StockMove(models.Model):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
         """
-        has_package = self.user_has_groups('stock.group_tracking_lot')
-        multi_locations_enabled = self.user_has_groups('stock.group_stock_multi_locations')
-        consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
+        has_package = self.env.user.has_group('stock.group_tracking_lot')
+        multi_locations_enabled = self.env.user.has_group('stock.group_stock_multi_locations')
+        consignment_enabled = self.env.user.has_group('stock.group_tracking_owner')
 
         show_details_visible = multi_locations_enabled or has_package or consignment_enabled
 
@@ -244,8 +244,8 @@ class StockMove(models.Model):
             if not move.product_id:
                 move.show_details_visible = False
             elif not move.picking_type_id.use_create_lots and not move.picking_type_id.use_existing_lots\
-                and not move.user_has_groups('stock.group_stock_tracking_lot')\
-                and not move.user_has_groups('stock.group_stock_multi_locations'):
+                and not self.env.user.has_group('stock.group_stock_tracking_lot')\
+                and not self.env.user.has_group('stock.group_stock_multi_locations'):
                 move.show_details_visible = False
             elif len(move.move_line_ids) > 1:
                 move.show_details_visible = True

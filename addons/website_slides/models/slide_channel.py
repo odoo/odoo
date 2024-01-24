@@ -1052,7 +1052,7 @@ class Channel(models.Model):
                 base_url=record.get_base_url(),
             )
             email_values = {'email_to': emails}
-            if self.env.user.has_group('base.group_portal'):
+            if self.env.user._is_portal():
                 template = template.sudo()
                 email_values['email_from'] = self.env.company.catchall_formatted or self.env.company.email_formatted
 
@@ -1077,7 +1077,7 @@ class Channel(models.Model):
     def action_request_access(self):
         """ Request access to the channel. Returns a dict with keys being either 'error'
         (specific error raised) or 'done' (request done or not). """
-        if self.env.user.has_group('base.group_public'):
+        if self.env.user._is_public():
             return {'error': _('You have to sign in before')}
         if not self.is_published:
             return {'error': _('Course not published yet')}

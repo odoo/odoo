@@ -86,7 +86,7 @@ class Http(models.AbstractModel):
         mods = odoo.conf.server_wide_modules or []
         if request.db:
             mods = list(request.registry._init_modules) + mods
-        is_internal_user = user.has_group('base.group_user')
+        is_internal_user = user._is_internal()
         session_info = {
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,

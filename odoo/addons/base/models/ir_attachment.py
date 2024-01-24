@@ -460,9 +460,8 @@ class IrAttachment(models.Model):
                         raise AccessError(_("Sorry, you are not allowed to access this document."))
                     if res_field:
                         field = self.env[res_model]._fields[res_field]
-                        if field.groups:
-                            if not self.env.user.user_has_groups(field.groups):
-                                raise AccessError(_("Sorry, you are not allowed to access this document."))
+                        if not field.is_accessible(self.env):
+                            raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if not (res_model and res_id):
                     continue
                 model_ids[res_model].add(res_id)
@@ -704,7 +703,7 @@ class IrAttachment(models.Model):
         if record_sudo.with_context(prefetch_fields=False).public:
             return record_sudo
 
-        if self.env.user.has_group('base.group_portal'):
+        if self.env.user._is_portal():
             # Check the read access on the record linked to the attachment
             # eg: Allow to download an attachment on a task from /my/tasks/task_id
             self.check('read')

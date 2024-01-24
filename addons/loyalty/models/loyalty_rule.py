@@ -112,7 +112,7 @@ class LoyaltyRule(models.Model):
     @api.depends_context('uid')
     @api.depends("mode")
     def _compute_user_has_debug(self):
-        self.user_has_debug = self.user_has_groups('base.group_no_one')
+        self.user_has_debug = self.env.user.has_group('base.group_no_one')
 
     def _get_valid_product_domain(self):
         self.ensure_one()

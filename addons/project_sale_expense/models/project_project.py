@@ -21,7 +21,7 @@ class Project(models.Model):
         expenses_per_so_id = {}
         expense_ids = []
         dict_amount_per_currency = defaultdict(lambda: 0.0)
-        can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
+        can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
         for sale_order, product, currency, ids, untaxed_amount_currency_sum in expenses_read_group:
             expenses_per_so_id.setdefault(sale_order.id, {})[product.id] = ids
             if can_see_expense:

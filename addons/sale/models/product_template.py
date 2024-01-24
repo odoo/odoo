@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
-        visibility = self.user_has_groups('analytic.group_analytic_accounting')
+        visibility = self.env.user.has_group('analytic.group_analytic_accounting')
         for product_template in self:
             product_template.visible_expense_policy = visibility
 
@@ -112,7 +112,7 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()
         if self.env.context.get('sale_multi_pricelist_product_template'):
-            if self.user_has_groups('product.group_sale_pricelist'):
+            if self.env.user.has_group('product.group_sale_pricelist'):
                 return [{
                     'label': _("Import Template for Products"),
                     'template': '/product/static/xls/product_template.xls'

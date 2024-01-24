@@ -360,7 +360,7 @@ class SaleOrderLine(models.Model):
         action_per_sol = super()._get_action_per_item()
         timesheet_action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order_item').id
         timesheet_ids_per_sol = {}
-        if self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+        if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             timesheet_read_group = self.env['account.analytic.line']._read_group([('so_line', 'in', self.ids), ('project_id', '!=', False)], ['so_line'], ['id:array_agg'])
             timesheet_ids_per_sol = {so_line.id: ids for so_line, ids in timesheet_read_group}
         for sol in self:

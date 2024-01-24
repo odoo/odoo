@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
         for (config_flag, is_global), project_flag in features.items():
             config_flag_global = f"project.{config_flag}"
             config_feature_enabled = self[config_flag]
-            if self.user_has_groups(config_flag_global) != config_feature_enabled:
+            if self.env.user.has_group(config_flag_global) != config_feature_enabled:
                 if config_feature_enabled and not is_global:
                     basic_projects[project_flag] = config_feature_enabled
                 else:

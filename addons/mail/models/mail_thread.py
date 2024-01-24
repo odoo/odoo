@@ -394,7 +394,7 @@ class MailThread(models.AbstractModel):
         return super().get_empty_list_help(help_message)
 
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
-        if self.env.su or self.user_has_groups('base.group_user'):
+        if self.env.su or self.env.user._is_internal():
             return super()._condition_to_sql(alias, fname, operator, value, query)
         if fname != 'message_partner_ids':
             return super()._condition_to_sql(alias, fname, operator, value, query)
@@ -2131,7 +2131,7 @@ class MailThread(models.AbstractModel):
             # use sudo as record access is not always granted (notably when replying
             # a notification) -> final check is done at message creation level
             msg_values['record_name'] = self.sudo().display_name
-        if body_is_html and self.user_has_groups("base.group_user"):
+        if body_is_html and self.env.user._is_internal():
             _logger.warning("Posting HTML message using body_is_html=True, use a Markup object instead (user: %s)",
                 self.env.user.id)
             body = Markup(body)

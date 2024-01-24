@@ -748,7 +748,7 @@ class PurchaseOrder(models.Model):
         return result
 
     def _send_reminder_mail(self, send_single=False):
-        if not self.user_has_groups('purchase.group_send_reminder'):
+        if not self.env.user.has_group('purchase.group_send_reminder'):
             return
 
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
@@ -768,7 +768,7 @@ class PurchaseOrder(models.Model):
 
     def send_reminder_preview(self):
         self.ensure_one()
-        if not self.user_has_groups('purchase.group_send_reminder'):
+        if not self.env.user.has_group('purchase.group_send_reminder'):
             return
 
         template = self.env.ref('purchase.email_template_edi_purchase_reminder', raise_if_not_found=False)
@@ -949,7 +949,7 @@ class PurchaseOrder(models.Model):
                 and self.amount_total < self.env.company.currency_id._convert(
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
-            or self.user_has_groups('purchase.group_purchase_manager'))
+            or self.env.user.has_group('purchase.group_purchase_manager'))
 
     def _confirm_reception_mail(self):
         for order in self:

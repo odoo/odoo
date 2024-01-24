@@ -805,7 +805,7 @@ class Task(models.Model):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields=allfields, attributes=attributes)
-        if not self.env.user.has_group('base.group_portal'):
+        if not self.env.user._is_portal():
             return fields
         readable_fields = self.SELF_READABLE_FIELDS
         public_fields = {field_name: description for field_name, description in fields.items() if field_name in readable_fields}
@@ -823,7 +823,7 @@ class Task(models.Model):
         """The override of fields_get making fields readonly for portal users
         makes the view cache dependent on the fact the user has the group portal or not"""
         key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.user.has_group('base.group_portal'),)
+        return key + (self.env.user._is_portal(),)
 
     @api.model
     def default_get(self, default_fields):
@@ -868,7 +868,7 @@ class Task(models.Model):
                 - False if we are sure the user is a portal user,
         """
         assert operation in ('read', 'write'), 'Invalid operation'
-        if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
+        if fields and (not check_group_user or self.env.user._is_portal()) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
                 unauthorized_field_list = format_list(self.env, list(unauthorized_fields))
@@ -879,7 +879,7 @@ class Task(models.Model):
                 raise AccessError(error_message)
 
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
-        if not self.env.su and self.env.user.has_group('base.group_portal'):
+        if not self.env.su and self.env.user._is_portal():
             valid_names = self.SELF_READABLE_FIELDS
             field_names = [fname for fname in field_names if fname in valid_names]
         return super()._determine_fields_to_fetch(field_names, ignore_when_in_cache)
@@ -915,7 +915,7 @@ class Task(models.Model):
     def check_field_access_rights(self, operation, field_names):
         if field_names and operation in ('read', 'write'):
             self._ensure_fields_are_accessible(field_names, operation)
-        elif not field_names and not self.env.su and self.env.user.has_group('base.group_portal'):
+        elif not field_names and not self.env.su and self.env.user._is_portal():
             valid_names = self.SELF_READABLE_FIELDS
             return [
                 fname for fname in super().check_field_access_rights(operation, field_names)
@@ -951,7 +951,7 @@ class Task(models.Model):
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
         self = self.with_context(new_context)
 
-        is_portal_user = self.env.user.has_group('base.group_portal')
+        is_portal_user = self.env.user._is_portal()
         if is_portal_user:
             self.check_access_rights('create')
         default_stage = dict()
@@ -1070,7 +1070,7 @@ class Task(models.Model):
         portal_can_write = False
         project_link_per_task_id = {}
         partner_ids = []
-        if self.env.user.has_group('base.group_portal') and not self.env.su:
+        if self.env.user._is_portal() and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
             self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
             self.check_access_rights('write')
@@ -1483,7 +1483,7 @@ class Task(models.Model):
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_task_waiting')
             if ((self.project_id and not self.project_id.allow_task_dependencies)\
-                or (not self.project_id and not self.user_has_groups('project.group_project_task_dependencies')))\
+                or (not self.project_id and not self.env.user.has_group('project.group_project_task_dependencies')))\
                 and waiting_subtype in res:
                 res -= waiting_subtype
         return res
@@ -1680,7 +1680,7 @@ class Task(models.Model):
         }
 
     def action_project_sharing_view_parent_task(self):
-        if self.parent_id.project_id != self.project_id and self.user_has_groups('base.group_portal'):
+        if self.parent_id.project_id != self.project_id and self.env.user._is_portal():
             project = self.parent_id.project_id._filter_access_rules_python('read')
             if project:
                 url = f"/my/projects/{self.parent_id.project_id.id}/task/{self.parent_id.id}"

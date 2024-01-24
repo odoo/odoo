@@ -305,7 +305,7 @@ class Import(models.TransientModel):
                 field_value['comodel_name'] = field['relation']
             elif field['type'] == 'one2many':
                 field_value['fields'] = self.get_fields_tree(field['relation'], depth=depth-1)
-                if self.user_has_groups('base.group_no_one'):
+                if self.env.user.has_group('base.group_no_one'):
                     field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
                 field_value['comodel_name'] = field['relation']
 
@@ -1003,7 +1003,7 @@ class Import(models.TransientModel):
                 'preview': column_example,
                 'options': options,
                 'advanced_mode': advanced_mode,
-                'debug': self.user_has_groups('base.group_no_one'),
+                'debug': self.env.user.has_group('base.group_no_one'),
                 'batch': batch,
                 'file_length': file_length
             }

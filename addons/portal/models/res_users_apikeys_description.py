@@ -13,7 +13,7 @@ class APIKeyDescription(models.TransientModel):
             return super().check_access_make_key()
         except AccessError:
             if self.env['ir.config_parameter'].sudo().get_param('portal.allow_api_keys'):
-                if self.user_has_groups('base.group_portal'):
+                if self.env.user._is_portal():
                     return
                 else:
                     raise AccessError(_("Only internal and portal users can create API keys"))

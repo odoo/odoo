@@ -17,7 +17,7 @@ class ResCompany(models.Model):
         if self.env.context.get('disable_company_pricelist_creation'):
             return
 
-        if self.user_has_groups('product.group_product_pricelist'):
+        if self.env.user.has_group('product.group_product_pricelist'):
             companies = self or self.env['res.company'].search([])
             ProductPricelist = self.env['product.pricelist'].sudo()
             # Activate existing default pricelists
@@ -59,11 +59,11 @@ class ResCompany(models.Model):
         if not vals.get('currency_id'):
             return super().write(vals)
 
-        enabled_pricelists = self.user_has_groups('product.group_product_pricelist')
+        enabled_pricelists = self.env.user.has_group('product.group_product_pricelist')
         res = super(
             ResCompany, self.with_context(disable_company_pricelist_creation=True)
         ).write(vals)
-        if not enabled_pricelists and self.user_has_groups('product.group_product_pricelist'):
+        if not enabled_pricelists and self.env.user.has_group('product.group_product_pricelist'):
             self.browse()._activate_or_create_pricelists()
 
         return res

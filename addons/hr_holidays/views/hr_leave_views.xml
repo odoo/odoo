@@ -444,7 +444,6 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="is_user_only_responsible" invisible="1"/>
                 <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" readonly="state not in ['confirm', 'draft']"/>
                 <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'company'" readonly="state not in ['confirm', 'draft']" required="holiday_type == 'company'"/>
                 <field name="category_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'category'" readonly="state not in ['confirm', 'draft']" required="holiday_type == 'category'"/>

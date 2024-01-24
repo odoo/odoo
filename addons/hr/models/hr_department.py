@@ -115,7 +115,7 @@ class Department(models.Model):
 
     def get_formview_action(self, access_uid=None):
         res = super().get_formview_action(access_uid=access_uid)
-        if (not self.user_has_groups('hr.group_hr_user') and
+        if (not self.env.user.has_group('hr.group_hr_user') and
            self.env.context.get('open_employees_kanban', False)):
             res.update({
                 'name': self.name,

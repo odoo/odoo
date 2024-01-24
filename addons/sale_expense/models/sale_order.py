@@ -16,8 +16,8 @@ class SaleOrder(models.Model):
         """ For expense, we want to show all sales order but only their display_name (no ir.rule applied), this is the only way to do it. """
         if (
             self._context.get('sale_expense_all_order')
-            and self.user_has_groups('sales_team.group_sale_salesman')
-            and not self.user_has_groups('sales_team.group_sale_salesman_all_leads')
+            and self.env.user.has_group('sales_team.group_sale_salesman')
+            and not self.env.user.has_group('sales_team.group_sale_salesman_all_leads')
         ):
             domain = expression.AND([domain or [], ['&', ('state', '=', 'sale'), ('company_id', 'in', self.env.companies.ids)]])
             return super(SaleOrder, self.sudo())._name_search(name, domain, operator, limit, order)

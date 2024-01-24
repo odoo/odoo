@@ -10,8 +10,8 @@ QUnit.test("successive calls to hasGroup", async (assert) => {
     patchWithCleanup(user, _makeUser({ uid: 7 }));
     const groups = ["x"];
     const mockRPC = (route, args) => {
-        assert.step(`${args.model}/${args.method}/${args.args[0]}`);
-        return groups.includes(args.args[0]);
+        assert.step(`${args.model}/${args.method}/${args.args[1]}`);
+        return groups.includes(args.args[1]);
     };
     await makeTestEnv({ mockRPC });
     const hasGroupX = await user.hasGroup("x");
