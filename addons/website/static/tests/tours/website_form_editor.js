@@ -522,9 +522,16 @@
             isCheck: true,
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
+        // This step is to ensure select fields are properly cleaned before
+        // exiting edit mode
+        {
+            content: "Click on the select field",
+            trigger: "iframe .s_website_form_field select",
+        },
         {
             content: 'Click on the submit button',
             trigger: 'iframe .s_website_form_send',
+            extra_trigger: "iframe .s_website_form_field .row :has(#editable_select)",
             run: 'click',
         },
         {
@@ -555,6 +562,15 @@
             trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
             isCheck: true,
         },
+        {
+            content: "Verify that the selects have been cleaned",
+            trigger: "iframe .s_website_form",
+            run: ({ tip_widget }) => {
+                if (tip_widget.$anchor[0].querySelector(".s_website_form_field .row:has(select) #editable_select")) {
+                    console.error("The form was not properly cleaned and still has some editable elements.");
+                }
+            }
+        }
     ]);
 
     function editContactUs(steps) {
