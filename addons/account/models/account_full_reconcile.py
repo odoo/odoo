@@ -38,6 +38,6 @@ class AccountFullReconcile(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         fulls = super().create(vals_list)
-        for full in fulls:
+        for full in fulls.with_context(skip_matching_number_check=True):
             full.reconciled_line_ids.matching_number = str(full.id)
         return fulls

@@ -172,7 +172,8 @@ class AccountPartialReconcile(models.Model):
         with amls.move_id._check_balanced({'records': amls.move_id}):  # avoid checking the consistency for each individual write
             for min_partial_id, line_ids in number2lines.items():
                 min_partial = self.browse(min_partial_id)
-                self.env['account.move.line'].browse(line_ids).matching_number = (
+                lines = self.env['account.move.line'].browse(line_ids).with_context(skip_matching_number_check=True)
+                lines.matching_number = (
                     str(min_partial.full_reconcile_id.id)
                     if min_partial.full_reconcile_id else
                     f"P{min_partial.id}"

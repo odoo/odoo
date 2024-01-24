@@ -1363,6 +1363,8 @@ class AccountMoveLine(models.Model):
                     raise Exception("Should have partials")
                 elif line.matching_number.startswith('P') and line.full_reconcile_id:
                     raise Exception("Should not be partial number")
+                elif line.matching_number.isdecimal() and not line.full_reconcile_id:
+                    raise Exception("Should not be full number")
                 elif line.full_reconcile_id and line.matching_number != str(line.full_reconcile_id.id):
                     raise Exception("Matching number should be the full reconcile")
             elif line.matched_debit_ids or line.matched_credit_ids:
@@ -1439,6 +1441,13 @@ class AccountMoveLine(models.Model):
                 vals.pop('credit', None)
             else:
                 vals['balance'] = vals.pop('debit', 0) - vals.pop('credit', 0)
+        if (
+            vals.get('matching_number')
+            and not vals['matching_number'].startswith('I')
+            and not self.env.context.get('skip_matching_number_check')
+        ):
+            vals['matching_number'] = f"I{vals['matching_number']}"
+
         return vals
 
     def _prepare_create_values(self, vals_list):
@@ -2638,6 +2647,7 @@ class AccountMoveLine(models.Model):
                     'debit': -amount_residual if amount_residual < 0.0 else 0.0,
                     'credit': amount_residual if amount_residual > 0.0 else 0.0,
                     'amount_currency': -amount_residual_currency,
+                    'full_reconcile_id': line.full_reconcile_id.id,
                     'account_id': line.account_id.id,
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
