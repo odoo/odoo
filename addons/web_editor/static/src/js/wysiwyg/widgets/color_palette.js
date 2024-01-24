@@ -526,7 +526,7 @@ export class ColorPalette extends Component {
         if (!gradient || colorSplits.length < 2) {
             $(editor.customContent).addClass('d-none');
             editor.customButton.style['background-image'] = '';
-            editor.customButton.dataset.color = false;
+            delete editor.customButton.dataset.color;
             return;
         }
         $(editor.customContent).removeClass('d-none');
