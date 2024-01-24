@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+    <t t-name="pos_restaurant.MultipleTipReceipt">
+        <div class="pos-receipt">
+            <t t-call="pos_restaurant.TipReceipt"/>
+            <p style="page-break-after:always;"/>
+            <t t-call="pos_restaurant.TipReceipt"/>
+        </div>
+    </t>
+
     <t t-name="pos_restaurant.TipReceipt">
         <div class="pos-receipt">
             <ReceiptHeader data="props.headerData" />

@@ -109,22 +109,15 @@ export class TipScreen extends Component {
         return { name: "ReceiptScreen" };
     }
     async printTipReceipt() {
-        const order = this.currentOrder;
-        const receipts = [
-            order.get_selected_paymentline().ticket,
-            order.get_selected_paymentline().cashier_receipt,
-        ];
-        for (let i = 0; i < receipts.length; i++) {
-            await this.printer.print(
-                TipReceipt,
-                {
-                    headerData: this.pos.getReceiptHeaderData(order),
-                    data: receipts[i] || {},
-                    total: this.env.utils.formatCurrency(this.totalAmount),
-                },
-                { webPrintFallback: true }
-            );
-        }
+        await this.printer.print(
+            TipReceipt,
+            {
+                headerData: this.pos.getReceiptHeaderData(this.currentOrder),
+                data: this.currentOrder.get_selected_paymentline().ticket || {},
+                total: this.env.utils.formatCurrency(this.totalAmount),
+            },
+            { webPrintFallback: true }
+        );
     }
 }
 
