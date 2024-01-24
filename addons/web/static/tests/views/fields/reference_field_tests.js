@@ -14,6 +14,7 @@ import {
     nextTick,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 let target;
 let serverData;
@@ -522,6 +523,42 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name=reference] input").value,
             "gold",
             "should contain a link with the new value"
+        );
+    });
+
+    QUnit.test("Many2One 'Search More...' updates on resModel change", async function (assert) {
+
+        // Patch the Many2XAutocomplete default search limit options
+        patchWithCleanup(Many2XAutocomplete.defaultProps, {
+            searchLimit: -1,
+        });
+
+        serverData.views = {
+            "product,false,list": '<tree><field name="display_name"/></tree>',
+            "product,false,search": '<search/>',
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="reference"/></form>',
+        });
+
+        // Selecting a relation
+        await editSelect(target.querySelector("div.o_field_reference"), "select.o_input", "partner_type");
+
+        // Selecting another relation
+        await editSelect(target.querySelector("div.o_field_reference"), "select.o_input", "product");
+
+        // Opening the Search More... option
+        await click(target.querySelector("div.o_field_reference"), "input.o_input");
+        await click(target.querySelector("div.o_field_reference"), ".o_m2o_dropdown_option_search_more");
+
+        assert.strictEqual(
+            target.querySelector("div.modal td.o_data_cell").innerText,
+            "xphone",
+            "The search more should lead to the values of product."
         );
     });
 
