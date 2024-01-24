@@ -52,7 +52,7 @@
                         </div>
                         <img
                             class="o_self_order_item_card_image w-100 rounded"
-                            t-attf-src="/menu/get-image/{{ state.selectedProduct.id }}/512?unique={{state.selectedProduct.write_date}}"
+                            t-attf-src="/web/image/product.product/{{ state.selectedProduct.id }}/image_512"
                             alt="Product image"
                             loading="lazy"
                             onerror="this.remove()"/>
@@ -83,7 +83,7 @@
                                 </div>
                                 <img
                                     class="o_self_order_item_card_image w-100 rounded"
-                                    t-attf-src="/menu/get-image/{{ combo.product.id }}/512?unique={{product.write_date}}"
+                                    t-attf-src="/web/image/product.product/{{ combo.product.id }}/image_512"
                                     alt="Product image"
                                     loading="lazy"
                                     onerror="this.remove()"/>
