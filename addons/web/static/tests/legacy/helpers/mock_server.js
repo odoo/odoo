@@ -748,7 +748,7 @@ export class MockServer {
     }
 
     mockLoadAction(kwargs) {
-        const action = this.actions[kwargs.action_id];
+        const action = this.actions[kwargs.action_id] || Object.values(this.actions).find((action) => action.xml_id === kwargs.action_id);
         if (!action) {
             // when the action doesn't exist, the real server doesn't crash, it
             // simply returns false
