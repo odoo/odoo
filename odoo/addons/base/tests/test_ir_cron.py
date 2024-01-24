@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# ruff: noqa: E201, E272, E301, E306
+
 import collections
 import secrets
 import textwrap
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from datetime import timedelta
 from unittest.mock import call, patch
 from freezegun import freeze_time
@@ -14,6 +17,7 @@ import odoo
 from odoo import api, fields
 from odoo.tests.common import BaseCase, TransactionCase, RecordCapturer, get_db_name, tagged
 from odoo.tools import mute_logger
+from odoo.addons.base.models.ir_cron import MIN_FAILURE_COUNT_BEFORE_DEACTIVATION, MIN_DELTA_BEFORE_DEACTIVATION
 
 
 class CronMixinCase:
@@ -51,8 +55,6 @@ class CronMixinCase:
             'active': True,
             'interval_number': 1,
             'interval_type': 'days',
-            'numbercall': -1,
-            'doall': False,
             'nextcall': fields.Datetime.now() + timedelta(hours=1),
             'lastcall': False,
             'priority': priority,
@@ -122,19 +124,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
     def test_cron_unactive_never_ready(self):
         self.cron.active = False
         self.cron.nextcall = fields.Datetime.now()
-        self.cron._trigger()
-        self.cron.flush_recordset()
-        self.env['ir.cron.trigger'].flush_model()
-
-        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
-        self.assertNotIn(self.cron.id, [job['id'] for job in ready_jobs])
-
-    def test_cron_numbercall0_never_ready(self):
-        self.cron.numbercall = 0
-        self.cron.nextcall = fields.Datetime.now()
-        self.cron._trigger()
-        self.cron.flush_recordset()
-        self.env['ir.cron.trigger'].flush_model()
+        self.env.flush_all()
 
         ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
         self.assertNotIn(self.cron.id, [job['id'] for job in ready_jobs])
@@ -205,61 +195,332 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertTrue(capture.records, "trigger should has been kept")
 
     def test_cron_process_job(self):
+        Progress = self.env['ir.cron.progress']
+        default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+        ten_days_ago = fields.Datetime.now() - MIN_DELTA_BEFORE_DEACTIVATION - timedelta(days=2)
+        almost_failed = MIN_FAILURE_COUNT_BEFORE_DEACTIVATION - 1
 
-        Setup = collections.namedtuple('Setup', ['doall', 'numbercall', 'missedcall', 'trigger'])
-        Expect = collections.namedtuple('Expect', ['call_count', 'call_left', 'active'])
+        def nothing(cron):
+            state = {'call_count': 0}
+            def f(self):
+                state['call_count'] += 1
+            return f, state
 
-        matrix = [
-            (Setup(doall=False, numbercall=-1, missedcall=2, trigger=False),
-             Expect(call_count=1, call_left=-1, active=True)),
-            (Setup(doall=True, numbercall=-1, missedcall=2, trigger=False),
-             Expect(call_count=2, call_left=-1, active=True)),
-            (Setup(doall=False, numbercall=3, missedcall=2, trigger=False),
-             Expect(call_count=1, call_left=2, active=True)),
-            (Setup(doall=True, numbercall=3, missedcall=2, trigger=False),
-             Expect(call_count=2, call_left=1, active=True)),
-            (Setup(doall=True, numbercall=3, missedcall=4, trigger=False),
-             Expect(call_count=3, call_left=0, active=False)),
-            (Setup(doall=True, numbercall=3, missedcall=0, trigger=True),
-             Expect(call_count=1, call_left=2, active=True)),
+        def eleven_success(cron):
+            state = {'call_count': 0}
+            CALL_TARGET = 11
+            def f(self):
+                state['call_count'] += 1
+                self.env['ir.cron']._notify_progress(
+                    done=1,
+                    remaining=CALL_TARGET - state['call_count']
+                )
+            return f, state
+
+        def five_success(cron):
+            state = {'call_count': 0}
+            CALL_TARGET = 5
+            def f(self):
+                state['call_count'] += 1
+                self.env['ir.cron']._notify_progress(
+                    done=1,
+                    remaining=CALL_TARGET - state['call_count']
+                )
+            return f, state
+
+        def failure(cron):
+            state = {'call_count': 0}
+            def f(self):
+                state['call_count'] += 1
+                raise ValueError
+            return f, state
+
+        def failure_partial(cron):
+            state = {'call_count': 0}
+            CALL_TARGET = 5
+            def f(self):
+                state['call_count'] += 1
+                self.env['ir.cron']._notify_progress(
+                    done=1,
+                    remaining=CALL_TARGET - state['call_count']
+                )
+                self.env.cr.commit()
+                raise ValueError
+            return f, state
+
+        def failure_fully(cron):
+            state = {'call_count': 0}
+            def f(self):
+                state['call_count'] += 1
+                self.env['ir.cron']._notify_progress(done=1, remaining=0)
+                self.env.cr.commit()
+                raise ValueError
+            return f, state
+
+        CASES = [
+            #                 IN          |                 OUT
+            #       callback, curr_failures, trigger, call_count, done_count, fail_count, active,
+            (        nothing,             0,   False,          1,          0,          0,  True),
+            (        nothing, almost_failed,   False,          1,          0,          0,  True),
+            ( eleven_success,             0,    True,         10,         10,          0,  True),
+            ( eleven_success, almost_failed,    True,         10,         10,          0,  True),
+            (   five_success,             0,   False,          5,          5,          0,  True),
+            (   five_success, almost_failed,   False,          5,          5,          0,  True),
+            (        failure,             0,   False,          1,          0,          1,  True),
+            (        failure, almost_failed,   False,          1,          0,          0, False),
+            (failure_partial,             0,   False,          5,          5,          1,  True),
+            (failure_partial, almost_failed,   False,          5,          5,          0, False),
+            (  failure_fully,             0,   False,          1,          1,          1,  True),
+            (  failure_fully, almost_failed,   False,          1,          1,          0, False),
         ]
 
-        for setup, expect in matrix:
-            with self.subTest(setup=setup, expect=expect):
+        for cb, curr_failures, trigger, call_count, done_count, fail_count, active in CASES:
+            with self.subTest(cb=cb, failure=curr_failures), closing(self.cr.savepoint()):
                 self.cron.write({
                     'active': True,
-                    'doall': setup.doall,
-                    'numbercall': setup.numbercall,
-                    'nextcall': fields.Datetime.now() - timedelta(days=setup.missedcall - 1),
+                    'failure_count': curr_failures,
+                    'first_failure_date': ten_days_ago if curr_failures else None
                 })
                 with self.capture_triggers(self.cron.id) as capture:
-                    if setup.trigger:
+                    if trigger:
                         self.cron._trigger()
 
-                self.cron.flush_recordset()
-                capture.records.flush_recordset()
+                self.env.flush_all()
                 self.registry.enter_test_mode(self.cr)
+                cb, state = cb(self.cron)
                 try:
-                    with patch.object(self.registry['ir.cron'], '_callback') as callback:
+                    with mute_logger('odoo.addons.base.models.ir_cron'),\
+                            patch.object(self.registry['ir.actions.server'], 'run', cb):
                         self.registry['ir.cron']._process_job(
                             self.registry.db_name,
                             self.registry.cursor(),
-                            self.cron.read(load=None)[0]
+                            {**self.cron.read(load=None)[0], **default_progress_values}
                         )
                 finally:
                     self.registry.leave_test_mode()
                 self.cron.invalidate_recordset()
                 capture.records.invalidate_recordset()
 
-                self.assertEqual(callback.call_count, expect.call_count)
-                self.assertEqual(self.cron.numbercall, expect.call_left)
-                self.assertEqual(self.cron.active, expect.active)
-                self.assertEqual(self.cron.lastcall, fields.Datetime.now())
-                self.assertEqual(self.cron.nextcall, fields.Datetime.now() + timedelta(days=1))
-                self.assertEqual(self.env['ir.cron.trigger'].search_count([
-                    ('cron_id', '=', self.cron.id),
-                    ('call_at', '<=', fields.Datetime.now())]
-                ), 0)
+                self.assertEqual(self.cron.id in [job['id'] for job in self.cron._get_all_ready_jobs(self.env.cr)], trigger)
+                self.assertEqual(state['call_count'], call_count)
+                self.assertEqual(Progress.search_count([('cron_id', '=', self.cron.id), ('done', '=', 1)]), done_count)
+                self.assertEqual(self.cron.failure_count, fail_count)
+                self.assertEqual(self.cron.active, active)
+
+    def test_cron_retrigger(self):
+        Trigger = self.env['ir.cron.trigger']
+        Progress = self.env['ir.cron.progress']
+        default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+
+        def make_run(cron):
+            state = {'call_count': 0}
+            CALL_TARGET = 11
+
+            def run(self):
+                state['call_count'] += 1
+                self.env['ir.cron']._notify_progress(done=1, remaining=CALL_TARGET - state['call_count'])
+            return run, state
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        mocked_run, mocked_run_state = make_run(self.cron)
+        try:
+            with patch.object(self.registry['ir.actions.server'], 'run', mocked_run):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**self.cron.read(load=None)[0], **default_progress_values}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.assertEqual(
+            mocked_run_state['call_count'], 10,
+            '`run` should have been called ten times',
+        )
+        self.assertEqual(
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 10,
+            'There should be 10 progress log for this cron',
+        )
+        self.assertEqual(
+            Trigger.search_count([('cron_id', '=', self.cron.id)]), 1,
+            "One trigger should have been kept",
+        )
+
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with patch.object(self.registry['ir.actions.server'], 'run', mocked_run):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**self.cron.read(load=None)[0], **default_progress_values}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
+        self.assertNotIn(
+            self.cron.id, [job['id'] for job in ready_jobs],
+            'The cron has finished executing'
+        )
+        self.assertEqual(
+            mocked_run_state['call_count'], 10 + 1,
+            '`run` should have been called one additional time',
+        )
+        self.assertEqual(
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 11,
+            'There should be 11 progress log for this cron',
+        )
+
+    def test_cron_failed_increase(self):
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        default_progress = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+        try:
+            with (
+                patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+                patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            ):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**self.cron.read(load=None)[0], **default_progress}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 1, 'The cron should have failed once')
+        self.assertEqual(self.cron.active, True, 'The cron should still be active')
+        self.assertFalse(notify.called)
+
+        self.cron.failure_count = 4
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with (
+                patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+                patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            ):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**self.cron.read(load=None)[0], **default_progress}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 5, 'The cron should have failed one more time but not reset (due to time)')
+        self.assertEqual(self.cron.active, True, 'The cron should not have been deactivated due to time constraint')
+        self.assertFalse(notify.called)
+
+        self.cron.failure_count = 4
+        self.cron.first_failure_date = fields.Datetime.now() - timedelta(days=8)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with (
+                patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+                patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            ):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**self.cron.read(load=None)[0], **default_progress}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 0, 'The cron should have failed one more time and reset to 0')
+        self.assertEqual(self.cron.active, False, 'The cron should have been deactivated after 5 failures')
+        self.assertTrue(notify.called)
+
+    def test_cron_timeout_failure(self):
+        self.cron._trigger()
+        progress = self.env['ir.cron.progress'].create([{
+                'cron_id': self.cron.id,
+                'remaining': 0,
+                'done': 0,
+                'timed_out_counter': 3,
+        }])
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+
+        try:
+            with mute_logger('odoo.addons.base.models.ir_cron'):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 1, 'The cron should have failed once')
+        self.assertEqual(self.cron.active, True, 'The cron should still be active')
+
+        self.cron._trigger()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            self.registry['ir.cron']._process_job(
+                self.registry.db_name,
+                self.registry.cursor(),
+                {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
+            )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 0, 'The cron should have succeeded and reset the counter')
+
+    def test_cron_timeout_success(self):
+        self.cron._trigger()
+        progress = self.env['ir.cron.progress'].create([{
+                'cron_id': self.cron.id,
+                'remaining': 0,
+                'done': 0,
+                'timed_out_counter': 3,
+        }])
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+
+        try:
+            with mute_logger('odoo.addons.base.models.ir_cron'):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 1, 'The cron should have failed once')
+        self.assertEqual(self.cron.active, True, 'The cron should still be active')
+
+        self.cron._trigger()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            self.registry['ir.cron']._process_job(
+                self.registry.db_name,
+                self.registry.cursor(),
+                {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
+            )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertEqual(self.cron.failure_count, 0, 'The cron should have succeeded and reset the counter')
 
 
 @tagged('-standard', '-at_install', 'post_install', 'database_breaking')
