@@ -418,6 +418,7 @@
                                     <li><code>UserError</code>: exception class for raising user-facing warning messages</li>
                                     <li><code>Command</code>: x2many commands namespace</li>
                                     <li>To return an action, assign: <code>action = {...}</code></li>
+                                    <li>To notify progress for CRON call and re-trigger a call if there is remaining tasks, use <code>env['ir.cron']._notify_progress(done=task_done_count, remaining=task_remaining_count)</code></li>
                                 </ul>
                                 <div >
                                     <p>Example of Python code:</p>
