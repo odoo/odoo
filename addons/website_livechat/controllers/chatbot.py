@@ -41,6 +41,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             discuss_channel_values['livechat_visitor_id'] = visitor_sudo.id
 
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
+        chatbot_script._post_welcome_steps(discuss_channel)
 
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),

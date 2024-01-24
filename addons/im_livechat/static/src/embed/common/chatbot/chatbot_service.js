@@ -26,7 +26,6 @@ export class ChatBotService {
     currentStep;
     /** @type {number} */
     nextStepTimeout;
-    hasPostedWelcomeSteps = false;
     isTyping = false;
 
     constructor(env, services) {
@@ -65,11 +64,6 @@ export class ChatBotService {
                 this.start();
             }
         });
-        this.livechatService.onStateChange(SESSION_STATE.PERSISTED, async () => {
-            if (this.livechatService.thread.isChatbotThread) {
-                await this.postWelcomeSteps();
-            }
-        });
         this.livechatService.onStateChange(SESSION_STATE.NONE, () => this.stop());
         this.bus.addEventListener("MESSAGE_POST", ({ detail: message }) => {
             if (this.currentStep?.type === "free_input_multi") {
@@ -89,7 +83,6 @@ export class ChatBotService {
         }
         this.chatbot = this.chatbot ?? new Chatbot(this.livechatService.rule.chatbot);
         if (this.livechatService.options.isTestChatbot && !this.hasPostedWelcomeSteps) {
-            await this.postWelcomeSteps();
             this.save();
         }
         if (!this.currentStep?.expectAnswer) {
@@ -131,23 +124,6 @@ export class ChatBotService {
         this.livechatService.thread?.messages.push({ ...message, body: markup(message.body) });
         this.currentStep = null;
         this.start();
-    }
-
-    /**
-     * Save the welcome steps on the server.
-     */
-    async postWelcomeSteps() {
-        const rawMessages = await rpc("/chatbot/post_welcome_steps", {
-            channel_uuid: this.livechatService.thread.uuid,
-            chatbot_script_id: this.chatbot.scriptId,
-        });
-        for (const rawMessage of rawMessages) {
-            this.livechatService.thread?.messages.add({
-                ...rawMessage,
-                body: markup(rawMessage.body),
-            });
-        }
-        this.hasPostedWelcomeSteps = true;
     }
 
     // =============================================================================

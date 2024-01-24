@@ -165,6 +165,8 @@ class LivechatController(http.Controller):
             }
         else:
             channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
+            if chatbot_script:
+                chatbot_script._post_welcome_steps(channel)
             with replace_exceptions(UserError, by=NotFound()):
                 # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
                 __, guest = channel.sudo()._find_or_create_persona_for_channel(
@@ -180,7 +182,7 @@ class LivechatController(http.Controller):
             channel_info = channel._channel_info()[0]
             if guest:
                 channel_info['guest_token'] = guest._format_auth_cookie()
-        channel_info.update(isNewlyCreated=True, isLoaded=True)
+        channel_info.update(isLoaded=not persisted or not chatbot_script)
         store = {}
         request.env["ir.http"]._add_self_to_session_info(store)
         return {

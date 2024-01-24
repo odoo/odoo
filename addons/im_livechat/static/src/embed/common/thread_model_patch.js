@@ -29,11 +29,6 @@ patch(Thread.prototype, {
             },
         });
         this.chatbot_script_id = null;
-        /**
-         * Indicates whether this thread was just created (i.e. no reload occurs
-         * since the creation).
-         */
-        this.isNewlyCreated = false;
         this.requested_by_operator = false;
     },
 
