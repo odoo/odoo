@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 
 from odoo.tools.float_utils import float_round
@@ -1970,3 +1971,13 @@ class CustomTableQuery(models.Model):
             JOIN test_new_api_any_tag AS tag ON tag.id = rel.test_new_api_any_tag_id
             GROUP BY tag.id
         """
+
+
+class ModelAutovacuumed(models.Model):
+    _name = _description = 'test_new_api.autovacuumed'
+
+    expire_at = fields.Datetime('Expires at')
+
+    @api.autovacuum
+    def _gc(self):
+        self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
