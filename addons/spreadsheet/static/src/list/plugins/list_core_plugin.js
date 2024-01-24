@@ -20,6 +20,7 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
  * @property {string} model The technical name of the model we are listing
  * @property {string} name Name of the list
  * @property {Array<string>} orderBy
+ * @property {string} actionXmlId
  *
  * @typedef {Object} List
  * @property {string} id
@@ -213,6 +214,7 @@ export class ListCorePlugin extends OdooCorePlugin {
             orderBy: [...def.searchParams.orderBy],
             id,
             name: def.name,
+            actionXmlId: def.actionXmlId,
         };
     }
 
