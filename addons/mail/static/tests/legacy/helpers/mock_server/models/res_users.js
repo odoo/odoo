@@ -66,7 +66,6 @@ patch(MockServer.prototype, {
                 fields: ["source", "substitution"],
             }),
             Store: {
-                current_user_id: this.pyEnv.currentUserId,
                 discuss: {
                     inbox: {
                         counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
