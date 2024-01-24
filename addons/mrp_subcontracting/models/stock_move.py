@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.misc import OrderedSet
 
 
 class StockMove(models.Model):
@@ -117,12 +118,18 @@ class StockMove(models.Model):
         return super(StockMove, self - move_untouchable)._set_quantities_to_reservation()
 
     def _action_cancel(self):
+        productions_to_cancel_ids = OrderedSet()
         for move in self:
             if move.is_subcontract:
                 active_production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
                 moves = self.env.context.get('moves_todo')
                 if not moves or active_production not in moves.move_orig_ids.production_id:
-                    active_production.with_context(skip_activity=True).action_cancel()
+                    productions_to_cancel_ids.update(active_production.ids)
+
+        if productions_to_cancel_ids:
+            productions_to_cancel = self.env['mrp.production'].browse(productions_to_cancel_ids)
+            productions_to_cancel.with_context(skip_activity=True).action_cancel()
+
         return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):

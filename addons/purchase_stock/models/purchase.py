@@ -8,6 +8,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
+from odoo.tools.misc import OrderedSet
 
 
 class PurchaseOrder(models.Model):
@@ -96,6 +97,8 @@ class PurchaseOrder(models.Model):
         return result
 
     def button_cancel(self):
+        order_lines_ids = OrderedSet()
+        pickings_to_cancel_ids = OrderedSet()
         for order in self:
             for move in order.order_line.mapped('move_ids'):
                 if move.state == 'done':
@@ -103,20 +106,38 @@ class PurchaseOrder(models.Model):
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
-                for order_line in order.order_line:
-                    order_line.move_ids._action_cancel()
-                    if order_line.move_dest_ids:
-                        move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
-                        if order_line.propagate_cancel:
-                            move_dest_ids._action_cancel()
-                        else:
-                            move_dest_ids.write({'procure_method': 'make_to_stock'})
-                            move_dest_ids._recompute_state()
+                order_lines_ids.update(order.order_line.ids)
 
-            for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
-                pick.action_cancel()
+            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state != 'cancel').ids)
 
-            order.order_line.write({'move_dest_ids':[(5,0,0)]})
+        order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
+
+        moves_to_cancel_ids = OrderedSet()
+        moves_to_recompute_ids = OrderedSet()
+        for order_line in order_lines:
+            moves_to_cancel_ids.update(order_line.move_ids.ids)
+            if order_line.move_dest_ids:
+                move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
+                if order_line.propagate_cancel:
+                    moves_to_cancel_ids.update(move_dest_ids.ids)
+                else:
+                    moves_to_recompute_ids.update(move_dest_ids.ids)
+
+        if moves_to_cancel_ids:
+            moves_to_cancel = self.env['stock.move'].browse(moves_to_cancel_ids)
+            moves_to_cancel._action_cancel()
+
+        if moves_to_recompute_ids:
+            moves_to_recompute = self.env['stock.move'].browse(moves_to_recompute_ids)
+            moves_to_recompute.write({'procure_method': 'make_to_stock'})
+            moves_to_recompute._recompute_state()
+
+        if pickings_to_cancel_ids:
+            pikings_to_cancel = self.env['stock.picking'].browse(pickings_to_cancel_ids)
+            pikings_to_cancel.action_cancel()
+
+        if order_lines:
+            order_lines.write({'move_dest_ids':[(5, 0, 0)]})
 
         return super(PurchaseOrder, self).button_cancel()
 
