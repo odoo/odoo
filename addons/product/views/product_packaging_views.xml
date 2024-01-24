@@ -18,6 +18,17 @@
         </field>
     </record>
 
+    <record id="product_packaging_search_view" model="ir.ui.view">
+        <field name="name">product.packaging.search</field>
+        <field name="model">product.packaging</field>
+        <field name="arch" type="xml">
+            <search string="Product Packagings">
+                <field name="name"/>
+                <field name="product_id" string="Product"/>
+            </search>
+        </field>
+    </record>
+
     <record id="product_packaging_tree_view2" model="ir.ui.view">
         <field name="name">product.packaging.tree.view2</field>
         <field name="model">product.packaging</field>
