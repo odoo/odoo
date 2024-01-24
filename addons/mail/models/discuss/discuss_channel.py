@@ -531,9 +531,9 @@ class Channel(models.Model):
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
                     'active': True,
-                    'groups': [],
                     'id': partner_id,
                     'is_follower': False,
+                    'groups': [],
                     'lang': lang,
                     'notif': notif,
                     'share': partner_share,
@@ -542,21 +542,25 @@ class Channel(models.Model):
                     'ushare': ushare,
                 })
 
-        if self.channel_type == 'chat':
+        if self.is_chat or self.channel_type == "group":
+            already_in_ids = [r['id'] for r in recipients_data]
             recipients_data += [
                 {
                     'active': partner.active,
-                    'groups': [],
                     'id': partner.id,
                     'is_follower': False,
+                    'groups': [],
                     'lang': partner.lang,
                     'notif': 'web_push',
                     'share': partner.partner_share,
                     'type': 'customer',
                     'uid': False,
                     'ushare': False,
-                } for partner in self.channel_member_ids.filtered(
-                    lambda member: not member.mute_until_dt
+                } for partner in self.sudo().channel_member_ids.filtered(
+                    lambda member: (
+                        not member.mute_until_dt and
+                        member.partner_id.id not in already_in_ids
+                    )
                 ).partner_id
             ]
 
