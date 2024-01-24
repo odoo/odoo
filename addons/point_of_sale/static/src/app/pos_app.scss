@@ -69,6 +69,15 @@ input::-webkit-inner-spin-button {
 .h-12{
     height: 12%;
 }
-.modal-dialog{
-    height: 100%;
+
+@media screen and (max-width: 575px) {
+    .pos .modal-dialog{
+        max-height: 90vh;
+    }
+    .pos .modal-content{
+        max-height: 90vh;
+    }
+    .pos .modal-body{
+        overflow: scroll;
+    }
 }

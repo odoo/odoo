@@ -63,7 +63,7 @@ patch(Order.prototype, {
             this.pos.ordersToUpdateSet.add(this);
         }
     },
-    async add_product(product, options) {
+    add_product(product, options) {
         const result = super.add_product(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             this.setBooked(true);
