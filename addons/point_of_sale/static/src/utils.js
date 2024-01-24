@@ -1,5 +1,4 @@
 /** @odoo-module */
-
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript

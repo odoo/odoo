@@ -1,15 +1,15 @@
 /** @odoo-module */
 
-import { Chrome } from "@point_of_sale/app/pos_app";
 import { Loader } from "@point_of_sale/app/loader/loader";
 import { getTemplate } from "@web/core/templates";
-import { App, mount, reactive, whenReady } from "@odoo/owl";
+import { mount, reactive, whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
-import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
+import { startOwl } from "@point_of_sale/startOwl";
+import { Chrome } from "@point_of_sale/app/pos_app";
 
 const loader = reactive({ isShown: true });
 whenReady(() => {
@@ -25,23 +25,10 @@ whenReady(() => {
         server_version_info: session.server_version_info,
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",
     };
-
-    // setup environment
-    const env = makeEnv();
-    await startServices(env);
-    // start application
-    await whenReady();
-    const app = new App(Chrome, {
+    const app = await startOwl(Chrome, {
         name: "Odoo Point of Sale",
-        env,
-        getTemplate,
-        dev: env.debug,
-        warnIfNoStaticProps: true,
-        translatableAttributes: ["data-tooltip"],
-        translateFn: _t,
         props: { disableLoader: () => (loader.isShown = false) },
     });
-    await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
         classList.add("o_rtl");
@@ -49,7 +36,7 @@ whenReady(() => {
     if (user.userId === 1) {
         classList.add("o_is_superuser");
     }
-    if (env.debug) {
+    if (app.env.debug) {
         classList.add("o_debug");
     }
     if (hasTouch()) {

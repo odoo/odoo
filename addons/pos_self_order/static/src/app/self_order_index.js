@@ -1,8 +1,5 @@
 /** @odoo-module */
-import { Component, whenReady, App } from "@odoo/owl";
-import { makeEnv, startServices } from "@web/env";
-import { getTemplate } from "@web/core/templates";
-import { _t } from "@web/core/l10n/translation";
+import { Component } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { Router } from "@pos_self_order/app/router";
@@ -17,8 +14,9 @@ import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_pa
 import { StandNumberPage } from "@pos_self_order/app/pages/stand_number_page/stand_number_page";
 import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/order_history_page";
 import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/loading_overlay";
+import { startOwl } from "@point_of_sale/startOwl";
 
-class selfOrderIndex extends Component {
+export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
     static props = [];
     static components = {
@@ -44,20 +42,4 @@ class selfOrderIndex extends Component {
         return Object.values(this.selfOrder.productByIds).length > 0;
     }
 }
-
-export async function createPublicRoot() {
-    await whenReady();
-    const env = makeEnv();
-    await startServices(env);
-    const app = new App(selfOrderIndex, {
-        getTemplate,
-        env: env,
-        dev: env.debug,
-        translateFn: _t,
-        translatableAttributes: ["data-tooltip"],
-    });
-    return app.mount(document.body);
-}
-
-createPublicRoot();
-export default { selfOrderIndex, createPublicRoot };
+startOwl(selfOrderIndex);
