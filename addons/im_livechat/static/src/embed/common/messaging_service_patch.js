@@ -32,7 +32,7 @@ patch(Messaging.prototype, {
             messagingData.Thread.push(livechatService.savedState.threadData);
         }
         this.store.insert(messagingData);
-        this.initMessagingCallback();
+        this.isReady.resolve();
     },
     get initMessagingParams() {
         return {
