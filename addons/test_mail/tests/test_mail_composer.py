@@ -5,7 +5,6 @@ import base64
 
 from ast import literal_eval
 from datetime import timedelta
-from freezegun import freeze_time
 from itertools import chain, product
 from unittest.mock import DEFAULT, patch
 
@@ -32,7 +31,6 @@ class TestMailComposer(MailCommon, TestRecipients):
 
         # force 'now' to ease test about schedulers
         cls.reference_now = FieldDatetime.from_string('2022-12-24 12:00:00')
-        cls.env.cr._now = cls.reference_now  # force create_date to check schedulers
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
@@ -56,15 +54,16 @@ class TestMailComposer(MailCommon, TestRecipients):
         )
         cls.env.ref('mail.group_mail_template_editor').users -= cls.user_rendering_restricted
 
-        cls.test_record = cls.env['mail.test.ticket.mc'].with_context(cls._test_context).create({
-            'name': 'TestRecord',
-            'customer_id': cls.partner_1.id,
-            'user_id': cls.user_employee_2.id,
-        })
-        cls.test_records, cls.test_partners = cls._create_records_for_batch(
-            'mail.test.ticket.mc', 2,
-            additional_values={'user_id': cls.user_employee_2.id},
-        )
+        with cls.mock_datetime_and_now(cls, cls.reference_now):
+            cls.test_record = cls.env['mail.test.ticket.mc'].with_context(cls._test_context).create({
+                'name': 'TestRecord',
+                'customer_id': cls.partner_1.id,
+                'user_id': cls.user_employee_2.id,
+            })
+            cls.test_records, cls.test_partners = cls._create_records_for_batch(
+                'mail.test.ticket.mc', 2,
+                additional_values={'user_id': cls.user_employee_2.id},
+            )
 
         cls.test_report, cls.test_report_2, cls.test_report_3 = cls.env['ir.actions.report'].create([
             {
@@ -1679,7 +1678,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 schedule_cron_id = self.env.ref('mail.ir_cron_send_scheduled_message').id
                 with self.mock_mail_gateway(mail_unlink_sent=False), \
                      self.mock_mail_app(), \
-                     freeze_time(self.reference_now), \
+                     self.mock_datetime_and_now(self.reference_now), \
                      self.capture_triggers(schedule_cron_id) as capt:
                     composer._action_send_mail()
 
@@ -1748,7 +1747,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     # Send the scheduled message from the CRON
                     with self.mock_mail_gateway(mail_unlink_sent=False), \
                          self.mock_mail_app(), \
-                         freeze_time(self.reference_now + timedelta(days=3)):
+                         self.mock_datetime_and_now(self.reference_now + timedelta(days=3)):
                         self.env['mail.message.schedule'].sudo()._send_notifications_cron()
 
                         # monorecord: force_send notifications
@@ -2191,6 +2190,7 @@ class TestComposerResultsCommentStatus(TestMailComposer):
         cls.template.write({
             'auto_delete': False,
             'model_id': cls.env['ir.model']._get_id(cls.test_records._name),
+            'scheduled_date': False,
         })
 
     def test_assert_initial_data(self):
@@ -2591,7 +2591,7 @@ class TestComposerResultsMass(TestMailComposer):
                 self.assertEqual(composer.email_from, self.template.email_from)
 
                 with self.mock_mail_gateway(mail_unlink_sent=False), \
-                     freeze_time(self.reference_now):
+                     self.mock_datetime_and_now(self.reference_now):
                     composer._action_send_mail()
 
                     # partners created from raw emails
@@ -2616,7 +2616,7 @@ class TestComposerResultsMass(TestMailComposer):
                                          [self.reference_now + timedelta(days=2)] * 2)
 
                         # simulate cron queue at right time for sending
-                        with freeze_time(self.reference_now + timedelta(days=2)):
+                        with self.mock_datetime_and_now(self.reference_now + timedelta(days=2)):
                             self.env['mail.mail'].sudo().process_email_queue()
 
                         # everything should be sent now
@@ -3236,6 +3236,7 @@ class TestComposerResultsMassStatus(TestMailComposer):
         ])
         cls.template.write({
             'model_id': cls.env['ir.model']._get_id(cls.test_records._name),
+            'scheduled_date': False,
         })
 
     def test_assert_initial_data(self):
