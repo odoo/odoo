@@ -1441,8 +1441,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             {'location_id': stock_location.id, 'location_dest_id': out_location.id, 'product_uom_qty': 1.0, 'quantity_done': 0.0, 'state': 'assigned'},
             {'location_id': out_location.id, 'location_dest_id': customer_location.id, 'product_uom_qty': 1.0, 'quantity_done': 0.0, 'state': 'waiting'},
         ])
-        self.assertEqual(ship01.move_ids.move_orig_ids, pick01.move_ids)
-        self.assertEqual(ship02.move_ids.move_orig_ids, pick02.move_ids)
+        self.assertEqual(ship01.move_ids.move_orig_ids, (pick01 | pick02).move_ids)
+        self.assertEqual(ship02.move_ids.move_orig_ids, (pick01 | pick02).move_ids)
 
     def test_incoterm_in_advance_payment(self):
         """When generating a advance payment invoice from a SO, this invoice incoterm should be the same as the SO"""
