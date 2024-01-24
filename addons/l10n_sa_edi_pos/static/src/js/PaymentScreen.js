@@ -9,7 +9,7 @@ odoo.define('l10n_sa_edi_pos.PaymentScreen', function(require) {
         //@Override
         toggleIsToInvoice() {
             // If the company is Saudi, POS orders should always be Invoiced
-            if (this.pos.company.country && this.currentOrder.pos.company.country.code === 'SA') return false
+            if (this.currentOrder.pos.company.country && this.currentOrder.pos.company.country.code === 'SA') return false
             return super.toggleIsToInvoice(...arguments);
         }
     };
