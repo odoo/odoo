@@ -1772,8 +1772,11 @@ export class Order extends PosModel {
     hasChangesToPrint() {
         return this.getOrderChanges().count ? true : false;
     }
+    canPay() {
+        return this.orderlines.length;
+    }
     async pay() {
-        if (!this.orderlines.length) {
+        if (!this.canPay()) {
             return;
         }
         if (
