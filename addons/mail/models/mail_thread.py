@@ -2948,7 +2948,7 @@ class MailThread(models.AbstractModel):
         }
 
     @api.model
-    def _is_notification_scheduled(self, notify_cheduled_date):
+    def _is_notification_scheduled(self, notify_scheduled_date):
         """ Helper to check if notification are about to be scheduled. Eases
         overrides.
 
@@ -2959,12 +2959,10 @@ class MailThread(models.AbstractModel):
         :return bool: True if a valid datetime has been found and is in the
           future; False otherwise.
         """
-        if notify_cheduled_date:
-            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(notify_cheduled_date)
-            notify_cheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
-        return (
-            notify_cheduled_date and notify_cheduled_date > datetime.datetime.utcnow()
-        )
+        if notify_scheduled_date:
+            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(notify_scheduled_date)
+            notify_scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+        return notify_scheduled_date if notify_scheduled_date and notify_scheduled_date > self.env.cr.now() else False
 
     def _raise_for_invalid_parameters(self, parameter_names, forbidden_names=None, restricting_names=None):
         """ Helper to warn about invalid parameters (or fields).
@@ -3067,11 +3065,8 @@ class MailThread(models.AbstractModel):
             return recipients_data
 
         # if scheduled for later: add in queue instead of generating notifications
-        scheduled_date = kwargs.pop('scheduled_date', None)
+        scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
-            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
-            scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
-        if scheduled_date and scheduled_date > datetime.datetime.utcnow():
             # send the message notifications at the scheduled date
             self.env['mail.message.schedule'].sudo().create({
                 'scheduled_datetime': scheduled_date,
