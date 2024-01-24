@@ -48,8 +48,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         if (doReload) {
             this._reloadAmount(true);
         } else {
-            this.$('div[id="o_sale_portal_use_amount_total"]').hide();
-            this.$('div[id="o_sale_portal_use_amount_prepayment"]').show();
+            this.$('span[id="o_sale_portal_use_amount_total"]').hide();
+            this.$('span[id="o_sale_portal_use_amount_prepayment"]').show();
         }
     },
 
@@ -60,8 +60,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         if (doReload) {
             this._reloadAmount(false);
         } else {
-            this.$('div[id="o_sale_portal_use_amount_total"]').show();
-            this.$('div[id="o_sale_portal_use_amount_prepayment"]').hide();
+            this.$('span[id="o_sale_portal_use_amount_total"]').show();
+            this.$('span[id="o_sale_portal_use_amount_prepayment"]').hide();
         }
     },
 
