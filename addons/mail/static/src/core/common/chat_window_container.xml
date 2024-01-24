@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatWindowContainer">
-    <div class="o-mail-ChatWindowContainer" t-if="store.isMessagingReady and (!store.discuss.isActive or ui.isSmall)">
+    <div class="o-mail-ChatWindowContainer" t-if="!store.discuss.isActive or ui.isSmall">
         <div t-if="chatWindowService.hidden.length > 0 and !ui.isSmall" t-ref="hiddenMenu" class="o-mail-ChatWindow-hiddenMenuContainer position-fixed bottom-0">
             <t t-call="mail.ChatWindowHiddenMenu"/>
         </div>

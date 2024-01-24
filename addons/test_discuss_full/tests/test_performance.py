@@ -11,12 +11,15 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
     # Queries for _query_count_init_store:
+    #     1: action_discuss_id
     #     1: hasGifPickerFeature
     #     1: hasLinkPreviewFeature
     #     1: hasMessageTranslationFeature
+    #     1: internalUserGroupId
+    #     1: mt_comment_id
     #     6: odoobot format
-    _query_count_init_store = 9
-    _query_count = 52
+    _query_count_init_store = 12
+    _query_count = 49
     _query_count_discuss_channels = 68
 
     def setUp(self):
@@ -157,11 +160,15 @@ class TestDiscussFullPerformance(HttpCase):
         """Returns the result of a call to init_messaging.
         The point of having a separate getter is to allow it to be overriden.
         """
+        xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
             "Store": {
+                "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
                 "hasMessageTranslationFeature": False,
+                "internalUserGroupId": self.env.ref("base.group_user").id,
+                "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": {
                     "active": False,
                     "email": "odoobot@example.com",
@@ -220,15 +227,12 @@ class TestDiscussFullPerformance(HttpCase):
                 },
             ],
             "Store": {
-                "action_discuss_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.action_discuss"),
                 "discuss": {
                     "inbox": {"counter": 1, "id": "inbox", "model": "mail.box"},
                     "starred": {"counter": 1, "id": "starred", "model": "mail.box"},
                 },
                 "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
                 "initChannelsUnreadCounter": 1,
-                "internalUserGroupId": self.env.ref("base.group_user").id,
-                "mt_comment_id": self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment"),
                 "odoobotOnboarding": False,
             },
             "Thread": [

@@ -8,8 +8,6 @@ import { Record } from "../common/record";
 patch(Thread.prototype, {
     /** @type {integer|undefined} */
     recipientsCount: undefined,
-    /** @type {Number} */
-    mt_comment_id: undefined,
     setup() {
         super.setup();
         this.recipients = Record.many("Follower");
