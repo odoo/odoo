@@ -7,6 +7,7 @@ import {
     escapeRegExp,
     intersperse,
     isEmail,
+    isNumeric,
     sprintf,
     unaccent,
 } from "@web/core/utils/strings";
@@ -123,4 +124,16 @@ test("isEmail", () => {
     expect(isEmail("te st@odoo.com")).toBe(false);
 
     expect(isEmail("test@odoo.com")).toBe(true);
+});
+
+test("isNumeric", () => {
+    expect(isNumeric("")).toBe(false);
+    expect(isNumeric("test1234")).toBe(false);
+    expect(isNumeric("1234test")).toBe(false);
+    expect(isNumeric("1234test1234")).toBe(false);
+    expect(isNumeric("-1234")).toBe(false);
+    expect(isNumeric("12,34")).toBe(false);
+    expect(isNumeric("12.34")).toBe(false);
+
+    expect(isNumeric("1234")).toBe(true);
 });

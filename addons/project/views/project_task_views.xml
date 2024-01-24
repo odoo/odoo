@@ -181,6 +181,7 @@
 
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="name">Tasks</field>
+            <field name="path">tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>

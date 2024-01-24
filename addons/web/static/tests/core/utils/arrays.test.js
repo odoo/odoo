@@ -6,6 +6,7 @@ import {
     groupBy,
     intersection,
     shallowEqual,
+    slidingWindow,
     sortBy,
     unique,
     zip,
@@ -291,5 +292,18 @@ describe("zip", () => {
 describe("zipWith", () => {
     test("zipWith", () => {
         expect(zipWith([{ a: 1 }, { b: 2 }], ["a", "b"], (o, k) => o[k])).toEqual([1, 2]);
+    });
+});
+
+describe("slidingWindow", () => {
+    test("slidingWindow", () => {
+        expect(slidingWindow([1, 2, 3, 4], 2)).toEqual([
+            [1, 2],
+            [2, 3],
+            [3, 4],
+        ]);
+        expect(slidingWindow([1, 2, 3, 4], 4)).toEqual([[1, 2, 3, 4]]);
+        expect(slidingWindow([1, 2, 3, 4], 5)).toEqual([]);
+        expect(slidingWindow([], 1)).toEqual([]);
     });
 });

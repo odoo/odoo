@@ -23,6 +23,7 @@ import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeServerError } from "../../helpers/mock_server";
 import { router } from "@web/core/browser/router";
+import { browser } from "@web/core/browser/browser";
 
 let target;
 let serverData;
@@ -803,6 +804,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             1: {
                 id: 1,
                 name: "Settings view",
+                path: "settings",
                 res_model: "res.config.settings",
                 type: "ir.actions.act_window",
                 views: [[1, "form"]],
@@ -839,13 +841,16 @@ QUnit.module("SettingsFormView", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, 1);
+        execTimeouts();
+        assert.strictEqual(browser.location.pathname, "/odoo/settings");
         assert.notOk(target.querySelector(".o_field_boolean input").disabled);
         await click(target.querySelector(".o_field_boolean input"));
         assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
         await click(target.querySelector(".o_control_panel .o_form_button_save"));
 
         await nextTick();
-        assert.notOk(router.current.id);
+        assert.notOk(router.current.resId);
+        assert.strictEqual(browser.location.pathname, "/odoo/settings");
     });
 
     QUnit.test(

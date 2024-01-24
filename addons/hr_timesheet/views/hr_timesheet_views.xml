@@ -281,6 +281,7 @@
         -->
         <record id="act_hr_timesheet_line" model="ir.actions.act_window">
             <field name="name">My Timesheets</field>
+            <field name="path">timesheets</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,kanban,pivot,graph</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>

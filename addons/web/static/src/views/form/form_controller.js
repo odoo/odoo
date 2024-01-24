@@ -31,10 +31,10 @@ import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
-import { router } from "@web/core/browser/router";
 
-import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onRendered, status, useEffect, useRef, useState } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
+import { effect } from "@web/core/utils/reactive";
 
 const viewRegistry = registry.category("views");
 
@@ -135,10 +135,12 @@ export class FormController extends Component {
         preventEdit: { type: Boolean, optional: true },
         onDiscard: { type: Function, optional: true },
         onSave: { type: Function, optional: true },
+        updateResId: { type: Function, optional: true },
     };
     static defaultProps = {
         preventCreate: false,
         preventEdit: false,
+        updateResId: () => {},
     };
 
     setup() {
@@ -185,10 +187,15 @@ export class FormController extends Component {
 
         this.cpButtonsRef = useRef("cpButtons");
 
-        useEffect(() => {
-            if (!this.env.inDialog) {
-                this.updateURL();
-            }
+        onMounted(() => {
+            effect(
+                (model) => {
+                    if (status(this) === "mounted") {
+                        this.props.updateResId(model.root.resId);
+                    }
+                },
+                [this.model]
+            );
         });
 
         // select footers that are not in subviews and move them to another arch
@@ -402,10 +409,6 @@ export class FormController extends Component {
             ev.preventDefault();
             ev.returnValue = "Unsaved changes";
         }
-    }
-
-    updateURL() {
-        router.pushState({ id: this.model.root.resId || undefined });
     }
 
     getStaticActionMenuItems() {

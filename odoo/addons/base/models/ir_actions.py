@@ -15,6 +15,7 @@ import logging
 from operator import getitem
 import requests
 import json
+import re
 
 from pytz import timezone
 
@@ -54,9 +55,12 @@ class IrActions(models.Model):
     _order = 'name'
     _allow_sudo_commands = False
 
+    _sql_constraints = [('path_unique', 'unique(path)', "Path to shown in the URL must be unique! Please choose another one.")]
+
     name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)
     xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
+    path = fields.Char(string="Path to show in the URL")
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
                        translate=True)
@@ -66,6 +70,19 @@ class IrActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
+
+    @api.constrains('path')
+    def _check_path(self):
+        for action in self:
+            if action.path:
+                if not re.fullmatch(r'[a-z][a-z0-9_-]*', action.path):
+                    raise ValidationError(_('The path should contain only lowercase alphanumeric characters, underscore, and dash, and it should start with a letter.'))
+                if action.path.startswith("m-"):
+                    raise ValidationError(_("'m-' is a reserved prefix."))
+                if action.path.startswith("act-"):
+                    raise ValidationError(_("'act-' is a reserved prefix."))
+                if action.path == "new":
+                    raise ValidationError(_("'new' is reserved, and can not be used as path."))
 
     def _compute_xml_id(self):
         res = self.get_external_id()
@@ -214,6 +231,7 @@ class IrActions(models.Model):
         return {
             "binding_model_id", "binding_type", "binding_view_types",
             "display_name", "help", "id", "name", "type", "xml_id",
+            "path",
         }
 
 

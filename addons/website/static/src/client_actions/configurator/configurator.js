@@ -628,11 +628,13 @@ export class Configurator extends Component {
         this.action = useService('action');
 
         // Using the back button must update the router state.
-        useExternalListener(window, "popstate", () => {
-            const match = window.location.pathname.match(/\/website\/configurator\/(.*)$/);
-            const step = parseInt(match && match[1], 10) || 1;
-            // Do not use navigate because URL is already updated.
-            this.state.currentStep = step;
+        useExternalListener(window, "popstate", (ev) => {
+            // FIXME: this doesn't work unless this component is already mounted so navigating through
+            // history from a different client action will not work.
+            if (ev.state && "configuratorStep" in ev.state) {
+                // Do not use navigate because URL is already updated.
+                this.state.currentStep = ev.state.configuratorStep;
+            }
         });
 
         const initialStep = this.props.action.context.params && this.props.action.context.params.step;
@@ -674,7 +676,7 @@ export class Configurator extends Component {
     }
 
     updateBrowserUrl() {
-        history.pushState({}, '', this.pathname);
+        history.pushState({ skipRouteChange: true, configuratorStep: this.state.currentStep }, '', this.pathname);
     }
 
     navigate(step) {

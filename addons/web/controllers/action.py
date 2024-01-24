@@ -2,9 +2,10 @@
 
 import logging
 from odoo import _
-from odoo.exceptions import MissingError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import Controller, request, route
 from .utils import clean_action
+from werkzeug.exceptions import BadRequest
 
 
 _logger = logging.getLogger(__name__)
@@ -20,8 +21,12 @@ class Action(Controller):
             action_id = int(action_id)
         except ValueError:
             try:
-                action = request.env.ref(action_id)
-                assert action._name.startswith('ir.actions.')
+                if '.' in action_id:
+                    action = request.env.ref(action_id)
+                    assert action._name.startswith('ir.actions.')
+                else:
+                    action = Actions.sudo().search([('path', '=', action_id)], limit=1)
+                    assert action
                 action_id = action.id
             except Exception as exc:
                 raise MissingError(_("The action %r does not exist.", action_id)) from exc
@@ -45,3 +50,37 @@ class Action(Controller):
         action = request.env['ir.actions.server'].browse([action_id])
         result = action.run()
         return clean_action(result, env=action.env) if result else False
+
+    @route('/web/action/load_breadcrumbs', type='json', auth='user', readonly=True)
+    def load_breadcrumbs(self, actions):
+        display_names = []
+        for action in actions:
+            record_id = action.get('resId')
+            try:
+                if action.get('action'):
+                    act = self.load(action.get('action'))
+                    if act['type'] == 'ir.actions.server':
+                        if act['path']:
+                            act = request.env['ir.actions.server'].browse(act['id']).run()
+                        else:
+                            display_names.append({'error': 'A server action must have a path to be restored'})
+                            continue
+                    if record_id:
+                        display_names.append(request.env[act['res_model']].browse(record_id).display_name)
+                    else:
+                        request.env[act['res_model']].check_access_rights('read')
+                        # action shouldn't be available on its own if it doesn't have multi-record views
+                        name = act['display_name'] if any(view[1] != 'form' and view[1] != 'search' for view in act['views']) else None
+                        display_names.append(name)
+                elif action.get('model'):
+                    Model = request.env[action.get('model')]
+                    if record_id:
+                        display_names.append(Model.browse(record_id).display_name)
+                    else:
+                        # This case cannot be produced by the web client
+                        raise BadRequest('Actions with a model should also have a resId')
+                else:
+                    raise BadRequest('Actions should have either an action (id or path) or a model')
+            except (MissingError, AccessError) as exc:
+                display_names.append({'error': str(exc)})
+        return display_names

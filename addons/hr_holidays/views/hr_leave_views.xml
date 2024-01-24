@@ -626,6 +626,7 @@
 
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
         <field name="name">Dashboard</field>
+        <field name="path">time-off</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,tree,form,activity</field>
         <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>

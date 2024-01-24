@@ -54,21 +54,16 @@ function getCompanyIdsFromBrowser(state) {
 
 const errorHandlerRegistry = registry.category("error_handlers");
 function accessErrorHandler(env, error, originalError) {
-    if (!router.current._company_switching) {
+    const { _company_switching, resId } = router.current;
+    if (
+        !_company_switching ||
+        originalError?.exceptionName !== "odoo.exceptions.AccessError" ||
+        !resId
+    ) {
         return false;
     }
-    if (originalError?.exceptionName === "odoo.exceptions.AccessError") {
-        const { model, id, view_type } = router.current;
-        if (!model || !id || view_type !== "form") {
-            return false;
-        }
-        if (error.event) {
-            error.event.preventDefault();
-        }
-        router.pushState({ id: undefined, view_type: undefined }, { reload: true });
-        return true;
-    }
-    return false;
+    error.event?.preventDefault();
+    return true;
 }
 
 export const companyService = {

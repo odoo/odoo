@@ -11,7 +11,6 @@ import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 import { WebsiteDialog } from "@website/components/dialog/dialog";
-import { routeToUrl, router } from "@web/core/browser/router";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from '@website/js/utils';
 import { renderToElement } from "@web/core/utils/render";
@@ -181,25 +180,6 @@ export class WebsitePreview extends Component {
             };
         }, () => []);
 
-        useEffect(() => {
-            let leftOnBackNavigation = false;
-            const handleBackNavigation = () => {
-                if (window.location.pathname === '/web') {
-                    leftOnBackNavigation = true;
-                }
-            };
-            window.addEventListener('popstate', handleBackNavigation);
-            return () => {
-                window.removeEventListener('popstate', handleBackNavigation);
-                // When leaving the client action, its original url is pushed
-                // so that the router can replay the action on back navigation
-                // from other screens.
-                if (!leftOnBackNavigation) {
-                    history.pushState({}, null, this.backendUrl);
-                }
-            };
-        }, () => []);
-
         const toggleIsMobile = () => {
             const wrapwrapEl = this.iframe.el.contentDocument.querySelector('#wrapwrap');
             if (wrapwrapEl) {
@@ -342,17 +322,11 @@ export class WebsitePreview extends Component {
             // loads "about:blank"), do not push that into the history
             // state as that could prevent the user from going back and could
             // trigger a traceback.
-            history.replaceState({}, document.title, '/web');
+            history.replaceState(history.state, document.title, '/web');
             return;
         }
-        // The original /web#action=... url is saved to be pushed on top of the
-        // history when leaving the component, so that the webclient can
-        // correctly find back and replay the client action.
-        if (!this.backendUrl) {
-            this.backendUrl = routeToUrl(router.current);
-        }
         const currentTitle = this.iframe.el.contentDocument.title;
-        history.replaceState({}, currentTitle, this.iframe.el.contentDocument.location.href);
+        history.replaceState(history.state, currentTitle, this.iframe.el.contentDocument.location.href);
         this.title.setParts({ action: currentTitle });
     }
 

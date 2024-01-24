@@ -16,6 +16,7 @@ import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
+import { router } from "@web/core/browser/router";
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -143,13 +144,13 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         useEffect(() => {
             // Back navigation is handled with an additional state in the
             // history, used to capture the popstate event.
-            history.pushState(null, '');
+            history.pushState({ skipRouteChange: true }, '');
             let hasFakeState = true;
             const leaveOnBackNavigation = () => {
                 hasFakeState = false;
                 this.leaveEditMode({
                     onStay: () => {
-                        history.pushState(null, '');
+                        history.pushState({ skipRouteChange: true }, '');
                         hasFakeState = true;
                     },
                     onLeave: () => history.back(),
@@ -160,6 +161,9 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             return () => {
                 window.removeEventListener('popstate', leaveOnBackNavigation);
                 if (hasFakeState) {
+                    // prevent router from reloading state from scratch
+                    // we just want to pop the fake history entry
+                    router.skipLoad = true;
                     history.back();
                 }
             };

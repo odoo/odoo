@@ -27,6 +27,7 @@ import { router } from "@web/core/browser/router";
 
 import { onMounted } from "@odoo/owl";
 import { patchUserContextWithCleanup } from "../../helpers/mock_services";
+import { redirect } from "@web/core/utils/urls";
 let serverData;
 let target;
 const serviceRegistry = registry.category("services");
@@ -527,8 +528,13 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick(); // wait for the update of the router
         assert.deepEqual(router.current, {
             action: 3,
-            model: "partner",
-            view_type: "list",
+            actionStack: [
+                {
+                    action: 3,
+                    displayName: "Partners",
+                    view_type: "list",
+                },
+            ],
         });
 
         // Click on the first record
@@ -539,12 +545,7 @@ QUnit.module("ActionManager", (hooks) => {
             "First record"
         );
         await nextTick(); // wait for the update of the router
-        assert.deepEqual(router.current, {
-            action: 3,
-            id: 1,
-            model: "partner",
-            view_type: "form",
-        });
+        assert.strictEqual(browser.location.pathname, "/odoo/act-3/1");
 
         // Delete the current record
         await click(target, ".o_cp_action_menus .fa-cog");
@@ -561,21 +562,12 @@ QUnit.module("ActionManager", (hooks) => {
             "Second record"
         );
         await nextTick(); // wait for the update of the router
-        assert.deepEqual(router.current, {
-            action: 3,
-            id: 2,
-            model: "partner",
-            view_type: "form",
-        });
+        assert.strictEqual(browser.location.pathname, "/odoo/act-3/2");
 
         // Go back to the previous (now deleted) record
         browser.history.back();
-        assert.deepEqual(router.current, {
-            action: 3,
-            id: 1, // This is the id of the deleted record
-            model: "partner",
-            view_type: "form",
-        });
+        await nextTick();
+        assert.strictEqual(browser.location.pathname, "/odoo/act-3/1");
         // As the previous one is deleted, we go back to the list
         await nextTick(); // wait for the update of the router
         await nextTick(); // wait for the doAction
@@ -1279,15 +1271,15 @@ QUnit.module("ActionManager", (hooks) => {
             // open a record in form view
             await click(target.querySelector(".o_list_view .o_data_row .o_data_cell"));
             await nextTick(); // wait for the router to update its state
-            assert.strictEqual(router.current.id, 1);
+            assert.strictEqual(router.current.resId, 1);
             // do some other action
             await doAction(webClient, 4);
             await nextTick(); // wait for the router to update its state
-            assert.notOk(router.current.id);
+            assert.notOk(router.current.resId);
             // go back to form view
             await click(target.querySelectorAll(".o_control_panel .breadcrumb a")[1]);
             await nextTick(); // wait for the router to update its state
-            assert.strictEqual(router.current.id, 1);
+            assert.strictEqual(router.current.resId, 1);
         }
     );
 
@@ -1599,7 +1591,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
-        Object.assign(browser.location, { search: "action=3&id=2&view_type=form" });
+        redirect("/web#action=3&id=2&view_type=form");
         const webClient = await createWebClient({ serverData });
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_form_view");
