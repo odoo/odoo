@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 
 from odoo.tools.float_utils import float_round
@@ -1915,3 +1916,13 @@ class AnyTag(models.Model):
 
     name = fields.Char()
     child_ids = fields.Many2many('test_new_api.any.child')
+
+
+class ModelAutovacuumed(models.Model):
+    _name = _description = 'test_new_api.autovacuumed'
+
+    expire_at = fields.Datetime('Expires at')
+
+    @api.autovacuum
+    def _gc(self):
+        self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
