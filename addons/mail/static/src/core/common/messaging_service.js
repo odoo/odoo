@@ -56,7 +56,6 @@ export class Messaging {
 
     initMessagingCallback() {
         this.isReady.resolve();
-        this.store.isMessagingReady = true;
     }
 
     // -------------------------------------------------------------------------
