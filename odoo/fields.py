@@ -3535,7 +3535,7 @@ class Properties(Field):
             current_model = env[self.model_name]
             definition_record_field = current_model._fields[self.definition_record]
             container_model_name = definition_record_field.comodel_name
-            container_id = env[container_model_name].browse(container_id)
+            container_id = env[container_model_name].sudo().browse(container_id)
 
         properties_definition = container_id[self.definition_record_field]
         if not (properties_definition or (
