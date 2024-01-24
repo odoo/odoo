@@ -9,6 +9,7 @@ import time
 from ast import literal_eval
 from collections import defaultdict
 from contextlib import contextmanager
+from freezegun import freeze_time
 from functools import partial
 from lxml import html
 from unittest.mock import patch
@@ -43,6 +44,19 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     def setUpClass(cls):
         super(MockEmail, cls).setUpClass()
         cls._mc_enabled = False
+
+    # ------------------------------------------------------------
+    # UTILITY MOCKS
+    # ------------------------------------------------------------
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        """ Used when synchronization date (using env.cr.now()) is important
+        in addition to standard datetime mocks. Used mainly to detect sync
+        issues. """
+        with freeze_time(mock_dt), \
+             patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield
 
     # ------------------------------------------------------------
     # GATEWAY MOCK
