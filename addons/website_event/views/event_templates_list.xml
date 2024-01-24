@@ -103,7 +103,7 @@
                                             <t t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" t-foreach="category.tag_ids" t-as="tag">
                                                 <li t-if="tag.color" class="list-group-item border-0 px-0">
                                                     <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
-                                                        class="text-reset">
+                                                        class="text-reset" t-att-title="tag.name">
                                                         <div class="form-check">
                                                             <input class="form-check-input pe-none" type="checkbox" t-attf-name="#{tag.color}" t-att-checked="tag in search_tags"/>
                                                             <label class="form-check-label" t-attf-for="#{tag.color}" t-out="tag.name"/>
@@ -139,7 +139,7 @@
 <template id="event_time" inherit_id="website_event.index_topbar" name="Filter by Date">
     <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
         <div class="dropdown d-none d-lg-block">
-            <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+            <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date">
                 <t t-if="current_date" t-out="current_date"/>
                 <t t-else="">Upcoming Events</t>
             </a>
@@ -174,7 +174,7 @@
                         <t t-foreach="dates" t-as="date">
                             <li t-if="date[3] or (date[0] in ('old','upcoming','all'))" class="list-group-item px-0 border-0">
                                 <t t-set="is_active" t-value="searches.get('date') == date[0]"/>
-                                <a t-att-href="keep('/event', date=date[0])" class="d-flex align-items-center justify-content-between text-reset text-decoration-none">
+                                <a t-att-href="keep('/event', date=date[0])" class="d-flex align-items-center justify-content-between text-reset text-decoration-none" t-att-title="date[1]">
                                     <div class="form-check flex-basis-100">
                                         <input class="form-check-input pe-none" type="radio" t-attf-name="#{date[1]}" t-att-checked="is_active"/>
                                         <label class="form-check-label" t-attf-for="#{date[1]}" t-out="date[1]"/>
@@ -194,7 +194,7 @@
 <template id="event_location" inherit_id="website_event.index_topbar" active="False" name="Filter by Country">
     <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]/div" position="before">
         <div class="dropdown d-none d-lg-block">
-            <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+            <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Country">
                 <t t-if="current_country" t-out="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
@@ -202,14 +202,14 @@
                 <t t-foreach="countries" t-as="country">
                     <t t-if="country['country_id']">
                         <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
-                        <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
+                        <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" t-att-title="country['country_id'][1]">
                             <t t-out="country['country_id'][1]"/>
                             <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
                         </a>
                     </t>
                     <t t-else="">
                         <t t-set="is_active" t-value="searches.get('country') == 'online'"/>
-                        <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
+                        <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}" title="Online Events">
                             <span>Online Events</span>
                             <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-3 #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
                         </a>
@@ -236,7 +236,7 @@
                         <li t-foreach="countries" t-as="country" class="list-group-item px-0 border-0">
                             <t t-if="country['country_id']">
                                 <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
-                                <a t-att-href="keep('/event', country=country['country_id'][0])" class="d-flex align-items-center justify-content-between text-reset text-decoration-none">
+                                <a t-att-href="keep('/event', country=country['country_id'][0])" class="d-flex align-items-center justify-content-between text-reset text-decoration-none" t-att-title="country['country_id'][1]">
                                     <div class="form-check flex-basis-100">
                                         <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="is_active"/>
                                         <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
