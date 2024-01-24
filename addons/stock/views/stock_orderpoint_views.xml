@@ -56,13 +56,13 @@
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id"/>
                 <field name="trigger" optional="hide"/>
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
-                <field name="product_min_qty" optional="show"/>
-                <field name="product_max_qty" optional="show"/>
+                <field name="product_min_qty" string="Min" optional="show"/>
+                <field name="product_max_qty" string="Max" optional="show"/>
                 <field name="qty_multiple" optional="hide"/>
                 <field name="qty_to_order"/>
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
-                <button name="action_replenish" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
+                <button name="action_replenish" string="Order" type="object" class="o_replenish_buttons" icon="fa-truck"
                     invisible="qty_to_order &lt;= 0.0"/>
                 <button name="action_replenish_auto" string="Automate" type="object" class="o_replenish_buttons" icon="fa-refresh"
                     invisible="qty_to_order &lt;= 0.0 or trigger == 'auto'"/>
