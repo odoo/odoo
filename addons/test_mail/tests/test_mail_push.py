@@ -96,7 +96,7 @@ class TestWebPushNotification(SMSCommon):
 
         for channel, has_notification in zip(
             (chat_channel + channel_channel + group_channel),
-            (True, False, False)
+            (True, False, True)
         ):
             with self.subTest(channel_type=channel.channel_type):
                 # Test Direct Message
@@ -108,7 +108,10 @@ class TestWebPushNotification(SMSCommon):
                 if has_notification:
                     push_to_end_point.assert_called_once()
                     payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-                    self.assertEqual(payload_value['title'], f'{self.user_email.name}')
+                    if channel.channel_type == 'chat':
+                        self.assertEqual(payload_value['title'], f'{self.user_email.name}')
+                    else:
+                        self.assertEqual(payload_value['title'], f'#{channel.name}')
                     self.assertEqual(
                         payload_value['options']['icon'],
                         f'/web/image/res.partner/{self.user_email.partner_id.id}/avatar_128'
@@ -124,7 +127,7 @@ class TestWebPushNotification(SMSCommon):
         # Test Direct Message with channel muted -> should skip push notif
         now = datetime.now()
         self.env['discuss.channel.member'].search([
-            ('partner_id', '=', self.user_inbox.partner_id.id),
+            ('partner_id', 'in', (self.user_email.partner_id + self.user_inbox.partner_id).ids),
             ('channel_id', 'in', (chat_channel + channel_channel + group_channel).ids),
         ]).write({
             'mute_until_dt': now + timedelta(days=5)

@@ -2939,6 +2939,25 @@ class MailThread(models.AbstractModel):
             'subtitles',
         }
 
+    @api.model
+    def _is_notification_scheduled(self, notify_cheduled_date):
+        """ Helper to check if notification are about to be scheduled. Eases
+        overrides.
+
+        :param notify_scheduled_date: value of 'scheduled_date' given in
+          notification parameters: arbitrary datetime (as a date, datetime or
+          a string), may be void. See 'MailMail._parse_scheduled_datetime()';
+
+        :return bool: True if a valid datetime has been found and is in the
+          future; False otherwise.
+        """
+        if notify_cheduled_date:
+            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(notify_cheduled_date)
+            notify_cheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+        return (
+            notify_cheduled_date and notify_cheduled_date > datetime.datetime.utcnow()
+        )
+
     def _raise_for_invalid_parameters(self, parameter_names, forbidden_names=None, restricting_names=None):
         """ Helper to warn about invalid parameters (or fields).
 
