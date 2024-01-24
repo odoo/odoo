@@ -12,7 +12,7 @@
                              if survey.session_question_id and survey.session_question_id.background_image_url
                              else ('background-image: url(' + survey.background_image_url + ');')
                              if survey.background_image_url
-                             else '')"/>
+                             else 'background-image: url(\'/survey/static/src/img/survey_background_sample.svg\')')"/>
             <attribute name="t-att-class" add="'o_survey_background'"/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
@@ -30,25 +30,38 @@
 
     <template id="user_input_session_open" name="Survey: Open Session">
         <t t-call="survey.user_input_session">
-            <div class="wrap py-3 min-vh-100 align-items-center justify-content-center d-flex o_survey_session_open o_survey_session_manage"
+            <div class="o_survey_session_open o_survey_session_manage position-absolute bottom-0 start-0 end-0 d-flex flex-column justify-content-between gap-md-4 mb-md-3 mx-md-4 fs-3 text-white"
                 t-att-data-survey-access-token="survey.access_token"
                 t-att-data-survey-id="survey.id"
                 t-att-data-is-start-screen="True">
-                <div class="w-75 p-4">
-                    <div class="text-center">
-                        <h1 class="mb-4" t-field="survey.title" />
-                        <h2 class="mb-5 fw-normal">
-                            <span class="text-break">To join: <span class="text-info o_survey_session_copy" t-esc="survey.session_link"/></span>
-                            <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
-                        </h2>
-                        <h2 class="fw-normal"><span>Waiting for attendees...</span>
-                            <span class="ms-1 fw-bold o_survey_session_attendees_count" t-esc="survey.session_answer_count" />
-                        </h2>
+
+                <div class="o_survey_session_open_header d-flex flex-column flex-md-row flex-grow-1 flex-md-grow-0 justify-content-between gap-4 p-5 rounded-3 bg-black-25">
+                    <div class="o_survey_session_open_title flex-basis-50">
+                        <h1 t-field="survey.title"/>
+                        <div class="o_survey_session_open_description overflow-auto">
+                            <p t-field="survey.description"/>
+                        </div>
                     </div>
-                    <a role="button"
-                        class="o_survey_session_navigation o_survey_session_navigation_next p-2">
-                        <span class="o_survey_session_navigation_next_label me-2 fw-bold">Start</span>
-                        <i class="fw-bold oi oi-chevron-right"/>
+                    <div class="d-flex flex-column flex-lg-row gap-4">
+                        <div class="o_survey_session_open_counter d-flex flex-column justify-content-center p-4 rounded-3 bg-black-25 text-center">
+                            <span class="o_survey_session_attendees_count" t-esc="survey.session_answer_count"/>
+                            <p>Waiting for attendees...</p>
+                        </div>
+                        <div class="o_survey_session_qrcode align-self-center ratio ratio-1x1 rounded-3 order-first order-lg-last">
+                            <!-- the value 725 makes the qrcode renders nicely for text from 18 to 53 characters. -->
+                            <img t-att-src="'/report/barcode/QR/%s?width=725&amp;height=725' % quote_plus(survey.session_link)"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_survey_session_open_link d-flex flex-column flex-md-row align-items-center gap-3 gap-md-0 justify-content-between px-5 py-4 rounded-3 bg-black">
+                    <div class="fs-5 o_survey_session_copy">
+                        <span class="text-info o_survey_session_copy_url" t-out="survey.session_link"/>
+                        <i class="fa fa-copy"/>
+                    </div>
+                    <a role="button" class="o_survey_session_navigation_next btn btn-lg btn-primary w-100 w-md-auto">
+                        <span class="o_survey_session_navigation_next_label">Start</span>
+                        <i class="oi oi-chevron-right"/>
                     </a>
                 </div>
             </div>
