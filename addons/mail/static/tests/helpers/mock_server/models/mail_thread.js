@@ -138,7 +138,7 @@ patch(MockServer.prototype, {
             (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
         );
         followers.length = Math.min(followers.length, limit);
-        return this._mockMailFollowers_FormatForChatter(followers.map((follower) => follower.id));
+        return this._mockMailFollowers_FollowerFormat(followers.map((follower) => follower.id));
     },
     /**
      * Simulates `_message_get_suggested_recipients` on `mail.thread`.

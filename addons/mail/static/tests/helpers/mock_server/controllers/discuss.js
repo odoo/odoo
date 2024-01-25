@@ -641,7 +641,7 @@ patch(MockServer.prototype, {
                 domain.concat([["partner_id", "=", this.pyEnv.currentPartnerId]])
             )[0];
             res["selfFollower"] = selfFollower
-                ? this._mockMailFollowers_FormatForChatter(selfFollower.id)[0]
+                ? this._mockMailFollowers_FollowerFormat(selfFollower.id)[0]
                 : false;
             res["followers"] = this._mockMailThreadMessageGetFollowers(thread_model, [thread_id]);
             res["recipientsCount"] = (thread.message_follower_ids || []).length - 1;

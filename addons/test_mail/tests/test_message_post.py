@@ -45,10 +45,11 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         )
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
-            'name': 'Test',
-            'email_from': 'ignasse@example.com'
-        })
+        cls.test_records, cls.test_partners = cls._create_records_for_batch(
+            'mail.test.simple', 10,
+        )
+        cls._reset_mail_context(cls.test_records)
+        cls.test_record = cls.test_records[0]
         cls._reset_mail_context(cls.test_record)
         cls.test_message = cls.env['mail.message'].create({
             'author_id': cls.partner_employee.id,
@@ -221,8 +222,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             msg_vals=notify_msg_vals,
         )
         # find back information for each recipients
-        partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-        emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+        partner_info = next(item for item in classify_res if item['partner_ids'] == self.partner_1.ids)
+        emp_info = next(item for item in classify_res if item['partner_ids'] == self.partner_employee.ids)
         # partner: no access button
         self.assertFalse(partner_info['has_button_access'])
         # employee: access button and link
@@ -249,8 +250,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
-                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                partner_info = next(item for item in classify_res if item['partner_ids'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['partner_ids'] == self.partner_employee.ids)
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
@@ -273,8 +274,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     msg_vals=notify_msg_vals,
                 )
                 # find back information for partner
-                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
-                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                partner_info = next(item for item in classify_res if item['partner_ids'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['partner_ids'] == self.partner_employee.ids)
                 # check there is no access button
                 self.assertFalse(partner_info['has_button_access'])
                 self.assertFalse(emp_info['has_button_access'])
@@ -441,7 +442,7 @@ class TestMessageNotify(TestMessagePostCommon):
     @users('employee')
     def test_notify_batch(self):
         """ Test notify in batch. Currently not supported. """
-        test_records, _partners = self._create_records_for_batch('mail.test.simple', 10)
+        test_records = self.test_records.with_env(self.env)
 
         with self.assertRaises(ValueError):
             test_records.message_notify(
@@ -576,11 +577,6 @@ class TestMessageLog(TestMessagePostCommon):
         cls.user_employee.write({
             'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
-
-        cls.test_records, cls.test_partners = cls._create_records_for_batch(
-            'mail.test.ticket',
-            10,
-        )
 
     @users('employee')
     def test_message_log(self):
@@ -797,6 +793,23 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=self.partner_portal.ids,
             )
+
+    @users('employee')
+    def test_message_post_batch(self):
+        """ Simply test posting in batch, to be sure it is effectively batch
+        enabled as expected since Odoo 18.0+ """
+        self.user_employee_2.write({'notification_type': 'inbox'})
+        test_records = self.test_records.with_env(self.env)
+
+        # not supported currently
+        with self.assertRaises(ValueError):
+            _new_messages = test_records.message_post(
+                    body='Body',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                    partner_ids=[self.partner_employee_2.id],
+                )
+        # self.assertEqual(len(new_messages), 10)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
@@ -1056,7 +1069,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         test_record = self.test_record.with_env(self.env)
         test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
 
-        with freeze_time(now), \
+        with self.mock_datetime_and_now(now), \
              self.assertMsgWithoutNotifications(), \
              self.capture_triggers(cron_id) as capt:
             msg = test_record.message_post(
@@ -1076,12 +1089,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(schedules.scheduled_datetime, scheduled_datetime)
 
         # trigger cron now -> should not sent as in future
-        with freeze_time(now):
+        with self.mock_datetime_and_now(now):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
         self.assertTrue(schedules.exists(), msg='Should not have sent the message')
 
         # Send the scheduled message from the cron at right date
-        with freeze_time(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
+        with self.mock_datetime_and_now(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
         self.assertFalse(schedules.exists(), msg='Should have sent the message')
         # check notifications have been sent
@@ -1099,11 +1112,11 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         })
 
         # Send the scheduled message from the CRON
-        with freeze_time(now + timedelta(days=5)), self.assertNoNotifications():
+        with self.mock_datetime_and_now(now + timedelta(days=5)), self.assertNoNotifications():
             self.env['mail.message.schedule'].sudo()._send_notifications_cron()
 
         # schedule in the past = send when posting
-        with freeze_time(now), \
+        with self.mock_datetime_and_now(now), \
              self.mock_mail_gateway(mail_unlink_sent=False), \
              self.capture_triggers(cron_id) as capt:
             msg = test_record.message_post(

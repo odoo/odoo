@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 class MailPush(models.Model):
     _name = 'mail.push'
     _description = "Push Notifications"
+    _order = 'id ASC'
 
     mail_push_device_id = fields.Many2one('mail.push.device', string='devices', required=True, ondelete="cascade")
     payload = fields.Text()
