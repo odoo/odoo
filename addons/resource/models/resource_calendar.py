@@ -399,9 +399,14 @@ class ResourceCalendar(models.Model):
         # retrieve leave intervals in (start_dt, end_dt)
         result = defaultdict(lambda: [])
         tz_dates = {}
-        for leave in self.env['resource.calendar.leaves'].search(domain):
+        all_leaves = self.env['resource.calendar.leaves'].search(domain)
+        for leave in all_leaves:
+            leave_resource = leave.resource_id
+            leave_company = leave.company_id
+            leave_date_from = leave.date_from
+            leave_date_to = leave.date_to
             for resource in resources_list:
-                if leave.resource_id.id not in [False, resource.id] or (not leave.resource_id and resource and resource.company_id != leave.company_id):
+                if leave_resource.id not in [False, resource.id] or (not leave_resource and resource and resource.company_id != leave_company):
                     continue
                 tz = tz if tz else timezone((resource or self).tz)
                 if (tz, start_dt) in tz_dates:
@@ -414,8 +419,8 @@ class ResourceCalendar(models.Model):
                 else:
                     end = end_dt.astimezone(tz)
                     tz_dates[(tz, end_dt)] = end
-                dt0 = string_to_datetime(leave.date_from).astimezone(tz)
-                dt1 = string_to_datetime(leave.date_to).astimezone(tz)
+                dt0 = string_to_datetime(leave_date_from).astimezone(tz)
+                dt1 = string_to_datetime(leave_date_to).astimezone(tz)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
         return {r.id: Intervals(result[r.id]) for r in resources_list}
