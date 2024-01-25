@@ -390,7 +390,7 @@ class PurchaseOrder(models.Model):
         # don't show price on RFQ mail
         if self.state in ['draft', 'sent']:
             subtitles.append(_('Order\N{NO-BREAK SPACE}due\N{NO-BREAK SPACE}%(date)s',
-                date=format_date(self.env, self.date_order, date_format='short', lang_code=render_context.get('lang'))
+                date=format_date(self.env, self.date_order, lang_code=render_context.get('lang'))
             ))
         else:
             subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
