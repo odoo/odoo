@@ -258,10 +258,10 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 <div t-ref="root">
                     <section t-foreach="[1,2,3]" t-as="l" t-key="l" t-att-id="l" class="pb-1">
                         <ul class="sortable_list">
-                            <li t-foreach="[1,2]" t-as="i" t-key="i" class="item" t-attf-id="#{l}.#{i}">
+                            <li t-foreach="[1,2]" t-as="i" t-key="i" t-attf-class="item #{l}.#{i}" t-attf-id="#{l}.#{i}">
                                 <span t-out="l + '.' + i"/>
                                 <ul class="sub_list">
-                                    <li t-foreach="[1,2]" t-as="j" t-key="j" class="item" t-attf-id="#{l}.#{i}.#{j}">
+                                    <li t-foreach="[1,2]" t-as="j" t-key="j" t-attf-class="item #{l}.#{i}.#{j}" t-attf-id="#{l}.#{i}.#{j}">
                                         <span t-out="l + '.' + i + '.' + j"/>
                                     </li>
                                 </ul>
@@ -305,14 +305,14 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                         assert.strictEqual(prevPos.group.id, "2");
                         assert.strictEqual(placeholder.previousElementSibling.id, "1.2");
                     },
-                    onGroupEnter({ element, group }) {
+                    onGroupEnter({ placeholder, group }) {
                         assert.step("enter");
-                        assert.strictEqual(element.id, "2.2");
+                        assert.hasClass(placeholder, "2.2");
                         assert.strictEqual(group.id, "1");
                     },
-                    onGroupLeave({ element, group }) {
+                    onGroupLeave({ placeholder, group }) {
                         assert.step("leave");
-                        assert.strictEqual(element.id, "2.2");
+                        assert.hasClass(placeholder, "2.2");
                         assert.strictEqual(group.id, "2");
                     },
                     onDrop({ element, previous, next, parent, group, newGroup, placeholder }) {
@@ -998,6 +998,100 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps(["start", "end"]);
     });
 
+    QUnit.test("shouldn't drag outside a nest level", async (assert) => {
+        assert.expect(20);
+        class NestedSortable extends Component {
+            static props = ["*"];
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list">
+                        <li class="item" id="A">
+                            <span>A</span>
+                        </li>
+                        <li class="item" id="B">
+                            <span>B</span>
+                            <ul>
+                                <li class="item" id="C">
+                                    <span>C</span>
+                                </li>
+                                <li class="item" id="D">
+                                    <span>D</span>
+                                </li>
+                                <li class="item" id="E">
+                                    <span>E</span>
+                                    <ul>
+                                        <li class="item" id="F">
+                                            <span>F</span>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            `;
+
+            setup() {
+                useNestedSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    onDragStart() {
+                        assert.step("start");
+                    },
+                    onMove() {
+                        assert.step("move");
+                    },
+                    onDrop() {
+                        assert.step("drop");
+                    },
+                    onDragEnd({ element }) {
+                        assert.step("end");
+                        const placeholder = target.querySelector(".o_nested_sortable_placeholder");
+                        if (element.id === "D1") {
+                            assert.ok(placeholder.nextElementSibling.id === "C");
+                        } else if (element.id === "D2") {
+                            assert.ok(placeholder.previousElementSibling.id === "E");
+                        } else if (element.id === "D3") {
+                            assert.ok(placeholder.previousElementSibling.id === "D3");
+                        } else if (element.id === "D4") {
+                            assert.ok(placeholder.previousElementSibling.id === "D4");
+                        }
+                    },
+                });
+            }
+        }
+
+        await mount(NestedSortable, target);
+
+        const dragged = target.querySelector("#D");
+        let drop, moveAbove, moveUnder;
+
+        // Move before a sibling (success)
+        dragged.id = "D1";
+        ({ drop, moveAbove } = await sortableDrag("#D1"));
+        await moveAbove("#C > span");
+        await drop();
+        assert.verifySteps(["start", "move", "drop", "end"]);
+        // Move after a sibling (success)
+        dragged.id = "D2";
+        ({ drop, moveUnder } = await sortableDrag("#D2"));
+        await moveUnder("#E > span");
+        await drop();
+        assert.verifySteps(["start", "move", "drop", "end"]);
+        // Attempt to change parent by going above the current parent (fail)
+        dragged.id = "D3";
+        ({ drop, moveAbove } = await sortableDrag("#D3"));
+        await moveAbove("#B > span");
+        await drop();
+        assert.verifySteps(["start", "end"]);
+        // Attempt to change parent by becoming the child of a sibling (fail)
+        dragged.id = "D4";
+        ({ drop, moveUnder } = await sortableDrag("#D4"));
+        await moveUnder("#F > span");
+        await drop();
+        assert.verifySteps(["start", "end"]);
+    });
+
     QUnit.test("shouldn't drag when not allowed", async (assert) => {
         assert.expect(7);
         target.style.top = "1px";
@@ -1066,10 +1160,10 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li class="item" id="target">
+                        <li class="item target" id="target">
                             <span>parent</span>
                         </li>
-                        <li class="item" id="dragged">
+                        <li class="item dragged" id="dragged">
                             <span>dragged</span>
                         </li>
                     </ul>
@@ -1083,7 +1177,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     useElementSize: true,
                     onDrop({ element, placeholder }) {
                         assert.strictEqual(element.id, "dragged");
-                        assert.strictEqual(placeholder.id, "dragged");
+                        assert.hasClass(placeholder, "dragged");
                         assert.ok(
                             placeholder.classList.contains("o_nested_sortable_placeholder_realsize")
                         );
