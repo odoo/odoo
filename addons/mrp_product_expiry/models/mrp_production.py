@@ -25,6 +25,7 @@ class MrpWorkorder(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'expiry.picking.confirmation',
                 'view_mode': 'form',
+                'views': [(False, 'form')],
                 'target': 'new',
                 'context': self._get_expired_context(expired_lot_ids),
             }
