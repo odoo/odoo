@@ -1140,7 +1140,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'livechat_lang_ids': [],
                 'livechat_username': False,
                 'user_id': {'id': self.users[0].id},
-                'voice_active_duration': 0,
+                'voice_active_duration': 200,
                 'volume_settings_ids': [('ADD', [])],
             },
         }
