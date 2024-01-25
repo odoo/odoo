@@ -2336,4 +2336,4 @@ class MrpProduction(models.Model):
 
     def _prepare_finished_extra_vals(self):
         self.ensure_one()
-        return {'lot_id' : self.lot_producing_id}
+        return {'lot_id' : self.lot_producing_id.id}
