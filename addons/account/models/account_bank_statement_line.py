@@ -585,7 +585,7 @@ class AccountBankStatementLine(models.Model):
                 self.journal_id.display_name,
             ))
 
-        company_currency = self.journal_id.company_id.currency_id
+        company_currency = self.journal_id.company_id.sudo().currency_id
         journal_currency = self.journal_id.currency_id or company_currency
         foreign_currency = self.foreign_currency_id or journal_currency or company_currency
 
