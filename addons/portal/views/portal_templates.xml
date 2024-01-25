@@ -157,13 +157,13 @@
             <t t-set="is_portal" t-value="True"/>
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center">
                     <t t-call="portal.portal_breadcrumbs"/>
                     <t t-if="prev_record or next_record" t-call='portal.record_pager'/>
                 </div>
             </div>
             <div id="wrap" class='o_portal_wrap'>
-                <div class="container pt-3 pb-5">
+                <div class="container pt-3">
                     <t t-if="my_details">
                         <div class="wrapper col-12 d-flex flex-wrap justify-content-between align-items-center">
                             <h3 class="my-3">My account</h3>
@@ -175,7 +175,7 @@
                             </button>
                         </div>
                         <div class="row justify-content-between">
-                            <div t-attf-class="o_portal_content col-12 col-lg-8">
+                            <div t-attf-class="o_portal_content col-12 col-lg-8 mb-5">
                                 <t t-out="0"/>
                             </div>
                             <div class="d-none d-lg-flex justify-content-end col-lg-4">
@@ -282,7 +282,7 @@
 
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
         <div t-attf-class="#{classes}">
-            <div class="o_portal_sidebar_content sticky-lg-top d-lg-inline-block mb-4 mb-lg-0 p-3 p-lg-0" id="sidebar_content">
+            <div class="o_portal_sidebar_content d-lg-inline-block mb-4 mb-lg-0 p-3 p-lg-0" id="sidebar_content">
                 <div t-if="title" class="position-relative d-flex align-items-center justify-content-md-center justify-content-lg-between flex-wrap gap-2">
                     <t t-out="title"/>
                 </div>
