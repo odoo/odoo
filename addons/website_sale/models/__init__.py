@@ -24,6 +24,7 @@ from . import sale_order
 from . import sale_order_line
 from . import website
 from . import website_base_unit
+from . import website_menu
 from . import website_sale_extra_field
 from . import website_snippet_filter
 from . import website_track

@@ -15,6 +15,13 @@ class WebsiteSnippetFilter(models.Model):
             " cross selling",
     )
 
+    def _prepare_values(self, **kwargs):
+        website = self.env['website'].get_current_website()
+        if self.model_name == 'product.product' and not website.has_ecommerce_access():
+            return []
+
+        return super()._prepare_values(**kwargs)
+
     @api.model
     def _get_website_currency(self):
         website = self.env['website'].get_current_website()

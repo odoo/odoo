@@ -231,11 +231,26 @@
                 </setting>
             </setting>
 
+            <setting id="website_login_documents" position="after">
+                <setting
+                    id="ecommerce_access"
+                    help="Enforce a customer to be logged in to access 'Shop'"
+                    title="Shop, products, cart and wishlist visibility"
+                >
+                    <field
+                        name="ecommerce_access"
+                        widget="radio"
+                        class="o_light_label"
+                    />
+                </setting>
+            </setting>
+
             <setting id="google_analytics_setting" position="after">
                 <setting id="autocomplete_googleplaces_setting" help="Use Google Places API to validate addresses entered by your visitors">
                     <field name="module_website_sale_autocomplete"/>
                 </setting>
             </setting>
+
         </field>
     </record>
 </odoo>
