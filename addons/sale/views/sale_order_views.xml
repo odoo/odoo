@@ -375,7 +375,7 @@
                                     <group invisible="display_type">
                                         <field name="product_updatable" invisible="1"/>
                                         <field name="product_id"
-                                            domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                            domain="[('sale_ok', '=', True)]"
                                             context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                             readonly="not product_updatable"
                                             required="not display_type"
@@ -487,7 +487,7 @@
                                     options="{
                                         'no_open': True,
                                     }"
-                                    domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                    domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"/>
                                 <field name="product_template_id"
                                     string="Product"
@@ -506,7 +506,7 @@
                                     options="{
                                         'no_open': True,
                                     }"
-                                    domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                    domain="[('sale_ok', '=', True)]"
                                     widget="sol_product_many2one"
                                     placeholder="Type to find a product..."/>
                                 <field name="name" widget="section_and_note_text" optional="show"/>
