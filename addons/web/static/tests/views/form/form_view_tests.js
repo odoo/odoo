@@ -11825,11 +11825,17 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
         assert.expect(4);
 
-        mockSendBeacon((route, { args, kwargs, model, method }) => {
-            if (method === "write" && model === "partner") {
-                assert.step("save"); // should be called
-                assert.deepEqual(args, [[1], { display_name: "test" }]);
-            }
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                if (params.method === "write" && params.model === "partner") {
+                    assert.step("save"); // should be called
+                    assert.deepEqual(params.args, [[1], { display_name: "test" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
         });
 
         await makeView({
@@ -11855,17 +11861,16 @@ QUnit.module("Views", (hooks) => {
         evnt.preventDefault = () => assert.step("prevented");
         window.dispatchEvent(evnt);
         await nextTick();
+        await sendBeaconDef;
         assert.verifySteps(["save"], "should not prevent unload");
     });
 
     QUnit.test(
         "Auto save: save on closing tab/browser (sendBeacon fails)",
         async function (assert) {
-            patchWithCleanup(navigator, {
-                sendBeacon: () => {
-                    assert.step("save"); // should be called
-                    return false;
-                },
+            mockSendBeacon(() => {
+                assert.step("save"); // should be called
+                return false;
             });
 
             await makeView({
@@ -11902,10 +11907,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
         assert.expect(2);
 
-        mockSendBeacon((route, { model, method }) => {
-            if (method === "write" && model === "partner") {
-                assert.step("save"); // should not be called
-            }
+        mockSendBeacon(() => {
+            assert.step("save"); // should not be called
         });
 
         await makeView({
@@ -11936,10 +11939,8 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: save on closing tab/browser (not dirty)", async function (assert) {
-        mockSendBeacon((route, { model, method }) => {
-            if (method === "write" && model === "partner") {
-                assert.step("save"); // should not be called
-            }
+        mockSendBeacon(() => {
+            assert.step("save"); // should not be called
         });
 
         await makeView({
@@ -11969,10 +11970,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "Auto save: save on closing tab/browser (not dirty but trailing spaces)",
         async function (assert) {
-            mockSendBeacon((route, { model, method }) => {
-                if (method === "write" && model === "partner") {
-                    throw new Error("no write should be done");
-                }
+            mockSendBeacon(() => {
+                throw new Error("no write should be done");
             });
 
             serverData.models.partner.fields.foo.trim = true;
@@ -12004,10 +12003,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "Auto save: save on closing tab/browser (not dirty) with text field",
         async function (assert) {
-            mockSendBeacon((route, { model, method }) => {
-                if (method === "write" && model === "partner") {
-                    assert.step("save"); // should not be called
-                }
+            mockSendBeacon(() => {
+                assert.step("save"); // should not be called
             });
 
             serverData.models.partner.fields.bloup = {
@@ -12048,10 +12045,8 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("Auto save: save on closing tab/browser (detached form)", async function (assert) {
-        mockSendBeacon((route, { method }) => {
-            if (method === "write") {
-                assert.step("save");
-            }
+        mockSendBeacon(() => {
+            assert.step("save"); // should not be called
         });
 
         serverData.actions[1] = {
@@ -12112,10 +12107,16 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
         assert.expect(1);
 
-        mockSendBeacon((route, { method, model, args }) => {
-            if (method === "write" && model === "partner") {
-                assert.deepEqual(args, [[1], { display_name: "test" }]);
-            }
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                if (params.method === "write" && params.model === "partner") {
+                    assert.deepEqual(params.args, [[1], { display_name: "test" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
         });
 
         serverData.models.partner.onchanges = {
@@ -12147,16 +12148,22 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, '.o_field_widget[name="display_name"] input', "test");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+        await sendBeaconDef;
     });
 
     QUnit.test("Auto save: save on closing tab/browser (onchanges 2)", async function (assert) {
         assert.expect(1);
 
-        mockSendBeacon((route, { method, args }) => {
-            if (method === "write") {
-                assert.deepEqual(args, [[1], { display_name: "test1", name: "test2" }]);
-            }
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                if (params.method === "write") {
+                    assert.deepEqual(params.args, [[1], { display_name: "test1", name: "test2" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
         });
 
         serverData.models.partner.onchanges = {
@@ -12187,17 +12194,23 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, '.o_field_widget[name="name"] input', "test2");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+        await sendBeaconDef;
     });
 
     QUnit.test("Auto save: save on closing tab/browser (pending change)", async function (assert) {
         assert.expect(5);
 
-        mockSendBeacon((route, { method, args }) => {
-            assert.step(`sendBeacon ${method}`);
-            if (method === "write") {
-                assert.deepEqual(args, [[1], { foo: "test" }]);
-            }
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                assert.step(`sendBeacon ${params.method}`);
+                if (params.method === "write") {
+                    assert.deepEqual(params.args, [[1], { foo: "test" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
         });
 
         await makeView({
@@ -12218,7 +12231,7 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(input, null, "input");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+        await sendBeaconDef;
 
         assert.verifySteps(["get_views", "read", "sendBeacon write"]);
     });
@@ -12228,14 +12241,20 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            mockSendBeacon((route, { method, args }) => {
-                assert.step(`sendBeacon ${method}`);
-                if (method === "write") {
-                    assert.deepEqual(args, [
-                        [1],
-                        { display_name: "test", name: "test", foo: "test" },
-                    ]);
-                }
+            const sendBeaconDef = makeDeferred();
+            mockSendBeacon((route, blob) => {
+                blob.text().then((r) => {
+                    const { params } = JSON.parse(r);
+                    assert.step(`sendBeacon ${params.method}`);
+                    if (params.method === "write") {
+                        assert.deepEqual(params.args, [
+                            [1],
+                            { display_name: "test", name: "test", foo: "test" },
+                        ]);
+                    }
+                    sendBeaconDef.resolve();
+                });
+                return true;
             });
 
             serverData.models.partner.onchanges = {
@@ -12278,7 +12297,7 @@ QUnit.module("Views", (hooks) => {
 
             // trigger the 'beforeunload' event -> notifies the model directly and saves
             window.dispatchEvent(new Event("beforeunload"));
-            await nextTick();
+            await sendBeaconDef;
 
             assert.verifySteps(["get_views", "read", "onchange", "sendBeacon write"]);
         }
@@ -12289,11 +12308,9 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            mockSendBeacon((route, { method, args }) => {
-                assert.step(`sendBeacon ${method}`);
-                if (method === "write") {
-                    assert.notOk(true, "should not call the /write route");
-                }
+            mockSendBeacon(() => {
+                assert.step(`sendBeacon`);
+                assert.notOk(true, "should not call the /write route");
             });
 
             await makeView({
@@ -12332,11 +12349,9 @@ QUnit.module("Views", (hooks) => {
                 },
             };
 
-            mockSendBeacon((route, { method }) => {
-                assert.step(`sendBeacon ${method}`);
-                if (method === "write") {
-                    throw new Error("Should not save the record");
-                }
+            mockSendBeacon(() => {
+                assert.step(`sendBeacon`);
+                throw new Error("Should not save the record");
             });
 
             const def = makeDeferred();
