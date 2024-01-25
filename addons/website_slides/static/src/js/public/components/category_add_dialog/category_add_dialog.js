@@ -7,7 +7,7 @@ export class CategoryAddDialog extends ConfirmationDialog {
     static template = "website_slides.CategoryAddDialog";
     static props = {
         ...ConfirmationDialog.props,
-        channelId: Number,
+        channelId: String,
     };
 
     setup() {

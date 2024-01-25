@@ -4,6 +4,7 @@ import { registry } from "./core/registry";
 import { getTemplate } from "@web/core/templates";
 import { App, EventBus } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { session } from "@web/session";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -191,8 +192,8 @@ export async function mountComponent(component, target, appConfig = {}) {
     const app = new App(component, {
         env,
         getTemplate,
-        dev: env.debug,
-        warnIfNoStaticProps: true,
+        dev: env.debug || session.test_mode,
+        warnIfNoStaticProps: !session.test_mode,
         name: component.constructor.name,
         translatableAttributes: ["data-tooltip"],
         translateFn: _t,
