@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('vn')
     def _get_vn_template_data(self):
         return {
-            'code_digits': '6',
+            'code_digits': '4',
             'property_account_receivable_id': 'chart131',
             'property_account_payable_id': 'chart331',
             'property_account_expense_categ_id': 'chart1561',
@@ -28,9 +28,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'chart131',
                 'income_currency_exchange_account_id': 'chart515',
                 'expense_currency_exchange_account_id': 'chart635',
-                'account_journal_early_pay_discount_loss_account_id': 'chart9993',
-                'account_journal_early_pay_discount_gain_account_id': 'chart9994',
+                'account_journal_early_pay_discount_loss_account_id': 'chart635',
+                'account_journal_early_pay_discount_gain_account_id': 'chart515',
                 'account_sale_tax_id': 'tax_sale_vat10',
                 'account_purchase_tax_id': 'tax_purchase_vat10',
+                'transfer_account_id': 'chart1131',
             },
         }
