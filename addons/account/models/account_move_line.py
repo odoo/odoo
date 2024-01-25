@@ -682,7 +682,7 @@ class AccountMoveLine(models.Model):
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
     def _compute_cumulated_balance(self):
         if not self.env.context.get('order_cumulated_balance'):
-            # We do not come from search_read, so we are not in a list view, so it doesn't make any sense to compute the cumulated balance
+            # We do not come from search_fetch, so we are not in a list view, so it doesn't make any sense to compute the cumulated balance
             self.cumulated_balance = 0
             return
 
@@ -1396,17 +1396,19 @@ class AccountMoveLine(models.Model):
         return super().invalidate_recordset(fnames, flush)
 
     @api.model
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
-        # Make an explicit order because we will need to reverse it
-        order = (order or self._order) + ', id'
+        order = (order or self._order)
+        if not re.search(r'\bid\b', order):
+            # Make an explicit order because we will need to reverse it
+            order += ', id'
         # Add the domain and order by in order to compute the cumulated balance in _compute_cumulated_balance
         contextualized = self.with_context(
             domain_cumulated_balance=to_tuple(domain or []),
             order_cumulated_balance=order,
         )
-        return super(AccountMoveLine, contextualized).search_read(domain, fields, offset, limit, order)
+        return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
 
     def init(self):
         """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
