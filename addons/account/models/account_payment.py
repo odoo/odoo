@@ -459,18 +459,16 @@ class AccountPayment(models.Model):
         Get all journals having at least one payment method for inbound/outbound depending on the payment_type.
         """
         journals = self.env['account.journal'].search([
-            *self.env['account.journal']._check_company_domain(self.company_id),
+            '|',
+            ('company_id', 'parent_of', self.env.company.id),
+            ('company_id', 'child_of', self.env.company.id),
             ('type', 'in', ('bank', 'cash')),
         ])
         for pay in self:
             if pay.payment_type == 'inbound':
-                pay.available_journal_ids = journals.filtered(
-                    lambda j: j.company_id == pay.company_id and j.inbound_payment_method_line_ids.ids != []
-                )
+                pay.available_journal_ids = journals.filtered('inbound_payment_method_line_ids')
             else:
-                pay.available_journal_ids = journals.filtered(
-                    lambda j: j.company_id == pay.company_id and j.outbound_payment_method_line_ids.ids != []
-                )
+                pay.available_journal_ids = journals.filtered('outbound_payment_method_line_ids')
 
     def _get_payment_method_codes_to_exclude(self):
         # can be overriden to exclude payment methods based on the payment characteristics
