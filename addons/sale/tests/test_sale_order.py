@@ -595,7 +595,7 @@ class TestSalesTeam(SaleCommon):
         company_b = self.env['res.company'].create({'name': 'B'})
         tax_group_a = self.env['account.tax.group'].create({'name': 'A', 'company_id': company_a.id})
         tax_group_b = self.env['account.tax.group'].create({'name': 'B', 'company_id': company_b.id})
-        country = self.env['res.country'].search([])[0]
+        country = self.env['res.country'].search([], limit=1)
 
         tax_a = self.env['account.tax'].create({
             'name': 'A',
@@ -628,6 +628,55 @@ class TestSalesTeam(SaleCommon):
 
         with self.assertRaises(UserError):
             sol.tax_id = tax_b
+
+    def test_assign_tax_multi_company(self):
+        root_company = self.env['res.company'].create({'name': 'B0 company'})
+        root_company.write({'child_ids': [
+            Command.create({'name': 'B1 company'}),
+            Command.create({'name': 'B2 company'}),
+        ]})
+
+        country = self.env['res.country'].search([], limit=1)
+        basic_tax_group = self.env['account.tax.group'].create({'name': 'basic group', 'country_id': country.id})
+        tax_b0 = self.env['account.tax'].create({
+            'name': 'B0 tax',
+            'company_id': root_company.id,
+            'amount': 10,
+            'tax_group_id': basic_tax_group.id,
+            'country_id': country.id,
+        })
+        tax_b1 = self.env['account.tax'].create({
+            'name': 'B1 tax',
+            'company_id': root_company.child_ids[0].id,
+            'amount': 11,
+            'tax_group_id': basic_tax_group.id,
+            'country_id': country.id,
+        })
+        tax_b2 = self.env['account.tax'].create({
+            'name': 'B2 tax',
+            'company_id': root_company.child_ids[1].id,
+            'amount': 20,
+            'tax_group_id': basic_tax_group.id,
+            'country_id': country.id,
+        })
+
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id, 'company_id': root_company.child_ids[0].id})
+        product = self.env['product.product'].create({'name': 'Product'})
+
+        # In sudo to simulate an user that have access to both companies.
+        sol_b1 = self.env['sale.order.line'].sudo().create({
+            'name': product.name,
+            'product_id': product.id,
+            'order_id': sale_order.id,
+            'tax_id': tax_b1,
+        })
+
+        # should not raise anything
+        sol_b1.tax_id = tax_b0
+        sol_b1.tax_id = tax_b1
+        # should raise (b2 is not on the same branch lineage as b1)
+        with self.assertRaises(UserError):
+            sol_b1.tax_id = tax_b2
 
     def test_sales_team_defined_on_partner_user_no_team(self):
         """ Test that sale order picks up a team from res.partner on change if user has no team specified """

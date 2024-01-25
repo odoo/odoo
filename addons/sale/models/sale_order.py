@@ -668,12 +668,13 @@ class SaleOrder(models.Model):
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
-            companies = order.order_line.product_id.company_id
-            if companies and companies != order.company_id:
+            product_company = order.order_line.product_id.company_id
+            companies = product_company and product_company._accessible_branches()
+            if companies and order.company_id not in companies:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
                 raise ValidationError(_(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.mapped('display_name')),
+                    product_company=', '.join(companies.sudo().mapped('display_name')),
                     quote_company=order.company_id.display_name,
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
