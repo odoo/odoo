@@ -1600,3 +1600,59 @@ QUnit.test("checks that href is correctly used", async (assert) => {
     await nextTick();
     assert.verifySteps(["command_with_link_clicked"]);
 });
+
+QUnit.skip("generate new session id when opened", async (assert) => {
+    assert.expect(4);
+
+    const def1 = makeDeferred();
+    const def2 = makeDeferred();
+    const def3 = makeDeferred();
+
+    let count = 0;
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: async (later) => {
+            count += 1;
+            if (count === 1) {
+                await def3;
+            }
+            later();
+        },
+    });
+    mount(TestComponent, target, { env });
+    const providers = [
+        {
+            provide: async (env, { searchValue }) => {
+                if (searchValue === "abc") {
+                    await def1;
+                }
+                // if (searchValue === "deb") {
+                //     await def2;
+                // }
+                return [
+                    {
+                        name: searchValue,
+                        action: () => {},
+                    },
+                ];
+            },
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+
+    await nextTick();
+
+    await editSearchBar("abc");
+    def3.resolve();
+    await nextTick();
+
+    await editSearchBar("deb");
+    def1.resolve();
+    await nextTick();
+    def2.resolve();
+});
