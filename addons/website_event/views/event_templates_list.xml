@@ -113,33 +113,8 @@
                                 </div>
                             </div>
                         </t>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button border-top collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target=".o_wevent_offcanvas_date"
-                                    aria-expanded="false">
-                                    Date
-                                </button>
-                            </h2>
-                            <div class="o_wevent_offcanvas_date accordion-collapse collapse">
-                                <div class="accordion-body pt-0">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">
-                                            <t t-foreach="dates" t-as="date">
-                                                <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
-                                                    <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
-                                                        <t t-out="date[1]"/>
-                                                        <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill #{searches.get('date') == date[0] and 'bg-light text-primary' or 'bg-primary'} ms-3"/>
-                                                    </a>
-                                                </t>
-                                            </t>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <span class="o_wevent_offcanvas_date"/>
+                        <span class="o_wevent_offcanvas_country"/>
                     </div>
                 </div>
             </div>
@@ -178,6 +153,37 @@
             </div>
         </div>
     </xpath>
+    <xpath expr="//span[hasclass('o_wevent_offcanvas_date')]" position="replace">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button border-top collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wevent_offcanvas_date"
+                    aria-expanded="false"
+                    aria-controls="o_wevent_offcanvas_date">
+                    Date
+                </button>
+            </h2>
+            <div id="o_wevent_offcanvas_date" class="o_wevent_offcanvas_date accordion-collapse collapse" aria-labelledby="offcanvas_date">
+            <div class="accordion-body pt-0">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <t t-foreach="dates" t-as="date">
+                            <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
+                                <t t-set="is_active" t-value="searches.get('date') == date[0]"/>
+                                <a role="button" t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
+                                    <t t-out="date[1]"/>
+                                    <span t-if="date[3]" t-out="date[3]" t-attf-class="badge rounded-pill #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
+                                </a>
+                            </t>
+                        </t>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </xpath>
 </template>
 
 <!-- Filter - Location -->
@@ -206,6 +212,44 @@
                     </t>
                 </t>
             </div>
+        </div>
+    </xpath>
+    <xpath expr="//span[hasclass('o_wevent_offcanvas_country')]" position="replace">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button border-top collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wevent_offcanvas_country"
+                    aria-expanded="false"
+                    aria-controls="o_wevent_offcanvas_country">
+                    Countries
+                </button>
+            </h2>
+            <div id="o_wevent_offcanvas_country" class="o_wevent_offcanvas_country accordion-collapse collapse" aria-labelledby="offcanvas_country">
+                <div class="accordion-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <t t-foreach="countries" t-as="country">
+                                <t t-if="country['country_id']">
+                                    <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
+                                    <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
+                                        <t t-out="country['country_id'][1]"/>
+                                        <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-auto #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="is_active" t-value="searches.get('country') == 'online'"/>
+                                    <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{is_active and 'active'}">
+                                        <span>Online Events</span>
+                                        <span t-out="country['country_id_count']" t-attf-class="badge rounded-pill ms-auto #{is_active and 'text-bg-light' or 'text-bg-primary'}"/>
+                                    </a>
+                                </t>
+                            </t>
+                        </li>
+                    </ul>
+                </div>
+            </div>    
         </div>
     </xpath>
 </template>
