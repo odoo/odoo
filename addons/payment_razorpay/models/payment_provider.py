@@ -116,7 +116,7 @@ class PaymentProvider(models.Model):
         default_codes = super()._get_default_payment_method_codes()
         if self.code != 'razorpay':
             return default_codes
-        return const.DEFAULT_PAYMENT_METHODS_CODES
+        return const.DEFAULT_PAYMENT_METHOD_CODES
 
     def _get_validation_amount(self):
         """ Override of `payment` to return the amount for Razorpay validation operations.

@@ -38,7 +38,7 @@ PAYMENT_STATUS_MAPPING = {
 }
 
 # The codes of the payment methods to activate when Flutterwave is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     'mpesa',
@@ -47,7 +47,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'mastercard',
     'amex',
     'discover',
-]
+}
 
 PAYMENT_METHODS_MAPPING = {
     'bank_transfer': 'banktransfer',

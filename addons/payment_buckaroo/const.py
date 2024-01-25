@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # The codes of the payment methods to activate when Buckaroo is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     'ideal',
@@ -10,7 +10,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'mastercard',
     'amex',
     'discover',
-]
+}
 
 # Mapping of payment method codes to Buckaroo codes.
 PAYMENT_METHODS_MAPPING = {

@@ -7,7 +7,7 @@ SUPPORTED_CURRENCIES = [
 ]
 
 # The codes of the payment methods to activate when Xendit is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     'dana',
@@ -17,7 +17,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     # Brand payment methods.
     'visa',
     'mastercard',
-]
+}
 
 # Mapping of payment code to channel code according to Xendit API
 PAYMENT_METHODS_MAPPING = {

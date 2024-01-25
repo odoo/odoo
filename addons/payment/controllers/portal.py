@@ -108,14 +108,21 @@ class PaymentPortal(portal.CustomerPortal):
         if not currency or not currency.active:
             raise werkzeug.exceptions.NotFound()  # The currency must exist and be active.
 
+        availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            company_id, partner_sudo.id, amount, currency_id=currency.id, **kwargs
+            company_id,
+            partner_sudo.id,
+            amount,
+            currency_id=currency.id,
+            report=availability_report,
+            **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
             partner_sudo.id,
             currency_id=currency.id,
+            report=availability_report,
             **kwargs,
         )  # In sudo mode to read the fields of providers.
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
@@ -147,6 +154,7 @@ class PaymentPortal(portal.CustomerPortal):
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
             'tokens_sudo': tokens_sudo,
+            'availability_report': availability_report,
             'transaction_route': '/payment/transaction',
             'landing_route': '/payment/confirmation',
             'access_token': access_token,
@@ -192,6 +200,7 @@ class PaymentPortal(portal.CustomerPortal):
         """
         partner_sudo = request.env.user.partner_id  # env.user is always sudoed
 
+        availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             request.env.company.id,
@@ -199,12 +208,14 @@ class PaymentPortal(portal.CustomerPortal):
             0.,  # There is no amount to pay with validation transactions.
             force_tokenization=True,
             is_validation=True,
+            report=availability_report,
             **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
             partner_sudo.id,
             force_tokenization=True,
+            report=availability_report,
         )  # In sudo mode to read the fields of providers.
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
             None, partner_sudo.id, is_validation=True
@@ -223,6 +234,7 @@ class PaymentPortal(portal.CustomerPortal):
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
             'tokens_sudo': tokens_sudo,
+            'availability_report': availability_report,
             'transaction_route': '/payment/transaction',
             'landing_route': '/my/payment_method',
             'access_token': access_token,

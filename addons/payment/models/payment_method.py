@@ -4,6 +4,9 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import REPORT_REASONS_MAPPING
+
 
 class PaymentMethod(models.Model):
     _name = 'payment.method'
@@ -82,6 +85,7 @@ class PaymentMethod(models.Model):
         help="The list of currencies for that are supported by this payment method (if the provider"
              " allows it). When paying with another currency, this payment method is not available "
              "to customers.",
+        context={'active_test': False},
     )
 
     #=== COMPUTE METHODS ===#
@@ -192,7 +196,7 @@ class PaymentMethod(models.Model):
 
     def _get_compatible_payment_methods(
         self, provider_ids, partner_id, currency_id=None, force_tokenization=False,
-        is_express_checkout=False, **kwargs
+        is_express_checkout=False, report=None, **kwargs
     ):
         """ Search and return the payment methods matching the compatibility criteria.
 
@@ -208,45 +212,84 @@ class PaymentMethod(models.Model):
         :param bool force_tokenization: Whether only payment methods supporting tokenization can be
                                         matched.
         :param bool is_express_checkout: Whether the payment is made through express checkout.
+        :param dict report: The report in which each provider's availability status and reason must
+                            be logged.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return: The compatible payment methods.
         :rtype: payment.method
         """
-        # Compute the base domain for compatible payment methods.
-        domain = [('provider_ids', 'in', provider_ids), ('is_primary', '=', True)]
+        # Search compatible payment methods with the base domain.
+        payment_methods = self.env['payment.method'].search([('is_primary', '=', True)])
+        payment_utils.add_to_report(report, payment_methods)
+
+        # Filter by compatible providers.
+        unfiltered_pms = payment_methods
+        payment_methods = payment_methods.filtered(
+            lambda pm: any(p in provider_ids for p in pm.provider_ids.ids)
+        )
+        payment_utils.add_to_report(
+            report,
+            unfiltered_pms - payment_methods,
+            available=False,
+            reason=REPORT_REASONS_MAPPING['provider_not_available'],
+        )
 
         # Handle the partner country; allow all countries if the list is empty.
         partner = self.env['res.partner'].browse(partner_id)
         if partner.country_id:  # The partner country must either not be set or be supported.
-            domain = expression.AND([
-                domain, [
-                    '|',
-                    ('supported_country_ids', '=', False),
-                    ('supported_country_ids', 'in', [partner.country_id.id]),
-                ]
-            ])
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered(
+                lambda pm: (
+                    not pm.supported_country_ids
+                    or partner.country_id.id in pm.supported_country_ids.ids
+                )
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING['incompatible_country'],
+            )
 
         # Handle the supported currencies; allow all currencies if the list is empty.
         if currency_id:
-            domain = expression.AND([
-                domain, [
-                    '|',
-                    ('supported_currency_ids', '=', False),
-                    ('supported_currency_ids', 'in', [currency_id]),
-                ]
-            ])
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered(
+                lambda pm: (
+                    not pm.supported_currency_ids
+                    or currency_id in pm.supported_currency_ids.ids
+                )
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING['incompatible_currency'],
+            )
 
         # Handle tokenization support requirements.
         if force_tokenization:
-            domain = expression.AND([domain, [('support_tokenization', '=', True)]])
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered('support_tokenization')
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING['tokenization_not_supported'],
+            )
 
         # Handle express checkout.
         if is_express_checkout:
-            domain = expression.AND([domain, [('support_express_checkout', '=', True)]])
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered('support_express_checkout')
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING['express_checkout_not_supported'],
+            )
 
-        # Search the payment methods matching the compatibility criteria.
-        compatible_payment_methods = self.env['payment.method'].search(domain)
-        return compatible_payment_methods
+        return payment_methods
 
     def _get_from_code(self, code, mapping=None):
         """ Get the payment method corresponding to the given provider-specific code.

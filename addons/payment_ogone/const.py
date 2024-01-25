@@ -78,7 +78,7 @@ PAYMENT_STATUS_MAPPING = {
 }
 
 # The codes of the payment methods to activate when Ogone is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
@@ -86,7 +86,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'mastercard',
     'amex',
     'discover',
-]
+}
 
 # Mapping of payment method codes to Ogone codes.
 PAYMENT_METHODS_MAPPING = {

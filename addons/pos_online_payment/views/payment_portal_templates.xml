@@ -28,11 +28,6 @@
                         <span t-elif="not amount" class="alert alert-info m-0">
                             There is nothing to pay.
                         </span>
-                        <span t-elif="not payment_methods_sudo and not tokens_sudo" class="alert alert-danger m-0">
-                            <strong>No suitable payment method could be found.</strong>
-                            <br/>
-                            If you believe that it is an error, please contact the website administrator.
-                        </span>
                         <span t-else="">
                             <t t-call="pos_online_payment.pay_summary"/>
                             <t t-call="payment.form" />

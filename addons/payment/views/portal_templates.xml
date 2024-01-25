@@ -11,6 +11,7 @@
             - payment_methods_sudo: The compatible payment methods, as a sudoed `payment.method`
                                     recordset.
             - tokens_sudo: The available payment tokens, as a sudoed `payment.token` recordset.
+            - availability_report: The availability report of providers and payment methods.
             - res_company: The company in which the payment if made (for the company logo).
             - company_mismatch: Whether the user should make the payment in another company.
             - expected_company: The record of the company that the user should switch to.
@@ -37,13 +38,6 @@
                             </div>
                             <div t-elif="company_mismatch">
                                 <t t-call="payment.company_mismatch_warning"/>
-                            </div>
-                            <div t-elif="not payment_methods_sudo and not tokens_sudo"
-                                 class="alert alert-warning"
-                            >
-                                <strong>No suitable payment method could be found.</strong><br/>
-                                If you believe that it is an error, please contact the website
-                                administrator.
                             </div>
                             <t t-else="">
                                 <div t-if="partner_is_different" class="alert alert-warning">
@@ -103,14 +97,7 @@
                     <!-- Payment methods page -->
                     <div class="row justify-content-center">
                         <div class="col-lg-7">
-                            <div t-if="not payment_methods_sudo and not tokens_sudo"
-                                 class="alert alert-warning"
-                            >
-                                <strong>No suitable payment method could be found.</strong><br/>
-                                If you believe that it is an error, please contact the website
-                                administrator.
-                            </div>
-                            <t t-else="" t-call="payment.form"/>
+                            <t t-call="payment.form"/>
                         </div>
                     </div>
                 </div>

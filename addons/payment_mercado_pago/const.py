@@ -31,7 +31,7 @@ SUPPORTED_CURRENCIES = [
 ]
 
 # The codes of the payment methods to activate when Mercado Pago is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
@@ -51,7 +51,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'shopping',
     'elo',
     'hipercard',
-]
+}
 
 # Mapping of payment method codes to Mercado Pago codes.
 PAYMENT_METHODS_MAPPING = {
