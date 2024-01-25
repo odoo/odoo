@@ -2726,10 +2726,14 @@ export class OdooEditor extends EventTarget {
 
         let left;
         let top;
-        if (isRow && isRtl) {
-            left = tableRect.right - tableUiContainerRect.x;
-        } else if (isRow && !isRtl) {
-            left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0);
+        if (isRow) {
+            if (isRtl) {
+                left = tableRect.right - tableUiContainerRect.x;
+            } else {
+                left = elementRect.left - tableUiContainerRect.left - wrappedUi.clientWidth;
+            }
+        } else if (isRtl) {
+            left = elementRect.left - tableUiContainerRect.left + wrappedUi.clientWidth;
         } else {
             left = elementRect.left - tableUiContainerRect.left - (isRow ? wrappedUi.clientWidth : 0);
         }
