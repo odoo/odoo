@@ -241,3 +241,29 @@ class TestReportStockQuantity(tests.TransactionCase):
             1.0, 2.0,   # in two days
         ]):
             self.assertEqual(row['product_qty'], qty, "Incorrect qty for Date '%s' Warehouse '%s'" % (row['date:day'], row['warehouse_id'][1]))
+
+    def test_report_stock_quantity_forecast_interval(self):
+        # 4 months in advance
+        from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), months=4, days=-1))
+        to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), months=4, days=4))
+        self.move2.write({'date': fields.Datetime.add(fields.Datetime.now(), months=4), 'date_deadline': fields.Datetime.add(fields.Datetime.now(), months=4)})
+        quantity_report = self.env['report.stock.quantity'].read_group(
+            [('date', '>=', from_date), ('date', '<=', to_date), ('product_id', '=', self.product1.id)],
+            ['product_qty', 'date', 'product_id', 'state'],
+            ['date:day', 'product_id', 'state'],
+            lazy=False)
+        forecast_report = [report['product_qty'] for report in quantity_report if report['state'] == 'forecast']
+        # The default interval is 3 months, so there is no forecast
+        self.assertEqual(forecast_report, [])
+        self.env['ir.config_parameter'].create({
+            'key': 'stock.forecast_interval_months',
+            'value': 4
+        })
+        quantity_report = self.env['report.stock.quantity'].read_group(
+            [('date', '>=', from_date), ('date', '<=', to_date), ('product_id', '=', self.product1.id)],
+            ['product_qty', 'date', 'product_id', 'state'],
+            ['date:day', 'product_id', 'state'],
+            lazy=False)
+        forecast_report = [report['product_qty'] for report in quantity_report if report['state'] == 'forecast']
+        # After setting the interval to 4 months we can see a forecast report
+        self.assertEqual(forecast_report, [-120, -120])
