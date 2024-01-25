@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: markup('Choose this <b>theme</b>.'),
             run: 'click',
         }, {
-            trigger: 'iframe .o_codeview_btn',
+            trigger: '.o_codeview_btn',
             content: markup('Click here to switch to <b>code view</b>'),
             run: 'click'
         }, {
@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
                 element.value = '';
             }
         }, {
-            trigger: 'iframe .o_codeview_btn',
+            trigger: '.o_codeview_btn',
             content: markup('Click here to switch back from <b>code view</b>'),
             run: 'click'
         }, {
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             content: 'Verify that the dropable zone was not removed',
             run: () => {},
         }, {
-            trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .oe_snippet_thumbnail',
+            trigger: '[name="body_arch"] #email_designer_default_body [name="Title"] .oe_snippet_thumbnail',
             content: 'Drag the "Title" snippet from the design panel and drop it in the editor',
             run: function (actions) {
                 actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable', this.$anchor);
