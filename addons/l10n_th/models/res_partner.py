@@ -5,9 +5,9 @@ from odoo import models, fields
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    l10n_th_branch_name = fields.Char(compute="_l10n_th_get_branch_name")
+    l10n_th_branch_name = fields.Char(compute="_compute_l10n_th_branch_name")
 
-    def _l10n_th_get_branch_name(self):
+    def _compute_l10n_th_branch_name(self):
         for partner in self:
             if not partner.is_company or partner.country_code != 'TH':
                 partner.l10n_th_branch_name = ""
