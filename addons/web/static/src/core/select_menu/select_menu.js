@@ -153,7 +153,7 @@ export class SelectMenu extends Component {
 
     getItemClass(choice) {
         if (this.isOptionSelected(choice)) {
-            return "o_select_menu_item mb-1 o_select_active bg-primary text-light fw-bolder fst-italic";
+            return "o_select_menu_item mb-1 o_select_active bg-primary fw-bolder fst-italic";
         } else {
             return "o_select_menu_item mb-1";
         }
