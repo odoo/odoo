@@ -38,16 +38,17 @@ export class EditListPopup extends Component {
     static components = { EditListInput, Dialog };
     static template = "point_of_sale.EditListPopup";
     static props = {
-        array: { type: Array, optional: true },
-        isSingleItem: { type: Boolean, optional: true },
+        array: Array,
+        isSingleItem: Boolean,
         title: String,
         name: String,
         getPayload: Function,
         close: Function,
+        options: { type: Array, optional: true },
+        customInput: { type: Boolean, optional: true },
+        uniqueValues: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        array: [],
-        isSingleItem: false,
         options: [],
         customInput: true,
         uniqueValues: true,

@@ -27,9 +27,7 @@ export class PaymentScreen extends Component {
         PaymentScreenPaymentLines,
         PaymentScreenStatus,
     };
-    static props = {
-        isShown: Boolean,
-    };
+    static props = {};
 
     setup() {
         this.pos = usePos();
