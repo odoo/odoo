@@ -43,8 +43,9 @@
                     <div class="mb-3 d-flex align-items-center flex-wrap">
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
                             <span class="me-2 text-truncate">Delay after releasing push-to-talk</span>
-                            <div class="d-flex w-100">
-                            <input class="flex-grow-2 form-range" type="range" min="200" max="2000" step="1" t-att-value="store.settings.voice_active_duration" t-on-change="onChangeDelay"/>
+                            <div class="d-flex w-100 align-items-center">
+                                <input class="flex-grow-2 form-range" type="range" min="0" max="2000" step="1" t-att-value="store.settings.voice_active_duration" t-on-input="onChangeDelay"/>
+                                <span class="p-1 w-50 text-end"><t t-out="store.settings.voice_active_duration"/>ms</span>
                             </div>
                         </label>
                     </div>
@@ -52,8 +53,9 @@
                 <div t-else="" class="mb-3 d-flex align-items-center flex-wrap">
                     <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Voice detection threshold" aria-label="Voice detection threshold">
                         <span class="me-2 text-truncate">Voice detection threshold</span>
-                        <div class="d-flex w-100">
-                            <input class="flex-grow-2 form-range" type="range" min="0.001" max="1" step="0.001" t-att-value="store.settings.voiceActivationThreshold" t-on-change="onChangeThreshold"/>
+                        <div class="d-flex w-100 align-items-center">
+                            <input class="flex-grow-2 form-range" type="range" min="0.001" max="1" step="0.001" t-att-value="store.settings.voiceActivationThreshold" t-on-input="onChangeThreshold"/>
+                            <span class="p-1 w-50 text-end"><t t-out="Math.floor(store.settings.voiceActivationThreshold * 100)"/>%</span>
                         </div>
                     </label>
                 </div>
@@ -75,17 +77,19 @@
                 <t t-if="store.settings.useBlur">
                     <div class="mb-3 d-flex align-items-center flex-wrap">
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
-                            <span class="me-2 text-truncate">Background blur intensity <t t-esc="store.settings.backgroundBlurAmount"/></span>
-                            <div class="d-flex w-100">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.backgroundBlurAmount" t-on-change="onChangeBackgroundBlurAmount"/>
+                            <span class="me-2 text-truncate">Background blur intensity</span>
+                            <div class="d-flex w-100 align-items-center">
+                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.backgroundBlurAmount" t-on-input="onChangeBackgroundBlurAmount"/>
+                                <span class="p-1 w-50 text-end"><t t-out="Math.floor(store.settings.backgroundBlurAmount * 5)"/>%</span>
                             </div>
                         </label>
                     </div>
                     <div class="mb-3 d-flex align-items-center flex-wrap">
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Edge blur intensity" aria-label="Edge blur intensity">
                             <span class="me-2 text-truncate">Edge blur intensity</span>
-                            <div class="d-flex w-100">
-                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.edgeBlurAmount" t-on-change="onChangeEdgeBlurAmount"/>
+                            <div class="d-flex w-100 align-items-center">
+                                <input class="flex-grow-2 form-range" type="range" min="0" max="20" step="1" t-att-value="store.settings.edgeBlurAmount" t-on-input="onChangeEdgeBlurAmount"/>
+                                <span class="p-1 w-50 text-end"><t t-out="Math.floor(store.settings.edgeBlurAmount * 5)"/>%</span>
                             </div>
                         </label>
                     </div>
