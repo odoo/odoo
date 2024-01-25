@@ -41,7 +41,7 @@
                             <div class="o_kanban_card_header_title">
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
-                                    <t t-if="dashboard.company_count > 1">
+                                    <t t-if="dashboard.show_company">
                                         <span groups="base.group_multi_company" class="small">- <field name="company_id"/></span>
                                     </t>
                                 </div>
