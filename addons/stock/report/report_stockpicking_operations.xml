@@ -7,16 +7,7 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
                         <t t-set="address" t-value="None"/>
-                        <div class="page">
-                            <div class="row justify-content-end mb16">
-                                <div class="col-4" name="right_box">
-                                    <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
-                                        <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center p-3 opacity-75 text-muted text-center">
-                                            (document barcode)
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="page o_report_stockpicking_operations">
                             <div class="row">
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
@@ -32,7 +23,7 @@
                                     <div t-elif="o.picking_type_id.code != 'internal' and o.picking_type_id.warehouse_id.partner_id">
                                         <span><strong>Warehouse Address:</strong></span>
                                         <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'>
+                                            t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                                                     <strong>Warehouse address</strong>
                                                     <div>Presence depends on the type of operation.</div>
@@ -42,21 +33,23 @@
                                 </div>
                                 <div class="col-5 offset-1" name="div_incoming_address">
                                     <t t-set="show_partner" t-value="False" />
+                                    <t t-set="show_full_address" t-value="False" />
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
-                                        <span><strong>Vendor Address:</strong></span>
+                                        <span><strong>Vendor:</strong></span>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-elif="o.picking_type_id.code=='internal' and o.partner_id">
-                                        <span><strong>Warehouse Address:</strong></span>
+                                        <span><strong>Warehouse:</strong></span>
                                         <t t-set="show_partner" t-value="True" />
                                     </div>
                                     <div t-elif="o.picking_type_id.code=='outgoing' and o.partner_id and o.partner_id != o.partner_id.commercial_partner_id">
                                         <span><strong>Customer Address:</strong></span>
                                         <t t-set="show_partner" t-value="True" />
+                                        <t t-set="show_full_address" t-value="True" />
                                     </div>
                                     <div t-if="show_partner" name="partner_header">
                                         <div t-field="o.partner_id.commercial_partner_id"
-                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'>
+                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"] if show_full_address else ["name"], "no_marker": True, "phone_icons": True}'>
                                              <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                                                 <strong>Recipient address</strong>
                                                 <div>Presence depends on the type of operation.</div>
@@ -66,9 +59,20 @@
                                 </div>
                             </div>
                             <div class="oe_structure"></div>
-                            <h1 t-field="o.name" class="mt0">WH/OUT/00001</h1>
+                            <div class="row mt16 mb16">
+                                <div>
+                                    <div class="float-start"><h1 t-field="o.name">WH/OUT/00001</h1></div>
+                                    <div class="float-start">
+                                        <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
+                                            <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center p-3 opacity-75 text-muted text-center">
+                                                (document barcode)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="oe_structure"></div>
-                            <div class="row mt32 mb32">
+                            <div class="row">
                                 <div t-if="o.origin" class="col-auto" name="div_origin">
                                     <strong>Order:</strong>
                                     <p t-field="o.origin">S0001</p>
@@ -82,21 +86,21 @@
                                     <p t-field="o.scheduled_date">2023-09-24</p>
                                 </div>
                             </div>
-                            <table class="table table-sm" t-if="o.move_line_ids and o.move_ids_without_package">
+                            <table class="table table-sm mt16" t-if="o.move_line_ids and o.move_ids_without_package">
                                 <t t-set="has_barcode" t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
                                 <t t-set="has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
                                 <thead>
                                     <tr>
                                         <th name="th_product">
-                                            <strong>Product</strong>
+                                            <div align="left"><strong>Product</strong></div>
                                         </th>
-                                        <th>
+                                        <th class="text-end">
                                             <strong>Quantity</strong>
                                         </th>
-                                        <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
+                                        <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations" class="text-start">
                                             <strong>From</strong>
                                         </th>
-                                        <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations" class="text-start">
                                             <strong>To</strong>
                                         </th>
                                         <th name="th_serial_number" class="text-center" t-if="has_serial_number">
@@ -112,9 +116,9 @@
                                     <tr t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
                                         <td>
                                             <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
-                                            <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking">Description on transfer</span>
+                                            <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking"></span>
                                         </td>
-                                        <td>
+                                        <td align="right">
                                             <span t-field="ml.quantity">3.00</span>
                                             <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
                                             <span t-if="ml.move_id.product_packaging_id">
