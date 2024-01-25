@@ -114,8 +114,7 @@ export class SelectMenu extends Component {
     get canDeselect() {
         return (
             !this.props.required &&
-            this.selectedChoice !== undefined &&
-            this.selectedChoice !== null
+            this.selectedChoice !== undefined
         );
     }
 
@@ -195,12 +194,8 @@ export class SelectMenu extends Component {
     }
 
     getSelectedChoice(props) {
-        if (props.value) {
-            const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
-            return choices.find((c) => c.value === props.value);
-        } else {
-            return undefined;
-        }
+        const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
+        return choices.find((c) => c.value === props.value);
     }
 
     onItemSelected(value) {
