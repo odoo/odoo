@@ -38,7 +38,7 @@
            t-nocache-_text_class="_text_class"
            t-nocache-_text="_text">
             <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
-            <t t-set="show_wishes" t-value="True"/>
+            <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
             <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                     <div t-attf-class="#{_icon_wrap_class}">

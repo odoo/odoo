@@ -11,7 +11,7 @@
            t-nocache-_item_class="_item_class"
            t-nocache-_link_class="_link_class">
             <t t-set="website_sale_cart_quantity" t-value="request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else website.sale_get_order().cart_quantity or 0"/>
-            <t t-set="show_cart" t-value="true"/>
+            <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
             <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
                 <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
