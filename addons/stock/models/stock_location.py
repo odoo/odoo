@@ -96,6 +96,8 @@ class Location(models.Model):
     incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight
     net_weight = fields.Float('Net Weight', compute="_compute_weight")
     forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
+    rule_dest_ids = fields.One2many('stock.rule', 'location_dest_id', 'Rules of Source Location')
+    rule_src_ids = fields.One2many('stock.rule', 'location_src_id', 'Rules of Source Location')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company!'),
                         ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
