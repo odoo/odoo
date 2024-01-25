@@ -168,60 +168,6 @@ export class PivotDataSource extends OdooViewsDataSource {
         return this._model.parseGroupField(groupFieldString);
     }
 
-    /**
-     * @param {"COLUMN" | "ROW"} dimension
-     * @returns {boolean}
-     */
-    isGroupedOnlyByOneDate(dimension) {
-        this._assertDataIsLoaded();
-        return this._model.isGroupedOnlyByOneDate(dimension);
-    }
-
-    /**
-     * @param {"COLUMN" | "ROW"} dimension
-     * @returns {string}
-     */
-    getGroupOfFirstDate(dimension) {
-        this._assertDataIsLoaded();
-        return this._model.getGroupOfFirstDate(dimension);
-    }
-
-    /**
-     * @param {"COLUMN" | "ROW"} dimension
-     * @param {number} index
-     * @returns {string}
-     */
-    getGroupByAtIndex(dimension, index) {
-        this._assertDataIsLoaded();
-        return this._model.getGroupByAtIndex(dimension, index);
-    }
-
-    /**
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isColumnGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.isColumnGroupBy(fieldName);
-    }
-
-    /**
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isRowGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.isRowGroupBy(fieldName);
-    }
-
-    /**
-     * @returns {number}
-     */
-    getNumberOfColGroupBys() {
-        this._assertDataIsLoaded();
-        return this._model.getNumberOfColGroupBys();
-    }
-
     async prepareForTemplateGeneration() {
         this._assertDataIsLoaded();
         await this._model.prepareForTemplateGeneration();
