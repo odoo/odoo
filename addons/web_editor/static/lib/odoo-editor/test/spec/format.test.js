@@ -889,11 +889,25 @@ describe('setTagName', () => {
                 contentAfter: `<ul><li>[abcd]</li></ul>`
             });
         });
+        it('should add paragraph tag to normal text in list when text is deeply nested', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><div><h1>[abcd]</h1></div></li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<ul><li><div><p>[abcd]</p></div></li></ul>',
+            });
+        });
         it('should turn three table cells with heading 1 to table cells with paragraph', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<table><tbody><tr><td><h1>[a</h1></td><td><h1>b</h1></td><td><h1>c]</h1></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'p'),
                 contentAfter: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a heading 4 with class h5 into a paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="text-uppercase h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<p class="text-uppercase">[abcd]</p>',
             });
         });
     });
@@ -940,6 +954,20 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><h1>[a</h1></td><td><h1>b</h1></td><td><h1>c]</h1></td></tr></tbody></table>',
             });
         });
+        it('should turn a heading 4 with class h5 into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="text-uppercase h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1 class="text-uppercase">[abcd]</h1>',
+            });
+        });
+        it('should turn a inline elements within a div into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><font style="color: red;">a[b</font><span style="font-size: 12px;">c]d</span><font style="color: red;">ef</font><p>gh</p><font style="color: red;">ij</font><span style="font-size: 12px;">kl</span></div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<div><h1><font style="color: red;">a[b</font><span style="font-size: 12px;">c]d</span><font style="color: red;">ef</font></h1><p>gh</p><font style="color: red;">ij</font><span style="font-size: 12px;">kl</span></div>',
+            });
+        });
     });
     describe('to heading 2', () => {
         it('should turn a heading 1 into a heading 2', async () => {
@@ -982,6 +1010,13 @@ describe('setTagName', () => {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'h2'),
                 contentAfter: '<table><tbody><tr><td><h2>[a</h2></td><td><h2>b</h2></td><td><h2>c]</h2></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a inline elements within a div into a heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><font style="color: red;">ab</font><span style="font-size: 12px;">cd</span><font style="color: red;">ef</font><p>gh</p><font style="color: red;">[ij</font><span style="font-size: 12px;">k]l</span></div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<div><font style="color: red;">ab</font><span style="font-size: 12px;">cd</span><font style="color: red;">ef</font><p>gh</p><h2><font style="color: red;">[ij</font><span style="font-size: 12px;">k]l</span></h2></div>',
             });
         });
     });
@@ -1101,6 +1136,13 @@ describe('setTagName', () => {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
                 stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
                 contentAfter: '<table><tbody><tr><td><blockquote>[a</blockquote></td><td><blockquote>b</blockquote></td><td><blockquote>c]</blockquote></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a heading 4 with class h5 into a blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                contentAfter: '<blockquote>[abcd]</blockquote>',
             });
         });
     });
