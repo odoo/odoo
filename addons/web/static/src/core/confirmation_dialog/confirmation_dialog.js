@@ -27,7 +27,7 @@ export class ConfirmationDialog extends Component {
             },
             optional: true,
         },
-        body: String,
+        body: { type: String, optional: true },
         confirm: { type: Function, optional: true },
         confirmLabel: { type: String, optional: true },
         confirmClass: { type: String, optional: true },
