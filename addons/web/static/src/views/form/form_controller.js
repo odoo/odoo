@@ -203,7 +203,9 @@ export class FormController extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector("div[name='button_box']:not(field div)");
+        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector(
+            "div[name='button_box']:not(field div)"
+        );
         if (xmlDocButtonBox) {
             const buttonBoxTemplates = useViewCompiler(
                 this.props.Compiler || FormCompiler,
@@ -214,7 +216,9 @@ export class FormController extends Component {
         }
 
         this.rootRef = useRef("root");
-        useViewButtons(this.model, this.rootRef, {
+        useViewButtons(this.rootRef, {
+            resModel: this.model.resModel,
+            reload: () => this.model.load(),
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
         });

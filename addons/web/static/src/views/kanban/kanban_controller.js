@@ -142,7 +142,10 @@ export class KanbanController extends Component {
         });
 
         this.rootRef = useRef("root");
-        useViewButtons(this.model, this.rootRef, {
+        useViewButtons(this.rootRef, {
+            resModel: this.model.resModel,
+            resIds: this.model.resIds,
+            reload: () => this.model.load(),
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
         });
