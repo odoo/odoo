@@ -6,6 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class BomOverviewControlPanel extends Component {
     static template = "mrp.BomOverviewControlPanel";
@@ -39,6 +40,7 @@ export class BomOverviewControlPanel extends Component {
     };
 
     setup() {
+        this.action = useService("action");
         this.controlPanelDisplay = {};
     }
 
@@ -63,6 +65,20 @@ export class BomOverviewControlPanel extends Component {
     getDomain() {
         const keys = Object.keys(this.props.variants);
         return [['id', 'in', keys]];
+    }
+
+    async manufactureFromBoM() {
+        const action = {
+            res_model: "mrp.production",
+            name: "Manufacture Orders",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            target: "current",
+            context: {
+                default_bom_id: this.props.data.bom_id,
+            },
+        };
+        return this.action.doAction(action);
     }
 
     get precision() {
