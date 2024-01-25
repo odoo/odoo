@@ -133,7 +133,10 @@ class Product(models.Model):
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
-        return self.env.user.has_group('base.group_system') or (self.active and self.sale_ok and self.website_published)
+        is_product_salable = self.active and self.sale_ok and self.website_published
+        website = self.env['website'].get_current_website()
+        return (is_product_salable and website.has_ecommerce_access()) \
+               or self.env.user.has_group('base.group_system')
 
     def _get_contextual_price_tax_selection(self):
         self.ensure_one()

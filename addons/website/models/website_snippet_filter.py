@@ -67,7 +67,7 @@ class WebsiteSnippetFilter(models.Model):
         if self.model_name.replace('.', '_') not in template_key:
             return ''
 
-        records = self._prepare_values(limit, search_domain)
+        records = self._prepare_values(limit=limit, search_domain=search_domain)
         is_sample = with_sample and not records
         if is_sample:
             records = self._prepare_sample(limit)

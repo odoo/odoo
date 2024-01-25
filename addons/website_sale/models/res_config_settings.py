@@ -84,6 +84,10 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         required=True,
     )
+    ecommerce_access = fields.Selection(
+        related='website_id.ecommerce_access',
+        readonly=False,
+    )
 
     enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
     enabled_buy_now_button = fields.Boolean(string="Buy Now")
