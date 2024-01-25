@@ -6,15 +6,17 @@
             <span t-esc="formattedValue" />
         </t>
         <t t-else="">
-            <input
-                class="o_input"
-                t-att-class="{'o_field_translate': isTranslatable}"
-                t-att-id="props.id"
-                t-att-type="props.isPassword ? 'password' : 'text'"
-                t-att-autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
-                t-att-maxlength="maxLength > 0 and maxLength"
-                t-att-placeholder="props.placeholder"
-                t-ref="input"
+            <Input
+                class="{'o_field_translate': isTranslatable}"
+                id="props.id"
+                type="props.isPassword ? 'password' : 'text'"
+                autocomplete="props.autocomplete or (props.isPassword ? 'new-password' : 'off')"
+                maxlength="maxLength > 0 and maxLength"
+                placeholder="props.placeholder"
+                ref="input"
+                value="props.record.data[props.name] or ''"
+                t-on-input="(e) => fieldInput.onInput(e.target.value)"
+                t-on-change="(e) => fieldInput.onChange(e.target.value)"
             />
             <t t-if="isTranslatable">
                 <TranslationButton

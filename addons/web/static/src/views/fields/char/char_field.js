@@ -1,19 +1,21 @@
 /** @odoo-module **/
 
+import { Component, useEffect, useExternalListener } from "@odoo/owl";
+import { Input } from "@web/core/input/input";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
+import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 import { formatChar } from "../formatters";
-import { useInputField } from "../input_field_hook";
+import { useFieldInput } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
-import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
-
-import { Component, useExternalListener, useRef, useEffect } from "@odoo/owl";
+import { useChildRef } from "@web/core/utils/hooks";
 
 export class CharField extends Component {
     static template = "web.CharField";
     static components = {
+        Input,
         TranslationButton,
     };
     static props = {
@@ -27,7 +29,7 @@ export class CharField extends Component {
     static defaultProps = { dynamicPlaceholder: false };
 
     setup() {
-        this.input = useRef("input");
+        this.input = useChildRef();
         if (this.props.dynamicPlaceholder) {
             const dynamicPlaceholder = useDynamicPlaceholder(this.input);
             useExternalListener(document, "keydown", dynamicPlaceholder.onKeydown);
@@ -35,8 +37,9 @@ export class CharField extends Component {
                 dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField)
             );
         }
-        useInputField({
-            getValue: () => this.props.record.data[this.props.name] || "",
+        this.fieldInput = useFieldInput({
+            record: this.props.record,
+            name: this.props.name,
             parse: (v) => this.parse(v),
         });
     }

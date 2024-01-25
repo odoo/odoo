@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="base_iban.iban" t-inherit="web.CharField">
-        <xpath expr="//input" position="attributes">
+        <!-- <xpath expr="//input" position="attributes">
             <attribute name="class" add="o_iban_input_with_validator" separator=" "/>
             <attribute name="t-on-input">validateIbanDebounced</attribute>
             <attribute name="t-on-focus">validateIbanDebounced</attribute>
@@ -14,6 +14,6 @@
             <t t-elif="this.state.isValidIBAN === false">
                 <i class="fa fa-times o_iban text-danger o_iban_fail" title="Account isn't a valid IBAN"/>
             </t>
-        </xpath>
+        </xpath> -->
     </t>
 </templates>

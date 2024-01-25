@@ -2,8 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatTimeField">
-        <span t-if="props.readonly" t-esc="formattedValue" />
-        <input t-else="" t-att-id="props.id" t-att-type="props.inputType" t-ref="numpadDecimal" t-att-placeholder="props.placeholder" class="o_input" autocomplete="off" />
+        <t t-if="props.readonly">
+            <span t-esc="formattedValue"/>
+        </t>
+        <t t-else="">
+            <Input
+                id="props.id"
+                type="props.inputType"
+                placeholder="props.placeholder"
+                value="formattedValue"
+                t-on-input="(e) => fieldInput.onInput(e.target.value)"
+                t-on-change="(e) => fieldInput.onChange(e.target.value)"
+            />
+        </t>
     </t>
 
 </templates>

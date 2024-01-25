@@ -2,19 +2,23 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.IntegerField">
-        <span t-if="props.readonly" t-esc="formattedValue" />
-        <input 
-            t-else="" 
-            t-ref="numpadDecimal" 
-            t-on-focusin="onFocusIn" 
-            t-on-focusout="onFocusOut" 
-            t-att-id="props.id" 
-            t-att-type="props.inputType" 
-            t-att-placeholder="props.placeholder" 
-            inputmode="numeric" 
-            class="o_input" 
-            autocomplete="off"
-            t-att-step="props.step" />
+        <t t-if="props.readonly">
+            <span t-esc="formattedValue"/>
+        </t>
+        <t t-else="">
+            <Input
+                id="props.id"
+                type="props.inputType"
+                placeholder="props.placeholder"
+                inputmode="'numeric'"
+                step="props.step"
+                value="formattedValue"
+                t-on-input="(e) => fieldInput.onInput(e.target.value)"
+                t-on-change="(e) => fieldInput.onChange(e.target.value)"
+                t-on-focusin="() => this.setFocus(true)"
+                t-on-focusout="() => this.setFocus(false)"
+            />
+        </t>
     </t>
 
 </templates>

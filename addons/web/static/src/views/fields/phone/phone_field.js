@@ -2,12 +2,14 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { useInputField } from "../input_field_hook";
+import { useFieldInput } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
+import { Input } from "@web/core/input/input";
 
 import { Component } from "@odoo/owl";
 
 export class PhoneField extends Component {
+    static components = { Input };
     static template = "web.PhoneField";
     static props = {
         ...standardFieldProps,
@@ -15,7 +17,10 @@ export class PhoneField extends Component {
     };
 
     setup() {
-        useInputField({ getValue: () => this.props.record.data[this.props.name] || "" });
+        this.fieldInput = useFieldInput({
+            name: this.props.name,
+            record: this.props.record,
+        });
     }
     get phoneHref() {
         return "tel:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
