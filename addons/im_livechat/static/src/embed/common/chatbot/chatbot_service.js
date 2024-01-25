@@ -128,11 +128,17 @@ export class ChatBotService {
         localStorage.removeItem(
             `im_livechat.chatbot.state.uuid_${this.livechatService.thread.uuid}`
         );
-        const message = await rpc("/chatbot/restart", {
-            channel_uuid: this.livechatService.thread.uuid,
-            chatbot_script_id: this.chatbot.scriptId,
-        });
-        this.livechatService.thread?.messages.push({ ...message, body: markup(message.body) });
+        const message = this.store.Message.insert(
+            await rpc("/chatbot/restart", {
+                channel_uuid: this.livechatService.thread.uuid,
+                chatbot_script_id: this.chatbot.scriptId,
+            }),
+            { html: true }
+        );
+        if (!this.livechatService.thread) {
+            return;
+        }
+        this.livechatService.thread.messages.add(message);
         this.currentStep = null;
         this.start();
     }
