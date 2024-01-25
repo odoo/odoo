@@ -181,7 +181,8 @@ class account_journal(models.Model):
             journal_result = query_result[journal.id]
 
             color = '#875A7B' if 'e' in version else '#7c7bad'
-            is_sample_data = not journal.has_statement_lines
+            accessible = journal.company_id.id in self.env.company._accessible_branches().ids
+            is_sample_data = not accessible or not journal.has_statement_lines
 
             data = []
             if is_sample_data:
@@ -286,7 +287,7 @@ class account_journal(models.Model):
         for journal in self:
             dashboard_data[journal.id] = {
                 'currency_id': journal.currency_id.id or journal.company_id.sudo().currency_id.id,
-                'company_count': len(self.env.companies),
+                'show_company': len(self.env.companies) > 1 or journal.company_id.id != self.env.company.id,
             }
         self._fill_bank_cash_dashboard_data(dashboard_data)
         self._fill_sale_purchase_dashboard_data(dashboard_data)
@@ -380,6 +381,7 @@ class account_journal(models.Model):
             currency = journal.currency_id or self.env['res.currency'].browse(journal.company_id.sudo().currency_id.id)
             has_outstanding, outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
             to_check_balance, number_to_check = to_check.get(journal.id, (0, 0))
+            accessible = journal.company_id.id in self.env.company._accessible_branches().ids
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -387,12 +389,12 @@ class account_journal(models.Model):
                 'number_to_reconcile': number_to_reconcile.get(journal.id, 0),
                 'account_balance': currency.format(journal.current_statement_balance),
                 'has_at_least_one_statement': bool(last_statement),
-                'nb_lines_bank_account_balance': bool(journal.has_statement_lines),
+                'nb_lines_bank_account_balance': bool(journal.has_statement_lines) and accessible,
                 'outstanding_pay_account_balance': currency.format(outstanding_pay_account_balance),
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(last_statement.balance_end_real),
                 'last_statement_id': last_statement.id,
-                'bank_statements_source': journal.bank_statements_source,
+                'bank_statements_source': accessible and journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
             })
 
