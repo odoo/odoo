@@ -388,12 +388,12 @@ export function compileStepAuto(stepIndex, step, options) {
                     result = willUnload && "will unload";
                 } else if (typeof step.run === "string") {
                     const m = step.run.match(/^(\w+) *(.*?)$/);
-                    actionHelper[m[1]](m[2]);
+                    await actionHelper[m[1]](m[2]);
                 } else if (!step.isCheck) {
                     if (stepIndex === tour.steps.length - 1) {
                         console.warn("Tour %s: ignoring action (auto) of last step", tour.name);
                     } else {
-                        actionHelper.auto();
+                        await actionHelper.auto();
                     }
                 }
                 return result;

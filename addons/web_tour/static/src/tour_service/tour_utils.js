@@ -356,6 +356,7 @@ export class RunningTourActionHelper {
 
         if (consume_event === "input") {
             hoot.edit(text);
+            element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
         } else if (element.matches("select")) {
             const options = hoot.queryAll("option", { root: element });
             options.forEach((option) => {
@@ -377,6 +378,7 @@ export class RunningTourActionHelper {
             hoot.click(element);
             // For situations where an `oninput` is defined.
             element.dispatchEvent(new Event("input"));
+            element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
         } else {
             element.dispatchEvent(new Event("focusin"));
             element.dispatchEvent(new KeyboardEvent("keydown", { key: "_" }));
@@ -384,8 +386,9 @@ export class RunningTourActionHelper {
             element.dispatchEvent(new Event("input", { bubbles: true }));
             element.dispatchEvent(new Event("focusout"));
             element.dispatchEvent(new KeyboardEvent("keyup", { key: "_" }));
+            element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
         }
-        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
+        // element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     }
 }
 

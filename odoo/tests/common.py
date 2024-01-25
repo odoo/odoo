@@ -1798,6 +1798,7 @@ class HttpCase(TransactionCase):
 
         if devtools: 
             watch = True
+            timeout = 1e6
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
 
