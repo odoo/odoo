@@ -5,7 +5,7 @@ import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
-import {helpers, constants, EvaluationError} from "@odoo/o-spreadsheet";
+import { helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
 import { PERIODS } from "@spreadsheet/pivot/pivot_helpers";
 import { SpreadsheetPivotTable } from "@spreadsheet/pivot/pivot_table";
 import { pivotTimeAdapter } from "./pivot_time_adapters";
@@ -147,34 +147,6 @@ export class SpreadsheetPivotModel extends PivotModel {
     //--------------------------------------------------------------------------
 
     /**
-     * Return true if the given field name is part of the col group bys
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isColumnGroupBy(fieldName) {
-        try {
-            const { field } = this.parseGroupField(fieldName);
-            return this._isCol(field);
-        } catch {
-            return false;
-        }
-    }
-
-    /**
-     * Return true if the given field name is part of the row group bys
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isRowGroupBy(fieldName) {
-        try {
-            const { field } = this.parseGroupField(fieldName);
-            return this._isRow(field);
-        } catch {
-            return false;
-        }
-    }
-
-    /**
      * Get the display name of a group by
      * @param {string} fieldName
      * @returns {string}
@@ -222,44 +194,6 @@ export class SpreadsheetPivotModel extends PivotModel {
      */
     markAsHeaderUsed(domain) {
         this._usedHeaderDomains.add(domain.join());
-    }
-
-    //--------------------------------------------------------------------------
-    // Autofill
-    //--------------------------------------------------------------------------
-
-    /**
-     * @param {string} dimension COLUMN | ROW
-     */
-    isGroupedOnlyByOneDate(dimension) {
-        const groupBys =
-            dimension === "COLUMN" ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys;
-        return groupBys.length === 1 && this._isDateField(this.parseGroupField(groupBys[0]).field);
-    }
-    /**
-     * @param {string} dimension COLUMN | ROW
-     */
-    getGroupOfFirstDate(dimension) {
-        if (!this.isGroupedOnlyByOneDate(dimension)) {
-            return undefined;
-        }
-        const groupBys =
-            dimension === "COLUMN" ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys;
-        return this.parseGroupField(groupBys[0]).aggregateOperator;
-    }
-
-    /**
-     * @param {string} dimension COLUMN | ROW
-     * @param {number} index
-     */
-    getGroupByAtIndex(dimension, index) {
-        const groupBys =
-            dimension === "COLUMN" ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys;
-        return groupBys[index];
-    }
-
-    getNumberOfColGroupBys() {
-        return this.metaData.fullColGroupBys.length;
     }
 
     //--------------------------------------------------------------------------
