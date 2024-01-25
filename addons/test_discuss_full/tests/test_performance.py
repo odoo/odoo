@@ -199,7 +199,7 @@ class TestDiscussFullPerformance(HttpCase):
                     "push_to_talk_key": False,
                     "use_push_to_talk": False,
                     "user_id": {"id": self.users[0].id},
-                    "voice_active_duration": 0,
+                    "voice_active_duration": 200,
                     "volumes": [("ADD", [])],
                 },
             },
