@@ -47,7 +47,9 @@ export class HierarchyController extends Component {
                 this.render(true);
             }
         );
-        useViewButtons(this.model, this.rootRef, {
+        useViewButtons(this.rootRef, {
+            resModel: this.model.resModel,
+            resIds: this.model.resIds,
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: this.model.reload.bind(this.model),

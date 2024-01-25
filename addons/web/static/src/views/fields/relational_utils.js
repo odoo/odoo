@@ -539,7 +539,9 @@ export class X2ManyFieldDialog extends Component {
 
         const reload = () => this.record.load();
 
-        useViewButtons(this.props.record.model, this.modalRef, {
+        useViewButtons(this.modalRef, {
+            resId: this.record.resId,
+            resModel: this.record.resModel,
             reload,
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
         }); // maybe pass the model directly in props

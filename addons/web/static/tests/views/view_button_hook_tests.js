@@ -39,7 +39,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
             static props = ["*"];
             setup() {
                 const rootRef = useRef("root");
-                useViewButtons({}, rootRef, {
+                useViewButtons(rootRef, {
                     beforeExecuteAction: () => {
                         assert.step("beforeExecuteAction in hook");
                         return executeInHook;
@@ -110,7 +110,7 @@ QUnit.module("UseViewButton tests", (hooks) => {
             static props = ["*"];
             setup() {
                 const rootRef = useRef("root");
-                useViewButtons({}, rootRef);
+                useViewButtons(rootRef);
             }
         }
 
