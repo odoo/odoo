@@ -563,11 +563,10 @@ describe('Link', () => {
                     await deleteBackward(editor);
                 },
                 contentAfterEdit: '<p>a<a href="#/" oe-zws-empty-inline="" class="o_link_in_selection">' +
-                        '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                        '<span data-o-link-zws="start">\u200B</span>' + // start zws
                         '[]\u200B' + // content: empty inline zws
-                        '<span data-o-link-zws="end">\u200B</span>' + // end zws
                     '</a>' +
-                    '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    '<span data-o-link-zws="after">\u200B</span>' + // after zws
                     'c</p>',
                 contentAfter: '<p>a[]c</p>',
             });
