@@ -8,7 +8,8 @@ import re
 import time
 import traceback
 
-from typing import NamedTuple
+from typing import NamedTuple, List
+from xmlrunner.result import _XMLTestResult
 
 from . import case
 from .. import sql_db
@@ -51,7 +52,7 @@ $
 """, re.VERBOSE)
 
 
-class OdooTestResult(object):
+class OdooTestResult(_XMLTestResult):
     """
     This class in inspired from TextTestResult and modifies TestResult
     Instead of using a stream, we are using the logger.
@@ -68,11 +69,19 @@ class OdooTestResult(object):
     _previousTestClass = None
     _moduleSetUpFailed = False
 
-    def __init__(self, stream=None, descriptions=None, verbosity=None):
+    def __init__(
+        self,
+        stream=None,
+        descriptions=False,
+        verbosity=0,
+        elapsed_times=True,
+        properties=None,
+        infoclass=None,
+    ):
         self.failures_count = 0
         self.errors_count = 0
         self.testsRun = 0
-        self.skipped = 0
+        self.skipped_count = 0
         self.tb_locals = False
         # custom
         self.time_start = None
@@ -80,12 +89,26 @@ class OdooTestResult(object):
         self._soft_fail = False
         self.had_failure = False
         self.stats = collections.defaultdict(Stat)
+        self.relevant_logs : List[logging.LogRecord] = []
+        super().__init__(
+            stream, descriptions, verbosity, elapsed_times, properties, infoclass
+        )
 
     def printErrors(self):
         "Called by TestRunner after test run"
+        self.stream.writeln()
+
+        from ..modules import module
+        if module.current_test:
+            self.stream.writeln(f"Finished testing module {module.current_test}")
+
+        while self.relevant_logs:
+            self.stream.writeln(self.separator2)
+            self.stream.writeln(self.relevant_logs.pop().getMessage())
 
     def startTest(self, test):
         "Called when the given test is about to be run"
+        super().startTest(test)
         self.testsRun += 1
         self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
         self.time_start = time.time()
@@ -93,6 +116,7 @@ class OdooTestResult(object):
 
     def stopTest(self, test):
         """Called when the given test has been run"""
+        super().stopTest(test)
         if stats_logger.isEnabledFor(logging.INFO):
             self.stats[test.id()] = Stat(
                 time=time.time() - self.time_start,
@@ -103,35 +127,43 @@ class OdooTestResult(object):
         """Called when an error has occurred. 'err' is a tuple of values as
         returned by sys.exc_info().
         """
+        super().addError(test, err)
         if self._soft_fail:
             self.had_failure = True
         else:
             self.errors_count += 1
-        self.logError("ERROR", test, err)
+        log = self.logError("ERROR", test, err)
+        if log:
+            self.relevant_logs.append(log)
 
     def addFailure(self, test, err):
         """Called when an error has occurred. 'err' is a tuple of values as
         returned by sys.exc_info()."""
+        super().addFailure(test, err)
         if self._soft_fail:
             self.had_failure = True
         else:
             self.failures_count += 1
-        self.logError("FAIL", test, err)
+        log = self.logError("FAIL", test, err)
+        if log:
+            self.relevant_logs.append(log)
 
     def addSubTest(self, test, subtest, err):
+        """Called when a subTest has completed."""
+        super().addSubTest(test, subtest, err)
         if err is not None:
             if issubclass(err[0], test.failureException):
                 self.addFailure(subtest, err)
             else:
                 self.addError(subtest, err)
 
-    def addSuccess(self, test):
-        "Called when a test has completed successfully"
-
     def addSkip(self, test, reason):
         """Called when a test is skipped."""
-        self.skipped += 1
-        self.log(logging.INFO, 'skipped %s : %s', self.getDescription(test), reason, test=test)
+        super().addSkip(test, reason)
+        self.skipped_count += 1
+        log = self.log(logging.INFO, 'skipped %s : %s', self.getDescription(test), reason, test=test)
+        if log:
+            self.relevant_logs.append(log)
 
     def wasSuccessful(self):
         """Tells whether or not this result was a success."""
@@ -194,7 +226,7 @@ class OdooTestResult(object):
         self.failures_count += other.failures_count
         self.errors_count += other.errors_count
         self.testsRun += other.testsRun
-        self.skipped += other.skipped
+        self.skipped_count += other.skipped_count
         self.stats.update(other.stats)
 
     def log(self, level, msg, *args, test=None, exc_info=None, extra=None, stack_info=False, caller_infos=None):
@@ -218,6 +250,7 @@ class OdooTestResult(object):
         if logger.isEnabledFor(level):
             record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
             logger.handle(record)
+            return record
 
     def log_stats(self):
         if not stats_logger.isEnabledFor(logging.INFO):
@@ -275,7 +308,7 @@ class OdooTestResult(object):
         err = self._exc_info_to_string(error, test)
         caller_infos = self.getErrorCallerInfo(error, test)
         self.log(logging.INFO, '=' * 70, test=test, caller_infos=caller_infos)  # keep this as info !!!!!!
-        self.log(logging.ERROR, "%s: %s\n%s", flavour, self.getDescription(test), err, test=test, caller_infos=caller_infos)
+        return self.log(logging.ERROR, "%s: %s\n%s", flavour, self.getDescription(test), err, test=test, caller_infos=caller_infos)
 
     def getErrorCallerInfo(self, error, test):
         """

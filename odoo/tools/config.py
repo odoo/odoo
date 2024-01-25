@@ -198,6 +198,9 @@ class configmanager(object):
         group.add_option("--screenshots", dest="screenshots", action="store", my_default=temp_tests_dir,
                          metavar='DIR',
                          help="Screenshots will go in DIR/{db_name}/screenshots. Defaults to %s." % temp_tests_dir)
+        group.add_option("--test-reports", dest="test_reports", action="store", my_default=temp_tests_dir,
+                         metavar='DIR',
+                         help="Test reports will go in DIR/{db_name}/test_reports. Defaults to %s." % temp_tests_dir)
         parser.add_option_group(group)
 
         # Logging Group
@@ -456,7 +459,7 @@ class configmanager(object):
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
                 'db_maxconn', 'db_maxconn_gevent', 'import_partial', 'addons_path', 'upgrade_path',
-                'syslog', 'without_demo', 'screencasts', 'screenshots',
+                'syslog', 'without_demo', 'screencasts', 'screenshots', 'test_reports',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
                 'shell_interface',
@@ -549,7 +552,7 @@ class configmanager(object):
             self.save()
 
         # normalize path options
-        for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'pg_path', 'translate_out', 'translate_in', 'geoip_city_db', 'geoip_country_db']:
+        for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'test_reports', 'pg_path', 'translate_out', 'translate_in', 'geoip_city_db', 'geoip_country_db']:
             self.options[key] = self._normalize(self.options[key])
 
         conf.addons_paths = self.options['addons_path'].split(',')

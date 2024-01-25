@@ -54,6 +54,7 @@ setup(
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'rjsmin',
         'requests',
+        'unittest-xml-reporting',
         'urllib3',
         'vobject',
         'werkzeug',

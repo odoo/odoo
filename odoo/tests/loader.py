@@ -2,10 +2,12 @@ import importlib
 import importlib.util
 import inspect
 import itertools
+import os
 import sys
 import threading
 import unittest
 from pathlib import Path
+from xmlrunner.runner import XMLTestRunner
 
 from .. import tools
 from .tag_selector import TagsSelector
@@ -82,8 +84,27 @@ def run_suite(suite, module_name=None):
     module.current_test = module_name
     threading.current_thread().testing = True
 
-    results = OdooTestResult()
-    suite(results)
+    # Let summary be printed live when logs go to a file
+    with open(os.devnull, "w") as stdnull:
+        summary_stream = sys.stderr if tools.config["logfile"] else stdnull
+        print(
+            f"Testing module {module_name}"
+            if module_name
+            else "Running post_install tests",
+            file=summary_stream,
+        )
+        runner = XMLTestRunner(
+            stream=summary_stream,
+            output=str(
+                Path(
+                    tools.config["test_reports"],
+                    threading.current_thread().dbname,
+                    "test_reports",
+                )
+            ),
+            resultclass=OdooTestResult,
+        )
+        results = runner.run(suite)
 
     threading.current_thread().testing = False
     module.current_test = None
