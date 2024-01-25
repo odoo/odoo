@@ -3824,3 +3824,39 @@ class TestMrpOrder(TestMrpCommon):
         production.button_mark_done()
 
         self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
+
+    def test_multi_edit_start_date_wo(self):
+        """
+        Test setting the start date for multiple workorders, checking if the finish date
+        will be set too. As if the finish date is not set the planned workorder will not
+        be shown in planning gantt view
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_uom_id': self.bom_1.product_uom_id.id,
+        })
+
+        wos = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test order',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.bom_1.product_uom_id.id,
+                'production_id': mo.id,
+                'duration_expected': 1.0
+            },
+            {
+                'name': 'Test order2',
+                'workcenter_id': self.workcenter_2.id,
+                'product_uom_id': self.bom_1.product_uom_id.id,
+                'production_id': mo.id,
+                'duration_expected': 2.0
+            }
+        ])
+        dt = datetime(2024, 1, 17, 11)
+        wos.date_planned_start = dt
+
+        self.assertEqual(wos[0].date_planned_start, dt)
+        self.assertEqual(wos[1].date_planned_start, dt)
+
+        self.assertEqual(wos[0].date_planned_finished, dt + timedelta(hours=1, minutes=1))
+        self.assertEqual(wos[1].date_planned_finished, dt + timedelta(hours=1, minutes=2))

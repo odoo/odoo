@@ -100,6 +100,18 @@ QUnit.test("luxon is configured in the correct lang", async (assert) => {
     assert.strictEqual(DateTime.utc(2021, 12, 10).toFormat("MMMM"), "décembre");
 });
 
+QUnit.test("Mismatched locale sr_RS is correctly converted", async (assert) => {
+    patchLang("sr_RS");
+    await makeTestEnv();
+    assert.strictEqual(DateTime.local().loc.locale, "sr-cyrl");
+});
+
+QUnit.test("Mismatched locale sr@latin is correctly converted", async (assert) => {
+    patchLang("sr@latin");
+    await makeTestEnv();
+    assert.strictEqual(DateTime.local().loc.locale, "sr-Latn-RS");
+});
+
 QUnit.module("Numbering system");
 
 QUnit.test("arabic has the correct numbering system (generic)", async (assert) => {

@@ -468,8 +468,6 @@ class MassMailing(models.Model):
     def create(self, vals_list):
         ab_testing_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
         for values in vals_list:
-            if values.get('body_html'):
-                values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
             if values.get('ab_testing_schedule_datetime'):
                 at = fields.Datetime.from_string(values['ab_testing_schedule_datetime'])
                 ab_testing_cron._trigger(at=at)
@@ -477,9 +475,16 @@ class MassMailing(models.Model):
         mailings._create_ab_testing_utm_campaigns()
         mailings._fix_attachment_ownership()
 
+        for values, mailing in zip(vals_list, mailings):
+            if values.get('body_arch'):
+                mailing.body_arch = mailing._convert_inline_images_to_urls(mailing.body_arch)
+            if values.get('body_html'):
+                mailing.body_html = mailing._convert_inline_images_to_urls(mailing.body_html)
         return mailings
 
     def write(self, values):
+        if values.get('body_arch'):
+            values['body_arch'] = self._convert_inline_images_to_urls(values['body_arch'])
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
@@ -1258,14 +1263,14 @@ class MassMailing(models.Model):
     # TOOLS
     # ------------------------------------------------------
 
-    def _convert_inline_images_to_urls(self, body_html):
+    def _convert_inline_images_to_urls(self, html_content):
         """
         Find inline base64 encoded images, make an attachement out of
         them and replace the inline image with an url to the attachement.
         Find VML v:image elements, crop their source images, make an attachement
         out of them and replace their source with an url to the attachement.
         """
-        root = lxml.html.fromstring(body_html)
+        root = lxml.html.fromstring(html_content)
         did_modify_body = False
 
         conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None))
@@ -1326,16 +1331,40 @@ class MassMailing(models.Model):
 
         if did_modify_body:
             return lxml.html.tostring(root, encoding='unicode')
-        return body_html
+        return html_content
 
     def _create_attachments_from_inline_images(self, b64images):
         if not b64images:
             return []
 
-        attachments = self.env['ir.attachment'].create([{
-            'datas': b64image,
-            'name': f"cropped_image_mailing_{self.id}_{i}",
-            'type': 'binary',} for i, b64image in enumerate(b64images)])
+        IrAttachment = self.env['ir.attachment']
+        existing_attachments = dict(IrAttachment.search([
+            ('res_model', '=', 'mailing.mailing'),
+            ('res_id', '=', self.id),
+        ]).mapped(lambda record: (record.checksum, record)))
+
+        attachments, vals_for_attachs = [], []
+        next_img_id = len(existing_attachments)
+        for b64image in b64images:
+            checksum = IrAttachment._compute_checksum(base64.b64decode(b64image))
+            existing_attach = existing_attachments.get(checksum)
+            # Existing_attach can be None, in which case it acts as placeholder
+            # for attachment to be created.
+            attachments.append(existing_attach)
+            if not existing_attach:
+                vals_for_attachs.append({
+                    'datas': b64image,
+                    'name': f"image_mailing_{self.id}_{next_img_id}",
+                    'type': 'binary',
+                    'res_id': self.id,
+                    'res_model': 'mailing.mailing'
+                })
+                next_img_id += 1
+
+        new_attachments = iter(IrAttachment.create(vals_for_attachs))
+        # Replace None entries by newly created attachments.
+        attachments = [(attach or next(new_attachments)) for attach in attachments]
+
         urls = []
         for attachment in attachments:
             attachment.generate_access_token()
