@@ -34,7 +34,7 @@ export async function executeButtonCallback(el, fct) {
 function undefinedAsTrue(val) {
     return typeof val === "undefined" || val;
 }
-export function useViewButtons(model, ref, options = {}) {
+export function useViewButtons(ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
     const comp = useComponent();
@@ -61,7 +61,7 @@ export function useViewButtons(model, ref, options = {}) {
                 const closeDialog = (clickParams.close || clickParams.special) && env.closeDialog;
                 const params = getResParams();
                 const resId = params.resId;
-                const resIds = params.resIds || model.resIds;
+                const resIds = params.resIds || options.resIds;
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
@@ -74,15 +74,14 @@ export function useViewButtons(model, ref, options = {}) {
                     Object.assign(buttonContext, clickParams.buttonContext);
                 }
                 const doActionParams = Object.assign({}, clickParams, {
-                    resModel: params.resModel || model.resModel,
+                    resModel: params.resModel || options.resModel,
                     resId,
                     resIds,
                     context: params.context || {}, //LPE FIXME new Context(payload.env.context).eval();
                     buttonContext,
                     onClose: async () => {
                         if (!closeDialog && status(comp) !== "destroyed") {
-                            const reload = options.reload || (() => model.load());
-                            await reload();
+                            await options.reload();
                         }
                     },
                 });
