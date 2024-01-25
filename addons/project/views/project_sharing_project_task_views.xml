@@ -174,12 +174,13 @@
                                 placeholder="e.g. Product Launch"
                                 context="{'default_project_id': project_id}"
                                 invisible="not allow_milestones"
-                                options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
+                                readonly="1"
+                                options="{'no_open': True}"/>
                             <field name="user_ids" invisible="1" />
                             <field name="portal_user_names"
                                 string="Assignees"
                                 class="o_task_user_field"/>
-                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_edit_color': True}"/>
+                            <field name="tag_ids" context="{'project_id': project_id}" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True, 'no_edit': True, 'no_edit_color': True}"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -188,7 +189,8 @@
                             <field name="state" invisible="1" />
                             <field name="depend_on_count" invisible="1" />
                             <field name="allow_task_dependencies" invisible="1" />
-                            <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
+                            <field name="current_user_same_company_partner" invisible="1"/>
+                            <field name="partner_id" readonly="not current_user_same_company_partner" options="{'no_open': True, 'no_create': True, 'no_edit': True}" invisible="not project_id"/>
                             <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date"/>
                             <field name="recurring_task" groups="project.group_project_recurring_tasks"/>
                             <label for="repeat_interval" invisible="not recurring_task" groups="project.group_project_recurring_tasks"/>
@@ -237,7 +239,7 @@
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies">
-                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}"
+                            <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}" readonly="1"
                                 context="{
                                     'depend_on_count': depend_on_count,
                                     'tree_view_ref': 'project.open_view_blocked_by_list_view',
@@ -247,8 +249,8 @@
                                 <tree editable="bottom">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" readonly="1"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" readonly="1"/>
                                     <field name="name"/>
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
