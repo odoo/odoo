@@ -9,15 +9,14 @@ export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton };
     static props = {
-        // FIXME: null????
         partner: { type: [Object, { value: null }] },
         actionName: Object,
         actionType: String,
-        isActionButtonHighlighted: { type: Boolean, optional: true },
-        onClickMore: Function,
+        onClickMore: { type: Function, optional: true },
+        actionToTrigger: { type: Function, optional: true },
     };
     static defaultProps = {
-        isActionButtonHighlighted: false,
+        actionToTrigger: null,
     };
 
     setup() {

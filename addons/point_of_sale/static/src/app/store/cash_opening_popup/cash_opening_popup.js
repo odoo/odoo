@@ -15,7 +15,6 @@ export class CashOpeningPopup extends Component {
     static props = {
         close: Function,
     };
-    static defaultProps = { cancelKey: false };
 
     setup() {
         this.moneyDetails = null;

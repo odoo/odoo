@@ -11,9 +11,12 @@ export class MoneyDetailsPopup extends Component {
     static components = { NumericInput, Dialog };
     static props = {
         moneyDetails: { type: Object, optional: true },
-        action: Object,
+        action: String,
         getPayload: Function,
         close: Function,
+    };
+    static defaultProps = {
+        moneyDetails: null,
     };
 
     setup() {
@@ -41,10 +44,7 @@ export class MoneyDetailsPopup extends Component {
         );
     }
     confirm() {
-        let moneyDetailsNotes = !floatIsZero(
-            this.computeTotal(),
-            this.currency.decimal_places
-        )
+        let moneyDetailsNotes = !floatIsZero(this.computeTotal(), this.currency.decimal_places)
             ? "Money details: \n"
             : null;
         this.pos.models["pos.bill"].forEach((bill) => {

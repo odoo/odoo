@@ -370,14 +370,9 @@ export class PosStore extends Reactive {
             return formattedUnitPrice;
         }
     }
-    async openConfigurator({ product, initQuantity = 1 }) {
-        const attrById = this.models["product.attribute"].getAllBy("id");
-        const attributes = product.attribute_line_ids.filter(
-            (attr) => attr.attribute_id.id in attrById
-        );
+    async openConfigurator(product) {
         return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
             product: product,
-            attributes: attributes,
         });
     }
     getProductPrice(product, p = false) {
@@ -423,7 +418,7 @@ export class PosStore extends Reactive {
         }
 
         if (product.isConfigurable()) {
-            const payload = await this.openConfigurator({ product, initQuantity: quantity });
+            const payload = await this.openConfigurator(product);
             if (payload) {
                 attribute_value_ids = payload.attribute_value_ids;
                 attribute_custom_values = payload.attribute_custom_values;
@@ -437,7 +432,6 @@ export class PosStore extends Reactive {
             // { combo_line_id: {}, configuration: {}}
             const payload = await makeAwaitable(this.env.services.dialog, ComboConfiguratorPopup, {
                 product: product,
-                keepBehind: true,
             });
 
             if (!payload) {

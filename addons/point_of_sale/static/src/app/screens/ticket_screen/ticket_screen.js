@@ -35,7 +35,6 @@ export class TicketScreen extends Component {
         Numpad,
     };
     static props = {
-        isShown: Boolean,
         destinationOrder: { type: Object, optional: true },
         reuseSavedUIState: { type: Boolean, optional: true },
         ui: { type: Object, optional: true },

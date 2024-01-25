@@ -11,8 +11,9 @@ export class NumberPopup extends Component {
     static components = { Numpad, Dialog };
     static props = {
         title: { type: String, optional: true },
+        subtitle: { type: String, optional: true },
         startingValue: { type: Number, optional: true },
-        isInputSelected: Boolean,
+        isInputSelected: { type: Boolean, optional: true },
         nbrDecimal: { type: Number, optional: true },
         inputSuffix: { type: String, optional: true },
         cheap: { type: Boolean, optional: true },
@@ -23,12 +24,14 @@ export class NumberPopup extends Component {
     };
     static defaultProps = {
         title: _t("Confirm?"),
+        subtitle: "",
         cheap: false,
         startingValue: null,
         isPassword: false,
         nbrDecimal: 0,
         inputSuffix: "",
         getInputBufferReminder: () => false,
+        isInputSelected: false,
     };
 
     /**

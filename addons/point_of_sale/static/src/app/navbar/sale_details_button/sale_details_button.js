@@ -9,7 +9,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 export class SaleDetailsButton extends Component {
     static template = "point_of_sale.SaleDetailsButton";
     static props = {
-        isHeaderButton: Boolean,
+        isHeaderButton: { type: Boolean, optional: true },
     };
     setup() {
         super.setup(...arguments);

@@ -12,7 +12,7 @@ export class SaleOrderList extends Component {
     static components = { SaleOrderRow };
     static template = "pos_sale.SaleOrderList";
     static props = {
-        initHighlightedOrder: { type: Object, optional: true },
+        initHighlightedOrder: [Object, { value: null }],
         orders: Array,
         onClickSaleOrder: Function,
     };

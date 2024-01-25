@@ -52,7 +52,7 @@ export class ComboConfiguratorPopup extends Component {
 
     async onClickProduct({ product, combo_line }, ev) {
         if (product.isConfigurable()) {
-            const payload = await this.pos.openConfigurator({ product, initQuantity: 1 });
+            const payload = await this.pos.openConfigurator(product);
             if (payload) {
                 this.state.configuration[combo_line.id] = payload;
             } else {

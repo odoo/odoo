@@ -107,7 +107,7 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = ["attributes", "product", "getPayload", "close"];
+    static props = ["product", "getPayload", "close"];
 
     setup() {
         useSubEnv({ attribute_components: [] });

@@ -10,7 +10,7 @@ export class OrderlineNoteButton extends Component {
     static template = "point_of_sale.OrderlineNoteButton";
     static props = {
         icon: { type: String, optional: true },
-        label: { type: Object, optional: true },
+        label: { type: String, optional: true },
         getter: { type: Function, optional: true },
         setter: { type: Function, optional: true },
     };
