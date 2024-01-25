@@ -33,7 +33,7 @@
                 <field name="subtask_count" invisible="1"/>
                 <label for="allocated_hours" invisible="not allow_timesheets"/>
                 <div class="text-nowrap" invisible="not allow_timesheets">
-                    <field name="allocated_hours" class="oe_inline" widget="float_time"/>
+                    <field name="allocated_hours" class="oe_inline" widget="float_time" readonly="1"/>
                     <span invisible="subtask_count == 0">
                         (incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                         <span class="fw-bold text-dark"> Sub-tasks</span>)
