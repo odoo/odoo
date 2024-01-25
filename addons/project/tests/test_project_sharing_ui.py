@@ -37,6 +37,53 @@ class TestProjectSharingUi(HttpCase):
             ],
         })
 
+    def test_blocked_task_with_project_sharing_string_portal(self):
+        """
+        Ensure the portal user shows the message 'This task is currently blocked...'.
+        Flow:
+            - Activated Task Dependencies in a portal project
+            - Create a 'New' task stage
+            - Create a project(Test Project)
+            - Ensure the portal user receives the message 'This task is currently blocked..'.
+            - Create task(Test Task)
+            - Create a task with a Blocked task (Test Task)
+        """
+
+        self.project_portal.write({
+            'allow_task_dependencies': True,
+            'collaborator_ids': [
+                Command.create({'partner_id': self.partner_portal.id}),
+            ],
+        })
+
+        project = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test Project',
+        })
+
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'access_mode': 'edit',
+            'res_model': 'project.project',
+            'res_id': self.project_portal.id,
+            'partner_ids': [
+                Command.link(self.partner_portal.id)
+            ],
+        })
+        project_share_wizard.action_send_mail()
+
+        task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test Task',
+            'project_id': project.id,
+        })
+
+        self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Portal Task',
+            'project_id': self.project_portal.id,
+            'depend_on_ids': task.ids,
+            'stage_id': self.project_portal.type_ids[0].id,
+        })
+
+        self.start_tour("/web", 'project_sharing_with_blocked_task_tour', login="georges1")
+
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
         self.start_tour("/web", 'project_sharing_tour', login="admin")
