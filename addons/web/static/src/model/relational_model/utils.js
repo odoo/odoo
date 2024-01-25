@@ -626,7 +626,8 @@ export function useRecordObserver(callback) {
             (record) => {
                 if (firstCall) {
                     firstCall = false;
-                    return Promise.resolve(callback(record, props))
+                    return new Promise((resolve) => resolve(props()))
+                        .then(props => callback(record, props))
                         .then(def.resolve)
                         .catch(def.reject);
                 } else {
@@ -637,7 +638,8 @@ export function useRecordObserver(callback) {
                                 // We must do it manually.
                                 return;
                             }
-                            return Promise.resolve(callback(record, props))
+                            return new Promise((resolve) => resolve(props()))
+                                .then(props => callback(record, props))
                                 .then(def.resolve)
                                 .catch(def.reject);
                         },
@@ -645,17 +647,17 @@ export function useRecordObserver(callback) {
                     )(record);
                 }
             },
-            [props.record]
+            [props().record]
         );
         return def;
     };
     onWillDestroy(() => {
         alive = false;
     });
-    onWillStart(() => fct(component.props));
+    onWillStart(() => fct(() => component.props));
     onWillUpdateProps((props) => {
         if (props.record.id !== component.props.record.id) {
-            return fct(props);
+            return fct(() => component.props);
         }
     });
 }
