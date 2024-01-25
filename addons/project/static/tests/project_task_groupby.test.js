@@ -23,7 +23,7 @@ test("project.task (tree): check group label for no project", async () => {
         arch: `<tree js_class="project_task_list"/>`,
         groupBy: ["project_id"],
     });
-    expect(".o_group_name").toHaveText("🔒 Private (1)");
+    expect(".o_group_name").toHaveText("🔒 Private\n(1)");
 });
 
 test("project.task (tree): check group label for no assignees", async () => {
@@ -33,7 +33,7 @@ test("project.task (tree): check group label for no assignees", async () => {
         arch: `<tree js_class="project_task_list"/>`,
         groupBy: ["user_ids"],
     });
-    expect(".o_group_name").toHaveText("👤 Unassigned (1)");
+    expect(".o_group_name").toHaveText("👤 Unassigned\n(1)");
 });
 
 test("project.task (tree): check group label for no deadline", async () => {
@@ -43,7 +43,7 @@ test("project.task (tree): check group label for no deadline", async () => {
         arch: `<tree js_class="project_task_list"/>`,
         groupBy: ["date_deadline"],
     });
-    expect(".o_group_name").toHaveText("None (1)");
+    expect(".o_group_name").toHaveText("None\n(1)");
 });
 
 test("project.task (kanban): check group label for no project", async () => {
