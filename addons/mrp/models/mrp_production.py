@@ -524,7 +524,7 @@ class MrpProduction(models.Model):
         produce and all work orders has been finished.
         """
         for production in self:
-            if not production.state or not production.product_uom_id:
+            if not production.state or not production.product_uom_id or not (production.id or production._origin.id):
                 production.state = 'draft'
             elif production.state == 'cancel' or (production.move_finished_ids and all(move.state == 'cancel' for move in production.move_finished_ids)):
                 production.state = 'cancel'
