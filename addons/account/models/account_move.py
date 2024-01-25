@@ -95,7 +95,12 @@ class AccountMove(models.Model):
         tracking=True,
         index='trigram',
     )
-    ref = fields.Char(string='Reference', copy=False, tracking=True)
+    ref = fields.Char(
+        string='Reference',
+        copy=False,
+        tracking=True,
+        index='trigram',
+    )
     date = fields.Date(
         string='Date',
         index=True,
