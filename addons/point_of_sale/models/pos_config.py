@@ -203,9 +203,9 @@ class PosConfig(models.Model):
     def _compute_currency(self):
         for pos_config in self:
             if pos_config.journal_id:
-                pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
+                pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.sudo().currency_id.id
             else:
-                pos_config.currency_id = pos_config.company_id.currency_id.id
+                pos_config.currency_id = pos_config.company_id.sudo().currency_id.id
 
     @api.depends('session_ids', 'session_ids.state')
     def _compute_current_session(self):
