@@ -238,6 +238,20 @@ class MailMail(models.Model):
 
         return res
 
+    def _preprocess_sent_message(self):
+        """ Fetch data related to mail.mail about to be sent. Try to optimize
+        and batch as much as possible. """
+        # Fetch follower status if a /mail/unfollow link is present
+        mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
+        if mails_with_unfollow_link:
+            follower_status = self.env['mail.followers']._get_mail_recipients_follower_status(mails_with_unfollow_link.ids)
+        else:
+            follower_status = {}
+        mail_information = defaultdict(dict)
+        for mail_id, partner_ids in follower_status.items():
+            mail_information[mail_id]['partner_follower_ids'] = partner_ids
+        return mail_information
+
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
@@ -326,7 +340,7 @@ class MailMail(models.Model):
             return ''
         return self.env['mail.render.mixin']._replace_local_links(self.body_html)
 
-    def _personalize_outgoing_body(self, body, partner=False, recipients_follower_status=None):
+    def _personalize_outgoing_body(self, body, partner=False, mail_information=None):
         """ Return a modified body based on the recipient (partner).
 
         It must be called when using standard notification layouts
@@ -334,14 +348,23 @@ class MailMail(models.Model):
 
         :param str body: body to personalize for the recipient
         :param partner: <res.partner> recipient
-        :param set recipients_follower_status: see ``Followers._get_mail_recipients_follower_status()``
+        :param dict mail_information: mail related information. Contains notably
+          followers information, like {
+            <mail ID>: {
+                'partner_follower_ids': [<partner IDs>],
+            }
+          }. See ``Followers._get_mail_recipients_follower_status()``;
         """
         self.ensure_one()
 
-        if (recipients_follower_status and '/mail/unfollow' in body and partner and
-                self.model and self.res_id and (self.model, self.res_id, partner.id) in recipients_follower_status and
-                (getattr(self.env[self.model], '_partner_unfollow_enabled', False) or
-                 any(user._is_internal() for user in partner.user_ids))):
+        if (
+                mail_information and '/mail/unfollow' in body and
+                partner.id in mail_information.get(self.id, {}).get('partner_follower_ids', []) and
+                (
+                    getattr(self.env[self.model], '_partner_unfollow_enabled', False) or
+                    any(user._is_internal() for user in partner.user_ids)
+                )
+        ):
             unfollow_url = self.env['mail.thread']._notify_get_action_link(
                 'unfollow', model=self.model, res_id=self.res_id, pid=partner.id)
             body = body.replace('/mail/unfollow', unfollow_url)
@@ -349,12 +372,14 @@ class MailMail(models.Model):
             body = re.sub(_UNFOLLOW_REGEX, '', body)
         return body
 
-    def _prepare_outgoing_list(self, recipients_follower_status=None):
+    def _prepare_outgoing_list(self, mail_information=None):
         """ Return a list of emails to send based on current mail.mail. Each
         is a dictionary for specific email values, depending on a partner, or
         generic to the whole recipients given by mail.email_to.
 
-        :param set recipients_follower_status: see ``Followers._get_mail_recipients_follower_status()``
+        :param dict mail_information: mail related information. Contains notably
+          followers information, see ``Followers._get_mail_recipients_follower_status()``;
+
         :return list: list of dicts used in IrMailServer.build_email()
         """
         self.ensure_one()
@@ -439,7 +464,7 @@ class MailMail(models.Model):
         results = []
         for email_values in email_list:
             partner_id = email_values['partner_id']
-            body_personalized = self._personalize_outgoing_body(body, partner_id, recipients_follower_status)
+            body_personalized = self._personalize_outgoing_body(body, partner_id, mail_information=mail_information)
             results.append({
                 'attachments': email_attachments,
                 'body': body_personalized,
@@ -555,12 +580,8 @@ class MailMail(models.Model):
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False):
         IrMailServer = self.env['ir.mail_server']
-        # Only retrieve recipient followers of the mails if needed
-        mails_with_unfollow_link = self.filtered(lambda m: m.body_html and '/mail/unfollow' in m.body_html)
-        recipients_follower_status = (
-            None if not mails_with_unfollow_link
-            else self.env['mail.followers']._get_mail_recipients_follower_status(mails_with_unfollow_link.ids)
-        )
+        # Prefetch mail related information used notably to process recipients
+        mail_information = self._preprocess_sent_message()
 
         for mail_id in self.ids:
             success_pids = []
@@ -607,7 +628,7 @@ class MailMail(models.Model):
                 res = None
                 # TDE note: could be great to pre-detect missing to/cc and skip sending it
                 # to go directly to failed state update
-                email_list = mail._prepare_outgoing_list(recipients_follower_status)
+                email_list = mail._prepare_outgoing_list(mail_information)
 
                 # send each sub-email
                 for email in email_list:

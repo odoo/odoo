@@ -82,16 +82,17 @@ class Followers(models.Model):
         Note that followers for message related to discuss.channel are not fetched.
 
         :param list mail_ids: mail_mail ids
+
         :return: followers of the related record of the mails limited to the
-            recipients of the mails as a set of tuple (model, res_id, partner_id).
-        :rtype: set
+            recipients of the mails, for each mail ID;
+        :rtype: dict
         """
         self.env['mail.mail'].flush_model(['message_id', 'recipient_ids'])
         self.env['mail.followers'].flush_model(['partner_id', 'res_model', 'res_id'])
         self.env['mail.message'].flush_model(['model', 'res_id'])
         # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
         self.env.cr.execute("""
-            SELECT message.model, message.res_id, mail_partner.res_partner_id
+            SELECT mail.id, mail_partner.res_partner_id
               FROM mail_mail mail        
               JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
               JOIN mail_message message ON mail.mail_message_id = message.id AND message.model != 'discuss.channel'
@@ -100,7 +101,11 @@ class Followers(models.Model):
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
-        return set(self.env.cr.fetchall())
+        res = self.env.cr.fetchall()
+        follower_status = defaultdict(list)
+        for mail_id, pid in res:
+            follower_status[mail_id].append(pid)
+        return follower_status
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
         """ Private method allowing to fetch recipients data based on a subtype.
