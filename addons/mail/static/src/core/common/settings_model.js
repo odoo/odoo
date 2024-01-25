@@ -1,11 +1,18 @@
 import { browser } from "@web/core/browser/browser";
 import { Record } from "./record";
+import { debounce } from "@web/core/utils/timing";
 
 export class Settings extends Record {
     id;
 
     setup() {
         super.setup();
+        this.saveVoiceThresholdDebounce = debounce(() => {
+            browser.localStorage.setItem(
+                "mail_user_setting_voice_threshold",
+                this.voiceActivationThreshold.toString()
+            );
+        }, 2000);
         this.hasCanvasFilterSupport =
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
         this._loadLocalSettings();
@@ -24,7 +31,7 @@ export class Settings extends Record {
     logRtc = false;
     push_to_talk_key;
     use_push_to_talk = false;
-    voice_active_duration = 0;
+    voice_active_duration = 200;
     useBlur = false;
     volumeSettingsTimeouts = new Map();
     /**
@@ -114,10 +121,7 @@ export class Settings extends Record {
      */
     setThresholdValue(voiceActivationThreshold) {
         this.voiceActivationThreshold = voiceActivationThreshold;
-        browser.localStorage.setItem(
-            "mail_user_setting_voice_threshold",
-            voiceActivationThreshold.toString()
-        );
+        this.saveVoiceThresholdDebounce();
     }
 
     // methods
