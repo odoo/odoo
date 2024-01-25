@@ -8,6 +8,8 @@ import requests
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment_ogone import const
 
 
@@ -48,12 +50,21 @@ class PaymentProvider(models.Model):
     #=== BUSINESS METHODS ===#
 
     @api.model
-    def _get_compatible_providers(self, *args, is_validation=False, **kwargs):
+    def _get_compatible_providers(self, *args, is_validation=False, report=None, **kwargs):
         """ Override of payment to unlist Ogone providers for validation operations. """
-        providers = super()._get_compatible_providers(*args, is_validation=is_validation, **kwargs)
+        providers = super()._get_compatible_providers(
+            *args, is_validation=is_validation, report=report, **kwargs
+        )
 
         if is_validation:
+            unfiltered_providers = providers
             providers = providers.filtered(lambda p: p.code != 'ogone')
+            payment_utils.add_to_report(
+                report,
+                unfiltered_providers - providers,
+                available=False,
+                reason=REPORT_REASONS_MAPPING['validation_not_supported'],
+            )
 
         return providers
 
@@ -138,4 +149,4 @@ class PaymentProvider(models.Model):
         default_codes = super()._get_default_payment_method_codes()
         if self.code != 'ogone':
             return default_codes
-        return const.DEFAULT_PAYMENT_METHODS_CODES
+        return const.DEFAULT_PAYMENT_METHOD_CODES

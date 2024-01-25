@@ -4,6 +4,8 @@ from odoo.exceptions import UserError
 from odoo.models import Command
 from odoo.tests import tagged
 
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
@@ -142,3 +144,92 @@ class TestPaymentMethod(PaymentCommon):
             self.provider.ids, self.partner.id, is_express_checkout=True
         )
         self.assertNotIn(self.payment_method, compatible_payment_methods)
+
+    def test_availability_report_covers_all_reasons(self):
+        """ Test that every possible unavailability reason is correctly reported. """
+        # Disable all payment methods.
+        pms = self.env['payment.method'].search([('is_primary', '=', True)])
+        pms.active = False
+
+        # Prepare a base payment method.
+        self.payment_method.write({
+            'active': True,
+            'support_express_checkout': True,
+            'support_tokenization': True,
+        })
+
+        # Prepare the report with a provider to allow checking provider availability.
+        report = {}
+        payment_utils.add_to_report(report, self.provider)
+
+        # Prepare a payment method with an unavailable provider.
+        unavailable_provider = self.provider.copy()
+        payment_utils.add_to_report(report, unavailable_provider, available=False, reason="test")
+        no_provider_pm = self.payment_method.copy()
+        no_provider_pm.provider_ids = [Command.set([unavailable_provider.id])]
+        unavailable_provider.payment_method_ids = [Command.set([no_provider_pm.id])]
+
+        # Prepare a payment method with an incompatible country.
+        invalid_country_pm = self.payment_method.copy()
+        belgium = self.env.ref('base.be')
+        invalid_country_pm.supported_country_ids = [Command.set([belgium.id])]
+        france = self.env.ref('base.fr')
+        self.partner.country_id = france
+
+        # Prepare a payment method with an incompatible currency.
+        invalid_currency_pm = self.payment_method.copy()
+        invalid_currency_pm.supported_currency_ids = [Command.set([self.currency_euro.id])]
+
+        # Prepare a payment method without support for tokenization.
+        no_tokenization_pm = self.payment_method.copy()
+        no_tokenization_pm.support_tokenization = False
+
+        # Prepare a payment method without support for express checkout.
+        no_express_checkout_pm = self.payment_method.copy()
+        no_express_checkout_pm.support_express_checkout = False
+
+        # Get compatible payment methods to generate their availability report.
+        self.env['payment.method']._get_compatible_payment_methods(
+            self.provider.ids,
+            self.partner.id,
+            currency_id=self.currency_usd.id,
+            force_tokenization=True,
+            is_express_checkout=True,
+            report=report,
+        )
+
+        # Compare the generated payment methods report with the expected one.
+        expected_pms_report = {
+            self.payment_method: {
+                'available': True,
+                'reason': '',
+                'supported_providers': [(self.provider, True)],
+            },
+            no_provider_pm: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['provider_not_available'],
+                'supported_providers': [(unavailable_provider, False)],
+             },
+            invalid_country_pm: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['incompatible_country'],
+                'supported_providers': [(self.provider, True)],
+             },
+            invalid_currency_pm: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['incompatible_currency'],
+                'supported_providers': [(self.provider, True)],
+             },
+            no_tokenization_pm: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['tokenization_not_supported'],
+                'supported_providers': [(self.provider, True)],
+             },
+            no_express_checkout_pm: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['express_checkout_not_supported'],
+                'supported_providers': [(self.provider, True)],
+            },
+        }
+        self.maxDiff = None
+        self.assertDictEqual(report['payment_methods'], expected_pms_report)

@@ -14,7 +14,7 @@ SUPPORTED_CURRENCIES = [
 ]
 
 # The codes of the payment methods to activate when PayULatam is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
@@ -22,7 +22,7 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'mastercard',
     'amex',
     'discover',
-]
+}
 
 # Mapping of payment method codes to PayU Latam codes.
 PAYMENT_METHODS_MAPPING = {

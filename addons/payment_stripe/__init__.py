@@ -3,12 +3,12 @@
 from . import controllers
 from . import models
 
-from odoo.addons.payment import setup_provider, reset_payment_provider
+import odoo.addons.payment as payment  # prevent circular import error with payment
 
 
 def post_init_hook(env):
-    setup_provider(env, 'stripe')
+    payment.setup_provider(env, 'stripe')
 
 
 def uninstall_hook(env):
-    reset_payment_provider(env, 'stripe')
+    payment.reset_payment_provider(env, 'stripe')

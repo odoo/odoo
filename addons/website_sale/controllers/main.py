@@ -1642,10 +1642,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'partner': order.partner_invoice_id,
             'order': order,
             'submit_button_label': _("Pay now"),
-            'payment_action_id': request.env.ref('payment.action_payment_provider').id,
-            'action_activate_stripe_id': request.env.ref(
-                'website_payment.action_activate_stripe'
-            ).id,
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(

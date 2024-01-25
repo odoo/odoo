@@ -4,7 +4,7 @@ import hashlib
 
 from odoo import fields, models
 
-from odoo.addons.payment_payulatam.const import DEFAULT_PAYMENT_METHODS_CODES
+from odoo.addons.payment_payulatam.const import DEFAULT_PAYMENT_METHOD_CODES
 
 
 class PaymentProvider(models.Model):
@@ -55,4 +55,4 @@ class PaymentProvider(models.Model):
         default_codes = super()._get_default_payment_method_codes()
         if self.code != 'payumoney':
             return default_codes
-        return DEFAULT_PAYMENT_METHODS_CODES
+        return DEFAULT_PAYMENT_METHOD_CODES

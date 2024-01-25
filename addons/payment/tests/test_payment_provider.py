@@ -5,6 +5,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.tests import tagged
 
+from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
@@ -226,3 +227,96 @@ class TestPaymentProvider(PaymentCommon):
             self.company.id, self.partner.id, self.amount, is_express_checkout=True
         )
         self.assertNotIn(self.provider, compatible_providers)
+
+    def test_availability_report_covers_all_reasons(self):
+        """ Test that every possible unavailability reason is correctly reported. """
+        # Disable all providers.
+        providers = self.env['payment.provider'].search([])
+        providers.state = 'disabled'
+
+        # Prepare a base provider.
+        self.provider.write({
+            'state': 'test',
+            'allow_express_checkout': True,
+            'allow_tokenization': True,
+        })
+
+        # Prepare a provider with an incompatible country.
+        invalid_country_provider = self.provider.copy()
+        belgium = self.env.ref('base.be')
+        invalid_country_provider.write({
+            'state': 'test',
+            'available_country_ids': [Command.set([belgium.id])],
+        })
+        france = self.env.ref('base.fr')
+        self.partner.country_id = france
+
+        # Prepare a provider with a maximum amount lower than the payment amount.
+        exceeding_max_provider = self.provider.copy()
+        exceeding_max_provider.write({
+            'state': 'test',
+            'maximum_amount': self.amount - 10.0,
+        })
+
+        # Prepare a provider with an incompatible currency.
+        invalid_currency_provider = self.provider.copy()
+        invalid_currency_provider.write({
+            'state': 'test',
+            'available_currency_ids': [Command.unlink(self.currency_usd.id)],
+        })
+
+        # Prepare a provider without tokenization support.
+        no_tokenization_provider = self.provider.copy()
+        no_tokenization_provider.write({
+            'state': 'test',
+            'allow_tokenization': False,
+        })
+
+        # Prepare a provider without express checkout support.
+        no_express_checkout_provider = self.provider.copy()
+        no_express_checkout_provider.write({
+            'state': 'test',
+            'allow_express_checkout': False,
+        })
+
+        # Get compatible providers to generate their availability report.
+        report = {}
+        self.env['payment.provider']._get_compatible_providers(
+            self.company_id,
+            self.partner.id,
+            self.amount,
+            currency_id=self.currency_usd.id,
+            force_tokenization=True,
+            is_express_checkout=True,
+            report=report,
+        )
+
+        # Compare the generated providers report with the expected one.
+        expected_providers_report = {
+            self.provider: {
+                'available': True,
+                'reason': '',
+            },
+            invalid_country_provider: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['incompatible_country'],
+             },
+            exceeding_max_provider: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['exceed_max_amount'],
+            },
+            invalid_currency_provider: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['incompatible_currency'],
+             },
+            no_tokenization_provider: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['tokenization_not_supported'],
+             },
+            no_express_checkout_provider: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['express_checkout_not_supported'],
+            },
+        }
+        self.maxDiff = None
+        self.assertDictEqual(report['providers'], expected_providers_report)
