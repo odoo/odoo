@@ -3,8 +3,9 @@
 import logging
 from hashlib import md5
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_alipay import const
 
 _logger = logging.getLogger(__name__)
@@ -33,15 +34,24 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS ===#
 
     @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
+    def _get_compatible_providers(self, *args, currency_id=None, report=None, **kwargs):
         """ Override of payment to unlist Alipay providers when the currency is not CNY in case of
         express checkout. """
-        providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
+        providers = super()._get_compatible_providers(
+            *args, currency_id=currency_id, report=report, **kwargs
+        )
 
         currency = self.env['res.currency'].browse(currency_id).exists()
         if currency and currency.name != 'CNY':
+            unfiltered_providers = providers
             providers = providers.filtered(
                 lambda p: p.code != 'alipay' or p.alipay_payment_method != 'express_checkout'
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_providers - providers,
+                available=False,
+                reason=_("incompatible currency; only CNY is supported"),
             )
 
         return providers
@@ -68,4 +78,4 @@ class PaymentProvider(models.Model):
         default_codes = super()._get_default_payment_method_codes()
         if self.code != 'alipay':
             return default_codes
-        return const.DEFAULT_PAYMENT_METHODS_CODES
+        return const.DEFAULT_PAYMENT_METHOD_CODES

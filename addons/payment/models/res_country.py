@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.addons.payment_stripe.const import SUPPORTED_COUNTRIES as STRIPE_SUPPORTED_COUNTRIES
+import odoo.addons.payment_stripe as stripe  # prevent circular import error with payment_stripe
 
 
 class ResCountry(models.Model):
@@ -12,4 +12,4 @@ class ResCountry(models.Model):
     @api.depends('code')
     def _compute_is_stripe_supported_country(self):
         for country in self:
-            country.is_stripe_supported_country = country.code in STRIPE_SUPPORTED_COUNTRIES
+            country.is_stripe_supported_country = country.code in stripe.const.SUPPORTED_COUNTRIES

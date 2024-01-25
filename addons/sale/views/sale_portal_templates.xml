@@ -254,8 +254,8 @@
                                     <div>
                                         <!-- The widget associated with this modal will hide and show divs in function of the amount selected. -->
                                         <span t-if="prepayment_available">
-                                            <span id="o_sale_portal_use_amount_prepayment"> 
-                                                By paying a <u>down payment</u> of 
+                                            <span id="o_sale_portal_use_amount_prepayment">
+                                                By paying a <u>down payment</u> of
                                                 <span
                                                     t-esc="prepayment_amount"
                                                     t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
@@ -279,10 +279,6 @@
                                     </div>
                                     <div t-elif="not sale_order._has_to_be_paid()" class="alert alert-danger">
                                         The order is not in a state requiring customer payment.
-                                    </div>
-                                    <div t-elif="not payment_methods_sudo and not tokens_sudo" class="alert alert-warning">
-                                        <strong>No suitable payment option could be found.</strong><br/>
-                                        If you believe that it is an error, please contact the website administrator.
                                     </div>
                                     <div t-else="" id="payment_method" class="text-start mt-0">
                                         <t t-call="payment.form">

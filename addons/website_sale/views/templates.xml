@@ -2119,38 +2119,10 @@
                 <div class="mt-4">
                     <h3>Pay with</h3>
                 </div>
-                <div t-if="payment_methods_sudo or tokens_sudo"
-                        id="payment_method"
-                        class="o_not_editable mt-4">
+                <div id="payment_method" class="o_not_editable mt-4">
                     <t t-call="payment.form"/>
                 </div>
-                <div t-else="" class="alert alert-warning">
-                    <t t-set="hide_payment_button" t-value="True"/>
-                    <strong>No suitable payment option could be found.</strong><br/>
-                    <div t-if="not request.env.is_admin()">
-                        If you believe that it is an error, please contact the website administrator.
-                    </div>
-                    <div class="mt-2" groups="base.group_system">
-                        <a t-if="request.env.company.country_id.is_stripe_supported_country"
-                            t-attf-href="/web#action=#{action_activate_stripe_id}"
-                            role="button"
-                            class="btn btn-primary"
-                            t-out="'ACTIVATE STRIPE'"
-                        />
-                        <div t-else=""
-                                class="d-inline"
-                                title="Stripe Connect is not available in your country, please use another payment provider."
-                        >
-                            <button t-out="'ACTIVATE STRIPE'" class="btn btn-primary" disabled="true"/>
-                        </div>
-                        <a role="button"
-                            class="btn-link alert-warning ps-2"
-                            t-attf-href="/web#action=#{payment_action_id}"
-                        >
-                            <strong><i class="oi oi-arrow-right"></i> View alternatives</strong>
-                        </a>
-                    </div>
-                </div>
+                <t t-if="not (payment_methods_sudo or tokens_sudo)" t-set="hide_payment_button" t-value="True"/>
             </t>
         </t>
     </template>

@@ -16,7 +16,6 @@ This is a bridge module that adds multi-website support for payment providers.
     'data': [
         'data/mail_templates.xml',
         'data/mail_template_data.xml',
-        'data/ir_actions_server_data.xml',
 
         'views/payment_form_templates.xml',
         'views/payment_provider.xml',

@@ -7,6 +7,13 @@
         </xpath>
     </template>
 
+    <template id="no_pms_available_warning" inherit_id="payment.no_pms_available_warning">
+        <a name="activate_stripe" position="attributes">
+            <!-- Hide 'Activate Stripe' button when the `payment_stripe` module is installed. -->
+            <attribute name="class" separator=" " add="d-none"/>
+        </a>
+    </template>
+
     <template id="express_checkout" inherit_id="payment.express_checkout">
         <xpath expr="." position="inside">
             <t t-call="payment_stripe.sdk_assets"/>

@@ -27,12 +27,6 @@
                             <div t-elif="not currency" class="alert alert-warning">
                                 <strong>Warning</strong> The currency is missing or incorrect.
                             </div>
-                            <div t-elif="not payment_methods_sudo and not tokens_sudo"
-                                 class="alert alert-warning"
-                            >
-                                <strong>No suitable payment option could be found.</strong><br/>
-                                If you believe that it is an error, please contact the website administrator.
-                            </div>
                             <t t-else="" t-call="payment.form"/>
                         </div>
                     </div>

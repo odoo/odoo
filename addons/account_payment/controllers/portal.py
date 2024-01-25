@@ -22,17 +22,20 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         partner_sudo = request.env.user.partner_id if logged_in else invoice.partner_id
         invoice_company = invoice.company_id or request.env.company
 
+        availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             invoice_company.id,
             partner_sudo.id,
             invoice.amount_total,
-            currency_id=invoice.currency_id.id
+            currency_id=invoice.currency_id.id,
+            report=availability_report,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
             partner_sudo.id,
             currency_id=invoice.currency_id.id,
+            report=availability_report,
         )  # In sudo mode to read the fields of providers.
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
             providers_sudo.ids, partner_sudo.id
@@ -59,6 +62,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
             'tokens_sudo': tokens_sudo,
+            'availability_report': availability_report,
             'invoice_id': invoice.id,
             'transaction_route': f'/invoice/transaction/{invoice.id}/',
             'landing_route': invoice.get_portal_url(),

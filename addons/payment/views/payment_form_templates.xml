@@ -51,7 +51,7 @@
         <t t-set="submit_button_label"
            t-value="submit_button_label or (pay_label if mode == 'payment' else save_label)"
         />
-        <form id="o_payment_form"
+        <form t-if="payment_methods_sudo or tokens_sudo" id="o_payment_form"
               class="o_payment_form"
               t-att-data-mode="mode"
               t-att-data-reference-prefix="reference_prefix"
@@ -101,6 +101,8 @@
                     >
                         <t t-if="not collapse_payment_methods">Choose a payment method</t>
                         <t t-else="">Other payment methods</t>
+                        <!-- === Availability report button (for debug) === -->
+                        <t t-call="payment.availability_report_button"/>
                         <hr class="flex-grow-1 m-0"/>
                     </h4>
                     <!-- === Body === -->
@@ -133,7 +135,10 @@
                 <!-- === Submit button === -->
                 <t t-if="display_submit_button" t-call="payment.submit_button"/>
             </div>
+            <!-- === Availability report (for debug) === -->
+            <t t-call="payment.availability_report"/>
         </form>
+        <t t-else="" t-call="payment.no_pms_available_warning"/>
     </template>
 
     <template id="payment.token_form" name="Payment Token Form">
@@ -408,6 +413,112 @@
                 class="btn btn-primary w-100 w-md-auto ms-auto px-5"
                 disabled="true"
         />
+    </template>
+
+    <template id="payment.no_pms_available_warning">
+        <div class="alert alert-warning mt-2">
+            <strong>No suitable payment option could be found.</strong>
+            <!-- === Availability report button (for debug) === -->
+            <t t-call="payment.availability_report_button"/>
+            <br/>
+            If you believe that it is an error, please contact the website administrator.
+            <div class="mt-2" groups="base.group_system">
+                <a
+                    t-if="request.env.company.country_id.is_stripe_supported_country"
+                    name="activate_stripe"
+                    href="/web#action=payment.action_activate_stripe"
+                    role="button"
+                    class="btn btn-primary"
+                > ACTIVATE STRIPE </a>
+                <a
+                    role="button"
+                    type="action"
+                    class="btn-link alert-warning ps-2"
+                    href="/web#action=payment.action_payment_provider"
+                >
+                    <strong><i class="oi oi-arrow-right"></i> View alternatives </strong>
+                </a>
+            </div>
+        </div>
+        <!-- === Availability report (for debug) === -->
+        <t t-call="payment.availability_report"/>
+    </template>
+
+    <template id="payment.availability_report_button">
+        <a
+            t-if="request.env.user._is_system() and availability_report"
+            groups="base.group_no_one"
+            role="button"
+            data-bs-toggle="collapse"
+            href="#payment_availability_report"
+            aria-expanded="false"
+            aria-controls="payment_availability_report"
+        >
+            <i class="fa fa-bug"/>
+        </a>
+    </template>
+
+    <template id="payment.availability_report">
+        <div
+            t-if="request.env.user._is_system() and availability_report"
+            id="payment_availability_report"
+            groups="base.group_no_one"
+            class="collapse"
+        >
+            <h4 class="fs-6 text-uppercase fw-bolder"> Availability report </h4>
+                <h6 class="mt-3 text-uppercase fw-normal fs-6"> Payment providers </h6>
+                <t t-call="payment.availability_report_records">
+                    <t t-set="records" t-value="availability_report.get('providers')"/>
+                </t>
+                <h6 class="mt-3 text-uppercase fw-normal fs-6"> Payment methods </h6>
+                <t t-call="payment.availability_report_records">
+                    <t t-set="records" t-value="availability_report.get('payment_methods')"/>
+                </t>
+        </div>
+    </template>
+
+    <template id="availability_report_records">
+        <!-- Parameters description:
+            - records: The records to list in the availability report, as a dict with the structure
+                       {record: {'available': bool, 'reason': str, supported_providers: list}}.
+        -->
+        <ul class="list-group">
+            <t t-foreach="records" t-as="r">
+                <t t-set="available" t-value="records[r]['available']"/>
+                <li class="list-group-item ps-0">
+                    <div class="d-flex gap-2">
+                        <div class="ms-2">
+                            <i
+                                t-attf-class="fa fa-fw fa-{{'check-circle' if available else 'times-circle'}}"
+                                t-attf-style="color: {{'green' if available else 'red'}};"
+                            />
+                        </div>
+                        <div>
+                            <p class="lead mb-0">
+                                <span class="fw-normal"><t t-out="r.name"/></span>
+                                <span class="text-muted">(ID: <t t-out="r.id"/>)</span>
+                            </p>
+                            <t t-if="not available">
+                                <p class="mb-0 fw-light">
+                                    Reason: <t t-out="records[r]['reason']"/>
+                                </p>
+                            </t>
+                            <t t-if="r._name == 'payment.method' and 'supported_providers' in records[r]">
+                                <p class="mb-0 fw-light">
+                                    Supported providers:
+                                     <t t-foreach="records[r]['supported_providers']" t-as="p">
+                                        <span t-attf-class="text-{{'success' if p[1] else 'danger'}}">
+                                            <t t-out="p[0].name"/>
+                                        </span>
+                                        <t t-if="records[r]['supported_providers'][-1] != p">,</t>
+                                    </t>
+                                </p>
+                            </t>
+                        </div>
+                    </div>
+                </li>
+            </t>
+        </ul>
     </template>
 
 </odoo>

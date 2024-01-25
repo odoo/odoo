@@ -94,4 +94,4 @@ class PaymentProvider(models.Model):
         default_codes = super()._get_default_payment_method_codes()
         if self.code != 'asiapay':
             return default_codes
-        return const.DEFAULT_PAYMENT_METHODS_CODES
+        return const.DEFAULT_PAYMENT_METHOD_CODES

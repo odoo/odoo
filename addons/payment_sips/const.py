@@ -66,7 +66,7 @@ RESPONSE_CODES_MAPPING = {
 }
 
 # The codes of the payment methods to activate when Sips is activated.
-DEFAULT_PAYMENT_METHODS_CODES = [
+DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
@@ -74,4 +74,4 @@ DEFAULT_PAYMENT_METHODS_CODES = [
     'mastercard',
     'amex',
     'discover',
-]
+}
