@@ -918,8 +918,8 @@
                                                widget="many2one_barcode"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
-                                                    and [('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
-                                                    or [('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
+                                                    and [('sale_ok', '=', True)]
+                                                    or [('purchase_ok', '=', True)]
                                                "/>
                                         <field name="name" widget="section_and_note_text" optional="show"/>
                                         <field name="account_id"
