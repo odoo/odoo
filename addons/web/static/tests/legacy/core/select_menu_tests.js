@@ -241,6 +241,95 @@ QUnit.module("Web Components", (hooks) => {
         );
     });
 
+    QUnit.test("Use a null value for choices", async (assert) => {
+        class Parent extends Component {
+            static props = ["*"];
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.state.value"
+                />
+            `;
+            setup() {
+                this.choices = [
+                    { label: "Nothing", value: null },
+                    { label: "Everything", value: "things" },
+                ];
+                this.state = useState({
+                    value: null,
+                });
+            }
+            setValue(newValue) {
+                this.state.value = newValue;
+            }
+        }
+
+        const comp = await mount(Parent, target, { env });
+        assert.equal(
+            getValue(),
+            "Nothing",
+            `The select value with an empty string has the "Null" value selected`
+        );
+
+        comp.setValue("things");
+        await nextTick();
+        assert.equal(
+            getValue(),
+            "Everything",
+            `After changing the value props, the select value shoud be "Everything"`
+        );
+    });
+
+    QUnit.test(
+        "Use an empty string as the value for a choice display the corresponding choice",
+        async (assert) => {
+            class Parent extends Component {
+                static props = ["*"];
+                static components = { SelectMenu };
+                static template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.state.value"
+                />
+            `;
+                setup() {
+                    this.choices = [
+                        { label: "Empty", value: "" },
+                        { label: "Full", value: "full" },
+                    ];
+                    this.state = useState({ value: "" });
+                }
+                setValue(newValue) {
+                    this.state.value = newValue;
+                }
+            }
+
+            const comp = await mount(Parent, target, { env });
+            assert.equal(
+                getValue(),
+                "Empty",
+                `The select value with an empty string has the "Empty" value selected`
+            );
+
+            comp.setValue("full");
+            await nextTick();
+            assert.equal(
+                getValue(),
+                "Full",
+                `After changing the value props, the select value shoud be "Full"`
+            );
+
+            comp.setValue(null);
+            await nextTick();
+            assert.equal(
+                getValue(),
+                "",
+                `After changing the value props to a null value, the select has no value selected`
+            );
+        }
+    );
+
     QUnit.test(
         "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
