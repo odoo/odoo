@@ -33,6 +33,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'portal_user_names',
     'user_ids',
     'display_parent_task_button',
+    'current_user_same_company_partner',
     'allow_milestones',
     'milestone_id',
     'has_late_and_unreached_milestone',
@@ -255,6 +256,7 @@ class Task(models.Model):
 
     # Project sharing fields
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
+    current_user_same_company_partner = fields.Boolean(compute='_compute_current_user_same_company_partner', compute_sudo=True)
 
     # recurrence fields
     recurring_task = fields.Boolean(string="Recurrent")
@@ -639,6 +641,11 @@ class Task(models.Model):
         accessible_parent_tasks = self.parent_id.with_user(self.env.user)._filter_access_rules('read')
         for task in self:
             task.display_parent_task_button = task.parent_id in accessible_parent_tasks
+
+    def _compute_current_user_same_company_partner(self):
+        commercial_partner_id = self.env.user.partner_id.commercial_partner_id
+        for task in self:
+            task.current_user_same_company_partner = task.partner_id and commercial_partner_id == task.partner_id.commercial_partner_id
 
     def _get_group_pattern(self):
         return {
