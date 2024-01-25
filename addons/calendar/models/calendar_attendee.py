@@ -137,7 +137,9 @@ class Attendee(models.Model):
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
-                    force_send=force_send)
+                    force_send=force_send,
+                    message_type='auto_comment',
+                )
 
     def _should_notify_attendee(self):
         """ Utility method that determines if the attendee should be notified.
