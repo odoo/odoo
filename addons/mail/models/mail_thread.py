@@ -3185,6 +3185,9 @@ class MailThread(models.AbstractModel):
         email_recipients_data = [r for r in recipients_data if r['notif'] == 'email']
         if not email_recipients_data:
             return True
+        # prepare partner browse
+        email_pids = [r['id'] for r in recipients_data if r['id']]
+        EmailPartner = self.env['res.partner'].with_prefetch(email_pids).sudo()
 
         base_mail_values = self._notify_by_email_get_base_mail_values(
             message,
@@ -3221,6 +3224,7 @@ class MailThread(models.AbstractModel):
                 render_values=render_values,
             )
             recipients_ids = recipients_group.pop('partner_ids')
+            recipients_data = recipients_group.pop('recipients_data')
 
             # create email
             for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
@@ -3248,6 +3252,7 @@ class MailThread(models.AbstractModel):
                     notif_create_values += [{
                         'author_id': message.author_id.id,
                         'is_read': True,  # discard Inbox notification
+                        'mail_email_to': recipients_data.get(recipient_id).get()
                         'mail_mail_id': new_email.id,
                         'mail_message_id': message.id,
                         'notification_status': 'ready',

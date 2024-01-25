@@ -22,6 +22,7 @@ class MailNotification(models.Model):
     mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
     # recipient
     res_partner_id = fields.Many2one('res.partner', 'Recipient', index=True, ondelete='cascade')
+    mail_email_to = fields.Char('Email')  # normalized or formatted ?
     # status
     notification_type = fields.Selection([
         ('inbox', 'Inbox'), ('email', 'Email')
