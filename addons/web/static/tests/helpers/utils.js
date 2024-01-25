@@ -585,6 +585,30 @@ for (const propName of Object.keys(window.console)) {
     hushConsole[propName] = () => {};
 }
 
+<<<<<<< HEAD
+||||||| parent of 0c92193a0c92 (temp)
+export function mockSendBeacon(mock) {
+    patchWithCleanup(navigator, {
+        sendBeacon: (url, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                mock(url, params);
+            });
+            return true;
+        },
+    });
+}
+
+=======
+export function mockSendBeacon(mock) {
+    patchWithCleanup(navigator, {
+        sendBeacon: (url, blob) => {
+            return mock(url, blob) !== false;
+        },
+    });
+}
+
+>>>>>>> 0c92193a0c92 (temp)
 export function mockTimeout() {
     const timeouts = new Map();
     let currentTime = 0;
