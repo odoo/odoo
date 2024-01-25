@@ -578,11 +578,7 @@ for (const propName of Object.keys(window.console)) {
 export function mockSendBeacon(mock) {
     patchWithCleanup(navigator, {
         sendBeacon: (url, blob) => {
-            blob.text().then((r) => {
-                const { params } = JSON.parse(r);
-                mock(url, params);
-            });
-            return true;
+            return mock(url, blob) !== false;
         },
     });
 }
