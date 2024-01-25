@@ -12,6 +12,10 @@
                 <span t-field="o.weight"/>
                 <span t-field="o.weight_uom_name"/>
             </div>
+            <div t-if="o.carrier_id" class="col-auto" name="div_shipping_method">
+                <strong>Shipping Method:</strong>
+                <p t-field="o.carrier_id">FedEx</p>
+            </div>
         </xpath>
     </template>
 </odoo>
