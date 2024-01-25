@@ -12,9 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
     static components = { OrderReceipt };
-    static props = {
-        isShown: Boolean,
-    };
+    static props = {};
 
     setup() {
         super.setup();

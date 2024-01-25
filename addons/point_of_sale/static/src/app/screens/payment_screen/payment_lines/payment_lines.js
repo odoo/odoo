@@ -10,7 +10,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
     static props = {
-        paymentlines: Array,
+        paymentLines: Array,
         deleteLine: Function,
         selectLine: Function,
         sendForceDone: Function,
