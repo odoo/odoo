@@ -247,9 +247,20 @@ class MailMail(models.Model):
             follower_status = self.env['mail.followers']._get_mail_recipients_follower_status(mails_with_unfollow_link.ids)
         else:
             follower_status = {}
+
+        # Retrieve notification-based data
+        notifications = self.env['mail.notification'].search([
+            ('notification_type', '=', 'email'),
+            ('mail_mail_id', 'in', self.ids),
+            ('notification_status', 'in', ('ready', 'process', 'pending'))
+        ])
         mail_information = defaultdict(dict)
+        for notif in notifications:
+            mail_information[notif.mail_mail_id.id].setdefault('partner_email_to', {})[notif.res_partner_id.id] = 'caca'
+
         for mail_id, partner_ids in follower_status.items():
             mail_information[mail_id]['partner_follower_ids'] = partner_ids
+        print('mail_information', mail_information)
         return mail_information
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
