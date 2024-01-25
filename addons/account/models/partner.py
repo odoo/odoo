@@ -54,11 +54,19 @@ class AccountFiscalPosition(models.Model):
     def map_tax(self, taxes, product=None, partner=None):
         if not self:
             return taxes
-        result = self.env['account.tax']
-        for tax in taxes:
-            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax._origin)
-            result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
-        return result
+        tmap = {
+            g["tax_src_id"][0]: g["dest_ids"]
+            for g in self.env["account.fiscal.position.tax"].read_group(
+                [
+                    ("id", "in", self.tax_ids.ids),
+                    ("tax_src_id", "in", [t._origin.id for t in taxes if t._origin]),
+                ],
+                ["dest_ids:array_agg(tax_dest_id)"],
+                groupby="tax_src_id",
+            )
+        }
+        result_ids = {id_ for tax in taxes for id_ in tmap.get(tax._origin.id if tax._origin else None, [tax.id])}
+        return self.env["account.tax"].browse(result_ids)
 
     def map_account(self, account):
         for pos in self.account_ids:
