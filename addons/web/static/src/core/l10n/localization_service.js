@@ -61,7 +61,11 @@ export const localizationService = {
         // whereas the Intl codes use "-" (Unicode BCP 47). There's only one exception, which
         // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
         const language = lang || browser.navigator.language;
-        const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
+        const momentJSLangCodesMap = {
+            "sr_RS": "sr-cyrl",
+            "sr@latin": "sr-Latn-RS",
+        };
+        const locale = momentJSLangCodesMap[language] || language.replace(/_/g, "-");
         Settings.defaultLocale = locale;
         for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
             if (re.test(locale)) {
