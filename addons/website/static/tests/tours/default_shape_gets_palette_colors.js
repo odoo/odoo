@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { queryAll, queryOne } from "@odoo/hoot-dom";
+import { queryAll } from "@odoo/hoot-dom";
 import wTourUtils from "@website/js/tours/tour_utils";
 
 wTourUtils.registerWebsitePreviewTour("default_shape_gets_palette_colors", {

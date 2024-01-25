@@ -80,19 +80,21 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "check menu and footer links are correct",
         trigger: 'body:not(.editor_enable)', // edit mode left
         run(helpers) {
-            const iframe = queryAll("iframe.o_iframe:not(.o_ignore_in_tour)").at(0);
             for (const menu of ['Home', 'Events', 'Courses', 'Pricing', 'News', 'Success Stories', 'Contact us']) {
-                if (!queryAll(`#top_menu a:contains(${menu})`, { root: iframe }).length) {
+                const check = queryAll(`:iframe #top_menu a:contains(${menu})`).length;
+                if (!check) {
                     console.error(`Missing ${menu} menu. It should have been created by the configurator.`);
                 }
             }
             for (const url of ['/', '/event', '/slides', '/pricing', '/blog/', '/blog/', '/contactus']) {
-                if (!queryAll(`#top_menu a[href^='${url}']`, { root: iframe }).length) {
+                const check = queryAll(`:iframe #top_menu a[href^='${url}']`).length;
+                if (!check) {
                     console.error(`Missing ${url} menu URL. It should have been created by the configurator.`);
                 }
             }
             for (const link of ['Privacy Policy', 'Contact us']) {
-                if (!queryAll(`#footer ul a:contains(${link})`, { root: iframe }).length) {
+                const check = queryAll(`:iframe #footer ul a:contains(${link})`).length;
+                if (!check) {
                     console.error(`Missing ${link} footer link. It should have been created by the configurator.`);
                 }
             }

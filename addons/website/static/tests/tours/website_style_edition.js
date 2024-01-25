@@ -53,7 +53,6 @@ wTourUtils.goToTheme(),
     trigger: '[data-variable="font-size-base"] input',
     run(helpers) {
         helpers.text_blur(TARGET_FONT_SIZE);
-        debugger
     },
 }, {
     content: "Check the font size was properly adapted",

@@ -151,7 +151,11 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
     extra_trigger: ".subtask_create_input",
     content: markup(_t("Give the sub-task a <b>name</b>")),
-    run: 'text Newer Sub-task'
+    run(helpers) {
+        //Make action more explicit to avoid creating twice 
+        helpers.anchor.value = "Newer Sub-task";
+        helpers.click(`div.subtask_list button:contains(SAVE)`);
+    },
 }, {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
     content: _t("You can change the sub-task state here!"),
@@ -160,7 +164,7 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: ".o_field_project_task_state_selection .dropdown-menu",
     content: markup(_t("Mark the task as <b>Canceled</b>")),
 }, {
-    trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
+    trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains(1/2)",
     content: _t("Close the sub-tasks list"),
 }, {
     trigger: '.o_kanban_renderer',
