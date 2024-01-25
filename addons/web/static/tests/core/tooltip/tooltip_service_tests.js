@@ -443,4 +443,47 @@ QUnit.module("Tooltip service", (hooks) => {
         // tooltip did not crash and is not shown
         assert.containsNone(target, ".o_popover");
     });
+
+    QUnit.test("tooltip using the mouse with a touch enabled device", async (assert) => {
+        // patch matchMedia to alter hasTouch value
+        patchWithCleanup(browser, {
+            matchMedia: (media) => {
+                if (media === "(pointer:coarse)") {
+                    return { matches: true };
+                }
+                return this._super();
+            },
+        });
+
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+        let simulateTimeout;
+        let simulateInterval;
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        const mockSetInterval = (fn) => {
+            simulateInterval = fn;
+        };
+        await makeParent(MyComponent, { mockSetInterval, mockSetTimeout });
+
+        assert.containsNone(target, ".o_popover");
+        target.querySelector(".mybtn").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsNone(target, ".o_popover");
+
+        simulateTimeout();
+        await nextTick();
+        assert.containsOnce(target, ".o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "hello");
+
+        simulateInterval();
+        await nextTick();
+        assert.containsOnce(target, ".o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "hello");
+
+        target.querySelector(".mybtn").dispatchEvent(new Event("mouseleave"));
+        await nextTick();
+        assert.containsNone(target, ".o_popover");
+    });
 });

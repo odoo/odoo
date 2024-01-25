@@ -51,6 +51,7 @@ export const tooltipService = {
         let closeTooltip;
         let target = null;
         let touchPressed;
+        let mouseEntered;
         const elementsWithTooltips = new Map();
 
         /**
@@ -74,7 +75,7 @@ export const tooltipService = {
             if (!document.body.contains(target)) {
                 return true; // target is no longer in the DOM
             }
-            if (hasTouch()) {
+            if (hasTouch() && !mouseEntered) {
                 return !touchPressed;
             }
             return false;
@@ -153,11 +154,13 @@ export const tooltipService = {
          * @param {MouseEvent} ev a "mouseenter" event
          */
         function onMouseenter(ev) {
+            mouseEntered = true;
             openElementsTooltip(ev.target);
         }
 
         function onMouseleave(ev) {
             if (target === ev.target) {
+                mouseEntered = false;
                 cleanup();
             }
         }
