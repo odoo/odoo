@@ -1297,6 +1297,7 @@ class StockMove(models.Model):
                 move.picking_type_id = move.picking_type_id.return_picking_type_id
             # We are returning some products, we must take them in the source location
             move.procure_method = 'make_to_stock'
+            move.to_refund = True
         neg_r_moves._assign_picking()
 
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
