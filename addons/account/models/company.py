@@ -261,7 +261,7 @@ class ResCompany(models.Model):
     @api.depends('parent_id.max_tax_lock_date')
     def _compute_max_tax_lock_date(self):
         for company in self:
-            company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.max_tax_lock_date or date.min)
+            company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.sudo().max_tax_lock_date or date.min)
 
     @api.model_create_multi
     def create(self, vals_list):
