@@ -3,7 +3,7 @@
 import Class from "@web/legacy/js/core/class";
 import mixins from "@web/legacy/js/core/mixins";
 import ServicesMixin from "@web/legacy/js/core/service_mixins";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadCSS, loadJS } from "@web/core/assets";
 import { renderToElement } from "@web/core/utils/render";
 
 /**
@@ -135,7 +135,22 @@ export var Widget = Class.extend(mixins.PropertiesMixin, ServicesMixin, {
     willStart: function () {
         var proms = [];
         if (this.jsLibs || this.cssLibs || this.assetLibs) {
-            proms.push(loadBundle(this));
+            var assetsPromise = Promise.all([
+                ...(this.cssLibs || []).map(loadCSS),
+                ...(this.jsLibs || []).map(loadJS),
+            ]);
+            for (const bundleName of this.assetLibs || []) {
+                if (typeof bundleName === "string") {
+                    assetsPromise = assetsPromise.then(() => {
+                        return loadBundle(bundleName);
+                    });
+                } else {
+                    assetsPromise = assetsPromise.then(() => {
+                        return Promise.all([...bundleName.map(loadBundle)]);
+                    })
+                }
+            }
+            proms.push(assetsPromise);
         }
         return Promise.all(proms);
     },
