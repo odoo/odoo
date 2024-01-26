@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 import { helpers, constants } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
@@ -13,7 +14,7 @@ const { DateTime } = luxon;
 
 /**
  * @param {"day" | "week" | "month" | "quarter" | "month"} groupAggregate
- * @returns {PivotTimeAdapter}
+ * @returns {PivotTimeAdapter<string | number | false>}
  */
 export function pivotTimeAdapter(groupAggregate) {
     return TIME_ADAPTERS[groupAggregate];
@@ -66,17 +67,18 @@ export function pivotTimeAdapter(groupAggregate) {
  * even if the spreadsheet locale is set to French and such a date is usually interpreted as the 1st of May 2023.
  * The reason is ODOO.PIVOT functions are currently generated without being aware of the spreadsheet locale.
  *
+ * @template T
  * @typedef {Object} PivotTimeAdapter
- * @property {(groupBy: string, field: string, readGroupResult: object) => string} normalizeServerValue
- * @property {(value: string) => string} normalizeFunctionValue
- * @property {(normalizedValue: string, step: number) => string} increment
- * @property {(normalizedValue: string, locale: Object) => string} formatValue
+ * @property {(groupBy: string, field: string, readGroupResult: object) => T} normalizeServerValue
+ * @property {(value: string) => T} normalizeFunctionValue
+ * @property {(normalizedValue: T, step: number) => T} increment
+ * @property {(normalizedValue: T, locale: Object) => string} formatValue
  * @property {(locale: Object) => string} getFormat
- * @property {(normalizedValue: string) => string | number} toCellValue
+ * @property {(normalizedValue: T) => string | number} toCellValue
  */
 
 /**
- * @type {PivotTimeAdapter}
+ * @type {PivotTimeAdapter<string>}
  * Normalized value: "12/25/2023"
  *
  * Note: Those two format are equivalent:
@@ -110,7 +112,7 @@ const dayAdapter = {
 };
 
 /**
- * @type {PivotTimeAdapter}
+ * @type {PivotTimeAdapter<string>}
  * Normalized value: "2/2023" for week 2 of 2023
  */
 const weekAdapter = {
@@ -144,7 +146,7 @@ const weekAdapter = {
 };
 
 /**
- * @type {PivotTimeAdapter}
+ * @type {PivotTimeAdapter<string>}
  * normalized month value is a string formatted as "MM/yyyy" (luxon format)
  * e.g. "01/2020" for January 2020
  */
@@ -156,7 +158,7 @@ const monthAdapter = {
     },
     normalizeFunctionValue(value) {
         const date = toNumber(value, DEFAULT_LOCALE);
-        return formatValue(date, { DEFAULT_LOCALE, format: "mm/yyyy" });
+        return formatValue(date, { locale: DEFAULT_LOCALE, format: "mm/yyyy" });
     },
     increment(normalizedValue, step) {
         return DateTime.fromFormat(normalizedValue, "MM/yyyy")
@@ -176,7 +178,7 @@ const monthAdapter = {
 };
 
 /**
- * @type {PivotTimeAdapter}
+ * @type {PivotTimeAdapter<string>}
  * normalized quarter value is "quarter/year"
  * e.g. "1/2020" for Q1 2020
  */
@@ -208,7 +210,7 @@ const quarterAdapter = {
     },
 };
 /**
- * @type {PivotTimeAdapter}
+ * @type {PivotTimeAdapter<number>}
  */
 const yearAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
@@ -233,8 +235,8 @@ const yearAdapter = {
 
 /**
  * Decorate adapter functions to handle the empty value "false"
- * @param {PivotTimeAdapter} adapter
- * @returns {PivotTimeAdapter}
+ * @param {PivotTimeAdapter<string | number>} adapter
+ * @returns {PivotTimeAdapter<string | number | false>}
  */
 function falseHandlerDecorator(adapter) {
     return {
@@ -245,7 +247,7 @@ function falseHandlerDecorator(adapter) {
             return adapter.normalizeServerValue(groupBy, field, readGroupResult);
         },
         normalizeFunctionValue(value) {
-            if (value === false || value === "false") {
+            if (value.toLowerCase() === "false") {
                 return false;
             }
             return adapter.normalizeFunctionValue(value);
@@ -296,7 +298,7 @@ function getGroupStartingDay(field, groupBy, readGroup) {
     if (field.type === "date") {
         return sqlValue;
     }
-    const userTz = user.tz || luxon.Settings.defaultZoneName;
+    const userTz = user.tz || luxon.Settings.defaultZone.name;
     return DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
 }
 

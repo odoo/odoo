@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 import { LoadableDataSource } from "./data_source";
 import { Domain } from "@web/core/domain";

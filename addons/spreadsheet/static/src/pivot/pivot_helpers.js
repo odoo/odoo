@@ -1,9 +1,10 @@
 /** @odoo-module **/
+// @ts-check
 
 import { _t } from "@web/core/l10n/translation";
 import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
 
-/** @typedef {import("@spreadsheet/helpers/odoo_functions_helpers").Token} Token */
+/** @typedef {import("@odoo/o-spreadsheet").Token} Token */
 
 export const pivotFormulaRegex = /^=.*PIVOT/;
 
@@ -55,7 +56,7 @@ export function getFirstPivotFunction(tokens) {
 export function makePivotFormula(formula, args) {
     return `=${formula}(${args
         .map((arg) =>
-            typeof arg == "number" || (typeof arg == "string" && !isNaN(arg))
+            typeof arg == "number" || (typeof arg == "string" && !isNaN(Number(arg)))
                 ? `${arg}`
                 : `"${arg.toString().replace(/"/g, '\\"')}"`
         )

@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 import { _t } from "@web/core/l10n/translation";
 import { LoadingDataError } from "../o_spreadsheet/errors";
@@ -108,7 +109,7 @@ export class DisplayNameRepository {
      * @param {number} id
      *
      * @private
-     * @returns {Deferred<string>}
+     * @returns {Promise<string>}
      */
     async _fetchDisplayName(model, id) {
         if (!this._displayNames[model]) {
@@ -116,14 +117,19 @@ export class DisplayNameRepository {
         }
         this._displayNames[model][id] = { state: "PENDING" };
         const displayNames = await this._nameService.loadDisplayNames(model, [id]);
-        if (typeof displayNames[id] === "string") {
-            this._displayNames[model][id].state = "COMPLETED";
-            this._displayNames[model][id].value = displayNames[id];
+        const displayName = displayNames[id];
+        if (typeof displayName === "string") {
+            this._displayNames[model][id] = {
+                state: "COMPLETED",
+                value: displayName,
+            };
         } else {
-            this._displayNames[model][id].state = "ERROR";
-            this._displayNames[model][id].error = new Error(
-                _t("Name not found. You may not have the required access rights.")
-            );
+            this._displayNames[model][id] = {
+                state: "ERROR",
+                error: new Error(
+                    _t("Name not found. You may not have the required access rights.")
+                ),
+            };
         }
         if (this._blockNotification) {
             return;

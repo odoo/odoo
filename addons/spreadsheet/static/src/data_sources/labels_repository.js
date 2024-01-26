@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 /**
  * This class is responsible for keeping track of the labels of records. It
