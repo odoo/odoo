@@ -5,7 +5,7 @@ from random import randint
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import ormcache
+from odoo.tools import ormcache, make_index_name, create_index
 
 
 class AccountAnalyticPlan(models.Model):
@@ -260,8 +260,9 @@ class AccountAnalyticPlan(models.Model):
             elif prev:
                 prev.field_description = plan.name
             elif not plan.parent_id:
+                column = plan._strict_column_name()
                 self.env['ir.model.fields'].with_context(update_custom_fields=True).create({
-                    'name': plan._strict_column_name(),
+                    'name': column,
                     'field_description': plan.name,
                     'state': 'manual',
                     'model': 'account.analytic.line',
@@ -269,6 +270,9 @@ class AccountAnalyticPlan(models.Model):
                     'ttype': 'many2one',
                     'relation': 'account.analytic.account',
                 })
+                tablename = self.env['account.analytic.line']._table
+                indexname = make_index_name(tablename, column)
+                create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
 
 
 class AccountAnalyticApplicability(models.Model):
