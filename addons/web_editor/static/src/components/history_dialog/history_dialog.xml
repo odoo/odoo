@@ -22,7 +22,8 @@
                 <div class="history-container">
                     <Notebook defaultPage="'history'">
                         <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
-                            <t t-out="state.revisionContent"/>
+                            <t t-if="state.revisionContent?.length" t-out="state.revisionContent"/>
+                            <t t-else="" t-out="props.noContentHelper" />
                         </t>
                         <t t-set-slot="comparison" name="'comparison'" isVisible="true" title="notebookTabs[1]">
                             <t t-out="state.revisionComparison"/>
@@ -32,7 +33,7 @@
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick">Restore history</button>
-                <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
             </t>
         </Dialog>
     </t>
