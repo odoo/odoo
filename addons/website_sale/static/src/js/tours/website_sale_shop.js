@@ -62,7 +62,7 @@
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
         position: "bottom",
     }, {
-        trigger: ".o_menu_systray_item .o_switch_danger_success",
+        trigger: ".o_menu_systray_item.o_website_publish_container a",
         extra_trigger: ":iframe body:not(.editor_enable)",
         content: _t("Click on this button so your customers can see it."),
         position: "bottom",

@@ -28,7 +28,7 @@ patch(EventAdditionalTourSteps.prototype, {
                 content: markup(_t("Don't forget to click <b>save</b> when you're done.")),
                 position: 'bottom',
             }, {
-                trigger: '.o_menu_systray_item .o_switch_danger_success',
+                trigger: '.o_menu_systray_item.o_website_publish_container a',
                 extra_trigger: ':iframe body:not(.editor_enable) .o_wevent_event',
                 content: markup(_t("Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!")),
                 position: 'bottom',

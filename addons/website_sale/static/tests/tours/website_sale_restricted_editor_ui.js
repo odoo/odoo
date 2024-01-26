@@ -19,7 +19,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     },
     {
         content: "Ensure the publish and 'edit-in-backend' buttons are not shown",
-        trigger: '.o_menu_systray:not(:has(.o_switch_danger_success)):not(:has(.o_website_edit_in_backend))',
+        trigger: '.o_menu_systray:not(:has(.form-switch)):not(:has(.o_website_edit_in_backend))',
         // Wait for the possibility to edit to appear
         extra_trigger: '.o_menu_systray .o_edit_website_container a',
     },
@@ -30,12 +30,12 @@ wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     },
     {
         content: "Click on publish/unpublish",
-        trigger: '.o_menu_systray_item .o_switch_danger_success:has(input:checked)',
+        trigger: '.o_website_publish_container a:has(input:checked)',
     },
     {
         content: "Click on edit-in-backend",
         trigger: '.o_menu_systray .o_website_edit_in_backend a',
-        extra_trigger: '.o_menu_systray_item:not([data-processing]) .o_switch_danger_success:has(input:not(:checked))',
+        extra_trigger: '.o_menu_systray_item:not([data-processing]) .form-switch:has(input:not(:checked))',
     },
     {
         content: "Check that you landed on a form view and that the record was unpublished",

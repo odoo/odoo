@@ -3,9 +3,9 @@
 <t t-name="website.WebsiteSwitcherSystray">
     <div class="o_menu_systray_item o_website_switcher_container">
         <Dropdown>
-            <button data-hotkey="w">
+            <button data-hotkey="w" class="mx-1 border-0">
                 <div class="d-none d-md-block">
-                    <span t-esc="websiteService.currentWebsite.name" class="me-1"/>
+                    <span t-esc="websiteService.currentWebsite.name" class="me-2"/>
                     <i class="fa fa-caret-down"/>
                 </div>
                 <div class="d-md-none">
@@ -28,5 +28,6 @@
             </t>
         </Dropdown>
     </div>
+    <span class="o_website_systray_separator d-none d-md-block w-0 border-start"/>
 </t>
 </templates>

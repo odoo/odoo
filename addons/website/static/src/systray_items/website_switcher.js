@@ -73,4 +73,4 @@ export const systrayItem = {
     isDisplayed: env => env.services.website.hasMultiWebsites,
 };
 
-registry.category("website_systray").add("WebsiteSwitcher", systrayItem, { sequence: 11 });
+registry.category("website_systray").add("WebsiteSwitcher", systrayItem, { sequence: 12 });

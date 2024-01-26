@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { Switch } from '@website/components/switch/switch';
+import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { Component, xml, useState } from "@odoo/owl";
 
@@ -11,14 +11,14 @@ const websiteSystrayRegistry = registry.category('website_systray');
 
 class PublishSystray extends Component {
     static template = xml`
-        <div t-on-click="publishContent" class="o_menu_systray_item d-md-flex ms-auto" data-hotkey="p" t-att-data-processing="state.processing and 1">
-            <a href="#" class="o_nav_entry">
-                <Switch value="state.published" disabled="true" extraClasses="'mb-0 o_switch_danger_success'"/>
-                <span class="d-none d-md-block ms-1" t-esc="this.label"/>
+        <div t-on-click="publishContent" class="o_menu_systray_item o_website_publish_container d-flex ms-auto" t-att-data-processing="state.processing and 1">
+            <a href="#" class="d-flex align-items-center mx-1 px-2 px-md-0" data-hotkey="p">
+                <span class="o_nav_entry d-none d-md-block mx-0 pe-1" t-esc="this.label"/>
+                <CheckBox value="state.published" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
             </a>
         </div>`;
     static components = {
-        Switch,
+        CheckBox,
     };
     static props = {};
 
