@@ -4,6 +4,30 @@
 from odoo import api, fields, models
 
 
+class MailAccessPortal(models.Model):
+    """ Test access on mail models without depending on real models like channel
+    or partner which have their own set of ACLs. """
+    _description = 'Mail Access Portal'
+    _name = 'mail.access.portal'
+    _inherit = ['mail.thread.blacklist']
+    _mail_post_access = 'write'  # default value but ease mock
+    _order = 'id DESC'
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    customer_id = fields.Many2one('res.partner', 'Customer')
+    access = fields.Selection(
+        [
+            ('public', 'public'),
+            ('logged', 'Logged'),
+            ('internal', 'Internal'),
+            ('internal_ro', 'Internal readonly'),
+            ('admin', 'Admin'),
+        ],
+        name='Access', default='public')
+
+
 class MailPerformanceThread(models.Model):
     _name = 'mail.performance.thread'
     _description = 'Performance: mail.thread'
