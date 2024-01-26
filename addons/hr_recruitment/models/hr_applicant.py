@@ -113,6 +113,13 @@ class Applicant(models.Model):
     ], compute="_compute_application_status")
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
 
+    def init(self):
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS hr_applicant_job_id_stage_id_idx
+            ON hr_applicant(job_id, stage_id)
+            WHERE active IS TRUE
+        """)
+
     @api.onchange('job_id')
     def _onchange_job_id(self):
         for applicant in self:
