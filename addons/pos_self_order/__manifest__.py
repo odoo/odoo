@@ -37,7 +37,7 @@
             "pos_self_order/static/src/app/primary_variables.scss",
             "pos_self_order/static/src/app/bootstrap_overridden.scss",
             ("include", "point_of_sale.base_app"),
-            "web/static/src/views/fields/formatters.js",
+            'web/static/src/core/currency.js',
             'barcodes/static/src/barcode_service.js',
             'point_of_sale/static/src/utils.js',
             'web/static/lib/bootstrap/js/dist/dom/data.js',

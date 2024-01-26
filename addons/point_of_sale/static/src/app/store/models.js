@@ -777,7 +777,9 @@ export class Orderline extends PosModel {
             qty: this.get_quantity_str(),
             unit: this.product.uom_id ? this.product.uom_id.name : "",
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
-            oldUnitPrice: this.env.utils.formatCurrency(this.get_old_unit_display_price()),
+            oldUnitPrice: this.get_old_unit_display_price()
+                ? this.env.utils.formatCurrency(this.get_old_unit_display_price())
+                : "",
             discount: this.get_discount_str(),
             customerNote: this.get_customer_note(),
             internalNote: this.getNote(),
