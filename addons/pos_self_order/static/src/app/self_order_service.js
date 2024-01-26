@@ -2,7 +2,7 @@
 import { Reactive, effect } from "@web/core/utils/reactive";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatCurrency as webFormatCurrency } from "@web/core/currency";
 import { Product } from "@pos_self_order/app/models/product";
 import { Combo } from "@pos_self_order/app/models/combo";
 import { session } from "@web/session";
@@ -661,7 +661,7 @@ export class SelfOrder extends Reactive {
     }
 
     formatMonetary(price) {
-        return formatMonetary(price, { currencyId: this.currency_id });
+        return webFormatCurrency(price, this.currency_id);
     }
 
     handleProductChanges(payload) {
