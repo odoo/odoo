@@ -56,6 +56,7 @@ QUnit.test("Edit message (mobile)", async () => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
     await click("button", { text: "general" });
     await contains(".o-mail-Message");
