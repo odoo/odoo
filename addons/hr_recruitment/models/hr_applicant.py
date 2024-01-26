@@ -119,6 +119,10 @@ class Applicant(models.Model):
             ON hr_applicant(job_id, stage_id)
             WHERE active IS TRUE
         """)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS hr_applicant_email_partner_phone_mobile
+            ON hr_applicant(email_normalized, partner_mobile_sanitized, partner_phone_sanitized);
+        """)
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
@@ -150,19 +154,42 @@ class Applicant(models.Model):
             else:
                 applicant.delay_close = False
 
-    @api.depends('email_from', 'partner_phone', 'partner_mobile')
+    @api.depends('email_from', 'partner_mobile_sanitized', 'partner_phone_sanitized')
     def _compute_application_count(self):
         """
             The field application_count is only used on the form view.
             Thus, using ORM rather then querying, should not make much
             difference in terms of performance, while being more readable and secure.
         """
+        if not any(self._ids):
+            for applicant in self:
+                domain = applicant._get_similar_applicants_domain()
+                if domain:
+                    applicant.application_count = max(0, self.env["hr.applicant"].with_context(active_test=False).search_count(domain) - 1)
+                else:
+                    applicant.application_count = 0
+            return
+        self.flush_recordset(['email_normalized', 'partner_phone_sanitized', 'partner_mobile_sanitized'])
+        self.env.cr.execute("""
+            SELECT
+                id,
+                (
+                    SELECT COUNT(*)
+                    FROM hr_applicant AS sub
+                    WHERE a.id != sub.id
+                     AND ((a.email_normalized <> '' AND sub.email_normalized = a.email_normalized)
+                       OR (a.partner_mobile_sanitized <> '' AND a.partner_mobile_sanitized = sub.partner_mobile_sanitized)
+                       OR (a.partner_mobile_sanitized <> '' AND a.partner_mobile_sanitized = sub.partner_phone_sanitized)
+                       OR (a.partner_phone_sanitized <> '' AND a.partner_phone_sanitized = sub.partner_mobile_sanitized)
+                       OR (a.partner_phone_sanitized <> '' AND a.partner_phone_sanitized = sub.partner_phone_sanitized))
+                ) AS similar_applicants
+            FROM hr_applicant AS a
+            WHERE id IN %(ids)s
+        """, {'ids': tuple(self._origin.ids)})
+        query_results = self.env.cr.dictfetchall()
+        mapped_data = {result['id']: result['similar_applicants'] for result in query_results}
         for applicant in self:
-            domain = applicant._get_similar_applicants_domain()
-            if domain:
-                applicant.application_count = self.env["hr.applicant"].with_context(active_test=False).search_count(domain) - 1
-            else:
-                applicant.application_count = 0
+            applicant.application_count = mapped_data.get(applicant.id, 0)
 
     def _get_similar_applicants_domain(self):
         """
