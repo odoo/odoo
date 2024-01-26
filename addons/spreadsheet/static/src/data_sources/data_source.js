@@ -102,4 +102,4 @@ export class LoadableDataSource {
     async _load() {}
 }
 
-const LOADING_ERROR = new LoadingDataError();
+export const LOADING_ERROR = new LoadingDataError();
