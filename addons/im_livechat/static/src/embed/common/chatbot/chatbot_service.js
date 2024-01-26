@@ -83,6 +83,10 @@ export class ChatBotService {
         }
         this.chatbot = this.chatbot ?? new Chatbot(this.livechatService.rule.chatbot);
         if (this.livechatService.options.isTestChatbot && !this.hasPostedWelcomeSteps) {
+            // Channel is already created when accessing the test page. Fast
+            // forward to post channel-creation state.
+            this.chatbot.welcomeStepIndex = this.chatbot.welcomeSteps.length;
+            this.currentStep = new ChatbotStep(this.chatbot.welcomeSteps.at(-1));
             this.save();
         }
         if (!this.currentStep?.expectAnswer) {
