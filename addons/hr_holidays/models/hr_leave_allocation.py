@@ -461,19 +461,27 @@ class HolidaysAllocation(models.Model):
                     current_level_last_date = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     if allocation.nextcall != current_level_last_date:
                         nextcall = min(nextcall, current_level_last_date)
-                # We have to check for end of year actions if it is within our period
-                #  since we can create retroactive allocations.
-                if allocation.lastcall.year < allocation.nextcall.year and\
-                    current_level.action_with_unused_accruals == 'postponed' and\
-                    current_level.postpone_max_days > 0:
-                    # Compute number of days kept
-                    allocation_days = allocation.number_of_days - allocation.leaves_taken
-                    allowed_to_keep = max(0, current_level.postpone_max_days - allocation_days)
-                    number_of_days = min(allocation_days, current_level.postpone_max_days)
-                    allocation.number_of_days = number_of_days + allocation.leaves_taken
-                    total_gained_days = sum(days_added_per_level.values())
-                    days_added_per_level.clear()
-                    days_added_per_level[current_level] = min(total_gained_days, allowed_to_keep)
+
+                # Managing the case of a change of year
+                # `nextcall` will be always the first day of the year
+                if allocation.lastcall.year < allocation.nextcall.year:
+                    if current_level.action_with_unused_accruals == 'lost':
+                        days_added_per_level.clear()
+                        allocation.number_of_days = allocation.leaves_taken
+                        allocation.lastcall = allocation.nextcall
+                        allocation.nextcall = nextcall
+                        continue
+                    elif current_level.action_with_unused_accruals == 'postponed' and\
+                        current_level.postpone_max_days > 0:
+                        # Compute number of days kept
+                        allocation_days = allocation.number_of_days - allocation.leaves_taken
+                        allowed_to_keep = max(0, current_level.postpone_max_days - allocation_days)
+                        number_of_days = min(allocation_days, current_level.postpone_max_days)
+                        allocation.number_of_days = number_of_days + allocation.leaves_taken
+                        total_gained_days = sum(days_added_per_level.values())
+                        days_added_per_level.clear()
+                        days_added_per_level[current_level] = min(total_gained_days, allowed_to_keep)
+
                 gained_days = allocation._process_accrual_plan_level(
                     current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
                 days_added_per_level[current_level] += gained_days
@@ -498,18 +506,13 @@ class HolidaysAllocation(models.Model):
             Method called by the cron task in order to increment the number_of_days when
             necessary.
         """
-        # Get the current date to determine the start and end of the accrual period
-        today = datetime.combine(fields.Date.today(), time(0, 0, 0))
-        this_year_first_day = (today + relativedelta(day=1, month=1)).date()
-        end_of_year_allocations = self.search(
-        [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
-            '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()), ('lastcall', '<', this_year_first_day)])
-        end_of_year_allocations._end_of_year_accrual()
-        end_of_year_allocations.flush_model()
-        allocations = self.search(
-        [('allocation_type', '=', 'accrual'), ('state', '=', 'validate'), ('accrual_plan_id', '!=', False), ('employee_id', '!=', False),
+        allocations = self.search([
+            ('allocation_type', '=', 'accrual'),
+            ('state', '=', 'validate'),
+            ('accrual_plan_id', '!=', False),
+            ('employee_id', '!=', False),
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
-            '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
+            '|', ('nextcall', '=', False), ('nextcall', '<=', fields.Date.today())])
         allocations._process_accrual_plans()
 
     ####################################################

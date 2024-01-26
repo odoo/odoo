@@ -198,47 +198,55 @@ class AccrualPlanLevel(models.Model):
         Returns the next date with the given last call
         """
         self.ensure_one()
+        next_date = False
         if self.frequency == 'daily':
-            return last_call + relativedelta(days=1)
+            next_date = last_call + relativedelta(days=1)
         elif self.frequency == 'weekly':
             daynames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
             weekday = daynames.index(self.week_day)
-            return last_call + relativedelta(days=1, weekday=weekday)
+            next_date = last_call + relativedelta(days=1, weekday=weekday)
         elif self.frequency == 'bimonthly':
             first_date = last_call + relativedelta(day=self.first_day)
             second_date = last_call + relativedelta(day=self.second_day)
             if last_call < first_date:
-                return first_date
+                next_date = first_date
             elif last_call < second_date:
-                return second_date
+                next_date = second_date
             else:
-                return last_call + relativedelta(months=1, day=self.first_day)
+                next_date = last_call + relativedelta(months=1, day=self.first_day)
         elif self.frequency == 'monthly':
             date = last_call + relativedelta(day=self.first_day)
             if last_call < date:
-                return date
+                next_date = date
             else:
-                return last_call + relativedelta(months=1, day=self.first_day)
+                next_date = last_call + relativedelta(months=1, day=self.first_day)
         elif self.frequency == 'biyearly':
             first_month = MONTHS.index(self.first_month) + 1
             second_month = MONTHS.index(self.second_month) + 1
             first_date = last_call + relativedelta(month=first_month, day=self.first_month_day)
             second_date = last_call + relativedelta(month=second_month, day=self.second_month_day)
             if last_call < first_date:
-                return first_date
+                next_date = first_date
             elif last_call < second_date:
-                return second_date
+                next_date = second_date
             else:
-                return last_call + relativedelta(years=1, month=first_month, day=self.first_month_day)
+                next_date = last_call + relativedelta(years=1, month=first_month, day=self.first_month_day)
         elif self.frequency == 'yearly':
             month = MONTHS.index(self.yearly_month) + 1
             date = last_call + relativedelta(month=month, day=self.yearly_day)
             if last_call < date:
-                return date
+                next_date = date
             else:
-                return last_call + relativedelta(years=1, month=month, day=self.yearly_day)
+                next_date = last_call + relativedelta(years=1, month=month, day=self.yearly_day)
         else:
-            return False
+            return next_date
+        # If the new year occurs between the `last_call` and the `next_date`
+        # and we are in the year of the `last_call`,
+        # return the first day of the next year.
+        if next_date.year > last_call.year and fields.Date.today().year == last_call.year:
+            return next_date + relativedelta(month=1, day=1)
+        else:
+            return next_date
 
     def _get_previous_date(self, last_call):
         """
