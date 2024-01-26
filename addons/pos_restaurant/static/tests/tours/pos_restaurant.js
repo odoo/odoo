@@ -63,6 +63,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
+
+            // When reaching the receipt screen, the order is sent for printing.
+            ProductScreen.isPrintingError(),
             ReceiptScreen.clickNextOrder(),
 
             // After clicking next order, floor screen is shown.
@@ -93,6 +96,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.confirmPopup(),
             isSyncStatusPending(),
             isSyncStatusConnected(),
+
+            // When deleting an order, the unprinted changes will be sent for printing.
+            ProductScreen.isPrintingError(),
+
             TicketScreen.selectOrder("-0003"),
             TicketScreen.loadSelectedOrder(),
             FloorScreen.backToFloor(),
