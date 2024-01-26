@@ -97,30 +97,27 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills
     @api.model
-    def create_bill(self, bill_vals, partner_id, bill_date, bill_date_due, reference, narration):
+    def create_bill(self, description, quantity, price_unit, account_id, analytic_account_id, partner_id,
+                    bill_date, bill_date_due, narration):
         """
-        Create a bill and corresponding analytic lines based on the provided data.
+        Create a bill and corresponding analytic line based on the provided data.
         """
-        # Prepare the invoice lines
-        bill_lines = []
-        for line in bill_vals:
-            # Create an analytic line if the analytic account ID is provided
-            analytic_line_vals = []
-            if 'analytic_account_id' in line:
-                analytic_line_vals.append((0, 0, {
-                    'account_id': line['analytic_account_id'],
-                    'name': line.get('description', ''),
-                    # Include additional fields for the analytic line here as needed
-                }))
+        # Prepare the analytic line, if an analytic account ID is provided
+        analytic_line_vals = []
+        if analytic_account_id:
+            analytic_line_vals.append((0, 0, {
+                'account_id': account_id,
+                'name': description,
+            }))
 
-            bill_line_vals = {
-                'name': line.get('description', ''),
-                'quantity': line.get('quantity', 1.0),
-                'price_unit': line.get('price_unit', 0.0),
-                'account_id': line.get('account_id'),
-                'analytic_line_ids': analytic_line_vals,  # Linking analytic lines to the invoice line
-            }
-            bill_lines.append((0, 0, bill_line_vals))
+        # Prepare the bill line
+        bill_line_vals = {
+            'name': description,
+            'quantity': quantity,
+            'price_unit': price_unit,
+            'account_id': account_id,
+            'analytic_line_ids': analytic_line_vals,  # Linking analytic lines to the invoice line
+        }
 
         # Create a new Bill record
         bill = self.env['account.move'].create({
@@ -129,7 +126,7 @@ class AccountBalance(models.Model):
             'invoice_date': bill_date,
             'invoice_date_due': bill_date_due,
             'narration': narration,
-            'invoice_line_ids': bill_lines,
+            'invoice_line_ids': [(0, 0, bill_line_vals)],
         })
         bill.action_post()
 
@@ -141,6 +138,7 @@ class AccountBalance(models.Model):
             'Supplier': bill.partner_id.name,
             'Amount': bill.amount_total,
             'State': bill.payment_state,
+            # 'selected_account_id': selected_account_id,  # Uncomment if used in your context
         }
 
     @api.model
