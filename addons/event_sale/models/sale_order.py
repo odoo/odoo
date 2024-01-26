@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
         only. """
         result = super(SaleOrder, self).write(vals)
         if vals.get('partner_id'):
-            registrations_toupdate = self.env['event.registration'].search([('sale_order_id', 'in', self.ids)])
+            registrations_toupdate = self.sudo().env['event.registration'].search([('sale_order_id', 'in', self.ids)])
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
 
