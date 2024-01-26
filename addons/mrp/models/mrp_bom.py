@@ -476,6 +476,36 @@ class MrpBom(models.Model):
 
         return self.env['product.product'].browse(product_id).standard_price
 
+    # -------------------------------------------------------------------------
+    # DOCUMENT
+    # -------------------------------------------------------------------------
+
+    def _get_mail_thread_data_attachments(self):
+        res = super()._get_mail_thread_data_attachments()
+        return res | self._get_extra_attachments()
+
+    def _get_extra_attachments(self):
+        final_domain = []
+        bom_domain = [('attached_on_mrp', '=', 'bom')]
+        is_byproduct = self.env.user.has_group('mrp.group_mrp_byproducts')
+        for bom in self:
+            product_subdomain = ['|',
+                '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom.product_id.id),
+                '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)]
+            if is_byproduct:
+                product_domain = OR([product_subdomain, [
+                    '|',
+                    '&', ('res_model', '=', 'product.product'), ('res_id', 'in', bom.byproduct_ids.product_id.ids),
+                    '&', ('res_model', '=', 'product.template'), ('res_id', 'in', bom.byproduct_ids.product_id.product_tmpl_id.ids)]])
+            else:
+                product_domain = product_subdomain
+            prod_final_domain = AND([bom_domain, product_domain])
+            final_domain = OR([final_domain, prod_final_domain]) if final_domain else prod_final_domain
+
+        attachements = self.env['product.document'].search(final_domain).ir_attachment_id
+        return attachements
+
+
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
     _order = "sequence, id"
@@ -548,10 +578,11 @@ class MrpBomLine(models.Model):
     @api.depends('product_id')
     def _compute_attachments_count(self):
         for line in self:
-            nbr_attach = self.env['mrp.document'].search_count([
+            nbr_attach = self.env['product.document'].search_count([
+                '&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', 't'),
                 '|',
                 '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
-                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)])
+                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_tmpl_id.id)])
             line.attachments_count = nbr_attach
 
     @api.depends('child_bom_id')
@@ -593,25 +624,35 @@ class MrpBomLine(models.Model):
 
     def action_see_attachments(self):
         domain = [
+            '&', ('attached_on_mrp', '=', 'bom'),
             '|',
             '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
             '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)]
-        attachment_view = self.env.ref('mrp.view_document_file_kanban_mrp')
+        attachments = self.env['product.document'].search(domain)
+        nbr_product_attach = len(attachments.filtered(lambda a: a.res_model == 'product.product'))
+        nbr_template_attach = len(attachments.filtered(lambda a: a.res_model == 'product.template'))
+        context = {'default_res_model': 'product.product',
+            'default_res_id': self.product_id.id,
+            'default_company_id': self.company_id.id,
+            'attached_on_bom': True,
+            'search_default_context_variant': not (nbr_product_attach == 0 and nbr_template_attach > 0) if self.env.user.has_group('product.group_product_variant') else False
+        }
+
         return {
             'name': _('Attachments'),
             'domain': domain,
-            'res_model': 'mrp.document',
+            'res_model': 'product.document',
             'type': 'ir.actions.act_window',
-            'view_id': attachment_view.id,
-            'views': [(attachment_view.id, 'kanban'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
+            'target': 'current',
             'help': _('''<p class="o_view_nocontent_smiling_face">
                         Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_company_id': %s}" % ('product.product', self.product_id.id, self.company_id.id)
+            'context': context,
+            'search_view_id': self.env.ref('product.product_document_search').ids
         }
 
     # -------------------------------------------------------------------------

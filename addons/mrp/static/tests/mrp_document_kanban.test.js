@@ -18,8 +18,8 @@ describe.current.tags("desktop");
 defineMrpModels();
 
 const newArchs = {
-    "mrp.document,false,kanban":
-            `<kanban js_class="mrp_documents_kanban" create="false"><templates><t t-name="kanban-box">
+    "product.document,false,kanban":
+            `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="kanban-box">
                     <div>
                         <field name="name"/>
                     </div>
@@ -32,14 +32,14 @@ test("MRP documents kanban basic rendering", async () => {
         mimetype: "image/png",
         name: "test.png",
     });
-    pyEnv["mrp.document"].create([
-        { name: "test1", priority: "2", ir_attachment_id: irAttachment, mimetype: "image/png" },
-        { name: "test2", priority: "1" },
-        { name: "test3", priority: "3" },
+    pyEnv["product.document"].create([
+        { name: "test1", ir_attachment_id: irAttachment, mimetype: "image/png" },
+        { name: "test2" },
+        { name: "test3" },
     ]);
     registerArchs(newArchs);
     await start();
-    await openView({ res_model: "mrp.document", views: [[false,"kanban"]] });
+    await openView({ res_model: "product.document", views: [[false,"kanban"]] });
     await contains(".o_mrp_documents_kanban_upload");
     await contains(".o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)", { count: 3 });
     // check control panel buttons
@@ -52,15 +52,15 @@ test("mrp: upload multiple files", async () => {
         mimetype: "image/png",
         name: "test.png",
     });
-    pyEnv["mrp.document"].create([
-        { name: "test1", priority: "2", ir_attachment_id: irAttachment, mimetype: "image/png" },
-        { name: "test2", priority: "1" },
-        { name: "test3", priority: "3" },
+    pyEnv["product.document"].create([
+        { name: "test1", ir_attachment_id: irAttachment, mimetype: "image/png" },
+        { name: "test2" },
+        { name: "test3" },
     ]);
 
     registerArchs(newArchs);
     const env = await start();
-    await openView({ res_model: "mrp.document", views: [[false,"kanban"]] });
+    await openView({ res_model: "product.document", views: [[false,"kanban"]] });
 
     env.services.file_upload.bus.addEventListener(
         "FILE_UPLOAD_ADDED",
@@ -91,8 +91,8 @@ test("mrp: upload multiple files", async () => {
 
 test("mrp: click on image opens attachment viewer", async () => {
     const newArchs = {
-        "mrp.document,false,kanban": `
-                <kanban js_class="mrp_documents_kanban" create="false">
+        "product.document,false,kanban": `
+                <kanban js_class="product_documents_kanban" create="false">
                     <templates>
                         <t t-name="kanban-box">
                             <div class="o_kanban_image" t-if="record.ir_attachment_id.raw_value">
@@ -114,15 +114,15 @@ test("mrp: click on image opens attachment viewer", async () => {
         mimetype: "image/png",
         name: "test.png",
     });
-    pyEnv["mrp.document"].create([
-        { name: "test1", priority: "2", ir_attachment_id: irAttachment, mimetype: "image/png" },
-        { name: "test2", priority: "1" },
-        { name: "test3", priority: "3" },
+    pyEnv["product.document"].create([
+        { name: "test1", ir_attachment_id: irAttachment, mimetype: "image/png" },
+        { name: "test2" },
+        { name: "test3" },
     ]);
 
     registerArchs(newArchs);
     await start();
-    await openView({ res_model: "mrp.document", views: [[false,"kanban"]] });
+    await openView({ res_model: "product.document", views: [[false,"kanban"]] });
 
     await click(".o_kanban_previewer");
     await contains(".o-FileViewer");
@@ -136,15 +136,15 @@ test("mrp: upload progress bars", async () => {
         mimetype: "image/png",
         name: "test.png",
     });
-    pyEnv["mrp.document"].create([
-        { name: "test1", priority: "2", ir_attachment_id: irAttachment, mimetype: "image/png" },
-        { name: "test2", priority: "1" },
-        { name: "test3", priority: "3" },
+    pyEnv["product.document"].create([
+        { name: "test1", ir_attachment_id: irAttachment, mimetype: "image/png" },
+        { name: "test2" },
+        { name: "test3" },
     ]);
 
     registerArchs(newArchs);
     await start();
-    await openView({res_model: "mrp.document", views: [[false, "kanban"]]});
+    await openView({res_model: "product.document", views: [[false, "kanban"]]});
 
     let xhr;
     patchWithCleanup(fileUploadService, {

@@ -49,7 +49,7 @@
             <span t-if="data.hasOwnProperty('prod_cost')" t-esc="formatMonetary(data.prod_cost)"/>
         </td>
         <td t-if="showAttachments" class="text-center">
-            <span t-if="!!data.attachment_ids &amp;&amp; data.attachment_ids.length > 0">
+            <span t-if="data.has_attachments">
                 <a href="#" role="button" t-on-click.prevent="goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
             </span>
         </td>

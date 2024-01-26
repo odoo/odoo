@@ -65,6 +65,6 @@ export class BomOverviewSpecialLine extends Component {
     }
 
     get showAttachments() {
-        return this.props.showOptions.attachments;
+        return this.data.has_attachments;
     }
 }

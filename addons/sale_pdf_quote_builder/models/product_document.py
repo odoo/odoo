@@ -11,7 +11,7 @@ from odoo.addons.sale_pdf_quote_builder import utils
 class ProductDocument(models.Model):
     _inherit = 'product.document'
 
-    attached_on = fields.Selection(
+    attached_on_sale = fields.Selection(
         selection_add=[('inside', "Inside quote pdf")],
         help="Allows you to share the document with your customers within a sale.\n"
              "Leave it empty if you don't want to share this document with sales customer.\n"
@@ -25,9 +25,9 @@ class ProductDocument(models.Model):
         ondelete={'inside': 'set default'},
     )
 
-    @api.constrains('attached_on', 'datas')
+    @api.constrains('attached_on_sale', 'datas')
     def _check_attached_on_and_datas_compatibility(self):
-        for doc in self.filtered(lambda doc: doc.attached_on == 'inside'):
+        for doc in self.filtered(lambda doc: doc.attached_on_sale == 'inside'):
             if doc.datas and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
             utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))

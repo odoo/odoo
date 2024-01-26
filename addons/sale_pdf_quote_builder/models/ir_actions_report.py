@@ -34,8 +34,8 @@ class IrActionsReport(models.Model):
                     product_product_docs = line.product_id.product_document_ids
                     product_template_docs = line.product_template_id.product_document_ids
                     doc_to_include = (
-                        product_product_docs.filtered(lambda d: d.attached_on == 'inside')
-                        or product_template_docs.filtered(lambda d: d.attached_on == 'inside')
+                        product_product_docs.filtered(lambda d: d.attached_on_sale == 'inside')
+                        or product_template_docs.filtered(lambda d: d.attached_on_sale == 'inside')
                     )
                     included_product_docs = included_product_docs | doc_to_include
                     doc_line_id_mapping.update({doc.id: line.id for doc in doc_to_include})
