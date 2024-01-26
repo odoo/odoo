@@ -54,16 +54,14 @@ patch(ThreadService.prototype, {
                 }
             }
         }
+        thread.attachments = result.attachments;
         if ("attachments" in result) {
             Object.assign(thread, {
                 areAttachmentsLoaded: true,
-                attachments: result.attachments,
                 isLoadingAttachments: false,
             });
         }
-        if ("mainAttachment" in result) {
-            thread.mainAttachment = result.mainAttachment.id ? result.mainAttachment : undefined;
-        }
+        thread.mainAttachment = result.mainAttachment;
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(thread, 0);
         }
