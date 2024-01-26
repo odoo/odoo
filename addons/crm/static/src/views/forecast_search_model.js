@@ -3,12 +3,15 @@
 import { Domain } from "@web/core/domain";
 import { makeContext } from "@web/core/context";
 import { SearchModel } from "@web/search/search_model";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 /**
  * This is the conversion of ForecastModelExtension. See there for more
  * explanations of what is done here.
  */
+const DATE_FORMAT = {
+  datetime: "YYYY-MM-DD HH:mm:ss",
+  date: "YYYY-MM-DD",
+};
 
 export class ForecastSearchModel extends SearchModel {
     /**
@@ -63,6 +66,7 @@ export class ForecastSearchModel extends SearchModel {
     _getForecastStart(forecastField) {
         if (!this.forecastStart) {
             const { type } = this.searchViewFields[forecastField];
+            let startMoment;
             const groupBy = this.groupBy;
             const firstForecastGroupBy = groupBy.find((gb) => gb.includes(forecastField));
             let granularity = "month";
@@ -71,8 +75,12 @@ export class ForecastSearchModel extends SearchModel {
             } else if (groupBy.length) {
                 granularity = "day";
             }
-            const startDateTime = luxon.DateTime.now().startOf(granularity);
-            this.forecastStart = type === "datetime" ? serializeDateTime(startDateTime) : serializeDate(startDateTime);
+            startMoment = moment().startOf(granularity);
+            if (type === "datetime") {
+                startMoment = moment.utc(startMoment);
+            }
+            const format = DATE_FORMAT[type];
+            this.forecastStart = startMoment.locale("en").format(format);
         }
         return this.forecastStart;
     }

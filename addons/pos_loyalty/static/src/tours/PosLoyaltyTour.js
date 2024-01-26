@@ -252,8 +252,11 @@ ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer('AAA Partner');
 ProductScreen.do.clickDisplayedProduct('Product B');
 ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.totalAmountIs('210.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.clickRewardButton();
 ProductScreen.check.totalAmountIs('205.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.clickRewardButton();
 ProductScreen.check.totalAmountIs('200.00');
 
