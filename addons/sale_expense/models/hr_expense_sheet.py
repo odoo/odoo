@@ -18,7 +18,9 @@ class HrExpenseSheet(models.Model):
             return self.env['sale.order.line']
         aml_to_so_map = expensed_amls._sale_determine_order()
         sale_order_ids = tuple(set(aml_to_so_map[aml.id].id for aml in expensed_amls))
-        aml_sol_unit_price_map = dict(expensed_amls.mapped(lambda aml: (aml.id, aml._sale_get_invoice_price(aml_to_so_map[aml.id]))))
+        aml_sol_unit_price_map = dict(
+            expensed_amls.mapped(lambda aml: (aml.id, aml.currency_id.round(aml._sale_get_invoice_price(aml_to_so_map[aml.id]))))
+        )
         product_ids = tuple(expensed_amls.product_id.ids)
         quantities = tuple(expensed_amls.mapped('quantity'))
         names = tuple(expensed_amls.mapped('name'))
