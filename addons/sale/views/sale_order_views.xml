@@ -131,7 +131,7 @@
                 <field name="currency_id" column_invisible="True"/>
 
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
-                <field name="date_order" widget="date" optional="show" readonly="state in ['cancel', 'sale']"/>
+                <field name="date_order" optional="show" readonly="state in ['cancel', 'sale']"/>
                 <field name="commitment_date" optional="hide"/>
                 <field name="expected_date" optional="hide"/>
                 <field name="partner_id" readonly="1"/>
@@ -205,7 +205,7 @@
                 <attribute name="string">Quotations</attribute>
             </tree>
             <field name="date_order" position="replace">
-                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="create_date" string="Creation Date" optional="show"/>
             </field>
             <field name="state" position="attributes">
                 <attribute name="optional">show</attribute>
@@ -732,7 +732,7 @@
                                 <label for="commitment_date" string="Delivery Date"/>
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date" readonly="state == 'cancel' or locked"/>
-                                    <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
+                                    <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
                                 </div>
                             </group>
                             <group string="Tracking" name="sale_reporting">

@@ -99,13 +99,13 @@
                                 <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
                             </div>
                             <div class="o_row" name="validity">
-                                <field name="date_from" widget="date" nolabel="1" readonly="1"
+                                <field name="date_from" nolabel="1" readonly="1"
                                     invisible="allocation_type == 'regular' and state != 'confirm'"/>
                                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"
                                     invisible="allocation_type == 'accrual' or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
                                     invisible="allocation_type == 'regular'"/>
-                                <field name="date_to" widget="date" nolabel="1"
+                                <field name="date_to" nolabel="1"
                                     placeholder="No Limit"  readonly="1"
                                     invisible="allocation_type == 'regular' and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
@@ -204,13 +204,13 @@
                 <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual'"/>
             </label>
             <field name="date_from" position="replace">
-                <field name="date_from" widget="date" nolabel="1" readonly="allocation_type == 'accrual' and state != 'confirm'"/>
+                <field name="date_from" nolabel="1" readonly="allocation_type == 'accrual' and state != 'confirm'"/>
             </field>
             <xpath expr="//i[hasclass('fa-long-arrow-right')]" position="replace">
                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual'"/>
             </xpath>
             <field name="date_to" position="replace">
-                <field name="date_to" widget="date" nolabel="1" placeholder="No Limit"  readonly="allocation_type == 'accrual' and state != 'confirm'"/>
+                <field name="date_to" nolabel="1" placeholder="No Limit"  readonly="allocation_type == 'accrual' and state != 'confirm'"/>
             </field>
             <div id="no_limit_label" position="replace">
                 <div id="no_limit_label" class="oe_read_only" invisible="not id or date_to">No limit</div>

@@ -31,7 +31,7 @@
                                 groups="uom.group_uom"
                                 options="{'no_open': 1, 'no_create': 1}"/>
                         </div>
-                        <field name="date_planned" widget="date"/>
+                        <field name="date_planned"/>
                         <field name="warehouse_id"
                             groups="stock.group_stock_multi_warehouses"/>
                         <field name="route_id" domain="[('id', 'in', allowed_route_ids)]"/>

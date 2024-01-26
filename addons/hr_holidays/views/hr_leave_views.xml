@@ -134,9 +134,9 @@
                                     </div>
                                     <div>
                                         <span class="text-muted">from </span>
-                                        <field name="date_from" widget="date" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                                        <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                                         <span class="text-muted"> to </span>
-                                        <field name="date_to" widget="date" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                                        <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                                     </div>
                                     <div class="o_leave_kanban_name p-2">
                                         <field name="name" nolabel="1"/>
@@ -218,7 +218,7 @@
                             </div>
                             <div class="text-muted">
                                 <field name="holiday_status_id" display="full"/>
-                                <field name="date_from" widget="date"/> <i class="fa fa-long-arrow-right" title="to" /> <field name="date_to" widget="date"/>
+                                <field name="date_from"/> <i class="fa fa-long-arrow-right" title="to" /> <field name="date_to"/>
                             </div>
                         </div>
                     </div>
