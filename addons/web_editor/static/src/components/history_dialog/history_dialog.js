@@ -20,7 +20,14 @@ class HistoryDialog extends Component {
         close: Function,
         restoreRequested: Function,
         historyMetadata: Array,
-        versionedFieldName: String
+        versionedFieldName: String,
+        title: { String, optional: true },
+        noContentHelper: { String, optional: true }, //Markup
+    };
+
+    static defaultProps = {
+        title: _t("History"),
+        noContentHelper: markup(""),
     };
 
     state = useState({
@@ -32,7 +39,7 @@ class HistoryDialog extends Component {
 
     setup() {
         this.size = 'xl';
-        this.title = _t('History');
+        this.title = this.props.title;
         this.orm = useService('orm');
         this.notebookTabs = [_t("Content"), _t("Comparison")];
 
