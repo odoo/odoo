@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 
 
 class AccountBankStmtCashWizard(models.Model):
@@ -482,8 +482,13 @@ class PosConfig(models.Model):
                 result.append((config.id, "%s (%s)" % (config.name, last_session.user_id.name)))
         return result
 
+    def _check_header_footer(self, values):
+        if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
+            raise AccessError(_('Only administrators can edit receipt headers and footers'))
+
     @api.model
     def create(self, values):
+        self._check_header_footer(values)
         IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s', values['name']),
@@ -504,6 +509,7 @@ class PosConfig(models.Model):
         return pos_config
 
     def write(self, vals):
+        self._check_header_footer(vals)
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
