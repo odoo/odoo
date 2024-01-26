@@ -247,7 +247,8 @@ class Website(models.Model):
 
         # no GeoIP or no pricelist for this country
         if not pricelists:
-            pricelists = pricelists.browse(website_pricelist_ids).filtered(check_pricelist)
+            pricelists = pricelists.browse(website_pricelist_ids).filtered(
+                lambda pl: check_pricelist(pl) and not (country_code and pl.country_group_ids))
 
         # if logged in, add partner pl (which is `property_product_pricelist`, might not be website compliant)
         if not self.env.user._is_public():
