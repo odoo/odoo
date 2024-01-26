@@ -12,7 +12,24 @@
                     <field string="Projects" name="project_count" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">analytic_account_form_view</attribute>
+            </xpath>
         </field>
     </record>
 
+    <record id="view_account_analytic_account_list_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.account.list.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">analytic_account_list_view</attribute>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <field name="project_count" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
