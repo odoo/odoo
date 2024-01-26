@@ -19,6 +19,7 @@ import {
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { getBasicServerData } from "../../utils/data";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { DEFAULT_LOCALE } = spreadsheet.constants;
@@ -516,6 +517,34 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getCellValue(model, "A2"), "xphone");
         assert.strictEqual(getCellValue(model, "A3"), 131);
         assert.verifySteps(["partner/fields_get", "partner/read_group"]);
+    });
+
+    QUnit.test("pivot grouped by char field which represents numbers", async function (assert) {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            { id: 1, name: "111", probability: 11 },
+            { id: 2, name: "000111", probability: 15 },
+        ];
+
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="name" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getCell(model, "A3").content, '=ODOO.PIVOT.HEADER(1,"name","000111")');
+        assert.strictEqual(getCell(model, "A4").content, '=ODOO.PIVOT.HEADER(1,"name",111)');
+        assert.strictEqual(getEvaluatedCell(model, "A3").value, "000111");
+        assert.strictEqual(getEvaluatedCell(model, "A4").value, "111");
+        assert.strictEqual(
+            getCell(model, "B3").content,
+            '=ODOO.PIVOT(1,"probability","name","000111")'
+        );
+        assert.strictEqual(getCell(model, "B4").content, '=ODOO.PIVOT(1,"probability","name",111)');
+        assert.strictEqual(getEvaluatedCell(model, "B3").value, 15);
+        assert.strictEqual(getEvaluatedCell(model, "B4").value, 11);
     });
 
     QUnit.test("relational PIVOT.HEADER with missing id", async function (assert) {
