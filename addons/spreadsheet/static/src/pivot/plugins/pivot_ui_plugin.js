@@ -145,7 +145,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
-                const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
+                const pivotDefinition = this._getPivotDefinitionForDataSource(cmd.pivotId);
                 const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
                 this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
                 break;
@@ -178,7 +178,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
                         continue;
                     }
 
-                    const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
+                    const pivotDefinition = this._getPivotDefinitionForDataSource(cmd.pivotId);
                     const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
                     this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
                 }
@@ -517,7 +517,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
      */
     _setupPivotDataSource(pivotId) {
         const dataSourceId = this.getPivotDataSourceId(pivotId);
-        const definition = this.getters.getPivotModelDefinition(pivotId);
+        const definition = this._getPivotDefinitionForDataSource(pivotId);
         if (!this.dataSources.contains(dataSourceId)) {
             this.dataSources.add(dataSourceId, PivotDataSource, definition);
         }
@@ -543,5 +543,30 @@ export class PivotUIPlugin extends OdooUIPlugin {
         }
         this.unusedPivots = [...unusedPivots];
         return this.unusedPivots;
+    }
+
+    /**
+     * Get the definition of a pivot, used to setup a data source
+     * @param {string} pivotId
+     * @returns {import("@spreadsheet").PivotRuntime}
+     */
+    _getPivotDefinitionForDataSource(pivotId) {
+        const definition = this.getters.getPivotDefinition(pivotId);
+        return {
+            metaData: {
+                colGroupBys: definition.colGroupBys,
+                rowGroupBys: definition.rowGroupBys,
+                activeMeasures: definition.measures,
+                resModel: definition.model,
+                sortedColumn: definition.sortedColumn,
+            },
+            searchParams: {
+                groupBy: [],
+                orderBy: [],
+                domain: definition.domain,
+                context: definition.context,
+            },
+            name: definition.name,
+        };
     }
 }
