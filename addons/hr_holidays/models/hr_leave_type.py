@@ -490,7 +490,8 @@ class HolidaysType(models.Model):
                     'closest_allocation_duration': closest_allocation_duration,
                     'holds_changes': holds_changes,
                 })
-                allocation_data[employee].append(lt_info)
+                if not self.env.context.get('from_dashboard', False) or lt_info[1]['max_leaves']:
+                    allocation_data[employee].append(lt_info)
         for employee in allocation_data:
             for leave_type_data in allocation_data[employee]:
                 for key, value in leave_type_data[1].items():
