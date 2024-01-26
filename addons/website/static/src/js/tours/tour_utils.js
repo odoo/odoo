@@ -196,6 +196,29 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
 }
 
 /**
+ * Click on the top right edit dropdown, then click on the edit dropdown item
+ * and wait for the edit mode
+ *
+ * @param {string} position Where the purple arrow will show up
+ */
+function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
+    return [{
+        content: markup(_t("<b>Click Edit</b> dropdown")),
+        trigger: ".o_edit_website_container button",
+        position: position,
+    }, {
+        content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
+        trigger: ".o_edit_website_dropdown_item",
+        position: position,
+    }, {
+        content: "Check that we are in edit mode",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        auto: true, // Checking step only for automated tests
+        isCheck: true,
+    }];
+}
+
+/**
  * Simple click on a snippet in the edition area
  * @param {*} snippet
  * @param {*} position
@@ -483,6 +506,7 @@ export default {
     changePaddingSize,
     checkIfVisibleOnScreen,
     clickOnEditAndWaitEditMode,
+    clickOnEditAndWaitEditModeInTranslatedPage,
     clickOnElement,
     clickOnExtraMenuItem,
     clickOnSave,

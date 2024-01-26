@@ -106,8 +106,11 @@ wTourUtils.dragNDrop({
     trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
     extra_trigger: ':iframe html[lang*="en"]',
 }, {
+    content: "edit",
+    trigger: '.o_edit_website_container button',
+}, {
     content: "translate",
-    trigger: '.o_menu_systray .o_translate_website_container > a',
+    trigger: '.o_translate_website_dropdown_item',
     extra_trigger: ':iframe html:not(:has(#wrap p span))',
 }, {
     content: "close modal",
