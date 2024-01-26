@@ -367,11 +367,18 @@ def get_text_content(term):
     content = html.fromstring(term).text_content()
     return " ".join(content.split())
 
+def is_text(term):
+    """ Return whether the term has only text. """
+    return len(html.fromstring(f"<_>{term}</_>")) == 0
+
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
 
 xml_translate.term_converter = xml_term_converter
 html_translate.term_converter = html_term_converter
+
+xml_translate.is_text = is_text
+html_translate.is_text = is_text
 
 def translate_sql_constraint(cr, key, lang):
     cr.execute("""
