@@ -29,7 +29,7 @@ export class TimeOffDashboard extends Component {
     }
 
     async loadDashboardData(date = false) {
-        const context = {};
+        const context = { from_dashboard: true };
         if (this.props && this.props.employeeId !== null) {
             context["employee_id"] = this.props.employeeId;
         }
