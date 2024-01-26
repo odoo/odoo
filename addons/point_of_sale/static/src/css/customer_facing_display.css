@@ -790,3 +790,37 @@ body .pos-hidden {
     background: linear-gradient(30deg, #1a1b1f, #3d3f45);
   }
 }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: #999;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  z-index: 100;
+}
+.pos-customer_payment_popup {
+  font-size: 1vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  max-height: 500px;
+  padding: 1em;
+  margin-left: -250px; /*Half the value of width to center div*/
+  margin-top: -250px; /*Half the value of height to center div*/
+  z-index: 200;
+}
+
+.pos-customer_payment_qr_code {
+  width: 200px;
+  height: 200px;
+  background: white;
+}

@@ -193,6 +193,11 @@ export class PaymentScreen extends Component {
     }
     deletePaymentLine(cid) {
         const line = this.paymentLines.find((line) => line.cid === cid);
+        if (line.payment_method.payment_method_type === "qr_code") {
+            this.currentOrder.remove_paymentline(line);
+            this.numberBuffer.reset();
+            return;
+        }
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.

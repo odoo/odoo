@@ -89,7 +89,31 @@
         </div>
     </t>
 
+    <t t-name="point_of_sale.CustomerFacingQR">
+        <div class="overlay" />
+        <div class="pos-customer_payment_popup rounded border border-dark">
+            <div class="text-center">
+                <p>Please scan the QR code with <t t-esc="order.uiState.PaymentScreen.qrPaymentData.name"/></p>
+                <img class="pos-customer_payment_qr_code my-1" t-att-src="order.uiState.PaymentScreen.qrPaymentData.qrCode" alt="QR Code" />
+            </div>
+            <div class="text-center">
+                <div>
+                    <strong>Amount: </strong>
+                    <span t-esc="order.uiState.PaymentScreen.qrPaymentData.amount" />
+                </div>
+                <div>
+                    <strong>Order reference: </strong>
+                    <span t-esc="order.name" />
+                </div>
+            </div>
+        </div>
+
+    </t>
+
     <t t-name="point_of_sale.CustomerFacingDisplayMainContainer">
+        <t t-if="order.get_current_screen_data().name === 'PaymentScreen' and order.uiState.PaymentScreen?.qrPaymentData">
+            <t t-call="point_of_sale.CustomerFacingQR"/>
+        </t>
         <div class="pos_orderlines">
             <t t-if="order">
                 <t t-if="order.get_current_screen_data().name != 'ReceiptScreen'">

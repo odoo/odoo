@@ -127,7 +127,7 @@ class PosSession(models.Model):
             },
             'pos.payment.method': {
                 'domain': ['|', ('active', '=', False), ('active', '=', True)],
-                'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence'],
+                'fields': ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr'],
             },
             'pos.printer': {
                 'domain': [('id', 'in', config_id.printer_ids.ids)],
