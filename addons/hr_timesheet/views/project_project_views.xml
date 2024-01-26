@@ -21,6 +21,15 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
+                <xpath expr="//header" position="after">
+                    <field name="analytic_account_active" invisible="1"/>
+                    <group name="timesheet_error" invisible="not allow_timesheets">
+                        <div class="alert alert-warning mb-1 text-center" role="alert" colspan="2" invisible="not analytic_account_id or analytic_account_active">
+                            You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>
+                            Please switch to another account, or reactivate the current one to timesheet on the project.
+                        </div>
+                    </group>
+                </xpath>
                 <xpath expr="//field[@name='date']" position="after">
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets"/>
                 </xpath>

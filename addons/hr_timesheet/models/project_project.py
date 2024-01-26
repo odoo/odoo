@@ -18,6 +18,7 @@ class Project(models.Model):
             ('partner_id', '=?', partner_id),
         ]"""
     )
+    analytic_account_active = fields.Boolean("Active Account", related="analytic_account_id.active", export_string_translation=False)
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id')
