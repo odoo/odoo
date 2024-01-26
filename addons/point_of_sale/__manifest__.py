@@ -76,33 +76,32 @@
 
         # PoS assets
 
+        'point_of_sale.base_app': [
+            ("include", "web._assets_helpers"),
+            ("include", "web._assets_backend_helpers"),
+            ("include", "web._assets_primary_variables"),
+            "web/static/src/scss/pre_variables.scss",
+            "web/static/lib/bootstrap/scss/_functions.scss",
+            "web/static/lib/bootstrap/scss/_variables.scss",
+            ("include", "web._assets_bootstrap"),
+            ("include", "web._assets_bootstrap_backend"),
+            ('include', 'web._assets_core'),
+            ("remove", "web/static/src/core/browser/router.js"),
+            ("remove", "web/static/src/core/debug/**/*"),
+            "web/static/src/libs/fontawesome/css/font-awesome.css",
+            "web/static/lib/odoo_ui_icons/*",
+            'web/static/src/legacy/scss/ui.scss',
+            "point_of_sale/static/src/utils.js",
+            'bus/static/src/services/bus_service.js',
+            'bus/static/src/bus_parameters_service.js',
+            'bus/static/src/multi_tab_service.js',
+            'bus/static/src/workers/*',
+        ],
+
         # Main PoS assets, they are loaded in the PoS UI and in the PoS unit tests
         'point_of_sale._assets_pos': [
-            # 'preparation_display' bootstrap customization layer
             'web/static/src/scss/functions.scss',
-            # 'point_of_sale/static/src/scss/primary_variables.scss', TO DO - CREATE
 
-            # 'webclient' bootstrap customization layer
-            ('include', 'web._assets_helpers'),
-            ('include', 'web._assets_backend_helpers'),
-
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-
-            # Import Bootstrap
-            ('include', 'web._assets_bootstrap_backend'),
-
-            # Icons
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/odoo_ui_icons/*',
-            'web/static/src/webclient/icons.scss',
-
-            # scss variables and utilities
-            'point_of_sale/static/src/scss/pos_variables_extra.scss',
-            'web/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/scss/fontawesome_overridden.scss',
-            'web/static/fonts/fonts.scss',
-            'web/static/src/core/colorlist/colorlist.scss',
             # JS boot
             'web/static/src/module_loader.js',
             # libs (should be loaded before framework)
@@ -112,8 +111,20 @@
             'web/static/lib/owl/odoo_module.js',
             'web_editor/static/lib/html2canvas.js',
             'web/static/lib/zxing-library/zxing-library.js',
-            # JS framework
-            ('include', 'web._assets_core'),
+
+
+            ('include', 'point_of_sale.base_app'),
+
+            'web/static/src/core/colorlist/colorlist.scss',
+
+            'web/static/src/webclient/icons.scss',
+
+            # scss variables and utilities
+            'point_of_sale/static/src/scss/pos_variables_extra.scss',
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
+            'web/static/fonts/fonts.scss',
+
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             ('remove', '/web/static/src/core/dialog/dialog.scss'),
             # formatMonetary
@@ -127,11 +138,6 @@
             'web/static/src/webclient/barcode/barcode_scanner.*',
             'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',
             'web/static/src/webclient/barcode/crop_overlay.*',
-            # bus service
-            'bus/static/src/services/bus_service.js',
-            'bus/static/src/bus_parameters_service.js',
-            'bus/static/src/multi_tab_service.js',
-            'bus/static/src/workers/*',
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
             # PoS files
@@ -140,12 +146,17 @@
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
             # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
-            'web/static/lib/jquery/jquery.js',
+            "web_tour/static/src/tour_pointer/**/*",
+            ("include", "point_of_sale.base_tests"),
             'web/static/src/legacy/js/libs/jquery.js',
-            'web_tour/static/src/tour_pointer/**/*',
-            'web_tour/static/src/tour_service/**/*',
             # account
             'account/static/src/helpers/*.js',
+        ],
+        'point_of_sale.base_tests': [
+            "web/static/lib/jquery/jquery.js",
+            "web_tour/static/src/tour_pointer/**/*.xml",
+            "web_tour/static/src/tour_pointer/**/*.js",
+            "web_tour/static/src/tour_service/**/*",
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
@@ -155,6 +166,8 @@
         # Bundle for the unit tests at /pos/ui/tests
         'point_of_sale.assets_qunit_tests': [
             ('include', 'point_of_sale._assets_pos'),
+            "web/static/src/core/browser/router.js",
+            "web/static/src/core/debug/**/*",
             # dependencies of web.tests_assets (in the web tests, these come from assets_backend)
             'web/static/tests/legacy/patch_translations.js',
             'web/static/lib/jquery/jquery.js',
