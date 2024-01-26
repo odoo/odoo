@@ -539,7 +539,7 @@ class AssetsBundle(object):
 
         css = self.preprocess_css()
         if self.css_errors:
-            error_message = '\n'.join(self.css_errors).replace('"', r'\\"').replace('\n', r'\A').replace('*', r'\*')
+            error_message = '\n'.join(self.css_errors).replace('"', r'\"').replace('\n', r'\A').replace('*', r'\*')
             previous_attachment = self.get_attachments(extension, ignore_version=True)
             previous_css = previous_attachment.raw.decode() if previous_attachment else ''
             css_error_message_header = '\n\n/* ## CSS error message ##*/'
@@ -605,7 +605,7 @@ css_error_message {
                 content_bundle_list.append(content)
                 content_line_count += len(content.split("\n"))
 
-        content_bundle = '\n'.join(content_bundle_list) + f"\n//*# sourceMappingURL={sourcemap_attachment.url} */"
+        content_bundle = '\n'.join(content_bundle_list) + f"\n/*# sourceMappingURL={sourcemap_attachment.url} */"
         css_attachment = self.save_attachment('css', content_bundle)
 
         generator._file = css_attachment.url
