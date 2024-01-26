@@ -2651,7 +2651,7 @@ export class Wysiwyg extends Component {
                         .removeClass(id)
                         .popover({
                             trigger: 'hover',
-                            content: response.message.data.message || '',
+                            content: response.message.data?.message || '',
                             placement: 'auto',
                         })
                         .popover('show');
