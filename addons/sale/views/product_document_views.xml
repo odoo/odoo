@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <sheet position="inside">
                 <group name="sale" string="Sales">
-                    <field name="attached_on" class="oe_inline"/>
+                    <field name="attached_on_sale" class="oe_inline"/>
                 </group>
             </sheet>
         </field>
@@ -21,8 +21,8 @@
         <field name="arch" type="xml">
             <div name="bottom" position="inside">
                 <div class="mt-2">
-                    <span>Visibility</span>
-                    <field name="attached_on" class="ms-2" widget="selection"/>
+                    <span>Sales visibility</span>
+                    <field name="attached_on_sale" class="ms-2" widget="selection"/>
                 </div>
             </div>
         </field>
@@ -34,7 +34,7 @@
         <field name="inherit_id" ref="product.product_document_list"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="attached_on"/>
+                <field name="attached_on_sale"/>
             </field>
         </field>
     </record>
@@ -48,10 +48,10 @@
                 <separator/>
                 <filter name="quotation"
                     string="Quotation"
-                    domain="[('attached_on', '=', 'quotation')]"/>
+                    domain="[('attached_on_sale', '=', 'quotation')]"/>
                 <filter name="sale_order"
                     string="Sales Order"
-                    domain="[('attached_on', '=', 'sale_order')]"/>
+                    domain="[('attached_on_sale', '=', 'sale_order')]"/>
             </search>
         </field>
     </record>

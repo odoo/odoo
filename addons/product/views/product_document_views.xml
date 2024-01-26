@@ -65,7 +65,7 @@
                             <div class="ribbon ribbon-top-right" invisible="active">
                                 <span class="text-bg-danger">Archived</span>
                             </div>
-                            <div class="ribbon ribbon-top-right" invisible="not active or res_model != 'product.product'">
+                            <div class="ribbon ribbon-top-right" invisible="not active or res_model != 'product.product'" groups="product.group_product_variant">
                                 <span class="text-bg-secondary">Variant</span>
                             </div>
                             <div class="o_kanban_image">
@@ -126,6 +126,7 @@
                     string="Documents of this variant"
                     name="context_variant"
                     domain="[('res_model', '=', 'product.product'), ('res_id', '=', context.get('default_res_id'))]"/>
+                <filter name="all" string="All" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
             </search>
         </field>
     </record>

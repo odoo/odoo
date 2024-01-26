@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_document_form" model="ir.ui.view">
+        <field name="name">product.document.form.mrp</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="product.product_document_form"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group name="mrp" string="Manufacturing">
+                    <field name="attached_on_mrp" class="oe_inline"/>
+                </group>
+            </sheet>
+        </field>
+    </record>
+</odoo>
