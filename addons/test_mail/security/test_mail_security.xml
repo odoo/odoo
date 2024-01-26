@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <record id="ir_rule_mail_test_access_public" model="ir.rule">
+        <field name="name">Public: public only</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access"/>
+        <field name="domain_force">[('access', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="ir_rule_mail_test_access_portal" model="ir.rule">
+        <field name="name">Portal: public/logged/logged readonly only</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access"/>
+        <field name="domain_force">[
+            '|', ('access', 'in', ('public', 'logged', 'logged_ro')),
+            '&amp;', ('access', '=', 'followers'), ('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="ir_rule_mail_test_access_portal_update" model="ir.rule">
+        <field name="name">Portal: update logged only</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access"/>
+        <field name="domain_force">[
+            '|', ('access', '=', 'logged'),
+            '&amp;', ('access', '=', 'followers'), ('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_write" eval="True"/>
+    </record>
+    <record id="ir_rule_mail_test_access_internal" model="ir.rule">
+        <field name="name">Internal: read not admin</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access"/>
+        <field name="domain_force">[('access', '!=', 'admin')]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="ir_rule_mail_test_access_internal_update" model="ir.rule">
+        <field name="name">Internal: update not admin and not readonly</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access"/>
+        <field name="domain_force">[('access', 'not in', ('internal_ro', 'admin'))]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="ir_rule_mail_test_access_admin" model="ir.rule">
+        <field name="name">Admin: all</field>
+        <field name="model_id" ref="test_mail.model_mail_test_access"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+
+    <record id="mail_test_multi_company_rule" model="ir.rule">
+        <field name="name">Mail Test Multi Company</field>
+        <field name="model_id" ref="test_mail.model_mail_test_multi_company"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="mail_test_multi_company_rule" model="ir.rule">
         <field name="name">Mail Test Multi Company</field>
         <field name="model_id" ref="test_mail.model_mail_test_multi_company"/>
