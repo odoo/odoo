@@ -107,44 +107,45 @@ class AccountBalance(models.Model):
         # Prepare the invoice lines
         bill_lines = []
         for line in bill_vals:
+            # Create an analytic line if the analytic account ID is provided
+            analytic_line_vals = []
+            if 'analytic_account_id' in line:
+                analytic_line_vals.append((0, 0, {
+                    'account_id': line['analytic_account_id'],
+                    'name': line.get('description', ''),
+                    # Include additional fields for the analytic line here as needed
+                }))
+
             bill_line_vals = {
                 'name': line.get('description', ''),
                 'quantity': line.get('quantity', 1.0),
                 'price_unit': line.get('price_unit', 0.0),
                 'account_id': line.get('account_id'),
-                # Assuming that the analytic account ID is also provided in line
-                'analytic_account_id': line.get('analytic_account_id'),
+                'analytic_line_ids': analytic_line_vals,  # Linking analytic lines to the invoice line
             }
             bill_lines.append((0, 0, bill_line_vals))
 
-        # Create a new AR invoice record
+        # Create a new Bill record
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner_id,
             'invoice_date': bill_date,
             'invoice_date_due': bill_date_due,
-            'ref': reference,
+            # 'ref': reference,  # Uncomment if 'ref' is used in your model
             'narration': narration,
             'invoice_line_ids': bill_lines,
         })
         bill.action_post()
 
-        # Create analytic lines for each invoice line if analytic_account_id is provided
-        for line in bill.invoice_line_ids:
-            if line.analytic_account_id:
-                self.env['account.analytic.line'].create({
-                    'account_id': line.analytic_account_id.id,
-                    'name': line.name,
-                    'amount': line.price_subtotal,  # or any other relevant amount
-                    'move_id': line.id,
-                })
-
         return {
-            "ID": bill.id,
-            "Name": bill.name,
-            "Amount": bill.amount_total,
-            "Date": bill.invoice_date,
-            "Due Date": bill.invoice_date_due
+            'Bill Number': bill.id,
+            'Name': bill.name,
+            'Bill Date': bill.invoice_date,
+            'Bill Due Date': bill.invoice_date_due,
+            'Supplier': bill.partner_id.name,
+            'Amount': bill.amount_total,
+            'State': bill.payment_state,
+            # 'selected_account_id': selected_account_id,  # Uncomment if used in your context
         }
 
     @api.model
@@ -216,7 +217,7 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills payment
     @api.model
-    def create_bill_payment(self, bills_ids, journal_id, payment_method_line_id):
+    def create_bill_payment(self, bills_ids, journal_id, payment_method_line_id, payment_date):
         Payment = self.env['account.payment']
         Bill = self.env['account.move']
         bills = Bill.browse(bills_ids)
@@ -224,7 +225,8 @@ class AccountBalance(models.Model):
         total_amount = sum(bill.amount_residual for bill in bills)
         payment_vals = {
             'amount': total_amount,
-            'partner_id': bills[0].partner_id.id,  # Assuming all bills are for the same partner
+            'partner_id': bills[0].partner_id.id,
+            'date': payment_date,  # Assuming all bills are for the same partner
             'partner_type': 'supplier',
             'payment_type': 'outbound',
             'journal_id': journal_id,
@@ -241,43 +243,6 @@ class AccountBalance(models.Model):
 
         return payment.id
 
-    @api.model
-    def get_bill_payment(self, payment_id):
-        # Define search criteria to filter bills
-        domain = [
-            ('id', '=', payment_id),
-            ('move_type', '=', 'in_invoice'),
-        ]
-
-        # Retrieve bills based on the criteria
-        payment = self.env['account.move'].search(domain, order='invoice_date')
-
-        # Prepare a list to store bill data
-        payment_data = []
-
-        # for bill in bills:
-        # Retrieve invoice lines for each bill
-        payment_lines = payment.invoice_line_ids
-        selected_account_id = (
-                payment_lines and payment_lines[0].account_id.name or False
-        )
-
-        # Assemble bill data
-        payment_data.append({
-            'id': payment.id,
-            'bill_number': payment.id,
-            'bill_date': payment.invoice_date,
-            'supplier_id': payment.partner_id.name,
-            'amount': payment.amount_total,
-            'state': payment.payment_state,
-            'selected_account_id': selected_account_id,
-            # Add more bill details here as needed
-        })
-
-        # Create a dictionary with a "bill_info" key
-        response = {'payment_info': payment_data}
-
-        return response
 
     @api.model
     def get_bill_payment_by_journal_entry_id(self, journal_entry_id):
