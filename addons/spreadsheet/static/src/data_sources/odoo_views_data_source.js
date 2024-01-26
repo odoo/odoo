@@ -1,10 +1,9 @@
 /** @odoo-module */
 // @ts-check
 
-import { LoadableDataSource } from "./data_source";
+import { LOADING_ERROR, LoadableDataSource } from "./data_source";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { omit } from "@web/core/utils/objects";
 
 /**
@@ -14,7 +13,11 @@ import { omit } from "@web/core/utils/objects";
 /**
  * @typedef {Object} OdooModelMetaData
  * @property {string} resModel
- * @property {Array<Field>|undefined} fields
+ * @property {Record<string, Field>} [fields]
+ *
+ * @typedef {Object} OdooModelSearchParams
+ * @property {Object} context
+ * @property {Array<string>} domain
  */
 
 export class OdooViewsDataSource extends LoadableDataSource {
@@ -27,6 +30,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
      */
     constructor(services, params) {
         super(services);
+        /** @type {OdooModelMetaData} */
         this._metaData = JSON.parse(JSON.stringify(params.metaData));
         /** @protected */
         this._initialSearchParams = JSON.parse(JSON.stringify(params.searchParams));
@@ -37,6 +41,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
         );
         /** @private */
         this._customDomain = this._initialSearchParams.domain;
+        this._metaDataLoaded = false;
     }
 
     /**
@@ -55,16 +60,24 @@ export class OdooViewsDataSource extends LoadableDataSource {
                 this._metaData.resModel
             );
         }
+        this._metaDataLoaded = true;
+    }
+
+    /**
+     * Ensure that the metadata are loaded. If not, throw an error
+     */
+    _assertMetaDataLoaded() {
+        if (!this._metaDataLoaded) {
+            this.loadMetadata();
+            throw LOADING_ERROR;
+        }
     }
 
     /**
      * @returns {Record<string, Field>} List of fields
      */
     getFields() {
-        if (this._metaData.fields === undefined) {
-            this.loadMetadata();
-            throw new LoadingDataError();
-        }
+        this._assertMetaDataLoaded();
         return this._metaData.fields;
     }
 
@@ -73,10 +86,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
      * @returns {Field | undefined} Field
      */
     getField(field) {
-        if (this._metaData.fields === undefined) {
-            this.loadMetadata();
-            throw new LoadingDataError();
-        }
+        this._assertMetaDataLoaded();
         return this._metaData.fields[field];
     }
 
