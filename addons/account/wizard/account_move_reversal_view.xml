@@ -14,7 +14,7 @@
                     <group>
                         <field name="reason" invisible="move_type == 'entry'"/>
                         <field name="journal_id" domain="[('id', 'in', available_journal_ids)]"/>
-                        <field name="date" widget="date" required="1"/>
+                        <field name="date" required="1"/>
                     </group>
                     <footer>
                         <button string='Reverse' name="refund_moves" type="object" class="btn-primary" data-hotkey="q"/>
