@@ -1842,14 +1842,15 @@ class _String(Field):
             for term in new_terms:
                 text2terms[self.get_text_content(term)].append(term)
 
+            is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
             for old_term in list(translation_dictionary.keys()):
                 if old_term not in new_terms:
                     old_term_text = self.get_text_content(old_term)
                     matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
                         closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
-                        old_is_text = old_term == self.get_text_content(old_term)
-                        closest_is_text = closest_term == self.get_text_content(closest_term)
+                        old_is_text = is_text(old_term)
+                        closest_is_text = is_text(closest_term)
                         if old_is_text or not closest_is_text:
                             translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
