@@ -73,7 +73,7 @@ const ODOO_PIVOT = {
         assertDomainLength(domainArgs);
         const value = this.getters.getPivotCellValue(pivotId, measure, domainArgs);
         if (measure === "__count") {
-            return "0";
+            return { value, format: "0" };
         }
         const format = this.getters.getPivotFieldFormat(pivotId, measure);
         return { value, format };
