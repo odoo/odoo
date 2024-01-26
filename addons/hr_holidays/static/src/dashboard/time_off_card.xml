@@ -70,7 +70,12 @@
         </ul>
         <div t-if="props.warning" class="alert alert-warning mb-0 o_time_off_card_popover_warning">
             <span class="m-0 mt-3"
-                t-if="props.closest &amp;&amp; props.closest &lt; props.left">
+                t-if="props.errorLeaves.length">
+                Some leaves cannot be linked to any allocation. To see those leaves, 
+                <a t-on-click="() => this.openLeaves()" class="cursor-pointer">click here</a>.
+            </span>
+            <span class="m-0 mt-3"
+                t-elif="props.closest &amp;&amp; props.closest &lt; props.left">
                 <i class="fa fa-warning"/> Only <t t-esc="props.closest"/>
                 <t t-if="props.request_unit == 'hour'"> hours</t>
                 <t t-else=""> days</t>
