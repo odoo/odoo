@@ -2,6 +2,7 @@
 
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
+import * as PartnerList from "@point_of_sale/../tests/tours/helpers/PartnerListTourMethods";
 
 export function clickPaymentMethod(name) {
     return [
@@ -277,4 +278,23 @@ export function clickShipLaterButton() {
             trigger: ".button.confirm",
         },
     ];
+}
+
+export function clickPartnerButton() {
+    return [
+        {
+            content: "click customer button",
+            trigger: "button.partner-button",
+        },
+        {
+            content: "partner screen is shown",
+            trigger: PartnerList.clickPartner().trigger,
+            in_modal: true,
+            run: () => {},
+        },
+    ];
+}
+
+export function clickCustomer(name) {
+    return [PartnerList.clickPartner(name)];
 }
