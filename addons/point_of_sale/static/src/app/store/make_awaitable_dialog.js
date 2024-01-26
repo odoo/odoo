@@ -20,10 +20,10 @@ export function makeAwaitable(dialog, comp, props, options) {
     });
 }
 
-export function ask(dialog, props, options) {
+export function ask(dialog, props, options, comp = ConfirmationDialog) {
     return new Promise((resolve) => {
         dialog.add(
-            ConfirmationDialog,
+            comp,
             {
                 ...props,
                 confirm: () => resolve(true),

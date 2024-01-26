@@ -16,7 +16,9 @@ import {
     floatIsZero,
 } from "@web/core/utils/numbers";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
 import { ProductCustomAttribute } from "./models/product_custom_attribute";
 import { omit } from "@web/core/utils/objects";
@@ -945,8 +947,53 @@ export class Payment extends PosModel {
         return Boolean(this.get_payment_status());
     }
 
+    async showQR() {
+        let qr;
+        try {
+            qr = await this.env.services.orm.call("pos.payment.method", "get_qr_code", [
+                [this.payment_method.id],
+                this.amount,
+                this.order.name,
+                this.order.name,
+                this.pos.currency.id,
+                this.order.partner?.id,
+            ]);
+        } catch (error) {
+            qr = this.payment_method.default_qr;
+            if (!qr) {
+                let message;
+                if (error instanceof ConnectionLostError) {
+                    message = _t(
+                        "Connection to the server has been lost. Please check your internet connection."
+                    );
+                } else {
+                    message = error.data.message;
+                }
+                this.env.services.dialog.add(AlertDialog, {
+                    title: _t("Failure to generate Payment QR Code"),
+                    body: message,
+                });
+                return false;
+            }
+        }
+        return await ask(
+            this.env.services.dialog,
+            {
+                title: _t(this.name),
+                line: this,
+                order: this.order,
+                qrCode: qr,
+            },
+            {},
+            QRPopup
+        );
+    }
+
     async pay() {
         this.set_payment_status("waiting");
+        if (this.payment_method.payment_method_type === "qr_code") {
+            return this.handle_payment_response(await this.showQR());
+        }
         return this.handle_payment_response(
             await this.payment_method.payment_terminal.send_payment_request(this.cid)
         );
@@ -954,7 +1001,9 @@ export class Payment extends PosModel {
     handle_payment_response(isPaymentSuccessful) {
         if (isPaymentSuccessful) {
             this.set_payment_status("done");
-            this.can_be_reversed = this.payment_method.payment_terminal.supports_reversals;
+            if (this.payment_method.payment_method_type !== "qr_code") {
+                this.can_be_reversed = this.payment_method.payment_terminal.supports_reversals;
+            }
         } else {
             this.set_payment_status("retry");
         }
@@ -1974,7 +2023,10 @@ export class Order extends PosModel {
             }
             newPaymentline.set_amount(this.get_due());
 
-            if (payment_method.payment_terminal) {
+            if (
+                payment_method.payment_terminal ||
+                payment_method.payment_method_type === "qr_code"
+            ) {
                 newPaymentline.set_payment_status("pending");
             }
             return newPaymentline;
