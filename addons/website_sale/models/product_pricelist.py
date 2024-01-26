@@ -30,6 +30,9 @@ class ProductPricelist(models.Model):
         default=_default_website,
         domain="[('company_id', '=?', company_id)]",
         tracking=20,
+        help="If you want a pricelist to be available on a website,"
+             "you must fill in this field or make it selectable."
+             "Otherwise, the pricelist will not apply to any website."
     )
     code = fields.Char(string="E-commerce Promotional Code", groups='base.group_user')
     selectable = fields.Boolean(help="Allow the end user to choose this price list")

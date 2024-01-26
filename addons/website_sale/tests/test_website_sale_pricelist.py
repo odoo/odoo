@@ -162,11 +162,12 @@ class TestWebsitePriceList(WebsiteSaleCommon):
     def test_get_pricelist_available_promocode(self):
         christmas_pl = self.list_christmas.id
 
+        # Christmas Pricelist only available for EU countries
         country_list = {
             False: True,
             'BE': True,
             'IT': True,
-            'US': True,
+            'US': False,
             'CA': False
         }
 
@@ -496,6 +497,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         })
 
         self.BE = self.env.ref('base.be')
+        self.US = self.env.ref('base.us')
         NL = self.env.ref('base.nl')
         c_BE, c_NL = self.env['res.country.group'].create([
             {'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]},
@@ -557,6 +559,13 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
             patch('odoo.addons.website_sale.models.website.Website._get_cached_pricelist_id', return_value=current_pl.id):
             pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
+
+    def test_get_pricelist_available_geoip5(self):
+        # Test get all available pricelists with geoip for a country not existing in any pricelists
+
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.US.code):
+            pricelists = self.website.get_pricelist_available()
+        self.assertFalse(pricelists, "Pricelists specific to NL and BE should not be returned for US.")
 
 
 @tagged('post_install', '-at_install')
