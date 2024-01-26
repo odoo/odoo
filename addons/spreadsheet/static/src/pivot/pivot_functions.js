@@ -70,6 +70,7 @@ const ODOO_PIVOT = {
         const args = domain.map(toString);
         assertPivotsExists(pivotId, this.getters);
         assertMeasureExist(pivotId, measure, this.getters);
+<<<<<<< HEAD
         assertDomainLength(args);
         const value = this.getters.getPivotCellValue(pivotId, measure, args);
         const field = this.getters.getPivotDataSource(pivotId).getField(measure);
@@ -86,6 +87,17 @@ const ODOO_PIVOT = {
                     format = this.getters.getCompanyCurrencyFormat() || "#,##0.00";
                     break;
             }
+||||||| parent of aa78810ba97c (temp)
+        assertDomainLength(domainArgs);
+        const value = this.getters.getPivotCellValue(pivotId, measure, domainArgs);
+        if (measure === "__count") {
+            return "0";
+=======
+        assertDomainLength(domainArgs);
+        const value = this.getters.getPivotCellValue(pivotId, measure, domainArgs);
+        if (measure === "__count") {
+            return { value, format: "0" };
+>>>>>>> aa78810ba97c (temp)
         }
         return { value, format };
     },
