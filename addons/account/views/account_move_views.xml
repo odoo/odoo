@@ -435,7 +435,7 @@
                            attrs="{'invisible': ['|', '|', ('payment_state', 'in', ('invoicing_legacy')), ('state', '!=', 'posted'), ('move_type', '=', 'entry')]}"
                            optional="show"/>
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
-                    <field name="move_type" invisible="context.get('default_move_type', True)"/>
+                    <field name="move_type" invisible="bool(context.get('default_move_type', True))"/>
                   </tree>
             </field>
         </record>
