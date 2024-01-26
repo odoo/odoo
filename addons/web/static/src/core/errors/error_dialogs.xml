@@ -76,18 +76,4 @@
       </Dialog>
     </t>
 
-    <t t-name="web.ScssErrorDialog">
-      <Dialog title="this.constructor.title" size="'md'" contentClass="'o_error_dialog'">
-        <div role="alert">
-          <p class="text-prewrap">
-            The style compilation failed, see the error below. This is an administrator or developer error that must be fixed for the entire database before continuing working.
-          </p>
-          <pre t-esc="props.message"/>
-        </div>
-        <t t-set-slot="footer">
-          <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
-        </t>
-      </Dialog>
-    </t>
-
 </templates>
