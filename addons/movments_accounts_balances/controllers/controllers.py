@@ -62,12 +62,9 @@ class AccountBalance(models.Model):
 
         for line in move_lines:
             analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
-            analytic_partner_id = analytic_info.partner_id if analytic_info else False
-            partner_name = analytic_partner_id.name if analytic_info else False
             analytic_account_id = analytic_info.account_id if analytic_info else ""
             analytic_account_name = analytic_account_id.name if analytic_info else ""
             analytic_account_amount = analytic_info.amount if analytic_info else "",
-            partner_id = line.partner_id.id if line.partner_id else ""
             partner_type = None
             if line.partner_id:
                 partner = line.partner_id
@@ -131,7 +128,6 @@ class AccountBalance(models.Model):
             'partner_id': partner_id,
             'invoice_date': bill_date,
             'invoice_date_due': bill_date_due,
-            # 'ref': reference,  # Uncomment if 'ref' is used in your model
             'narration': narration,
             'invoice_line_ids': bill_lines,
         })
@@ -145,7 +141,6 @@ class AccountBalance(models.Model):
             'Supplier': bill.partner_id.name,
             'Amount': bill.amount_total,
             'State': bill.payment_state,
-            # 'selected_account_id': selected_account_id,  # Uncomment if used in your context
         }
 
     @api.model
@@ -217,31 +212,45 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills payment
     @api.model
-    def create_bill_payment(self, bills_ids, journal_id, payment_method_line_id, payment_date):
+    def create_bill_payment(self, bill_id, journal_id, payment_date, payment_method_line_id):
         Payment = self.env['account.payment']
         Bill = self.env['account.move']
-        bills = Bill.browse(bills_ids)
+        bill_id = Bill.browse(bill_id)
 
-        total_amount = sum(bill.amount_residual for bill in bills)
+        if not bill_id:
+            raise ValueError("No bills found with the provided IDs")
+
+        total_amount = sum(bill.amount_residual for bill in bill_id)
         payment_vals = {
             'amount': total_amount,
-            'partner_id': bills[0].partner_id.id,
-            'date': payment_date,  # Assuming all bills are for the same partner
+            'date': payment_date,
+            'partner_id': bill_id[0].partner_id.id,
             'partner_type': 'supplier',
             'payment_type': 'outbound',
-            'journal_id': journal_id,
             'payment_method_line_id': payment_method_line_id,
-
+            'journal_id': journal_id
         }
 
         payment = Payment.create(payment_vals)
         payment.action_post()
 
-        # Reconcile each bill with the payment
-        # for bill in bills:
-        #     payment.register_payment(bill.invoice_payments_widget)
+        # Register payment against each bill
+        for bill in bill_id:
+            bill.action_register_payment()
 
-        return payment.id
+        # Convert the payment record to a dictionary
+        payment_data = {
+            'id': payment.id,
+            'amount': payment.amount,
+            'date': payment.date,
+            'partner_id': payment.partner_id.id,
+            'partner_type': payment.partner_type,
+            'payment_type': payment.payment_type,
+            'payment_method_line_id': payment.payment_method_line_id.id,
+            'journal_id': payment.journal_id.id
+        }
+
+        return payment_data
 
 
     @api.model
