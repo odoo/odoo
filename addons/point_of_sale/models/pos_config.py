@@ -179,10 +179,10 @@ class PosConfig(models.Model):
     limited_products_amount = fields.Integer(default=20000)
     product_load_background = fields.Boolean()
     limited_partners_loading = fields.Boolean('Limited Partners Loading',
-                                              help="By default, 100 partners are loaded.\n"
+                                              help="By default, 10000 partners are loaded.\n"
                                                    "When the session is open, we keep on loading all remaining partners in the background.\n"
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
-    limited_partners_amount = fields.Integer(default=100)
+    limited_partners_amount = fields.Integer(default=10000)
     partner_load_background = fields.Boolean()
 
     @api.depends('payment_method_ids')
