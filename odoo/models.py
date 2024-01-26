@@ -5700,6 +5700,7 @@ class BaseModel(metaclass=MetaModel):
         self.flush_model([parent])
         for id in self.ids:
             current_id = id
+            seen_ids = {current_id}
             while current_id:
                 cr.execute(SQL(
                     "SELECT %s FROM %s WHERE id = %s",
@@ -5707,8 +5708,9 @@ class BaseModel(metaclass=MetaModel):
                 ))
                 result = cr.fetchone()
                 current_id = result[0] if result else None
-                if current_id == id:
+                if current_id in seen_ids:
                     return False
+                seen_ids.add(current_id)
         return True
 
     def _check_m2m_recursion(self, field_name):
