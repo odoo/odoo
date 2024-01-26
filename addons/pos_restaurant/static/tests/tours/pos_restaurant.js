@@ -47,6 +47,9 @@ registry
             ProductScreen.do.clickPayButton();
             PaymentScreen.do.clickPaymentMethod("Cash");
             PaymentScreen.do.clickValidate();
+
+            // When reaching the receipt screen, the order is sent for printing.
+            ProductScreen.check.isPrintingError();
             ReceiptScreen.do.clickNextOrder();
             
             // After clicking next order, floor screen is shown.
@@ -77,6 +80,10 @@ registry
             Chrome.do.confirmPopup();
             Chrome.check.isSyncStatusPending();
             Chrome.check.isSyncStatusConnected();
+
+            // When deleting an order, the unprinted changes will be sent for printing.
+            ProductScreen.check.isPrintingError();
+
             TicketScreen.do.selectOrder("-0003");
             Chrome.do.backToFloor();
             
