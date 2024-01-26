@@ -7,7 +7,7 @@ import pytz
 
 from odoo import api, fields, models, _, Command
 from odoo.osv.expression import OR, AND
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 
 
 class PosConfig(models.Model):
@@ -368,9 +368,14 @@ class PosConfig(models.Model):
             else:
                 config.display_name = f"{config.name} ({last_session.user_id.name})"
 
+    def _check_header_footer(self, values):
+        if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
+            raise AccessError(_('Only administrators can edit receipt headers and footers'))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            self._check_header_footer(vals)
             IrSequence = self.env['ir.sequence'].sudo()
             val = {
                 'name': _('POS Order %s', vals['name']),
@@ -405,6 +410,7 @@ class PosConfig(models.Model):
             prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
 
     def write(self, vals):
+        self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
