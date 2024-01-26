@@ -10,10 +10,6 @@ export class ProjectTaskCalendarController extends CalendarController {
         ...ProjectTaskCalendarController.components,
         FilterPanel: ProjectTaskCalendarFilterPanel,
     };
-    setup() {
-        super.setup(...arguments);
-        this.env.config.setDisplayName(this.env.config.getDisplayName() + _t(" - Tasks by Deadline"));
-    }
 
     get editRecordDefaultDisplayText() {
         return _t("New Task");
