@@ -3,6 +3,7 @@
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { formatNumber, useNewAllocationRequest } from "@hr_holidays/views/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { Component, onWillRender } from "@odoo/owl";
 
 export class TimeOffCardPopover extends Component {
@@ -22,6 +23,22 @@ export class TimeOffCardPopover extends Component {
         "max_allowed_negative",
         "onClickNewAllocationRequest?",
     ];
+
+    setup() {
+        this.actionService = useService("action");
+    }
+
+    async openLeaves() {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "hr.leave",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            domain: [["id", "in", this.props.errorLeaves]],
+        });
+    }
 }
 
 export class TimeOffCard extends Component {
@@ -36,6 +53,12 @@ export class TimeOffCard extends Component {
         this.newAllocationRequest = useNewAllocationRequest();
         this.lang = user.lang;
         this.formatNumber = formatNumber;
+        const { data } = this.props;
+        this.errorLeaves = Object.values(data.virtual_excess_data).map((data) => data.leave_id);
+        this.errorLeavesDuration = Object.values(data.virtual_excess_data).reduce(
+            (acc, data) => acc + data.amount,
+            0
+        );
         this.updateWarning();
 
         onWillRender(this.updateWarning);
@@ -47,10 +70,13 @@ export class TimeOffCard extends Component {
         const exceeding_duration = data.allows_negative
             ? excess > data.max_allowed_negative
             : excess > 0;
+        const errorLeavesSignificant = data.allows_negative
+            ? this.errorLeavesDuration > data.max_allowed_negative
+            : this.errorLeavesDuration > 0;
         const closeExpire =
             data.closest_allocation_duration &&
             data.closest_allocation_duration < data.virtual_remaining_leaves;
-        this.warning = exceeding_duration || closeExpire;
+        this.warning = errorLeavesSignificant || exceeding_duration || closeExpire;
     }
 
     onClickInfo(ev) {
@@ -68,6 +94,7 @@ export class TimeOffCard extends Component {
             allows_negative: data.allows_negative,
             max_allowed_negative: data.max_allowed_negative,
             onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
+            errorLeaves: this.errorLeaves,
         });
     }
 
