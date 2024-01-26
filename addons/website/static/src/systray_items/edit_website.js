@@ -2,11 +2,17 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from '@web/core/utils/hooks';
 import { Component, useState, useEffect } from "@odoo/owl";
 
 class EditWebsiteSystray extends Component {
     static template = "website.EditWebsiteSystray";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
     static props = {};
     setup() {
         this.websiteService = useService('website');
@@ -34,10 +40,21 @@ class EditWebsiteSystray extends Component {
     }
 
     get label() {
-        if (this.translatable) {
-            return _t("or edit master");
-        }
         return _t("Edit");
+    }
+
+    startTranslate() {
+        const { pathname, search, hash } = this.websiteService.contentWindow.location;
+        if (!search.includes('edit_translations')) {
+            const searchParams = new URLSearchParams(search);
+            searchParams.set('edit_translations', '1');
+            this.websiteService.goToWebsite({
+                path: pathname + `?${searchParams.toString() + hash}`,
+                translation: true
+            });
+        } else {
+            this.websiteContext.translation = true;
+        }
     }
 
     startEdit() {
@@ -61,7 +78,7 @@ class EditWebsiteSystray extends Component {
 
 export const systrayItem = {
     Component: EditWebsiteSystray,
-    isDisplayed: (env) => env.services.website.currentWebsite.metadata.editable,
+    isDisplayed: (env) => env.services.website.currentWebsite.metadata.editable || env.services.website.currentWebsite.metadata.translatable,
 };
 
 registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 7 });
