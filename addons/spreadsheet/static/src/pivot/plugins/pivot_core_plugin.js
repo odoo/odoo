@@ -16,7 +16,7 @@
  */
 
 import { helpers } from "@odoo/o-spreadsheet";
-import { makePivotFormula } from "../pivot_helpers";
+import { makePivotFormula, convertRuntimeDefinition } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
 import { SpreadsheetPivotTable } from "../pivot_table";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
@@ -52,7 +52,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
             getDisplayName: (pivotId) => this.getters.getPivotName(pivotId),
             getTag: (pivotId) => sprintf(_t("Pivot #%s"), pivotId),
             getFieldMatching: (pivotId, filterId) => this.getPivotFieldMatching(pivotId, filterId),
-            getModel: (pivotId) => this.getPivotDefinition(pivotId).model,
+            getModel: (pivotId) => this.pivots[pivotId].definition.model,
         };
     }
 
@@ -105,7 +105,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
                 const position = { col, row };
                 const { cols, rows, measures, rowTitle } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
-                const def = this._convertPivotDefinition(definition);
+                const def = convertRuntimeDefinition(definition);
                 this._addPivot(id, def);
                 this._insertPivot(sheetId, position, id, table);
                 this.history.update("nextId", parseInt(id, 10) + 1);
@@ -252,24 +252,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
         for (const pivotId in pivots) {
             this.history.update("pivots", pivotId, "fieldMatching", filterId, undefined);
         }
-    }
-
-    /**
-     * @param {PivotRuntime} runtimeDefinition
-     *
-     * @returns {PivotDefinition}
-     */
-    _convertPivotDefinition(runtimeDefinition) {
-        return {
-            colGroupBys: runtimeDefinition.metaData.colGroupBys,
-            rowGroupBys: runtimeDefinition.metaData.rowGroupBys,
-            measures: runtimeDefinition.metaData.activeMeasures,
-            model: runtimeDefinition.metaData.resModel,
-            domain: runtimeDefinition.searchParams.domain,
-            context: runtimeDefinition.searchParams.context,
-            name: runtimeDefinition.name,
-            sortedColumn: runtimeDefinition.metaData.sortedColumn || null,
-        };
     }
 
     /**
@@ -437,7 +419,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
     export(data) {
         data.pivots = {};
         for (const id in this.pivots) {
-            data.pivots[id] = deepCopy(this.getPivotDefinition(id));
+            data.pivots[id] = deepCopy(this.pivots[id].definition);
             data.pivots[id].measures = data.pivots[id].measures.map((elt) => ({ field: elt }));
             data.pivots[id].fieldMatching = this.pivots[id].fieldMatching;
             data.pivots[id].domain = new Domain(data.pivots[id].domain).toJson();

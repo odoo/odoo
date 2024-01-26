@@ -6,6 +6,7 @@ import { nextTick } from "@web/../tests/helpers/utils";
 import { PivotDataSource } from "@spreadsheet/pivot/pivot_data_source";
 import { getBasicServerData, getBasicPivotArch } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
+import { convertRawDefinition } from "@spreadsheet/pivot/pivot_helpers";
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -17,19 +18,13 @@ import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
  */
 export async function insertPivotInSpreadsheet(model, params) {
     const archInfo = new PivotArchParser().parse(params.arch || getBasicPivotArch());
-    const definition = {
-        metaData: {
-            colGroupBys: archInfo.colGroupBys,
-            rowGroupBys: archInfo.rowGroupBys,
-            activeMeasures: archInfo.activeMeasures,
-            resModel: params.resModel || "partner",
-        },
-        searchParams: {
-            domain: [],
-            context: {},
-            groupBy: [],
-            orderBy: [],
-        },
+    const rawDefinition = {
+        domain: [],
+        context: {},
+        measures: archInfo.activeMeasures,
+        model: params.resModel || "partner",
+        colGroupBys: archInfo.colGroupBys,
+        rowGroupBys: archInfo.rowGroupBys,
         name: "Partner Pivot",
     };
     const pivotId = model.getters.getNextPivotId();
@@ -37,7 +32,7 @@ export async function insertPivotInSpreadsheet(model, params) {
     const dataSource = model.config.custom.dataSources.add(
         dataSourceId,
         PivotDataSource,
-        definition
+        rawDefinition
     );
     await dataSource.load();
     const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
@@ -48,6 +43,7 @@ export async function insertPivotInSpreadsheet(model, params) {
         rowTitle,
     };
     const [col, row] = params.anchor || [0, 0];
+    const definition = convertRawDefinition(rawDefinition);
     model.dispatch("INSERT_PIVOT", {
         id: model.getters.getNextPivotId(),
         sheetId: params.sheetId || model.getters.getActiveSheetId(),

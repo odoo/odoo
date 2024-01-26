@@ -12,10 +12,22 @@ export class PivotDataSource extends OdooViewsDataSource {
      *
      * @override
      * @param {Object} services Services (see DataSource)
-     * @param {import("@spreadsheet").PivotRuntime} params
+     * @param {import("@spreadsheet").PivotDefinition} definition
      */
-    constructor(services, params) {
+    constructor(services, definition) {
+        const params = {
+            metaData: {
+                resModel: definition.model,
+                fields: definition.fields,
+            },
+            searchParams: {
+                domain: definition.domain,
+                context: definition.context,
+            },
+        };
         super(services, params);
+        definition.fields = undefined;
+        this._rawDefinition = definition;
     }
 
     async _load() {
@@ -25,6 +37,7 @@ export class PivotDataSource extends OdooViewsDataSource {
             { _t },
             {
                 metaData: this._metaData,
+                definition: this._rawDefinition,
                 searchParams: this._searchParams,
             },
             {
@@ -41,6 +54,7 @@ export class PivotDataSource extends OdooViewsDataSource {
             { _t },
             {
                 metaData: this._metaData,
+                definition: this._rawDefinition,
                 searchParams: this._initialSearchParams,
             },
             {
@@ -83,18 +97,16 @@ export class PivotDataSource extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} measure
+     * @param {string} measureName
      * @returns {string}
      */
-    getMeasureDisplayName(measure) {
-        if (measure === "__count") {
-            return _t("Count");
+    getMeasureDisplayName(measureName) {
+        const measures = this.definition.measures;
+        const measure = measures.find((m) => m.name === measureName);
+        if (!measure) {
+            throw new EvaluationError(_t("Field %s does not exist", measureName));
         }
-        const field = this.getField(measure);
-        if (field === undefined) {
-            throw new EvaluationError(_t("Field %s does not exist", measure));
-        }
-        return field.string;
+        return measure.displayName;
     }
 
     /**
@@ -172,15 +184,6 @@ export class PivotDataSource extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} fieldName
-     * @returns {string}
-     */
-    getFormattedGroupBy(fieldName) {
-        this._assertDataIsLoaded();
-        return this._model.getFormattedGroupBy(fieldName);
-    }
-
-    /**
      * @param {string} groupFieldString
      */
     parseGroupField(groupFieldString) {
@@ -191,5 +194,10 @@ export class PivotDataSource extends OdooViewsDataSource {
     async prepareForTemplateGeneration() {
         this._assertDataIsLoaded();
         await this._model.prepareForTemplateGeneration();
+    }
+
+    get definition() {
+        this._assertMetaDataLoaded();
+        return this._model.getDefinition();
     }
 }
