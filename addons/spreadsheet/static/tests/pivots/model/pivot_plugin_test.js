@@ -9,7 +9,7 @@ import {
     getBorders,
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
-import { getBasicPivotArch } from "@spreadsheet/../tests/utils/data";
+import { getBasicPivotArch, getBasicServerData } from "@spreadsheet/../tests/utils/data";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
@@ -503,6 +503,42 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.strictEqual(getCellValue(model, "A2"), "xphone");
         assert.strictEqual(getCellValue(model, "A3"), 131);
         assert.verifySteps(["partner/fields_get", "partner/read_group"]);
+    });
+
+    QUnit.test("pivot grouped by char field which represents numbers", async function (assert) {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            { id: 1, name: "111", probability: 11 },
+            { id: 2, name: "000111", probability: 15 },
+            { id: 3, name: "14.0", probability: 16 },
+        ];
+
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="name" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getCell(model, "A3").content, '=ODOO.PIVOT.HEADER(1,"name","000111")');
+        assert.strictEqual(getCell(model, "A4").content, '=ODOO.PIVOT.HEADER(1,"name",111)');
+        assert.strictEqual(getCell(model, "A5").content, '=ODOO.PIVOT.HEADER(1,"name","14.0")');
+        assert.strictEqual(getEvaluatedCell(model, "A3").value, "000111");
+        assert.strictEqual(getEvaluatedCell(model, "A4").value, "111");
+        assert.strictEqual(getEvaluatedCell(model, "A5").value, "14.0");
+        assert.strictEqual(
+            getCell(model, "B3").content,
+            '=ODOO.PIVOT(1,"probability","name","000111")'
+        );
+        assert.strictEqual(getCell(model, "B4").content, '=ODOO.PIVOT(1,"probability","name",111)');
+        assert.strictEqual(
+            getCell(model, "B5").content,
+            '=ODOO.PIVOT(1,"probability","name","14.0")'
+        );
+        assert.strictEqual(getEvaluatedCell(model, "B3").value, 15);
+        assert.strictEqual(getEvaluatedCell(model, "B4").value, 11);
+        assert.strictEqual(getEvaluatedCell(model, "B5").value, 16);
     });
 
     QUnit.test("relational PIVOT.HEADER with missing id", async function (assert) {

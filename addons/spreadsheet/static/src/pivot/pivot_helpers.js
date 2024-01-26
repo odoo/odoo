@@ -55,11 +55,12 @@ export function getFirstPivotFunction(tokens) {
  */
 export function makePivotFormula(formula, args) {
     return `=${formula}(${args
-        .map((arg) =>
-            typeof arg == "number" || (typeof arg == "string" && !isNaN(Number(arg)))
-                ? `${arg}`
-                : `"${arg.toString().replace(/"/g, '\\"')}"`
-        )
+        .map((arg) => {
+            const stringIsNumber =
+                typeof arg == "string" && !isNaN(Number(arg)) && Number(arg).toString() === arg;
+            const convertToNumber = typeof arg == "number" || stringIsNumber;
+            return convertToNumber ? `${arg}` : `"${arg.toString().replace(/"/g, '\\"')}"`;
+        })
         .join(",")})`;
 }
 
