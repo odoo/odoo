@@ -13,15 +13,7 @@ import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
-function isSyncStatusPending() {
-    return [
-        {
-            trigger:
-                ".pos-topheader .pos-rightheader .status-buttons .oe_status:has(.js_connecting)",
-            run: () => {},
-        },
-    ];
-}
+
 function isSyncStatusConnected() {
     return [
         {
@@ -104,7 +96,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Dialog.confirm(),
             {
                 ...Dialog.confirm(),
-                ...isSyncStatusPending(),
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
