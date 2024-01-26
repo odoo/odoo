@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatCurrency as webFormatCurrency } from "@web/core/currency";
 import {
     formatFloat,
     roundDecimals,
@@ -38,13 +38,8 @@ export const contextualUtilsService = {
             return formatFloat(qty, { digits: [true, productUoMDecimals] });
         };
 
-        const formatStrCurrency = (valueStr, hasSymbol = true) => {
-            return formatCurrency(parseFloat(valueStr), hasSymbol);
-        };
-
         const formatCurrency = (value, hasSymbol = true) => {
-            return formatMonetary(value, {
-                currencyId: res_currency.id,
+            return webFormatCurrency(value, res_currency.id, {
                 noSymbol: !hasSymbol,
             });
         };
@@ -66,7 +61,6 @@ export const contextualUtilsService = {
 
         env.utils = {
             formatCurrency,
-            formatStrCurrency,
             roundCurrency,
             formatProductQty,
             isValidFloat,

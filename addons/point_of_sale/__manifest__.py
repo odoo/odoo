@@ -129,8 +129,7 @@
 
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             ('remove', '/web/static/src/core/dialog/dialog.scss'),
-            # formatMonetary
-            'web/static/src/views/fields/formatters.js',
+            'web/static/src/core/currency.js',
             # barcode scanner
             'barcodes/static/src/barcode_service.js',
             'barcodes/static/src/js/barcode_parser.js',
