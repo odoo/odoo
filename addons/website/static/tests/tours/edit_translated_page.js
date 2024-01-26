@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('edit_translated_page_redirect', {
         trigger: ':iframe main:has([data-for="contactus_form"])',
         run: () => {}, // it's a check
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
     {
         content: "Go to /nl",
         trigger: "body",
@@ -31,5 +31,5 @@ registry.category("web_tour.tours").add('edit_translated_page_redirect', {
         content: "Enter backend",
         trigger: 'a.o_frontend_to_backend_edit_btn',
     },
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
 ]});

@@ -32,15 +32,19 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
         trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="en"]',
     },
     {
+        content: "Open Edit dropdown",
+        trigger: '.o_edit_website_container button',
+    },
+    {
         content: "Enable translation",
-        trigger: '.o_translate_website_container a',
+        trigger: '.o_translate_website_dropdown_item',
     },
     {
         content: "Close the dialog",
         trigger: '.modal-footer .btn-primary',
     },
     ...wTourUtils.clickOnSave(),
-    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
     wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
