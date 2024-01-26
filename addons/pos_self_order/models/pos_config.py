@@ -314,11 +314,15 @@ class PosConfig(models.Model):
             }
         return printerData
 
+    def _get_self_ordering_payment_methods_data(self, payment_methods):
+        excluded_fields = ['image']
+        payment_search_fields = self.current_session_id._load_data_params(self)['pos.payment.method']['fields']
+        filtered_fields = [field for field in payment_search_fields if field not in excluded_fields]
+        return payment_methods.read(filtered_fields)
+
     def _get_self_ordering_data(self):
         self.ensure_one()
-        params = self.current_session_id._load_data_params(self)
-        payment_fields = params['pos.payment.method']['fields']
-        payment_methods = self._get_allowed_payment_methods().read(payment_fields)
+        payment_methods = self._get_self_ordering_payment_methods_data(self._get_allowed_payment_methods())
         default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
 
         return {
