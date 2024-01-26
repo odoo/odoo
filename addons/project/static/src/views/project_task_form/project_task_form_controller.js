@@ -5,8 +5,16 @@ import { DeleteSubtasksConfirmationDialog } from "@project/components/delete_sub
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import HistoryDialog from '@web_editor/components/history_dialog/history_dialog';
+import { useService } from '@web/core/utils/hooks';
+import { markup } from '@odoo/owl';
+import { escape } from '@web/core/utils/strings';
 
 export class ProjectTaskFormController extends FormController {
+    setup() {
+        super.setup();
+        this.notifications = useService("notification");
+    }
+
     /**
      * @override
      */
@@ -41,12 +49,25 @@ export class ProjectTaskFormController extends FormController {
         const versionedFieldName = 'description';
         const historyMetadata = record.data["html_field_history_metadata"]?.[versionedFieldName];
         if (!historyMetadata) {
+            this.notifications.add(
+                escape(_t(
+                    "The task description lacks any past content that could be restored at the moment."
+                ))
+            );
             return;
         }
 
         this.dialogService.add(
             HistoryDialog,
             {
+                title: _t("Task Description History"),
+                noContentHelper: markup(
+                    `<span class='text-muted fst-italic'>${escape(
+                        _t(
+                            "The task description was empty at the time."
+                        )
+                    )}</span>`
+                ),
                 recordId: this.props.resId,
                 recordModel: this.props.resModel,
                 versionedFieldName,
