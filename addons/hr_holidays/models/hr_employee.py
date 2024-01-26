@@ -40,7 +40,7 @@ class HrEmployeeBase(models.AbstractModel):
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count")
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
-    allocation_display = fields.Char(compute='_compute_allocation_count')
+    allocation_display = fields.Char(compute='_compute_allocation_remaining_display')
     allocation_remaining_display = fields.Char(compute='_compute_allocation_remaining_display')
     hr_icon_display = fields.Selection(selection_add=[('presence_holiday_absent', 'On leave'),
                                                       ('presence_holiday_present', 'Present but on leave')])
@@ -97,24 +97,28 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self:
             count, days = rg_results.get(employee.id, (0, 0))
             employee.allocation_count = float_round(days, precision_digits=2)
-            employee.allocation_display = "%g" % employee.allocation_count
             employee.allocations_count = count
 
     def _compute_allocation_remaining_display(self):
+        current_date = date.today()
         allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])
         leaves_taken = self._get_consumed_leaves(allocations.holiday_status_id)[0]
         for employee in self:
             employee_remaining_leaves = 0
+            employee_max_leaves = 0
             for leave_type in leaves_taken[employee]:
                 if leave_type.requires_allocation == 'no':
                     continue
                 for allocation in leaves_taken[employee][leave_type]:
-                    if allocation:
+                    if allocation and allocation.date_from <= current_date\
+                            and (not allocation.date_to or allocation.date_to >= current_date):
                         virtual_remaining_leaves = leaves_taken[employee][leave_type][allocation]['virtual_remaining_leaves']
                         employee_remaining_leaves += virtual_remaining_leaves\
                             if leave_type.request_unit in ['day', 'half_day']\
                             else virtual_remaining_leaves / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                        employee_max_leaves += allocation.number_of_days
             employee.allocation_remaining_display = "%g" % float_round(employee_remaining_leaves, precision_digits=2)
+            employee.allocation_display = "%g" % float_round(employee_max_leaves, precision_digits=2)
 
     def _compute_presence_icon(self):
         super()._compute_presence_icon()
@@ -536,6 +540,7 @@ class HrEmployee(models.Model):
                             to_recheck_leaves_per_leave_type[employee][leave_type]['excess_days'][leave.date_to.date()] = {
                                 'amount': leave_duration,
                                 'is_virtual': leave.state != 'validate',
+                                'leave_id': leave.id,
                             }
                     else:
                         if leave_unit == 'hour':
