@@ -541,12 +541,12 @@
                                         <span invisible="not sent_date"
                                             t-attf-title="Sent on #{record.sent_date.value}" class="d-inline-flex">
                                             <span class="fa fa-paper-plane me-2 small my-auto" aria-label="Sent date"/>
-                                            <span class="align-self-baseline"><field name="sent_date" widget="date"/></span>
+                                            <span class="align-self-baseline"><field name="sent_date"/></span>
                                         </span>
                                         <span invisible="not schedule_date"
                                             t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
                                             <span class="fa fa-hourglass-half me-2 small my-auto" aria-label="Scheduled date"/>
-                                            <span class="align-self-baseline"><field name="schedule_date" widget="date" readonly="state not in ['draft', 'in_queue']"/></span>
+                                            <span class="align-self-baseline"><field name="schedule_date" readonly="state not in ['draft', 'in_queue']"/></span>
                                         </span>
                                         <span invisible="sent_date or schedule_date or state == 'in_queue'"
                                             class="clearfix">
