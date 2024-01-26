@@ -7,6 +7,6 @@ declare module "@spreadsheet" {
   }
 
   export interface OdooSpreadsheetModelConstructor {
-    new (data: object, config: Model["config"]): OdooSpreadsheetModel;
+    new (data: object, config: Partial<Model["config"]>, revisions: object[]): OdooSpreadsheetModel;
   }
 }

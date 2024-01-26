@@ -1,4 +1,5 @@
 /** @odoo-module **/
+// @ts-check
 
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
@@ -12,19 +13,30 @@ const { functionRegistry } = spreadsheet.registries;
 const { CellErrorType } = spreadsheet;
 
 /**
- * @typedef {import("@spreadsheet/pivot/pivot_table.js").SpreadsheetPivotTable} SpreadsheetPivotTable
+ * @typedef {import("./pivot_table").SpreadsheetPivotTable} SpreadsheetPivotTable
+ * @typedef {import("@spreadsheet").CustomFunctionDescription} CustomFunctionDescription
+ * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
  */
 
 //--------------------------------------------------------------------------
 // Spreadsheet functions
 //--------------------------------------------------------------------------
 
+/**
+ * @param {string} pivotId
+ * @param {import("@spreadsheet").OdooGetters} getters
+ */
 function assertPivotsExists(pivotId, getters) {
     if (!getters.isExistingPivot(pivotId)) {
         throw new EvaluationError(sprintf(_t('There is no pivot with id "%s"'), pivotId));
     }
 }
 
+/**
+ * @param {string} pivotId
+ * @param {string} measure
+ * @param {import("@spreadsheet").OdooGetters} getters
+ */
 function assertMeasureExist(pivotId, measure, getters) {
     const { measures } = getters.getPivotDefinition(pivotId);
     if (!measures.includes(measure)) {
@@ -39,23 +51,29 @@ function assertMeasureExist(pivotId, measure, getters) {
     }
 }
 
+/**
+ * @param {(string | number)[]} domain
+ */
 function assertDomainLength(domain) {
     if (domain.length % 2 !== 0) {
         throw new EvaluationError(_t("Function PIVOT takes an even number of arguments."));
     }
 }
 
-const ODOO_FILTER_VALUE = {
+const ODOO_FILTER_VALUE = /** @satisfies {CustomFunctionDescription} */ ({
     description: _t("Return the current value of a spreadsheet filter."),
     args: [arg("filter_name (string)", _t("The label of the filter whose value to return."))],
     category: "Odoo",
+    /**
+     * @param {FPayload} filterName
+     */
     compute: function (filterName) {
         return this.getters.getFilterDisplayValue(filterName.value);
     },
     returns: ["STRING"],
-};
+});
 
-const ODOO_PIVOT = {
+const ODOO_PIVOT = /** @satisfies {CustomFunctionDescription} */ ({
     description: _t("Get the value from a pivot."),
     args: [
         arg("pivot_id (string)", _t("ID of the pivot.")),
@@ -64,24 +82,29 @@ const ODOO_PIVOT = {
         arg("domain_value (string,optional,repeating)", _t("Value.")),
     ],
     category: "Odoo",
+    /**
+     * @param {FPayload} pivotId
+     * @param {FPayload} measureName
+     * @param  {...FPayload} domain
+     */
     compute: function (pivotId, measureName, ...domain) {
-        pivotId = toString(pivotId);
+        const _pivotId = toString(pivotId);
         const measure = toString(measureName);
         const domainArgs = domain.map(toString);
-        assertPivotsExists(pivotId, this.getters);
-        assertMeasureExist(pivotId, measure, this.getters);
+        assertPivotsExists(_pivotId, this.getters);
+        assertMeasureExist(_pivotId, measure, this.getters);
         assertDomainLength(domainArgs);
-        const value = this.getters.getPivotCellValue(pivotId, measure, domainArgs);
+        const value = this.getters.getPivotCellValue(_pivotId, measure, domainArgs);
         if (measure === "__count") {
             return { value, format: "0" };
         }
-        const format = this.getters.getPivotFieldFormat(pivotId, measure);
+        const format = this.getters.getPivotFieldFormat(_pivotId, measure);
         return { value, format };
     },
     returns: ["NUMBER", "STRING"],
-};
+});
 
-const ODOO_PIVOT_HEADER = {
+const ODOO_PIVOT_HEADER = /** @satisfies {CustomFunctionDescription} */ ({
     description: _t("Get the header of a pivot."),
     args: [
         arg("pivot_id (string)", _t("ID of the pivot.")),
@@ -89,26 +112,30 @@ const ODOO_PIVOT_HEADER = {
         arg("domain_value (string,optional,repeating)", _t("Value.")),
     ],
     category: "Odoo",
+    /**
+     * @param {FPayload} pivotId
+     * @param  {...FPayload} domain
+     */
     compute: function (pivotId, ...domain) {
-        pivotId = toString(pivotId);
+        const _pivotId = toString(pivotId);
         const domainArgs = domain.map(toString);
-        assertPivotsExists(pivotId, this.getters);
+        assertPivotsExists(_pivotId, this.getters);
         assertDomainLength(domainArgs);
         const fieldName = domainArgs.at(-2);
         const value = domainArgs.at(-1);
         const format =
             !fieldName || fieldName === "measure" || value === "false"
                 ? undefined
-                : this.getters.getPivotFieldFormat(pivotId, fieldName);
+                : this.getters.getPivotFieldFormat(_pivotId, fieldName);
         return {
-            value: this.getters.computeOdooPivotHeaderValue(pivotId, domainArgs, this.locale),
+            value: this.getters.computeOdooPivotHeaderValue(_pivotId, domainArgs),
             format,
         };
     },
     returns: ["NUMBER", "STRING"],
-};
+});
 
-const ODOO_PIVOT_POSITION = {
+const ODOO_PIVOT_POSITION = /** @satisfies {CustomFunctionDescription} */ ({
     description: _t("Get the absolute ID of an element in the pivot"),
     args: [
         arg("pivot_id (string)", _t("ID of the pivot.")),
@@ -123,9 +150,9 @@ const ODOO_PIVOT_POSITION = {
     },
     returns: ["STRING"],
     hidden: true,
-};
+});
 
-const ODOO_PIVOT_TABLE = {
+const ODOO_PIVOT_TABLE = /** @satisfies {CustomFunctionDescription} */ ({
     description: _t("Get a pivot table."),
     args: [
         arg("pivot_id (string)", _t("ID of the pivot.")),
@@ -139,6 +166,12 @@ const ODOO_PIVOT_TABLE = {
             _t("Whether to include the column titles or not.")
         ),
     ],
+    /**
+     * @param {FPayload} pivotId
+     * @param {FPayload} rowCount
+     * @param {FPayload} includeTotal
+     * @param {FPayload} includeColumnHeaders
+     */
     compute: function (
         pivotId,
         rowCount = { value: 10000 },
@@ -153,7 +186,7 @@ const ODOO_PIVOT_TABLE = {
         const cells = table.getPivotCells(toBoolean(includeTotal), _includeColumnHeaders);
         const headerRows = _includeColumnHeaders ? table.getNumberOfHeaderRows() : 0;
         const pivotTitle = this.getters.getPivotDisplayName(_pivotId);
-        const _rowCount = toNumber(rowCount);
+        const _rowCount = toNumber(rowCount, this.locale);
         if (_rowCount < 0) {
             throw new EvaluationError(_t("The number of rows must be positive."));
         }
@@ -178,7 +211,7 @@ const ODOO_PIVOT_TABLE = {
     },
     category: "Odoo",
     returns: ["RANGE<ANY>"],
-};
+});
 
 function getPivotCellValueAndFormat(pivotId, pivotCell) {
     if (!pivotCell.domain) {

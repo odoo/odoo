@@ -1,4 +1,6 @@
 /** @odoo-module */
+// @ts-check
+
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
@@ -11,7 +13,7 @@ const { toCartesian, UuidGenerator, createEmptySheet } = helpers;
 const uuidGenerator = new UuidGenerator();
 
 /**
- * @typedef {import("@spreadsheet/@types/model").OdooSpreadsheetModel} OdooSpreadsheetModel
+ * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  */
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
@@ -50,7 +52,7 @@ export async function waitForDataLoaded(model) {
 
 /**
  * @param {OdooSpreadsheetModel} model
- * @returns {object}
+ * @returns {Promise<object>}
  */
 export async function freezeOdooData(model) {
     await waitForDataLoaded(model);
@@ -198,7 +200,11 @@ function odooChartToImage(model, figure) {
     canvas.setAttribute("height", figure.height);
     // we have to add the canvas to the DOM otherwise it won't be rendered
     document.body.append(div);
+    if (!("chartJsConfig" in runtime)) {
+        return "";
+    }
     runtime.chartJsConfig.plugins = [backgroundColorPlugin];
+    // @ts-ignore
     const chart = new Chart(canvas, runtime.chartJsConfig);
     const img = chart.toBase64Image();
     chart.destroy();

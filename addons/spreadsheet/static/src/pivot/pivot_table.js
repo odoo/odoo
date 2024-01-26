@@ -1,4 +1,6 @@
 /** @odoo-module */
+// @ts-check
+
 import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpers/constants";
 
 /**
@@ -11,7 +13,7 @@ import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpe
  * @typedef {Object} Row
  * @property {string[]} fields
  * @property {string[]} values
- * @property {number} intend
+ * @property {number} indent
  *
  * @typedef {Object} PivotCell
  * @property {boolean} isHeader

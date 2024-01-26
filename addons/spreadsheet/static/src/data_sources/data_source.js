@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc";

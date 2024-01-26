@@ -17,7 +17,7 @@ const { DateTime } = luxon;
 /**
  * @typedef {import("./pivot_core_plugin").PivotDefinition} PivotDefinition
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
- * @typedef {import("@spreadsheet/helpers/odoo_functions_helpers").Token} Token
+ * @typedef {import("@odoo/o-spreadsheet").Token} Token
  */
 
 /**
@@ -342,6 +342,11 @@ export class PivotUIPlugin extends OdooUIPlugin {
         return formatValue(value, { format, locale });
     }
 
+    /**
+     * @param {string} pivotId
+     * @param {string} fieldName
+     * @returns {string | undefined}
+     */
     getPivotFieldFormat(pivotId, fieldName) {
         const dataSource = this.getPivotDataSource(pivotId);
         const { field, aggregateOperator } = dataSource.parseGroupField(fieldName);
