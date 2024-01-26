@@ -557,6 +557,20 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(getCellValue(model, "E4"), 95);
     });
 
+    QUnit.test("__count measure", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="__count" type="measure"/>
+                </pivot>`,
+        });
+        setCellContent(model, "F10", '=ODOO.PIVOT(1, "__count")');
+        const F10 = getEvaluatedCell(model, "F10");
+        assert.strictEqual(F10.value, 4);
+        assert.strictEqual(F10.format, "0");
+    });
+
     QUnit.test("can import/export sorted pivot", async (assert) => {
         const spreadsheetData = {
             pivots: {
