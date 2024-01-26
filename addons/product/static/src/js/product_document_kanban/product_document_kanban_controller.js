@@ -26,13 +26,15 @@ export class ProductDocumentKanbanController extends KanbanController {
             "/product/document/upload",
             ev.target.files,
             {
-                buildFormData: (formData) => {
-                    formData.append("res_model", this.props.context.active_model);
-                    formData.append("res_id", this.props.context.active_id);
-                },
+                buildFormData: (formData) => this.buildFormData(formData)
             },
         );
         // Reset the file input's value so that the same file may be uploaded twice.
         ev.target.value = "";
+    }
+
+    buildFormData(formData) {
+        formData.append("res_model", this.props.context.default_res_model);
+        formData.append("res_id", this.props.context.default_res_id);
     }
 }

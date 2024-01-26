@@ -1911,8 +1911,8 @@ class SaleOrder(models.Model):
     def _filter_product_documents(self, documents):
         return documents.filtered(
             lambda document:
-                document.attached_on == 'quotation'
-                or (self.state == 'sale' and document.attached_on == 'sale_order')
+                document.attached_on_sale == 'quotation'
+                or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
         )
 
     def _update_order_line_info(self, product_id, quantity, **kwargs):

@@ -33,7 +33,7 @@
         <field name="model">product.document</field>
         <field name="inherit_id" ref="sale.product_document_list"/>
         <field name="arch" type="xml">
-            <field name="attached_on" position="after">
+            <field name="attached_on_sale" position="after">
                 <field name="shown_on_product_page" invisible="res_model == 'product.product'"/>
             </field>
         </field>
