@@ -76,4 +76,3 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(D.application_count, 3) # A, B, C
         self.assertEqual(E.application_count, 0) # Should not match with G
         self.assertEqual(F.application_count, 1) # B
-
