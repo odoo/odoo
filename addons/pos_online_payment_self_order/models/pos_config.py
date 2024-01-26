@@ -18,8 +18,7 @@ class PosConfig(models.Model):
 
     def _get_self_ordering_data(self):
         res = super()._get_self_ordering_data()
-        payment_search_params = self.current_session_id._loader_params_pos_payment_method()
-        payment_methods = self.self_order_online_payment_method_id.read(payment_search_params['search_params']['fields'])
+        payment_methods = self._get_self_ordering_payment_methods_data(self.self_order_online_payment_method_id)
         res['pos_payment_methods'] += payment_methods
         return res
 
