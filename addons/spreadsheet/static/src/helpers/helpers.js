@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 /**
  * Get the intersection of two arrays
@@ -18,7 +19,7 @@ export function intersect(a, b) {
  * in this object
  * If the object has no keys, return 0
  *
- * @param {Object} o an object for which the keys are an ID
+ * @param {object} o an object for which the keys are an ID
  *
  * @returns {number}
  */
@@ -51,6 +52,9 @@ export function sum(array) {
     return array.reduce((acc, n) => acc + n, 0);
 }
 
+/**
+ * @param {string} word
+ */
 function camelToSnakeKey(word) {
     const result = word.replace(/(.){1}([A-Z])/g, "$1 $2");
     return result.split(" ").join("_").toLowerCase();
@@ -90,6 +94,9 @@ export function isEmpty(item) {
     return false;
 }
 
+/**
+ * @param {import("@odoo/o-spreadsheet").Cell} cell
+ */
 export function containsReferences(cell) {
     if (!cell.isFormula) {
         return false;

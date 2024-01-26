@@ -77,7 +77,7 @@ export class CurrencyPlugin extends OdooUIPlugin {
 
     /**
      * Returns the default display format of a the company currency
-     * @param {number|undefined} companyId
+     * @param {number} [companyId]
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {

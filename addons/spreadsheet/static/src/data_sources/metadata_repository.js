@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
@@ -125,7 +126,9 @@ export class MetadataRepository extends EventBus {
             if (isLoadingError(e)) {
                 throw e;
             }
-            throw new EvaluationError(sprintf(_t("Unable to fetch the label of %s of model %s"), id, model));
+            throw new EvaluationError(
+                sprintf(_t("Unable to fetch the label of %s of model %s"), id, model)
+            );
         }
     }
 }

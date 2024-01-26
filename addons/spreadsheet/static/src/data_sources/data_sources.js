@@ -1,4 +1,5 @@
 /** @odoo-module */
+// @ts-check
 
 import { LoadableDataSource } from "./data_source";
 import { MetadataRepository } from "./metadata_repository";
@@ -8,8 +9,10 @@ import { EventBus } from "@odoo/owl";
 /** *
  * @typedef {object} DataSourceServices
  * @property {MetadataRepository} metadataRepository
- * @property {import("@web/core/orm_service")} orm
+ * @property {import("@web/core/orm_service").ORM} orm
  * @property {() => void} notify
+ * @property {(promise: Promise) => void} notifyWhenPromiseResolves
+ * @property {(promise: Promise) => void} cancelPromise
  *
  * @typedef {new (services: DataSourceServices, params: object) => any} DataSourceConstructor
  */

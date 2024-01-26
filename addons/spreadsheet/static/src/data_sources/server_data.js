@@ -1,4 +1,6 @@
 /** @odoo-module */
+// @ts-check
+
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { LoadingDataError, isLoadingError } from "../o_spreadsheet/errors";
 
@@ -139,7 +141,12 @@ export class ServerData {
             this.orm
                 .call(resModel, method, args)
                 .then((result) => (this.cache[request.key] = result))
-                .catch((error) => (this.cache[request.key] = new EvaluationError(error.data?.message || error.message)))
+                .catch(
+                    (error) =>
+                        (this.cache[request.key] = new EvaluationError(
+                            error.data?.message || error.message
+                        ))
+                )
                 .finally(() => this.dataFetchedCallback());
             throw error;
         }
@@ -178,7 +185,7 @@ export class ServerData {
      */
     _getOrThrowCachedResponse(request) {
         const data = this.cache[request.key];
-        if (data instanceof Error || isLoadingError(data)) {
+        if (data instanceof Error || isLoadingError({ value: data })) {
             throw data;
         }
         return data;
@@ -208,11 +215,12 @@ export class ServerData {
         return new BatchEndpoint(this.orm, resModel, method, {
             whenDataIsFetched: () => this.dataFetchedCallback(),
             successCallback: (request, result) => {
-                this.cache[request.key] = result
+                this.cache[request.key] = result;
             },
-            failureCallback: (request, error) => (
-                this.cache[request.key] = new EvaluationError(error.data?.message || error.message)
-            ),
+            failureCallback: (request, error) =>
+                (this.cache[request.key] = new EvaluationError(
+                    error.data?.message || error.message
+                )),
         });
     }
 }

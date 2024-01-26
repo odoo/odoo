@@ -1,5 +1,5 @@
 /** @odoo-module */
-//@ts-check
+// @ts-check
 /**
  *
  * @typedef {import("@spreadsheet").PivotDefinition} PivotDefinition
@@ -211,7 +211,7 @@ export class PivotCorePlugin extends OdooCorePlugin {
     /**
      * Check if an id is an id of an existing pivot
      *
-     * @param {number} pivotId Id of the pivot
+     * @param {number | string} pivotId Id of the pivot
      *
      * @returns {boolean}
      */

@@ -1,9 +1,11 @@
 /** @odoo-module */
+// @ts-check
+
 import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
- * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @param {import("@spreadsheet").SpreadsheetChildEnv} env
  * @returns {Promise<void>}
  */
 export const SEE_RECORDS_PIVOT = async (position, env) => {
@@ -30,7 +32,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
- * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @param {import("@spreadsheet").SpreadsheetChildEnv} env
  * @returns {boolean}
  */
 export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {

@@ -1,8 +1,9 @@
 /** @odoo-module */
+// @ts-check
 
 import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
 
-/** @typedef {import("@spreadsheet/helpers/odoo_functions_helpers").Token} Token */
+/** @typedef {import("@odoo/o-spreadsheet").Token} Token */
 
 /**
  * Parse a spreadsheet formula and detect the number of LIST functions that are

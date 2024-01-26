@@ -1,17 +1,18 @@
 /** @odoo-module */
+// @ts-check
 
 import { astToFormula } from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
- * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @param {import("@spreadsheet").SpreadsheetChildEnv} env
  * @returns {Promise<void>}
  */
 export const SEE_RECORD_LIST = async (position, env) => {
     const cell = env.model.getters.getCell(position);
     const sheetId = position.sheetId;
-    if (!cell) {
+    if (!cell || !cell.isFormula) {
         return;
     }
     const { args } = getFirstListFunction(cell.compiledFormula.tokens);
@@ -21,7 +22,11 @@ export const SEE_RECORD_LIST = async (position, env) => {
     const listId = env.model.getters.getListIdFromPosition(position);
     const { model } = env.model.getters.getListDefinition(listId);
     const dataSource = await env.model.getters.getAsyncListDataSource(listId);
-    const recordId = dataSource.getIdFromPosition(evaluatedArgs[1] - 1);
+    const index = evaluatedArgs[1];
+    if (typeof index !== "number") {
+        return;
+    }
+    const recordId = dataSource.getIdFromPosition(index - 1);
     if (!recordId) {
         return;
     }
@@ -36,7 +41,7 @@ export const SEE_RECORD_LIST = async (position, env) => {
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
- * @param {import("@spreadsheet").OdooSpreadsheetEnv} env
+ * @param {import("@spreadsheet").SpreadsheetChildEnv} env
  * @returns {boolean}
  */
 export const SEE_RECORD_LIST_VISIBLE = (position, env) => {

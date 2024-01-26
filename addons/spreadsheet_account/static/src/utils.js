@@ -1,8 +1,10 @@
 /** @odoo-module **/
+// @ts-check
+
 import { getOdooFunctions } from "@spreadsheet/helpers/odoo_functions_helpers";
 
 /**
- * @typedef {import("@spreadsheet/helpers/odoo_functions_helpers").Token} Token
+ * @typedef {import("@odoo/o-spreadsheet").Token} Token
  * @typedef  {import("@spreadsheet/helpers/odoo_functions_helpers").OdooFunctionDescription} OdooFunctionDescription
  */
 
