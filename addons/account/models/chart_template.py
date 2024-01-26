@@ -426,7 +426,8 @@ class AccountChartTemplate(models.AbstractModel):
                     or (field.type in ('integer', 'many2one_reference') and not value.isdigit())
                 ):
                     try:
-                        values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
+                        record = self.ref(value, not self.env.company.parent_id)
+                        values[fname] = record.id if record and value not in ('', 'False', 'None') else False
                     except ValueError as e:
                         _logger.warning("Failed when trying to recover %s for field=%s", value, field)
                         raise e
