@@ -40,7 +40,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
         "isExistingPivot",
         "getPivotFieldMatch",
         "getPivotFieldMatching",
-        "getPivotModelDefinition",
     ]);
     constructor(config) {
         super(config);
@@ -198,30 +197,6 @@ export class PivotCorePlugin extends OdooCorePlugin {
      */
     getPivotDefinition(id) {
         return deepCopy(this.pivots[id].definition);
-    }
-
-    /**
-     * @param {string} id
-     * @returns {PivotRuntime}
-     */
-    getPivotModelDefinition(id) {
-        const definition = this.getPivotDefinition(id);
-        return {
-            metaData: {
-                colGroupBys: definition.colGroupBys,
-                rowGroupBys: definition.rowGroupBys,
-                activeMeasures: definition.measures,
-                resModel: definition.model,
-                sortedColumn: definition.sortedColumn,
-            },
-            searchParams: {
-                groupBy: [],
-                orderBy: [],
-                domain: definition.domain,
-                context: definition.context,
-            },
-            name: definition.name,
-        };
     }
 
     /**
