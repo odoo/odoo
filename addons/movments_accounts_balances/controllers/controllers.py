@@ -130,16 +130,7 @@ class AccountBalance(models.Model):
         })
         bill.action_post()
 
-        return {
-            'Bill Number': bill.id,
-            'Name': bill.name,
-            'Bill Date': bill.invoice_date,
-            'Bill Due Date': bill.invoice_date_due,
-            'Supplier': bill.partner_id.name,
-            'Amount': bill.amount_total,
-            'State': bill.payment_state,
-            # 'selected_account_id': selected_account_id,  # Uncomment if used in your context
-        }
+        return bill
 
     @api.model
     def get_bill(self, bill_id):
