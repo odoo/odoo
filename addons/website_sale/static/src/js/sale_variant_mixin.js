@@ -79,7 +79,7 @@ var VariantMixin = {
                     'context': this.context,
                     ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
-                    this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
+                    VariantMixin._onChangeCombination.call(this, ev, $currentOptionalProduct, combinationData);
                     this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
                 });
             }
@@ -98,7 +98,7 @@ var VariantMixin = {
             'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
-            this._onChangeCombination(ev, $parent, combinationData);
+            VariantMixin._onChangeCombination.call(this, ev, $parent, combinationData);
             this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
     },
