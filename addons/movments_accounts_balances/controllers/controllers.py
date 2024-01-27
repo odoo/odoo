@@ -106,7 +106,7 @@ class AccountBalance(models.Model):
         analytic_line_vals = []
         if analytic_account_id:
             analytic_line_vals.append((0, 0, {
-                'account_id': account_id,
+                'account_id': analytic_account_id,
                 'name': description,
             }))
 
