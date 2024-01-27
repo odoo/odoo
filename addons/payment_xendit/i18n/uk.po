@@ -1,0 +1,96 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_xendit
+# 
+# Translators:
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-08 13:49+0000\n"
+"PO-Revision-Date: 2024-01-23 08:23+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occurred during the processing of your payment (status %s). Please "
+"try again."
+msgstr ""
+"Під час обробки вашого платежу сталася помилка (статус %s). Спробуйте знову."
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
+msgid "Code"
+msgstr "Код"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Не вдалося встановити з’єднання з API."
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Не знайдено жодної транзакції, що відповідає референсу %s."
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_provider
+msgid "Payment Provider"
+msgstr "Провайдер платежу"
+
+#. module: payment_xendit
+#: model:ir.model,name:payment_xendit.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Платіжна операція"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference."
+msgstr "Дані отримані без референса."
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_secret_key
+msgid "Secret Key"
+msgstr "Секретний ключ"
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
+msgid ""
+"The communication with the API failed. Xendit gave us the following "
+"information: '%s'"
+msgstr ""
+
+#. module: payment_xendit
+#: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Технічний код цього провайдера платежу."
+
+#. module: payment_xendit
+#: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_webhook_token
+msgid "Webhook Token"
+msgstr ""
+
+#. module: payment_xendit
+#: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
+msgid "Xendit"
+msgstr ""

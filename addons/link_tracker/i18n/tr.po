@@ -8,13 +8,13 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2023
-# Ediz Duman <neps1192@gmail.com>, 2023
 # Halil, 2023
+# Umur Akın <umura@projetgrup.com>, 2023
 # Murat Durmuş <muratd@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
-# Umur Akın <umura@projetgrup.com>, 2023
 # Erdem Keskin <erdemkeskines@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Ediz Duman <neps1192@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,11 +33,14 @@ msgstr ""
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
-msgid "<span class=\"o_stat_text\">Visit Page</span>"
+#: code:addons/link_tracker/models/link_tracker.py:0
+#: code:addons/link_tracker/models/link_tracker.py:0
+#, python-format
+msgid "%r is not a valid link, links cannot redirect to the current page."
 msgstr ""
 
 #. module: link_tracker
@@ -48,7 +51,7 @@ msgstr "Mutlak URL"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
 msgid "Button label"
-msgstr "Buton etiketi"
+msgstr "Buton Etiketi"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
@@ -335,20 +338,20 @@ msgstr "UTM"
 #: model:ir.model,name:link_tracker.model_utm_campaign
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__campaign_id
 msgid "UTM Campaign"
-msgstr "UTM kampanyası"
+msgstr "UTM Kampanyası"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Visit Page"
-msgstr "Sayfayı Ziyaret Et"
+msgstr "Sayfa Ziyareti"
 
 #. module: link_tracker
 #. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage"
-msgstr "Web Sayfasını Ziyaret Et"
+msgstr "Web Sayfasını Ziyareti"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form

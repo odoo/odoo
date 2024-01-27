@@ -5,7 +5,7 @@
 # Translators:
 # Michael Hofer, 2023
 # Wil Odoo, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +66,17 @@ msgstr ""
 "<span>\n"
 "                                    Ich möchte meine Peppol-Verbindung in Odoo migrieren (optional):\n"
 "                                </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Peppol service, please "
+"deregister from that service, or request a migration key before trying "
+"again."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -201,7 +212,7 @@ msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
-"Code zur Identifizierung des Endpoint für BIS Billing 3.0 und seine Ableitungen.\n"
+"Code zur Identifizierung des Endpunkts für BIS Billing 3.0 und seine Ableitungen.\n"
 "              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_peppol
@@ -220,6 +231,13 @@ msgstr "Konfigurationseinstellungen "
 #, python-format
 msgid "Confirm"
 msgstr "Bestätigen"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Connection error, please try again later."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_partner
@@ -765,8 +783,29 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
+msgid "The verification code is not correct"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
 msgid "The verification code should contain six digits."
 msgstr "Der Verifizierungscode sollte 6 Zahlen enthalten."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "This verification code has expired. Please request a new one."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -895,3 +934,8 @@ msgstr "Ihr Bestätigungscode lautet"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Ihr Migrationsschlüssel lautet:"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your registration should be activated within a day."
+msgstr ""

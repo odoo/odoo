@@ -3,15 +3,15 @@
 # 	* sale_stock
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-15 10:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Awaiting arrival</b>"
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
 msgstr ""
 
 #. module: sale_stock
@@ -40,8 +40,8 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr "<i class=\"fa fa-fw fa-times\"/><b>Anulowane</b>"
+msgid "<i class=\"fa fa-fw fa-times\"/> Cancelled"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -50,7 +50,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Received</b>"
+msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
 msgstr ""
 
 #. module: sale_stock
@@ -62,8 +62,8 @@ msgstr "<span class=\"o_stat_text\">Sprzedaż</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                    <i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>\n"
-"                                </span>"
+"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                    </span>"
 msgstr ""
 
 #. module: sale_stock
@@ -83,11 +83,6 @@ msgstr "<strong>Odnośnik klienta:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<strong>Returns</strong>"
 msgstr ""
 
 #. module: sale_stock
@@ -190,7 +185,6 @@ msgstr "Alert dostawy"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Delivery Orders"
 msgstr "Wydania"
 
@@ -366,6 +360,11 @@ msgid "Journal Item"
 msgstr "Pozycja zapisu"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Last Delivery Orders"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
 msgstr "Czas dostawy"
@@ -510,6 +509,11 @@ msgstr "Uzupełnianie na zamówienie (MTO)"
 #, python-format
 msgid "Reserved"
 msgstr "Zarezerwowane"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Returns"
+msgstr "Zwroty"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -664,9 +668,7 @@ msgstr ""
 "Prawdopodobnie powinieneś zaktualizować partnera na tym dokumencie."
 
 #. module: sale_stock
-#. odoo-python
 #. odoo-javascript
-#: code:addons/sale_stock/models/sale_order_line.py:0
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
@@ -675,6 +677,15 @@ msgid ""
 msgstr ""
 "Zamówiona ilość nie może zostać zmniejszona poniżej ilości już dostarczonej."
 " Zamiast tego, utwórz zwrot w swoim magazynie."
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
+msgstr ""
 
 #. module: sale_stock
 #. odoo-javascript

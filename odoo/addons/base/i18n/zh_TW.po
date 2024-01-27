@@ -3286,6 +3286,8 @@ msgid ""
 "\n"
 "Bridge module to add a new payment term - Days end of month on the\n"
 msgstr ""
+"\n"
+"橋接模組，以加入新的付款條款 - (x天在月底, 在x)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
@@ -5328,6 +5330,8 @@ msgid ""
 "\n"
 "Generates a new website in Odoo, with the goal of recreating an external website as close as possible.\n"
 msgstr ""
+"\n"
+"在 Odoo 中生成一個新網站，目的是盡可能接近地重新創建一個外部網站。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -5564,6 +5568,29 @@ msgid ""
 "print the amount in words (special Chinese characters for numbers)\n"
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 msgstr ""
+"\n"
+"包括以下中文本地化數據\n"
+"========================================================\n"
+"\n"
+"賬戶類型\n"
+"\n"
+"省份數據\n"
+"\n"
+"    科目/賬戶類型 / 會計科目表/賬目總表範本 / 增值稅 / 輔助核算類別 / 管理會計憑證簿 / 財務會計憑證簿\n"
+"\n"
+"    加入中文省份數據\n"
+"\n"
+"    增加小企業會計科目表\n"
+"\n"
+"    修改小企業會計科目表\n"
+"\n"
+"    修改小企業會計稅率\n"
+"\n"
+"    增加大企業會計科目表\n"
+"\n"
+"我們新增了列印憑證的選項，\n"
+"若有安裝 cn2an 程式庫，該選項會\n"
+"列印正確的文字金額（記數的特殊中文字）。（例如使用 pip3 安裝 cn2an）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -5575,6 +5602,12 @@ msgid ""
 "City Data/城市数据\n"
 "\n"
 msgstr ""
+"\n"
+"包括以下中文本地化數據\n"
+"========================================================\n"
+"\n"
+"城市數據\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi
@@ -6665,6 +6698,11 @@ msgid ""
 "SAF-T files are the standard accounting reports that businesses in some countries have to submit to the tax authorities.\n"
 "This module allows the import of accounts, journals, partners, taxes and moves from these files.\n"
 msgstr ""
+"\n"
+"匯入 SAF-T 文件的模組，用於匯入會計歷史記錄。\n"
+"\n"
+"SAF-T 文件是某些國家/地區的企業必須向稅務機關提交的標準會計報告。\n"
+"該模組允許從這些文件中匯入賬目、日記賬、合作夥伴、稅收和分錄。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -11315,6 +11353,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ and\n"
 "https://razorpay.com/docs/payments/payments/test-upi-details/ for the list of test payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## 實施細節\n"
+"\n"
+"### 支援功能\n"
+"\n"
+"- 直接支付流程\n"
+"- 代幣化\n"
+"- 手動捕獲\n"
+"- 部份退款\n"
+"- 多種支付方式，如扣賬卡/信用卡、網銀、UPI 等。(https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"### API 和網關\n"
+"\n"
+"我們選擇整合\n"
+"[Razorpay Recurring Payments](https://razorpay.com/docs/api/payments/recurring-payments/)，處理起來較\n"
+"[Razorpay Hosted Checkout] 更加複雜，(https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted)\n"
+"因為它可以作為直接支付流使用，支持代幣化。其他網關已被排除；有關其他網關的詳細資料，請參閱原始任務的開發說明。\n"
+"\n"
+"本模組實現的 API 版本為 v1。\n"
+"\n"
+"## 模組歷史\n"
+"\n"
+"- 模組的第一個版本在任務中指定\n"
+"  [2800823](https://www.odoo.com/web#id=2800823&model=project.task) 並與 `saas-15.5` 中的PR\n"
+"  odoo/odoo#92848 合併。\n"
+"- 在 `17.0` 中，API 已更改為循環支付 API，以支持 PR odoo/odoo#143525 中的標記化。\n"
+"\n"
+"## 測試說明\n"
+"\n"
+"- 合作夥伴的電話號碼必須是有效的印度電話號碼. 例如 +911234567890\n"
+"- 合作夥伴的國家必須是印度，支付貨幣必須是印度盧比（INR），以支援印度的支付方式。\n"
+"\n"
+"請參閱 https://razorpay.com/docs/payments/payments/test-card-upi-details/ 及\n"
+"https://razorpay.com/docs/payments/payments/test-upi-details/ 了解測試 和付款詳情.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -13840,7 +13914,7 @@ msgstr "允許連結課程論壇"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
 msgid "Allows to register withholdings during the payment of an invoice."
-msgstr ""
+msgstr "允許在支付發票時登記預扣款項。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sms
@@ -14202,7 +14276,7 @@ msgstr "Arch 檔案名稱"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
 msgid "Arch To Compare To"
-msgstr ""
+msgstr "要比較的架構"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -15295,7 +15369,7 @@ msgstr "使用租賃應用程式橋接符號功能"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_website_sale
 msgid "Bridge Website Sale for Brazil"
-msgstr ""
+msgstr "巴西橋接網站銷售"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_crm
@@ -17457,7 +17531,7 @@ msgstr "列印金額時使用的貨幣符號。"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Current Arch"
-msgstr ""
+msgstr "當前架構"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
@@ -17643,7 +17717,7 @@ msgstr "DLE 26 110 x 220 公厘"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
-msgstr ""
+msgstr "Dash"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -18296,7 +18370,7 @@ msgstr "在相關文件上顯示一個選擇來列印這個報表"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_pricer
 msgid "Display and change your products information on electronic Pricer tags"
-msgstr "在電子價錢標籤顯示及更改產品資料"
+msgstr "利用 Pricer 電子價錢牌，顯示及變更產品資料"
 
 #. module: base
 #. odoo-python
@@ -22478,6 +22552,9 @@ msgid ""
 "\n"
 " %(e)s"
 msgstr ""
+"無效上下文：%(expr)r 不是有效的 Python 表達式\n"
+"\n"
+" %(e)s"
 
 #. module: base
 #. odoo-python
@@ -28502,7 +28579,7 @@ msgstr "POS PayTM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_pricer
 msgid "POS Pricer"
-msgstr "POS 價錢顯示器"
+msgstr "POS Pricer 價錢顯示器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_adyen
@@ -29378,7 +29455,7 @@ msgstr "預覽pdf src"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Previous Arch"
-msgstr ""
+msgstr "上一個架構"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
@@ -30199,7 +30276,7 @@ msgstr "QWeb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_time
 msgid "QWeb Field Time"
-msgstr ""
+msgstr "QWeb FieldTime"
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -34715,7 +34792,7 @@ msgid ""
 "This is the legacy integration with UPS that is no longer supported."
 "         Please install the new \"UPS Shipping\" module and uninstall this "
 "one as soon as possible. This integration will stop working in 2024."
-msgstr ""
+msgstr "這是與 UPS 的舊有整合，已不再支持。 請安裝新的 \"UPS 送貨\" 模組，並盡快解除安裝此模組。該整合將於 2024 年停止工作。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -37479,7 +37556,7 @@ msgstr ""
 msgid ""
 "You cannot archive the language in which Odoo was setup as it is used by "
 "automated processes."
-msgstr ""
+msgstr "您不能將設置 Odoo 時使用的語言存檔，因為自動程序會使用該語言."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -38221,7 +38298,7 @@ msgstr "properties_definition"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "read"
-msgstr ""
+msgstr "讀取"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__resource_ref

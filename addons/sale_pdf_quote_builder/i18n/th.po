@@ -30,6 +30,12 @@ msgstr ""
 " 'สั่งซื้อ - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
@@ -76,6 +82,11 @@ msgstr "ส่วนหัวของหน้า"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "ใบเสนอราคาภายใน"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -129,12 +140,9 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
-"จัดเตรียมส่วนหัวและส่วนท้ายของหน้า เพื่อจัดทำใบเสนอราคาที่น่าสนใจ\n"
-"                            พร้อมข้อมูลเพิ่มเติมเกี่ยวกับบริษัท ผลิตภัณฑ์ และบริการของคุณ\n"
-"                            ใบเสนอราคาของคุณในรูปแบบ PDF จะถูกสร้างขึ้นโดยการรวบรวมส่วนหัวของหน้าเข้าด้วยกัน\n"
-"                            รายละเอียดสินค้า รายละเอียดของใบเสนอราคา และส่วนท้ายของหน้า"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

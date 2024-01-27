@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2023
-# Sanne Kristensen <sanne@vkdata.dk>, 2023
 # Mads Søndergaard, 2023
-# Martin Trigaux, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,7 +166,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -456,6 +456,7 @@ msgid "Consumers"
 msgstr "Forbrugere"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Countries"
 msgstr "Lande"
@@ -483,6 +484,7 @@ msgstr "Oprettet den"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+#: model_terms:ir.ui.view,arch_db:website_event.event_time
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Date"
 msgstr "Dato"
@@ -495,12 +497,12 @@ msgstr "Dato &amp; tid"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
 msgid "Date (new to old)"
-msgstr ""
+msgstr "Dato (ny til gammel)"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
 msgid "Date (old to new)"
-msgstr ""
+msgstr "Dato (gammel til ny)"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -704,6 +706,16 @@ msgstr "Udløbet"
 #: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Extra Register Button"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Filter by Country"
+msgstr "Filtrer efter land"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_time
+msgid "Filter by Date"
 msgstr ""
 
 #. module: website_event
@@ -1005,6 +1017,11 @@ msgid "Once per Order"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Online Events"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
@@ -1091,7 +1108,7 @@ msgstr "Spørgsmål"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Quotes"
-msgstr ""
+msgstr "Citater"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_1_question_0_answer_2

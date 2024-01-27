@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-15 10:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -735,23 +735,23 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Autorisiert</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/><b>Bezahlt</b>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warten auf Zahlung</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Abgelaufen"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -800,11 +800,6 @@ msgstr "<small class=\"text-muted\">Ihr Kontakt</small>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Ihr Vorteil</b></small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small><b>This offer expires on</b></small>"
-msgstr "<small><b>Dieses Angebot läuft ab am</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -893,8 +888,8 @@ msgstr "<span>Steuern</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
-msgid "<span>Visible at</span>"
-msgstr "<span>Sichtbar bei</span>"
+msgid "<span>Visibility</span>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1173,6 +1168,12 @@ msgid ""
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
+"Ermöglicht es Ihnen, das Dokument mit Ihren Kunden im Rahmen eines Verkaufs zu teilen.\n"
+"Lassen Sie das Feld leer, wenn Sie dieses Dokument nicht mit dem Kunden teilen möchten.\n"
+"Angebot: Das Dokument wird an Kunden gesendet und ist für diese jederzeit zugänglich.\n"
+"Diese Option kann z. B. nützlich sein, um Produktbeschreibungsdateien weiterzugeben.\n"
+"Bestätigter Auftrag: Das Dokument wird an den Kunden gesendet und ist für ihn zugänglich.\n"
+"Diese Option kann z. B. nützlich sein, um Benutzerhandbücher oder digitale Inhalte, die im E-Commerce gekauft wurden, weiterzugeben."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2006,6 +2007,8 @@ msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines."
 msgstr ""
+"Lieferdatum, das Sie dem Kunden zusagen können, berechnet aus der "
+"Mindestvorlaufzeit der Auftragszeilen."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2692,7 +2695,6 @@ msgstr "Diesen Monat abgerechnet"
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Rechnungen"
@@ -2814,6 +2816,11 @@ msgstr "Buchungszeile"
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
 msgid "Language"
 msgstr "Sprache"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Last Invoices"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3831,7 +3838,6 @@ msgstr "Angebotsdatum"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quotation Date:"
 msgstr "Angebotsdatum:"
 

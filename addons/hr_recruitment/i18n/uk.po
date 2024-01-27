@@ -100,6 +100,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-danger float-end me-4\" invisible=\"application_status != 'refused'\">Refused</span>\n"
 "                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"application_status != 'archived'\">Archived</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" invisible=\"application_status != 'refused'\">Відхилено</span>\n"
+"                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"application_status != 'archived'\">Заархівовано</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -119,7 +121,7 @@ msgstr "<span class=\"text-bg-success\">Найнято</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span invisible=\"address_id\" class=\"oe_read_only\">Remote</span>"
-msgstr ""
+msgstr "<span invisible=\"address_id\" class=\"oe_read_only\">Віддалено</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -132,16 +134,23 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"not is_warning_visible\">\n"
+"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    Усі заявки втратять дату прийняття на роботу та статус найму.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_expected_extra\"> + </span>"
-msgstr ""
+msgstr "<span invisible=\"not salary_expected_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_proposed_extra\"> + </span>"
-msgstr ""
+msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -774,7 +783,7 @@ msgstr "Ступінь кандидата"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_emails
 msgid "Applicant Emails"
-msgstr ""
+msgstr "Електронні адреси заявників"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -785,7 +794,7 @@ msgstr "Заявник найманий"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
 msgid "Applicant Properties"
-msgstr ""
+msgstr "Властивості заявника"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -1296,7 +1305,7 @@ msgstr "Оцифруйте ваше CV щоби витягнути з нього
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Directly Available"
-msgstr ""
+msgstr "Безпосередньо доступний"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1636,7 +1645,7 @@ msgstr "Етап найму"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Hiring Date"
-msgstr ""
+msgstr "Дата найму"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -2693,7 +2702,7 @@ msgstr "Запропонована зарплата організацією, д
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile_sanitized
 msgid "Sanitized Mobile Number"
-msgstr ""
+msgstr "Оброблений мобільний номер"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -2703,7 +2712,7 @@ msgstr "Очищений номер"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone_sanitized
 msgid "Sanitized Phone Number"
-msgstr ""
+msgstr "Оброблений номер телефону"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2738,6 +2747,8 @@ msgid ""
 "Select the location where the applicant will work. Addresses listed here are"
 " defined on the company's contact information."
 msgstr ""
+"Виберіть місце, де буде працювати заявник. Наведені тут адреси визначені в "
+"контактній інформації компанії."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
