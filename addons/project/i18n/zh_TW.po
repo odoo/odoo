@@ -98,14 +98,14 @@ msgstr "#{task.stage_id.name}"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -200,6 +200,7 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>記錄備註</b>，作為內部通訊方式（關注此任務的人，不會因為你記錄備註而收到通知，除非你特別標記他們）。使用「<b>@提及</b>」以特別指明某位同事，或使用「<b>#提及</b>」接觸整個團隊。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -417,6 +418,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"滿意\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"還可以\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"不滿意\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -458,12 +462,12 @@ msgstr "<small class=\"text-end\">階段：</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">受指派人</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">客戶</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -485,22 +489,22 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"合作夥伴\" title=\"合�
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\">已完成</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> 任務</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">已關閉</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text order-2\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text order-2\">子任務</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -538,6 +542,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">任務到達設有評分電郵範本的階段時，便會發送評分請求。</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">只要任務仍處於設有評分電郵範本的階段，便會定時發送評分請求。</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1259,12 +1268,12 @@ msgstr "已結束子任務數目"
 #: model:ir.model.fields,field_description:project.field_project_project__closed_task_count
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_count
 msgid "Closed Task Count"
-msgstr ""
+msgstr "已關閉任務數目"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__closed_task_percentage
 msgid "Closed Task Percentage"
-msgstr ""
+msgstr "已關閉任務百分比"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1400,7 +1409,7 @@ msgstr "聯絡人"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "轉換任務"
 
 #. module: project
 #. odoo-python
@@ -1408,7 +1417,7 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "轉換為任務/子任務"
 
 #. module: project
 #. odoo-javascript
@@ -3459,7 +3468,7 @@ msgstr "窗口網站使用者將會在專案及其任務的關注者中刪除。
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Previous"
-msgstr "前一個"
+msgstr "上一頁"
 
 #. module: project
 #. odoo-javascript

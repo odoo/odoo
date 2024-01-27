@@ -31,6 +31,12 @@ msgstr ""
 "%s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
@@ -77,6 +83,11 @@ msgstr "머리글 페이지"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "내부 견적"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -128,12 +139,9 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
-"견적서를 한층 멋지게 만들기 위해서 머리글 페이지와 바닥글 페이지에 \n"
-"                            회사 및 품목, 서비스에 대해서 자세한 정보를 기재합니다.\n"
-"                            견적서의 PDF는 머리글 페이지와 품목 설명 및 \n"
-"                            세부 내역, 그리고 바닥글 페이지로 구성됩니다."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw

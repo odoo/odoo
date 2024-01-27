@@ -9,7 +9,6 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2023
 # Halil, 2023
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2023
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2023
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Martin Trigaux, 2023
@@ -17,14 +16,15 @@
 # Levent Karakaş <levent@mektup.at>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-15 10:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2023\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Awaiting arrival</b>"
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
 msgstr ""
 
 #. module: sale_stock
@@ -53,8 +53,8 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
-msgstr "<i class=\"fa fa-fw fa-times\"/> <b>İptal edildi</b>"
+msgid "<i class=\"fa fa-fw fa-times\"/> Cancelled"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -63,7 +63,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Received</b>"
+msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
 msgstr ""
 
 #. module: sale_stock
@@ -75,8 +75,8 @@ msgstr "<span class=\"o_stat_text\">Satış</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                    <i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>\n"
-"                                </span>"
+"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                    </span>"
 msgstr ""
 
 #. module: sale_stock
@@ -97,11 +97,6 @@ msgstr "<strong>Müşteri Referansı:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
 msgstr "<strong>Teslimat Koşulu:</strong>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid "<strong>Returns</strong>"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -198,7 +193,6 @@ msgstr "Teslimat Uyarısı"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Delivery Orders"
 msgstr "Teslimatlar"
 
@@ -375,6 +369,11 @@ msgid "Journal Item"
 msgstr "Yevmiye Kalemi"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Last Delivery Orders"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
 msgstr "Teslim Süresi"
@@ -519,6 +518,11 @@ msgstr "(MTO) Sipariş Üzerine İkmal "
 #, python-format
 msgid "Reserved"
 msgstr "Rezerve"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Returns"
+msgstr "İadeler"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id

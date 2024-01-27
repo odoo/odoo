@@ -9,17 +9,17 @@
 # Youssef Bashandy, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # David Ramia, 2024
-# Larissa Manderfeld, 2024
 # Braulio D. López Vázquez <bdl@odoo.com>, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-15 10:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +99,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "'PRO-FORMA - %s' % (object.name)"
+msgstr "'PROFORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -740,23 +740,23 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Autorizado</b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr "<i class=\"fa fa-fw fa-check\"/><b>Pagado </b>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Esperando Pago </b>"
+msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Expirado"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -805,11 +805,6 @@ msgstr "<small class=\"text-muted\">Su contacto</small>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr "<small><b class=\"text-muted\">Precio original</b></small>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<small><b>This offer expires on</b></small>"
-msgstr "<small><b>Esta oferta vence el</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -897,8 +892,8 @@ msgstr "<span>Impuestos</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
-msgid "<span>Visible at</span>"
-msgstr "<span>Visible en</span>"
+msgid "<span>Visibility</span>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1157,12 +1152,12 @@ msgstr "Línea de la orden de venta autorizada"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Le permite enviar Factura Pro-Forma a sus clientes"
+msgstr "Le permite enviar factura proforma a sus clientes"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Le permite enviar una factura pro-forma."
+msgstr "Le permite enviar una factura proforma."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
@@ -1174,6 +1169,12 @@ msgid ""
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
+"Le permite compartir el documento con sus clientes dentro de una venta.\n"
+"Déjelo vacío si no desea compartir este documento con su cliente.\n"
+"Presupuesto: los clientes recibirán el documento y podrán acceder visualizarlo en cualquier momento.\n"
+"Esta opción puede ser útil, por ejemplo, para compartir archivos de descripción del producto.\n"
+"Orden confirmada: los clientes recibirán el documento y podrán visualizarlo.\n"
+"Esta opción puede ser útil, por ejemplo, para compartir el manual de usuario o algún contenido digital que se haya adquirido mediante comercio electrónico."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1691,7 +1692,7 @@ msgstr "Crear borrador de factura"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Create Invoice"
-msgstr "Crear Factura"
+msgstr "Crear factura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -1701,7 +1702,7 @@ msgstr "Crear facturas"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
 msgid "Create a customer invoice"
-msgstr "Crea una factura de cliente"
+msgstr "Crear una factura de cliente"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1729,8 +1730,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Crea facturas, registra pagos y lleva el seguimiento de las conversaciones "
-"con tus clientes."
+"Cree facturas, registre pagos y mantenga el rastro de todas las "
+"conversaciones con sus clientes."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1780,7 +1781,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr "Tarjeta de crédito (a través de Stripe)"
+msgstr "Tarjetas de crédito y débito (por Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -2000,6 +2001,8 @@ msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines."
 msgstr ""
+"Fecha de entrega que puede prometer al cliente, computada a partir del plazo"
+" mínimo de las líneas de pedido."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2684,7 +2687,6 @@ msgstr "Facturado este mes"
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Facturas"
@@ -2726,7 +2728,7 @@ msgstr "Diario de factura"
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "Política de Facturación"
+msgstr "Política de facturación"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
@@ -2806,6 +2808,11 @@ msgstr "Apunte contable"
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
 msgid "Language"
 msgstr "Idioma"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Last Invoices"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3445,7 +3452,7 @@ msgstr "Token de identidad PDT(Payment Data Transfer)"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Factura PRO-FORMA"
+msgstr "Factura PROFORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3486,7 +3493,7 @@ msgstr "PayPal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr "Instrucciones de Pago"
+msgstr "Instrucciones de pago"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__payment_method
@@ -3512,7 +3519,7 @@ msgstr "Proveedores de pagos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr "Ref. de Pago"
+msgstr "Ref. de pago"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -3572,7 +3579,7 @@ msgstr "El porcentaje de pago anticipado debe ser un porcentaje válido."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Preview"
-msgstr "Previsualizar"
+msgstr "Vista previa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
@@ -3609,7 +3616,7 @@ msgstr "Precio"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Factura Pro-Forma"
+msgstr "Factura proforma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3619,7 +3626,7 @@ msgstr "Número de factura proforma"
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Facturas pro-forma"
+msgstr "Facturas proforma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3749,17 +3756,17 @@ msgstr "Cant."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr "Ctdad Enviada"
+msgstr "Cant. Enviada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Ctdad Facturada"
+msgstr "Cant. Facturada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr "Ctdad Ordenada"
+msgstr "Cant. Ordenada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -3769,7 +3776,7 @@ msgstr "Cant. Por Entregar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "Ctdad para Facturar"
+msgstr "Cant. para Facturar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3829,7 +3836,6 @@ msgstr "Fecha de presupuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quotation Date:"
 msgstr "Fecha de presupuesto:"
 
@@ -4025,7 +4031,7 @@ msgstr "Ingresos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr "Ingresos generados por la campaña."
+msgstr "Ingresos generados por la campaña"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -4394,7 +4400,7 @@ msgstr "Venda variantes de un producto usando atributos (tamaño, color, etc.)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Enviar Factura PRO-FORMA"
+msgstr "Enviar factura PROFORMA"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4426,7 +4432,7 @@ msgstr "Enviar mensaje"
 #. module: sale
 #: model:onboarding.onboarding.step,button_text:sale.onboarding_onboarding_step_sample_quotation
 msgid "Send sample"
-msgstr "Enviar prueba."
+msgstr "Enviar prueba"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
@@ -5353,7 +5359,7 @@ msgstr "UdM"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr "Actualizar Precios"
+msgstr "Actualizar precios"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5372,7 +5378,7 @@ msgstr "Venta adicional %(order)s para el cliente %(customer)s"
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr "Oportunidad de upselling"
+msgstr "Oportunidad de venta adicional"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale

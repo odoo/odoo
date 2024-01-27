@@ -7,14 +7,15 @@
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
 # Ivana Bartonkova, 2023
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ivana Bartonkova, 2023\n"
+"Last-Translator: Katerina Horylova, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,13 @@ msgstr ""
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "%(carrier)s Error"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "%(old_name)s (copy)"
 msgstr ""
 
 #. module: delivery
@@ -683,6 +691,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Pojištění přepravy je služba, která může odesílatelům uhradit ztrátu, krádež"
+" a/nebo poškození zásilky během přepravy."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -824,7 +834,7 @@ msgstr "PSČ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Předpony směrovacích čísel"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

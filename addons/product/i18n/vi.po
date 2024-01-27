@@ -110,6 +110,13 @@ msgstr "'Bao bì sản phẩm - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "(e.g: product description, ebook, legal notice, ...)."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
@@ -225,6 +232,11 @@ msgid "<span class=\"text-bg-danger\">Archived</span>"
 msgstr "<span class=\"text-bg-danger\">Đã lưu trữ</span>"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "<span class=\"text-bg-secondary\">Variant</span>"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
 msgstr "<span>%</span>"
@@ -234,6 +246,11 @@ msgstr "<span>%</span>"
 msgid "<span>All general settings about this product are managed on</span>"
 msgstr ""
 "<span>Tất cả cài đặt tổng quát về sản phẩm này được quản lý trên</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_kanban
+msgid "<span>Variant </span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -1173,7 +1190,6 @@ msgstr "Tài liệu"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_ids
@@ -1189,9 +1205,21 @@ msgid "Documents Count"
 msgstr "Số lượng tài liệu"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_document_search
+msgid "Documents of this variant"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Download"
 msgstr "Tải xuống"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "Download examples"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1222,14 +1250,6 @@ msgstr "Dymo"
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
 msgstr "Linh động"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_product.py:0
-#: code:addons/product/models/product_template.py:0
-#, python-format
-msgid "E.G: product description, ebook, legal notice, ..."
-msgstr "VD: mô tả sản phẩm, ebook, yết thị, ..."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -2542,6 +2562,7 @@ msgstr "Đơn vị tính sản phẩm"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_document_form
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
@@ -3316,7 +3337,6 @@ msgstr "Tải lên"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
@@ -3334,15 +3354,12 @@ msgstr "Url"
 
 #. module: product
 #. odoo-python
-#: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid ""
 "Use this feature to store any files you would like to share with your "
-"customers."
+"customers"
 msgstr ""
-"Sử dụng tính năng này để lưu trữ bất kỳ tệp nào bạn muốn chia sẻ với khách "
-"hàng của mình."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products

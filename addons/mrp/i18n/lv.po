@@ -3,7 +3,6 @@
 # 	* mrp
 # 
 # Translators:
-# Will Sensors, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
@@ -12,14 +11,15 @@
 # Martin Trigaux, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Anzelika Adejanova, 2023
+# Will Sensors, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anzelika Adejanova, 2023\n"
+"Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# komplektācija"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
@@ -801,8 +801,8 @@ msgid "Attachment URL"
 msgstr "Attachment URL"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1051,7 +1051,7 @@ msgstr "Receptes (BoM)"
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr ""
+msgstr "Komplektācijas"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__bom_id
@@ -1977,6 +1977,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the consumed Lot/Serial Numbers."
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Displays the produced Lot/Serial Numbers."
 msgstr ""
 
 #. module: mrp
@@ -3345,8 +3350,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimālu atlikumu noteikums"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -3724,8 +3729,8 @@ msgid "Operation not supported"
 msgstr "Operācija netiek atbalstīta"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -4256,6 +4261,11 @@ msgid "Product Quantity"
 msgstr "Produkta Daudzums"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_product_replenish
+msgid "Product Replenish"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_tmpl_id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__product_template
@@ -4654,6 +4664,7 @@ msgstr "Atskaites"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
+#: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Reserved"
 msgstr ""
@@ -6700,15 +6711,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/change_production_qty.py:0
-#, python-format
-msgid ""
-"You have already processed %(quantity)s. Please input a quantity higher than"
-" %(quantity)s "
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid ""
 "You have entered less serial numbers than the quantity to produce.<br/>\n"
@@ -6764,7 +6766,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
-msgid "You need to supply Lot/Serial Number for products and 'picked' them:"
+msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
 msgstr ""
 
 #. module: mrp
@@ -6792,15 +6794,15 @@ msgid "cancelled"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
-msgid "copy paste a list and/or use Generate"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "days"
 msgstr "dienas"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
+msgid "e.g. SN0000001"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
