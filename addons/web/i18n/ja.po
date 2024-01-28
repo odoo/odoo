@@ -2393,7 +2393,6 @@ msgstr "ファイル"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "ファイルのアップロード"
@@ -2595,6 +2594,16 @@ msgstr "Handle"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "全てのレポートの上部に表示されるヘッダーテキスト。"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4544,6 +4553,13 @@ msgid "Request timeout"
 msgstr "リクエストタイムアウト"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "ドメインをリセット"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "ロゴのカラーへリセットする"
@@ -5246,8 +5262,14 @@ msgstr "処理が中断されました。処理に時間がかかりすぎてい
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "選択されたファイル (%sB)は許可されている最大ファイルサイズ(%sB)を超えています。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "選択したファイルが最大ファイルサイズ%sを超えています。"
@@ -6520,8 +6542,8 @@ msgstr "引き続き読込中です..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

@@ -2404,7 +2404,6 @@ msgstr "Tệp"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Tải tập tin lên"
@@ -2606,6 +2605,16 @@ msgstr "Xử lý"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Văn bản tiêu đề hiển thị ở đầu tất cả các báo cáo."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4572,6 +4581,13 @@ msgid "Request timeout"
 msgstr "Hết thời gian yêu cầu"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "Đặt lại miền"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "Đặt lại màu biểu tượng"
@@ -5280,8 +5296,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "Tệp đã chọn (%sB) vượt quá kích thước tệp tối đa cho phép (%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "Tập tin được chọn chạm giới hạn dung lượng tối đa %s."
@@ -6579,8 +6601,8 @@ msgstr "nó vẫn đang tải..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

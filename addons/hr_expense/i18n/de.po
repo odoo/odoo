@@ -5,15 +5,16 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-25 11:23+0000\n"
+"POT-Creation-Date: 2024-01-25 13:15+0000\n"
 "PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,24 +49,6 @@ msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\"><i class=\"text-muted\">Use this reference as"
@@ -73,6 +56,16 @@ msgid ""
 msgstr ""
 "<span class=\"d-inline-block\"><i class=\"text-muted\">Verwenden Sie diese "
 "Referenz als Betreffspräfix, wenn per E-Mail eingereicht wird.</i></span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+msgstr "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
+msgstr "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -313,10 +306,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Hängen Sie einen Beleg an – meistens ein Bild oder eine PDF-Datei."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Anhang"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "Anzahl Anhänge"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Dateianhänge"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr "Anhänge zu Ausgaben"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -1549,6 +1557,11 @@ msgid "Product Name"
 msgstr "Produktname"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Produktvariante"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
 msgstr "Produktvarianten"
@@ -1830,6 +1843,11 @@ msgid "Split Possible"
 msgstr "Aufteilung möglich"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "Standardwarnung bei Preisaktualisierung"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__state
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1981,6 +1999,17 @@ msgid "The payment method used when the expense is paid by the company."
 msgstr ""
 "Die Zahlungsmethode, die verwendet wird, wenn das Unternehmen die Spesen "
 "bezahlt."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Die Privatadresse des Mitarbeiters ist erforderlich, um die Spesenabrechnung"
+" zu buchen. Bitte geben Sie sie auf dem Mitarbeiterformular an."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2339,6 +2368,7 @@ msgstr ""
 "Abrechnung zu erfassen."
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2440,14 +2470,3 @@ msgstr "wird validiert"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "OCR zum Ausfüllen von Daten aus einem Foto der Rechnung verwenden"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid ""
-"The private address of the employee is required to post the expense report. "
-"Please add it on the employee form."
-msgstr ""
-"Die Privatadresse des Mitarbeiters ist erforderlich, um die Spesenabrechnung"
-" zu buchen. Bitte geben Sie sie auf dem Mitarbeiterformular an."

@@ -9,14 +9,15 @@
 # Martin Trigaux, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Mónica Pinheiro, 2023
+# cafonso <cafonso62@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2023-05-25 11:25+0000\n"
 "PO-Revision-Date: 2023-01-17 15:03+0000\n"
-"Last-Translator: Mónica Pinheiro, 2023\n"
+"Last-Translator: cafonso <cafonso62@gmail.com>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides_survey
+#. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #, python-format
 msgid "- %s (Courses - %s)"
@@ -42,8 +44,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br><br>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br><br>\n"
 "        Don't hesitate to enroll again!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -107,12 +109,6 @@ msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr "<i class=\"text-muted\"> utilizadores recompensados</i>"
 
 #. module: website_slides_survey
-#: model:survey.question,description:website_slides_survey.furniture_certification_page_1
-#: model:survey.survey,description:website_slides_survey.furniture_certification
-msgid "<p>Test your furniture knowledge!</p>"
-msgstr ""
-
-#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_home_inherit_survey
 msgid "<span class=\"ms-1\">Certifications</span>"
 msgstr ""
@@ -165,7 +161,7 @@ msgid "Add Certification"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
 msgid "Add Questions to this Survey"
@@ -182,6 +178,7 @@ msgid "Allow Preview"
 msgstr ""
 
 #. module: website_slides_survey
+#. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -222,7 +219,7 @@ msgid "Beech"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #, python-format
@@ -240,7 +237,7 @@ msgid "Category"
 msgstr "Categoria"
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
@@ -298,6 +295,7 @@ msgid "Certification icon"
 msgstr ""
 
 #. module: website_slides_survey
+#. odoo-python
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "Certification slides are completed when the survey is succeeded."
@@ -323,7 +321,7 @@ msgid "Chair"
 msgstr "Cadeira"
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #, python-format
@@ -333,9 +331,10 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_channel
 msgid "Course"
-msgstr ""
+msgstr "Curso"
 
 #. module: website_slides_survey
+#. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_form
 #, python-format
@@ -363,7 +362,7 @@ msgid "Desk"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
@@ -393,7 +392,7 @@ msgid "Go back to course"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid "How to upload a certification on your course?"
@@ -442,7 +441,7 @@ msgid "Oak"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid "Please select a certification."
@@ -546,11 +545,17 @@ msgid "Take Quiz"
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 #, python-format
 msgid "Test Certification"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
+#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
+msgid "Test your furniture knowledge!"
 msgstr ""
 
 #. module: website_slides_survey
@@ -592,19 +597,21 @@ msgid "What type of wood is the best for furniture?"
 msgstr ""
 
 #. module: website_slides_survey
+#. odoo-python
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "You are not allowed to create a survey."
 msgstr ""
 
 #. module: website_slides_survey
+#. odoo-python
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "You are not allowed to link a certification."
 msgstr ""
 
 #. module: website_slides_survey
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid ""

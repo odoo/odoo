@@ -8,16 +8,16 @@
 # Linkup <link-up@naver.com>, 2023
 # Martin Trigaux, 2023
 # Daye Jeong, 2023
-# Wil Odoo, 2023
 # Sarah Park, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2024-01-25 13:15+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,6 +189,13 @@ msgstr "%s 부가세 포함"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s 명세서 %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -215,13 +222,6 @@ msgid ""
 msgstr ""
 "%s가 관련 명세서 내역과 관련하여 유효하지 않습니다.\n"
 "동일하게 일치시키기 위해서는 가계정 내역과 관련된 전표 항목은 반드시 하나만 있어야 합니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s 명세서 %s"
 
 #. module: account
 #. odoo-python
@@ -1107,11 +1107,6 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr "<strong class=\"text-center\">은행 앱으로 스캔해 주세요.</strong><br/><br/>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>지불해야 할 금액</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2715,15 +2710,6 @@ msgstr "관련 계정 서식"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__at_date
 msgid "At Date"
 msgstr "기준일"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr "회계 데이터베이스 사용을 위해서는 하나 이상의 현지화 항목이 설치되어야 합니다."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -5322,26 +5308,6 @@ msgid "Delivery Address"
 msgstr "배송 주소"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "데모용 CEO 급여 계정"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "데모용 자본 계정"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "데모용 토지 판매 계정"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "데모용 주식 계정"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "감가상각됨"
@@ -6321,11 +6287,6 @@ msgstr "재무 전표"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "재무 태그"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "재무 활동"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7642,11 +7603,6 @@ msgstr "잘못된 회계연도 마감일"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "전환 태그"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "투자 및 기타 활동"
 
 #. module: account
 #. odoo-python
@@ -9079,6 +9035,11 @@ msgid "Memo:"
 msgstr "메모:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "협력사 병합 마법사"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
@@ -9358,16 +9319,6 @@ msgstr "새 값"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "최근순"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "다음 활동 캘린더 행사"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -9761,11 +9712,6 @@ msgid "Off-Balance Sheet"
 msgstr "부외금융"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "사무용 가구"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -9944,11 +9890,6 @@ msgstr "전기된 개시 이동"
 #, python-format
 msgid "Opening balance"
 msgstr "개시 잔액"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "영업 활동"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10387,6 +10328,13 @@ msgstr "조정 모델을 위한 협력사 맵핑"
 #, python-format
 msgid "Partners"
 msgstr "협력사"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "해시 항목에 사용되는 협력사는 병합할 수 없습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13946,6 +13894,7 @@ msgstr ""
 "예: .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14248,6 +14197,21 @@ msgid ""
 msgstr ""
 "정렬은 다시 시작될 수 없습니다.\n"
 "이 경우 '%(formatted_seq)s' 만큼 숫자가 증가합니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"순서는 회계연도가 시작할 때마다 1부터 다시 시작됩니다.\n"
+"확인된 회계연도 시작 연도는 '%(year)s'년입니다.\n"
+"확인된 회계연도 종료 연도는 '%(year_end)s'년입니다.\n"
+"이 경우 증 '%(formatted_seq)s'만큼 숫자가 증가합니다."
 
 #. module: account
 #. odoo-python
@@ -14686,8 +14650,7 @@ msgstr "이 이동 항목은 회계 일자 기준으로 발행됩니다: %(date)
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "이 작업은 시퀀스에 공백을 생성합니다."
@@ -15251,6 +15214,11 @@ msgstr "환율 자동 업데이트"
 #, python-format
 msgid "Upload"
 msgstr "업로드"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr "청구서 업로드"
 
 #. module: account
 #. odoo-python
@@ -15836,13 +15804,6 @@ msgstr "발행이 완료된 전표는 기간/계정만 변경할 수 있습니�
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr "구매 관련 문서에서 원본 문서만 출력할 수 있습니다."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -16213,6 +16174,13 @@ msgid ""
 msgstr ""
 "기초 작업 (%s)이 발행된 경우에는 \"openning_balance\" 를 가져올 수 없습니다."
 "                         계정의 기초 잔액을 수정하려는 것이 확실한 경우, 초안 항목으로 작업을 재설정하십시오."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "계정을 합칠 수 없습니다."
 
 #. module: account
 #. odoo-python

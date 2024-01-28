@@ -12,11 +12,11 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # David Ramia, 2023
-# Wil Odoo, 2023
 # Martin Trigaux, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Carlos Manrique Enguita, 2023
 # Hugo Santos <hugo.santos@factorlibre.com>, 2023
+# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -2414,7 +2414,6 @@ msgstr "Archivo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Subir Archivos"
@@ -2616,6 +2615,16 @@ msgstr "Hacerse cargo de"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Texto de encabezado en la parte de arriba de todos los reportes"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4587,6 +4596,13 @@ msgid "Request timeout"
 msgstr "Tiempo de espera de respuesta agotado"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "Reestablecer dominio"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "Restablecer a colores de logo"
@@ -4770,7 +4786,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search a field..."
-msgstr "Busuqe un campo..."
+msgstr "Busque un campo..."
 
 #. module: web
 #. odoo-javascript
@@ -5296,8 +5312,16 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr ""
+"Este archivo seleccionado (%sB) excede el tamaño máximo de archivo permitido"
+" (%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "El archivo seleccionado supera el tamaño máximo de %s."
@@ -6595,8 +6619,8 @@ msgstr "sigue cargando..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"

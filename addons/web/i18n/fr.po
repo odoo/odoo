@@ -8,7 +8,7 @@
 # e2f <projects@e2f.com>, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -2408,7 +2408,6 @@ msgstr "Fichier"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Chargement de fichier"
@@ -2610,6 +2609,20 @@ msgstr "Gérer"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Texte d'en-tête affiché en haut de tous les rapports."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"Attention ! Vos changements récents sont trop volumineux pour s'enregistrer "
+"automatiquement. Cliquez sur le bouton <i class=\"fa fa-cloud-upload fa-"
+"fw\"></i> pour vous assurer que votre travail est enregistré avant que vous "
+"ne quittiez cet onglet."
 
 #. module: web
 #. odoo-javascript
@@ -4586,6 +4599,13 @@ msgid "Request timeout"
 msgstr "Délai d'attente de la requête"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "Réinitialiser le domaine"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "Réinitialiser aux couleurs du logo"
@@ -5298,8 +5318,15 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr ""
+"Le fichier sélectionné (%sB) dépasse la taille maximale autorisée (%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr ""
@@ -6265,7 +6292,7 @@ msgstr "il y a une heure environ"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "all"
-msgstr "toutes"
+msgstr "toutes les"
 
 #. module: web
 #. odoo-javascript
@@ -6282,7 +6309,7 @@ msgstr "tous les enregistrements"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "any"
-msgstr "une"
+msgstr "une des"
 
 #. module: web
 #. odoo-javascript
@@ -6607,8 +6634,8 @@ msgstr "ça charge toujours..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6741,7 +6768,7 @@ msgstr "non défini (faux)"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "of the following rules:"
-msgstr "des règles suivantes :"
+msgstr "règles suivantes :"
 
 #. module: web
 #. odoo-javascript

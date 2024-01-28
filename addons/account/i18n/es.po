@@ -33,14 +33,15 @@
 # Lucia Pacheco, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2024-01-25 13:15+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +212,13 @@ msgstr "%s impuestos incluidos"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Extracto bancario %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -237,13 +245,6 @@ msgid ""
 msgstr ""
 "%s alcanzó un estado que no es válido con respecto a su línea de estado de cuenta correspondiente.\n"
 "Para que sea coherente, el asiento contable debe tener siempre solo una línea en suspenso."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s Extracto bancario %s"
 
 #. module: account
 #. odoo-python
@@ -1143,11 +1144,6 @@ msgid ""
 msgstr ""
 "<strong class=\"text-center\">Para ser escaneado con la aplicación "
 "bancaria.</strong><br/><br/>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Importe adeudado</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2810,17 +2806,6 @@ msgstr "Plantillas de cuentas asociadas"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__at_date
 msgid "At Date"
 msgstr "En fecha"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-"Es necesario instalar al menos una localización para poblar la base de datos"
-" con la contabilidad"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -5498,26 +5483,6 @@ msgid "Delivery Address"
 msgstr "Dirección de entrega"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "Cuenta de Salarios de CEO de Demostración"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "Cuenta de Capital de Demostración"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "Cuenta de Ventas de Terreno de Demostración"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "Cuenta de Acciones de Demostración"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Obsoleta"
@@ -6526,11 +6491,6 @@ msgstr "Diario Financiero"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "Etiquetas Financieras"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "Actividades de Financiamiento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7912,11 +7872,6 @@ msgstr "El último día del ejercicio fiscal es inválido."
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "Invertir etiquetas"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "Inversión y Actividades Extraordinarias"
 
 #. module: account
 #. odoo-python
@@ -9383,6 +9338,11 @@ msgid "Memo:"
 msgstr "Memo:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Asistente de fusionado de empresas"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
@@ -9668,16 +9628,6 @@ msgstr "Nuevos Valores"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "Más Recientes primero"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de actividades."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10089,11 +10039,6 @@ msgid "Off-Balance Sheet"
 msgstr "Fuera del balance general"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "Muebles de Oficina"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10287,11 +10232,6 @@ msgstr "Movimiento de apertura publicado"
 #, python-format
 msgid "Opening balance"
 msgstr "Saldo inicial"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "Actividades operativas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10736,6 +10676,14 @@ msgstr "Mapeo de empresas para modelos de conciliación"
 #, python-format
 msgid "Partners"
 msgstr "Contactos"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+"No es posible fusionar los contactos que se usan en asientos con hash."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14451,6 +14399,7 @@ msgstr ""
 "  ej.:  .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14784,6 +14733,21 @@ msgid ""
 msgstr ""
 "La secuencia nunca se reiniciará.\n"
 "El número creciente en este caso es '%(formatted_seq)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"La secuencia se reiniciará a 1 al inicio de cada año fiscal.\n"
+"El inicio del año fiscal detectado aquí es \"%(year)s\".\n"
+"El cierre del año fiscal detectado aquí es \"%(year_end)s\".\n"
+"En este caso, el número creciente es \"%(formatted_seq)s\"."
 
 #. module: account
 #. odoo-python
@@ -15284,8 +15248,7 @@ msgstr "Este movimiento se publicará en la fecha contable: %(date)s"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "Esta operación creará un espacio en la secuencia."
@@ -15868,6 +15831,11 @@ msgstr "Actualizar las tasas de cambio automáticamente"
 #, python-format
 msgid "Upload"
 msgstr "Subir"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr "Subir facturas"
 
 #. module: account
 #. odoo-python
@@ -16493,13 +16461,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -16929,6 +16890,13 @@ msgstr ""
 "apertura (%s).                         Si está completamente seguro de que "
 "desea modificar el saldo de apertura de sus cuentas, restablezca el "
 "movimiento a borrador."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "No puede fusionar cuentas."
 
 #. module: account
 #. odoo-python

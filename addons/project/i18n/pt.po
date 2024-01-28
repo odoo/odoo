@@ -17,6 +17,8 @@
 # Luiz Fernando <lfpsgs@outlook.com>, 2023
 # Nuno Silva <nuno.silva@arxi.pt>, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
+# Rita Bastos, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -442,11 +444,14 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '&lt;', 3.66)]}\" title=\"Satisfied\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -470,7 +475,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 
 #. module: project
 #. odoo-python
@@ -662,7 +667,7 @@ msgstr "Aceitar Emails De"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
 msgid "Access Instruction Message"
-msgstr ""
+msgstr "Mensagem de Instrução de Acesso"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
@@ -841,7 +846,7 @@ msgstr "Todas as Tarefas"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "Todos os utilizadores internos"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
@@ -1114,30 +1119,30 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Classificação Média"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "Classificação Média (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "Classificação Média: Insatisfeito"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "Classificação Média: OK"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "Classificação Média: Satisfeito"
 
 #. module: project
 #. odoo-javascript
@@ -1157,7 +1162,7 @@ msgstr "Saldo"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Billed"
-msgstr ""
+msgstr "Faturado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
@@ -1966,7 +1971,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ko
 msgid "Dissatisfied"
-msgstr ""
+msgstr "Insatisfeito"
 
 #. module: project
 #. odoo-python
@@ -2064,7 +2069,7 @@ msgstr "E-mail cc"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
-msgstr ""
+msgstr "Emails enviados para"
 
 #. module: project
 #. odoo-javascript
@@ -2468,6 +2473,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Se definido, este conteúdo será automaticamente enviado para utilizadores "
+"não autorizados em vez da mensagem default."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2605,12 +2612,12 @@ msgstr "Convidar Pessoas"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "Utilizadores internos convidados"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users"
-msgstr ""
+msgstr "Utilizadores do portal convidados e todos os utilizadores internos"
 
 #. module: project
 #. odoo-javascript
@@ -2736,7 +2743,7 @@ msgstr "Estado Kanban"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Etiqueta de Estado Kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -3181,7 +3188,7 @@ msgstr "Precisa de ajuda técnica ou funcional"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Cara neutra"
 
 #. module: project
 #. odoo-python
@@ -3314,7 +3321,7 @@ msgstr "Sem Assunto"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
 msgid "No activity types found. Let's create one!"
-msgstr ""
+msgstr "Não foram encontrados tipos de atividades. Vamos criar um!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -3350,7 +3357,7 @@ msgstr "Nenhum estágio encontrado. Vamos criar um!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr ""
+msgstr "Não foram encontradas etiquetas. Vamos criar uma!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3442,7 +3449,7 @@ msgstr "Número de erros"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Número de mensagens que requerem ação"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -3474,7 +3481,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ok
 msgid "Okay"
-msgstr ""
+msgstr "OK"
 
 #. module: project
 #. odoo-javascript
@@ -3638,7 +3645,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Percentagem de classificações felizes"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
@@ -3774,7 +3781,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
 msgid "Privacy Visibility Warning"
-msgstr ""
+msgstr "Aviso de Visibilidade de Privacidade"
 
 #. module: project
 #. odoo-javascript
@@ -4072,12 +4079,12 @@ msgstr "Classificação"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr ""
+msgstr "Classificação (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Texto de Média de Classificação"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4092,12 +4099,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Último Feedback da Classificação"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Última Imagem da Classificação"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_text
@@ -4107,7 +4114,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Último Valor da Classificação"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -4118,12 +4125,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:project.field_project_task__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Satisfação da Classificação"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Texto da Classificação"
 
 #. module: project
 #. odoo-javascript
@@ -4137,7 +4144,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Contagem de classificações"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
@@ -4417,7 +4424,7 @@ msgstr "Erro de Envio de SMS"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Cara triste"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sat
@@ -4435,7 +4442,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__top
 msgid "Satisfied"
-msgstr ""
+msgstr "Satisfeito"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sat
@@ -4623,6 +4630,8 @@ msgid ""
 "Set this template on a project's stage to automate email when tasks reach "
 "stages"
 msgstr ""
+"Define este modelo na etapa de um projeto para automatizar um email quando "
+"tarefas alcançam etapas."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4775,12 +4784,12 @@ msgstr "Etapa alterada"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "Etapas Ativas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "Etapas a Eliminar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -5038,12 +5047,13 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Tarefa em curso. Clicar para bloquear ou definir como concluída."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"Tarefa está bloqueada. Clicar para desbloquear ou definir como concluída."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -5323,6 +5333,7 @@ msgstr "Esta e as seguintes tarefas"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"Esta etapa está concluída. Clica para bloquear ou definir como Em Progresso."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__this
@@ -5342,6 +5353,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
 msgstr ""
+"Representam as diferentes categorias de coisas que tens de fazer (p. ex., "
+"\"Telefonar\" ou \"Enviar email\""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -5772,13 +5785,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "Horas de Trabalho até Atribuição"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "Horas de Trabalho até Encerramento"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id

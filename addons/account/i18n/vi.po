@@ -9,15 +9,15 @@
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2024-01-25 13:15+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,6 +189,13 @@ msgstr "%s Kèm thuế"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Sao kê%s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -215,13 +222,6 @@ msgid ""
 msgstr ""
 "Dòng sao kê liên quan của %s đã chuyển qua trạng thái không hợp lệ.\n"
 "Để nhất quán, bút toán phải luôn có chính xác một dòng tạm thời."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s Sao kê%s"
 
 #. module: account
 #. odoo-python
@@ -1121,11 +1121,6 @@ msgid ""
 msgstr ""
 "<strong class=\"text-center\">Quét tôi qua ứng dụng ngân hàng của "
 "bạn.</strong><br/><br/>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Tổng tiền cần trả</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2775,17 +2770,6 @@ msgstr "Mẫu tài khoản liên kết"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__at_date
 msgid "At Date"
 msgstr "Vào ngày"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-"Cần cài đặt ít nhất một khu vực để điền vào cơ sở dữ liệu với tính năng kế "
-"toán"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -5451,26 +5435,6 @@ msgid "Delivery Address"
 msgstr "Địa chỉ giao hàng"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr "Demo Tài khoản tiền lương của CEO"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr "Tài khoản vốn demo"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr "Tài khoản demo bán đất"
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
-msgstr "Demo Tài khoản kho"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Không nhận"
@@ -6473,11 +6437,6 @@ msgstr "Sổ nhật ký tài chính"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "Từ khóa tài chính"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
-msgstr "Hoạt động tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7849,11 +7808,6 @@ msgstr "Ngày cuối năm tài chính không đúng"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "Từ khóa đảo"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
-msgstr "Đầu tư & Hoạt động khác"
 
 #. module: account
 #. odoo-python
@@ -9309,6 +9263,11 @@ msgid "Memo:"
 msgstr "Nội dung giao dịch:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Tính năng gộp đối tác"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
@@ -9593,16 +9552,6 @@ msgstr "Giá trị mới"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "Mới nhất trước tiên"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động tiếp theo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10012,11 +9961,6 @@ msgid "Off-Balance Sheet"
 msgstr "Các khoản mục ngoài bảng cân đối"
 
 #. module: account
-#: model:account.account.tag,name:account.demo_office_furniture_account
-msgid "Office Furniture"
-msgstr "Nội thất văn phòng"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10210,11 +10154,6 @@ msgstr "Chi tiết bút toán đầu kỳ đã vào sổ"
 #, python-format
 msgid "Opening balance"
 msgstr "Số dư đầu kỳ"
-
-#. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr "Hoạt động vận hành"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10655,6 +10594,13 @@ msgstr "Khớp đối tác cho đố tượng đối soát"
 #, python-format
 msgid "Partners"
 msgstr "Đối tác"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14326,6 +14272,7 @@ msgstr ""
 "  ví dụ: .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14648,6 +14595,17 @@ msgid ""
 msgstr ""
 "Mã thứ tự sẽ không bao giờ chạy ngược lại.\n"
 "Số tăng dần trong trường hợp này là '%(formatted_seq)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15134,8 +15092,7 @@ msgstr "Bút toán này sẽ được vào sổ vào ngày kế toán: %(date)s"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "Thao tác này sẽ tạo ra một khoảng trống trong chuỗi."
@@ -15715,6 +15672,11 @@ msgstr "Tự động cập nhật tỉ giá quy đổi"
 #, python-format
 msgid "Upload"
 msgstr "Tải lên"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Upload Invoices"
+msgstr "Tải lên hoá đơn"
 
 #. module: account
 #. odoo-python
@@ -16330,13 +16292,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -16760,6 +16715,13 @@ msgstr ""
 "Bạn không thể nhập \"openning_balance\" nếu bút toán đầu kỳ (%s) đã được vào"
 " sổ. Nếu bạn hoàn toàn chắc chắn rằng bạn muốn sửa đổi số dư đầu kỳ của các "
 "tài khoản của mình, hãy bút toán về trạng thái nháp."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr ""
 
 #. module: account
 #. odoo-python
