@@ -760,8 +760,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             leave_data = leave_type.get_allocation_data(employees, date_from)
             max_excess = leave_type.max_allowed_negative if leave_type.allows_negative else 0
             for employee in employees:
-                if leave_data[employee][0][1]['total_virtual_excess'] > max_excess:
-                    raise ValidationError(_("There is no valid allocation to cover that request."))
+                if max_excess:
+                    if leave_data[employee][0][1]['total_virtual_excess'] > max_excess:
+                        raise ValidationError(_("There is no valid allocation to cover that request."))
 
     ####################################################
     # ORM Overrides methods
