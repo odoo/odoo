@@ -5,7 +5,7 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,7 +168,7 @@ msgstr "建立新的支付交易需要一個代碼(token)。"
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
-msgstr "引用 %(ref)s 的交易已啟動 (%(acq_name)s)。"
+msgstr "一項交易已啟始（參考：%(ref)s）(%(acq_name)s)。"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -176,7 +176,7 @@ msgstr "引用 %(ref)s 的交易已啟動 (%(acq_name)s)。"
 msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
-msgstr "已使用付款方式 %(token_name)s (%(acq_name)s) 發起了號碼為 %(ref)s 的交易。"
+msgstr "一項交易（參考：%(ref)s）已使用此付款方式啟始：%(token_name)s (%(acq_name)s)。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -1515,7 +1515,7 @@ msgstr "原因："
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "原因： %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
@@ -1647,7 +1647,7 @@ msgstr "伺服器錯誤:"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_allow_tokenization
 msgid "Show Allow Tokenization"
-msgstr ""
+msgstr "顯示允許代碼化"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_auth_msg
@@ -2216,7 +2216,7 @@ msgstr "您不能刪除付款服務商使用的視圖。"
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "你沒有權限存取此付款權杖。"
 
 #. module: payment
 #. openerp-web
