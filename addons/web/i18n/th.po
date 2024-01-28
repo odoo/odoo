@@ -11,17 +11,17 @@
 # Wichanon Jamwutthipreecha, 2023
 # Krisa C, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Ped Sansiri, 2023
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 05:10+0000\n"
+"POT-Creation-Date: 2024-01-24 13:30+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -265,6 +265,11 @@ msgid "1 record"
 msgstr "1 บันทึก"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
+msgid "<i class=\"fa fa-repeat\"/> Reset"
+msgstr "<i class=\"fa fa-repeat\"/> รีเซ็ต"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
 msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
@@ -315,8 +320,10 @@ msgstr "<span class=\"text-nowrap\">ภาษี 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>สหรัฐอเมริกา</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1236,6 +1243,8 @@ msgstr "เลือกคำสั่งดีบัก..."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_fields.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
+#: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -2305,8 +2314,8 @@ msgid "Expression"
 msgstr "ตัวสั่งงาน"
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -2414,7 +2423,6 @@ msgstr "ไฟล์"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "อัปโหลดไฟล์"
@@ -3951,6 +3959,11 @@ msgid "Password"
 msgstr "ใส่รหัส"
 
 #. module: web
+#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
+msgstr "การสื่อสารการชำระเงิน: <b><span>INV/2023/00003</span></b>"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 #, python-format
@@ -4068,18 +4081,6 @@ msgstr "โปรดเลือกฟิลด์เพื่อบันทึ
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr "โปรดใช้ปุ่มคัดลอกเพื่อรายงานข้อผิดพลาดไปยังบริการสนับสนุนของคุณ"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid ""
-"Please use the following communication for your payment : <b><span>\n"
-"                           INV/2023/00003</span></b>"
-msgstr ""
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
-msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
-msgstr "การสื่อสารการชำระเงิน: <b><span>INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -5324,8 +5325,14 @@ msgstr "ช่องที่เลือกจะถูกใช้เพื่
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "ไฟล์ที่เลือก (%sB) มีขนาดเกินขนาดไฟล์สูงสุดที่อนุญาต (%sB)"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "ไฟล์ที่ถูกเลือกมีขนาดใหญ่เกิน %s"
@@ -5662,8 +5669,8 @@ msgid "Uncaught Promise"
 msgstr "สัญญาที่ไม่ถูกตรวจจับ"
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -6013,6 +6020,7 @@ msgstr "พุธ"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_renderer.js:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Week"
 msgstr "สัปดาห์"
@@ -6567,8 +6575,8 @@ msgstr "มันยังคงโหลด..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6601,7 +6609,7 @@ msgstr "น้อยกว่าหรือเท่ากับ"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "ถูกใจ"
 
 #. module: web
 #. odoo-javascript
@@ -6659,7 +6667,7 @@ msgstr "ไม่มีคำอธิบายให้"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_nodes.js:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "ไม่มี"
 
 #. module: web
 #. odoo-javascript

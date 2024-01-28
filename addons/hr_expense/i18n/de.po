@@ -6,14 +6,15 @@
 # Friederike Fasterling-Nesselbosch, 2023
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-30 05:08+0000\n"
+"POT-Creation-Date: 2024-01-24 13:30+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -346,10 +347,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Hängen Sie einen Beleg an – meistens ein Bild oder eine PDF-Datei."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Anhang"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "Anzahl Anhänge"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Dateianhänge"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr "Anhänge zu Ausgaben"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
@@ -1316,12 +1332,6 @@ msgid "New Expense Reports"
 msgstr "Neue Spesenabrechnungen"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Nächstes Aktivitätskalenderereignis"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1594,6 +1604,11 @@ msgid "Product Name"
 msgstr "Produktname"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Produktvariante"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
 msgid "Product Variants"
 msgstr "Produktvarianten"
@@ -1612,12 +1627,6 @@ msgstr "Menge"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
 msgid "Quantity"
 msgstr "Menge"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
-msgid "Ratings"
-msgstr "Bewertungen"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1881,6 +1890,11 @@ msgid "Split Possible"
 msgstr "Aufteilung möglich"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "Standardwarnung bei Preisaktualisierung"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__state
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2030,6 +2044,17 @@ msgid "The payment method used when the expense is paid by the company."
 msgstr ""
 "Die Zahlungsmethode, die verwendet wird, wenn das Unternehmen die Spesen "
 "bezahlt."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Die Privatadresse des Mitarbeiters ist erforderlich, um die Spesenabrechnung"
+" zu buchen. Bitte geben Sie sie auf dem Mitarbeiterformular an."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2371,6 +2396,7 @@ msgstr ""
 "Abrechnung zu erfassen."
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2398,6 +2424,13 @@ msgstr "Sie können nicht zweimal die gleiche Zeile erfassen!"
 #, python-format
 msgid "You have no expense to report"
 msgstr "Sie habe keine zu meldenen Spesen"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You need to add a manual payment method on the journal (%s)"
+msgstr "Sie müssen eine manuelle Zahlungsmethode zum Journal (%s) hinzufügen"
 
 #. module: hr_expense
 #. odoo-python
@@ -2465,14 +2498,3 @@ msgstr "wird validiert"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "OCR zum Ausfüllen von Daten aus einem Foto der Rechnung verwenden"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid ""
-"The private address of the employee is required to post the expense report. "
-"Please add it on the employee form."
-msgstr ""
-"Die Privatadresse des Mitarbeiters ist erforderlich, um die Spesenabrechnung"
-" zu buchen. Bitte geben Sie sie auf dem Mitarbeiterformular an."

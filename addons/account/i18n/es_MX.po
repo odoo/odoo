@@ -9,16 +9,17 @@
 # Aimée Mendoza Sánchez, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
-# Martin Trigaux, 2023
 # Alfonso González, 2024
 # Iran Villalobos López, 2024
+# Wil Odoo, 2024
+# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-11 09:57+0000\n"
+"POT-Creation-Date: 2024-01-24 13:30+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -69,13 +70,6 @@ msgstr ""
 "        Por ejemplo, 180 / (1 - 10%) = 200 (sin precio incluido)\n"
 "        Por ejemplo, 200 * (1-10%) = 180 (precio incluido)\n"
 "        "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " (including this document)"
-msgstr "(este documento incluido)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -196,6 +190,13 @@ msgstr "%s impuestos incluidos"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Estado de cuenta %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "%s installment #%s"
@@ -218,13 +219,6 @@ msgid ""
 msgstr ""
 "%s alcanzó un estado que no es válido con respecto a su línea de estado de cuenta relacionada.\n"
 "Para que sea coherente, el asiento contable siempre debe tener solo una línea en suspenso."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s Estado de cuenta %s"
 
 #. module: account
 #. odoo-python
@@ -253,6 +247,12 @@ msgstr "(copia)"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "(included)."
 msgstr "(incluido)."
+
+#. module: account
+#: model:ir.actions.report,print_report_name:account.account_invoices
+#: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
+msgid "(object._get_report_base_filename())"
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -627,6 +627,17 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Enviar mensaje</b>"
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> Imprimir"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_form
+msgid ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The email address is unknown on the partner\" attrs=\"{'invisible': "
+"[('send_mail_readonly', '=', False)]}\"/>"
+msgstr ""
+"<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-"
+"label=\"Advertencia\" title=\"Se desconoce el correo electrónico del "
+"contacto\" attrs=\"{'invisible': [('send_mail_readonly', '=', False)]}\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1107,11 +1118,6 @@ msgstr "<span>Ver</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Subtotal</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Importe pendiente</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4555,13 +4561,6 @@ msgstr "Nota de crédito"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You can only send sales documents"
-msgstr "Solo puede enviar documentos de ventas"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
 msgid "Credit Note Created"
 msgstr "Nota de crédito creada"
 
@@ -4582,6 +4581,12 @@ msgstr "Nóta de crédito: enviando"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
 msgstr "Notas de crédito"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__credit_to_invoice
+#: model:ir.model.fields,field_description:account.field_res_users__credit_to_invoice
+msgid "Credit To Invoice"
+msgstr "Abonar a factura "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -5539,7 +5544,6 @@ msgstr "Distribución de reembolsos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
-#: model:ir.model.fields,help:account.field_account_tax__repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
 msgstr "Distribución cuando el impuesto se utiliza en un reembolso"
 
@@ -5995,6 +5999,16 @@ msgid "Epd Needed"
 msgstr "Descuento por pago anticipado necesario"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
+#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
+#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, python-format
+msgid "Equity"
+msgstr "Capital"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
@@ -6004,16 +6018,6 @@ msgid ""
 msgstr ""
 "Ocurrió un error al cargar la localización. Es probable que primero deba "
 "actualizar su aplicación de localización."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
-#: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity
-#: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, python-format
-msgid "Equity"
-msgstr "Capital"
 
 #. module: account
 #. odoo-python
@@ -7876,6 +7880,13 @@ msgid "Invoicing App Legacy"
 msgstr "Sistema anterior de facturación"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
+#: model:ir.model.fields,field_description:account.field_account_move__is_being_sent
+#: model:ir.model.fields,field_description:account.field_account_payment__is_being_sent
+msgid "Is Being Sent"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Está entre"
@@ -8832,7 +8843,7 @@ msgstr "Marcar como enviado"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
-msgstr "Marcar como totalmente pagado"
+msgstr "Marcar como pagado en su totalidad"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -8945,6 +8956,11 @@ msgstr "Memorando"
 #, python-format
 msgid "Memo:"
 msgstr "Memo:"
+
+#. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Asistente de fusión de contactos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
@@ -9920,7 +9936,7 @@ msgstr "Otros ingresos"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Other Info"
-msgstr "Más información"
+msgstr "Otra información"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -10209,6 +10225,14 @@ msgstr "Mapeo de contactos para modelos de conciliación"
 #, python-format
 msgid "Partners"
 msgstr "Contactos"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+"No es posible fusionar los contactos que se usan en asientos con hash."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10566,13 +10590,6 @@ msgstr "Riesgo de phishing: alto"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Phishing risk: Medium"
 msgstr "Riesgo de phishing: medio"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "Please add an email address for your partner"
-msgstr "Establezca una dirección de correo electrónico para su contacto"
 
 #. module: account
 #. odoo-python
@@ -11860,15 +11877,6 @@ msgid "Select specific invoice and delivery addresses"
 msgstr "Seleccione facturas específicas y direcciones de entrega"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"We can't leave this document without any company. Please select a company "
-"for this document."
-msgstr "Es necesario que este documento tenga una empresa. Elija una."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
@@ -11903,7 +11911,6 @@ msgstr "Selección"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.server,name:account.invoice_send
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__outbound
@@ -12967,12 +12974,12 @@ msgstr "TaxCloud"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__tax_ids
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__taxes
 #: model:ir.ui.menu,name:account.menu_action_tax_form
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #, python-format
 msgid "Taxes"
 msgstr "Impuestos"
@@ -13545,17 +13552,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid ""
-"The following invoice(s) will not be sent by email, because the customers "
-"don't have email address: "
-msgstr ""
-"La(s) siguiente(s) factura(s) no se enviará(n) por correo electrónico debido"
-" a que los clientes no tienen direcciones de correo electrónico:"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -13700,6 +13696,7 @@ msgstr ""
 "  ej.:  .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -13781,6 +13778,17 @@ msgid ""
 msgstr ""
 "Los partners del diario de la empresa y el de la cuenta del banco "
 "relacionada no coinciden."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The partners on the following invoices have no email address, so those "
+"invoices will not be sent: %s"
+msgstr ""
+"Los contactos en las siguientes facturas no cuentan con una dirección de "
+"correo electrónico, esas facturas no se enviarán: %s"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative
@@ -14023,6 +14031,21 @@ msgid ""
 msgstr ""
 "La secuencia nunca reiniciará.\n"
 "El número creciente en este caso es \"%(formatted_seq)s\"."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"La secuencia se reiniciará a 1 al inicio de cada año fiscal.\n"
+"El inicio del año fiscal detectado aquí es \"%(year)s\".\n"
+"El cierre del año fiscal detectado aquí es \"%(year_end)s\".\n"
+"En este caso, el número incremental es \"%(formatted_seq)s\"."
 
 #. module: account
 #. odoo-python
@@ -14486,8 +14509,7 @@ msgstr "Este movimiento se publicará en la fecha contable: %(date)s"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "Esta operación creará un espacio en la secuencia."
@@ -15517,6 +15539,15 @@ msgstr "Advertencias en facturas"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"We can't leave this document without any company. Please select a company "
+"for this document."
+msgstr "Es necesario que este documento tenga una empresa. Elija una."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -15787,6 +15818,13 @@ msgid "You can only send from the same company."
 msgstr "Solo puede enviar desde la misma empresa."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You can only send sales documents"
+msgstr "Solo puede enviar documentos de ventas"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
@@ -15796,13 +15834,6 @@ msgstr ""
 "Puede establecer aquí la comunicación predeterminada que aparecerá en las "
 "facturas del cliente, una vez validada, para ayudar al cliente a consultar "
 "esa factura en particular al realizar el pago."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/wizard/account_move_send.py:0
-#, python-format
-msgid "You can't send invoice(s) in draft state."
-msgstr "No puede enviar facturas que se encuentran en estado de borrador."
 
 #. module: account
 #. odoo-python
@@ -15942,6 +15973,13 @@ msgid ""
 msgstr ""
 "No puede registrar pagos para apuntes contables que sean todos entrantes o "
 "salientes."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't send invoice(s) in draft state."
+msgstr "No puede enviar facturas que se encuentran en estado de borrador."
 
 #. module: account
 #. odoo-python
@@ -16181,6 +16219,13 @@ msgstr ""
 "apertura (%s).                         Si está completamente seguro de que "
 "desea modificar el balance de apertura de sus cuentas, restablezca el "
 "movimiento a borrador."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "No puede fusionar cuentas."
 
 #. module: account
 #. odoo-python
