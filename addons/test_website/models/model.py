@@ -4,6 +4,12 @@
 from odoo import api, fields, models
 
 
+class Website(models.Model):
+    _inherit = "website"
+
+    name_translated = fields.Char(translate=True)
+
+
 class TestModel(models.Model):
     """ Add website option in server actions. """
 

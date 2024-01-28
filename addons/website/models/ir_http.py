@@ -127,7 +127,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_public_users(cls):
         public_users = super()._get_public_users()
-        website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
+        website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').get_current_website()  # sudo
         if website:
             public_users.append(website._get_cached('user_id'))
         return public_users
@@ -138,7 +138,7 @@ class Http(models.AbstractModel):
             public user as request uid.
         """
         if not request.session.uid:
-            website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
+            website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').get_current_website()  # sudo
             if website:
                 request.update_env(user=website._get_cached('user_id'))
 
