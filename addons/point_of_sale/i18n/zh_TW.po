@@ -7,7 +7,7 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-06 08:36+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1865,7 +1865,7 @@ msgstr "錯誤！您不能建立循環類別。"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Existing orderlines"
-msgstr ""
+msgstr "現有的訂單資料行"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_expected
@@ -4575,7 +4575,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "缺漏某些序號/批次號碼"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4864,7 +4864,7 @@ msgstr "預設價目表必須包括在可用價目表中。"
 msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
-msgstr ""
+msgstr "預設價格表必須不屬於任何公司,或者屬於門店所屬的公司。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5202,7 +5202,7 @@ msgstr "訂單是空白的"
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
-msgstr ""
+msgstr "這個訂單還沒有同步到服務器。請確認它已被同步,然後再試。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -5545,7 +5545,7 @@ msgstr "不支援的文件格式"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "未同步的訂單"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -5749,6 +5749,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"您正在嘗試銷售帶有序列號/批號的產品，但其中一些未設置。\n"
+"是否仍要繼續？"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5766,6 +5768,8 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"您不能：從後端界面創建 pos 訂單，或取消設置價目表，或使用表單工具在 python 測試中創建 "
+"pos.order，或者在工作室中編輯表單視圖（如果不存在 PoS訂單）"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5774,6 +5778,8 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"發票未過賬時，不能關閉POS。\n"
+"發票:%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
