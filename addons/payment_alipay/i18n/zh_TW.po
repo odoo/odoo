@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:23+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr "跨境"
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese merchants)"
-msgstr ""
+msgstr "快速結賬（只適用於中國商戶）"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
@@ -89,17 +89,17 @@ msgstr "付款交易"
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(r)s or txn_id %(t)s."
-msgstr ""
+msgstr "收到的數據中缺漏參考編號 %(r)s 或 txn_id %(t)s。"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
 msgid "The public Alipay partner email"
-msgstr ""
+msgstr "公開的支付寶合作夥伴電子郵件"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
 msgid "The public partner ID solely used to identify the account with Alipay"
-msgstr ""
+msgstr "只用於識別支付寶賬戶的公開合作夥伴識別碼"
 
 #. module: payment_alipay
 #: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
@@ -112,6 +112,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Asiapay</strong>."
 msgstr ""
+"此服務商已被棄用。\n"
+"                    請考慮將它設為停用，並轉用 <strong>Asiapay</strong>。"
 
 #. module: payment_alipay
 #: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
@@ -139,4 +141,4 @@ msgstr "交易完成，您的線上付款已成功處理完畢。 感謝您的�
 #: code:addons/payment_alipay/models/payment_transaction.py:0
 #, python-format
 msgid "received invalid transaction status: %s"
-msgstr ""
+msgstr "收到的無效交易狀態：%s"
