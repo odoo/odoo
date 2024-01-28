@@ -7,7 +7,7 @@
 # Pak Wai Ho, 2023
 # Martin Trigaux, 2023
 # Levi Siuzdak (sile), 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\"以驗證您的動作。"
 
 #. module: portal
 #. odoo-javascript
@@ -38,7 +38,7 @@ msgstr "過期 %1d 天"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "1. Enter your password to confirm you own this account"
-msgstr ""
+msgstr "1. 輸入您的密碼以確認您擁有該帳戶"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -46,6 +46,8 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. 要確認刪除您的帳戶，\n"
+"                                        請複製您的登入名稱("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -57,12 +59,12 @@ msgstr "<i class=\"fa fa-arrow-right me-1\"/> 返回編輯模式"
 msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
-msgstr "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" title=\"回前頁\"/>"
+msgstr "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"上一頁\" title=\"上一頁\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"下頁\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"下一頁\" title=\"下一頁\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -102,7 +104,7 @@ msgstr "<option value=\"\">國家...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">select...</option>"
-msgstr ""
+msgstr "<option value=\"\">請選擇⋯</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -324,7 +326,7 @@ msgstr "賬戶安全"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
-msgstr ""
+msgstr "帳戶已刪除！"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -356,7 +358,7 @@ msgstr "加入於"
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
+msgstr "已經註冊"
 
 #. module: portal
 #. odoo-python
@@ -368,7 +370,7 @@ msgstr "必須為每個附件提供存取代碼(token)。"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "確認要這樣做？"
 
 #. module: portal
 #. odoo-javascript
@@ -532,7 +534,7 @@ msgstr "當前僅限內部員工使用，點選更改使其可供查看此文檔
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "客戶 API 密鑰"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -554,7 +556,7 @@ msgstr "刪除"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr ""
+msgstr "刪除帳戶"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -581,6 +583,11 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"停用你的帳戶，以防止再有登入。<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            此操作無法還原。\n"
+"                                        </b>"
 
 #. module: portal
 #. odoo-javascript
@@ -624,7 +631,7 @@ msgstr "電郵"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "電郵地址已有其他用戶使用"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -681,6 +688,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"這是您的新API密鑰，使用它代替密碼進行 RPC 訪問.\n"
+"                            您的登錄仍然是交互式使用所必需的."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -699,7 +708,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "重要提示:"
 
 #. module: portal
 #. odoo-javascript
@@ -752,7 +761,7 @@ msgstr "邀請消息"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "邀請聯絡人建立使用者帳戶的電郵"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -772,6 +781,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"此描述清晰完整是\n"
+"                非常重要，"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
@@ -835,7 +846,7 @@ msgstr "模型 %(model_name)s 不支持金鑰認證，因為它沒有 %(field_na
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "不支援多公司報表."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -874,7 +885,7 @@ msgstr "下一頁"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "No Documents to display"
-msgstr ""
+msgstr "沒有文件可顯示"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -891,7 +902,7 @@ msgstr "Odoo 徽標"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "只有內部用戶和門戶用戶才能創建API密鑰"
 
 #. module: portal
 #. odoo-javascript
@@ -995,7 +1006,7 @@ msgstr "已在 %s 時發佈"
 msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
-msgstr ""
+msgstr "將我的電子郵件和電話列入封鎖名單，確保再也不會有人聯繫我"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1175,7 +1186,7 @@ msgstr "聯絡人“%s”沒有有效的電子郵件。"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "聯絡人\"%s\"跟現有用戶的電子郵件相同"
 
 #. module: portal
 #. odoo-python
@@ -1190,7 +1201,7 @@ msgstr "附件不存在，或者您沒有存取該文檔的許可權。"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "密鑰不可稍後讀取，並提供"
 
 #. module: portal
 #. odoo-python
@@ -1219,7 +1230,7 @@ msgstr "合作夥伴“%s”已經擁有網站登入存取權限。"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "合作夥伴\"%s\"沒有門戶訪問權,或者是內部的。"
 
 #. module: portal
 #. odoo-python
@@ -1295,7 +1306,7 @@ msgstr "有效"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "有效電子郵件地址"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1447,7 +1458,7 @@ msgstr "您必須"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "你應該輸入「"
 
 #. module: portal
 #. odoo-python
@@ -1497,7 +1508,7 @@ msgstr "評語"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "完全存取權限"
 
 #. module: portal
 #. odoo-javascript
@@ -1507,6 +1518,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"建立後，它將是\n"
+"                識別密鑰的唯一方法"
 
 #. module: portal
 #. odoo-javascript
@@ -1537,4 +1550,4 @@ msgstr "張貼評論。"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "對於您的用戶帳戶,安全地存儲它非常重要。"

@@ -344,6 +344,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        Kære <t t-out=\"object.partner_id.name or ''\">bruger</t>,\n"
+"        <br><br>\n"
+"        Vær opmærksom på, at dit\n"
+"        <t t-out=\"doc_name or ''\">tilbud</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (med reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        er blevet aflyst. Derfor bør du ikke blive opkrævet yderligere for denne ordre.\n"
+"        Hvis det er nødvendigt med tilbagebetaling, vil dette blive udført efter bedste bekvemmelighed.\n"
+"        <br><br>\n"
+"        Tøv ikke med at kontakte os, hvis du har spørgsmål.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -764,7 +782,7 @@ msgstr "Konto bruges til forudbetalinger"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Påløbne indtægter"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1848,7 +1866,7 @@ msgstr "Sortér efter"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Har Fiscal stilling ændret"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2778,12 +2796,12 @@ msgstr "Emballering"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Pakke Antal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Partnerkreditadvarsel"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2880,7 +2898,7 @@ msgstr "Prisliste"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Prisliste vare"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3318,7 +3336,7 @@ msgstr "Salgsordrer"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Salg Betalingsudbyder onboarding guide"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3996,7 +4014,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Adgangs tokenen er ugyldig."
 
 #. module: sale
 #. odoo-python
@@ -4034,6 +4052,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Fakturaen genereres automatisk og er tilgængelig i kundeportalen, når transaktionen er bekræftet af betalingsudbyderen.\n"
+"Fakturaen markeres som betalt og betalingen registreres i betalingsjournalen defineret i betalingsudbyderens konfiguration.\n"
+"Denne tilstand anbefales, hvis du udsteder den endelige faktura ved ordren og ikke efter levering."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4089,6 +4110,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"Det produkt, der bruges til at fakturere en forudbetaling, skal have en "
+"fakturapolitik sat til \"Bestilte mængder\". Opdater venligst dit "
+"indbetalingsprodukt for at kunne oprette en indbetalingsfaktura."
 
 #. module: sale
 #. odoo-python
@@ -4467,7 +4491,7 @@ msgstr "Mulighed for mersalg"
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr ""
+msgstr "Bruges af sælgere, når de sender tilbud eller proforma til kunder"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4592,6 +4616,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Du kan vælge alle ordrer og fakturere dem i partier<br>\n"
+"                eller tjekke hver ordre og fakturere dem enkeltvis."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
