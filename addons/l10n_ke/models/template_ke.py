@@ -37,5 +37,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'ke5146',
                 'account_sale_tax_id': 'ST16',
                 'account_purchase_tax_id': 'PT16',
+                'tax_exigibility': 'True',
             },
         }
