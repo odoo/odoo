@@ -2472,7 +2472,7 @@ class BaseModel(metaclass=MetaModel):
 
                 if not value and field.type == 'many2many':
                     other_values = [other_row[group][0] if isinstance(other_row[group], tuple)
-                                    else other_row[group].id if isinstance(value, BaseModel)
+                                    else other_row[group].id if isinstance(other_row[group], BaseModel)
                                     else other_row[group] for other_row in rows_dict if other_row[group]]
                     additional_domain = [(field_name, 'not in', other_values)]
                 else:
