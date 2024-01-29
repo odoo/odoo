@@ -623,10 +623,13 @@ export class PosOrderline extends Base {
             discount: this.get_discount_str(),
             customerNote: this.get_customer_note(),
             internalNote: this.getNote(),
-            combo_parent_id: this.combo_parent_id
-                ? this.combo_parent_id.get_full_product_name()
-                : "",
-            pack_lot_lines: this.get_lot_lines(),
+            comboParent: this.combo_parent_id?.get_full_product_name?.() || "",
+            packLotLines: this.pack_lot_ids.map(
+                (l) =>
+                    `${l.pos_order_line_id.product_id.tracking == "lot" ? "Lot Number" : "SN"} ${
+                        l.lot_name
+                    }`
+            ),
             price_without_discount: formatCurrency(
                 this.getUnitDisplayPriceBeforeDiscount(),
                 this.currency
@@ -643,9 +646,6 @@ export class PosOrderline extends Base {
         return this.pack_lot_ids.filter((item) => {
             return item.lot_name;
         });
-    }
-    get_lot_lines() {
-        return this.pack_lot_ids && this.pack_lot_ids;
     }
     // FIXME what is the use of this ?
     updateSavedQuantity() {
