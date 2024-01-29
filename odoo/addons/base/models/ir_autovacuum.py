@@ -31,7 +31,7 @@ class AutoVacuum(models.AbstractModel):
             raise AccessDenied()
 
         for model in self.env.values():
-            cls = type(model)
+            cls = self.env.registry[model._name]
             for attr, func in inspect.getmembers(cls, is_autovacuum):
                 _logger.debug('Calling %s.%s()', model, attr)
                 try:

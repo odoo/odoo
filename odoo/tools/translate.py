@@ -1571,7 +1571,7 @@ def _get_translation_upgrade_queries(cr, field):
                 SELECT it.res_id as res_id, jsonb_object_agg(it.lang, it.value) AS value, bool_or(imd.noupdate) AS noupdate
                   FROM _ir_translation it
              LEFT JOIN ir_model_data imd
-                    ON imd.model = %s AND imd.res_id = it.res_id
+                    ON imd.model = %s AND imd.res_id = it.res_id AND imd.module != '__export__'
                  WHERE it.type = 'model' AND it.name = %s AND it.state = 'translated'
               GROUP BY it.res_id
             )

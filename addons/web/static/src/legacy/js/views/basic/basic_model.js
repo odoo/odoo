@@ -91,6 +91,7 @@ var Domain = require('web.Domain');
 const pyUtils = require('web.py_utils');
 var session = require('web.session');
 var utils = require('web.utils');
+const rpc = require("web.rpc");
 var viewUtils = require('web.viewUtils');
 var localStorage = require('web.local_storage');
 
@@ -1181,11 +1182,32 @@ var BasicModel = AbstractModel.extend({
                     }
                     record.saveInProgress = true;
                     var args = method === 'write' ? [[record.data.id], changes] : [changes];
+                    const context = record.getContext();
+                    const model = record.model;
+                    if (self.useSendBeacon) {
+                        // We are trying to save urgently because the user is closing the page. To
+                        // ensure that the save succeeds, we can't do a classic rpc, as these requests
+                        // can be cancelled (payload too heavy, network too slow, computer too fast...).
+                        // We instead use sendBeacon, which isn't cancellable. However, it has limited
+                        // payload (typically < 64k). So we try to save with sendBeacon, and if it
+                        // doesn't work, we will prevent the page from unloading.
+                        const { route, params } = rpc.buildQuery({ model, method, args, context });
+                        const data = { jsonrpc: "2.0", method: "call", params };
+                        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+                        const succeeded = navigator.sendBeacon(route, blob);
+                        record.saveInProgress = false;
+                        if (succeeded) {
+                            resolve(changedFields);
+                        } else {
+                            reject("send beacon failed");
+                        }
+                        return;
+                    }
                     self._rpc({
-                            model: record.model,
+                            model,
                             method: method,
                             args: args,
-                            context: record.getContext(),
+                            context,
                         }).then(function (id) {
                             if (method === 'create') {
                                 record.res_id = id;  // create returns an id, write returns a boolean
@@ -1217,7 +1239,7 @@ var BasicModel = AbstractModel.extend({
                             record.saveInProgress = false;
                             // Update the data directly or reload them
                             if (shouldReload) {
-                                self._fetchRecord(record, { viewType: options.viewType }).then(function () {
+                                self._fetchRecord(record, { viewType: options.viewType }).finally(function () {
                                     resolve(changedFields);
                                 });
                             } else {

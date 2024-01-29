@@ -49,10 +49,14 @@ class IrUiView(models.Model):
 
         if value is not None:
             # TODO: batch writes?
+            record = Model.browse(int(el.get('data-oe-id')))
             if not self.env.context.get('lang') and self.get_default_lang_code():
-                Model.browse(int(el.get('data-oe-id'))).with_context(lang=self.get_default_lang_code()).write({field: value})
+                record.with_context(lang=self.get_default_lang_code()).write({field: value})
             else:
-                Model.browse(int(el.get('data-oe-id'))).write({field: value})
+                record.write({field: value})
+
+            if callable(Model._fields[field].translate):
+                self._copy_custom_snippet_translations(record, field)
 
     def save_oe_structure(self, el):
         self.ensure_one()
@@ -80,9 +84,85 @@ class IrUiView(models.Model):
             'mode': 'extension',
         }
         vals.update(self._save_oe_structure_hook())
-        self.env['ir.ui.view'].create(vals)
+        oe_structure_view = self.env['ir.ui.view'].create(vals)
+        self._copy_custom_snippet_translations(oe_structure_view, 'arch_db')
 
         return True
+
+    @api.model
+    def _copy_custom_snippet_translations(self, record, html_field):
+        """ Given a ``record`` and its HTML ``field``, detect any
+        usage of a custom snippet and copy its translations.
+        """
+        lang_value = record[html_field]
+        if not lang_value:
+            return
+
+        tree = html.fromstring(lang_value)
+        for custom_snippet_el in tree.xpath('//*[hasclass("s_custom_snippet")]'):
+            custom_snippet_name = custom_snippet_el.get('data-name')
+            custom_snippet_view = self.search([('name', '=', custom_snippet_name)], limit=1)
+            if custom_snippet_view:
+                self._copy_field_terms_translations(custom_snippet_view, 'arch_db', record, html_field)
+
+    @api.model
+    def _copy_field_terms_translations(self, record_from, name_field_from, record_to, name_field_to):
+        """ Copy the terms translation from a record/field ``Model1.Field1``
+        to a (possibly) completely different record/field ``Model2.Field2``.
+
+        For instance, copy the translations of a
+        ``product.template.html_description`` field to a ``ir.ui.view.arch_db``
+        field.
+
+        The method takes care of read and write access of both records/fields.
+        """
+        record_to.check_access_rights('write')
+        record_to.check_access_rule('write')
+        record_to.check_field_access_rights('write', [name_field_to])
+
+        # This will also implicitly check for `read` access rights
+        if not record_from[name_field_from] or not record_to[name_field_to]:
+            return
+
+        field_from = record_from._fields[name_field_from]
+        field_to = record_to._fields[name_field_to]
+        error_callable_msg = "'translate' property of field %r is not callable"
+        if not callable(field_from.translate):
+            raise ValueError(error_callable_msg % field_from)
+        if not callable(field_to.translate):
+            raise ValueError(error_callable_msg % field_to)
+        if not field_to.store:
+            raise ValueError("Field %r is not stored" % field_to)
+
+        lang_env = self.env.lang or 'en_US'
+        langs = set(lang for lang, _ in self.env['res.lang'].get_installed())
+
+        # 1. Get translations
+        record_from.flush_model([name_field_from])
+        existing_translation_dictionary = field_to.get_translation_dictionary(
+            record_to[name_field_to],
+            {lang: record_to.with_context(prefetch_langs=True, lang=lang)[name_field_to] for lang in langs if lang != lang_env}
+        )
+        extra_translation_dictionary = field_from.get_translation_dictionary(
+            record_from[name_field_from],
+            {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
+        )
+        existing_translation_dictionary.update(extra_translation_dictionary)
+        translation_dictionary = existing_translation_dictionary
+
+        # The `en_US` jsonb value should always be set, even if english is not
+        # installed. If we don't do this, the custom snippet `arch_db` will only
+        # have a `fr_BE` key but no `en_US` key.
+        langs.add('en_US')
+
+        # 2. Set translations
+        new_value = {
+            lang: field_to.translate(lambda term: translation_dictionary.get(term, {}).get(lang), record_to[name_field_to])
+            for lang in langs
+        }
+        record_to.env.cache.update_raw(record_to, field_to, [new_value], dirty=True)
+        # Call `write` to trigger compute etc (`modified()`)
+        record_to[name_field_to] = new_value[lang_env]
 
     @api.model
     def _save_oe_structure_hook(self):
@@ -200,6 +280,7 @@ class IrUiView(models.Model):
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
             self.write({'arch': self._pretty_arch(new_arch)})
+            self._copy_custom_snippet_translations(self, 'arch_db')
 
     @api.model
     def _view_get_inherited_children(self, view):
@@ -278,7 +359,12 @@ class IrUiView(models.Model):
             ``bundles=True`` returns also the asset bundles
         """
         user_groups = set(self.env.user.groups_id)
-        View = self.with_context(active_test=False, lang=None)
+        new_context = {
+            **self._context,
+            'active_test': False,
+        }
+        new_context.pop('lang', None)
+        View = self.with_context(new_context)
         views = View._views_get(key, bundles=bundles)
         return views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))
 
@@ -338,7 +424,24 @@ class IrUiView(models.Model):
             'arch': xml_arch,
         }
         new_snippet_view_values.update(self._snippet_save_view_values_hook())
-        self.create(new_snippet_view_values)
+        custom_snippet_view = self.create(new_snippet_view_values)
+        model = self._context.get('model')
+        field = self._context.get('field')
+        if field == 'arch':
+            # Special case for `arch` which is a kind of related (through a
+            # compute) to `arch_db` but which is hosting XML/HTML content while
+            # being a char field.. Which is then messing around with the
+            # `get_translation_dictionary` call, returning XML instead of
+            # strings
+            field = 'arch_db'
+        res_id = self._context.get('resId')
+        if model and field and res_id:
+            self._copy_field_terms_translations(
+                self.env[model].browse(int(res_id)),
+                field,
+                custom_snippet_view,
+                'arch_db',
+            )
 
         custom_section = self.search([('key', '=', template_key)])
         snippet_addition_view_values = {

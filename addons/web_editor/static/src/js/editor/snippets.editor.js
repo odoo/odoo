@@ -2556,7 +2556,7 @@ var SnippetsMenu = Widget.extend({
             // their descendant snippets.
             const rootInvisibleSnippetEls = [...$invisibleSnippets].filter(invisibleSnippetEl => {
                 const ancestorInvisibleEl = invisibleSnippetEl
-                                                 .parentElement.closest(".o_snippet_invisible");
+                                                 .parentElement.closest(invisibleSelector);
                 if (!ancestorInvisibleEl) {
                     return true;
                 }
@@ -3588,7 +3588,10 @@ var SnippetsMenu = Widget.extend({
      */
     _registerDefaultTexts: function ($in) {
         if ($in === undefined) {
-            $in = this.$snippets.find('.oe_snippet_body');
+            // By default, we don't want the `o_default_snippet_text` class on
+            // custom snippets. Those are most likely already ready, we don't
+            // really need the auto-selection by the editor.
+            $in = this.$snippets.find('.oe_snippet_body:not(.s_custom_snippet)');
         }
 
         $in.find('*').addBack()
@@ -4425,7 +4428,7 @@ var SnippetsMenu = Widget.extend({
         const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
         this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
         $(this.customizePanel).append($customizeTableBlock);
-        this._$removeFormatButton = this.options.wysiwyg.toolbar.$el.find('#removeFormat');
+        this._$removeFormatButton = this._$removeFormatButton || this.options.wysiwyg.toolbar.$el.find('#removeFormat');
         $title.append(this._$removeFormatButton);
         this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
         this.options.wysiwyg.toolbar.$el.find('#table').remove();
@@ -4449,7 +4452,7 @@ var SnippetsMenu = Widget.extend({
             return;
         }
         if (!range ||
-            !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
+            !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper').length ||
             closestElement(selection.anchorNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])') ||
             closestElement(selection.focusNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])') ||
             (e && $(e.target).closest('.fa, img').length ||

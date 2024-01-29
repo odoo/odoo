@@ -794,6 +794,41 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             self.assertEqual(move.tax_totals['amount_total'], 544.7)
             self.assertEqual(move.tax_totals['amount_total_rounded'], 545)
 
+    def test_recompute_cash_rounding_lines(self):
+        # if rounding_method is changed then rounding shouldn't be recomputed in posted invoices
+        cash_rounding_add_invoice_line = self.env['account.cash.rounding'].create({
+            'name': 'Add invoice line Rounding UP',
+            'rounding': 1,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+            'rounding_method': 'UP',
+        })
+        moves_rounding = {}
+        moves = self.env['account.move']
+        for move_type in ['out_invoice', 'in_invoice']:
+            move = self.env['account.move'].create({
+                'move_type': move_type,
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-01',
+                'invoice_cash_rounding_id': cash_rounding_add_invoice_line.id,
+                'invoice_line_ids': [
+                        Command.create({
+                            'name': 'line',
+                            'display_type': 'product',
+                            'price_unit': 99.5,
+                        })
+                    ],
+            })
+            moves_rounding[move] = sum(move.line_ids.filtered(lambda line: line.display_type == 'rounding').mapped('balance'))
+            moves += move
+        moves.action_post()
+        cash_rounding_add_invoice_line.rounding_method = 'DOWN'
+        # check if rounding is recomputed
+        moves.to_check = True
+        for move in moves_rounding:
+            self.assertEqual(sum(move.line_ids.filtered(lambda line: line.display_type == 'rounding').mapped('balance')), moves_rounding[move])
+
     def test_cash_rounding_amount_total_rounded_foreign_currency(self):
         tax_15 = self.env['account.tax'].create({
             'name': "tax_15",

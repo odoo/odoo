@@ -19,6 +19,7 @@
 # Jakub Smolka, 2023
 # Tomáš Píšek, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Jakub Krkoška, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Jakub Krkoška, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1040,7 +1041,7 @@ msgstr "Přiřazeno k"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Assignees"
-msgstr "Nabyvatelé"
+msgstr "Odpovědné osoby"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -1206,7 +1207,7 @@ msgstr "Blokováno"
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr ""
+msgstr "Blokováno uživatelem"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2660,14 +2661,14 @@ msgstr "Neplatná specifikace pole %r."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Neplatný operátor: %s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Neplatná hodnota: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -3452,7 +3453,7 @@ msgstr "Bez předmětu"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
 msgid "No activity types found. Let's create one!"
-msgstr ""
+msgstr "Nebyly nalezeny žádné typy aktivit. Vytvořme si jeden!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -3919,7 +3920,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
 msgid "Privacy Visibility Warning"
-msgstr ""
+msgstr "Upozornění na viditelnost soukromí"
 
 #. module: project
 #. odoo-javascript
@@ -5509,6 +5510,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
 msgstr ""
+"Ty představují různé kategorie věcí, které musíte udělat (např. „Zavolat“ "
+"nebo „Poslat e-mail“)."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -6146,7 +6149,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr ""
+msgstr "odpovědné osoby"
 
 #. module: project
 #. odoo-javascript

@@ -1266,6 +1266,29 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(len(sale_order.picking_ids), 2)
 
+    def test_update_so_line_qty_with_package(self):
+        """
+        Creates a sale order, then validates the delivery
+        modifying the sale order lines qty to 0
+        move line should be deleted.
+        """
+        self.product_a.type = 'product'
+        self.env['stock.quant']._update_available_quantity(
+            self.product_a, self.company_data['default_warehouse'].lot_stock_id, 10,
+            package_id=self.env['stock.quant.package'].create({'name': 'PacMan'}))
+
+        # Create sale order
+        sale_order = self._get_new_sale_order(product=self.product_a)
+        sale_order.action_confirm()
+
+        # Update the SO line
+        with Form(sale_order.with_context(import_file=True)) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 0
+
+        self.assertFalse(sale_order.picking_ids.package_level_ids)
+        self.assertFalse(sale_order.picking_ids.move_line_ids)
+
     def test_multiple_returns(self):
         # Creates a sale order for 10 products.
         sale_order = self._get_new_sale_order()
@@ -1634,3 +1657,47 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             {'product_id': self.product_a.id, 'product_uom_qty': 0, 'quantity_done': 0, 'state': 'cancel'},
             {'product_id': self.product_b.id, 'product_uom_qty': 1, 'quantity_done': 0, 'state': 'waiting'},
         ])
+
+    def test_2_steps_fixed_procurement_propagation_with_backorder(self):
+        """
+        When validating a picking (partially coming from a backorder) linked to 2 destinations moves in a 2-steps delivery,
+        stock.move.line should be created for the 2 OUT moves.
+        Steps:
+        - Warehouse with Outgoing Shipments in 2 steps and propagation of rule set to Fixed
+        - Create a SO with 3 Product X
+        - on PICK_1 picking: set 1 unit in done, validate and create a backorder
+        - Create a SO with 1 Product X
+        - on PICK_2 picking: set 3 units in done and validate
+        """
+        warehouse = self.company_data.get('default_warehouse')
+        warehouse.delivery_steps = 'pick_ship'
+        rule = warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.procure_method == 'make_to_stock')[0]
+        rule.group_propagation_option = 'fixed'
+        fixedGroup = self.env['procurement.group'].create({})
+        rule.group_id = fixedGroup
+        self.env['stock.quant']._update_available_quantity(self.test_product_delivery, warehouse.lot_stock_id, 4)
+        # create a SO with 3 products
+        so1 = self._get_new_sale_order(product=self.test_product_delivery, amount=3)
+        so1.action_confirm()
+        pick1 = fixedGroup.stock_move_ids.filtered(lambda m: m.origin == so1.name)[0].picking_id
+        out1 = so1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+        # set 1 done on the PICK move
+        pick1.move_ids.quantity_done = 1
+        res_dict = pick1.button_validate()
+        # create a backorder for the 2 remaining products
+        backorder_wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        backorder_wizard.process()
+        pick2 = pick1.backorder_ids[0]
+        self.assertEqual(out1.move_line_ids.reserved_qty, 1)
+        # create another SO with 1 product
+        so2 = self._get_new_sale_order(product=self.test_product_delivery, amount=1)
+        so2.action_confirm()
+        # PICK move of this SO will increment the product quantity of the PICK backorder by 1
+        # PICK backorder is linked to out1 and out2
+        out2 = so2.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+        pick2.move_ids.quantity_done = 3
+        pick2.button_validate()
+        self.assertEqual(out1.state, 'assigned')
+        self.assertEqual(out1.move_line_ids.reserved_qty, 3)
+        self.assertEqual(out2.state, 'assigned')
+        self.assertEqual(out2.move_line_ids.reserved_qty, 1)

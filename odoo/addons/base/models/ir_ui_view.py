@@ -152,6 +152,7 @@ class ViewCustom(models.Model):
     _description = 'Custom View'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
     _rec_name = 'user_id'
+    _allow_sudo_commands = False
 
     ref_id = fields.Many2one('ir.ui.view', string='Original View', index=True, required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', index=True, required=True, ondelete='cascade')
@@ -227,6 +228,7 @@ class View(models.Model):
     _name = 'ir.ui.view'
     _description = 'View'
     _order = "priority,name,id"
+    _allow_sudo_commands = False
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
@@ -677,8 +679,8 @@ actual arch.
         views = self.browse(row[0] for row in rows)
 
         # optimization: fill in cache of inherit_id and mode
-        self.env.cache.update(views, type(self).inherit_id, [row[1] for row in rows])
-        self.env.cache.update(views, type(self).mode, [row[2] for row in rows])
+        self.env.cache.update(views, self._fields['inherit_id'], [row[1] for row in rows])
+        self.env.cache.update(views, self._fields['mode'], [row[2] for row in rows])
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
@@ -1352,7 +1354,7 @@ actual arch.
         if func is not None:
             return func(node, name_manager)
         # by default views are non-editable
-        return node.tag not in (item[0] for item in type(self).type.selection)
+        return node.tag not in (item[0] for item in self._fields['type'].selection)
 
     def _editable_tag_form(self, node, name_manager):
         return True
@@ -1584,7 +1586,7 @@ actual arch.
             elif not name:
                 self._raise_view_error(_("Button must have a name"), node)
             elif type_ == 'object':
-                func = getattr(type(name_manager.model), name, None)
+                func = getattr(name_manager.model, name, None)
                 if not func:
                     msg = _(
                         "%(action_name)s is not a valid action on %(model_name)s",
@@ -1600,7 +1602,7 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind(self=name_manager.model)
+                    inspect.signature(func).bind()
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)

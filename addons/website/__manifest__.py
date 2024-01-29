@@ -162,6 +162,7 @@
             ('prepend', 'website/static/src/scss/secondary_variables.scss'),
         ],
         'web.assets_tests': [
+            'website/static/tests/tour_utils/widget_lifecycle_dep_widget.js',
             'website/static/tests/tours/**/*',
             'website/static/src/client_actions/website_preview/website_preview_test_mode.js',
         ],

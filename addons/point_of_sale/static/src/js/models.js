@@ -1194,15 +1194,41 @@ class PosGlobalState extends PosModel {
 
         // 2) Deal with the rounding methods
 
-        var round_tax = this.company.tax_calculation_rounding_method != 'round_globally';
+        const company = this.company;
+        var round_tax = company.tax_calculation_rounding_method != 'round_globally';
 
         var initial_currency_rounding = currency_rounding;
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
         // 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
-             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
+        var recompute_base = function(base_amount, incl_tax_amounts){
+            let fixed_amount = incl_tax_amounts.fixed_amount;
+            let division_amount = 0.0;
+            for(const [, tax_factor] of incl_tax_amounts.division_taxes){
+                division_amount += tax_factor;
+            }
+            let percent_amount = 0.0;
+            for(const [, tax_factor] of incl_tax_amounts.percent_taxes){
+                percent_amount += tax_factor;
+            }
+
+            if(company.country && company.country.code === "IN"){
+                for(const [i, tax_factor] of incl_tax_amounts.percent_taxes){
+                    const tax_amount = round_pr(base_amount * tax_factor / (100 + percent_amount), currency_rounding);
+                    cached_tax_amounts[i] = tax_amount;
+                    fixed_amount += tax_amount;
+                }
+                percent_amount = 0.0;
+            }
+
+            Object.assign(incl_tax_amounts, {
+                percent_taxes: [],
+                division_taxes: [],
+                fixed_amount: 0.0,
+            });
+
+            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
         }
 
         var base = round_pr(price_unit * quantity, initial_currency_rounding);
@@ -1217,30 +1243,29 @@ class PosGlobalState extends PosModel {
         var i = taxes.length - 1;
         var store_included_tax_total = true;
 
-        var incl_fixed_amount = 0.0;
-        var incl_percent_amount = 0.0;
-        var incl_division_amount = 0.0;
+        const incl_tax_amounts = {
+            percent_taxes: [],
+            division_taxes: [],
+            fixed_amount: 0.0,
+        }
 
         var cached_tax_amounts = {};
         if (handle_price_include){
             _(taxes.reverse()).each(function(tax){
                 if(tax.include_base_amount){
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
-                    incl_fixed_amount = 0.0;
-                    incl_percent_amount = 0.0;
-                    incl_division_amount = 0.0;
+                    base = recompute_base(base, incl_tax_amounts);
                     store_included_tax_total = true;
                 }
                 if(tax.price_include){
                     if(tax.amount_type === 'percent')
-                        incl_percent_amount += tax.amount;
+                        incl_tax_amounts.percent_taxes.push([i, tax.amount]);
                     else if(tax.amount_type === 'division')
-                        incl_division_amount += tax.amount;
+                        incl_tax_amounts.division_taxes.push([i, tax.amount]);
                     else if(tax.amount_type === 'fixed')
-                        incl_fixed_amount += Math.abs(quantity) * tax.amount
+                        incl_tax_amounts.fixed_amount += Math.abs(quantity) * tax.amount;
                     else{
                         var tax_amount = self._compute_all(tax, base, quantity);
-                        incl_fixed_amount += tax_amount;
+                        incl_tax_amounts.fixed_amount += tax_amount;
                         cached_tax_amounts[i] = tax_amount;
                     }
                     if(store_included_tax_total){
@@ -1252,7 +1277,7 @@ class PosGlobalState extends PosModel {
             });
         }
 
-        var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
+        var total_excluded = round_pr(recompute_base(base, incl_tax_amounts), initial_currency_rounding);
         var total_included = total_excluded;
 
         // 4) Iterate the taxes in the sequence order to fill missing base/amount values.
@@ -1273,6 +1298,8 @@ class PosGlobalState extends PosModel {
             if(!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined){
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
+            }else if(tax.price_include && cached_tax_amounts.hasOwnProperty(i)){
+                var tax_amount = cached_tax_amounts[i];
             }else
                 var tax_amount = self._compute_all(tax, tax_base_amount, quantity, true);
 

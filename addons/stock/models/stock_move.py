@@ -1543,7 +1543,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.env['stock.quant']._get_available_quantity(self.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, allow_negative=allow_negative)
 
     def _get_available_move_lines_in(self):
-        move_lines_in = self.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
+        move_lines_in = self.move_orig_ids.move_dest_ids.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
 
         def _keys_in_groupby(ml):
             return (ml.location_dest_id, ml.lot_id, ml.result_package_id, ml.owner_id)

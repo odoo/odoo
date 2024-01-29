@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { FormController } from '@web/views/form/form_controller';
@@ -354,6 +354,33 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
     QUnit.test("Ensure that urgentSave works even with modified image to save", async (assert) => {
         assert.expect(5);
+
+        let sendBeaconDef;
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                const { args, model } = params;
+                if (route === '/web/dataset/call_kw/partner/write' && model === 'partner') {
+                    if (writeCount === 0) {
+                        // Save normal value without image.
+                        assert.equal(args[1].txt, `<p class="test_target"><br></p>`);
+                    } else if (writeCount === 1) {
+                        // Save image with unfinished modification changes.
+                        assert.equal(args[1].txt, imageContainerHTML);
+                    } else if (writeCount === 2) {
+                        // Save the modified image.
+                        assert.equal(args[1].txt, getImageContainerHTML(newImageSrc, false));
+                    } else {
+                        // Fail the test if too many write are called.
+                        assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
+                    }
+                    writeCount += 1;
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
+
         let formController;
         // Patch to get the controller instance.
         patchWithCleanup(FormController.prototype, {
@@ -419,20 +446,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 route === '/web/dataset/call_kw/partner/write' &&
                 args.model === 'partner'
             ) {
-                if (writeCount === 0) {
-                    // Save normal value without image.
-                    assert.equal(args.args[1].txt, `<p class="test_target"><br></p>`);
-                } else if (writeCount === 1) {
-                    // Save image with unfinished modification changes.
-                    assert.equal(args.args[1].txt, imageContainerHTML);
-                } else if (writeCount === 2) {
-                    // Save the modified image.
-                    assert.equal(args.args[1].txt, getImageContainerHTML(newImageSrc, false));
-                } else {
-                    // Fail the test if too many write are called.
-                    assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
-                }
-                writeCount += 1;
+                assert.ok(false, "write should only be called through sendBeacon");
             } else if (
                 route === `/web_editor/modify_image/${imageRecord.id}`
             ) {
@@ -473,8 +487,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const editor = htmlField.wysiwyg.odooEditor;
 
         // Simulate an urgent save without any image in the content.
+        sendBeaconDef = makeDeferred();
         await formController.beforeUnload();
-        await nextTick();
+        await sendBeaconDef;
 
         // Replace the empty paragraph with a paragrah containing an unsaved
         // modified image
@@ -485,8 +500,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // Simulate an urgent save before the end of the RPC roundtrip for the
         // image.
+        sendBeaconDef = makeDeferred();
         await formController.beforeUnload();
-        await nextTick();
+        await sendBeaconDef;
 
         // Resolve the image modification (simulate end of RPC roundtrip).
         modifyImagePromise.resolve();
@@ -494,7 +510,8 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await nextTick();
 
         // Simulate the last urgent save, with the modified image.
+        sendBeaconDef = makeDeferred();
         await formController.beforeUnload();
-        await nextTick();
+        await sendBeaconDef;
     });
 });

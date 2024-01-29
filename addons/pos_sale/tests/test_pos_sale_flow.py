@@ -319,7 +319,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         #create a sale order with product_a
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,

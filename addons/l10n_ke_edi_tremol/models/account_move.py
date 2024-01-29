@@ -172,8 +172,8 @@ class AccountMove(models.Model):
             percentage = 0
             for tax in tax_details['tax_details_per_record'][line]['tax_details']:
                 if tax['tax'].amount in (16, 8, 0): # This should only occur once
-                    tax_details = tax_details['tax_details_per_record'][line]['tax_details'][tax]
-                    price_total = abs(tax_details['base_amount_currency']) + abs(tax_details['tax_amount_currency'])
+                    line_tax_details = tax_details['tax_details_per_record'][line]['tax_details'][tax]
+                    price_total = abs(line_tax_details['base_amount_currency']) + abs(line_tax_details['tax_amount_currency'])
                     percentage = tax['tax'].amount
 
             price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate

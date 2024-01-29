@@ -11,7 +11,7 @@
 # Iran Villalobos López, 2023
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2522,21 +2522,21 @@ msgstr ""
 "\n"
 "Documento di Trasporto (DDT)\n"
 "\n"
-"Siempre que se transfieran bienes entre A y B el DDT sirve\n"
-"como legitimación p. ej. si en algún momento la policía lo detiene. \n"
+"Siempre que se transfieran bienes entre A y B, el DDT sirve\n"
+"como legitimación, por ejemplo, si en algún momento la policía lo detiene. \n"
 "\n"
-"Cuando quiere imprimir una recolección saliente en una empresa italiana,\n"
+"Cuando desee imprimir una recolección saliente en una empresa italiana,\n"
 "lo que se imprimirá será el DDT. Es como una nota\n"
-"de entrega, pero también contiene el valor del producto\n"
-"la razón de transporte, el transportista,... todo esto lo hace un DDT. \n"
+"de entrega, pero también contiene el valor del producto,\n"
+"el motivo de transporte, el transportista, entre otras cosas. Toda esta información lo hace un DDT. \n"
 "\n"
-"También usamos una secuencia separada para el DDT, ya que el nombre\n"
+"También usamos una secuencia separada para el DDT, ya que el número\n"
 "no puede tener separaciones y solo se debe aplicar cuando se envíen los bienes.\n"
 "\n"
 "Cuando las facturas están relacionadas a su orden de venta y la orden de venta está relacionada \n"
-"a la entrega, el sistema calculará automáticamente los DDT para cada \n"
-"línea de factura para exportarlo en el FatturaPA XML.\n"
-"    "
+"a la entrega, el sistema calculará los DDT de forma automática para cada \n"
+"línea de factura para exportarlo al XML de FatturaPA.\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
@@ -3116,12 +3116,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Incluir esta información para la localización china\n"
+"Incluye la siguiente información para la localización china\n"
 "========================================================\n"
 "\n"
 "Tipo de cuenta/科目类型\n"
 "\n"
-"Información de estado/省份数据\n"
+"Información del estado/省份数据\n"
 "\n"
 "    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
 "\n"
@@ -3133,10 +3133,12 @@ msgstr ""
 "\n"
 "    修改小企业会计税率\n"
 "\n"
-"Agregamos la opción para imprimir el vale que también \n"
-"tendrá la cantidad escrita en palabras (caracteres chinos especiales para números).\n"
-"Las palabras estarán escritas correctamente cuando la librería de cn2an se instale (p. ej. con pip3 instale cn2an)\n"
-"    "
+"    增加大企业会计科目表\n"
+"\n"
+"Agregamos la opción para imprimir el vale que también incluirá\n"
+"el importe escrito con letra (caracteres chinos especiales para números).\n"
+"Este importe estará escrito de forma correcta cuando instale la biblioteca cn2an (por ejemplo, con pip3 instale cn2an).\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -3688,23 +3690,24 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Configuración mínima de la contabilidad de México.\n"
+"Configuración mínima de la contabilidad para México.\n"
 "============================================\n"
 "\n"
-"Este plan de cuentas es una propuesta mínima para poder utilizar OoB, la\n"
-"función de contabilidad de Odoo.\n"
+"Este plan de cuentas es una propuesta mínima para poder utilizar las\n"
+"funciones de contabilidad de Odoo de forma directa.\n"
 "\n"
-"Esto no pretende ser toda la localización de México, sino que son solo los datos\n"
-"mínimos requeridos para empezar de cero en la localización mexicana.\n"
+"Esto no pretende ser toda la localización de México, sino que solo es la información\n"
+"mínima necesaria para empezar desde cero en la localización mexicana.\n"
 "\n"
-"El equipo de OpenErp-México actualiza este módulo y su contenido con frecuencia.\n"
+"El equipo de openerp-méxico actualiza este módulo y su contenido con frecuencia.\n"
 "\n"
 "Con este módulo tendrá:\n"
 "\n"
-"- Plan de cuentas mínimo probado en entornos de producción.\n"
-"- Plan de impuestos mínimo para cumplir con los requisitos del SAT \n"
+"- Un plan de cuentas mínimo probado en entornos de producción.\n"
+"- Un esquema de impuestos mínimo para cumplir con los requisitos del SAT.\n"
 "\n"
-".._SAT: http://www.sat.gob.mx/"
+".._SAT: http://www.sat.gob.mx/\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -5946,7 +5949,7 @@ msgid ""
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
 "\n"
-"Este widget permite mostrar medidores usando la librería d3.\n"
+"Este widget permite mostrar medidores gracias a la biblioteca d3.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -6348,7 +6351,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "\"group_by\" value must be a string %(attribute)s=%(value)r"
-msgstr "El valor \"group_by\" debe ser una cadena %(attribute)s = %(value)r"
+msgstr "El valor \"group_by\" debe ser una cadena %(attribute)s=%(value)r"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
@@ -10449,7 +10452,7 @@ msgstr "Centralice su libreta de direcciones"
 #: model:ir.module.module,summary:base.module_knowledge
 msgid "Centralize, manage, share and grow your knowledge library"
 msgstr ""
-"Centralice, gestione, comparta y haga crecer su librería de información"
+"Centralice, gestione, comparta y haga crecer su biblioteca de información"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -29133,6 +29136,16 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+"No puede archivar el idioma en el que configuró Odoo, los procesos "
+"automatizados también lo usan."
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."

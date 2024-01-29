@@ -311,7 +311,7 @@ class IoTboxHomepage(Home):
     @http.route('/enable_ngrok', type='http', auth='none', cors='*', csrf=False)
     def enable_ngrok(self, auth_token):
         if subprocess.call(['pgrep', 'ngrok']) == 1:
-            subprocess.Popen(['ngrok', 'tcp', '-authtoken', auth_token, '-log', '/tmp/ngrok.log', '22'])
+            subprocess.Popen(['ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
             return 'starting with ' + auth_token
         else:
             return 'already running'

@@ -1388,7 +1388,6 @@ export class OdooEditor extends EventTarget {
         return false;
     }
     historySetSelection(step) {
-        this.deselectTable();
         if (step.selection && step.selection.anchorNodeOid) {
             const anchorNode = this.idFind(step.selection.anchorNodeOid);
             const focusNode = this.idFind(step.selection.focusNodeOid) || anchorNode;
@@ -2383,7 +2382,6 @@ export class OdooEditor extends EventTarget {
         if (anchorNode && !ancestors(anchorNode).includes(this.editable)) {
             return false;
         }
-        this.deselectTable();
         const traversedNodes = getTraversedNodes(this.editable);
         if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td') && !closestElement(node, '[data-oe-protected="true"]'))) {
             return false;
@@ -3416,6 +3414,7 @@ export class OdooEditor extends EventTarget {
                     ev.data === ' ' &&
                     selection &&
                     selection.anchorNode &&
+                    isHtmlContentSupported(selection.anchorNode) &&
                     !closestElement(selection.anchorNode).closest('a') &&
                     selection.anchorNode.nodeType === Node.TEXT_NODE
                 ) {
@@ -4514,13 +4513,16 @@ export class OdooEditor extends EventTarget {
             link.remove();
             setSelection(...start, ...start, false);
         }
-        if (odooEditorHtml && targetSupportsHtmlContent) {
+        if (!targetSupportsHtmlContent) {
+            const text = ev.clipboardData.getData("text/plain");
+            this._applyCommand("insert", text);
+        } else if (odooEditorHtml) {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
-        } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
+        } else if (files.length || clipboardHtml) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
             // When copy pasting a table from the outside, a picture of the
             // table can be included in the clipboard as an image file. In that

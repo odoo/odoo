@@ -173,6 +173,7 @@ class Partner(models.Model):
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name ASC, id DESC"
+    _allow_sudo_commands = False
     _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
 
     def _default_category(self):
@@ -1060,7 +1061,7 @@ class Partner(models.Model):
             'company_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
-            args[field] = getattr(self, field) or ''
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
         elif self.commercial_company_name:

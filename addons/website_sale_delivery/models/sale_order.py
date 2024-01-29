@@ -64,18 +64,11 @@ class SaleOrder(models.Model):
         return bool(carrier)
 
     def _get_delivery_methods(self):
-        def _is_carrier_available(carrier):
-            # Drop carriers where price computation fails (no price rule available/matching
-            # request)
-            res = carrier.rate_shipment(self)
-            return res.get('success')
         # searching on website_published will also search for available website (_search method on
         # computed field)
         return self.env['delivery.carrier'].sudo().search([
             ('website_published', '=', True),
-        ]).available_carriers(
-            self.partner_shipping_id
-        ).filtered(_is_carrier_available)
+        ]).filtered(lambda carrier: carrier._is_available_for_order(self))
 
     def _cart_update(self, *args, **kwargs):
         """ Override to update carrier quotation if quantity changed """

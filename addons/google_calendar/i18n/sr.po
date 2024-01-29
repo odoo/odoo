@@ -6,7 +6,9 @@
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
-# Milan Bojovic, 2023
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# コフスタジオ, 2024
+# Vladislav Ristić, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Milan Bojovic, 2023\n"
+"Last-Translator: Vladislav Ristić, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,31 +28,31 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s i%(length)s prati"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Days"
-msgstr ""
+msgstr "%(reminder_type)s - %(duration)s Dana"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Hours"
-msgstr ""
+msgstr "%(reminder_type)s - %(duration)s Sati"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Minutes"
-msgstr ""
+msgstr "%(reminder_type)s - %(duration)s Minuti"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
-msgstr ""
+msgstr "(bez naslova)"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
@@ -67,6 +69,7 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
+"Administrator mora da konfiguriše Google Synchronization pre korišćenja"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
@@ -77,6 +80,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"Došlo je do greške pri generisanju tokena. Vaš kod autorizacije je možda "
+"nevažeći ili je već istekao [%s]. Trebalo bi da proverite ID klijenta i "
+"tajnu na platformi Google API-ja ili pokušajte da zaustavite i ponovo "
+"pokrenete sinhronizaciju kalendara."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -92,7 +99,7 @@ msgstr "Događaj kalendar"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr ""
+msgstr "Kalendar ID"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -107,17 +114,17 @@ msgstr "ID klijenta"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "Poverljivo - klijent"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
 msgid "Client_id"
-msgstr ""
+msgstr "Klijent_id"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_secret
 msgid "Client_key"
-msgstr ""
+msgstr "Kod (ključ) - klijent"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
@@ -152,17 +159,17 @@ msgstr "Kreirano"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr ""
+msgstr "Izbriši iz Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr ""
+msgstr "Izbrisati sa oba."
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr ""
+msgstr "Obrisati iz trenutnog Google Calendar naloga"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -192,53 +199,53 @@ msgstr "Google"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Calendar"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_account_id
 msgid "Google Calendar Account"
-msgstr ""
+msgstr "Google Calendar Nalog"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
 msgid "Google Calendar Account Data"
-msgstr ""
+msgstr "Google Calendar podaci o nalogu"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
-msgstr ""
+msgstr "Google Calendar resetovanje naloga"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "Google Calendar događaji Id"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
 msgid "Google Calendar Id"
-msgstr ""
+msgstr "Google Calendar Id"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
-msgstr ""
+msgstr "Google Calendar: sinhronizacija"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr ""
+msgstr "Google zaustavljanje sinhronizacije"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google je dao sledeće objašnjenje: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -262,6 +269,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"Poslednji ID kalendara koji je sinhronizovan. Ako se promeni, uklanjamo sve veze između GoogleID-a i Odoo Google internog ID-a\n"
+"​"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
@@ -284,25 +293,25 @@ msgstr "Poslednje ažuriranje dana"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr ""
+msgstr "Ostavite ih netaknute."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
 msgid "Need Sync"
-msgstr ""
+msgstr "Potrebna je sinhronizacija"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 msgid "Next Sync Token"
-msgstr ""
+msgstr "Sledeći token za sinhronizaciju"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
 msgid "Next Synchronization"
-msgstr ""
+msgstr "Sledeća sinhronizacija"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -314,17 +323,17 @@ msgstr "Notifikacija"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_rtoken
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr ""
+msgstr "Osveži token"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Reset Account"
-msgstr ""
+msgstr "Resetuj nalog"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr ""
+msgstr "Resetujte nalog Google Calendar-a"
 
 #. module: google_calendar
 #. openerp-web
@@ -336,17 +345,17 @@ msgstr "Uspeh"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr ""
+msgstr "Sinhronizujte zapis sa Google Calendar-om"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr ""
+msgstr "Sinhronizujte sve postojeće događaje"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr ""
+msgstr "Sinhronizujte samo nove događaje"
 
 #. module: google_calendar
 #. openerp-web
@@ -356,12 +365,14 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
+"Google sinhronizaciju treba da konfigurišete da biste mogli da je koristite,"
+" da li želite da to uradite sada?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr ""
+msgstr "Nalog za uslugu Google Calendar nije konfigurisan."
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -376,23 +387,23 @@ msgstr ""
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "Sinhronizacija sa Google Calendar-om je uspešno zaustavljena."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "Korisnik već ima Google nalog"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr ""
+msgstr "Ovo će uticati samo na događaje kojima je korisnik vlasnik"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr ""
+msgstr "Punovažnost tokena "
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -405,12 +416,12 @@ msgstr "Korisnik"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
-msgstr ""
+msgstr "Korisnički token"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
-msgstr ""
+msgstr "Postojeći događaji korisnika"
 
 #. module: google_calendar
 #. openerp-web
@@ -420,13 +431,15 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
+"Spremate se da zaustavite sinhronizaciju vašeg kalendara sa Google-om. Da li"
+" ste sigurni da želite da nastavite?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "Nedefinisano vreme"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -434,3 +447,4 @@ msgstr ""
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
+"Izgleda da nemate dozvolu da izmenite ovaj događaj u Google Calendar-u"

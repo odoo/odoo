@@ -341,6 +341,9 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
         if (filter.rangeType === "relative") {
             return getRelativeDateDomain(now, offset, value, field, type);
         }
+        if (value.yearOffset === undefined) {
+            return new Domain();
+        }
 
         const setParam = { year: now.year };
         const yearOffset = value.yearOffset || 0;

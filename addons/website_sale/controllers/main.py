@@ -318,7 +318,7 @@ class WebsiteSale(http.Controller):
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
-            company_currency = website.company_id.currency_id
+            company_currency = website.company_id.sudo().currency_id
             conversion_rate = request.env['res.currency']._get_conversion_rate(
                 company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
         else:

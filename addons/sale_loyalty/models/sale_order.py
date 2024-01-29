@@ -165,9 +165,15 @@ class SaleOrder(models.Model):
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
-            line_discountable = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
-            discountable += line.price_total
-            discountable_per_tax[line.tax_id] += line_discountable
+            tax_data = line._convert_to_tax_base_line_dict()
+            # To compute the discountable amount we get the fixed tax amount and
+            # subtract it from the order total. This way fixed taxes will not be discounted
+            tax_data['taxes'] = tax_data['taxes'].filtered(lambda t: t.amount_type == 'fixed')
+            tax_results = self.env['account.tax']._compute_taxes([tax_data])
+            totals = list(tax_results['totals'].values())[0]
+            discountable += line.price_total - totals['amount_tax']
+            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            discountable_per_tax[taxes] += totals['amount_untaxed']
         return discountable, discountable_per_tax
 
     def _cheapest_line(self):
@@ -189,7 +195,8 @@ class SaleOrder(models.Model):
 
         cheapest_line = self._cheapest_line()
         discountable = cheapest_line.price_unit * (1 - (cheapest_line.discount or 0) / 100)
-        return discountable, {cheapest_line.tax_id: discountable}
+        taxes = cheapest_line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+        return discountable, {taxes: discountable}
 
     def _get_specific_discountable_lines(self, reward):
         """
@@ -252,21 +259,21 @@ class SaleOrder(models.Model):
             else:
                 non_common_lines = discounted_lines - lines_to_discount
                 # Fixed prices are per tax
-                discounted_amounts = {line.tax_id: abs(line.price_total) for line in lines}
+                discounted_amounts = {line.tax_id.filtered(lambda t: t.amount_type != 'fixed'): abs(line.price_total) for line in lines}
                 for line in itertools.chain(non_common_lines, common_lines):
                     # For gift card and eWallet programs we have no tax but we can consume the amount completely
                     if lines.reward_id.program_id.is_payment_program:
-                        discounted_amount = discounted_amounts[lines.tax_id]
+                        discounted_amount = discounted_amounts[lines.tax_id.filtered(lambda t: t.amount_type != 'fixed')]
                     else:
-                        discounted_amount = discounted_amounts[line.tax_id]
+                        discounted_amount = discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')]
                     if discounted_amount == 0:
                         continue
                     remaining = remaining_amount_per_line[line]
                     consumed = min(remaining, discounted_amount)
                     if lines.reward_id.program_id.is_payment_program:
-                        discounted_amounts[lines.tax_id] -= consumed
+                        discounted_amounts[lines.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     else:
-                        discounted_amounts[line.tax_id] -= consumed
+                        discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
@@ -277,7 +284,8 @@ class SaleOrder(models.Model):
             # line_discountable is the same as in a 'order' discount
             #  but first multiplied by a factor for the taxes to apply
             #  and then multiplied by another factor coming from the discountable
-            discountable_per_tax[line.tax_id] += line_discountable *\
+            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            discountable_per_tax[taxes] += line_discountable *\
                 (remaining_amount_per_line[line] / line.price_total)
         return discountable, discountable_per_tax
 

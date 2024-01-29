@@ -6,6 +6,8 @@
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
 # Milan Bojovic <mbojovic@outlook.com>, 2023
+# Nemanja Skadric, 2024
+# コフスタジオ, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Milan Bojovic <mbojovic@outlook.com>, 2023\n"
+"Last-Translator: コフスタジオ, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +35,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -70,13 +72,13 @@ msgstr "Vreme isteka pristupnog tokena"
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process."
-msgstr ""
+msgstr "Došlo je do greške tokom procesa autentifikacije."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "Došlo je do greške pri preuzimanju tokena za pristup."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -88,7 +90,7 @@ msgstr "Autentifikujte sa"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "Kod autorizacije"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
@@ -102,6 +104,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
+"Povežite svoj Gmail nalog sa OAuth procesom autentifikacije. \n"
+"Bićete preusmereni na Gmail stranicu za prijavljivanje gde ćete morati da prihvatite dozvolu."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -110,27 +114,29 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Povežite svoj Gmail nalog sa OAuth procesom autentifikacije. \n"
+"Podrazumevano, samo korisnik sa podudarajućom email adresom će moći da koristi ovaj server. Da biste proširili njegovu upotrebu, trebali biste postaviti \"mail.default.from\" sistemski parametar."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "Gmail klijent ID"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Gmail Klijent Tajna"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
+msgstr "Gmail OAuth Autentifikacija"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Google Gmail Mixin"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -140,12 +146,12 @@ msgstr "ID"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "ID vaše Google aplikacije"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_fetchmail_server
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Dolazni mail server"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -154,23 +160,25 @@ msgid ""
 "Incorrect Connection Security for Gmail mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"Netačna bezbednost veze za Gmail server pošte %r. Podesite ga na „TLS "
+"(STARTTLS)“."
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Mail server"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
-msgstr ""
+msgstr "Samo administrator može povezati Gmail mail server."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
-msgstr ""
+msgstr "Konfigurišite svoje Gmail akreditive."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -180,6 +188,9 @@ msgid ""
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
 msgstr ""
+"Popunite polje „Korisničko ime“ svojim Gmail korisničkim imenom (vaša adresa"
+" e-pošte). Ovo bi trebalo da bude isti nalog kao onaj koji se koristi za "
+"Gmail token za autentifikaciju."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -188,6 +199,8 @@ msgid ""
 "Please leave the password field empty for Gmail mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Ostavite polje za lozinku prazno za Gmail server pošte %r. OAuth proces to "
+"ne zahteva"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -199,7 +212,7 @@ msgstr "Pročitajte više"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_refresh_token
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_refresh_token
 msgid "Refresh Token"
-msgstr ""
+msgstr "Osveži token"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
@@ -209,7 +222,7 @@ msgstr "Tajna"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "Poverljivost vaše Google aplikacije"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type
@@ -223,13 +236,15 @@ msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
 msgstr ""
+"Podesite svoje Gmail API akreditive u opštim podešavanjima da biste povezali"
+" Gmail nalog."
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "URL za generisanje autorizacionog koda od Google-a"
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -238,6 +253,8 @@ msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
 msgstr ""
+"This server %r can only be used for your personal email address. Please fill"
+" the \"from_filter\" field with %r."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

@@ -6,7 +6,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,7 +137,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -196,17 +196,18 @@ msgstr ""
 "            <t t-else=\"\">\n"
 "                Se actualizó su cita.\n"
 "            </t>\n"
-"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demo</strong> ahora está programada para el\n"
-"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
+"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demostración</strong> ahora está programada para el\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
 "            Se actualizó la fecha de su cita con <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>.\n"
 "            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> ahora está programada para el\n"
-"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021  en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Se actualizó la fecha de la reunión.\n"
-"            La reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para propuesta de proyecto</strong> creada por <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> ahora está programada para el            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
+"            La reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para propuesta de proyecto</strong> creada por <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> ahora está programada para el \n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
@@ -251,7 +252,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Cuándo: <t t-out=\"object.recurrence_id.name or ''\">Cada 1 semana, por 3 eventos</t></li>\n"
+"                    <li>Cuándo: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Cada 1 semana, por 3 eventos</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duración: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -352,7 +353,7 @@ msgid ""
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"recurrent\">\n"
-"                            <li>When: <t t-out=\"object.recurrence_id.name or ''\"></t></li>\n"
+"                            <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\"></t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"not object.allday and object.duration\">\n"
 "                            <li>Duration:\n"
@@ -429,7 +430,7 @@ msgstr ""
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"recurrent\">\n"
-"                            <li>Cuándo: <t t-out=\"object.recurrence_id.name or ''\"></t></li>\n"
+"                            <li>Cuándo: <t t-out=\"object.recurrence_id.get_recurrence_name()\"></t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"not object.allday and object.duration\">\n"
 "                            <li>Duración:\n"
@@ -528,7 +529,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -578,7 +579,7 @@ msgstr ""
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "\n"
 "    <p>\n"
-"        Hola <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br><br>\n"
+"        Hola, <t t-out=\"object.common_name or ''\">Wood Corner</t>.<br><br>\n"
 "\n"
 "        <t t-if=\"is_online and target_customer\">\n"
 "            Se agendó su cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom'\"> con <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t>.\n"
@@ -617,7 +618,7 @@ msgstr ""
 "                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">Mayo de 2021</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">mayo de 2021</t>\n"
 "            </div>\n"
 "            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
 "                <t t-if=\"not object.event_id.allday\">\n"
@@ -645,7 +646,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Cuándo: <t t-out=\"object.recurrence_id.name or ''\">Cada 1 semanas, por 3 eventos</t></li>\n"
+"                    <li>Cuándo: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Cada 1 semanas, por 3 eventos</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duración: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -666,7 +667,7 @@ msgstr ""
 "                    <li>\n"
 "                        Cómo unirse:\n"
 "                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Unirse con Conversaciones de Odoo</t>\n"
-"                        <t t-else=\"\"> Unirse a través de </t><br>\n"
+"                        <t t-else=\"\"> Unirse a través de</t><br>\n"
 "                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
@@ -739,7 +740,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -785,7 +786,7 @@ msgstr ""
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object.event_id and object.event_id.appointment_type_id\"></t>\n"
 "    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
 "    <p>\n"
-"        Hola <t t-out=\"object.common_name or ''\">Gemini Furniture</t>,<br><br>\n"
+"        Hola, <t t-out=\"object.common_name or ''\">Gemini Furniture</t>.<br><br>\n"
 "        Este es un recordatorio para el siguiente evento:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
@@ -805,7 +806,7 @@ msgstr ""
 "                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>Mayo de 2021</t>\n"
+"                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>de mayo de 2021</t>\n"
 "            </div>\n"
 "            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
 "                <t t-if=\"not object.event_id.allday\">\n"
@@ -830,7 +831,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Cuándo: <t t-out=\"object.recurrence_id.name or ''\">Cada 1 semanas, por 3 eventos</t></li>\n"
+"                    <li>Cuándo: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Cada 1 semanas, por 3 eventos</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duración: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -851,7 +852,7 @@ msgstr ""
 "                    <li>\n"
 "                        Cómo unirse:\n"
 "                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Unirse con Conversaciones de Odoo</t>\n"
-"                        <t t-else=\"\"> Unirse a través de </t><br>\n"
+"                        <t t-else=\"\"> Unirse a través de</t><br>\n"
 "                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
@@ -1489,8 +1490,111 @@ msgstr "Hora del evento"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "Every %(count)s %(period)s"
-msgstr "Cada %(count)s %(period)s"
+msgid "Every %(interval)s Days"
+msgstr "Cada %(interval)s días"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Days for %(count)s events"
+msgstr "Cada %(interval)s días para %(count)s eventos"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Days until %(until)s"
+msgstr "Cada %(interval)s días hasta %(until)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s"
+msgstr "Cada %(interval)s meses el día %(day)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s for %(count)s events"
+msgstr "Cada %(interval)s meses el día %(day)s para %(count)s eventos"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s until %(until)s"
+msgstr "Cada %(interval)s meses el día %(day)s hasta el %(until)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
+msgstr "Cada %(interval)s meses el %(position)s %(weekday)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
+"events"
+msgstr ""
+"Cada %(interval)s meses el %(position)s %(weekday)s para %(count)s eventos"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
+msgstr ""
+"Cada %(interval)s meses el %(position)s %(weekday)s hasta el %(until)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s"
+msgstr "Cada %(interval)s semanas en %(days)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
+msgstr "Cada %(interval)s semanas en %(days)s para %(count)s eventos"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
+msgstr "Cada %(interval)s semanas en %(days)s hasta %(until)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years"
+msgstr "Cada %(interval)s años"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years for %(count)s events"
+msgstr "Cada %(interval)s años para %(count)s eventos"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years until %(until)s"
+msgstr "Cada %(interval)s años hasta %(until)s"
 
 #. module: calendar
 #. odoo-python
@@ -2602,44 +2706,9 @@ msgid "You have to choose at least one day in the week"
 msgstr "Debe elegir al menos un día de la semana"
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "day %s"
-msgstr "día %s"
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "Por ejemplo, almuerzo de trabajo"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "for %s events"
-msgstr "para %s eventos"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "on %s"
-msgstr "en %s"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "on the %(position)s %(weekday)s"
-msgstr "en el %(position)s%(weekday)s"
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "until %s"
-msgstr "hasta el %s"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
