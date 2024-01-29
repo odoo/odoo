@@ -9,7 +9,7 @@
     <record id="hr_timesheet_attendance_report_rule_user" model="ir.rule">
         <field name="name">Timesheet attendance Report: User</field>
         <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="domain_force">[('employee_id', '=', user.employee_id.id)]</field>
         <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
     </record>
 
