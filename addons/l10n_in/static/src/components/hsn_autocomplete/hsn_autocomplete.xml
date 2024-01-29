@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="l10n_in.hsnAutoComplete">
+        <AutoComplete
+            value="props.record.data[props.name] || ''"
+            sources="sources"
+            onSelect.bind="onSelect"
+            input="inputRef"
+            placeholder="props.placeholder || ''"
+        />
+    </t>
+
+    <t t-name="hsn_autocomplete.DropdownOption">
+        <div class="text-wrap">
+            <strong t-out="option.label"/>
+            <div t-out="option.description"/>
+        </div>
+    </t>
+</templates>
