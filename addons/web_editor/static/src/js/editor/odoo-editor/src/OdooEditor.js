@@ -1937,12 +1937,12 @@ export class OdooEditor extends EventTarget {
                         link.classList.add('o_link_in_selection');
                         this.observerActive('_setLinkZws_o_link_in_selection');
                         didAddZwsInLinkInSelection = true;
-                    }
-                    const zwsAfter = this._insertLinkZws('after', link);
-                    if (!zwsAfter.parentElement || !zwsAfter.parentElement.isContentEditable) {
-                        this.observerUnactive('_setLinkZws_zwsAfter_remove');
-                        zwsAfter.remove();
-                        this.observerActive('_setLinkZws_zwsAfter_remove');
+                        const zwsAfter = this._insertLinkZws('after', link);
+                        if (!zwsAfter.parentElement || !zwsAfter.parentElement.isContentEditable) {
+                            this.observerUnactive('_setLinkZws_zwsAfter_remove');
+                            zwsAfter.remove();
+                            this.observerActive('_setLinkZws_zwsAfter_remove');
+                        }
                     }
                 }
             }

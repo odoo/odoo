@@ -7019,5 +7019,17 @@ X[]
                 });
             });
         });
+        describe('shiftEnter command', () => {
+            it('should place cursor correctly after br element', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>text <a href="http://test.com">http://test.com</a> text[]</p>',
+                    stepFunction: async editor => {
+                        await triggerEvent(editor.editable, 'keydown', {key: 'Enter', shiftKey: true});
+                        await triggerEvent(editor.editable, 'keyup', {key: 'Enter', shiftKey: true});
+                    },
+                    contentAfterEdit: `<p>text <a href="http://test.com"><span data-o-link-zws="start" contenteditable="false">\u200B</span>http://test.com</a> text<br>[]<br></p>`,
+                });
+            });
+        });
     });
 });
