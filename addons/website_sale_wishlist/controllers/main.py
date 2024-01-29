@@ -47,7 +47,10 @@ class WebsiteSaleWishlist(WebsiteSale):
     def get_wishlist(self, count=False, **kw):
         values = request.env['product.wishlist'].with_context(display_default_code=False).current()
         if count:
-            return request.make_response(json.dumps(values.mapped('product_id').ids))
+            return request.make_response(
+                json.dumps(values.mapped('product_id').ids),
+                [('Content-type', 'application/json')]
+            )
 
         if not len(values):
             return request.redirect("/shop")

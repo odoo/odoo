@@ -41,8 +41,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             wishDef = $.get('/shop/wishlist', {
                 count: 1,
             }).then(function (res) {
-                self.wishlistProductIDs = JSON.parse(res);
-                sessionStorage.setItem('website_sale_wishlist_product_ids', res);
+                self.wishlistProductIDs = res;
+                sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(res));
             });
 
         }
