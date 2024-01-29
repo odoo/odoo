@@ -14,8 +14,9 @@
         <field name="name">Base: Portal Users Deletion</field>
         <field name="model_id" ref="base.model_res_users_deletion"/>
         <field name="state">code</field>
-        <field name="code">model._gc_portal_users()</field>
+        <field name="code">model._gc_portal_users(batch_size=50)</field>
         <field name='interval_number'>1</field>
         <field name='interval_type'>days</field>
+        <field name="priority">8</field>
     </record>
 </odoo>
