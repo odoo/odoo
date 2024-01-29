@@ -101,6 +101,28 @@
             <field name="code">action = records.action_split()</field>
         </record>
 
+        <record id="action_production_order_lock_unlock" model="ir.actions.server">
+            <field name="name">Lock/Unlock</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_toggle_is_locked()</field>
+        </record>
+
+        <record id="action_production_order_scrap" model="ir.actions.server">
+            <field name="name">Scrap</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                action = records.button_scrap()</field>
+        </record>
+
         <record id="action_plan_with_components_availability" model="ir.actions.server">
             <field name="name">Plan based on Components Availability</field>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_routings'))]"/>
@@ -155,10 +177,7 @@
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state == 'cancel'" data-hotkey="z"/>
                     <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object" data-hotkey="c"/>
                     <button name="do_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
-                    <button name="button_scrap" type="object" string="Scrap" invisible="state in ('cancel', 'draft')" data-hotkey="y"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
-                    <button name="action_toggle_is_locked" invisible="not show_lock or not is_locked" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock to adjust component demand during production, or consumed quantities once the manufacturing order is done." data-hotkey="l"/>
-                    <button name="action_toggle_is_locked" invisible="not show_lock or is_locked" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced." data-hotkey="l"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel') or confirm_cancel"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
@@ -233,7 +252,6 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label class="o_form_label" for="name" string="MO Reference"/>
                         <h1 class="d-flex">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
@@ -279,7 +297,7 @@
                                 <button name="action_generate_bom" type="object" icon="fa-plus"
                                     title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
                                     invisible="bom_id or not product_id or not move_raw_ids">
-                                    <span class="ms-2">Generate BOM</span>
+                                    <span>Generate BOM</span>
                                 </button>
                                 <button name="action_update_bom" string="Update BoM" type="object"
                                     title="Note that another version of this BOM is available." class="text-danger"
@@ -304,7 +322,7 @@
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
-                            <field name="date_finished"/>
+                            <field name="date_finished" string="Scheduled End" invisible="state == 'draft'"/>
                             <field name="components_availability_state" invisible="1"/>
                             <field name="components_availability" invisible="state not in ['confirmed', 'progress']"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
