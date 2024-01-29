@@ -523,9 +523,9 @@ class IrModelFields(models.Model):
     copied = fields.Boolean(string='Copied',
                             compute='_compute_copied', store=True, readonly=False,
                             help="Whether the value is copied when duplicating a record.")
-    related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
+    related = fields.Char(string='Related Field Definition', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
     related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
-                                       store=True, string="Related field", ondelete='cascade')
+                                       store=True, string="Related Field", ondelete='cascade')
     required = fields.Boolean()
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
