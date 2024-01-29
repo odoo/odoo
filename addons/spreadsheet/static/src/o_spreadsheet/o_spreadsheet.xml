@@ -268,7 +268,7 @@
           t-on-dblclick="() => this.onDblClick()"
           t-on-focusout="() => this.onFocusOut()"
           t-on-keydown="(ev) => this.onKeyDown(ev)"
-          t-att-contenteditable="state.isEditing.toString()"
+          t-att-contenteditable="state.isEditing ? 'plaintext-only': 'false'"
         />
         <span class="o-sheet-icon ms-1" t-on-click.stop="(ev) => this.onIconClick(ev)">
           <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
@@ -1370,7 +1370,7 @@
     <svg class="o-icon">
       <path
         fill="currentColor"
-        d="M16 .5A1.5 1.5 0 0 1 17.5 2v14a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 16V2A1.5 1.5 0 0 1 2 .5h14V2h-3.5v14H16V2H7v14h4V2H2v14h3.5V2M6 1l5 4v2L6 3m0 2 5 4v2L6 7m0 2 5 4v2l-5-4m0 2 5 4H"
+        d="M16 .5A1.5 1.5 0 0 1 17.5 2v14a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 16V2A1.5 1.5 0 0 1 2 .5h14V2h-3.5v14H16V2H7v14h4V2H2v14h3.5V2M6 1l5 4v2L6 3m0 2 5 4v2L6 7m0 2 5 4v2l-5-4"
       />
     </svg>
   </t>
@@ -3875,7 +3875,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.22';
-  __info__.date = '2024-01-17T10:55:11.023Z';
-  __info__.hash = '54cf3c0';
+  __info__.version = '16.3.23';
+  __info__.date = '2024-01-29T15:39:00.346Z';
+  __info__.hash = '21ce736';
 -->
