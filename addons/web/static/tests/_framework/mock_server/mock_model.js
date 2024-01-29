@@ -1493,7 +1493,7 @@ export class Model extends Array {
         }
 
         if (kwargs.options.load_filters && "search" in views) {
-            views["search"].filters = this.filters || [];
+            views["search"].filters = this._filters || [];
         }
         return { models, views };
     }
