@@ -13,29 +13,34 @@
  * limitations under the License.
  */
 
+:root {
+  --panel-width: 300px;
+}
+
+#PDFBug,
+#PDFBug :is(input, button, select) {
+  font: message-box;
+}
 #PDFBug {
-  background-color: rgba(255, 255, 255, 1);
-  border: 1px solid rgba(102, 102, 102, 1);
+  background-color: rgb(255 255 255);
+  border: 1px solid rgb(102 102 102);
   position: fixed;
   top: 32px;
   right: 0;
   bottom: 0;
   font-size: 10px;
   padding: 0;
-  width: 300px;
+  width: var(--panel-width);
 }
 #PDFBug .controls {
-  background: rgba(238, 238, 238, 1);
-  border-bottom: 1px solid rgba(102, 102, 102, 1);
+  background: rgb(238 238 238);
+  border-bottom: 1px solid rgb(102 102 102);
   padding: 3px;
 }
 #PDFBug .panels {
-  bottom: 0;
-  left: 0;
+  inset: 27px 0 0;
   overflow: auto;
   position: absolute;
-  right: 0;
-  top: 27px;
 }
 #PDFBug .panels > div {
   padding: 5px;
@@ -45,7 +50,7 @@
 }
 .debuggerShowText,
 .debuggerHideText:hover {
-  background-color: rgba(255, 255, 0, 1);
+  background-color: rgb(255 255 0);
 }
 #PDFBug .stats {
   font-family: courier;
@@ -64,8 +69,7 @@
   text-align: center;
 }
 #PDFBug table.showText,
-#PDFBug table.showText tr,
-#PDFBug table.showText td {
+#PDFBug table.showText :is(tr, td) {
   border: 1px solid black;
   padding: 1px;
 }
@@ -78,7 +82,7 @@
 }
 
 #viewer.textLayer-visible .canvasWrapper {
-  background-color: rgba(128, 255, 128, 1);
+  background-color: rgb(128 255 128);
 }
 
 #viewer.textLayer-visible .canvasWrapper canvas {
@@ -86,22 +90,22 @@
 }
 
 #viewer.textLayer-visible .textLayer span {
-  background-color: rgba(255, 255, 0, 0.1);
-  color: rgba(0, 0, 0, 1);
-  border: solid 1px rgba(255, 0, 0, 0.5);
+  background-color: rgb(255 255 0 / 0.1);
+  color: rgb(0 0 0);
+  border: solid 1px rgb(255 0 0 / 0.5);
   box-sizing: border-box;
 }
 
 #viewer.textLayer-visible .textLayer span[aria-owns] {
-  background-color: rgba(255, 0, 0, 0.3);
+  background-color: rgb(255 0 0 / 0.3);
 }
 
 #viewer.textLayer-hover .textLayer span:hover {
-  background-color: rgba(255, 255, 255, 1);
-  color: rgba(0, 0, 0, 1);
+  background-color: rgb(255 255 255);
+  color: rgb(0 0 0);
 }
 
 #viewer.textLayer-shadow .textLayer span {
-  background-color: rgba(255, 255, 255, 0.6);
-  color: rgba(0, 0, 0, 1);
+  background-color: rgb(255 255 255 / 0.6);
+  color: rgb(0 0 0);
 }

@@ -1,6 +1,4 @@
 // @odoo-module ignore
-/* global PDFSlidesViewer */
-
 /**
  * This is a minimal version of the PDFViewer widget.
  * It is NOT use in the website_slides module, but it is called when embedding
@@ -29,7 +27,7 @@ $(function () {
             this.defaultpage = parseInt($viewer.find('#PDFSlideViewer').data('defaultpage'));
             this.canvas = $viewer.find('canvas')[0];
 
-            this.pdf_viewer = new PDFSlidesViewer(this.slide_url, this.canvas);
+            this.pdf_viewer = new globalThis.PDFSlidesViewer(this.slide_url, this.canvas);
             this.pdf_viewer.loadDocument().then(function () {
                 self.on_loaded_file();
             });
