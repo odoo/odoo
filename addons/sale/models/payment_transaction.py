@@ -53,6 +53,8 @@ class PaymentTransaction(models.Model):
                 for so in tx.sale_order_ids:
                     so.reference = tx._compute_sale_order_reference(so)
 
+            if tx.operation == 'validation':
+                continue
             # Send the payment status email.
             # The transactions are manually cached while in a sudoed environment to prevent an
             # AccessError: In some circumstances, sending the mail would generate the report assets
