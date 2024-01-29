@@ -52,6 +52,8 @@ class PaymentTransaction(models.Model):
             if tx.provider_id.code == 'custom':
                 for so in tx.sale_order_ids:
                     so.reference = tx._compute_sale_order_reference(so)
+            if tx.operation == 'validation':
+                continue
             # send payment status mail.
             sales_orders._send_payment_succeeded_for_order_mail()
 
@@ -87,7 +89,8 @@ class PaymentTransaction(models.Model):
         super()._set_authorized(state_message=state_message, **kwargs)
         confirmed_orders = self._check_amount_and_confirm_order()
         confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+        validation_tx = self.filtered(lambda tx: tx.operation == 'validation')
+        (self.sale_order_ids - confirmed_orders - validation_tx.sale_order_ids)._send_payment_succeeded_for_order_mail()
 
     def _log_message_on_linked_documents(self, message):
         """ Override of payment to log a message on the sales orders linked to the transaction.
@@ -106,7 +109,8 @@ class PaymentTransaction(models.Model):
         """ Override of payment to automatically confirm quotations and generate invoices. """
         confirmed_orders = self._check_amount_and_confirm_order()
         confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+        validation_tx = self.filtered(lambda tx: tx.operation == 'validation')
+        (self.sale_order_ids - confirmed_orders - validation_tx.sale_order_ids)._send_payment_succeeded_for_order_mail()
 
         auto_invoice = str2bool(
             self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
