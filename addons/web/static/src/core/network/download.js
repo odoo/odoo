@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";

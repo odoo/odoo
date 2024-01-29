@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Utils to make use of document.cookie
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies

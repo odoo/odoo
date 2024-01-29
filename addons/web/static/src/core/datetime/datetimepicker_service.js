@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { markRaw, reactive } from "@odoo/owl";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";

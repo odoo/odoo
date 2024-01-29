@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useRef, onPatched } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { clamp } from "@web/core/utils/numbers";

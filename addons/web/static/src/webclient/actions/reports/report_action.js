@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";

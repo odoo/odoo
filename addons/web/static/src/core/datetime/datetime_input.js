@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component } from "@odoo/owl";
 import { omit } from "../utils/objects";
 import { useDateTimePicker } from "./datetime_hook";

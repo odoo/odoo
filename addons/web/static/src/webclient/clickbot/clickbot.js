@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * The purpose of this test is to click on every installed App and then open each
  * view. On each view, click on each filter.

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";

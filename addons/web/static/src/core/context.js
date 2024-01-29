@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { evaluateExpr, parseExpr } from "./py_js/py";
 import { BUILTINS } from "./py_js/py_builtin";
 import { evaluate } from "./py_js/py_interpreter";

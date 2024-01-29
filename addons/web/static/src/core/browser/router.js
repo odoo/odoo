@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { EventBus } from "@odoo/owl";
 import { shallowEqual } from "../utils/objects";
 import { objectToUrlEncodedString } from "../utils/urls";

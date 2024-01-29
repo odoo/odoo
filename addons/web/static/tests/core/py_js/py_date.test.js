@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { evaluateExpr } from "@web/core/py_js/py";

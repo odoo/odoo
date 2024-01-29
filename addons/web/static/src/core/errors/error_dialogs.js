@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";

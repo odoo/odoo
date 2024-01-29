@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { UPDATE_METHODS } from "@web/core/orm_service";

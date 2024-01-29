@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { startWebClient } from "./start";
 import { WebClient } from "./webclient/webclient";
 

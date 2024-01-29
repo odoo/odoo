@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, useState, useRef, onWillUpdateProps, useEffect } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

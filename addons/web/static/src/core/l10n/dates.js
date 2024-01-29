@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";

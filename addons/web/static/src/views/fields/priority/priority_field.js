@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useCommand } from "@web/core/commands/command_hook";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";

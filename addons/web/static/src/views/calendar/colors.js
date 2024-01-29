@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 const CSS_COLOR_REGEX = /^((#[A-F0-9]{3})|(#[A-F0-9]{6})|((hsl|rgb)a?\(\s*(?:(\s*\d{1,3}%?\s*),?){3}(\s*,[0-9.]{1,4})?\))|)$/i;
 const colorMap = new Map();
 

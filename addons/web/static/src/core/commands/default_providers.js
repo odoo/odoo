@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";

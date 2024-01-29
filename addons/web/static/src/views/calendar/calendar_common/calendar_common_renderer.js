@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";

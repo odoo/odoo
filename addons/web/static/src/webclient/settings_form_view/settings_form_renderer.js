@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormLabelHighlightText } from "./highlight_text/form_label_highlight_text";
 import { HighlightText } from "./highlight_text/highlight_text";

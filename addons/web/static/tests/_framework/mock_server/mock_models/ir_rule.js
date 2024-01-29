@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { Model } from "../mock_model";
 
 export class IrRule extends Model {

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";

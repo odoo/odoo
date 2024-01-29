@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { currencies } from "@web/core/currency";

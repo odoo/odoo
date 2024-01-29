@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";

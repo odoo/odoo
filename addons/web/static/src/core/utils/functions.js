@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Creates a version of the function that's memoized on the value of its first
  * argument, if any.

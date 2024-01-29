@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { App, blockDom, Component, markup } from "@odoo/owl";
 import { getTemplate } from "@web/core/templates";
 import { _t } from "@web/core/l10n/translation";

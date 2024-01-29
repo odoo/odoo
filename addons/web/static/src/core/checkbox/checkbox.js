@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useHotkey } from "../hotkeys/hotkey_hook";
 
 import { Component, useRef } from "@odoo/owl";

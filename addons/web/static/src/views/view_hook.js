@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { registry } from "@web/core/registry";

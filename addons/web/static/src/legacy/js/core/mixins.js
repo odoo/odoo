@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { floatIsZero } from "@web/core/utils/numbers";
 
 /**

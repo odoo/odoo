@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { expect, test } from "@odoo/hoot";
 import { tokenize } from "@web/core/py_js/py";
 

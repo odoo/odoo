@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Traverses the given menu tree, executes the given callback for each node with
  * the node itself and the list of its ancestors as arguments.

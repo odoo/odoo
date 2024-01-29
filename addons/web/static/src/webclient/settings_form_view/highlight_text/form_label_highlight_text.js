@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { FormLabel } from "@web/views/form/form_label";
 import { HighlightText } from "./highlight_text";
 
