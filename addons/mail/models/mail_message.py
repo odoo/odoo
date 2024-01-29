@@ -1016,13 +1016,19 @@ class Message(models.Model):
     def message_fetch_failed(self):
         """Returns first 100 messages, sent by the current user, that have
         errors, in the format expected by the web client."""
-        messages = self.search([
-            ('has_error', '=', True),
-            ('author_id', '=', self.env.user.partner_id.id),
-            ('res_id', '!=', 0),
-            ('model', '!=', False),
-            ('message_type', '!=', 'user_notification')
-        ], limit=100)
+        author_id = self.env.user.partner_id.id
+        query = """
+                SELECT m.id from mail_message m
+                JOIN mail_message_res_partner_needaction_rel ON m.id = mail_message_res_partner_needaction_rel.mail_message_id
+                AND mail_message_res_partner_needaction_rel.notification_status in ('bounce','exception')
+                WHERE m.author_id = %s and m.res_id != 0 and (m.message_type != 'user_notification' OR m.message_type IS NULL)
+                ORDER BY m.id DESC LIMIT 100
+                """
+        params = [author_id]
+        self.env.cr.execute(query, params)
+        message_ids = [row[0] for row in self.env.cr.fetchall()]
+        messages = self.browse(message_ids)
+
         return messages._message_notification_format()
 
     @api.model
