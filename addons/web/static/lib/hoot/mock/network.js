@@ -135,7 +135,7 @@ export async function mockedFetch(input, init) {
     const controller = new AbortController();
     init.signal = controller.signal;
 
-    logRequest(() => (init.body ? JSON.parse(init.body) : init));
+    logRequest(() => (typeof init.body === "string" ? JSON.parse(init.body) : init));
 
     openRequestControllers.add(controller);
     const result = await (mockFetchFn || fetch)(input, init);
@@ -692,6 +692,7 @@ export class MockXMLHttpRequest extends EventTarget {
     setRequestHeader(name, value) {
         this.#headers[name] = value;
     }
+    getResponseHeader() {}
 }
 
 export class ServerWebSocket extends EventTarget {
