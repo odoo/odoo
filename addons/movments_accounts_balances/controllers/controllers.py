@@ -241,20 +241,31 @@ class AccountBalance(models.Model):
 
         return payment_data
 
-
     @api.model
     def get_bill_payment_by_journal_entry_id(self, journal_entry_id):
+        """
+        Retrieves the bill payment details associated with a specific journal entry ID.
+        Additionally fetches the bill date from the related account.move record.
+
+        :param journal_entry_id: The ID of the journal entry.
+        :return: A dictionary containing the payment details or an error message.
+        """
         Payment = self.env['account.payment']
+        Move = self.env['account.move']
         # Search for payment associated with the given journal entry
         payment = Payment.search([('move_id', '=', journal_entry_id)], limit=1)
 
         if payment:
+            # Fetch the bill date from the related account.move record
+            move = Move.browse([journal_entry_id])
+            bill_date = move.date if move else None
+
             # Prepare a dictionary of relevant payment details
             payment_data = {
                 'id': payment.id,
                 'name': payment.name,
                 'amount': payment.amount,
-                # 'payment_date': payment.payment_date,
+                'bill_date': bill_date,  # Retrieved from account.move
                 'partner_id': payment.partner_id.id,
                 'partner_name': payment.partner_id.name,
                 'state': payment.state,
