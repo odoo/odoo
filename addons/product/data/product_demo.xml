@@ -157,6 +157,12 @@
             <field name="attribute_id" ref="product_attribute_2"/>
             <field name="sequence">2</field>
         </record>
+        <record id="product_attribute_value_wood" model="product.attribute.value">
+            <field name="name">Wood</field>
+            <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="sequence">3</field>
+            <field name="image" type="base64" file="product/static/img/wood.jpg"/>
+        </record>
 
         <record id="product_attribute_3" model="product.attribute">
             <field name="name">Duration</field>
@@ -522,6 +528,26 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_6666</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
+        </record>
+
+        <record id="product_product_img_attr_product_template" model="product.template">
+            <field name="name">Demo product template with image attr value</field>
+            <field name="categ_id" ref="product_category_5"/>
+            <field name="standard_price">42.0</field>
+            <field name="list_price">42.0</field>
+            <field name="detailed_type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">FURN_4242</field>
+            <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
+        </record>
+
+        <!-- the product template attribute lines have to be defined before creating the variants -->
+        <record id="product_product_25_template_attribute_line" model="product.template.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_img_attr_product_template"/>
+            <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_3'), ref('product.product_attribute_value_wood')])]"/>
         </record>
 
         <record id="product_product_25_document" model="product.document">
