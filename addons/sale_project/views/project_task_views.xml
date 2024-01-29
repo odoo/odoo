@@ -354,4 +354,26 @@
         </field>
     </record>
 
+    <!-- Views for 'Tasks' stat button via Contact form -->
+    <record id="view_task_form_res_partner" model="ir.ui.view">
+        <field name="name">project.task.form.res.partner.inherit.sale_project</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form_res_partner"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='project_id']" position="attributes">
+                <attribute name="domain">['&amp;', ('allow_billable', '=', True), '&amp;',('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="quick_create_task_form_res_partner" model="ir.ui.view">
+        <field name="name">project.task.form.quick_create.res.partner.inherit.sale_project</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.quick_create_task_form_res_partner"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='project_id']" position="attributes">
+                <attribute name="domain">[('allow_billable', '=', True), ('type_ids', 'in', context['default_stage_id'])] if context.get('default_stage_id') else []</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>
