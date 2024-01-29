@@ -45,6 +45,7 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/xml/portal_signature.xml',
             'portal/static/src/js/portal_sidebar.js',
             'portal/static/src/xml/portal_security.xml',
+            'web/static/src/scss/lists_styles.scss',
         ],
         'web.assets_tests': [
             'portal/static/tests/**/*',

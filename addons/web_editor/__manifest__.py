@@ -97,6 +97,7 @@ Odoo Web Editor widget.
         ],
         'web.assets_common': [
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
+            'web/static/src/scss/lists_styles.scss',
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',

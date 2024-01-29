@@ -500,6 +500,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/fonts/fonts.scss',
 
             'web/static/src/webclient/actions/reports/report.scss',
+            'web/static/src/scss/lists_styles.scss',
             'web/static/src/webclient/actions/reports/layout_assets/layout_standard.scss',
             'web/static/src/webclient/actions/reports/layout_assets/layout_background.scss',
             'web/static/src/webclient/actions/reports/layout_assets/layout_boxed.scss',

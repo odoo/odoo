@@ -1,0 +1,28 @@
+$max-depth: 25;
+@for $depth from 0 through $max-depth {
+    $selectorOl: "";
+    $selectorUl: "";
+    @for $i from 0 through $depth {
+        $selectorOl: $selectorOl + "ol ";
+        $selectorUl: $selectorUl + "ul ";
+    }
+    $remainder: $depth % 3;
+    #{$selectorOl} {
+        @if $remainder == 0 {
+            list-style-type: decimal;
+        } @else if $remainder == 1 {
+            list-style-type: lower-alpha;
+        } @else if $remainder == 2 {
+            list-style-type: lower-roman;
+        }
+    }
+    #{$selectorUl} {
+        @if $remainder == 0 {
+            list-style-type: disc;
+        } @else if $remainder == 1 {
+            list-style-type: circle;
+        } @else if $remainder == 2 {
+            list-style-type: square;
+        }
+    }
+}
