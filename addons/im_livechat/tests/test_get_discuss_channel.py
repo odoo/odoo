@@ -7,7 +7,7 @@ from unittest.mock import patch, PropertyMock
 from odoo import fields
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import tagged
+from odoo.tests.common import tagged, new_test_user
 
 
 @tagged("post_install", "-at_install")
@@ -243,3 +243,40 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ],
         ):
             channel.execute_command_help()
+
+    def test_only_active_livechats_returned_by_init_messaging(self):
+        self.authenticate(None, None)
+        operator = new_test_user(self.env, login="John")
+        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Customer Support", "user_ids": [operator.id]}
+        )
+        inactive_livechat = self.env["discuss.channel"].browse(
+            self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "Visitor",
+                    "channel_id": livechat_channel.id,
+                    "persisted": True,
+                },
+            )["Thread"]["id"]
+        )
+        self.make_jsonrpc_request(
+            "/im_livechat/visitor_leave_session", {"uuid": inactive_livechat.uuid}
+        )
+        active_livechat = self.env["discuss.channel"].browse(
+            self.make_jsonrpc_request(
+                "/im_livechat/get_session",
+                {
+                    "anonymous_name": "Visitor",
+                    "channel_id": livechat_channel.id,
+                    "persisted": True,
+                },
+            )["Thread"]["id"]
+        )
+        init_messaging_result = self.make_jsonrpc_request(
+            "/mail/action",
+            {"init_messaging": True, "context": {"is_for_livechat": True}},
+        )
+        self.assertEqual(len(init_messaging_result["Thread"]), 1)
+        self.assertEqual(init_messaging_result["Thread"][0]["id"], active_livechat.id)

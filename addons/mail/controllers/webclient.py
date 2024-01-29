@@ -34,7 +34,7 @@ class WebclientController(http.Controller):
                 user = request.env.user.sudo(False)
                 self._add_to_res(res, user._init_messaging())
             else:
-                guest = request.env["mail.guest"]._get_guest_from_context()
+                guest = request.env["mail.guest"]._get_guest_from_context().with_context(**request.context)
                 if guest:
                     self._add_to_res(res, guest._init_messaging())
                 else:
