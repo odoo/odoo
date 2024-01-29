@@ -949,3 +949,13 @@ class TestPrivateReadGroup(common.TransactionCase):
             ORDER BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" ASC
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
+
+    def test_many2many_aggregate(self):
+        """ many2many fields are not aggregable """
+        Model = self.env['test_read_group.task']
+
+        # it works with another field
+        Model._read_group([], [], ['name:array_agg'])
+
+        with self.assertRaises(ValueError):
+            Model._read_group([], [], ['user_ids:array_agg'])
