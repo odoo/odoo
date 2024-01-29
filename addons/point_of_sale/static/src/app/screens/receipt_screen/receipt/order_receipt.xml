@@ -10,16 +10,6 @@
                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                         <t t-esc="line.customerNote" />
                     </li>
-                    <ul t-if="line.pack_lot_lines">
-                        <li t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.uuid"> <!-- FIXME add uuid to pos.pack.operation.lot -->
-                            <t t-if="lot.pos_order_line_id.product_id.tracking == 'lot'">
-                                Lot Number <t t-esc="lot.lot_name"/>
-                            </t>
-                            <t t-else="">
-                                SN <t t-esc="lot.lot_name"/>
-                            </t>
-                        </li>
-                    </ul>
                 </Orderline>
             </OrderWidget>
 
