@@ -78,7 +78,7 @@
     </p>
 <t t-if="hasattr(object, 'website_id') and object.website_id">
     <div style="margin: 0px; padding: 0px;">
-        <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+        <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse; white-space: nowrap;">
             <tr style="border-bottom: 2px solid #dee2e6;">
                 <td style="width: 150px;"><span style="font-weight:bold;">Products</span></td>
                 <td></td>
@@ -122,7 +122,7 @@
                         </td>
                         <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
                         <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
-                        <td width="20%" align="right"><span style="font-weight:bold;">
+                        <td width="20%" align="right"><span style="font-weight:bold; white-space: nowrap;">
                         <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
                             <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
                         </t>
@@ -136,7 +136,7 @@
         </t>
     </div>
     <div style="margin: 0px; padding: 0px;" t-if="hasattr(object, 'carrier_id') and object.carrier_id">
-        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
             <tr>
                 <td style="width: 60%"/>
                 <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Delivery:</span></td>
@@ -150,7 +150,7 @@
         </table>
     </div>
     <div style="margin: 0px; padding: 0px;" t-else="">
-        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
             <tr>
                 <td style="width: 60%"/>
                 <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">SubTotal:</span></td>
@@ -159,7 +159,7 @@
         </table>
     </div>
     <div style="margin: 0px; padding: 0px;">
-        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px;" align="right">
+        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
             <tr>
                 <td style="width: 60%"/>
                 <td style="width: 30%;" align="right"><span style="font-weight:bold;">Taxes:</span></td>
