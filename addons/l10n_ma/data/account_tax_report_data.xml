@@ -1136,6 +1136,19 @@
                     </record>
                 </field>
                 <field name="children_ids">
+                    <record id="l10n_ma_vat_d_prorata" model="account.report.line">
+                        <field name="hierarchy_level">1</field>
+                        <field name="name">Percentage of prorated deductions (ADC110)</field>
+                        <field name="code">l10n_ma_vat_d_prorata</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ma_vat_d_prorata_pro" model="account.report.expression">
+                                <field name="label">pro</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="tax_report_part_d_1" model="account.report.line">
                         <field name="hierarchy_level">1</field>
                         <field name="name">1 - NON-FIXED ASSETS PURCHASES</field>
@@ -1170,16 +1183,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">140T</field>
                                             </record>
-                                            <record id="tax_report_line_140_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_140_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_140.base_tax * l10n_ma_vat_140.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_140.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1193,16 +1200,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">141T</field>
                                             </record>
-                                            <record id="tax_report_line_141_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_141_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_141.base_tax * l10n_ma_vat_141.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_141.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1216,16 +1217,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">142T</field>
                                             </record>
-                                            <record id="tax_report_line_142_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_142_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_142.base_tax * l10n_ma_vat_142.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_142.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1239,16 +1234,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">143T</field>
                                             </record>
-                                            <record id="tax_report_line_143_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_143_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_143.base_tax * l10n_ma_vat_143.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_143.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1262,16 +1251,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">144T</field>
                                             </record>
-                                            <record id="tax_report_line_144_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_144_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_144.base_tax * l10n_ma_vat_144.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_144.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1285,16 +1268,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">153T</field>
                                             </record>
-                                            <record id="tax_report_line_153_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_153_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_153.base_tax * l10n_ma_vat_153.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_153.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1322,16 +1299,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">145T</field>
                                             </record>
-                                            <record id="tax_report_line_145_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_145_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_145.base_tax * l10n_ma_vat_145.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_145.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1345,16 +1316,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">146T</field>
                                             </record>
-                                            <record id="tax_report_line_146_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_146_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_146.base_tax * l10n_ma_vat_146.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_146.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1368,16 +1333,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">147T</field>
                                             </record>
-                                            <record id="tax_report_line_147_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_147_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_147.base_tax * l10n_ma_vat_147.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_147.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1391,16 +1350,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">148T</field>
                                             </record>
-                                            <record id="tax_report_line_148_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_148_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_148.base_tax * l10n_ma_vat_148.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_148.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1414,16 +1367,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">149T</field>
                                             </record>
-                                            <record id="tax_report_line_149_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_149_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_149.base_tax * l10n_ma_vat_149.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_149.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1437,16 +1384,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">150T</field>
                                             </record>
-                                            <record id="tax_report_line_150_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_150_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_150.base_tax * l10n_ma_vat_150.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_150.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1460,16 +1401,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">151T</field>
                                             </record>
-                                            <record id="tax_report_line_151_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_151_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_151.base_tax * l10n_ma_vat_151.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_151.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1483,16 +1418,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">152T</field>
                                             </record>
-                                            <record id="tax_report_line_152_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_152_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_152.base_tax * l10n_ma_vat_152.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_152.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1506,16 +1435,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">155T</field>
                                             </record>
-                                            <record id="tax_report_line_155_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_155_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_155.base_tax * l10n_ma_vat_155.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_155.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1529,16 +1452,10 @@
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">156T</field>
                                             </record>
-                                            <record id="tax_report_line_156_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_156_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_156.base_tax * l10n_ma_vat_156.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_156.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1553,16 +1470,10 @@
                                                 <field name="formula">most_recent</field>
                                                 <field name="subformula">editable;rounding=2</field>
                                             </record>
-                                            <record id="tax_report_line_158_pro" model="account.report.expression">
-                                                <field name="label">pro</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">most_recent</field>
-                                                <field name="subformula">editable;rounding=0</field>
-                                            </record>
                                             <record id="tax_report_line_158_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">l10n_ma_vat_158.base_tax * l10n_ma_vat_158.pro / 100</field>
+                                                <field name="formula">l10n_ma_vat_158.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1592,16 +1503,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">162T</field>
                                     </record>
-                                    <record id="tax_report_line_162_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_162_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_162.base_tax * l10n_ma_vat_162.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_162.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1615,16 +1520,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">163T</field>
                                     </record>
-                                    <record id="tax_report_line_163_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_163_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_163.base_tax * l10n_ma_vat_163.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_163.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1638,16 +1537,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">164T</field>
                                     </record>
-                                    <record id="tax_report_line_164_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_164_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_164.base_tax * l10n_ma_vat_164.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_164.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1661,16 +1554,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">165T</field>
                                     </record>
-                                    <record id="tax_report_line_165_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_165_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_165.base_tax * l10n_ma_vat_165.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_165.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1684,16 +1571,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">166T</field>
                                     </record>
-                                    <record id="tax_report_line_166_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_166_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_166.base_tax * l10n_ma_vat_166.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_166.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1707,16 +1588,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">167T</field>
                                     </record>
-                                    <record id="tax_report_line_167_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_167_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_167.base_tax * l10n_ma_vat_167.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_167.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1730,16 +1605,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">168T</field>
                                     </record>
-                                    <record id="tax_report_line_168_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_168_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_168.base_tax * l10n_ma_vat_168.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_168.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1753,16 +1622,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">160T</field>
                                     </record>
-                                    <record id="tax_report_line_160_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_160_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_160.base_tax * l10n_ma_vat_160.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_160.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
@@ -1776,16 +1639,10 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">169T</field>
                                     </record>
-                                    <record id="tax_report_line_169_pro" model="account.report.expression">
-                                        <field name="label">pro</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">most_recent</field>
-                                        <field name="subformula">editable;rounding=0</field>
-                                    </record>
                                     <record id="tax_report_line_169_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">l10n_ma_vat_169.base_tax * l10n_ma_vat_169.pro / 100</field>
+                                        <field name="formula">l10n_ma_vat_169.base_tax * l10n_ma_vat_d_prorata.pro / 100</field>
                                     </record>
                                 </field>
                             </record>
