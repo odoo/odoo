@@ -329,6 +329,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     # Do not use semantic controller due to sudo()
     @http.route()
     def partners_detail(self, partner_id, **post):
+        current_slug = partner_id
         _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
@@ -341,6 +342,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             partner = request.env['res.partner'].sudo().browse(partner_id)
             is_website_restricted_editor = request.env['res.users'].has_group('website.group_website_restricted_editor')
             if partner.exists() and (partner.website_published or is_website_restricted_editor):
+                if slug(partner) != current_slug:
+                    return request.redirect('/partners/%s' % slug(partner))
                 values = {
                     'main_object': partner,
                     'partner': partner,
@@ -348,4 +351,4 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                     'current_country': current_country
                 }
                 return request.render("website_crm_partner_assign.partner", values)
-        return self.partners(**post)
+        raise request.not_found()
