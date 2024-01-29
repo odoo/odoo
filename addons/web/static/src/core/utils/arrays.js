@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { shallowEqual as _shallowEqual } from "./objects";
 
 /**

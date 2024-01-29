@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA } from "@web/core/colors/colors";

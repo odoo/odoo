@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { localization } from "@web/core/l10n/localization";
 import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";

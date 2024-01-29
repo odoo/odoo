@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Dialog } from "@web/core/dialog/dialog";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";

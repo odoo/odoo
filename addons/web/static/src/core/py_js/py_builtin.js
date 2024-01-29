@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { PyDate, PyDateTime, PyRelativeDelta, PyTime, PyTimeDelta } from "./py_date";
 
 export class EvaluationError extends Error {}

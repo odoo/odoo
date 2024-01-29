@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ServerModel } from "../mock_model";
 
 export class IrUiView extends ServerModel {

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";

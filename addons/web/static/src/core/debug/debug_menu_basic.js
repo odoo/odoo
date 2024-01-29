@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useEnvDebugContext } from "./debug_context";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

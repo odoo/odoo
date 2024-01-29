@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { clamp } from "@web/core/utils/numbers";

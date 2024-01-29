@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 class ClipboardItemImpl {
     constructor(items, options = {}) {
         this.items = items;

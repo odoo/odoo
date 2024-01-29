@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { markEventHandled } from "@web/core/utils/misc";
 
 import {

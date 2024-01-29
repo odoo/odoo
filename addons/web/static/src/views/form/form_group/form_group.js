@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { Component } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 

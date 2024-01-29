@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * @typedef Localization
  * @property {string} dateFormat

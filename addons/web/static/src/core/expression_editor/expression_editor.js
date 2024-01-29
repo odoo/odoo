@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
 import {

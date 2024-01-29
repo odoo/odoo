@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  *  @typedef {{
  *      originalProperties: Map<string, PropertyDescriptor>;

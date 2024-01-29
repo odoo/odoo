@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export function editModelDebug(env, title, model, id) {
     return env.services.action.doAction({
         res_model: model,

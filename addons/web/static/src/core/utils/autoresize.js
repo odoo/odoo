@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useEffect } from "@odoo/owl";
 import { browser } from "../browser/browser";
 

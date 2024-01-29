@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
 /**
  * The child nodes of operation represent new content to create before target or

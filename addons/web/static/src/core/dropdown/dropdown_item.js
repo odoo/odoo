@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { DROPDOWN } from "./dropdown";
 
 import { Component } from "@odoo/owl";

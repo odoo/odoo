@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "../browser/browser";
 import { localization } from "@web/core/l10n/localization";

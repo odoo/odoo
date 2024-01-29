@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadJS } from "../assets"; // use the real, non patched (in tests), loadJS
 import { isBrowserChrome } from "../browser/feature_detection";
 

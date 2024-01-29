@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export function getFormattedDateSpan(start, end) {
     const isSameDay = start.hasSame(end, "days");
 

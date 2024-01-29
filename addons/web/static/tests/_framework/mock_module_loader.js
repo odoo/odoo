@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 // ! WARNING: THIS MODULE CANNOT HAVE ANY DEPENDENCY !
 
 export const CONFIG_SUFFIX = ".hoot";

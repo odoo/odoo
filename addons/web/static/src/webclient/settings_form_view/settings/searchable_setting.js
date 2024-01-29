@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { escapeRegExp } from "@web/core/utils/strings";
 import { Setting } from "@web/views/form/setting/setting";
 import { onMounted, useRef, useState } from "@odoo/owl";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 // ! WARNING: this module cannot depend on modules defined in "@web" !
 
 import { after, before, describe, globals, start } from "@odoo/hoot";

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { after, before, globals, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
 import { assets } from "@web/core/assets";

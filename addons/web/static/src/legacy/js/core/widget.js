@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import Class from "@web/legacy/js/core/class";
 import mixins from "@web/legacy/js/core/mixins";
 import ServicesMixin from "@web/legacy/js/core/service_mixins";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * @typedef StandardFieldProps
  * @property {string} [id]

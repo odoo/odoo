@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { session } from "@web/session";
 import { user } from "@web/core/user";
 import { browser } from "../browser/browser";

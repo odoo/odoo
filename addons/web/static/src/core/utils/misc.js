@@ -1,4 +1,3 @@
-/* @odoo-module */
 const eventHandledWeakMap = new WeakMap();
 /**
  * Returns whether the given event has been handled with the given markName.

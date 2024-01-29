@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { after } from "@odoo/hoot";
 import { patch } from "@web/core/utils/patch";
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Returns a promise resolved after 'wait' milliseconds
  *

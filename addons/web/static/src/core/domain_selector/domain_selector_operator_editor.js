@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export function getDomainDisplayedOperators(fieldDef) {
     if (!fieldDef) {
         fieldDef = {};

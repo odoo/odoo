@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 
 /**

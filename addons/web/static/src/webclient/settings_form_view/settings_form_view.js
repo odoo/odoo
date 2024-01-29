@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { intersection } from "@web/core/utils/arrays";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * DOM Utility helpers
  *

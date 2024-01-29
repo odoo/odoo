@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";

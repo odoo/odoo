@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { MockServerError } from "./mock_server_utils";
 /**
  * @typedef {{

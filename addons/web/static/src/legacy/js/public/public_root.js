@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import dom from '@web/legacy/js/core/dom';
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';

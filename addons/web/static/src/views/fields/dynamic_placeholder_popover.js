@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useAutofocus } from "@web/core/utils/hooks";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
 import { Component, useState } from "@odoo/owl";
