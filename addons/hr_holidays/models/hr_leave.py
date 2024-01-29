@@ -547,7 +547,7 @@ class HolidaysRequest(models.Model):
                       ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
                       # When searching for resource leave intervals, we exclude the one that
                       # is related to the leave we're currently trying to compute for.
-                      ('holiday_id', '!=', self.id)]
+                      '|', ('holiday_id', '=', False), ('holiday_id', '!=', self.id)]
             if self.leave_type_request_unit == 'day' and check_leave_type:
                 # list of tuples (day, hours)
                 work_time_per_day_list = self.employee_id.list_work_time_per_day(self.date_from, self.date_to, calendar=resource_calendar, domain=domain)
