@@ -224,14 +224,6 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/browser/cookie.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
-        # Optional Bundle for PDFJS lib
-        # Since PDFJS is quite huge (80000≈ lines), please only load it when it is necessary.
-        # For now, it is only use to display the PDF slide Viewer during an embed.
-        # Bundlized, the size is reduced to 5300≈ lines.
-        'web.pdf_js_lib': [
-            'web/static/lib/pdfjs/build/pdf.js',
-            'web/static/lib/pdfjs/build/pdf.worker.js',
-        ],
         'web.report_assets_common': [
             ('include', 'web._assets_helpers'),
 

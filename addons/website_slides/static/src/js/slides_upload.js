@@ -607,9 +607,9 @@ var SlideUploadDialog = Dialog.extend({
                  * In the mean time, this small fix allows not refactoring all of this and can not
                  * cause much harm.
                  */
-                window.Util = window.pdfjsLib.Util;
+                window.Util = globalThis.pdfjsLib.Util;
                 // pdf is stored in file.data in base64 and converted in binary (atob) to generate the preview
-                const pdfTask = window.pdfjsLib.getDocument({ data: atob(this.file.data) });
+                const pdfTask = globalThis.pdfjsLib.getDocument({ data: atob(this.file.data) });
                 pdfTask.onPassword = () => {
                     this._alertDisplay(_t("You can not upload password protected file."));
                     this._fileReset();
