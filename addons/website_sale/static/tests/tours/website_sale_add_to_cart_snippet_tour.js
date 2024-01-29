@@ -23,6 +23,11 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Acoustic Bloc Screens', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        {
+            content: "Wait for the cart to be updated",
+            trigger: 'body',
+            isCheck: true,  // wait as the next step was sometimes too fast
+        },
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
@@ -37,6 +42,11 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        {
+            content: "Wait for the cart to be updated",
+            trigger: 'body',
+            isCheck: true,  // wait as the next step was sometimes too fast
+        },
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
@@ -44,6 +54,11 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        {
+            content: "Wait for the cart to be updated",
+            trigger: 'body',
+            isCheck: true,  // wait as the next step was sometimes too fast
+        },
         wTourUtils.assertPathName('/shop/payment', 'iframe h3:contains("Pay with")'),
 
         wsTourUtils.goToCart({quantity: 4, backend: true}),
