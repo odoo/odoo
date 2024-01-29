@@ -36,7 +36,7 @@
                     <t t-esc="line.internalNote" />
                 </li>
                 <li t-if="line.attributes">
-                    <t t-foreach="line.attributes" t-as="attribute" t-key="attribute.id">
+                    <div t-foreach="line.attributes" t-as="attribute" t-key="attribute.id">
                         <t t-esc="attribute.name"/>:
                         <t t-foreach="attribute.valuesForOrderLine" t-as="value" t-key="value.id">
                             <t t-if="value_index !== 0" t-esc="' | '"/>
@@ -46,7 +46,7 @@
                             </t>
 
                         </t><br/>
-                    </t>
+                    </div>
                 </li>
             </ul>
         </li>
