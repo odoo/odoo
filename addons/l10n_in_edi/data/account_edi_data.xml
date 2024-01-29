@@ -4,14 +4,4 @@
         <field name="name">E-Invoice (IN)</field>
         <field name="code">in_einvoice_1_03</field>
     </record>
-    <record model="ir.actions.server" id="einvoice_cancel_action">
-        <field name="name">Cancel E-Invoice</field>
-        <field name="model_id" ref="model_account_move"/>
-        <field name="binding_model_id" ref="account.model_account_move" />
-        <field name="binding_view_types">form,list</field>
-        <field name="state">code</field>
-        <field name="code">
-                action = records.display_cancel_einvoice_form()
-        </field>
-    </record>
 </odoo>

@@ -42,6 +42,10 @@
                                 invisible="l10n_in_mode not in ('2', '3', '4')"
                                 required="l10n_in_mode in ('2', '3', '4')"/>
                         </group>
+                        <group string="Cancel Reason" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel">
+                            <field name="l10n_in_edi_cancel_reason"/>
+                            <field name="l10n_in_edi_cancel_remarks"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
@@ -52,9 +56,6 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account_edi.view_move_form_inherit"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='button_cancel_posted_moves']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <xpath expr="//div[hasclass('alert', 'alert-info')]/div " position="attributes">
                 <attribute name="class">o_row</attribute>
             </xpath>

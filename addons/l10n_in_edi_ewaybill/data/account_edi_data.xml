@@ -4,14 +4,4 @@
         <field name="name">E-waybill (IN)</field>
         <field name="code">in_ewaybill_1_03</field>
     </record>
-    <record model="ir.actions.server" id="eway_cancel_action">
-            <field name="name">Cancel E-way Bill</field>
-            <field name="model_id" ref="model_account_move"/>
-            <field name="binding_model_id" ref="account.model_account_move" />
-            <field name="binding_view_types">form,list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.display_cancel_eway_form()
-        </field>
-        </record>
 </odoo>
