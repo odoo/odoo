@@ -40,6 +40,8 @@ const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
+const getCursorDirection = OdooEditorLib.getCursorDirection;
+const DIRECTIONS = OdooEditorLib.DIRECTIONS;
 
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
@@ -1261,8 +1263,17 @@ const Wysiwyg = Widget.extend({
                         anchorOffset = focusOffset = index;
                     }
                 } else {
-                    anchorNode = link;
-                    focusNode = link;
+                    const isDirectionRight = getCursorDirection(selection.anchorNode, 0, selection.focusNode, 0) === DIRECTIONS.RIGHT;
+                    if (
+                        closestElement(selection.anchorNode, 'a') === link &&
+                        closestElement(selection.focusNode, 'a') === link
+                    ) {
+                        [anchorNode, focusNode] = isDirectionRight
+                            ? [selection.anchorNode, selection.focusNode]
+                            : [selection.focusNode, selection.anchorNode];
+                    } else {
+                        [anchorNode, focusNode] = [link, link];
+                    }
                 }
                 if (!focusOffset) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
@@ -1598,6 +1609,7 @@ const Wysiwyg = Widget.extend({
             let manualOpening = false;
             // Prevent dropdown closing on colorpicker click
             $dropdown.on('hide.bs.dropdown', ev => {
+                $dropdown[0].classList.remove('dropup');
                 return !(ev.clickEvent && ev.clickEvent.__isColorpickerClick);
             });
             $dropdown.on('show.bs.dropdown', () => {

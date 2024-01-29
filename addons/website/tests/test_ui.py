@@ -460,6 +460,9 @@ class TestUi(odoo.tests.HttpCase):
     def test_28_website_text_edition(self):
         self.start_tour('/@/', 'website_text_edition', login='admin')
 
+    def test_20_website_edit_megamenu_big_icons_subtitles(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
+
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
         menu_root = Menu.create({'name': 'Test Root'})

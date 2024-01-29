@@ -1172,6 +1172,8 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        # remove inventory mode
+        self = self.with_context(inventory_mode=False)
         unpacked_quants = self.env['stock.quant']
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([
