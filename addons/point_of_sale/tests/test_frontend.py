@@ -570,7 +570,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
     def test_04_product_configurator(self):
-
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_user")
 
