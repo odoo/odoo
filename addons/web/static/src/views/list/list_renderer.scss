@@ -271,9 +271,23 @@
             cursor: col-resize;
         }
 
-        .o_list_actions_header {
+        .o_list_actions_header, .o_optional_columns_dropdown {
             width: 32px;
             background-color: var(--ListRenderer-thead-bg-color);
+        }
+
+        .o_optional_columns_dropdown {
+            z-index: 2;
+            padding: var(--ListRenderer-thead-padding-v) var(--ListRenderer-table-padding-h) calc(var(--ListRenderer-thead-padding-v) + #{$form-check-margin-bottom}) $table-cell-padding-x-sm;
+
+            // Reset the styling applied by table > x
+            .dropdown-item {
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+            }
+
+            .dropdown-divider {
+                padding: 0;
+            }
         }
 
         .o_data_row.o_list_no_open {
