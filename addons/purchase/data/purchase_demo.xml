@@ -31,8 +31,8 @@
                     'product_uom': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today() + relativedelta(days=3)}),
                 (0, 0, {
-                    'product_id': ref('product.product_product_25_product_template'),
-                    'name': obj().env.ref('product.product_product_25_product_template').product_variant_id.partner_ref,
+                    'product_id': ref('product.product_product_25'),
+                    'name': obj().env.ref('product.product_product_25').partner_ref,
                     'price_unit': 286.70,
                     'product_qty': 5.0,
                     'product_uom': ref('uom.product_uom_unit'),
@@ -297,3 +297,4 @@
 
     </data>
 </odoo>
+

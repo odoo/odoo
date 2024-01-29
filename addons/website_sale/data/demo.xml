@@ -24,7 +24,7 @@
         <record id="product.product_product_13" model="product.product">
             <field name="is_published" eval="True"/>
         </record>
-        <record id="product.product_product_25_product_template" model="product.template">
+        <record id="product.product_product_25" model="product.product">
             <field name="is_published" eval="True"/>
         </record>
         <record id="product.consu_delivery_02" model="product.product">
@@ -494,8 +494,8 @@
 
         <record id="website_sale_order_line_9" model="sale.order.line">
             <field name="order_id" ref="website_sale_order_9"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25_product_template').product_variant_id.get_product_multiline_description_sale()"/>
-            <field name="product_id" ref="product.product_product_25_product_template"/>
+            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
+            <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>

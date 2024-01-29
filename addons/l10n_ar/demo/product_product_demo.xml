@@ -97,8 +97,7 @@
 
     <!-- VAT 10,5% -->
 
-    <!-- TODO MATP Should remove (file name: product_product_demo, it's a product.template) -->
-    <record id="product.product_product_25_product_template" model="product.template">
+    <record id="product.product_product_25" model="product.product">
         <!-- agregamos percecipn aplicada y sufrida tambien -->
         <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
         <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>

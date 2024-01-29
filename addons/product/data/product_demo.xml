@@ -157,11 +157,6 @@
             <field name="attribute_id" ref="product_attribute_2"/>
             <field name="sequence">2</field>
         </record>
-        <record id="product_attribute_value_wood" model="product.attribute.value">
-            <field name="name">Wood</field>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="sequence">3</field>
-        </record>
 
         <record id="product_attribute_3" model="product.attribute">
             <field name="name">Duration</field>
@@ -516,7 +511,7 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_24-image.jpg"/>
         </record>
 
-        <record id="product_product_25_product_template" model="product.template">
+        <record id="product_product_25" model="product.product">
             <field name="name">Acoustic Bloc Screens</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">287.0</field>
@@ -529,19 +524,12 @@
             <field name="image_1920" type="base64" file="product/static/img/product_product_25-image.png"/>
         </record>
 
-        <!-- the product template attribute lines have to be defined before creating the variants -->
-        <record id="product_product_25_template_attribute_line" model="product.template.attribute.line">
-            <field name="product_tmpl_id" ref="product_product_25_product_template"/>
-            <field name="attribute_id" ref="product_attribute_2"/>
-            <field name="value_ids" eval="[(6, 0, [ref('product.product_attribute_value_3'), ref('product.product_attribute_value_wood')])]"/>
-        </record>
-
-        <record id="product_product_25_product_template_document" model="product.document">
+        <record id="product_product_25_document" model="product.document">
             <field name="name">Acoustic Bloc Screens Document.pdf</field>
             <field name="datas" type="base64" file="product/static/demo/acoustic_bloc_screen_document.pdf"/>
             <field name="mimetype">application/pdf</field>
             <field name="res_model">product.product</field>
-            <field name="res_id" ref="product.product_product_25_product_template"/>
+            <field name="res_id" ref="product.product_product_25"/>
         </record>
 
         <record id="product_product_27" model="product.product">
