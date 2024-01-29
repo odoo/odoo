@@ -50,4 +50,9 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'demo/product_demo.xml',
     ],
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'l10n_in/static/src/components/**/*',
+        ],
+    },
 }
