@@ -734,6 +734,8 @@ class IrModuleModule(models.Model):
             # Invoke for themes and website_* - otherwise on -u website, the
             # additional primary snippets they require are deleted by _process_end.
             for module in self.env['ir.module.module'].search([
+                '|',
+                ('name', '=', 'theme_default'),
                 ('state', 'in', ('installed', 'to upgrade')),
                 '|',
                 ('name', '=like', f'{escape_psql("theme_")}%'),
