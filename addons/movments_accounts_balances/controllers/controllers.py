@@ -242,6 +242,51 @@ class AccountBalance(models.Model):
         return payment_data
 
     @api.model
+    def setup_payment_journal(self, journal_name, account_id, journal_type, payment_method_name):
+        """
+        Sets up a payment journal and payment method in the accounting system.
+
+        Parameters:
+        journal_name (str): Name of the journal to be created or found.
+        account_id (int): ID of the account associated with the journal.
+        journal_type (str): Type of the journal ('bank' or 'cash').
+        payment_method_name (str): Name of the payment method to be created or found.
+
+        Returns:
+        tuple: A tuple containing the IDs of the created/found journal and payment method.
+        """
+        AccountJournal = self.env['account.journal']
+        AccountPaymentMethod = self.env['account.payment.method']
+
+        # Create or find the journal
+        journal = AccountJournal.search([('name', '=', journal_name)], limit=1)
+        if not journal:
+            journal_vals = {
+                'name': journal_name,
+                'type': journal_type,  # 'bank' or 'cash'
+                'code': journal_name[:5].upper(),
+                'default_account_id': account_id,  # Use the default_account_id field
+            }
+            journal = AccountJournal.create(journal_vals)
+
+        # Create or find the payment method
+        payment_method = AccountPaymentMethod.search([('name', '=', payment_method_name)], limit=1)
+        if not payment_method:
+            payment_method_vals = {
+                'name': payment_method_name,
+                'payment_type': 'outbound',  # 'inbound' for customer payments, 'outbound' for supplier payments
+                'code': payment_method_name[:10].upper(),
+            }
+            payment_method = AccountPaymentMethod.create(payment_method_vals)
+
+        # Link the payment method to the journal
+        # Assuming outbound payments. Adjust as needed for inbound.
+        if payment_method.id not in journal.outbound_payment_method_line_ids.ids:
+            journal.write({'outbound_payment_method_line_ids': [(4, payment_method.id)]})
+
+        return journal.id, payment_method.id
+
+    @api.model
     def get_bill_payment_by_journal_entry_id(self, journal_entry_id):
         """
         Retrieves the bill payment details associated with a specific journal entry ID.
