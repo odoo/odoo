@@ -680,6 +680,16 @@ class PurchaseOrder(models.Model):
 
         return result
 
+    def action_discount_wizard_open(self):
+        self.ensure_one()
+        return {
+            'name': _("Discount"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order.discount',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
     @api.model
     def retrieve_dashboard(self):
         """ This function returns the values to populate the custom dashboard in

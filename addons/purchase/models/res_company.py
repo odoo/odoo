@@ -26,3 +26,14 @@ class Company(models.Model):
 
     po_double_validation_amount = fields.Monetary(string='Double validation amount', default=5000,
         help="Minimum amount for which a double validation is required")
+
+    purchase_discount_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string="Discounted Product",
+        domain=[
+            ('type', '=', 'service'),
+            ('purchase_method', '=', 'purchase')
+        ],
+        help="Default product used for discounts",
+        check_company=True,
+    )

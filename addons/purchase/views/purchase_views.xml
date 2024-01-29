@@ -258,7 +258,7 @@
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
-                                    <field name="discount" string="Disc.%" readonly="qty_invoiced != 0" optional="hide"/>
+                                    <field name="discount" string="Disc.%" readonly="qty_invoiced != 0" optional="show"/>
                                     <field name="price_subtotal" string="Tax excl."/>
                                     <field name="price_total"
                                            string="Tax incl."
@@ -380,6 +380,14 @@
                                      </templates>
                                  </kanban>
                             </field>
+                            <div class="float-end mb-2"
+                                name="po_button_below_order_lines">
+                                <button string="Discount"
+                                        name="action_discount_wizard_open"
+                                        type="object"
+                                        class="btn btn-secondary"
+                                        invisible="invoice_count != 0"/>
+                            </div>
                             <group>
                                 <group>
                                     <field colspan="2" name="notes" nolabel="1" placeholder="Define your terms and conditions ..."/>
