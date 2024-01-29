@@ -229,6 +229,39 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
                 'same number of records as counted in the group',
             )
 
+    def test_ordered_tasks(self):
+        """
+            Depending on the order of the group_by, you may obtain non-desired behavior.
+            In this test, we check the operation of read_group in the event that the first
+            group (defined by orderby) contains no results.
+
+            Default order is 'users_ids ASC'
+            So we reverse the order to have the spot without users in first position.
+        """
+        tasks_by_users = self.tasks.read_group(
+            domain=[],
+            fields=['name'],
+            groupby=['user_ids'],
+            orderby='user_ids DESC',
+        )
+
+        self.assertEqual(tasks_by_users, [
+            {   # tasks of no one
+                'user_ids': False,
+                'user_ids_count': 1,
+                '__domain': [('user_ids', 'not in', [self.users[1].id, self.users[0].id])],
+            },
+            {   # tasks of Luigi
+                'user_ids': (self.users[1].id, 'Luigi'),
+                'user_ids_count': 2,
+                '__domain': [('user_ids', '=', self.users[1].id)],
+            },
+            {   # tasks of Mario
+                'user_ids': (self.users[0].id, 'Mario'),
+                'user_ids_count': 2,
+                '__domain': [('user_ids', '=', self.users[0].id)],
+            },
+        ])
 
 class unordered(list):
     """ A list where equality is interpreted without ordering. """
