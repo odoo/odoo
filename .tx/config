@@ -1,6 +1,24 @@
 [main]
 host = https://www.transifex.com
 
+[o:odoo:p:odoo-17-l10n:r:l10n_be]
+file_filter            = addons/l10n_be/i18n/<lang>.po
+source_file            = addons/l10n_be/i18n/l10n_be.pot
+type                   = PO
+minimum_perc           = 0
+resource_name          = l10n_be
+replace_edited_strings = false
+keep_translations      = false
+
+[o:odoo:p:odoo-17-l10n:r:l10n_be_pos_sale]
+file_filter            = addons/l10n_be_pos_sale/i18n/<lang>.po
+source_file            = addons/l10n_be_pos_sale/i18n/l10n_be_pos_sale.pot
+type                   = PO
+minimum_perc           = 0
+resource_name          = l10n_be_pos_sale
+replace_edited_strings = false
+keep_translations      = false
+
 [o:odoo:p:odoo-17:r:account]
 file_filter            = addons/account/i18n/<lang>.po
 source_file            = addons/account/i18n/account.pot
@@ -2682,3 +2700,4 @@ minimum_perc           = 0
 resource_name          = website_twitter
 replace_edited_strings = false
 keep_translations      = false
+
