@@ -1310,7 +1310,7 @@
 
     <record id="account_320265" model="account.account.template">
         <field name="code">320265</field>
-        <field name="name">Diferencia tipo de cambio</field>
+        <field name="name">Diferencia tipo de cambio Ganancia</field>
         <field name="account_type">income</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1486,7 +1486,7 @@
 
     <record id="account_410195" model="account.account.template">
         <field name="code">410195</field>
-        <field name="name">Diferencia Tipo de Cambio</field>
+        <field name="name">Diferencia Tipo de Cambio Pérdida</field>
         <field name="account_type">expense</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1680,7 +1680,7 @@
         <field name="property_account_expense_categ_id" ref="account_410235"/>
         <field name="property_account_income_categ_id" ref="account_310115"/>
         <field name="income_currency_exchange_account_id" ref="account_410195"/>
-        <field name="expense_currency_exchange_account_id" ref="account_410195"/>
+        <field name="expense_currency_exchange_account_id" ref="account_320265"/>
         <field name="default_pos_receivable_account_id" ref="account_110421"/>
         <field name="property_stock_account_input_categ_id" ref="account_210230"/>
         <field name="property_stock_account_output_categ_id" ref="account_110640"/>
