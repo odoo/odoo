@@ -20,6 +20,7 @@ import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
 import { localization } from "@web/core/l10n/localization";
+import { uniqueId } from "@web/core/utils/functions";
 
 import {
     Component,
@@ -73,13 +74,33 @@ function getElementToFocus(cell, index) {
     return getTabableElements(cell).at(index) || cell;
 }
 
+/**
+ * Here be dragons. 🐉
+ * This is a workaround to avoid clipping issues in Firefox and Safari.
+ * cf. https://bugzilla.mozilla.org/show_bug.cgi?id=1887116
+ */
+class OptionalFieldsDropdown extends Dropdown {
+    static template = "web.ListRenderer.OptionalFieldsDropdown";
+    static props = {
+        ...Dropdown.props,
+        listRendererClass: String,
+    };
+
+    onWindowClicked(ev) {
+        if (ev.target.closest(".o_optional_columns_dropdown.o-dropdown--menu")) {
+            return;
+        }
+        super.onWindowClicked(...arguments);
+    }
+}
+
 export class ListRenderer extends Component {
     static template = "web.ListRenderer";
     static rowsTemplate = "web.ListRenderer.Rows";
     static recordRowTemplate = "web.ListRenderer.RecordRow";
     static groupRowTemplate = "web.ListRenderer.GroupRow";
     static LONG_TOUCH_THRESHOLD = 400;
-    static components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
+    static components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown: OptionalFieldsDropdown, Pager, Widget };
     static defaultProps = { hasSelectors: false, cycleOnTab: true };
     static props = [
         "activeActions?",
@@ -238,6 +259,7 @@ export class ListRenderer extends Component {
             this.lastEditedCell = null;
         });
         this.isRTL = localization.direction === "rtl";
+        this.uniqueRendererClass = uniqueId("o_list_renderer_");
     }
 
     displaySaveNotification() {
