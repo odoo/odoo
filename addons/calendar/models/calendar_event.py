@@ -592,9 +592,9 @@ class Meeting(models.Model):
             super().write(values)
             self._sync_activities(fields=values.keys())
 
-        # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
-        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
-            detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
+            # Apply recurrence when updating an existing event and 'recurrence' value is True
+            if recurrence_update_setting is None and not self.recurrence_id and not break_recurrence:
+                detached_events |= self._apply_recurrence_values(recurrence_values)
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
@@ -1093,7 +1093,9 @@ class Meeting(models.Model):
         new_values.pop('rrule', None)
 
         # Generate the new recurrence by patching the updated event and return an empty list.
-        self._apply_recurrence_values(new_values)
+        events_to_archive = self._apply_recurrence_values(new_values)
+        (events_to_archive & self).active = False
+        (events_to_archive - self).with_context(archive_on_error=True).unlink()
 
     def _rewrite_recurrence(self, values, time_values, recurrence_values):
         """ Delete the current recurrence, reactivate base event and apply updated recurrence values. """

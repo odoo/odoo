@@ -692,3 +692,37 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventHasNoConferenceData()
+
+    @patch_api
+    def test_update_future_events(self):
+        google_id = 'aaaaaaaaa'
+        event_1 = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2024, 3, 25, 1, 0),
+            'stop': datetime(2024, 3, 25, 3, 0),
+            'need_sync': False,
+        })
+        event_2 = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2024, 4, 1, 1, 0),
+            'stop': datetime(2024, 4, 1, 3, 0),
+            'need_sync': False,
+        })
+        self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=MONTHLY;COUNT=2;BYDAY=+1MO',
+            'calendar_event_ids': [(4, event_1.id), (4, event_2.id)],
+            'need_sync': False,
+        })
+        event = event_2
+
+        event.write({
+            'recurrence_update': 'future_events',
+            'byday': '2',
+            'weekday': 'TUE'
+        })
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', event_1.recurrence_id.id)])
+
+        self.assertTrue(new_recurrence)
+        self.assertEqual(new_recurrence.byday, '2')
+        self.assertEqual(new_recurrence.weekday, 'TUE')
