@@ -23,6 +23,11 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Acoustic Bloc Screens', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        {
+            content: "Wait for the cart to be updated",
+            trigger: 'body',
+            isCheck: true,  // wait as the next step was sometimes too fast
+        },
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
@@ -32,12 +37,16 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         wTourUtils.clickOnElement('continue shopping', 'iframe span:contains(Continue Shopping)'),
 
         // Product with 2 variants with a variant selected
-        // ...editAddToCartSnippet(),
-        // ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
-        // ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
-        // ...wTourUtils.clickOnSave(),
-        // wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        // TODO edm: re-enable this part when this isn't an indeterminist error anymore
+        ...editAddToCartSnippet(),
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
+        ...wTourUtils.selectElementInWeSelectWidget('product_variant_picker_opt', 'Conference Chair (Aluminium)'),
+        ...wTourUtils.clickOnSave(),
+        wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
+        {
+            content: "Wait for the cart to be updated",
+            trigger: 'body',
+            isCheck: true,  // wait as the next step was sometimes too fast
+        },
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
@@ -46,11 +55,11 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
         {
-            content: "Wait for the redirection to the payment page",
+            content: "Wait for the cart to be updated",
             trigger: 'body',
-            isCheck: true,  // wait for the page to load, as the next check was sometimes too fast
+            isCheck: true,  // wait as the next step was sometimes too fast
         },
-        wTourUtils.assertPathName('/shop/payment', 'iframe a[href="/shop/cart"]'),
+        wTourUtils.assertPathName('/shop/payment', 'iframe h3:contains("Pay with")'),
 
         wsTourUtils.goToCart({quantity: 3, backend: true}),
         wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens', backend: true}),
