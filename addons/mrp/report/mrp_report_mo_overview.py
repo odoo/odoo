@@ -34,8 +34,8 @@ class ReportMoOverview(models.AbstractModel):
             doc['show_mo_costs'] = data.get('moCosts') == '1'
             doc['show_product_costs'] = data.get('productCosts') == '1'
             doc['show_uom'] = self.env.user.user_has_groups('uom.group_uom')
-            doc['data_mo_unit_cost'] = doc['summary'].get('mo_cost', 0) / doc['summary'].get('quantity', 1)
-            doc['data_product_unit_cost'] = doc['summary'].get('product_cost', 0) / doc['summary'].get('quantity', 1)
+            doc['data_mo_unit_cost'] = doc['summary'].get('mo_cost', 0) / doc['summary'].get('quantity', 1) if doc['summary'].get('quantity', 1) != 0 else 0
+            doc['data_product_unit_cost'] = doc['summary'].get('product_cost', 0) / doc['summary'].get('quantity', 1) if doc['summary'].get('quantity', 1) != 0 else 0
             doc['unfolded_ids'] = set(json.loads(data.get('unfoldedIds', '[]')))
 
             docs.append(doc)
@@ -65,8 +65,8 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_report_extra_lines(self, summary):
         currency = summary.get('currency', self.env.company)
-        unit_mo_cost = currency.round(summary.get('mo_cost', 0) / summary.get('quantity', 1))
-        unit_product_cost = currency.round(summary.get('product_cost', 0) / summary.get('quantity', 1))
+        unit_mo_cost = currency.round(summary.get('mo_cost', 0) / summary.get('quantity', 1)) if (summary.get('quantity', 1) != 0) else 0
+        unit_product_cost = currency.round(summary.get('product_cost', 0) / summary.get('quantity', 1))  if (summary.get('quantity', 1) != 0) else 0
         return {
             'unit_mo_cost': unit_mo_cost,
             'unit_mo_cost_decorator': self._get_comparison_decorator(unit_product_cost, unit_mo_cost, currency.rounding),
@@ -103,7 +103,7 @@ class ReportMoOverview(models.AbstractModel):
         return dict(record._fields['state']._description_selection(self.env)).get(record.state)
 
     def _get_uom_precision(self, uom_rounding):
-        return max(0, int(-(log10(uom_rounding))))
+        return max(0, int(-(log10(uom_rounding)) if uom_rounding != 0 else 0))
 
     def _get_comparison_decorator(self, expected, current, rounding):
         compare = float_compare(current, expected, precision_rounding=rounding)
