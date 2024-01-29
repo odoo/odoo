@@ -155,6 +155,12 @@ class AccountTestInvoicingCommon(TransactionCase):
             'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
             'company_id': False,
         })
+        cls.partner_agrolait = cls.env['res.partner'].create({
+            'name': 'Deco Addict',
+            'is_company': True,
+            'country_id': cls.env.ref('base.us').id,
+        })
+        cls.partner_agrolait_id = cls.partner_agrolait.id
 
         # ==== Cash rounding ====
         cls.cash_rounding_a = cls.env['account.cash.rounding'].create({
@@ -409,6 +415,92 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         return rslt
 
+    def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False, taxes=None, state=None):
+        if move_type == 'entry':
+            raise AssertionError("Unexpected move_type : 'entry'.")
+
+        if not taxes:
+            taxes = self.env['account.tax']
+
+        date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
+
+        invoice_vals = {
+            'move_type': move_type,
+            'partner_id': partner_id or self.partner_agrolait_id,
+            'invoice_date': date_invoice,
+            'date': date_invoice,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'product that cost %s' % invoice_amount,
+                'quantity': 1,
+                'price_unit': invoice_amount,
+                'tax_ids': [(6, 0, taxes.ids)],
+            })]
+        }
+
+        if payment_term_id:
+            invoice_vals['invoice_payment_term_id'] = payment_term_id
+
+        if currency_id:
+            invoice_vals['currency_id'] = currency_id
+
+        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
+        if auto_validate:
+            invoice.action_post()
+        return invoice
+
+    def create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None):
+        return self._create_invoice(move_type=move_type, invoice_amount=invoice_amount, currency_id=currency_id, auto_validate=True)
+
+    @classmethod
+    def _create_tax_tag(cls, name, country_id=None):
+        return cls.env['account.account.tag'].create({
+            'name': name,
+            'applicability': 'taxes',
+            'country_id': country_id if country_id else cls.company.country_id.id,
+        })
+
+    @classmethod
+    def _create_tax(cls, name, amount=15, amount_type='percent', type_tax_use='sale', tag_names=None, children_taxes=None, tax_exigibility='on_invoice'):
+        if not tag_names:
+            tag_names = {}
+        tag_commands = {
+            type_rep_line: [(6, 0, cls._create_tax_tag(tag_names[type_rep_line]).ids)]
+            for type_rep_line in tag_names
+        }
+        vals = {
+            'name': name,
+            'amount': amount,
+            'amount_type': amount_type,
+            'type_tax_use': type_tax_use,
+            'tax_exigibility': tax_exigibility,
+            'children_tax_ids': [(6, 0, children_taxes.ids)] if children_taxes else None,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': tag_commands.get('invoice_base'),
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': tag_commands.get('invoice_tax'),
+                }),
+            ] if not children_taxes else None,
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': tag_commands.get('refund_base'),
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': tag_commands.get('refund_tax'),
+                }),
+            ] if not children_taxes else None,
+        }
+        return cls.env['account.tax'].create(vals)
+
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
             return lines.sorted(lambda line: (line.exclude_from_invoice_tab, not bool(line.tax_line_id), line.name or '', line.balance))
@@ -528,12 +620,6 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         cls.company = cls.company_data['company']
         cls.company.currency_id = cls.env.ref('base.EUR')
 
-        cls.partner_agrolait = cls.env['res.partner'].create({
-            'name': 'Deco Addict',
-            'is_company': True,
-            'country_id': cls.env.ref('base.us').id,
-        })
-        cls.partner_agrolait_id = cls.partner_agrolait.id
         cls.currency_swiss_id = cls.env.ref("base.CHF").id
         cls.currency_usd_id = cls.env.ref("base.USD").id
         cls.currency_euro_id = cls.env.ref("base.EUR").id
@@ -640,36 +726,6 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
                 'rate': 1.5289,
             }
         ])
-
-    def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False):
-        date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
-
-        invoice_vals = {
-            'move_type': move_type,
-            'partner_id': partner_id or self.partner_agrolait_id,
-            'invoice_date': date_invoice,
-            'date': date_invoice,
-            'invoice_line_ids': [(0, 0, {
-                'name': 'product that cost %s' % invoice_amount,
-                'quantity': 1,
-                'price_unit': invoice_amount,
-                'tax_ids': [(6, 0, [])],
-            })]
-        }
-
-        if payment_term_id:
-            invoice_vals['invoice_payment_term_id'] = payment_term_id
-
-        if currency_id:
-            invoice_vals['currency_id'] = currency_id
-
-        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
-        if auto_validate:
-            invoice.action_post()
-        return invoice
-
-    def create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None):
-        return self._create_invoice(move_type=move_type, invoice_amount=invoice_amount, currency_id=currency_id, auto_validate=True)
 
     def create_invoice_partner(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False, payment_term_id=False):
         return self._create_invoice(
