@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_sale.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
-		<xpath expr="//Orderline" position="inside" >
-            <t t-if="line.get_sale_order()">
-                <li class="info orderline-sale-order ms-2">
+    <t t-name="pos_sale.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//ul[hasclass('info-list')]" position="inside" >
+            <t t-if="line.so_reference">
+                <li>
                     <i class="fa fa-shopping-basket me-1" role="img" aria-label="SO" title="SO"/>
-                    <t t-esc="line.get_sale_order().name" />
+                    <t t-esc="line.so_reference" />
                 </li>
-                <table t-if="line.get_sale_order().details" class="sale-order-info ms-2">
-                    <tr t-foreach="line.get_sale_order()?.details" t-as="soLine" t-key="soLine_index">
+                <table t-if="line.details" class="sale-order-info">
+                    <tr t-foreach="line.details" t-as="soLine" t-key="soLine_index">
                         <td class="text-truncate"><t t-esc="soLine.product_uom_qty"/>x</td>
                         <td class="text-truncate" style="max-width: 275px;"
                             t-esc="soLine.product_name" />
                         <td class="text-truncate">: </td>
-                        <td class="text-truncate"><t t-esc="env.utils.formatCurrency(soLine.total)" /> (tax incl.)</td>
+                        <td class="text-truncate"><t t-esc="soLine.total" /> (tax incl.)</td>
                     </tr>
                 </table>
             </t>

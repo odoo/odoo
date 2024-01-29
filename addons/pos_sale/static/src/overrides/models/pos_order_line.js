@@ -1,4 +1,5 @@
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
+import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline.prototype, {
@@ -32,11 +33,14 @@ patch(PosOrderline.prototype, {
         } catch {
             down_payment_details = this.down_payment_details;
         }
-
         return {
             ...super.getDisplayData(),
-            down_payment_details: down_payment_details,
             so_reference: this.sale_order_origin_id?.name,
+            details: down_payment_details?.map?.((detail) => ({
+                product_uom_qty: detail.product_uom_qty,
+                product_name: detail.product_name,
+                total: formatCurrency(detail.total, this.currency),
+            })),
         };
     },
     /**
