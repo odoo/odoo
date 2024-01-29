@@ -917,3 +917,20 @@ class StockQuant(TransactionCase):
         self.assertEqual(quant_2.with_context(inventory_mode=True).sn_duplicated, True)
         with self.assertRaises(UserError):
             quant_2.with_context(inventory_mode=True).write({'location_id': self.stock_subloc2})
+
+    def test_update_quant_with_forbidden_field_02(self):
+        """
+        Test that updating the package from the quant raise an error
+        but if the package is unpacked, the quant can be updated.
+        """
+        package = self.env['stock.quant.package'].create({
+            'name': 'Package',
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package)
+        quant = self.product.stock_quant_ids
+        self.assertEqual(len(self.product.stock_quant_ids), 1)
+        with self.assertRaises(UserError):
+            quant.with_context(inventory_mode=True).write({'package_id': False})
+        package.with_context(inventory_mode=True).unpack()
+        self.assertFalse(quant.package_id)
+        self.assertTrue(True)
