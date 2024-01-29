@@ -6,11 +6,12 @@ from collections import defaultdict
 import psycopg2
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tests.common import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.tools import mute_logger
 from odoo import Command
 
 
+@tagged("at_install", "-post_install")
 class TestORM(TransactionCase):
     """ test special behaviors of ORM CRUD functions """
 

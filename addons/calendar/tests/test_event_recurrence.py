@@ -6,7 +6,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 from freezegun import freeze_time
 
 
@@ -407,6 +407,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(len(updated_events), 2, "It should have 2 events in the recurrence")
         self.assertTrue(updated_events[1].recurrency, "It should have recurrency in the updated events")
 
+
+@tagged("at_install", "-post_install")
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod

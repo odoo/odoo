@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.models import MetaModel
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.addons.base.models.ir_model import model_xmlid, field_xmlid, selection_xmlid
 
 
@@ -12,6 +12,7 @@ def get_model_name(cls):
     return name
 
 
+@tagged("at_install", "-post_install")
 class TestReflection(common.TransactionCase):
     """ Test the reflection into 'ir.model', 'ir.model.fields', etc. """
 
@@ -91,6 +92,7 @@ class TestReflection(common.TransactionCase):
                     self.assertTrue(field_description['sortable'])
 
 
+@tagged("at_install", "-post_install")
 class TestSchema(common.TransactionCase):
 
     def get_table_data(self, tablename):

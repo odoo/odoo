@@ -12,6 +12,7 @@ from odoo.tests import tagged
 from odoo.tests.common import users
 
 
+@tagged("at_install", "-post_install")
 class TestDigest(TestDigestCommon):
 
     @classmethod

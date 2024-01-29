@@ -3,11 +3,12 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
 
 
+@tagged("at_install", "-post_install")
 class TestProcRule(TransactionCase):
 
     @classmethod

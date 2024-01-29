@@ -84,6 +84,7 @@ except:
         })
 
 
+@tagged("at_install", "-post_install")
 class TestServerActions(TestServerActionsBase):
     def test_00_server_action(self):
         with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',
@@ -510,6 +511,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             self.action.with_context(self.context).run()
         self.assertEqual(num_requests, 2)
 
+
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
@@ -548,6 +550,7 @@ class TestCommonCustomFields(common.TransactionCase):
         })
 
 
+@tagged("at_install", "-post_install")
 class TestCustomFields(TestCommonCustomFields):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """

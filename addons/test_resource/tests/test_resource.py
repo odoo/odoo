@@ -9,7 +9,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.addons.test_resource.tests.common import TestResourceCommon
-from odoo.tests.common import TransactionCase
+from odoo.tests import tagged, TransactionCase
 
 
 def datetime_tz(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None):
@@ -118,6 +118,7 @@ class TestErrors(TestResourceCommon):
             })
 
 
+@tagged("at_install", "-post_install")
 class TestCalendar(TestResourceCommon):
     def setUp(self):
         super(TestCalendar, self).setUp()
@@ -1300,6 +1301,8 @@ class TestTimezones(TestResourceCommon):
             (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
         ])
 
+
+@tagged("at_install", "-post_install")
 class TestResource(TestResourceCommon):
 
     def test_calendars_validity_within_period(self):

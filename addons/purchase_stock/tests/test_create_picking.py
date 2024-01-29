@@ -5,9 +5,10 @@ from datetime import date, datetime, timedelta
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 
+@tagged("at_install", "-post_install")
 class TestCreatePicking(common.TestProductCommon):
 
     @classmethod

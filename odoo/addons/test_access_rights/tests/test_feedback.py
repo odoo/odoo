@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import odoo
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import AccessError
-from odoo.tests import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.tools.misc import mute_logger
 
 
@@ -23,6 +23,7 @@ class Feedback(TransactionCase):
         })
 
 
+@tagged("at_install", "-post_install")
 class TestSudo(Feedback):
     """ Test the behavior of method sudo(). """
     def test_sudo(self):
@@ -160,6 +161,8 @@ Contact your administrator to request access if necessary."""
             r.read(['val'])
         self.assertEqual(ctx.exception.args[0], expected)
 
+
+@tagged("at_install", "-post_install")
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """

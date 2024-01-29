@@ -8,11 +8,13 @@ from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
 from odoo import Command
+from odoo.tests import tagged
 from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
+@tagged("at_install", "-post_install")
 class TestHolidaysFlow(TestHrHolidaysCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')

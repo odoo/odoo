@@ -57,7 +57,7 @@ class TestMailingContactToList(MassMailCommon):
         self.assertEqual(subaction["context"]["default_contact_list_ids"], [mailing2.id])
 
 
-@tagged('mailing_list')
+@tagged("mailing_list", "at_install", "-post_install")
 class TestMailingListMerge(MassMailCommon):
 
     @classmethod

@@ -217,14 +217,14 @@ class RecordCapturer:
 
 class MetaCase(type):
     """ Metaclass of test case classes to assign default 'test_tags':
-        'standard', 'at_install' and the name of the module.
+        'standard', 'post_install' and the name of the module.
     """
     def __init__(cls, name, bases, attrs):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
             if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard', 'at_install'}
+                cls.test_tags = {'standard', 'post_install'}
             cls.test_module = cls.__module__.split('.')[2]
             cls.test_class = cls.__name__
             cls.test_sequence = 0
@@ -1977,7 +1977,7 @@ def tagged(*tags):
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
 
     By default, all Test classes from odoo.tests.common have a test_tags
-    attribute that defaults to 'standard' and 'at_install'.
+    attribute that defaults to 'standard' and 'post_install'.
 
     When using class inheritance, the tags ARE inherited.
     """

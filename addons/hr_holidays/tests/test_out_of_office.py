@@ -58,7 +58,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         self.assertEqual(partner_info['persona']['out_of_office_date_end'], fields.Date.to_string(leave_date_end), "correspondent should be out of office")
 
 
-@tagged('out_of_office')
+@tagged("out_of_office", "at_install", "-post_install")
 class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):
 
     @classmethod

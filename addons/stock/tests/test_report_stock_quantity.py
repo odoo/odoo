@@ -4,9 +4,10 @@
 from datetime import datetime, timedelta
 
 from odoo import fields, tests
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 
+@tagged("at_install", "-post_install")
 class TestReportStockQuantity(tests.TransactionCase):
 
     @classmethod

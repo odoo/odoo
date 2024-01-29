@@ -126,6 +126,8 @@ SCSS_TEST = '''
 }
 '''
 
+
+@tagged("at_install", "-post_install")
 class TestClocCustomization(TransactionCase):
     def create_xml_id(self, module, name, rec):
         self.env['ir.model.data'].create({

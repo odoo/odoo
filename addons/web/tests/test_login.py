@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener
+from odoo.tests import get_db_name, HOST, HttpCase, new_test_user, Opener, tagged
 
 
 class TestWebLoginCommon(HttpCase):
@@ -30,6 +30,7 @@ class TestWebLoginCommon(HttpCase):
         return res_post
 
 
+@tagged("at_install", "-post_install")
 class TestWebLogin(TestWebLoginCommon):
     def test_web_login(self):
         res_post = self.login('internal_user', 'internal_user')

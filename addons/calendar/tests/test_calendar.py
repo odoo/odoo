@@ -15,6 +15,7 @@ import re
 import base64
 
 
+@tagged("at_install", "-post_install")
 class TestCalendar(SavepointCaseWithUserDemo):
 
     def setUp(self):

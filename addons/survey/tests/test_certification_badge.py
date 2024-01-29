@@ -4,9 +4,11 @@
 from odoo.addons.survey.tests import common
 from psycopg2 import IntegrityError
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+@tagged("at_install", "-post_install")
 class TestCertificationBadge(common.TestSurveyCommon):
 
     def setUp(self):

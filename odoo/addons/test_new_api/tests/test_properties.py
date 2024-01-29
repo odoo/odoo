@@ -11,7 +11,7 @@ from odoo import Command
 
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tests import Form, TransactionCase, users
+from odoo.tests import Form, tagged, TransactionCase, users
 from odoo.tools import mute_logger, get_lang
 
 
@@ -112,6 +112,7 @@ class TestPropertiesMixin(TransactionCase):
         return value[0]
 
 
+@tagged("at_install", "-post_install")
 class PropertiesCase(TestPropertiesMixin):
 
     def test_properties_field(self):

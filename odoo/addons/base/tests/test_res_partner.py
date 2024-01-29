@@ -294,7 +294,7 @@ class TestPartner(TransactionCaseWithUserDemo):
         )
 
 
-@tagged('res_partner')
+@tagged("res_partner", "at_install", "-post_install")
 class TestPartnerAddressCompany(TransactionCase):
 
     def test_address(self):

@@ -3,10 +3,12 @@
 
 from odoo import api, models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.tests import tagged
 from odoo.tools import mute_logger, unique, lazy
 from odoo.exceptions import AccessError
 
 
+@tagged("at_install", "-post_install")
 class TestAPI(SavepointCaseWithUserDemo):
     """ test the new API of the ORM """
 

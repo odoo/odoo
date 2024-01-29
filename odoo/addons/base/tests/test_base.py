@@ -4,7 +4,7 @@
 import ast
 
 from odoo import Command
-from odoo.tests.common import TransactionCase, BaseCase
+from odoo.tests import BaseCase, tagged, TransactionCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -123,6 +123,7 @@ class TestParentStore(TransactionCase):
         self.assertFalse(new_struct & old_struct, "After duplication, nodes should not be mixed")
 
 
+@tagged("at_install", "-post_install")
 class TestGroups(TransactionCase):
 
     def test_res_groups_fullname_search(self):

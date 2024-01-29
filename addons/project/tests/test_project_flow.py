@@ -3,6 +3,7 @@
 
 from .test_project_base import TestProjectCommon
 from odoo import Command
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -34,6 +35,7 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
+@tagged("at_install", "-post_install")
 class TestProjectFlow(TestProjectCommon, MailCommon):
 
     def test_project_process_project_manager_duplicate(self):

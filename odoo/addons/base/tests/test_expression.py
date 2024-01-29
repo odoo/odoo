@@ -11,7 +11,7 @@ import psycopg2
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Date
 from odoo.models import BaseModel
-from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests import BaseCase, tagged, TransactionCase
 from odoo.tools import mute_logger
 from odoo.osv import expression
 from odoo import Command
@@ -1004,6 +1004,7 @@ class TestExpression2(TransactionCase):
         self.env['res.users'].search([('name', '=', 'test')])
 
 
+@tagged("at_install", "-post_install")
 class TestAutoJoin(TransactionCase):
 
     def test_auto_join(self):
@@ -1200,6 +1201,7 @@ class TestAutoJoin(TransactionCase):
         )
 
 
+@tagged("at_install", "-post_install")
 class TestQueries(TransactionCase):
 
     def test_logic(self):

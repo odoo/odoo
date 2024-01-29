@@ -7,8 +7,10 @@ import odoo
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 
 
+@tagged("at_install", "-post_install")
 class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
     def setUp(self):

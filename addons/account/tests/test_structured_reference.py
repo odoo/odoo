@@ -1,4 +1,3 @@
-from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.account.tools import (
@@ -9,7 +8,6 @@ from odoo.addons.account.tools import (
 )
 
 
-@tagged('standard', 'at_install')
 class StructuredReferenceTest(TransactionCase):
 
     def test_structured_reference_iso(self):

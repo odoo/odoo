@@ -171,6 +171,7 @@ class TestNodeLocator(common.TransactionCase):
         self.assertIsNone(node)
 
 
+@tagged("at_install", "-post_install")
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
@@ -3936,6 +3937,8 @@ class TestValidationTools(common.BaseCase):
             {'field'},
         )
 
+
+@tagged("at_install", "-post_install")
 class TestAccessRights(TransactionCaseWithUserDemo):
 
     @common.users('demo')
@@ -4007,7 +4010,7 @@ class CompRegexTest(common.TransactionCase):
         self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "{{ __comp__ }}"))
 
 
-@common.tagged('at_install', 'modifiers')
+@tagged("modifiers")
 class ViewModifiers(ViewCase):
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')

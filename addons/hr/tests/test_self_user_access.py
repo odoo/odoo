@@ -103,6 +103,7 @@ class TestSelfAccessProfile(TestHrCommon):
         self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
 
 
+@tagged("at_install", "-post_install")
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod

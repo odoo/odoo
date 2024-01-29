@@ -8,9 +8,10 @@ from unittest.mock import Mock, patch
 from werkzeug.urls import url_parse
 
 from odoo.addons.website.tools import MockRequest
-from odoo.tests import common
+from odoo.tests import common, tagged
 
 
+@tagged("at_install", "-post_install")
 class TestMenu(common.TransactionCase):
     def setUp(self):
         super(TestMenu, self).setUp()

@@ -5,6 +5,7 @@ from freezegun import freeze_time
 
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
@@ -26,6 +27,7 @@ class TestGamificationCommon(TransactionCaseGamification):
         self.badge_good_job = self.env.ref('gamification.badge_good_job')
 
 
+@tagged("at_install", "-post_install")
 class test_challenge(TestGamificationCommon):
 
     def test_00_join_challenge(self):
@@ -152,6 +154,7 @@ class test_challenge(TestGamificationCommon):
         )
 
 
+@tagged("at_install", "-post_install")
 class test_badge_wizard(TestGamificationCommon):
 
     def test_grant_badge(self):

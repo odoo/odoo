@@ -89,6 +89,7 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.assertEqual(sql_into_tables, insert_tables_perf or {}, f'Insert queries does not match: {query_separator}{queries}{query_separator}')
 
 
+@tagged("at_install", "-post_install")
 class TestStandardPerformance(UtilPerf):
 
     @classmethod
@@ -141,6 +142,7 @@ class TestStandardPerformance(UtilPerf):
         self.assertEqual(self._get_url_hot_query(url, cache=False), 5)
 
 
+@tagged("at_install", "-post_install")
 class TestWebsitePerformanceCommon(UtilPerf):
 
     def setUp(self):

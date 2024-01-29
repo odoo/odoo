@@ -10,7 +10,7 @@ from odoo.tests.common import users, HttpCase
 from odoo.tools import mute_logger
 
 
-@tagged('security')
+@tagged("security", "at_install", "-post_install")
 class TestAccess(common.TestSurveyCommon):
 
     def setUp(self):

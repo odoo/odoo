@@ -60,7 +60,8 @@ class TestProjectSharingCommon(TestProjectCommon):
             view=self.project_sharing_form_view_xml_id
         )
 
-@tagged('project_sharing')
+
+@tagged("project_sharing", "at_install", "-post_install")
 class TestProjectSharing(TestProjectSharingCommon):
 
     def test_project_share_wizard(self):
