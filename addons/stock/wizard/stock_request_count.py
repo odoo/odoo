@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.osv import expression
 
 
 class StockRequestCount(models.TransientModel):
@@ -18,10 +19,26 @@ class StockRequestCount(models.TransientModel):
 
     def action_request_count(self):
         for count_request in self:
+            quants_to_count = count_request._get_quants_to_count()
             if count_request.set_count == 'set':
-                count_request.quant_ids.filtered(lambda q: not q.inventory_quantity_set).action_set_inventory_quantity()
-            count_request.quant_ids.with_context(inventory_mode=True).write(
-                count_request._get_values_to_write())
+                quants_to_count.filtered(lambda q: not q.inventory_quantity_set).action_set_inventory_quantity()
+            values = count_request._get_values_to_write()
+            quants_to_count.with_context(inventory_mode=True).write(values)
+
+    def _get_quants_to_count(self):
+        self.ensure_one()
+        quants_to_count = self.quant_ids
+        tracked_quants = self.quant_ids.filtered(lambda q: q.product_id.tracking != 'none')
+        if not self.env.user.has_group('stock.group_production_lot') or not tracked_quants:
+            return quants_to_count
+        # Searches sibling quants for tracked product.
+        if tracked_quants:
+            domain = {('&', ('product_id', '=', quant.product_id.id), ('location_id', '=', quant.location_id.id))
+                    for quant in tracked_quants}
+            domain = expression.OR(domain)
+            sibling_quants = self.env['stock.quant'].search(domain)
+            quants_to_count |= sibling_quants
+        return quants_to_count
 
     def _get_values_to_write(self):
         values = {
