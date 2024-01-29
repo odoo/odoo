@@ -1601,7 +1601,10 @@ class MailThread(models.AbstractModel):
                 limit=1)
         if parent_ids:
             msg_dict['parent_id'] = parent_ids.id
-            msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+            msg_dict['is_internal'] = False
+            from_partner = self._mail_search_on_user(tools.email_split(msg_dict['from']))
+            if from_partner and from_partner.user_ids._is_internal():
+                msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
