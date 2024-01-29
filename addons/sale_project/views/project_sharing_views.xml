@@ -41,6 +41,21 @@
         </field>
     </record>
 
+    <record id="project_sharing_inherit_project_task_view_tree" model="ir.ui.view">
+        <field name="name">project.task.view.tree.inherit</field>
+        <field name="model">project.task</field>
+        <field name="priority">300</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="allow_milestones" position="after">
+                <field name="allow_billable" column_invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="column_invisible">not allow_billable</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project.project_sharing_project_task_action" model="ir.actions.act_window">
         <field name="context">{
             'default_project_id': active_id,
