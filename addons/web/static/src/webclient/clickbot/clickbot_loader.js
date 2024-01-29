@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";

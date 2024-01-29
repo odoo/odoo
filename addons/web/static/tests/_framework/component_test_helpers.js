@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { mountOnFixture } from "@odoo/hoot";
 import { App, Component, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Domain } from "@web/core/domain";
 import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";

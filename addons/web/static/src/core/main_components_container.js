@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { registry } from "./registry";
 import { ErrorHandler } from "./utils/components";
 import { useBus } from "@web/core/utils/hooks";

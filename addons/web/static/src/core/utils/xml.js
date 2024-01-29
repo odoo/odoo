@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { isIterable } from "./arrays";
 
 /**

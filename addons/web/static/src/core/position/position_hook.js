@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";

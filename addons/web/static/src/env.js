@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "./core/registry";
 import { getTemplate } from "@web/core/templates";
 import { App, EventBus } from "@odoo/owl";

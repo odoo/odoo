@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AccordionItem, ACCORDION } from "@web/core/dropdown/accordion_item";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

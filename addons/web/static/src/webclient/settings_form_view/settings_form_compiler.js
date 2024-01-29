@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { toStringExpression } from "@web/views/utils";

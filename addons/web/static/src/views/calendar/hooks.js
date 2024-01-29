@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadCSS, loadJS } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";

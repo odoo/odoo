@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { HighlightText } from "../highlight_text/highlight_text";
 import { escapeRegExp } from "@web/core/utils/strings";
 

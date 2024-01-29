@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import {

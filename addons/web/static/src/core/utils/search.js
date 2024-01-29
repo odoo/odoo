@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { unaccent } from "./strings";
 
 /**

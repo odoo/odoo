@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Setting } from "@web/views/form/setting/setting";
 
 export class SettingHeader extends Setting {

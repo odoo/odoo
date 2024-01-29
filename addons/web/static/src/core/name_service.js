@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { unique, zip } from "@web/core/utils/arrays";
 import { Deferred } from "@web/core/utils/concurrency";

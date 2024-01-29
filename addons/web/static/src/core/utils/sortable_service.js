@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "../registry";
 import { useSortable } from "@web/core/utils/sortable";
 import { throttleForAnimation } from "@web/core/utils/timing";

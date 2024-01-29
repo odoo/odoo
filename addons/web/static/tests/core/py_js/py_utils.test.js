@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { describe, expect, test } from "@odoo/hoot";
 import { evaluateExpr, formatAST, parseExpr } from "@web/core/py_js/py";
 import { PyDate, PyDateTime } from "@web/core/py_js/py_date";

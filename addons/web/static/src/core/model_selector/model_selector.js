@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";

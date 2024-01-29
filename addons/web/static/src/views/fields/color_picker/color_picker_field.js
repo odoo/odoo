@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";

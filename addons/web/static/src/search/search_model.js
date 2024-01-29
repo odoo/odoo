@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";

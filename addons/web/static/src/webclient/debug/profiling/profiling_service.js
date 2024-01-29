@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { ProfilingItem } from "./profiling_item";
 import { session } from "@web/session";

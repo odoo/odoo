@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
 import { _t } from "@web/core/l10n/translation";

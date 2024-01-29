@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { visitXML } from "@web/core/utils/xml";
 import { archParseBoolean } from "@web/views/utils";
 

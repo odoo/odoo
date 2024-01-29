@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { isMacOS } from "../browser/feature_detection";
 import { registry } from "../registry";
 import { browser } from "../browser/browser";

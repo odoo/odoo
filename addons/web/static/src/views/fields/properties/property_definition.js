@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { PropertyValue } from "./property_value";
 import { CheckBox } from "@web/core/checkbox/checkbox";

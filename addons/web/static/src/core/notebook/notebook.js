@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { scrollTo } from "@web/core/utils/scrolling";
 
 import {

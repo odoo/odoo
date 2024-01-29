@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import { fuzzyLookup } from "@web/core/utils/search";

@@ -1,4 +1,3 @@
-/* @odoo-module */
 // @ts-check
 
 import { EventBus, markRaw } from "@odoo/owl";

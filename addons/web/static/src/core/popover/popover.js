@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillDestroy, useExternalListener, useRef, useSubEnv } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { usePosition } from "@web/core/position/position_hook";

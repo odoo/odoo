@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { after, registerDebugInfo } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { createDebugContext } from "@web/core/debug/debug_context";

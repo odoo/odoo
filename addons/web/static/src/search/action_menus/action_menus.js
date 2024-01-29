@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { session } from "@web/session";

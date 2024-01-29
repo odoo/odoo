@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";

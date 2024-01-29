@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * @typedef Position
  * @property {number} x

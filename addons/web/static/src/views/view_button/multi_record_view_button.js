@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ViewButton } from "./view_button";
 
 export class MultiRecordViewButton extends ViewButton {

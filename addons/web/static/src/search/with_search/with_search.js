@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
 import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
 import { SearchModel } from "@web/search/search_model";

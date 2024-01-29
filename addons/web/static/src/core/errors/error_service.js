@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";

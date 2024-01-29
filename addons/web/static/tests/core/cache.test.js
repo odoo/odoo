@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 import { Cache } from "@web/core/utils/cache";

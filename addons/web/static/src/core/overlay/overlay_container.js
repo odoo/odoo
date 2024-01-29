@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component } from "@odoo/owl";
 import { sortBy } from "../utils/arrays";
 import { ErrorHandler } from "../utils/components";

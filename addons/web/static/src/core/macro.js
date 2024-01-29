@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { browser } from "@web/core/browser/browser";
 import { isVisible } from "@web/core/utils/ui";
 import { Mutex } from "@web/core/utils/concurrency";

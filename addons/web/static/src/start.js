@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { mountComponent } from "./env";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";

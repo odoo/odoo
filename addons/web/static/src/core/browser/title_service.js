@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "../registry";
 
 export const titleService = {

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import {
     DRAGGED_CLASS,
     makeDraggableHook as nativeMakeDraggableHook,

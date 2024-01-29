@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Builder for BarcodeDetector-like polyfill class using ZXing library.
  *

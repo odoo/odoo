@@ -1,4 +1,3 @@
-/** @odoo-module **/
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";

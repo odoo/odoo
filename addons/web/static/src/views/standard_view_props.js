@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 // TODO: add this in info props description
 
 // breadcrumbs: { type: Array, optional: true },

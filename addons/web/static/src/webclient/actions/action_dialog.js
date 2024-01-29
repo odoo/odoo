@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Dialog } from "@web/core/dialog/dialog";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";

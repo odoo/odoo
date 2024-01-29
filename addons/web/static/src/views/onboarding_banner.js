@@ -1,5 +1,3 @@
-/**@odoo-module */
-
 import { loadCSS, loadJS } from "@web/core/assets";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";

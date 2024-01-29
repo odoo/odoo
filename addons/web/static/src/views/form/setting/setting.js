@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { session } from "@web/session";
 import { Component } from "@odoo/owl";
 import { FormLabel } from "../form_label";

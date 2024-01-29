@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { queryAll, queryAllTexts, queryContent, queryOne } from "@odoo/hoot-dom";
 import { contains } from "./dom_test_helpers";
 import { getMockEnv } from "./env_test_helpers";

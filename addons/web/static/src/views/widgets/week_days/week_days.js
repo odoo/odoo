@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";

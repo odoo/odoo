@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { ActionDialog } from "./action_dialog";
 
 import { Component, xml, onWillDestroy } from "@odoo/owl";

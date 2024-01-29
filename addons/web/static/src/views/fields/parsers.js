@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { parseDate, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";

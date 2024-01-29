@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { onWillDestroy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { FileViewer } from "./file_viewer";

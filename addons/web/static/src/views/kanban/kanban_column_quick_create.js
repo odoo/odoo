@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";

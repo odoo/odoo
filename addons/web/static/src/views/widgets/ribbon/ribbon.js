@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "../standard_widget_props";
 

@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { applyInheritance } from "@web/core/template_inheritance";
 
 const parser = new DOMParser();

@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { DynamicList } from "./dynamic_list";
 
 export class DynamicRecordList extends DynamicList {

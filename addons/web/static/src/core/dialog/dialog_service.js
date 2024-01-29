@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "../registry";
 import { Component, markRaw, reactive, xml } from "@odoo/owl";
 import { WithEnv } from "../utils/components";

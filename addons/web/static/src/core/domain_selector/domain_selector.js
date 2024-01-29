@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { extractPathsFromDomain, useGetDefaultCondition } from "@web/core/domain_selector/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";

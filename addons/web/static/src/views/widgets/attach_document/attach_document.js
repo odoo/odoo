@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";

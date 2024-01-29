@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";

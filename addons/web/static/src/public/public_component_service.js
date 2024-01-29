@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { App } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";

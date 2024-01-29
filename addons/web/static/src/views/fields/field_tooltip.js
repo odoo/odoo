@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export function getTooltipInfo(params) {
     let widgetDescription = undefined;
     if (params.fieldInfo.widget) {

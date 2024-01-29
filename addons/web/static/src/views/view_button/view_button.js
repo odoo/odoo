@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { DROPDOWN } from "@web/core/dropdown/dropdown";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";

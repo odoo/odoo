@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { onWillStart, onWillUpdateProps, reactive, useComponent } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";

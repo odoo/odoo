@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useBus, useService } from "@web/core/utils/hooks";
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";

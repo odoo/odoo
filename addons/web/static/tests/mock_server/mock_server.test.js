@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import { defineModels, fields, makeMockServer, models } from "@web/../tests/web_test_helpers";
 

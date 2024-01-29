@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";

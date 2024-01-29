@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillRender, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import {

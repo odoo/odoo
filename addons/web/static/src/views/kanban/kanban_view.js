@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { KanbanArchParser } from "./kanban_arch_parser";

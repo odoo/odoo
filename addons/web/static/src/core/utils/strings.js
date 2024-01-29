@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export const nbsp = "\u00a0";
 
 /**

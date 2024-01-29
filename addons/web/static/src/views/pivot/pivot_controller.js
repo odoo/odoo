@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";

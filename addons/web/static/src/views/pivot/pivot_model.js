@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";

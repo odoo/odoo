@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";

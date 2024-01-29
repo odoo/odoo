@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { visitXML } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { archParseBoolean } from "@web/views/utils";

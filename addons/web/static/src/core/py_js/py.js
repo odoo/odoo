@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { evaluate } from "./py_interpreter";
 import { parse } from "./py_parser";
 import { tokenize } from "./py_tokenizer";

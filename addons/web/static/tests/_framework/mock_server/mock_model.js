@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { after } from "@odoo/hoot";
 import { Domain } from "@web/core/domain";
 import {

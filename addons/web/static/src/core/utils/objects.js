@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Shallow compares two objects.
  *

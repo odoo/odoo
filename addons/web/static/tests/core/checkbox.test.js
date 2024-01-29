@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { expect, test } from "@odoo/hoot";
 import { check, uncheck } from "@odoo/hoot-dom";
 import { Component, useState, xml } from "@odoo/owl";

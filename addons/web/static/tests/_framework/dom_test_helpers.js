@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import {
     check,
     click,

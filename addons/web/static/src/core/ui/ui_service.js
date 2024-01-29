@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { throttleForAnimation } from "@web/core/utils/timing";

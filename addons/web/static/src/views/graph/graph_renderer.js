@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { getBorderWhite, DEFAULT_BG, getColor, hexToRGBA } from "@web/core/colors/colors";
 import { formatFloat } from "@web/views/fields/formatters";

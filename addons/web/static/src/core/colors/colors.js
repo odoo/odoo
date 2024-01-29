@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 /**
  * Lists of colors that contrast well with each other to be used in various
  * visualizations (eg. graphs/charts), both in bright and dark themes.

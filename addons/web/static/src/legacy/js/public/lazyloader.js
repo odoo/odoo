@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 var blockEvents = ['submit', 'click'];
 var blockFunction = function (ev) {
     ev.preventDefault();

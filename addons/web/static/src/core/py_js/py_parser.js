@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { binaryOperators, comparators } from "./py_tokenizer";
 
 // -----------------------------------------------------------------------------

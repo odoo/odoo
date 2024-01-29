@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { _t } from "@web/core/l10n/translation";

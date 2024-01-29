@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { Many2ManyTagsField, many2ManyTagsField } from "./many2many_tags_field";
 

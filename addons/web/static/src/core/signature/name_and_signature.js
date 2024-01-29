@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { loadJS } from "@web/core/assets";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";

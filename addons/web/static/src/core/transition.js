@@ -1,4 +1,3 @@
-/** @odoo-module */
 import { browser } from "./browser/browser";
 
 import { Component, useState, useEffect, xml, onWillUpdateProps, useComponent } from "@odoo/owl";

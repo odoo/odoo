@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export const FACET_ICONS = {
     filter: "fa fa-filter",
     groupBy: "oi oi-group",

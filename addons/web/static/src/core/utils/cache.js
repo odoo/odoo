@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 export class Cache {
     constructor(getValue, getKey) {
         this.cache = {};

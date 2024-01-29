@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { sortBy, groupBy } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";

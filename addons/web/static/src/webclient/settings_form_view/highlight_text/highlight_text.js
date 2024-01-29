@@ -1,4 +1,3 @@
-/** @odoo-module **/
 import { escapeRegExp } from "@web/core/utils/strings";
 
 import { Component, useState, onWillRender } from "@odoo/owl";

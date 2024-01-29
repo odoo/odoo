@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { clamp } from "@web/core/utils/numbers";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
 import { setRecurringAnimationFrame } from "@web/core/utils/timing";

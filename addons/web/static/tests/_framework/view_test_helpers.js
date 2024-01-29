@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { waitFor } from "@odoo/hoot-dom";
 import { Component, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";

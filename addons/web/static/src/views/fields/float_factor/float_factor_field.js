@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { floatField, FloatField } from "../float/float_field";
 import { _t } from "@web/core/l10n/translation";

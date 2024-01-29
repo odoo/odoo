@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useComponent } from "@odoo/owl";

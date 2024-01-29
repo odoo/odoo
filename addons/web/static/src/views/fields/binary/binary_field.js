@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { isBinarySize, toBase64Length } from "@web/core/utils/binary";

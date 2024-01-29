@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Notification } from "./notification";
 import { Transition } from "@web/core/transition";
 

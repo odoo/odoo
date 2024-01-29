@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { SERVICES_METADATA } from "@web/env";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 

@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "../utils/hooks";
 import { ConfirmationDialog } from "../confirmation_dialog/confirmation_dialog";

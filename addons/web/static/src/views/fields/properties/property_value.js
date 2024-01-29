@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { CheckBox } from "@web/core/checkbox/checkbox";

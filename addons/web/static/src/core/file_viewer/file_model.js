@@ -1,5 +1,3 @@
-/* @odoo-module */
-
 import { url } from "@web/core/utils/urls";
 
 export const FileModelMixin = T => class extends T {

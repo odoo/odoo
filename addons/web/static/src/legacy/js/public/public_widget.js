@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * Provides a way to start JS code for public contents.
  */
