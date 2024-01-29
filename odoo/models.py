@@ -1987,10 +1987,43 @@ class BaseModel(metaclass=MetaModel):
 
         if field.type == 'properties':
             sql_expr = self._read_group_groupby_properties(fname, property_name, query)
+
         elif property_name:
             raise ValueError(f"Relation cannot be traverse expected for property field: {groupby_spec!r}")
+
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
             raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
+
+        elif field.type == 'many2many':
+            alias = self._table
+            if field.related and not field.store:
+                __, field, alias = self._traverse_related_sql(alias, field, query)
+
+            # special case for many2many fields: prepare a query on the comodel
+            # in order to reuse the mechanism _apply_ir_rules, then inject the
+            # query as an extra condition of the left join
+            comodel = self.env[field.comodel_name]
+            coquery = comodel._where_calc([], active_test=False)
+            comodel._apply_ir_rules(coquery)
+            # LEFT JOIN {field.relation} AS rel_alias ON
+            #     alias.id = rel_alias.{field.column1}
+            #     AND rel_alias.{field.column2} IN ({coquery})
+            rel_alias = query.make_alias(alias, field.name)
+            condition = SQL(
+                "%s = %s",
+                SQL.identifier(alias, 'id'),
+                SQL.identifier(rel_alias, field.column1),
+            )
+            if coquery.where_clause:
+                condition = SQL(
+                    "%s AND %s IN %s",
+                    condition,
+                    SQL.identifier(rel_alias, field.column2),
+                    coquery.subselect(),
+                )
+            query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
+            return SQL.identifier(rel_alias, field.column2)
+
         else:
             sql_expr = self._field_to_sql(self._table, fname, query)
 
@@ -2765,6 +2798,30 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
+    def _traverse_related_sql(self, alias: str, field: Field, query: Query):
+        """ Traverse the related `field` and add needed join to the `query`. """
+        assert field.related and not field.store
+        if not (self.env.su or field.compute_sudo or field.inherited):
+            raise ValueError(f'Cannot convert {field} to SQL because it is not a sudoed related or inherited field')
+
+        model = self.sudo(self.env.su or field.compute_sudo)
+        *path_fnames, last_fname = field.related.split('.')
+        for path_fname in path_fnames:
+            path_field = model._fields[path_fname]
+            if path_field.type != 'many2one':
+                raise ValueError(f'Cannot convert {field} (related={field.related}) to SQL because {path_fname} is not a Many2one')
+
+            comodel = model.env[path_field.comodel_name]
+            coalias = query.make_alias(alias, path_fname)
+            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+                "%s = %s",
+                model._field_to_sql(alias, path_fname, query),
+                SQL.identifier(coalias, 'id'),
+            ))
+            model, alias = comodel, coalias
+
+        return model, model._fields[last_fname], alias
+
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -2777,7 +2834,6 @@ class BaseModel(metaclass=MetaModel):
         result to make method :meth:`~odoo.api.Environment.execute_query` flush
         the field before executing the query.
         """
-        full_fname = fname
         property_name = None
         if '.' in fname:
             fname, property_name = fname.split('.', 1)
@@ -2787,59 +2843,14 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
         if field.related and not field.store:
-            if not (self.env.su or field.compute_sudo or field.inherited):
-                raise ValueError(f'Cannot convert {field} to SQL because it is not a sudoed related or inherited field')
+            model, field, alias = self._traverse_related_sql(alias, field, query)
+            return model._field_to_sql(alias, field.name, query)
 
-            model = self.sudo(self.env.su or field.compute_sudo)
-            *path_fnames, last_fname = field.related.split('.')
-            for path_fname in path_fnames:
-                path_field = model._fields[path_fname]
-                if path_field.type != 'many2one':
-                    raise ValueError(f'Cannot convert {field} (related={field.related}) to SQL because {path_fname} is not a Many2one')
-
-                comodel = model.env[path_field.comodel_name]
-                coalias = query.make_alias(alias, path_fname)
-                query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
-                    "%s = %s",
-                    model._field_to_sql(alias, path_fname, query),
-                    SQL.identifier(coalias, 'id'),
-                ))
-                model, alias = comodel, coalias
-
-            # delegate to the last model
-            return model._field_to_sql(alias, last_fname, query)
-
-        if not field.store or field.type == 'one2many':
+        if not field.store or not field.column_type:
             raise ValueError(f"Cannot convert field {field} to SQL")
 
         if field.type == 'properties' and property_name:
             return SQL("%s -> %s", self._field_to_sql(alias, fname, query, flush), property_name)
-
-        if field.type == 'many2many':
-            # special case for many2many fields: prepare a query on the comodel
-            # in order to reuse the mechanism _apply_ir_rules, then inject the
-            # query as an extra condition of the left join
-            comodel = self.env[field.comodel_name]
-            coquery = comodel._where_calc([], active_test=False)
-            comodel._apply_ir_rules(coquery)
-            # LEFT JOIN {field.relation} AS rel_alias ON
-            #     alias.id = rel_alias.{field.column1}
-            #     AND rel_alias.{field.column2} IN ({coquery})
-            rel_alias = query.make_alias(alias, field.name)
-            condition = SQL(
-                "%s = %s",
-                SQL.identifier(alias, 'id'),
-                SQL.identifier(rel_alias, field.column1),
-            )
-            if coquery.where_clause:
-                condition = SQL(
-                    "%s AND %s IN %s",
-                    condition,
-                    SQL.identifier(rel_alias, field.column2),
-                    coquery.subselect(),
-                )
-            query.add_join("LEFT JOIN", rel_alias, field.relation, condition)
-            return SQL.identifier(rel_alias, field.column2)
 
         self.check_field_access_rights('read', [field.name])
 
