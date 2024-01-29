@@ -101,11 +101,6 @@ QUnit.test("Only necessary requests are made when creating a new chat", async ()
             temporary_id: -1,
             persisted: true,
         })}`,
-        `/discuss/channel/fold - ${JSON.stringify({
-            channel_id: threadId,
-            state: "open",
-            state_count: 1,
-        })}`,
         `/mail/action - ${JSON.stringify({
             init_messaging: true,
             failures: true, // called because mail/core/web is loaded in qunit bundle

@@ -29,7 +29,6 @@ QUnit.test("do not save fold state of temporary live chats", async () => {
     await insertText(".o-mail-Composer-input", "Hello");
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello" });
-    await assertSteps(["fold - open"]);
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Message", { text: "Hello", count: 0 });
     await assertSteps(["fold - folded"]);

@@ -133,7 +133,7 @@ export class LivechatService {
         if (!this.thread) {
             return;
         }
-        this.chatWindowService.open(this.thread);
+        this.store.ChatWindow.insert({ thread: this.thread }).autofocus++;
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.messaging"].initialize();
         await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.PERSISTED].map((fn) => fn()));
