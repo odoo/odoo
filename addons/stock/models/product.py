@@ -708,8 +708,7 @@ class ProductTemplate(models.Model):
         compute='_compute_nbr_reordering_rules', compute_sudo=False)
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
-        relation="stock.route", string="Category Routes",
-        related='categ_id.total_route_ids', related_sudo=False)
+        string="Category Routes", related='categ_id.total_route_ids', related_sudo=False)
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
 
