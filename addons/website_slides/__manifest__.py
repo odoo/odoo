@@ -183,7 +183,6 @@ Featuring
             'web/static/lib/bootstrap/scss/_variables.scss',
             ('include', 'web._assets_bootstrap_frontend'),
             'website_slides/static/src/scss/website_slides.scss',
-            ('include', 'web.pdf_js_lib'),
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
         ],

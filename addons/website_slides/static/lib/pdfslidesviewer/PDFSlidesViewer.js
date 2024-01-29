@@ -5,9 +5,9 @@
     DOC : http://mozilla.github.io/pdf.js/api/draft/api.js.html
 */
 
-// !!!!!!!!! use window.pdfjsLib and not pdfjsLib
+// !!!!!!!!! use globalThis.pdfjsLib and not pdfjsLib
 
-var PDFSlidesViewer = (function(){
+globalThis.PDFSlidesViewer = (function(){
     function PDFSlidesViewer(pdf_url, $canvas) {
         // pdf variables
         this.pdf = null;
@@ -27,7 +27,7 @@ var PDFSlidesViewer = (function(){
      * Load the PDF document
      */
     PDFSlidesViewer.prototype.loadDocument = async function() {
-        const file_content = await window.pdfjsLib.getDocument(this.pdf_url).promise;
+        const file_content = await globalThis.pdfjsLib.getDocument(this.pdf_url).promise;
         this.pdf = file_content;
         this.pdf_page_total = file_content.numPages;
         return file_content;
