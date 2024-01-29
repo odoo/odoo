@@ -18,15 +18,47 @@ const xslt = `
             <xsl:if test="true()">
                 <xsl:attribute name="t-ref">compiled_view_root</xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="*|@*"/>
         </div>
     </xsl:template>
 
-    <xsl:template match="*|@*|text()">
+    <xsl:template match="*">
         <xsl:copy>
             <xsl:apply-templates select="*|@*|text()"/>
         </xsl:copy>
     </xsl:template>
+
+    <xsl:template match="@*">
+        <xsl:copy />
+    </xsl:template>
+
+    <xsl:template match="field">
+        <xsl:variable name="recordExpr" select="'__comp__.props.record'" />
+        <xsl:variable name="field_id">
+            <xsl:choose>
+                <xsl:when test="@field_id"><xsl:value-of select="@field_id" /></xsl:when>
+                <xsl:otherwise>null</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <Field
+            id="'{$field_id}'"
+            name="'{@name}'"
+            record="{$recordExpr}"
+            fieldInfo="__comp__.props.archInfo.fieldNodes['{$field_id}']"
+            readonly="__comp__.props.archInfo.activeActions?.edit === false and !{$recordExpr}.isNew"
+        >
+            <xsl:if test="@widget">
+                <xsl:attribute name="type">'<xsl:value-of select="@widget"/>'</xsl:attribute>
+            </xsl:if>
+        </Field>
+    </xsl:template>
+
+    <xsl:template match="label[@for]">
+
+    </xsl:template>
+    
+    <!-- remove comments -->
+    <xsl:template match="comment()" /> 
 
 </xsl:stylesheet>
 `;
@@ -42,7 +74,10 @@ export class ViewCompilerWithXSLT {
 
     setup() {}
 
-    compile(key) {
+    compile(key, params = {}) {
+        for (const [k, v] of Object.entries(params)) {
+            this.xsltProcessor.setParameter(null, k, v);
+        }
         const root = this.templates[key].cloneNode(true);
         const doc = new Document();
         doc.append(root);
