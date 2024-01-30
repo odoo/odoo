@@ -322,6 +322,10 @@ class StockRule(models.Model):
                     partner = partners
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
 
+        # If the quantity is negative the move should be considered as a refund
+        if float_compare(product_qty, 0.0, precision_rounding=product_uom.rounding) < 0:
+            values['to_refund'] = True
+
         move_values = {
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_dest_id.company_id.id or company_id.id,
