@@ -2934,6 +2934,9 @@ export class OdooEditor extends EventTarget {
      * @param {HTMLTableRowElement|HTMLTableCellElement} element
      */
     _positionTableUi(element) {
+        if (!element.isConnected) {
+            return;
+        }
         const tableUiContainerRect = this._tableUiContainer.getBoundingClientRect();
         const isRtl = this.options.direction === 'rtl';
         const isRow = element.nodeName === 'TR';
