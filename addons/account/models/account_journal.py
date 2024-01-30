@@ -101,8 +101,8 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
     )
-    restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
-        help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
+    restrict_mode_hash_table = fields.Boolean(string="Lock Sent Entries with Hash",
+        help="If ticked, the accounting entry or invoice receives a hash as soon as it is sent and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Open'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
@@ -540,7 +540,10 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
-                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                domain = self.env['account.move']._get_move_hash_domain(
+                    common_domain=[('journal_id', '=', self.id), ('secure_sequence_number', '!=', 0)]
+                )
+                journal_entry = self.env['account.move'].sudo().search_count(domain, limit=1)
                 if journal_entry:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))

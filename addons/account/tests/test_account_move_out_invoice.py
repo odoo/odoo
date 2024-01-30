@@ -4045,6 +4045,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
 
         invoice.action_post()
+        wizard = self.env['account.move.send'].create({'move_ids': [Command.set(invoice.ids)]})
+        wizard.action_send_and_print()
         move_form.payment_reference = "Bad Reference"
         move_form.save()
 

@@ -1,7 +1,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.models import Model
 from odoo.tests import Form, tagged
-from odoo import fields
+from odoo import fields, Command
 from odoo.exceptions import UserError
 from odoo.tools import format_date
 
@@ -12,15 +12,34 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+    def _init_and_send(self, vals, hash_version=False):
+        moves = self.env['account.move']
+        for val in vals:
+            moves |= self.init_invoice("out_invoice", val['partner'], val['date'], amounts=val['amounts'])
+        moves.action_post()
+
+        wizard = self.env['account.move.send'].create({'move_ids': [Command.set(moves.ids)]})
+        if hash_version:
+            wizard.with_context(hash_version=hash_version).action_send_and_print(force_synchronous=True)
+        else:
+            wizard.action_send_and_print(force_synchronous=True)
+
+        return moves
+
     def test_account_move_inalterable_hash(self):
         """Test that we cannot alter a field used for the computation of the inalterable hash"""
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
-        move = self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000], post=True)
+        self.company_data['default_journal_purchase'].restrict_mode_hash_table = True
+        move = self._init_and_send([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        in_invoice = self.init_invoice("in_invoice", self.partner_a, "2023-01-01", amounts=[1000], post=True)
 
         with self.assertRaisesRegex(UserError, "You cannot overwrite the values ensuring the inalterability of the accounting."):
             move.inalterable_hash = 'fake_hash'
+        # out_invoice should be hashed on sending, while in_invoice should be hashed on posting
         with self.assertRaisesRegex(UserError, "You cannot overwrite the values ensuring the inalterability of the accounting."):
             move.secure_sequence_number = 666
+        with self.assertRaisesRegex(UserError, "You cannot overwrite the values ensuring the inalterability of the accounting."):
+            in_invoice.secure_sequence_number = 666
         with self.assertRaisesRegex(UserError, "You cannot edit the following fields due to restrict mode being activated.*"):
             move.name = "fake name"
         with self.assertRaisesRegex(UserError, "You cannot edit the following fields due to restrict mode being activated.*"):
@@ -44,11 +63,10 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
     def test_account_move_hash_integrity_report(self):
         """Test the hash integrity report"""
-        moves = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-        )
-        moves.action_post()
+        moves = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+        ])
 
         # No records to be hashed because the restrict mode is not activated yet
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]  # First journal
@@ -60,14 +78,14 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self.assertEqual(integrity_check['msg_cover'], 'There isn\'t any journal entry flagged for data inalterability yet for this journal.')
 
         # Everything should be correctly hashed and verified
-        new_moves = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-03", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-04", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_a, "2023-01-05", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-06", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_a, "2023-01-07", amounts=[1000, 2000])
-        )
-        new_moves.action_post()
+        new_moves = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-04', 'amounts': [1000, 2000]},
+            {'partner': self.partner_a, 'date': '2023-01-05', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-06', 'amounts': [1000, 2000]},
+            {'partner': self.partner_a, 'date': '2023-01-07', 'amounts': [1000, 2000]},
+        ])
+
         moves |= new_moves
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
         self.assertRegex(integrity_check['msg_cover'], f'Entries are hashed from {moves[2].name}.*')
@@ -99,14 +117,15 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
     def test_account_move_hash_versioning_1(self):
         """We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
         This test focuses on the case where the user has only moves with the old hash algorithm."""
-        self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000], post=True)  # Not hashed
+        self._init_and_send([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]}]) # Not hashed
+
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
-        moves = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-04", amounts=[1000, 2000])
-        )
-        moves.with_context(hash_version=1).action_post()
+        moves = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-04', 'amounts': [1000, 2000]},
+        ], hash_version=1)
+
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
         self.assertRegex(integrity_check['msg_cover'], f'Entries are hashed from {moves[0].name}.*')
         self.assertEqual(integrity_check['first_move_date'], format_date(self.env, fields.Date.to_string(moves[0].date)))
@@ -122,14 +141,15 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
     def test_account_move_hash_versioning_2(self):
         """We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
         This test focuses on the case where the user has only moves with the new hash algorithm."""
-        self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000], post=True)  # Not hashed
+        self._init_and_send([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]}])  # Not hashed
+
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
-        moves = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-        )
-        moves.action_post()
+        moves = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+        ])
+
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
         self.assertRegex(integrity_check['msg_cover'], f'Entries are hashed from {moves[0].name}.*')
         self.assertEqual(integrity_check['first_move_date'], format_date(self.env, fields.Date.to_string(moves[0].date)))
@@ -145,21 +165,22 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
     def test_account_move_hash_versioning_v1_to_v2(self):
         """We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
         This test focuses on the case where the user has moves with both hash algorithms."""
-        self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000], post=True)  # Not hashed
+        self._init_and_send([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]}])  # Not hashed
+
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
-        moves_v1 = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-        )
-        moves_v1.with_context(hash_version=1).action_post()
+        moves_v1 = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+        ], hash_version=1)
+
         fields_v1 = moves_v1.with_context(hash_version=1)._get_integrity_hash_fields()
-        moves_v2 = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-        )
-        moves_v2.with_context(hash_version=2).action_post()
+        moves_v2 = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+        ], hash_version=2)
+
         fields_v2 = moves_v2._get_integrity_hash_fields()
         self.assertNotEqual(fields_v1, fields_v2)  # Make sure two different hash algorithms were used
 
@@ -180,12 +201,11 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         # This means we don't simply check whether the move is correctly hashed with either algorithms,
         # but that we can only use v2 after v1 and not go back to v1 afterwards.
         Model.write(moves[4], {'date': fields.Date.from_string("2023-01-02")})  # Revert the previous change
-        moves_v1_bis = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-10", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-11", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-12", amounts=[1000, 2000])
-        )
-        moves_v1_bis.with_context(hash_version=1).action_post()
+        moves_v1_bis = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-10', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-11', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-12', 'amounts': [1000, 2000]},
+        ], hash_version=1)
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on journal entry with id {moves_v1_bis[0].id}.')
 
@@ -194,15 +214,14 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         Version 2 does not take into account floating point representation issues.
         Test that version 3 covers correctly this case
         """
-        self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000],
-                          post=True)  # Not hashed
+        self._init_and_send([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]}])  # Not hashed
+
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
-        moves_v3 = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[30*0.17, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-        )
-        moves_v3.action_post()
+        moves_v3 = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [30*0.17, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+        ])
 
         # invalidate cache
         moves_v3[0].line_ids[0].invalidate_recordset()
@@ -215,22 +234,20 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         We are updating the hash algorithm. We want to make sure that we do not break the integrity report.
         This test focuses on the case with version 2 and version 3.
         """
-        self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000],
-                          post=True)  # Not hashed
-        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
-        moves_v2 = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-        )
-        moves_v2.with_context(hash_version=2).action_post()
+        self._init_and_send([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]}])  # Not hashed
 
-        moves_v3 = (
-            self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-02", amounts=[1000, 2000])
-            | self.init_invoice("out_invoice", self.partner_b, "2023-01-03", amounts=[1000, 2000])
-        )
-        moves_v3.with_context(hash_version=3).action_post()
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        moves_v2 = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+        ], hash_version=2)
+
+        moves_v3 = self._init_and_send([
+            {'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-02', 'amounts': [1000, 2000]},
+            {'partner': self.partner_b, 'date': '2023-01-03', 'amounts': [1000, 2000]},
+        ], hash_version=3)
 
         moves = moves_v2 | moves_v3
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
@@ -260,6 +277,8 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         # Should not raise
         invoice.action_post()
+        wizard = self.env['account.move.send'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
+        wizard.action_send_and_print()
 
         self.assertEqual(invoice.amount_total, 1410.0)
         self.assertEqual(invoice.amount_untaxed, 1200.0)
