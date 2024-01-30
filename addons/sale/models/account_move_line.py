@@ -155,12 +155,15 @@ class AccountMoveLine(models.Model):
         for move_line in self:
             if move_line.analytic_distribution:
                 distribution_json = move_line.analytic_distribution
-                sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys())),
+                account_ids = [int(account_id) for key in distribution_json.keys() for account_id in key.split(',')]
+
+                sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', account_ids),
                                                             ('state', '=', 'sale')], order='create_date ASC', limit=1)
                 if sale_order:
                     mapping[move_line.id] = sale_order
                 else:
-                    sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys()))], order='create_date ASC', limit=1)
+                    sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', account_ids)],
+                                                               order='create_date ASC', limit=1)
                     mapping[move_line.id] = sale_order
 
         # map of AAL index with the SO on which it needs to be reinvoiced. Maybe be None if no SO found
