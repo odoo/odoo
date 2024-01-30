@@ -65,3 +65,11 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
         locale = data["snapshot"]["settings"]["locale"]
         self.assertEqual(locale["code"], "fr_FR")
         self.assertEqual(len(data["revisions"]), 0)
+
+    def test_load_with_company_currency(self):
+        dashboard = self.create_dashboard().with_user(self.user)
+        data = dashboard.get_readonly_dashboard()
+        self.assertEqual(
+            data["default_currency"],
+            self.env["res.currency"].get_company_currency_for_spreadsheet()
+        )
