@@ -223,8 +223,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         for vals in vals_list:
             vals.pop('name')
-            # [UBL-CR-601]-A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReason
-            #vals.pop('tax_exemption_reason')
 
         return vals_list
 
@@ -239,6 +237,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 subtotal_vals['currency_dp'] = 2
 
         return vals_list
+
+    def _get_invoice_line_item_vals(self, line, taxes_vals):
+        # EXTENDS account.edi.xml.ubl_21
+        line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
+
+        for val in line_item_vals['classified_tax_category_vals']:
+            # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
+            # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
+            val.pop('tax_exemption_reason')
+
+        return line_item_vals
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list):
         # EXTENDS account.edi.xml.ubl_21
