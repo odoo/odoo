@@ -753,6 +753,9 @@ class AccountPayment(models.Model):
     # SYNCHRONIZATION account.payment <-> account.move
     # -------------------------------------------------------------------------
 
+    def _expected_liquidity_lines_count(self):
+        return 1
+
     def _synchronize_from_moves(self, changed_fields):
         ''' Update the account.payment regarding its related account.move.
         Also, check both models are still consistent.
@@ -779,12 +782,12 @@ class AccountPayment(models.Model):
             if 'line_ids' in changed_fields:
                 all_lines = move.line_ids
                 liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
-
-                if len(liquidity_lines) != 1:
+                liquidity_lines_count = pay._expected_liquidity_lines_count()
+                if len(liquidity_lines) != liquidity_lines_count :
                     raise UserError(_(
                         "Journal Entry %s is not valid. In order to proceed, the journal items must "
-                        "include one and only one outstanding payments/receipts account.",
-                        move.display_name,
+                        "include %s and only %s outstanding payments/receipts account.",
+                        move.display_name, liquidity_lines_count, liquidity_lines_count
                     ))
 
                 if len(counterpart_lines) != 1:
@@ -814,7 +817,7 @@ class AccountPayment(models.Model):
                 else:
                     partner_type = 'supplier'
 
-                liquidity_amount = liquidity_lines.amount_currency
+                liquidity_amount = sum(liquidity_lines.mapped('amount_currency'))
 
                 move_vals_to_write.update({
                     'currency_id': liquidity_lines.currency_id.id,

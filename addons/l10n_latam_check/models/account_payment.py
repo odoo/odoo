@@ -9,6 +9,8 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
     _rec_names_search = ['name', 'check_number']
 
+    amount = fields.Monetary(compute="_compute_amount", readonly=False)
+
     # Third party check operation links
     l10n_latam_check_id = fields.Many2one(
         comodel_name='account.payment',
@@ -38,11 +40,11 @@ class AccountPayment(models.Model):
     l10n_latam_check_bank_id = fields.Many2one(
         comodel_name='res.bank',
         string='Check Bank',
-        compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
+        #compute='_compute_l10n_latam_check_bank_id', store=True, readonly=False,
     )
     l10n_latam_check_issuer_vat = fields.Char(
         string='Check Issuer VAT',
-        compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
+        #compute='_compute_l10n_latam_check_issuer_vat', store=True, readonly=False,
     )
     l10n_latam_check_payment_date = fields.Date(
         string='Check Cash-In Date',
@@ -54,6 +56,12 @@ class AccountPayment(models.Model):
     l10n_latam_manual_checks = fields.Boolean(
         related='journal_id.l10n_latam_manual_checks',
     )
+    l10n_latam_check_lines_ids = fields.One2many('account.payment.latam.check', 'payment_id')
+
+    @api.depends('l10n_latam_check_lines_ids.amount')
+    def _compute_amount(self):
+        for rec in self.filtered('l10n_latam_check_lines_ids'):
+            rec.amount = sum(self.l10n_latam_check_lines_ids.mapped('amount'))
 
     @api.depends('check_number')
     def _compute_l10n_latam_check_number(self):
@@ -84,34 +92,34 @@ class AccountPayment(models.Model):
             lambda x: x.l10n_latam_manual_checks or x.payment_method_line_id.code == 'new_third_party_checks')
         return super(AccountPayment, self - avoid_inverse)._inverse_check_number()
 
-    @api.depends('payment_method_line_id.code', 'partner_id')
-    def _compute_l10n_latam_check_bank_id(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-        for rec in new_third_party_checks:
-            rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id
-        (self - new_third_party_checks).l10n_latam_check_bank_id = False
+    # @api.depends('payment_method_line_id.code', 'partner_id')
+    # def _compute_l10n_latam_check_bank_id(self):
+    #     new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+    #     for rec in new_third_party_checks:
+    #         rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id
+    #     (self - new_third_party_checks).l10n_latam_check_bank_id = False
 
-    @api.depends('payment_method_line_id.code', 'partner_id')
-    def _compute_l10n_latam_check_issuer_vat(self):
-        new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
-        for rec in new_third_party_checks:
-            rec.l10n_latam_check_issuer_vat = rec.partner_id.vat
-        (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
+    # @api.depends('payment_method_line_id.code', 'partner_id')
+    # def _compute_l10n_latam_check_issuer_vat(self):
+    #     new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
+    #     for rec in new_third_party_checks:
+    #         rec.l10n_latam_check_issuer_vat = rec.partner_id.vat
+    #     (self - new_third_party_checks).l10n_latam_check_issuer_vat = False
 
-    @api.onchange('l10n_latam_check_issuer_vat')
-    def _clean_l10n_latam_check_issuer_vat(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
-            stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
-            if hasattr(stdnum_vat, 'compact'):
-                rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
+    # @api.onchange('l10n_latam_check_issuer_vat')
+    # def _clean_l10n_latam_check_issuer_vat(self):
+    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id.code):
+    #         stdnum_vat = stdnum.util.get_cc_module(rec.company_id.country_id.code, 'vat')
+    #         if hasattr(stdnum_vat, 'compact'):
+    #             rec.l10n_latam_check_issuer_vat = stdnum_vat.compact(rec.l10n_latam_check_issuer_vat)
 
-    @api.constrains('l10n_latam_check_issuer_vat', 'company_id')
-    def _check_l10n_latam_check_issuer_vat(self):
-        for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id):
-            if not self.env['res.partner']._run_vat_test(rec.l10n_latam_check_issuer_vat, rec.company_id.country_id):
-                error_message = self.env['res.partner']._build_vat_error_message(
-                    rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
-                raise ValidationError(error_message)
+    # @api.constrains('l10n_latam_check_issuer_vat', 'company_id')
+    # def _check_l10n_latam_check_issuer_vat(self):
+    #     for rec in self.filtered(lambda x: x.l10n_latam_check_issuer_vat and x.company_id.country_id):
+    #         if not self.env['res.partner']._run_vat_test(rec.l10n_latam_check_issuer_vat, rec.company_id.country_id):
+    #             error_message = self.env['res.partner']._build_vat_error_message(
+    #                 rec.company_id.country_id.code.lower(), rec.l10n_latam_check_issuer_vat, 'Check Issuer VAT')
+    #             raise ValidationError(error_message)
 
     @api.depends('payment_method_line_id', 'l10n_latam_check_issuer_vat', 'l10n_latam_check_bank_id', 'company_id',
                  'l10n_latam_check_number', 'l10n_latam_check_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id')
@@ -273,19 +281,66 @@ class AccountPayment(models.Model):
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         res = super()._get_trigger_fields_to_synchronize()
-        return res + ('l10n_latam_check_number',)
+        return res + ('l10n_latam_check_number', 'l10n_latam_check_lines_ids')
+
+    def _expected_liquidity_lines_count(self):
+        if self.l10n_latam_check_lines_ids:
+            return len(self.l10n_latam_check_lines_ids)
+        return super()._expected_liquidity_lines_count()
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         """ Add check name and operation on liquidity line """
         res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
         check = self if (self.payment_method_line_id.code == 'new_third_party_checks' or (self.payment_method_line_id.code == 'check_printing' and self.l10n_latam_manual_checks)) \
             else self.l10n_latam_check_id
-        if check:
-            document_name = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (
-                check.check_number)
-            res[0].update({
-                'name': document_name + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
-            })
+        if self.payment_method_line_id.code == 'new_third_party_checks' or self.payment_method_line_id.code == 'check_printing':
+            liquidity_accounts = [x.id for x in self._get_valid_liquidity_accounts() if x]
+            valid_account_types = self._get_valid_payment_account_types()
+            check_total_amount = sum(self.l10n_latam_check_lines_ids.mapped('amount'))
+
+            res = [x for x in res if x['account_id'] not in liquidity_accounts]
+            column = 'credit' if self.payment_type == 'inbound' else 'debit'
+            multiple = -1 if self.payment_type == 'inbound' else 1
+
+            for line in res:
+                account_id = self.env['account.account'].browse(line['account_id'])
+                if account_id.account_type in valid_account_types:
+                    line[column] = check_total_amount
+                    line['amount_currency'] = check_total_amount * multiple
+
+            for check_id in self.l10n_latam_check_lines_ids:
+                document_name = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (check_id.l10n_latam_check_number)
+                if self.payment_type == 'inbound':
+                    # Receive money.
+                    liquidity_amount_currency = check_id.amount
+                elif self.payment_type == 'outbound':
+                    # Send money.
+                    liquidity_amount_currency = -check_id.amount
+                else:
+                    liquidity_amount_currency = 0.0
+
+                liquidity_balance = self.currency_id._convert(
+                    liquidity_amount_currency,
+                    self.company_id.currency_id,
+                    self.company_id,
+                    self
+                )
+                # Liquidity line.
+                res.insert(0, {
+                            'name': document_name,
+                            'date_maturity': check_id.l10n_latam_check_payment_date,
+                            'amount_currency': liquidity_amount_currency,
+                            'currency_id':   check_id.currency_id.id,
+                            'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                            'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
+                            'partner_id': self.partner_id.id,
+                            'account_id': self.outstanding_account_id.id,
+                        })
+            # document_name = (_('Check %s received') if self.payment_type == 'inbound' else _('Check %s delivered')) % (
+            #     check.check_number)
+            # res[0].update({
+            #     'name': document_name + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
+            # })
         return res
 
     @api.depends('check_number', 'payment_method_line_id')
