@@ -187,9 +187,9 @@ class ChatbotScript(models.Model):
         self.ensure_one()
 
         return {
-            'scriptId': self.id,
+            'id': self.id,
             'name': self.title,
-            'partnerId': self.operator_partner_id.id,
+            'partner': {'id': self.operator_partner_id.id, 'type': 'partner', 'name': self.operator_partner_id.name},
             'welcomeSteps': [
                 step._format_for_frontend()
                 for step in self._get_welcome_steps()

@@ -51,8 +51,25 @@ class DiscussChannel(models.Model):
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             if channel.chatbot_current_step_id:
-                # sudo: chatbot.script.step - returning the current script of the channel
-                channel_infos_dict[channel.id]["chatbot_script_id"] = channel.chatbot_current_step_id.sudo().chatbot_script_id.id
+                # sudo: chatbot.script.step - returning the current script/step of the channel
+                current_step_sudo = channel.chatbot_current_step_id.sudo()
+                chatbot_script = current_step_sudo.chatbot_script_id
+                # sudo: channel - accessing chatbot messages to get the current step message
+                step_message = next((
+                    m.mail_message_id for m in channel.sudo().chatbot_message_ids
+                    if m.script_step_id == current_step_sudo
+                    and m.mail_message_id.author_id == chatbot_script.operator_partner_id
+                ), None) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else None
+                current_step = {
+                    'scriptStep': current_step_sudo._format_for_frontend(),
+                    'message': {'id': step_message.id} if step_message else None,
+                    'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
+                }
+                channel_infos_dict[channel.id]["chatbot"] = {
+                    'script': chatbot_script._format_for_frontend(),
+                    'steps': [current_step],
+                    'currentStep': current_step,
+                }
             channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
             channel_infos_dict[channel.id]['anonymous_country'] = {
                 'code': channel.country_id.code,

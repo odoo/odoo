@@ -10,6 +10,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { Deferred } from "@web/core/utils/concurrency";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
+import { browser } from "@web/core/browser/browser";
 
 QUnit.module("livechat service");
 
@@ -28,7 +29,7 @@ QUnit.test("persisted session history", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    cookie.set(
+    browser.localStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );

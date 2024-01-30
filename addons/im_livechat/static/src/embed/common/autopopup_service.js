@@ -51,7 +51,7 @@ export class AutopopupService {
             JSON.parse(cookie.get(AutopopupService.COOKIE) ?? "true") !== false &&
                 !this.ui.isSmall &&
                 this.livechatService.rule?.action === "auto_popup" &&
-                (this.livechatService.available || this.chatbotService.available)
+                this.livechatService.available
         );
     }
 }

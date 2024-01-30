@@ -57,10 +57,7 @@ class LivechatChatbotScriptController(http.Controller):
 
         posted_message = next_step._process_step(discuss_channel)
         return {
-            'chatbot_posted_message': posted_message.message_format()[0] if posted_message else None,
-            'chatbot_step': {
-                'operatorFound': next_step.step_type == 'forward_operator' and len(
-                    discuss_channel.channel_member_ids) > 2,
+            'scriptStep': {
                 'id': next_step.id,
                 'answers': [{
                     'id': answer.id,
@@ -70,7 +67,10 @@ class LivechatChatbotScriptController(http.Controller):
                 'isLast': next_step._is_last_step(discuss_channel),
                 'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
                 'type': next_step.step_type,
-            }
+            },
+            'message': posted_message.message_format()[0] if posted_message else None,
+            'operatorFound': next_step.step_type == 'forward_operator' and len(
+                discuss_channel.channel_member_ids) > 2,
         }
 
     @http.route('/chatbot/step/validate_email', type="json", auth="public", cors="*")
