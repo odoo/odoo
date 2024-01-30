@@ -128,3 +128,20 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         barcode_rule.pattern = r'(300)(.*)'
         with self.assertRaises(ValidationError):
             res = barcode_nomenclature.gs1_decompose_extanded('300bilou4000')
+
+    def test_gs1_skip_rules(self):
+        """ Ensures a GS1 barcode can be parsed when it includes a GS1 AI not unsed by Odoo."""
+        barcode_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        # Rule for AI 20 should be skip.
+        self.env.ref('barcodes_gs1_nomenclature.barcode_rule_gs1_20').type = 'skip'
+        # Barcode for 12x product using barcode 94019097685457, internal variant code: 12.
+        # (01)94019097685457(20)12(30)00000050
+        barcode = "019401909768545720123000000050"
+        res = barcode_nomenclature.gs1_decompose_extanded(barcode)
+        [r1, r2, r3] = res
+        self.assertEqual(r1['ai'], "01")
+        self.assertEqual(r1['value'], "94019097685457")
+        self.assertEqual(r2['ai'], "20")
+        self.assertEqual(r2['value'], "12")
+        self.assertEqual(r3['ai'], "30")
+        self.assertEqual(r3['value'], 50)

@@ -6,7 +6,7 @@
             <field name="is_gs1_nomenclature">true</field>
         </record>
 
-        <!-- Identifier Barcodes -->
+    <!-- Identifier Barcodes -->
         <record id="barcode_rule_gs1_00" model="barcode.rule">
             <field name="name">Serial Shipping Container Code</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
@@ -67,7 +67,7 @@
             <field name="gs1_content_type">identifier</field>
         </record>
 
-        <!-- Alphanumeric Barcodes -->
+    <!-- Alphanumeric Barcodes -->
         <record id="barcode_rule_gs1_10" model="barcode.rule">
             <field name="name">Batch or lot number</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
@@ -88,7 +88,7 @@
             <field name="gs1_content_type">alpha</field>
         </record>
 
-        <!-- Date Barcodes -->
+    <!-- Date Barcodes -->
         <record id="barcode_rule_gs1_13" model="barcode.rule">
             <field name="name">Pack date (YYMMDD)</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
@@ -119,7 +119,7 @@
             <field name="gs1_content_type">date</field>
         </record>
 
-        <!-- Quantity/Measure Barcode -->
+    <!-- Quantity/Measure Barcode -->
         <record id="barcode_rule_gs1_30" model="barcode.rule">
             <field name="name">Variable count of items (variable measure trade item)</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
@@ -332,6 +332,1583 @@
             <field name="encoding">gs1-128</field>
             <field name="pattern">(91)([!"%-/0-9:-?A-Z_a-z]{0,90})</field>
             <field name="type">package_type</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+    <!-- Skip rules -->
+        <!-- Those rules are about GS1 AI not used in Odoo but they are needed
+        to correctly parse barcodes including them -->
+        <record id="barcode_rule_gs1_11" model="barcode.rule">
+            <field name="name">Production date (YYMMDD)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">1100</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(11)(\d{6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_12" model="barcode.rule">
+            <field name="name">Due date for amount on payment slip (YYMMDD)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">1200</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(12)(\d{6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_16" model="barcode.rule">
+            <field name="name">Sell by date (YYMMDD)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">1600</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(16)(\d{6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_20" model="barcode.rule">
+            <field name="name">Internal Product Variant</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2000</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(20)(\d{2})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_22" model="barcode.rule">
+            <field name="name">Consumer product variant</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2200</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(22)([!"%-/0-9:-?A-Z_a-z]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_235" model="barcode.rule">
+            <field name="name">Third Party Controlled, Serialised Extension of Global Trade Item Number (GTIN) (TPX)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2350</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(235)([!"%-/0-9:-?A-Z_a-z]{1,28})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_240" model="barcode.rule">
+            <field name="name">Additional product identification assigned by the manufacturer</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2400</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(240)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_241" model="barcode.rule">
+            <field name="name">Customer part number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2410</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(241)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_242" model="barcode.rule">
+            <field name="name">Made-to-Order variation number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2420</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(242)(\d{1,6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_250" model="barcode.rule">
+            <field name="name">Secondary serial number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2500</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(250)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_251" model="barcode.rule">
+            <field name="name">Reference to source entity</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2510</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(251)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_253" model="barcode.rule">
+            <field name="name">Global Document Type Identifier (GDTI)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2530</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(253)(\d{13}[!"%-/0-9:-?A-Z_a-z]{0,17})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_254" model="barcode.rule">
+            <field name="name">Global Location Number (GLN) extension component</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2540</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(254)([!"%-/0-9:-?A-Z_a-z]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_255" model="barcode.rule">
+            <field name="name">Global Coupon Number (GCN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">2550</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(255)(\d{13}[!"%-/0-9:-?A-Z_a-z]{0,12})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_312y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, metres (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3120</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(312[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_313y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, metres (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3130</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(313[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_324y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, inches (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3240</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(324[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_inch"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_325y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, feet (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3250</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(325[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_326y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, yards (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3260</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(326[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_yard"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_327y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, inches (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3270</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(327[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_inch"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_328y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, feet (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3280</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(328[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_329y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, yards (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3290</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(329[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_yard"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_330y" model="barcode.rule">
+            <field name="name">Logistic weight, kilograms</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3300</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(330[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_331y" model="barcode.rule">
+            <field name="name">Length or first dimension, metres</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3310</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(331[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_332y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, metres</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3320</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(332[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_333y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, metres</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3330</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(333[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_334y" model="barcode.rule">
+            <field name="name">Area, square metres</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3340</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(334[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.uom_square_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_335y" model="barcode.rule">
+            <field name="name">Logistic volume, litres</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3350</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(335[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_litre"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_336y" model="barcode.rule">
+            <field name="name">Logistic volume, cubic metres</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3360</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(336[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_cubic_meter"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_337y" model="barcode.rule">
+            <field name="name">Kilograms per square metre</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3370</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(337[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (kg/m²), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_340y" model="barcode.rule">
+            <field name="name">Logistic weight, pounds</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3400</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(340[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_lb"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_341y" model="barcode.rule">
+            <field name="name">Length or first dimension, inches</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3410</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(341[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_inch"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_342y" model="barcode.rule">
+            <field name="name">Length or first dimension, feet</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3420</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(342[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_343y" model="barcode.rule">
+            <field name="name">Length or first dimension, yards</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3430</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(343[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_yard"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_344y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, inches</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3440</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(344[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_inch"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_345y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, feet</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3450</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(345[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_346y" model="barcode.rule">
+            <field name="name">Width, diameter, or second dimension, yard</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3460</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(346[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_yard"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_347y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, inches</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3470</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(347[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_inch"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_348y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, feet</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3480</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(348[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_349y" model="barcode.rule">
+            <field name="name">Depth, thickness, height, or third dimension, yards</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3490</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(349[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_yard"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_350y" model="barcode.rule">
+            <field name="name">Area, square inches</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3500</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(350[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (in²), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_352y" model="barcode.rule">
+            <field name="name">Area, square yards (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3520</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(352[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (yd²), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_353y" model="barcode.rule">
+            <field name="name">Area, square inches</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3530</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(353[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (in²), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_354y" model="barcode.rule">
+            <field name="name">Area, square feet</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3540</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(354[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.uom_square_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_355y" model="barcode.rule">
+            <field name="name">Area, square yards</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3550</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(355[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (yd²), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_356y" model="barcode.rule">
+            <field name="name">Net weight, troy ounces (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3560</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(356[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (t oz), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_362y" model="barcode.rule">
+            <field name="name">Logistic volume, quarts</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3620</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(362[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_qt"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_363y" model="barcode.rule">
+            <field name="name">Logistic volume, gallons U.S.</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3630</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(363[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_gal"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_366y" model="barcode.rule">
+            <field name="name">Net volume, cubic yards (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3660</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(366[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (yd³), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_367y" model="barcode.rule">
+            <field name="name">Logistic volume, cubic inches</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3670</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(367[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_cubic_inch"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_368y" model="barcode.rule">
+            <field name="name">Logistic volume, cubic feet</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3680</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(368[0-5])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_cubic_foot"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_369y" model="barcode.rule">
+            <field name="name">Logistic volume, cubic yards</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3690</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(369[0-5])(\d{6})</field>
+            <!-- We don't have the right UoM for this rule (yd³), we use unit for now. -->
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+    <!-- Price Barcode Rules -->
+        <!-- The following rules are about prices. We don't have a type nor content type for that
+        but we set them as a measure since they share some aspect like the decimal usage. -->
+        <record id="barcode_rule_gs1_390y" model="barcode.rule">
+            <field name="name">Amount payable or coupon value - Single monetary area</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3900</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(390[0-9])(\d{1,15})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_391y" model="barcode.rule">
+            <field name="name">Amount payable and ISO currency code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3910</field>
+            <field name="encoding">gs1-128</field>
+            <!-- This rule catches two data: currency code (ISO 4217) and amount payable. -->
+            <field name="pattern">(391[0-9])(\d{3})(\d{1,15})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_392y" model="barcode.rule">
+            <field name="name">Amount payable for a variable measure trade item – Single monetary area</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3920</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(392[0-9])(\d{1,15})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_393y" model="barcode.rule">
+            <field name="name">Amount payable for a variable measure trade item and ISO currency code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3930</field>
+            <field name="encoding">gs1-128</field>
+            <!-- This rule catches two data: currency code (ISO 4217) and amount payable. -->
+            <field name="pattern">(393[0-9])(\d{3})(\d{1,15})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_394y" model="barcode.rule">
+            <field name="name">Percentage discount of a coupon</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3940</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(394[0-3])(\d{4})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_395y" model="barcode.rule">
+            <field name="name">Amount Payable per unit of measure single monetary area (variable measure trade item)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">3950</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(395[0-9])(\d{6})</field>
+            <field name="associated_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">measure</field>
+            <field name="gs1_decimal_usage">True</field>
+        </record>
+
+        <record id="barcode_rule_gs1_400" model="barcode.rule">
+            <field name="name">Customer's purchase order number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4000</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(400)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_401" model="barcode.rule">
+            <field name="name">Global Identification Number for Consignment (GINC)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4010</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(401)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_402" model="barcode.rule">
+            <field name="name">Global Shipment Identification Number (GSIN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4020</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(402)(\d{17})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_403" model="barcode.rule">
+            <field name="name">Routing code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4030</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(403)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_411" model="barcode.rule">
+            <field name="name">Bill to / Invoice to Global Location Number (GLN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4110</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(411)(\d{13})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_412" model="barcode.rule">
+            <field name="name">Purchased from Global Location Number (GLN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4120</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(412)(\d{13})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_415" model="barcode.rule">
+            <field name="name">Global Location Number (GLN) of the invoicing party</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4150</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(415)(\d{13})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_416" model="barcode.rule">
+            <field name="name">Global Location Number (GLN) of the production or service location</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4160</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(416)(\d{13})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_417" model="barcode.rule">
+            <field name="name">Party Global Location Number (GLN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4170</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(417)(\d{13})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">identifier</field>
+        </record>
+
+        <record id="barcode_rule_gs1_420" model="barcode.rule">
+            <field name="name">Ship to / Deliver to postal code within a single postal authority</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4200</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(420)([!"%-/0-9:-?A-Z_a-z]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_421" model="barcode.rule">
+            <field name="name">Ship to / Deliver to postal code with ISO country code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4210</field>
+            <field name="encoding">gs1-128</field>
+            <!-- This rule catches two data: country code (ISO 3166) and postal code. -->
+            <field name="pattern">(421)(\d{3})([!"%-/0-9:-?A-Z_a-z]{1,9})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_422" model="barcode.rule">
+            <field name="name">Country of origin of a trade item</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4220</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(422)(\d{3})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_423" model="barcode.rule">
+            <field name="name">Country of initial processing</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4230</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(423)((?:\d{3}){1,5})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_424" model="barcode.rule">
+            <field name="name">Country of processing</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4240</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(424)(\d{3})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_425" model="barcode.rule">
+            <field name="name">Country of disassembly</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4250</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(42[35])((?:\d{3}){1,5})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_426" model="barcode.rule">
+            <field name="name">Country covering full process chain</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4260</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(426)(\d{3})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_427" model="barcode.rule">
+            <field name="name">Country subdivision Of origin</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4270</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(427)([!"%-/0-9:-?A-Z_a-z]{0,3})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4300" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to Company name</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4300</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4300)([!"%-/0-9:-?A-Z_a-z]{1,35})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4301" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to contact name</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4301</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4301)([!"%-/0-9:-?A-Z_a-z]{1,35})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4302" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to address line 1</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4302</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4302)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4303" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to address line 2</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4303</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4303)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4304" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to suburb</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4304</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4304)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4305" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to locality</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4305</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4305)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4306" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to region</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4306</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4306)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4307" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to country code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4307</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4307)([A-Z0-9]{2})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4308" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to telephone number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4308</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4308)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4309" model="barcode.rule">
+            <field name="name">Ship-to / Deliver-to GEO location</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4309</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4309)(\d{20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4310" model="barcode.rule">
+            <field name="name">Return-to company name</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4310</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4310)([!"%-/0-9:-?A-Z_a-z]{1,35})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4311" model="barcode.rule">
+            <field name="name">Return-to contact</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4311</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4311)([!"%-/0-9:-?A-Z_a-z]{1,35})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4312" model="barcode.rule">
+            <field name="name">Return-to address line 1</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4312</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4312)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4313" model="barcode.rule">
+            <field name="name">Return-to address line 2</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4313</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4313)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4314" model="barcode.rule">
+            <field name="name">Return-to suburb</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4314</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4314)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4315" model="barcode.rule">
+            <field name="name">Return-to locality</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4315</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4315)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4316" model="barcode.rule">
+            <field name="name">Return-to region</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4316</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4316)([!"%-/0-9:-?A-Z_a-z]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4317" model="barcode.rule">
+            <field name="name">Return-to country code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4317</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4317)([A-Z0-9]{2})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4318" model="barcode.rule">
+            <field name="name">Return-to postal code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4318</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4318)([!"%-/0-9:-?A-Z_a-z]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4319" model="barcode.rule">
+            <field name="name">Return-to telephone number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4319</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4319)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4320" model="barcode.rule">
+            <field name="name">Service code description</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4320</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4320)([!"%-/0-9:-?A-Z_a-z]{1,35})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4321" model="barcode.rule">
+            <field name="name">Dangerous goods flag</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4321</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4321)([01])</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4322" model="barcode.rule">
+            <field name="name">Authority to leave</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4322</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4322)([01])</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4323" model="barcode.rule">
+            <field name="name">Signature required flag</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4323</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4323)([01])</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4324" model="barcode.rule">
+            <field name="name">Not before delivery date time</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4324</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4324)(\d{10})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4325" model="barcode.rule">
+            <field name="name">Not after delivery date time</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4325</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4325)(\d{10})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_4326" model="barcode.rule">
+            <field name="name">Release date</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">4326</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(4326)(\d{6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7001" model="barcode.rule">
+            <field name="name">NATO Stock Number (NSN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7001</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7001)(\d{13})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7002" model="barcode.rule">
+            <field name="name">UN/ECE meat carcasses and cuts classification</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7002</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7002)([!"%-/0-9:-?A-Z_a-z]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7003" model="barcode.rule">
+            <field name="name">Expiration date and time</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7003</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7003)(\d{10})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7004" model="barcode.rule">
+            <field name="name">Active potency</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7004</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7004)(\d{0,4})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7005" model="barcode.rule">
+            <field name="name">Catch area</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7005</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7005)([!"%-/0-9:-?A-Z_a-z]{1,12})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7006" model="barcode.rule">
+            <field name="name">First freeze date</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7006</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7006)(\d{6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7007" model="barcode.rule">
+            <field name="name">Harvest date</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7007</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7007)(\d{6,12})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7008" model="barcode.rule">
+            <field name="name">Species for fishery purposes</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7008</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7008)([!%-?A-Z_a-z"]{1,3})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7009" model="barcode.rule">
+            <field name="name">Fishing gear type</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7009</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7009)([!%-?A-Z_a-z"]{1,10})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7010" model="barcode.rule">
+            <field name="name">Production method</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7010</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7010)([!%-?A-Z_a-z"]{1,2})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7011" model="barcode.rule">
+            <field name="name">Test by date</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7011</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7011)(\d{6}\d{0,4})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7020_7021_7022" model="barcode.rule">
+            <field name="name">Unused GS1 rules: AI 7020, 7021 and 7022</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7020</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(702[012])([!"%-/0-9:-?A-Z_a-z]{0,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_703s" model="barcode.rule">
+            <field name="name">Number of processor with ISO Country Code</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7030</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(703[0-9])(\d{3}[!"%-/0-9:-?A-Z_a-z]{0,27})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7040" model="barcode.rule">
+            <field name="name">GS1 UIC with Extension 1 and Importer index</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7040</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7040)(\d[!"%-/0-9:-?A-Z_a-z]{3})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_710" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Germany PZN</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7100</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(710)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_711" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - France CIP</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7110</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(711)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_712" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Spain CN</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7120</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(712)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_713" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Brasil DRN</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7130</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(713)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_714" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - Portugal AIM</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7140</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(714)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_715" model="barcode.rule">
+            <field name="name">National Healthcare Reimbursement Number (NHRN) - United States of America NDC</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7150</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(715)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_723s" model="barcode.rule">
+            <field name="name">Certification reference</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7230</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(723[0-9])([!%-?A-Z_a-z"]{3,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_7240" model="barcode.rule">
+            <field name="name">Protocol ID</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">7240</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(7240)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8001" model="barcode.rule">
+            <field name="name">Roll products (width, length, core diameter, direction, splices)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8001</field>
+            <field name="encoding">gs1-128</field>
+            <!-- Width (in mm), length (in m), core diameter (in mm), direction et splices -->
+            <field name="pattern">(8001)(\d{4})(\d{5})(\d{3})([019]{1})(\d{1})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8002" model="barcode.rule">
+            <field name="name">Cellular mobile telephone identifier</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8002</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8002)([!%-?A-Z_a-z"]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8003" model="barcode.rule">
+            <field name="name">Global Returnable Asset Identifier</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8003</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8003)(0\d{13})([!%-?A-Z_a-z"]{1,16})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8004" model="barcode.rule">
+            <field name="name">Global Individual Asset Identifier</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8004</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8004)([!%-?A-Z_a-z"]{1,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8005" model="barcode.rule">
+            <field name="name">Price per unit of measure</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8005</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8005)(\d{6})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8006" model="barcode.rule">
+            <field name="name">Identification of an individual trade item (ITIP) piece</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8006</field>
+            <field name="encoding">gs1-128</field>
+            <!-- GTIN, piece number and total count. -->
+            <field name="pattern">(8006)(\d{14})(\d{2})(\d{2})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8007" model="barcode.rule">
+            <field name="name">International Bank Account Number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8007</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8007)([!"%-/0-9:-?A-Z_a-z]{1,34})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8008" model="barcode.rule">
+            <field name="name">Date and time of production</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8008</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8008)(\d{8,12})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">date</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8009" model="barcode.rule">
+            <field name="name">Optically Readable Sensor Indicator</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8009</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8009)([!"%-/0-9:-?A-Z_a-z]{1,50})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8010" model="barcode.rule">
+            <field name="name">Component/Part Identifier (CPID)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8010</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8010)([A-Z0-9/#-]{5,30})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8011" model="barcode.rule">
+            <field name="name">Component/Part Identifier serial number (CPID SERIAL)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8011</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8011)(\d{1,12})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8012" model="barcode.rule">
+            <field name="name">Software version</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8012</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8012)([A-Z0-9/#-]{1,20})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8013" model="barcode.rule">
+            <field name="name">Global Model Number (GMN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8013</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8013)([A-Z0-9/#-]{1,25})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8017" model="barcode.rule">
+            <field name="name">Global Service Relation Number (GSRN) to identify the relationship between an organisation offering services and the provider of services</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8017</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8017)(\d{18})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8018" model="barcode.rule">
+            <field name="name">Global Service Relation Number (GSRN) to identify the relationship between an organisation offering services and the recipient of services</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8018</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8018)(\d{18})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8019" model="barcode.rule">
+            <field name="name">Service Relation Instance Number (SRIN)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8019</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8019)(\d{1,10})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8020" model="barcode.rule">
+            <field name="name">Payment slip reference number</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8020</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8020)([A-Z0-9/#-]{1,25})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8026" model="barcode.rule">
+            <field name="name">Identification of pieces of a trade item (ITIP) contained in a logistic unit</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8026</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8026)(\d{14}\d{4})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8030" model="barcode.rule">
+            <field name="name">Digital Signature (DigSig)</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8030</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8030)([0-9A-Za-z_-]{1,90})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8110" model="barcode.rule">
+            <field name="name">Coupon code identification for use in North America</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8110</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8110)([!%-?A-Z_a-z"]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8111" model="barcode.rule">
+            <field name="name">Loyalty points of a coupon</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8111</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8111)(\d{4})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8112" model="barcode.rule">
+            <field name="name">Positive offer file coupon code identification for use in North America</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8112</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8112)([!%-?A-Z_a-z"]{1,70})</field>
+            <field name="type">skip</field>
+            <field name="gs1_content_type">alpha</field>
+        </record>
+
+        <record id="barcode_rule_gs1_8200" model="barcode.rule">
+            <field name="name">Extended Packaging URL</field>
+            <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
+            <field name="sequence">8200</field>
+            <field name="encoding">gs1-128</field>
+            <field name="pattern">(8200)([A-Z0-9/#-]{1,70})</field>
+            <field name="type">skip</field>
             <field name="gs1_content_type">alpha</field>
         </record>
     </data>

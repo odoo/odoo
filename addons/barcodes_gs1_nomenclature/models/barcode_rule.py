@@ -24,6 +24,7 @@ class BarcodeRule(models.Model):
             ('expiration_date', 'Expiration Date'),
             ('package_type', 'Package Type'),
             ('pack_date', 'Pack Date'),
+            ('skip', 'Skip'),
         ], ondelete={
             'quantity': 'set default',
             'location': 'set default',
@@ -34,6 +35,7 @@ class BarcodeRule(models.Model):
             'expiration_date': 'set default',
             'package_type': 'set default',
             'pack_date': 'set default',
+            'skip': 'set default',
         })
     is_gs1_nomenclature = fields.Boolean(related="barcode_nomenclature_id.is_gs1_nomenclature")
     gs1_content_type = fields.Selection([
@@ -52,12 +54,21 @@ class BarcodeRule(models.Model):
 
     @api.constrains('pattern')
     def _check_pattern(self):
-        gs1_rules = self.filtered(lambda rule: rule.encoding == 'gs1-128')
-        for rule in gs1_rules:
+        not_gs1_rules = self.env['barcode.rule']
+        for rule in self:
+            if rule.encoding != 'gs1-128':
+                not_gs1_rules += rule
+                continue
             try:
                 re.compile(rule.pattern)
             except re.error as error:
                 raise ValidationError(_("The rule pattern \"%s\" is not a valid Regex: ", rule.name) + str(error))
+            if rule.type == 'skip':
+                # We don't check the number of pattern groups for skip rules because some of those
+                # rules are not supported  and need more than 2 groups (they catch multiple data.)
+                # That means those rules cannot use another type without modifying their pattern but
+                # it's OK until we got a way to make a single rule to handle multiple data.
+                continue
             groups = re.findall(r'\([^)]*\)', rule.pattern)
             if len(groups) != 2:
                 raise ValidationError(_(
@@ -66,4 +77,4 @@ class BarcodeRule(models.Model):
                     "\n\t- A second one to catch the value.",
                     rule.name))
 
-        super(BarcodeRule, (self - gs1_rules))._check_pattern()
+        super(BarcodeRule, not_gs1_rules)._check_pattern()
