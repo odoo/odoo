@@ -36,7 +36,7 @@
                                 productId="product.id"
                                 color="product.pos_categ_ids?.at(-1)?.color"
                                 price="pos.getProductPriceFormatted(product)"
-                                imageUrl="product.getImageUrl()"
+                                imageUrl="pos.config.show_product_images and product.getImageUrl()"
                                 onClick.bind="() => this.addProductToOrder(product)"
                                 productInfo="true"
                                 onProductInfoClick.bind="() => this.onProductInfoClick(product)"

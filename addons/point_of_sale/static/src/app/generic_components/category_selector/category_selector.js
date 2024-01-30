@@ -18,18 +18,16 @@ export class CategorySelector extends Component {
             shape: {
                 id: Number,
                 name: { type: String, optional: true },
+                color: { type: Number, optional: true },
+                imgSrc: String,
                 icon: { type: String, optional: true },
                 showSeparator: { type: Boolean, optional: true },
-                has_image: Boolean,
-                color: { type: Number, optional: true },
             },
         },
         class: { type: String, optional: true },
         onClick: { type: Function },
-        getImgSrc: { type: Function, optional: true },
     };
     static defaultProps = {
         class: "",
-        getImgSrc: (c) => `/web/image?model=pos.category&field=image_128&id=${c.id}`,
     };
 }
