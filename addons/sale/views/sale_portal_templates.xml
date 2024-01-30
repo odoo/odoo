@@ -359,12 +359,18 @@
 
                     <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissible d-print-none" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-                        <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        <div class="text-center">
+                            <span>This quotation has been canceled.</span>
+                            <a role="button" href="#discussion" class="alert-link"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        </div>
                     </div>
 
                     <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissible d-print-none" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-                        <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        <div class="text-center">
+                            <span>This offer expired!</span>
+                            <a role="button" href="#discussion" class="alert-link"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        </div>
                     </div>
 
                     <!-- main content -->
