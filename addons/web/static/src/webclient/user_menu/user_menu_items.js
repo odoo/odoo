@@ -3,6 +3,7 @@
 import { Component, markup } from "@odoo/owl";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
@@ -86,14 +87,13 @@ export function preferencesItem(env) {
     };
 }
 
-function odooAccountItem(env) {
+export function odooAccountItem(env) {
     return {
         type: "item",
         id: "account",
         description: _t("My Odoo.com account"),
         callback: () => {
-            env.services
-                .rpc("/web/session/account")
+            rpc("/web/session/account")
                 .then((url) => {
                     browser.open(url, "_blank");
                 })
