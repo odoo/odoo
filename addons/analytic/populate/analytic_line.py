@@ -18,11 +18,12 @@ class AnalyticLine(models.Model):
     def _populate_factories(self):
         accounts = self.env['account.analytic.account'].browse(self.env.registry.populated_models['account.analytic.account'])
         grouped_account = accounts.grouped('plan_id')
+        project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
         return [
             ('amount', populate.randfloat(0, 1000)),
             *[(
                 plan._column_name(),
                 populate.randomize(grouped_account.get(plan, self.env['account.analytic.account'].browse([False]))._ids)
-            ) for plan in sum(self.env['account.analytic.plan']._get_all_plans())],
+            ) for plan in project_plan + other_plans],
             ('name', populate.constant("Line {counter}")),
         ]
