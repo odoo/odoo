@@ -1483,6 +1483,10 @@ class PosGlobalState extends PosModel {
     doNotAllowRefundAndSales() {
         return false;
     }
+
+    get invoiceReportAction() {
+      return "account.account_invoices";
+    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 Registries.Model.add(PosGlobalState);
