@@ -660,9 +660,21 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
                 return;
             }
         }
+        // Get the previously focused element of the page.
+        const focusedEl = this.el.ownerDocument.querySelector(":focus")
+            || window.frameElement && window.frameElement.ownerDocument.querySelector(":focus");
+
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the extra menu ('+').
         this._updateDropdownVisibility(ev, 'show');
+
+        // Keep the focus on the previously focused element if any, otherwise do
+        // not focus the dropdown on hover.
+        if (focusedEl) {
+            focusedEl.focus();
+        } else {
+            ev.currentTarget.querySelector(".dropdown-toggle").blur();
+        }
     },
     /**
      * @private
