@@ -185,6 +185,8 @@ class PosConfig(models.Model):
                                           column2="is_trusted", string="Trusted Point of Sale Configurations",
                                           domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False)]")
     access_token = fields.Char("Access Token", default=lambda self: uuid4().hex[:16])
+    show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
+    show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
