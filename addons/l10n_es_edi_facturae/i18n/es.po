@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.3\n"
+"Project-Id-Version: Odoo Server 17.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-02 13:00+0000\n"
-"PO-Revision-Date: 2024-01-02 14:07+0100\n"
+"POT-Creation-Date: 2024-01-30 09:04+0000\n"
+"PO-Revision-Date: 2024-01-30 09:04+0000\n"
 "Last-Translator: Dylan Kiss <dyki@odoo.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -281,6 +281,11 @@ msgid "FACe Center"
 msgstr "Centro FACe"
 
 #. module: l10n_es_edi_facturae
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_move_form
+msgid "Factura-e"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_edi_facturae_xml_id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__l10n_es_edi_facturae_xml_id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_payment__l10n_es_edi_facturae_xml_id
@@ -354,6 +359,20 @@ msgid "Invoice Class"
 msgstr "Clase de factura"
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_invoicing_period_end_date
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__l10n_es_invoicing_period_end_date
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_payment__l10n_es_invoicing_period_end_date
+msgid "Invoice Period End Date"
+msgstr "Fecha final del periodo de facturación"
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_invoicing_period_start_date
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__l10n_es_invoicing_period_start_date
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_payment__l10n_es_invoicing_period_start_date
+msgid "Invoice Period Start Date"
+msgstr "Fecha de inicio del periodo de facturación"
+
+#. module: l10n_es_edi_facturae
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 msgid "Invoice imported from Factura-E XML file."
@@ -422,7 +441,7 @@ msgstr "Bidones"
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__03
