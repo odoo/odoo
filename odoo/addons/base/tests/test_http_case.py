@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase, tagged
-from odoo.tools import mute_logger, logging
+from odoo.tests.common import HttpCase, tagged, ChromeBrowser
+from odoo.tools import config, logging
 from unittest.mock import patch
 
 @tagged('-at_install', 'post_install')
@@ -47,5 +47,23 @@ class TestHttpCase(HttpCase):
                 if text == 'test successful':
                     continue
                 self.assertEqual(text, "Object(custom=Object, value=1, description='dummy')")
-                console_log_count +=1
+                console_log_count += 1
         self.assertEqual(console_log_count, 1)
+
+
+@tagged('-at_install', 'post_install')
+class TestChromeBrowser(HttpCase):
+    def setUp(self):
+        super().setUp()
+        screencasts_dir = config['screencasts'] or config['screenshots']
+        with patch.dict('odoo.tools.config.options', {'screencasts': screencasts_dir, 'screenshots': config['screenshots']}):
+            self.browser = ChromeBrowser(self)
+        self.addCleanup(self.browser.stop)
+
+    def test_screencasts(self):
+        self.browser.start_screencast()
+        self.browser.navigate_to('about:blank')
+        self.browser._wait_ready()
+        code = "setTimeout(() => console.log('test successful'), 2000); setInterval(() => document.body.innerText = (new Date()).getTime(), 100);"
+        self.browser._wait_code_ok(code, 10)
+        self.browser._save_screencast()
