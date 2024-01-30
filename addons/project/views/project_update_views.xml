@@ -67,9 +67,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + record.color.raw_value : ''}} oe_kanban_global_click o_pupdate_kanban_card">
-                            <!-- Project Update Kanban View is always ungrouped - see js_class -->
+                            <!-- displayed in ungrouped mode -->
                             <div class="o_kanban_detail_ungrouped d-flex align-items-center">
-                                <div class="pb-0 o_pupdate_name mr8 o_pupdate_kanban_width">
+                                <div id="ungrouped_kanban_card_header" class="pb-0 o_pupdate_name mr8 o_pupdate_kanban_width">
                                     <b><field name="name_cropped"/></b>
                                     <div class="d-flex gap-1">
                                         <field name="user_id" widget="many2one_avatar_user"/>
@@ -92,6 +92,46 @@
                                 <div class="mr8 o_pupdate_kanban_width">
                                     <b><field name="date"/></b>
                                     <div>Date</div>
+                                </div>
+                            </div>
+                            <!-- displayed in grouped mode -->
+                            <div class="o_kanban_detail_grouped">
+                                <div id="grouped_kanban_card_header" class="o_kanban_primary_left">
+                                    <div class="col">
+                                        <span class="o_text_overflow">
+                                            <b><field name="name_cropped"/></b>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row g-0">
+                                    <div class="col-10 p-0 pb-1">
+                                        <div class="container o_kanban_card_content">
+                                            <div class="row mt-2 ms-2">
+                                                <div class="col-4 p-0">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <b><field name="progress_percentage" widget="percentage"/></b>
+                                                        <span class="text-muted">Progress</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 p-0">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <b><field name="closed_task_count"/>/<field name="task_count"/><span invisible="not task_count"> (<field name="closed_task_percentage"/>%)</span></b>
+                                                        <span class="text-muted">Tasks</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 p-0">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <b><field name="date"/></b>
+                                                        <span class="text-muted">Date</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-1 mt-2">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <span class="o_text_overflow"><t class="o_text_overflow" t-esc="record.user_id.value"/></span>
                                 </div>
                             </div>
                         </div>
@@ -129,5 +169,124 @@
             Get a snapshot of the status of your project and share its progress with key stakeholders.
             </p>
         </field>
+    </record>
+
+
+    <record id="project_update_report_view_tree" model="ir.ui.view">
+        <field name="name">project.update.report.view.tree</field>
+        <field name="model">project.update</field>
+        <field name="inherit_id" ref="project_update_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="default_order">date desc</attribute>
+            </list>
+            <field name="name" position="before">
+                <field name="project_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_update_report_view_form" model="ir.ui.view">
+        <field name="name">project.update.report.view.form</field>
+        <field name="model">project.update</field>
+        <field name="inherit_id" ref="project_update_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <field name="project_id" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_update_report_view_kanban" model="ir.ui.view">
+        <field name="name">project.update.report.view.kanban</field>
+        <field name="model">project.update</field>
+        <field name="inherit_id" ref="project_update_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <div id="ungrouped_kanban_card_header" position="after">
+                <div class="col-sm-2 col-6 pb-0">
+                    <b><field name="project_id"/></b>
+                </div>
+            </div>
+            <div id="ungrouped_kanban_card_header" position="attributes">
+                <attribute name="class" separator=" " add="col-sm-2" remove="col-sm-4"/>
+            </div>
+            <div id="grouped_kanban_card_header" position="inside">
+                <div class="col">
+                    <span class="o_text_overflow">
+                        <field name="project_id"/>
+                    </span>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="project_update_report_view_search" model="ir.ui.view">
+        <field name="name">project.update.report.view.search</field>
+        <field name="model">project.update</field>
+        <field name="inherit_id" ref="project_update_view_search"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <filter name="on_hold" position="after">
+                <filter string="Done" name="done" domain="[('status', '=', 'done')]"/>
+            </filter>
+            <field name="project_id" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </field>
+            <field name="description" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <search position="inside">
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Author" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="act_project_update_report" model="ir.actions.act_window">
+        <field name="name">Project Updates</field>
+        <field name="res_model">project.update</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'search_default_group_by_project': True}</field>
+        <field name="search_view_id" ref="project_update_report_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No updates found. Let's create one!
+            </p>
+            <p>
+                Get a snapshot of the status of your projects and share their progress with key stakeholders.
+            </p>
+        </field>
+    </record>
+
+    <record id="act_project_update_report_view_tree" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="sequence" eval="4"/>
+        <field name="view_id" ref="project_update_report_view_tree"/>
+        <field name="act_window_id" ref="act_project_update_report"/>
+    </record>
+
+    <record id="act_project_update_report_view_form" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence" eval="5"/>
+        <field name="view_id" ref="project_update_report_view_form"/>
+        <field name="act_window_id" ref="act_project_update_report"/>
+    </record>
+
+    <record id="act_project_update_report_view_kanban" model="ir.actions.act_window.view">
+        <field name="view_mode">kanban</field>
+        <field name="sequence" eval="6"/>
+        <field name="view_id" ref="project_update_report_view_kanban"/>
+        <field name="act_window_id" ref="act_project_update_report"/>
     </record>
 </odoo>

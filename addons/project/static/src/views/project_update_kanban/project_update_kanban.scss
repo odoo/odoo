@@ -1,5 +1,19 @@
 .o_project_update_kanban_view .o_kanban_renderer {
     overflow: auto;
+
+    // Grouped / Ungrouped sections hidding
+    &.o_kanban_grouped {
+        .o_kanban_detail_ungrouped {
+            display:none !important;
+        }
+    }
+    &.o_kanban_ungrouped {
+        .o_kanban_detail_grouped {
+            display:none !important;
+        }
+    }
+
+    // Ungrouped display: whole length (kanban-list)
     &.o_kanban_ungrouped {
         padding:0px;
         .o_pupdate_kanban_card {
@@ -48,6 +62,16 @@
                         }
                     }
                 }
+            }
+        }
+    }
+
+    // Grouped specific
+    &.o_kanban_grouped {
+        // Set a minimal height otherwise display may have different card sized
+        .o_survey_kanban_card_grouped {
+            & > .row {
+                min-height: 60px;
             }
         }
     }
