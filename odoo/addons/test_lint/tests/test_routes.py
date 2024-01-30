@@ -5,12 +5,11 @@ from pprint import pformat
 from unittest.mock import patch
 
 from odoo import http
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install')
 class RoutesLinter(TransactionCase):
 
     def test_routes_definition(self):

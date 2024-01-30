@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -12,7 +11,6 @@ from odoo.addons.payment_xendit.controllers.main import XenditController
 from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_xendit.controllers.main')

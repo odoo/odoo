@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import HttpCase
-from odoo.tests.common import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestUi(HttpCase):
 
     def test_01_crm_tour(self):

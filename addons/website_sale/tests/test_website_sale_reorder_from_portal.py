@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleReorderFromPortal(HttpCase):
     @classmethod
     def setUpClass(cls):

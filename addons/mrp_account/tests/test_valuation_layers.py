@@ -6,7 +6,6 @@
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
 from odoo.tests import Form
-from odoo.tests.common import tagged
 
 
 class TestMrpValuationCommon(TestStockValuationCommon):
@@ -389,7 +388,6 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(self.component.value_svl, 1424)
 
 
-@tagged("post_install", "-at_install")
 class TestMrpStockValuation(TestStockValuationBase):
     @classmethod
     def setUpClass(cls):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
-from odoo.tests.common import tagged
 
 import json
 
@@ -9,7 +8,6 @@ from odoo import http
 from odoo.tools import mute_logger
 
 
-@tagged('post_install', '-at_install')
 class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
     @classmethod

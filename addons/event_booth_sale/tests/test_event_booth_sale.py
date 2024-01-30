@@ -7,7 +7,7 @@ from odoo import Command, fields
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests.common import tagged, users
+from odoo.tests import users
 from odoo.tools import float_compare
 
 
@@ -154,7 +154,6 @@ class TestEventBoothSale(TestEventBoothSaleWData):
                          (self.booth_2 + self.booth_3).ids,
                          "Booths not correctly linked with event_booth_registration.")
 
-@tagged('post_install', '-at_install')
 class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWData):
 
     @classmethod

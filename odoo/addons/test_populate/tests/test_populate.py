@@ -104,7 +104,6 @@ class TestPopulate(common.TransactionCase):
         return records
 
 
-@common.tagged('-at_install', 'post_install')
 class TestPopulateValidation(common.TransactionCase):
     """ check that all fields in _populate_factories exists """
     def setUp(self):
@@ -120,7 +119,7 @@ class TestPopulateValidation(common.TransactionCase):
             self.assertFalse(missing, 'Fields %s not found in model %s' % (missing, model._name))
 
 
-@common.tagged('-standard', '-at_install', 'post_install', 'missing_populate')
+@common.tagged('-standard', 'missing_populate')
 class TestPopulateMissing(common.TransactionCase):
     """ check that all fields in _populate_factories exists """
     def setUp(self):

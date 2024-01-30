@@ -3,9 +3,10 @@
 
 from . import common
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 
+@tagged("at_install", "-post_install")
 class TestWarehouseMrp(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):

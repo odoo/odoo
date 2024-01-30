@@ -1,8 +1,7 @@
 import contextlib
 
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
-
+from odoo.tests import TransactionCase
 
 IGNORE_MODEL_NAMES = {
     'ir.attachment',
@@ -12,7 +11,7 @@ IGNORE_MODEL_NAMES = {
     'account_followup.manual_reminder',
 }
 
-@tagged('-at_install', 'post_install')
+
 class TestEveryModel(TransactionCase):
 
     def test_display_name_new_record(self):

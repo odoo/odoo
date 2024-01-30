@@ -9,7 +9,7 @@ from odoo.tools.profiler import Profiler, ExecutionContext
 from odoo.tools.speedscope import Speedscope
 
 
-@tagged('post_install', '-at_install', 'profiling')
+@tagged('profiling')
 # post_install to ensure mail is already loaded if installed (new_test_user would fail otherwise because of notification_type)
 class TestProfileAccess(TransactionCase):
 
@@ -30,7 +30,7 @@ class TestProfileAccess(TransactionCase):
             self.test_profile.with_user(user).read(['name'])
 
 
-@tagged('post_install', '-at_install', 'profiling')
+@tagged('profiling')
 class TestSpeedscope(BaseCase):
     def example_profile(self):
         return {
@@ -371,7 +371,7 @@ class TestSpeedscope(BaseCase):
         ])
 
 
-@tagged('post_install', '-at_install', 'profiling')
+@tagged('profiling')
 class TestProfiling(TransactionCase):
 
     def test_default_values(self):

@@ -4,7 +4,7 @@
 import odoo
 import odoo.tests
 
-@odoo.tests.tagged('-at_install', 'post_install')
+
 class TestWebsiteSettings(odoo.tests.HttpCase):
     def test_01_multi_website_settings(self):
         # If not enabled (like in demo data), landing on res.config will try

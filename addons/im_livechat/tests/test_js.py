@@ -2,7 +2,6 @@ import odoo
 from odoo.addons.web.tests.test_js import qunit_error_checker
 
 
-@odoo.tests.tagged("post_install", "-at_install")
 class ExternalTestSuite(odoo.tests.HttpCase):
     def test_external_livechat(self):
         # webclient external test suite

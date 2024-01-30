@@ -3,10 +3,11 @@
 
 import time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.exceptions import AccessError
 
 
+@tagged("at_install", "-post_install")
 class TestEquipmentMulticompany(TransactionCase):
 
     def test_00_equipment_multicompany_user(self):

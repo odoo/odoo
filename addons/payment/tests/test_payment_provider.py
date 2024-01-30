@@ -3,12 +3,9 @@
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.tests import tagged
-
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestPaymentProvider(PaymentCommon):
 
     def test_changing_provider_state_archives_tokens(self):

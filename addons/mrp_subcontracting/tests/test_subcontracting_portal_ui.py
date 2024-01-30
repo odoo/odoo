@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import Command
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestSubcontractingPortalUi(HttpCase):
 
     @classmethod

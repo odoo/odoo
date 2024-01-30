@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -12,7 +11,6 @@ from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveControll
 from odoo.addons.payment_flutterwave.tests.common import FlutterwaveCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_flutterwave.controllers.main')

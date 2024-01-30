@@ -11,7 +11,7 @@ from odoo.tests.common import TransactionCase
 
 _logger = logging.getLogger(__name__)
 
-@odoo.tests.tagged('-at_install', 'post_install')
+
 class TestAutoComplete(TransactionCase):
     @classmethod
     def setUpClass(cls):

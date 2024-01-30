@@ -3,11 +3,12 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
 
+@tagged("at_install", "-post_install")
 class TestProcurement(TestMrpCommon):
 
     def test_procurement(self):

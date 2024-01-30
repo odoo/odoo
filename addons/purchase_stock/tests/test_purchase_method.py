@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests.common import TransactionCase, tagged
 
-@tagged('-at_install', 'post_install')
+from odoo.tests import TransactionCase
+
+
 class TestPurchaseMethod(TransactionCase):
     def test_product_purchase_method_with_receive_as_default_purchase_method(self):
         self.env['ir.default'].set('product.template', 'purchase_method', 'receive', company_id=True)

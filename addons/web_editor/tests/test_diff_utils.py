@@ -11,7 +11,7 @@ from odoo.addons.web_editor.models.diff_utils import (
 )
 
 
-@odoo.tests.tagged("post_install", "-at_install", "html_history")
+@odoo.tests.tagged("html_history")
 class TestPatchUtils(BaseCase):
     def test_new_content_add_line(self):
         initial_content = "<p>foo</p><p>baz</p>"

@@ -22,7 +22,7 @@ class TestMassMailPerformanceBase(BaseMailPerformance):
             signature='--\nMartial'
         )
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestMassMailPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):
@@ -57,7 +57,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         self.assertFalse(mails, 'Should have auto-deleted the <mail.mail>')
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestMassMailBlPerformance(TestMassMailPerformanceBase):
 
     def setUp(self):

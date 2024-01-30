@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestAccountMoveRounding(AccountTestInvoicingCommon):
 
     def test_move_line_rounding(self):

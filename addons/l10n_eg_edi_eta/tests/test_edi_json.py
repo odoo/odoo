@@ -67,7 +67,7 @@ def mocked_l10n_eg_edi_post_invoice_web_service(self, invoice):
     return {'success': True, 'attachment': invoice.l10n_eg_eta_json_doc_id}
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestEdiJson(TestEGEdiCommon):
 
     def test_1_simple_test_local_parter_no_tax(self):

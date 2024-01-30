@@ -13,7 +13,7 @@ from odoo.tools import date_utils
 from odoo.tools import mute_logger
 
 
-@tests.tagged('access_rights', 'post_install', '-at_install')
+@tests.tagged('access_rights')
 class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):

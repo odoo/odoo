@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 import werkzeug
 
 
-@tagged('-at_install', 'post_install')
 class TestHttpEndPoint(HttpCase):
 
     def test_can_clear_routing_map_during_render(self):

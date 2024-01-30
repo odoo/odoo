@@ -3,12 +3,11 @@
 
 import logging
 
-from odoo.tests import tagged, HttpCase, loaded_demo_data
+from odoo.tests import HttpCase, loaded_demo_data
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged("post_install", "-at_install")
 class WebSuite(HttpCase):
     def setUp(self):
         super().setUp()

@@ -5,10 +5,9 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import TransactionCase
 
 
-@tagged('post_install', '-at_install')
 class TestPartner(TransactionCase):
 
     @classmethod

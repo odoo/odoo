@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.api import Environment
 import odoo.tests
 from odoo.tools import html2plaintext
 
-@odoo.tests.tagged('post_install', '-at_install')
+
 class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
     def test_tour(self):
         job_guru = self.env['hr.job'].create({

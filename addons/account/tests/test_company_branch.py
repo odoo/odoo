@@ -7,10 +7,9 @@ from functools import partial
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestCompanyBranch(AccountTestInvoicingCommon):
 
     @classmethod

@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=bad-whitespace
+
+from collections import defaultdict
 from lxml import etree
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import fields, Command
 
-from collections import defaultdict
 
-
-@tagged('post_install', '-at_install')
 class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
 
     @classmethod

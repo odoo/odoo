@@ -6,7 +6,7 @@ from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
 from odoo.tests import tagged, users
 
 
-@tagged('forum_internals')
+@tagged("forum_internals", "at_install", "-post_install")
 class TestForumInternals(TestForumCommon):
 
     @classmethod

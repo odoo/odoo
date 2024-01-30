@@ -2,7 +2,6 @@
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
@@ -11,7 +10,6 @@ from odoo.addons.payment_payumoney.controllers.main import PayUMoneyController
 from odoo.addons.payment_payumoney.tests.common import PayumoneyCommon
 
 
-@tagged('post_install', '-at_install')
 class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
 
     def test_compatible_providers(self):

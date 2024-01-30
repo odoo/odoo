@@ -7,12 +7,10 @@ from odoo.addons.website.controllers.main import Website
 from odoo.addons.website.tools import MockRequest
 from odoo.fields import Command
 from odoo.http import root
-from odoo.tests import common, HttpCase, tagged
-from odoo.tests.common import HOST
+from odoo.tests import common, HOST, HttpCase
 from odoo.tools import config, mute_logger
 
 
-@tagged('-at_install', 'post_install')
 class TestPage(common.TransactionCase):
     def setUp(self):
         super(TestPage, self).setUp()
@@ -206,7 +204,6 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
 
-@tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
     def setUp(self):
         super().setUp()
@@ -543,7 +540,6 @@ class WithContext(HttpCase):
         self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
         self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")
 
-@tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
     def test_new_page_used_key(self):
         website = self.env.ref('website.default_website')

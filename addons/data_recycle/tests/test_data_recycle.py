@@ -8,7 +8,7 @@ from odoo.fields import Date
 from odoo.tests.common import TransactionCase, tagged
 
 
-@tagged('post_install', '-at_install', 'data_recycle')
+@tagged('data_recycle')
 class TestDataRecycle(TransactionCase):
 
     @classmethod

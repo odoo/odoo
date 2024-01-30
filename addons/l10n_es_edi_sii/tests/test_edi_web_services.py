@@ -6,7 +6,7 @@ from odoo import fields
 from .common import TestEsEdiCommon
 
 
-@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
+@tagged('external_l10n', '-standard', 'external')
 class TestEdiWebServices(TestEsEdiCommon):
 
     @classmethod

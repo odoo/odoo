@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import SaleCommon
 from odoo.addons.website.tools import MockRequest
@@ -9,7 +7,6 @@ from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
 from odoo.exceptions import ValidationError
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleStockDeliveryController(PaymentCommon, SaleCommon):
     def setUp(self):
         super().setUp()

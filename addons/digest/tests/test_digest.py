@@ -12,6 +12,7 @@ from odoo.tests import tagged
 from odoo.tests.common import users
 
 
+@tagged("at_install", "-post_install")
 class TestDigest(TestDigestCommon):
 
     @classmethod
@@ -182,7 +183,6 @@ class TestDigest(TestDigestCommon):
         self.assertEqual(digest.periodicity, 'monthly')
 
 
-@tagged('-at_install', 'post_install')
 class TestUnsubscribe(HttpCaseWithUserDemo):
 
     def setUp(self):

@@ -2,7 +2,6 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -10,7 +9,6 @@ from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.tests.common import StripeCommon
 
 
-@tagged('post_install', '-at_install')
 class TestRefundFlows(StripeCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')

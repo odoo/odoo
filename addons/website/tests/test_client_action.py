@@ -4,7 +4,6 @@
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestClientAction(odoo.tests.HttpCase):
 
     def test_01_client_action_redirect(self):

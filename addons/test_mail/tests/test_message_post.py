@@ -341,7 +341,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             )
 
 
-@tagged('mail_post', 'mail_notify')
+@tagged("mail_post", "mail_notify", "at_install", "-post_install")
 class TestMessageNotify(TestMessagePostCommon):
 
     @users('employee')
@@ -1730,7 +1730,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         }])
 
 
-@tagged('mail_post', 'post_install', '-at_install')
+@tagged('mail_post')
 class TestMessagePostGlobal(TestMessagePostCommon):
 
     @users('employee')

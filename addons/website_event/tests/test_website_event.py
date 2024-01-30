@@ -10,9 +10,9 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tests.test_base_url import TestUrlCommon
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon, OnlineEventCase
 from odoo.exceptions import AccessError
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, users
 from odoo.tools import mute_logger
-from odoo.tests.common import users
+
 
 class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
     def test_event_registration_utm_values(self):
@@ -52,7 +52,6 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
         self.assertEqual(new_registration.utm_medium_id, self.env.ref('utm.utm_medium_email'))
 
 
-@tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_website_event_tour_admin(self):
@@ -167,7 +166,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         ).value_answer_id.name, 'A friend')
 
 
-@tagged('-at_install', 'post_install')
 class TestURLs(TestUrlCommon):
 
     def test_canonical_url(self):
@@ -175,7 +173,6 @@ class TestURLs(TestUrlCommon):
         self._assertCanonical('/event?date=old', self.domain + '/event?date=old')
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
 
     def setUp(self):

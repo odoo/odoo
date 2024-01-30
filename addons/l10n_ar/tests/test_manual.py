@@ -3,7 +3,7 @@ from . import common
 from odoo.tests import Form, tagged
 
 
-@tagged('post_install_l10n', '-at_install', 'post_install')
+@tagged('post_install_l10n')
 class TestManual(common.TestAr):
 
     @classmethod

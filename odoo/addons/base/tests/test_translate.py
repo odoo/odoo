@@ -346,7 +346,6 @@ class TestLanguageInstall(TransactionCase):
         self.assertEqual(loaded[0][2], True)
 
 
-@tagged('post_install', '-at_install')
 class TestTranslationExport(TransactionCase):
 
     def test_export_translatable_resources(self):
@@ -355,6 +354,7 @@ class TestTranslationExport(TransactionCase):
             TranslationModuleReader(self.env.cr)
 
 
+@tagged("at_install", "-post_install")
 class TestTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -570,6 +570,8 @@ class TestTranslation(TransactionCase):
     #     with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
     #         country_3 = Country.create({'name': 'Odoo'})
 
+
+@tagged("at_install", "-post_install")
 class TestTranslationWrite(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -905,6 +907,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(info['models'][model._name]['name']['string'], LABEL)
 
 
+@tagged("at_install", "-post_install")
 class TestXMLTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1307,6 +1310,7 @@ class TestXMLTranslation(TransactionCase):
             )
 
 
+@tagged("at_install", "-post_install")
 class TestHTMLTranslation(TransactionCase):
     def test_write_non_existing(self):
         html = '''
@@ -1343,7 +1347,6 @@ class TestHTMLTranslation(TransactionCase):
                 )
 
 
-@tagged('post_install', '-at_install')
 class TestLanguageInstallPerformance(TransactionCase):
     def test_language_install(self):
         """ Install a language on a complete database. """

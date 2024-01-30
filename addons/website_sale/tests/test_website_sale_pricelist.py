@@ -6,7 +6,7 @@ import logging
 from unittest.mock import patch
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, loaded_demo_data
+from odoo.tests import TransactionCase, loaded_demo_data
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
@@ -32,7 +32,6 @@ Try to keep one call to `get_pricelist_available` by test method.
 '''
 
 
-@tagged('post_install', '-at_install')
 class TestWebsitePriceList(TransactionCase):
 
     def setUp(self):
@@ -353,7 +352,6 @@ def simulate_frontend_context(self, website_id=1):
     self.startPatcher(patcher)
 
 
-@tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailable(TransactionCase):
     def setUp(self):
         super(TestWebsitePriceListAvailable, self).setUp()
@@ -440,7 +438,6 @@ class TestWebsitePriceListAvailable(TransactionCase):
         self.assertEqual(len(pl), 1, "Inactive partner should still get a `property_product_pricelist`")
 
 
-@tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
     def setUp(self):
         super(TestWebsitePriceListAvailableGeoIP, self).setUp()
@@ -516,7 +513,6 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
 
-@tagged('post_install', '-at_install')
 class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
     def test_get_pricelist_available_multi_company(self):
         ''' Test that the `property_product_pricelist` of `res.partner` is not
@@ -541,7 +537,6 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
         self.assertEqual(r.status_code, 200, "The page should not raise an access error because of reading pricelists from other companies")
 
 
-@tagged('post_install', '-at_install')
 class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
     def setUp(self):
         ''' Create a basic multi-company pricelist environment:
@@ -648,7 +643,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # archive should not raise an error
         self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
 
-@tagged('post_install', '-at_install')
+
 class TestWebsiteSaleSession(HttpCaseWithUserPortal):
 
     def test_update_pricelist_user_session(self):

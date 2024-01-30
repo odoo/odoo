@@ -4,13 +4,11 @@ from werkzeug import urls
 
 from odoo import Command
 from odoo.http import root
-from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
-@tagged('at_install')
 class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
     """ The goal of this method class is to test the address management on
         express checkout.

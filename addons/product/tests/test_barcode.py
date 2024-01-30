@@ -3,10 +3,9 @@
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase
 
 
-@tagged('post_install', '-at_install')
 class TestProductBarcode(TransactionCase):
 
     @classmethod

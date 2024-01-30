@@ -3,7 +3,7 @@
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestCIIUS(TestUBLCommon):
 
     @classmethod

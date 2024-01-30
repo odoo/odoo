@@ -5,11 +5,9 @@ from markupsafe import Markup
 from odoo.tests.common import TransactionCase, users
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
 from odoo.tools import mute_logger, convert_file
 
 
-@tagged('post_install', '-at_install')
 class TestSmsTemplateAccessRights(TransactionCase):
 
     @classmethod
@@ -109,7 +107,6 @@ class TestSmsTemplateAccessRights(TransactionCase):
         self.assertIn(self.partner.name, body, 'Template Editor should be able to write new Jinja code')
 
 
-@tagged('post_install', '-at_install')
 class TestSMSTemplateReset(TransactionCase):
 
     def _load(self, module, filepath):

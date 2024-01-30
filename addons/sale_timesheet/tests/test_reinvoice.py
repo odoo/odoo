@@ -5,10 +5,9 @@ from datetime import timedelta
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 
 from odoo.fields import Date
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
-@tagged('-at_install', 'post_install')
 class TestReInvoice(TestCommonSaleTimesheet):
 
     @classmethod

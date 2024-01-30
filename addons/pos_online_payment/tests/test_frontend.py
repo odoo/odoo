@@ -11,10 +11,7 @@ from odoo.addons.account.models.account_payment_method import AccountPaymentMeth
 from odoo.osv.expression import AND
 from odoo.addons.point_of_sale.tests.common import archive_products
 
-import odoo.tests
 
-
-@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
     @classmethod

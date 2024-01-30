@@ -8,7 +8,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 import odoo
-from odoo.tests import new_test_user, tagged, RecordCapturer
+from odoo.tests import new_test_user, RecordCapturer
 from odoo.tools import config, file_open, image_process
 
 from .test_common import TestHttpBase
@@ -62,7 +62,6 @@ class TestHttpStaticCommon(TestHttpBase):
         return self.assertDownload(url, {}, 200, headers, self.placeholder_data)
 
 
-@tagged('post_install', '-at_install')
 class TestHttpStatic(TestHttpStaticCommon):
     def test_static00_static(self):
         with self.subTest(x_sendfile=False):
@@ -312,7 +311,6 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertDownloadGizeh(f'/web/image/{att.id}')
 
 
-@tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
     @staticmethod
     def img_data_to_web_data(img_base_64):
@@ -427,7 +425,6 @@ class TestHttpStaticLogo(TestHttpStaticCommon):
         self.assertDownloadLogoDefault(company=self.company2, user=self.user_of_company_of_superuser)
 
 
-@tagged('post_install', '-at_install')
 class TestHttpStaticCache(TestHttpStaticCommon):
     @freeze_time(datetime.utcnow())
     def test_static_cache0_standard(self, domain=''):
@@ -483,7 +480,6 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertEqual(res2.status_code, 304, "We should not download the file again.")
 
 
-@tagged('post_install', '-at_install')
 class TestHttpStaticUpload(TestHttpStaticCommon):
     def _test_upload_small_file(self):
         new_test_user(self.env, 'jackoneill')

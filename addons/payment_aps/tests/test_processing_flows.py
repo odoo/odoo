@@ -4,14 +4,12 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment_aps.controllers.main import APSController
 from odoo.addons.payment_aps.tests.common import APSCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProcessingFlows(APSCommon):
 
     @mute_logger('odoo.addons.payment_aps.controllers.main')

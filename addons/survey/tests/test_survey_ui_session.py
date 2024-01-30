@@ -5,10 +5,9 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestUiSession(HttpCase):
 
     def test_admin_survey_session(self):

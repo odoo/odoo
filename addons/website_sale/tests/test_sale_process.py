@@ -5,8 +5,7 @@ import logging
 
 from werkzeug.exceptions import Forbidden
 
-import odoo.tests
-
+import odoo
 from odoo import api, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -15,7 +14,6 @@ from odoo.addons.website.tools import MockRequest
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 
     def setUp(self):
@@ -157,7 +155,6 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/shop", 'update_billing_shipping_address', login="admin")
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUserPortal):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).

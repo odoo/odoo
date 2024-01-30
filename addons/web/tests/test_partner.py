@@ -6,7 +6,7 @@ import unittest
 import zipfile
 from odoo.fields import Command
 
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests import HttpCase
 from base64 import b64decode
 
 from odoo.tools import mute_logger
@@ -19,7 +19,6 @@ except ImportError:
     vobject = None
 
 
-@tagged('-at_install', 'post_install')
 class TestPartnerVCard(HttpCase):
 
     def setUp(self):

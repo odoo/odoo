@@ -8,9 +8,11 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
+from odoo.tests import tagged
 from odoo.tools import formataddr, mute_logger
 
 
+@tagged("at_install", "-post_install")
 class TestMailSchedule(EventCase, MockEmail):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')

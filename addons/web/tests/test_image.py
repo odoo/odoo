@@ -7,10 +7,9 @@ import base64
 from PIL import Image
 from werkzeug.urls import url_quote
 
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('-at_install', 'post_install')
 class TestImage(HttpCase):
     def test_01_content_image_resize_placeholder(self):
         """The goal of this test is to make sure the placeholder image is

@@ -5,7 +5,7 @@ from odoo.tests import Form, tagged
 from odoo import fields
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestOwnChecks(L10nLatamCheckTest):
 
     def test_01_pay_with_manual_check(self):

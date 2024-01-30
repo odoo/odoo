@@ -11,7 +11,7 @@ from odoo.addons.mail.tools import link_preview
 from odoo.tests.common import tagged
 
 
-@tagged("mail_link_preview", "mail_message", "post_install", "-at_install")
+@tagged("mail_link_preview", "mail_message")
 class TestLinkPreview(MailCommon):
 
     @classmethod

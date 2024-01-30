@@ -45,7 +45,7 @@ class EmailConfigCase(TransactionCase):
         self.assertEqual(message["From"], "settings@example.com")
 
 
-@tagged('mail_server')
+@tagged("mail_server", "at_install", "-post_install")
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     @classmethod

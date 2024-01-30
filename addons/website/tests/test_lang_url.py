@@ -7,10 +7,9 @@ from urllib.parse import urlparse
 
 from odoo.addons.http_routing.models.ir_http import url_lang
 from odoo.addons.website.tools import MockRequest
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('-at_install', 'post_install')
 class TestLangUrl(HttpCase):
     def setUp(self):
         super(TestLangUrl, self).setUp()
@@ -107,7 +106,6 @@ class TestLangUrl(HttpCase):
         self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of unicode query-string")
 
 
-@tagged('-at_install', 'post_install')
 class TestControllerRedirect(TestLangUrl):
     def setUp(self):
         self.page = self.env['website.page'].create({

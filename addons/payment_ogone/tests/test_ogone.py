@@ -6,7 +6,6 @@ from freezegun import freeze_time
 from werkzeug.exceptions import Forbidden
 
 from odoo.fields import Command
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
@@ -15,7 +14,6 @@ from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.tests.common import OgoneCommon
 
 
-@tagged('post_install', '-at_install')
 class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
     def test_incompatibility_with_validation_operation(self):

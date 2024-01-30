@@ -4,10 +4,9 @@
 from markupsafe import Markup
 
 from odoo import Command, fields
-from odoo.tests.common import users, tagged, HttpCase
+from odoo.tests import HttpCase, users
 
 
-@tagged('post_install', '-at_install')
 class TestImLivechatMessage(HttpCase):
     def setUp(self):
         super().setUp()

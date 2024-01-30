@@ -9,7 +9,7 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 from odoo.addons.website.tools import MockRequest
 
 
-@tagged('post_install', '-at_install', 'product_attribute')
+@tagged('product_attribute')
 class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
     @classmethod
@@ -171,7 +171,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         self.assertEqual(combination_info['price_extra'], 173.91, "173.91$ + 0% tax (mapped from fp 15% -> 0%)")
 
 
-@tagged('post_install', '-at_install', 'product_pricelist')
+@tagged('product_pricelist')
 class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart

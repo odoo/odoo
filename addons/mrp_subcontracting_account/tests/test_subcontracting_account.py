@@ -2,14 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, fields
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.tools.float_utils import float_round, float_compare
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 from odoo.addons.mrp_account.tests.test_bom_price import TestBomPriceCommon
 
 
-@tagged('post_install', '-at_install')
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
         # pylint: disable=bad-whitespace

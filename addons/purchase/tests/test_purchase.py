@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo import Command, fields
 
 
@@ -9,7 +9,6 @@ from datetime import timedelta
 import pytz
 
 
-@tagged('-at_install', 'post_install')
 class TestPurchase(AccountTestInvoicingCommon):
 
     def test_date_planned(self):

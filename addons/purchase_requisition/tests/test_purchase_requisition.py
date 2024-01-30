@@ -7,10 +7,7 @@ from odoo.tests import Form
 
 from datetime import timedelta
 
-from odoo.tests.common import tagged
 
-
-@tagged('post_install', '-at_install')
 class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_00_purchase_requisition_users(self):

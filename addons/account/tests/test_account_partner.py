@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 from freezegun import freeze_time
 
 
-@tagged('post_install', '-at_install')
 class TestAccountPartner(AccountTestInvoicingCommon):
 
     @freeze_time("2023-05-31")

@@ -2,7 +2,7 @@
 # pylint: disable=bad-whitespace
 from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import fields, Command
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, RedirectWarning
@@ -10,7 +10,7 @@ from datetime import date
 
 from collections import defaultdict
 
-@tagged('post_install', '-at_install')
+
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     @classmethod

@@ -2,13 +2,11 @@ import logging
 import re
 import time
 
-from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import TransactionCase
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('-at_install', 'post_install')
 class TestIrHttpPerformances(TransactionCase):
 
     def test_routing_map_performance(self):

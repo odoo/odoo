@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo import tools
 
 
-@tagged('post_install', '-at_install')
 class TestUi(HttpCase):
 
 	# Avoid "A Chart of Accounts is not yet installed in your current company."

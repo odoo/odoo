@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
 
 
-@tagged('recruitment_interviewer')
+@tagged("recruitment_interviewer", "at_install", "-post_install")
 class TestRecruitmentInterviewer(MailCommon):
     @classmethod
     def setUpClass(cls):

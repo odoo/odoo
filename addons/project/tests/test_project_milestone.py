@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 from .test_project_base import TestProjectCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestProjectMilestone(TestProjectCommon):
     @classmethod
     def setUpClass(cls):

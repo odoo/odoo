@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
-@tagged('post_install_l10n', '-at_install', 'post_install')
+@tagged('post_install_l10n')
 class TestSaEdiCommon(AccountEdiTestCommon):
 
     @classmethod

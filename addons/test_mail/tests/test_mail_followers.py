@@ -508,7 +508,7 @@ class AdvancedResponsibleNotifiedTest(MailCommon):
         self.assertEqual(mail_notification.mail_mail_id.state, 'outgoing')
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged('mail_followers')
 class RecipientsNotificationTest(MailCommon):
     """ Test advanced and complex recipients computation / notification, such
     as multiple users, batch computation, ... Post install because we need the
@@ -787,7 +787,7 @@ class RecipientsNotificationTest(MailCommon):
         self.assertRecipientsData(recipients_data, False, test_partners)
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged('mail_followers')
 class UnfollowUnreadableRecordTest(MailCommon):
     """ Test message_unsubscribe on unreadable record. """
 
@@ -833,7 +833,7 @@ class UnfollowUnreadableRecordTest(MailCommon):
             self._message_unsubscribe_unreadable_record(self.user_portal, override_check='check_access_rights')
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged('mail_followers')
 class UnfollowFromInboxTest(MailCommon):
     """ Test unfollow mechanism from inbox (server part). """
 
@@ -888,7 +888,7 @@ class UnfollowFromInboxTest(MailCommon):
         self.assertFalse(messages[0].get('originThread').get('selfFollower'))
 
 
-@tagged('mail_followers', 'post_install', '-at_install')
+@tagged('mail_followers')
 class UnfollowFromEmailTest(MailCommon, HttpCase):
     """ Test unfollow mechanism from email. """
 

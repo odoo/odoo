@@ -3,7 +3,6 @@
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.project.tests.test_project_profitability import TestProjectProfitabilityCommon
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests.common import tagged
 
 
 class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon, AccountTestInvoicingCommon):
@@ -32,7 +31,6 @@ class TestProjectHrExpenseProfitabilityCommon(TestExpenseCommon, AccountTestInvo
         return expense_sheet
 
 
-@tagged('post_install', '-at_install')
 class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProjectHrExpenseProfitabilityCommon):
 
     def test_project_profitability(self):

@@ -5,7 +5,6 @@ import odoo.tests
 from odoo.tools.translate import TranslationImporter
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestRelatedTranslation(odoo.tests.TransactionCase):
 
     @classmethod

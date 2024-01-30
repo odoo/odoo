@@ -1,9 +1,8 @@
 import collections
 import inspect
-import itertools
 
 import odoo
-from odoo.tests.common import get_db_name, tagged
+from odoo.tests.common import get_db_name
 from .lint_case import LintCase
 
 
@@ -110,7 +109,6 @@ def assert_valid_override(parent_signature, child_signature):
         assert child_has_varkwargs and parent_has_varkwargs, "wrong keyword parameters"
 
 
-@tagged('-at_install', 'post_install')
 class TestLintOverrideSignatures(LintCase):
     def test_lint_override_signature(self):
         self.failureException = TypeError

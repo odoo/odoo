@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests import HttpCase
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale_product_configurator.tests.common import TestProductConfiguratorCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
 
     @classmethod

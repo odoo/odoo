@@ -7,13 +7,11 @@ from unittest.mock import patch
 from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError
-from odoo.tests import tagged
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentTransaction(RazorpayCommon):
 
     def test_no_item_missing_from_order_request_payload(self):

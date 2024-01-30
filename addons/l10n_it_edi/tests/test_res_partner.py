@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestResPartner(TransactionCase):
 
     def test_validate_fiscal_code(self):

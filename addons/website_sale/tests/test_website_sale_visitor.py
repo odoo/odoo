@@ -1,9 +1,9 @@
 # coding: utf-8
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase
 
-@tagged('post_install', '-at_install')
+
 class WebsiteSaleVisitorTests(TransactionCase):
 
     def setUp(self):

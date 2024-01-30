@@ -3,13 +3,12 @@
 
 import logging
 
-from odoo.tests import tagged, loaded_demo_data
+from odoo.tests import loaded_demo_data
 from odoo.addons.auth_totp.tests.test_totp import TestTOTP
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install')
 class TestTOTPInvite(TestTOTP):
 
     def test_totp_administration(self):

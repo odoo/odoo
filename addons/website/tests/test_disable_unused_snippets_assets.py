@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase
 from unittest.mock import patch
 
-@tagged('post_install', '-at_install')
+
 class TestDisableSnippetsAssets(TransactionCase):
     def setUp(self):
         super().setUp()

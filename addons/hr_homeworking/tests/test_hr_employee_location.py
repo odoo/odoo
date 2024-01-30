@@ -6,7 +6,7 @@ from odoo.addons.hr_homeworking.tests.common import TestHrHomeworkingCommon
 from odoo.tests import tagged
 from datetime import datetime
 
-@tagged('post_install', '-at_install', "homeworking_tests")
+@tagged("homeworking_tests")
 class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
     @classmethod
     def setUpClass(cls):

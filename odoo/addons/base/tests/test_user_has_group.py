@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests import tagged, TransactionCase
 from odoo.exceptions import ValidationError
 from odoo import Command
 
 
+@tagged("at_install", "-post_install")
 class TestHasGroup(TransactionCase):
     def setUp(self):
         super(TestHasGroup, self).setUp()

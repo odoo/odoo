@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase, warmup
 
 
-@tagged('company_leave')
+@tagged("company_leave", "at_install", "-post_install")
 class TestCompanyLeave(TransactionCase):
     """ Test leaves for a whole company, conflict resolutions """
 

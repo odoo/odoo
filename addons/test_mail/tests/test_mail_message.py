@@ -11,7 +11,7 @@ from odoo.tests.common import tagged, users
 from odoo.tools import is_html_empty, mute_logger, formataddr
 
 
-@tagged("mail_message", "post_install", "-at_install")
+@tagged("mail_message")
 class TestMessageValues(MailCommon):
 
     @classmethod
@@ -318,7 +318,8 @@ class TestMessageValues(MailCommon):
         msg = self.env['mail.message'].create({'model': self.alias_record._name, 'res_id': self.alias_record.id})
         self.assertEqual(msg.message_type, 'comment', 'Message should be comments by default')
 
-@tagged("mail_message", "post_install", "-at_install")
+
+@tagged("mail_message")
 class TestMessageAccess(MailCommon):
 
     @classmethod

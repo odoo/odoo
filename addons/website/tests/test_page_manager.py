@@ -3,7 +3,7 @@
 
 import odoo.tests
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+
 class TestWebsitePageManager(odoo.tests.HttpCase):
 
     def test_01_page_manager(self):

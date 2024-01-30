@@ -7,14 +7,13 @@ from passlib.totp import TOTP
 
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.exceptions import AccessDenied
-from odoo.service import common as auth, model
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import get_db_name, loaded_demo_data
 from odoo.tools import mute_logger
 
 from ..controllers.home import Home
 
 _logger = logging.getLogger(__name__)
+
 
 class TestTOTPMixin:
     def install_totphook(self):
@@ -45,7 +44,6 @@ class TestTOTPMixin:
             self.env.registry.clear_cache('routing')
 
 
-@tagged('post_install', '-at_install')
 class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
     def setUp(self):
         super().setUp()

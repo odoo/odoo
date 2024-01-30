@@ -102,7 +102,6 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
         })
 
 
-@tests.common.tagged('post_install', '-at_install')
 class TestUi(TestUICommon):
 
     @mute_logger("odoo.http", "odoo.addons.base.models.ir_rule", "werkzeug")
@@ -190,7 +189,6 @@ class TestUi(TestUICommon):
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
 
-@tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
 
     def test_course_publisher_elearning_manager(self):
@@ -206,7 +204,6 @@ class TestUiPublisher(HttpCaseGamification):
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher_standard', login=user_demo.login)
 
 
-@tests.common.tagged('post_install', '-at_install')
 class TestUiMemberInvited(TestUICommon):
 
     def setUp(self):
@@ -244,7 +241,7 @@ class TestUiMemberInvited(TestUICommon):
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
 
 
-@tests.common.tagged('external', 'post_install', '-standard', '-at_install')
+@tests.common.tagged('external', '-standard')
 class TestUiPublisherYoutube(HttpCaseGamification):
 
     def test_course_member_yt_employee(self):

@@ -3,10 +3,9 @@
 from datetime import timedelta
 
 from odoo.fields import Datetime
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestUi(HttpCase):
 
     def test_event_configurator(self):

@@ -2,7 +2,7 @@ import base64
 import io
 from markupsafe import Markup
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 from odoo.tools.misc import file_open, mute_logger, file_path
 from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, TranslationFileReader
 from odoo import Command
@@ -226,7 +226,6 @@ class TestImport(common.TransactionCase):
         )
 
 
-@tagged('post_install', '-at_install')
 class TestTranslationFlow(common.TransactionCase):
 
     def test_export_pot(self):

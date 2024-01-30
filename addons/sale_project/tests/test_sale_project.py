@@ -5,9 +5,8 @@ from odoo import Command
 from odoo.tests.common import new_test_user
 from .common import TestSaleProjectCommon
 from odoo.tests import Form
-from odoo.tests.common import tagged
 
-@tagged('post_install', '-at_install')
+
 class TestSaleProject(TestSaleProjectCommon):
 
     @classmethod

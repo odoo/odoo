@@ -3,12 +3,10 @@
 from unittest.mock import patch
 
 from odoo.exceptions import UserError
-from odoo.tests import tagged
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestAccountPayment(AccountPaymentCommon):
 
     def test_no_amount_available_for_refund_when_not_supported(self):

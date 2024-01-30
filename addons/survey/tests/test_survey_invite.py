@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import etree
 
@@ -9,10 +8,10 @@ from odoo import fields, Command
 from odoo.addons.survey.tests import common
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
-from odoo.tests.common import users
+from odoo.tests import Form, tagged, users
 
 
+@tagged("at_install", "-post_install")
 class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
 
     def setUp(self):

@@ -5,7 +5,7 @@ from odoo.addons.crm.tests import common as crm_common
 from odoo.tests.common import tagged, users
 
 
-@tagged('lead_manage', 'crm_performance', 'post_install', '-at_install')
+@tagged('lead_manage', 'crm_performance')
 class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
     @classmethod

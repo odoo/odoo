@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.product.tests.common import ProductAttributesCommon, ProductVariantsCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
 
     def request_get_values(self, product_template, ptav_ids=None):
@@ -249,7 +247,6 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertTrue(result['products'][0]['attribute_lines'][1]['selected_attribute_value_ids'])
 
 
-@tagged('post_install', '-at_install')
 class TestSaleProductVariants(ProductAttributesCommon, SaleCommon):
 
     @classmethod

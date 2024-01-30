@@ -12,7 +12,6 @@ import odoo.tests
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
     def test_01_website_sale_comparison_remove(self):
         """ This tour makes sure the product page still works after the module
@@ -71,7 +70,6 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         self.assertFalse(Website1.viewref(test_view_key, raise_if_not_found=False))
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
     def setUp(self):

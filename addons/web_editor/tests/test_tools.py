@@ -7,7 +7,6 @@ from odoo.tests import common, tagged
 from odoo.addons.web_editor import tools
 
 
-@tagged('post_install', '-at_install')
 class TestVideoUtils(common.BaseCase):
     urls = {
         'youtube': 'https://www.youtube.com/watch?v=xCvFZrrQq7k',

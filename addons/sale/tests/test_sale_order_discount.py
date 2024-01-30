@@ -2,12 +2,10 @@
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged
 
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('post_install', '-at_install')
 class TestSaleOrderDiscount(SaleCommon):
 
     @classmethod

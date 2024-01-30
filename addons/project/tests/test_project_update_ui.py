@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
-@tagged('post_install', '-at_install')
+
 class TestProjectUpdateUi(HttpCase):
     @classmethod
     def setUpClass(cls):

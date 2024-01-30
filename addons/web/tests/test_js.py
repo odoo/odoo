@@ -29,7 +29,6 @@ def qunit_error_checker(message):
     return True  # in other cases, always stop (missing dependency, ...)
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(odoo.tests.HttpCase):
 
     @odoo.tests.no_retry
@@ -86,7 +85,6 @@ class WebSuite(odoo.tests.HttpCase):
                         self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class MobileWebSuite(odoo.tests.HttpCase):
     browser_size = '375x667'
     touch_enabled = True

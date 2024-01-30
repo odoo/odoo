@@ -11,7 +11,7 @@ def _urlencode_kwargs(**kwargs):
     return urlencode(kwargs)
 
 
-@tagged("post_install_l10n", "post_install", "-at_install")
+@tagged("post_install_l10n")
 class BaseAutomationTestUi(HttpCase):
     def _neutralize_preexisting_automations(self, neutralize_action=True):
         self.env["base.automation"].with_context(active_test=False).search([]).write({"active": False})

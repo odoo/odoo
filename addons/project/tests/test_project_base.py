@@ -4,8 +4,7 @@ from lxml import etree
 
 from odoo import fields
 from odoo.osv import expression
-from odoo.tests import users
-from odoo.tests.common import TransactionCase
+from odoo.tests import tagged, TransactionCase, users
 from odoo.exceptions import UserError
 
 
@@ -102,6 +101,7 @@ class TestProjectCommon(TransactionCase):
         return self.env[target_model].search([(target_field, '=', subject)])
 
 
+@tagged("at_install", "-post_install")
 class TestProjectBase(TestProjectCommon):
 
     def test_delete_project_with_tasks(self):

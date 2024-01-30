@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-
 from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentProvider(RazorpayCommon):
 
     def test_incompatible_with_unsupported_currencies(self):

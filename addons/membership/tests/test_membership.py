@@ -6,11 +6,9 @@ from unittest.mock import patch
 
 import time
 from odoo.addons.membership.tests.common import TestMembershipCommon
-from odoo.tests import tagged
 from odoo import fields
 
 
-@tagged('post_install', '-at_install')
 class TestMembership(TestMembershipCommon):
 
     def test_none_membership(self):

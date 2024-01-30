@@ -5,7 +5,7 @@ import odoo.tests
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
-@odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
+@odoo.tests.tagged('post_install_l10n')
 class TestUi(TestPointOfSaleHttpCommon):
     @classmethod
     def _get_main_company(cls):

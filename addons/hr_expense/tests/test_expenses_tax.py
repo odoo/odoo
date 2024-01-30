@@ -2,10 +2,8 @@
 
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestExpensesTax(TestExpenseCommon):
     def test_tax_is_used_when_in_transactions(self):
         ''' Ensures that a tax is set to used when it is part of some transactions '''

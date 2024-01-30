@@ -10,11 +10,13 @@ from PIL import Image
 import odoo
 from odoo.exceptions import AccessError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.tests import tagged
 from odoo.tools import image_to_base64
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
 
+@tagged("at_install", "-post_install")
 class TestIrAttachment(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestIrAttachment, self).setUp()

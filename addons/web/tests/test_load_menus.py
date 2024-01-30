@@ -1,5 +1,7 @@
-from odoo.tests.common import HttpCase
+from odoo.tests import HttpCase, tagged
 
+
+@tagged("at_install", "-post_install")
 class LoadMenusTests(HttpCase):
 
     def setUp(self):

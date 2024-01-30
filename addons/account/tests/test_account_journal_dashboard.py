@@ -3,10 +3,9 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 from odoo.tools.misc import format_amount
 
-@tagged('post_install', '-at_install')
+
 class TestAccountJournalDashboard(AccountTestInvoicingCommon):
 
     @freeze_time("2019-01-22")

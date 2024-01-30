@@ -9,7 +9,7 @@ from odoo.addons.website.tools import MockRequest
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install', 'website_snippets')
+@tagged('website_snippets')
 class TestSnippets(HttpCase):
 
     def test_01_snippet_products_edition(self):

@@ -1,8 +1,10 @@
 from .test_multicompany import TestMultiCompanyProject
 
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 
+@tagged("at_install", "-post_install")
 class TestProjectStagesMulticompany(TestMultiCompanyProject):
 
     @classmethod

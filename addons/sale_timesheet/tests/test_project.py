@@ -3,10 +3,9 @@
 
 from odoo import Command
 from .common import TestCommonSaleTimesheet
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestProject(TestCommonSaleTimesheet):
 
     def setUp(self):

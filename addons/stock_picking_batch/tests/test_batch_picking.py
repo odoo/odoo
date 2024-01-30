@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -662,7 +662,7 @@ class TestBatchPicking(TransactionCase):
         receipt03.action_confirm()
         self.assertEqual(batch.picking_ids, backorder | receipt02 | receipt03)
 
-@tagged('-at_install', 'post_install')
+
 class TestBatchPicking02(TransactionCase):
 
     def setUp(self):

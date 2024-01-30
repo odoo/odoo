@@ -8,8 +8,7 @@ from unittest.mock import patch
 
 import odoo
 from odoo import fields, exceptions, Command
-from odoo.tests import Form
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests import Form, TransactionCase
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock.tests.common import TestStockCommon
@@ -294,7 +293,6 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.product_qty, 5)
 
 
-@tagged('post_install', '-at_install')
 class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
     @classmethod

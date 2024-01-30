@@ -5,7 +5,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests.common import users
+from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 class TestAccessRights(TestProjectCommon):
@@ -326,6 +326,7 @@ class TestPortalProject(TestProjectPortalCommon):
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 
 
+@tagged("at_install", "-post_install")
 class TestAccessRightsPrivateTask(TestAccessRights):
 
     @classmethod

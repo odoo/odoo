@@ -26,7 +26,6 @@ class TestUrlCommon(odoo.tests.HttpCase):
         self.assertEqual(canonical_link[0].attrib["href"], canonical_url)
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestBaseUrl(TestUrlCommon):
     def test_01_base_url(self):
         ICP = self.env['ir.config_parameter']
@@ -88,7 +87,6 @@ class TestBaseUrl(TestUrlCommon):
         self._assertCanonical('/fr_FR', self.website.get_base_url() + '/fr')
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestGetBaseUrl(odoo.tests.TransactionCase):
     def test_01_get_base_url(self):
         # Setup

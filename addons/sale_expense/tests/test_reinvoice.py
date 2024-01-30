@@ -3,10 +3,8 @@
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.tests import tagged
 
 
-@tagged('-at_install', 'post_install')
 class TestReInvoice(TestExpenseCommon, TestSaleCommon):
 
     @classmethod

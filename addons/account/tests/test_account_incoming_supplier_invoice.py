@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 
 from contextlib import contextmanager
 from unittest.mock import patch
 
 
-@tagged('post_install', '-at_install')
 class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
 
     @classmethod

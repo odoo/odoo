@@ -3,11 +3,10 @@
 from contextlib import contextmanager
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import fields, Command
 
 
-@tagged('post_install', '-at_install')
 class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     ''' Tests about the account.partial.reconcile model, not the reconciliation itself but mainly the computation of
     the residual amounts on account.move.line.

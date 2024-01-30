@@ -4,7 +4,6 @@ import odoo.tests
 import lxml
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestIsMultiLang(odoo.tests.HttpCase):
 
     def test_01_is_multilang_url(self):

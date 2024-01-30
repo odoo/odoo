@@ -1,7 +1,7 @@
 import copy
 
 from odoo.exceptions import UserError
-from odoo.tests import common, tagged, Form
+from odoo.tests import common, Form
 
 
 class TestConsumeComponentCommon(common.TransactionCase):
@@ -235,7 +235,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
                 self.assertFalse(error, "Immediate Production shall not raise an error.")
 
 
-@tagged('post_install', '-at_install')
 class TestConsumeComponent(TestConsumeComponentCommon):
     def test_option_disabled_and_qty_available(self):
         """Option disabled, qty available

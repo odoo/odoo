@@ -4,8 +4,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.account.models.chart_template import AccountChartTemplate
 from odoo.addons.account.tests.common import instantiate_accountman
-from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import TransactionCase
 
 
 def _get_chart_template_mapping(self, get_all=False):
@@ -135,7 +134,6 @@ def _tax_vals(name, amount, external_id_prefix):
     }
 
 
-@tagged('post_install', '-at_install')
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
 class TestMultiVAT(TransactionCase):
 

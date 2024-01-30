@@ -4,7 +4,6 @@
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestIrAsset(odoo.tests.HttpCase):
 
     def test_01_website_specific_assets(self):

@@ -1,10 +1,8 @@
 from odoo.fields import Command
-from odoo.tests import tagged
 
 from .common import TestSaleCommon
 
 
-@tagged('post_install', '-at_install')
 class TestSaleOrderCreditLimit(TestSaleCommon):
 
     @classmethod

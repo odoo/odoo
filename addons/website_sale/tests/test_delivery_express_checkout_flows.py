@@ -6,13 +6,11 @@ from werkzeug import urls
 
 from odoo.fields import Command
 from odoo.http import root
-from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery as WebsiteSaleDeliveryController
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
     """ The goal of this method class is to test the address management on
         express checkout.

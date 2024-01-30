@@ -7,6 +7,7 @@ from odoo.tools import mute_logger, float_round
 from odoo import fields
 
 
+@tagged("at_install", "-post_install")
 class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -2541,7 +2542,6 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(backorder.state, 'done')
 
 
-@tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 
     def test_last_delivery_partner_field_on_lot(self):

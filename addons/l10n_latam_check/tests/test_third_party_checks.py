@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestThirdChecks(L10nLatamCheckTest):
 
     def create_third_party_check(self, journal=False, check_number='00000001'):

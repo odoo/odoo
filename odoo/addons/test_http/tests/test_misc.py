@@ -8,7 +8,6 @@ from urllib.parse import urlparse
 
 import odoo
 from odoo.http import root, content_disposition
-from odoo.tests import tagged
 from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase
 from odoo.tools import config, file_path
 from odoo.addons.test_http.controllers import CT_JSON
@@ -17,7 +16,6 @@ from odoo.addons.test_http.utils import TEST_IP
 from .test_common import TestHttpBase
 
 
-@tagged('post_install', '-at_install')
 class TestHttpMisc(TestHttpBase):
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
@@ -139,7 +137,7 @@ class TestHttpMisc(TestHttpBase):
     def test_misc7_robotstxt(self):
         self.nodb_url_open('/robots.txt').raise_for_status()
 
-@tagged('post_install', '-at_install')
+
 class TestHttpCors(TestHttpBase):
     def test_cors0_http_default(self):
         res_opt = self.opener.options(f'{self.base_url()}/test_http/cors_http_default', timeout=10, allow_redirects=False)
@@ -181,7 +179,6 @@ class TestHttpCors(TestHttpBase):
         self.assertEqual(res_post.headers.get('Access-Control-Allow-Methods'), 'POST')
 
 
-@tagged('post_install', '-at_install')
 class TestHttpEnsureDb(TestHttpBase):
     def setUp(self):
         super().setUp()
@@ -237,6 +234,7 @@ class TestHttpEnsureDb(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'db1')
+
 
 class TestContentDisposition(BaseCase):
 

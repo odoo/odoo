@@ -11,7 +11,6 @@ def break_view(view, fr='<p>placeholder</p>', to='<p t-field="no_record.exist"/>
     view.arch = view.arch.replace(fr, to)
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     def fix_it(self, page, mode='soft'):

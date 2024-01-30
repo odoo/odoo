@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestItEdiImport(TestItEdi):
     """ Main test class for the l10n_it_edi vendor bills XML import"""
 

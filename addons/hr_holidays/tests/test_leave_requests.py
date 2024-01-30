@@ -16,7 +16,8 @@ from odoo.exceptions import UserError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
-@tagged('leave_requests')
+
+@tagged("leave_requests", "at_install", "-post_install")
 class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, holiday_status, employee, ml, lt, rl, vrl):

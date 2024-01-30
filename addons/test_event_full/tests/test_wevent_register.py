@@ -7,7 +7,7 @@ from odoo import tests
 from odoo.addons.test_event_full.tests.common import TestWEventCommon
 
 
-@tests.common.tagged('event_online', 'post_install', '-at_install')
+@tests.common.tagged('event_online')
 class TestWEventRegister(TestWEventCommon):
 
     def test_register(self):

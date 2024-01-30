@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 
-@tagged('post_install', '-at_install')
+
 class TestAccountMove(AccountTestInvoicingCommon):
     def setUp(self):
         super().setUp()

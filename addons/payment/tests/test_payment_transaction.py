@@ -2,13 +2,11 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestPaymentTransaction(PaymentCommon):
 
     def test_refunds_count(self):

@@ -25,7 +25,7 @@ def prepare(func, self):
     func(self)
 
 
-@tagged('so_batch_perf')
+@tagged("so_batch_perf", "at_install", "-post_install")
 class TestPERF(TransactionCaseWithUserDemo):
 
     @classmethod

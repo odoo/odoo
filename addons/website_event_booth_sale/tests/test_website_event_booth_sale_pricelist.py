@@ -5,10 +5,8 @@ from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCommon):
 
     @classmethod

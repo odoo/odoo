@@ -6,14 +6,12 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.fields import Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import tagged, Form
-from odoo.tools import float_compare
+from odoo.tests import Form
 
 from odoo.addons.sale.tests.common import SaleCommon
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-@tagged('post_install', '-at_install')
 class TestSaleOrder(SaleCommon):
 
     # Those tests do not rely on accounting common on purpose
@@ -473,7 +471,6 @@ class TestSaleOrder(SaleCommon):
 
         self.assertIn(self.partner2, sale_order.message_partner_ids)
 
-@tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
     def test_invoice_state_when_ordered_quantity_is_negative(self):
         """When you invoice a SO line with a product that is invoiced on ordered quantities and has negative ordered quantity,
@@ -490,7 +487,6 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
         self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
 
 
-@tagged('post_install', '-at_install')
 class TestSalesTeam(SaleCommon):
 
     @classmethod

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 from odoo.exceptions import ValidationError, UserError
 from odoo import fields, Command
 
 import base64
 
-@tagged('post_install', '-at_install')
+
 class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
     @classmethod

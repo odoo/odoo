@@ -145,7 +145,7 @@ class TestRatingMixin(TestRatingCommon):
         self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
 
 
-@tagged('rating', 'mail_performance', 'post_install', '-at_install')
+@tagged('rating', 'mail_performance')
 class TestRatingPerformance(TestRatingCommon):
     @classmethod
     def setUpClass(cls):

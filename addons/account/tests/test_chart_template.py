@@ -5,8 +5,7 @@ from odoo.addons.account.models.chart_template import AccountChartTemplate
 from odoo.addons.account.models.chart_template import TEMPLATE_MODELS
 from odoo.addons.account.tests.common import instantiate_accountman
 from odoo.exceptions import UserError
-from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import TransactionCase
 
 
 def _get_chart_template_mapping(self, get_all=False):
@@ -112,7 +111,6 @@ def _tax_vals(name, amount, children_tax_xmlids=None, active=True):
     return tax_vals
 
 
-@tagged('post_install', '-at_install')
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
 class TestChartTemplate(TransactionCase):
 

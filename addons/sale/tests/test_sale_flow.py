@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.tests import tagged
 
 
+@tagged("at_install", "-post_install")
 class TestSaleFlow(TestSaleCommonBase):
     ''' Test running at-install to test flows independently to other modules, e.g. 'sale_stock'. '''
 

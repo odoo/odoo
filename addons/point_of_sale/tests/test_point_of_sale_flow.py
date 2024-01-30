@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 from freezegun import freeze_time
 from datetime import datetime
 
-import odoo
-from odoo import fields, tools
-from odoo.tools import float_compare, mute_logger, test_reports
+from odoo import fields
+from odoo.tools import mute_logger
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def compute_tax(self, product, price, qty=1, taxes=None):

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseUsersCommon, HttpCaseWithUserPortal
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('post_install', '-at_install')
 class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
@@ -65,7 +64,6 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
         self.assertEqual(req.status_code, 303)
 
 
-@tagged('post_install', '-at_install')
 class TestSaleSignature(HttpCaseWithUserPortal):
 
     def test_01_portal_sale_signature_tour(self):

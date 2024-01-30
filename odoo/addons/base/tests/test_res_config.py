@@ -6,7 +6,7 @@ from lxml import etree
 import logging
 
 from odoo import exceptions, Command
-from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests import Form, TransactionCase
 
 _logger = logging.getLogger(__name__)
 
@@ -148,7 +148,6 @@ class TestResConfig(TransactionCase):
             """), 'The `app` block must be a direct child of the `form` block')
 
 
-@tagged('post_install', '-at_install')
 class TestResConfigExecute(TransactionCase):
 
     def test_01_execute_res_config(self):

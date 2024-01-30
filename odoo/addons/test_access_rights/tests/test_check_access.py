@@ -4,7 +4,6 @@ import odoo.tests
 from odoo import Command
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestAccess(odoo.tests.HttpCase):
     def setUp(self):
         super(TestAccess, self).setUp()

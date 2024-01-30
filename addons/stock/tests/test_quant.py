@@ -8,10 +8,11 @@ from ast import literal_eval
 from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
+@tagged("at_install", "-post_install")
 class StockQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):

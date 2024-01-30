@@ -254,14 +254,14 @@ class TestMailTemplateReset(MailCommon):
         self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template")
 class TestMailTemplateUI(HttpCase):
 
     def test_mail_template_dynamic_placeholder_tour(self):
         self.start_tour("/web", 'mail_template_dynamic_placeholder_tour', login="admin")
 
 
-@tagged("mail_template", "-at_install", "post_install")
+@tagged("mail_template")
 class TestTemplateConfigRestrictEditor(MailCommon):
 
     def test_switch_icp_value(self):

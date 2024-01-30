@@ -8,7 +8,7 @@ from odoo import Command
 from odoo.addons.base.models.res_users import Users
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.tests import tagged, users
+from odoo.tests import users
 from odoo.tools import mute_logger
 
 
@@ -82,7 +82,6 @@ class TestUser(MailCommon):
         self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
 
 
-@tagged('-at_install', 'post_install')
 class TestUserModifyOwnProfile(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):

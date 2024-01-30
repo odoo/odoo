@@ -1,9 +1,8 @@
 from odoo import Command
 from odoo.http import Request
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('-at_install', 'post_install')
 class TestUsersHttp(HttpCase):
 
     def test_deactivate_portal_user(self):

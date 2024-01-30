@@ -15,7 +15,7 @@ except ImportError:
     pass
 
 from odoo.api import Environment
-from odoo.tests import common, new_test_user
+from odoo.tests import new_test_user
 from .common import WebsocketCase
 from .. import websocket as websocket_module
 from ..models.bus import dispatch
@@ -29,7 +29,7 @@ from ..websocket import (
     WebsocketConnectionHandler,
 )
 
-@common.tagged('post_install', '-at_install')
+
 class TestWebsocketCaryall(WebsocketCase):
     def test_lifecycle_hooks(self):
         events = []

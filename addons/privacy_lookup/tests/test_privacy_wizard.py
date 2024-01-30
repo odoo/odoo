@@ -4,7 +4,7 @@
 from odoo.tests.common import TransactionCase, tagged
 
 
-@tagged('post_install', '-at_install', 'privacy')
+@tagged('privacy')
 class TestPrivacyWizard(TransactionCase):
 
     @classmethod

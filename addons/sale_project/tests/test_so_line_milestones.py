@@ -3,11 +3,9 @@
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged
 from psycopg2.errors import NotNullViolation
 
 
-@tagged('post_install', '-at_install')
 class TestSoLineMilestones(TestSaleCommon):
 
     @classmethod

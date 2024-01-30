@@ -9,7 +9,6 @@ from odoo import tests
 from odoo.tools import mute_logger, submap
 
 
-@tests.tagged('post_install', '-at_install')
 class TestControllers(tests.HttpCase):
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')

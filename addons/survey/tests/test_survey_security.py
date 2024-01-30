@@ -4,13 +4,13 @@
 import datetime
 
 from odoo.addons.survey.tests import common
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users, HttpCase
 from odoo.tools import mute_logger
 
 
-@tagged('security')
+@tagged("security", "at_install", "-post_install")
 class TestAccess(common.TestSurveyCommon):
 
     def setUp(self):
@@ -326,7 +326,6 @@ class TestAccess(common.TestSurveyCommon):
         (answer_own | answer_other | self.answer_0).unlink()
 
 
-@tagged('post_install', '-at_install')
 class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
     def test_survey_start_short(self):
         # avoid name clash with existing data

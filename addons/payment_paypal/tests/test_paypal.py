@@ -5,15 +5,13 @@ from unittest.mock import patch
 from werkzeug import urls
 
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
-from odoo.tools import float_repr, mute_logger
+from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from odoo.addons.payment_paypal.tests.common import PaypalCommon
 
 
-@tagged('post_install', '-at_install')
 class PaypalTest(PaypalCommon, PaymentHttpCommon):
 
     def _get_expected_values(self):

@@ -171,6 +171,7 @@ class TestNodeLocator(common.TransactionCase):
         self.assertIsNone(node)
 
 
+@tagged("at_install", "-post_install")
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
@@ -3250,7 +3251,7 @@ Forbidden use of `__comp__` in arch."""
         )
 
 
-@tagged('post_install', '-at_install')
+
 class TestDebugger(common.TransactionCase):
     def test_t_debug_in_qweb_based_views(self):
         View = self.env['ir.ui.view']
@@ -3936,6 +3937,8 @@ class TestValidationTools(common.BaseCase):
             {'field'},
         )
 
+
+@tagged("at_install", "-post_install")
 class TestAccessRights(TransactionCaseWithUserDemo):
 
     @common.users('demo')
@@ -3951,7 +3954,7 @@ class TestAccessRights(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             self.env['ir.ui.view'].get_view(view_type='form')
 
-@common.tagged('post_install', '-at_install', '-standard', 'migration')
+@common.tagged('-standard', 'migration')
 class TestAllViews(common.TransactionCase):
     def test_views(self):
         views = self.env['ir.ui.view'].with_context(lang=None).search([])
@@ -3961,7 +3964,8 @@ class TestAllViews(common.TransactionCase):
             with self.subTest(name=view.name):
                 view._check_xml()
 
-@common.tagged('post_install', '-at_install', '-standard', 'render_all_views')
+
+@common.tagged('-standard', 'render_all_views')
 class TestRenderAllViews(TransactionCaseWithUserDemo):
 
     @common.users('demo', 'admin')
@@ -4007,7 +4011,7 @@ class CompRegexTest(common.TransactionCase):
         self.assertIsNotNone(re.search(ir_ui_view.COMP_REGEX, "{{ __comp__ }}"))
 
 
-@common.tagged('at_install', 'modifiers')
+@tagged("modifiers")
 class ViewModifiers(ViewCase):
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')

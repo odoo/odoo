@@ -7,7 +7,7 @@ from odoo.tools import file_open
 from odoo.addons.l10n_es_edi_facturae.tests.test_edi_xml import TestEdiFacturaeXmls
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestEdiFacturaeInvoicePeriodXmls(TestEdiFacturaeXmls):
 
     @freeze_time('2023-01-01')

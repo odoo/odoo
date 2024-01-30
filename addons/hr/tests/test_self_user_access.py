@@ -9,7 +9,7 @@ from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
 
-@tagged('post_install', '-at_install')
+
 class TestSelfAccessProfile(TestHrCommon):
 
     def test_access_my_profile(self):
@@ -103,6 +103,7 @@ class TestSelfAccessProfile(TestHrCommon):
         self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
 
 
+@tagged("at_install", "-post_install")
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod

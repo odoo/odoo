@@ -9,7 +9,7 @@ from odoo.tests.common import users
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
-@tagged('post_install', '-at_install', 'holiday_calendar')
+@tagged('holiday_calendar')
 class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
 
     @users('enguerran')

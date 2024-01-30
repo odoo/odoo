@@ -3,11 +3,10 @@
 
 from datetime import date
 import json
-from psycopg2 import IntegrityError, ProgrammingError
+from psycopg2 import IntegrityError
 import requests
 from unittest.mock import patch
 
-import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common, tagged
@@ -84,6 +83,7 @@ except:
         })
 
 
+@tagged("at_install", "-post_install")
 class TestServerActions(TestServerActionsBase):
     def test_00_server_action(self):
         with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',
@@ -510,6 +510,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             self.action.with_context(self.context).run()
         self.assertEqual(num_requests, 2)
 
+
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
     COMODEL = 'res.users'
@@ -548,6 +549,7 @@ class TestCommonCustomFields(common.TransactionCase):
         })
 
 
+@tagged("at_install", "-post_install")
 class TestCustomFields(TestCommonCustomFields):
     def test_create_custom(self):
         """ custom field names must be start with 'x_' """
@@ -834,7 +836,6 @@ class TestCustomFields(TestCommonCustomFields):
         self.assertEqual(rec3.x_sel, 'baz')
 
 
-@tagged('post_install', '-at_install')
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_add_field_valid(self):
         """ custom field names must start with 'x_', even when bypassing the constraints

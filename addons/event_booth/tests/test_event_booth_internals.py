@@ -8,7 +8,7 @@ from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users, tagged
 
 
-@tagged('post_install', '-at_install', 'event_booth')
+@tagged('event_booth')
 class TestEventData(TestEventBoothCommon):
 
     @users('user_eventmanager')

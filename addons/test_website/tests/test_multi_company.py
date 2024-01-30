@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestMultiCompany(HttpCase):
 
     def test_company_in_context(self):

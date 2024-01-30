@@ -44,7 +44,7 @@ class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
                         _logger.info('Error detected while generating bundle %r %s', bundle_name, assets_type)
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'assets_bundle')
+@odoo.tests.tagged('assets_bundle')
 class TestLogsAssetsGenerateTime(TestAssetsGenerateTimeCommon):
 
     def test_logs_assets_generate_time(self):
@@ -67,7 +67,7 @@ class TestLogsAssetsGenerateTime(TestAssetsGenerateTimeCommon):
         _logger.info('All bundle checked in %.2fs', duration)
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'test_assets')
+@odoo.tests.tagged('-standard', 'test_assets')
 class TestPregenerateTime(HttpCase):
 
     def test_logs_pregenerate_time(self):
@@ -80,7 +80,7 @@ class TestPregenerateTime(HttpCase):
         duration = time.time() - start
         _logger.info('All bundle checked in %.2fs', duration)
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'assets_bundle')
+@odoo.tests.tagged('-standard', 'assets_bundle')
 class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
     """
     This test is meant to be run nightly to ensure bundle generation does not exceed
@@ -98,7 +98,6 @@ class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
             threshold = thresholds.get(bundle, 2)
             self.assertLess(duration, threshold, "Bundle %r took more than %s sec" % (bundle, threshold))
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestLoad(HttpCase):
     def test_assets_already_exists(self):
         self.authenticate('admin', 'admin')
@@ -116,7 +115,6 @@ class TestLoad(HttpCase):
             self.url_open('/').raise_for_status()
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestWebAssetsCursors(HttpCase):
     """
     This tests class tests the specificities of the route /web/assets regarding used connections.

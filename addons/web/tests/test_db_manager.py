@@ -31,7 +31,7 @@ class TestDatabaseManager(HttpCase):
         self.assertIn('.o_database_restore', res.text)
 
 
-@tagged('-at_install', 'post_install', '-standard', 'database_operations')
+@tagged('-standard', 'database_operations')
 class TestDatabaseOperations(BaseCase):
     def setUp(self):
         self.password = secrets.token_hex()

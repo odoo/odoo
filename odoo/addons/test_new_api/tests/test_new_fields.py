@@ -21,6 +21,7 @@ from odoo.tools.date_utils import add, subtract, start_of, end_of
 from odoo.tools.image import image_data_uri
 
 
+@tagged("at_install", "-post_install")
 class TestFields(TransactionCaseWithUserDemo):
 
     def setUp(self):

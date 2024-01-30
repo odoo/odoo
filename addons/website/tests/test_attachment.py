@@ -8,7 +8,6 @@ from odoo.tests.common import HOST
 from odoo.tools import config
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteAttachment(odoo.tests.HttpCase):
 
     def test_01_type_url_301_image(self):

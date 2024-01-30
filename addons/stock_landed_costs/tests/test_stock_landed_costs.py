@@ -3,11 +3,9 @@
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 from odoo import fields
 
 
-@tagged('post_install', '-at_install')
 class TestStockLandedCosts(TestStockLandedCostsCommon):
 
     def test_stock_landed_costs(self):

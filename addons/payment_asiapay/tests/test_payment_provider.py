@@ -1,12 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-
 from odoo.addons.payment_asiapay import const
 from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentProvider(AsiaPayCommon):
 
     def test_incompatible_with_unsupported_currencies(self):

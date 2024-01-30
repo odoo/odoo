@@ -6,11 +6,11 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_slides.tests import common
-from odoo.tests import tagged, users
+from odoo.tests import users
 
 from werkzeug.urls import url_decode
 
-@tagged('post_install', '-at_install')
+
 class TestAttendee(common.SlidesCase):
 
     @users('user_officer')
@@ -245,7 +245,7 @@ class TestAttendee(common.SlidesCase):
         member_after = self.env['slide.channel.partner'].search_count([])
         self.assertEqual(member_before, member_after, "Duplicating the contact should not create a new member")
 
-@tagged('-at_install', 'post_install')
+
 class TestAttendeeCase(HttpCaseWithUserPortal):
 
     def setUp(self):

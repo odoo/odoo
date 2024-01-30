@@ -3,14 +3,12 @@
 from unittest.mock import patch
 from urllib.parse import quote as url_quote
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
 
     def test_no_item_missing_from_preference_request_payload(self):

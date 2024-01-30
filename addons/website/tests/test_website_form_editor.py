@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 
-import odoo.tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     @classmethod
     def setUpClass(cls):

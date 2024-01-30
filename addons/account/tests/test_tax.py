@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 
 
 class TestTaxCommon(AccountTestInvoicingCommon):
@@ -176,7 +175,6 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             self.assertAlmostEqual(res['taxes'][i]['amount'], taxes[i][1])
 
 
-@tagged('post_install', '-at_install')
 class TestTax(TestTaxCommon):
 
     @classmethod

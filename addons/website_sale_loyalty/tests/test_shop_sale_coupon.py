@@ -3,11 +3,10 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, TransactionCase
+from odoo.tests import HttpCase
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 
 
-@tagged('post_install', '-at_install')
 class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
     @classmethod
@@ -187,7 +186,6 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleCoupon(HttpCase):
 
     @classmethod

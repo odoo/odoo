@@ -4,7 +4,6 @@
 from datetime import datetime
 
 from odoo import Command
-from odoo.tests import tagged
 from odoo.tools.float_utils import float_compare
 
 from odoo.addons.sale.tests.common import TestSaleCommon
@@ -77,7 +76,6 @@ class TestProjectProfitabilityCommon(Common):
         cls.project_billable_no_company._create_analytic_account()
 
 
-@tagged('-at_install', 'post_install')
 class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommon):
 
     def test_profitability_of_non_billable_project(self):

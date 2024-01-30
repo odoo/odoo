@@ -262,7 +262,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 ), 0)
 
 
-@tagged('-standard', '-at_install', 'post_install', 'database_breaking')
+@tagged('-standard', 'database_breaking')
 class TestIrCronConcurrent(BaseCase, CronMixinCase):
 
     @classmethod

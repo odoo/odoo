@@ -294,7 +294,7 @@ class TestPartner(TransactionCaseWithUserDemo):
         )
 
 
-@tagged('res_partner')
+@tagged("res_partner", "at_install", "-post_install")
 class TestPartnerAddressCompany(TransactionCase):
 
     def test_address(self):
@@ -616,7 +616,7 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
 
-@tagged('res_partner', 'post_install', '-at_install')
+@tagged('res_partner')
 class TestPartnerForm(TransactionCase):
     # those tests are made post-install because they need module 'web' for the
     # form view to work properly

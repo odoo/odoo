@@ -3,10 +3,8 @@
 
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo import Command
-from odoo.tests import tagged
 
 
-@tagged('-at_install', 'post_install')
 class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
 
     def setUp(self):

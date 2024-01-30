@@ -6,7 +6,7 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 from odoo.tests.common import users, warmup, tagged
 
 
-@tagged('work_entry_holidays_perf')
+@tagged("work_entry_holidays_perf", "at_install", "-post_install")
 class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
 
     @classmethod

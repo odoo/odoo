@@ -2,11 +2,9 @@
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 from odoo.exceptions import UserError, ValidationError
 
 
-@tagged('post_install', '-at_install')
 class TestAccountTax(AccountTestInvoicingCommon):
 
     def test_changing_tax_company(self):

@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
-@tagged('post_install', '-at_install', 'neutralize')
+@tagged('neutralize')
 class TestNeutralize(TransactionCase):
     def test_10_neutralize(self):
         """ Simply testing that none of the SQL neutralize crashes """

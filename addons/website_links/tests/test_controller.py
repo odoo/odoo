@@ -1,11 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from urllib.parse import urlparse
 
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase
+from odoo.tests import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteLinksRussian(HttpCase):
     """
     The /r URL prefix is considered as an alias to /ru by the "nearest

@@ -7,7 +7,7 @@ from odoo import Command
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, loaded_demo_data
+from odoo.tests import HttpCase, loaded_demo_data
 
 _logger = logging.getLogger(__name__)
 
@@ -21,7 +21,6 @@ ATTACHMENT_DATA = [
 ATTACHMENT_COUNT = 5
 
 
-@tagged('post_install', '-at_install')
 class TestProductPictureController(HttpCase):
     @classmethod
     def setUpClass(cls):
@@ -191,7 +190,6 @@ class TestProductPictureController(HttpCase):
                 )
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleEditor(HttpCase):
     @classmethod
     def setUpClass(cls):

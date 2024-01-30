@@ -5,7 +5,6 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.fields import Command
-from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -13,7 +12,6 @@ from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
 
 
-@tagged('post_install', '-at_install')
 class WebsiteSaleCart(TransactionCaseWithUserPortal):
 
     @classmethod

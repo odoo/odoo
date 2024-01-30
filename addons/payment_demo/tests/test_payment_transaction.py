@@ -2,14 +2,12 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
 
     def test_processing_notification_data_sets_transaction_pending(self):

@@ -12,7 +12,7 @@ from .common import TestSaEdiCommon
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install_l10n', '-at_install', 'post_install')
+@tagged('post_install_l10n')
 class TestEdiZatca(TestSaEdiCommon):
 
     def testInvoiceStandard(self):

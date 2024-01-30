@@ -4,11 +4,9 @@
 from lxml import etree
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 from odoo.tools import file_open
 
 
-@tagged('post_install', '-at_install')
 class TestAccountEdiUblCii(AccountTestInvoicingCommon):
 
     @classmethod

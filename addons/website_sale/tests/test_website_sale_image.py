@@ -10,7 +10,6 @@ from odoo.tools import config
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteSaleImage(odoo.tests.HttpCase):
 
     # registry_test_mode = False  # uncomment to save the product to test in browser
@@ -335,7 +334,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         # when there is a template image, the image must be obtained from the template
         self.assertEqual(template, template._get_image_holder())
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+
 class TestEnvironmentWebsiteSaleImage(odoo.tests.HttpCase):
     def setUp(self):
         super(TestEnvironmentWebsiteSaleImage, self).setUp()
@@ -385,7 +384,7 @@ class TestEnvironmentWebsiteSaleImage(odoo.tests.HttpCase):
             'image_1920': blue_image,
         })
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+
 class TestRemoveWebsiteSaleImageNoVariant(TestEnvironmentWebsiteSaleImage):
     def setUp(self):
         super(TestRemoveWebsiteSaleImageNoVariant, self).setUp()
@@ -398,7 +397,7 @@ class TestRemoveWebsiteSaleImageNoVariant(TestEnvironmentWebsiteSaleImage):
         self.assertFalse(self.template.image_1920)
         self.assertFalse(self.product.image_1920)
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+
 class TestRemoveWebsiteSaleImageVariants(TestEnvironmentWebsiteSaleImage):
     def setUp(self):
         super(TestRemoveWebsiteSaleImageVariants, self).setUp()

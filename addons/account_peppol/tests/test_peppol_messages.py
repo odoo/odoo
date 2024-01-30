@@ -7,7 +7,6 @@ from unittest.mock import Mock, patch
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
-from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
 
 
@@ -18,7 +17,6 @@ FILE_PATH = 'account_peppol/tests/assets'
 
 
 @freeze_time('2023-01-01')
-@tagged('-at_install', 'post_install')
 class TestPeppolMessage(TestAccountMoveSendCommon):
 
     @classmethod

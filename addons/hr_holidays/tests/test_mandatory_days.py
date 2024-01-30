@@ -9,7 +9,7 @@ from odoo.tests import Form, new_test_user, TransactionCase
 from odoo.exceptions import ValidationError
 
 
-@tests.tagged('access_rights', 'post_install', '-at_install')
+@tests.tagged('access_rights')
 class TestHrLeaveMandatoryDays(TransactionCase):
     @classmethod
     def setUpClass(cls):

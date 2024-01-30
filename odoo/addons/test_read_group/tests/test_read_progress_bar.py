@@ -3,7 +3,6 @@
 from odoo.tests import common
 
 
-@common.tagged('post_install', '-at_install')
 class TestReadProgressBar(common.TransactionCase):
     """Test for read_progress_bar"""
 

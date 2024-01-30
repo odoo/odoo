@@ -3,12 +3,10 @@
 from freezegun import freeze_time
 
 from odoo.tests import HttpCase
-from odoo.tests.common import tagged
 
 from datetime import date
 
 
-@tagged('post_install', '-at_install')
 class TestHrHolidaysTour(HttpCase):
     @freeze_time('01/17/2022')
     def test_hr_holidays_tour(self):

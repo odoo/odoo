@@ -4,7 +4,6 @@ from odoo import fields, tests
 from odoo.addons.website_slides.tests import test_ui_wslides
 
 
-@tests.common.tagged('post_install', '-at_install')
 class TestUiWebsiteSaleSlides(test_ui_wslides.TestUICommon):
 
     def setUp(self):

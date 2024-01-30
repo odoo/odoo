@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
 
 
-@tagged('work_entry_multi_contract')
+@tagged("work_entry_multi_contract", "at_install", "-post_install")
 class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
 
     @classmethod

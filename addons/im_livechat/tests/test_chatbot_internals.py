@@ -2,9 +2,8 @@
 
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged
 
-@tagged("post_install", "-at_install")
+
 class ChatbotCase(chatbot_common.ChatbotCase):
 
     def test_chatbot_duplicate(self):

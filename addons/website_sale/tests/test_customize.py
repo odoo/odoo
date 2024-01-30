@@ -4,11 +4,9 @@ import base64
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.fields import Command
-from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
 
-@tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def setUp(self):

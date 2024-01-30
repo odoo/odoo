@@ -3,10 +3,8 @@
 
 from odoo.exceptions import AccessError
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
-from odoo.tests import tagged
 
 
-@tagged('-at_install', 'post_install')
 class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     @classmethod

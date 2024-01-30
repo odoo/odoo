@@ -4,7 +4,6 @@ from odoo.tools import mute_logger
 from unittest.mock import patch
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteControllerArgs(odoo.tests.HttpCase):
 
     @mute_logger('odoo.http')
@@ -39,7 +38,6 @@ class TestWebsiteControllerArgs(odoo.tests.HttpCase):
                              "Model converter record does not exist, return a 404.")
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteControllers(odoo.tests.TransactionCase):
 
     def test_01_sitemap(self):

@@ -5,12 +5,10 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.purchase_stock.models.purchase_order_line import PurchaseOrderLine
-from odoo.tests.common import tagged
 
 from .common import PurchaseTestCommon
 
 
-@tagged('post_install', '-at_install')
 class TestUninstallPurchaseStock(PurchaseTestCommon):
     def test_qty_received_method(self):
         partner = self.env['res.partner'].create({'name': 'Test Partner'})

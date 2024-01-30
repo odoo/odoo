@@ -5,10 +5,8 @@ from odoo import fields
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueCommon
-from odoo.tests import tagged
 
 
-@tagged("post_install", "-at_install")
 class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProductAttributeValueCommon):
 
     @classmethod
@@ -69,7 +67,6 @@ class TestSaleProductAttributeValueCommon(AccountTestInvoicingCommon, TestProduc
         })
 
 
-@tagged('post_install', '-at_install')
 class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
     def _setup_pricelist(self, currency_ratio=2):
         to_currency = self._setup_currency(currency_ratio)

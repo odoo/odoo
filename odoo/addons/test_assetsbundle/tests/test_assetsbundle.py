@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
-from lxml import etree
 import os
 import time
 from unittest import skip
@@ -21,8 +20,7 @@ from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.modules.module import get_manifest
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
-from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.tools import mute_logger, func
+from odoo.tools import mute_logger
 from odoo.tools.misc import file_path
 
 GETMTINE = os.path.getmtime
@@ -626,6 +624,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
     </body>
 </html>"""))
 
+
 class TestXMLAssetsBundle(FileTouchable):
 
     def _get_asset(self, bundle, rtl=False, debug_assets=False):
@@ -677,7 +676,7 @@ class TestXMLAssetsBundle(FileTouchable):
             with self.assertRaisesRegex(XMLAssetError, "Could not get content for test_assetsbundle/static/invalid_src/xml/file_not_found.xml."):
                 self.bundle.xml()
 
-@tagged('-at_install', 'post_install')
+
 class TestAssetsBundleInBrowser(HttpCase):
     def test_01_js_interpretation(self):
         """ Checks that the javascript of a bundle is correctly interpreted.
@@ -1864,7 +1863,6 @@ class TestAssetsManifest(AddonManifestPatched):
             """
         )
 
-@tagged('-at_install', 'post_install')
 class AssetsNodeOrmCacheUsage(TransactionCase):
 
     def cache_keys(self):
@@ -1999,7 +1997,6 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(asset_keys), 1, "lazy_load shouldn't create another entry")
         self.assertEqual(len(qweb_keys), 1, "lazy_load shouldn't create another entry")
 
-@tagged('-at_install', 'post_install')
 class TestErrorManagement(HttpCase):
 
     def test_assets_bundle_css_error_backend(self):

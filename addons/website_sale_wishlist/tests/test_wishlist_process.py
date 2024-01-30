@@ -3,7 +3,6 @@
 import odoo.tests
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestUi(odoo.tests.HttpCase):
     def test_01_wishlist_tour(self):
 

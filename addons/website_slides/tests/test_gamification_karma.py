@@ -7,7 +7,7 @@ from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-@tagged('gamification')
+@tagged("gamification", "at_install", "-post_install")
 class TestKarmaGain(common.SlidesCase):
 
     def setUp(self):

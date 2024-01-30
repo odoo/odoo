@@ -4,7 +4,7 @@ import odoo.tests
 from odoo.osv import expression
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'assets_bundle')
+@odoo.tests.tagged('assets_bundle')
 class BusWebTests(odoo.tests.HttpCase):
 
     def test_bundle_sends_bus(self):

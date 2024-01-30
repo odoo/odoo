@@ -3,7 +3,7 @@
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, JsonRpcException
+from odoo.tests import JsonRpcException
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.controllers.payment import PaymentPortal
@@ -12,7 +12,6 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.portal.controllers.portal import CustomerPortal
 
 
-@tagged('post_install', '-at_install')
 class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
 
     def test_invoice_payment_flow(self):

@@ -8,11 +8,10 @@ try:
 except ImportError:
     pass
 
-from odoo.tests import common
 from .common import WebsocketCase
 from ..websocket import CloseCode, Websocket
 
-@common.tagged('post_install', '-at_install')
+
 class TestWebsocketRateLimiting(WebsocketCase):
     def test_rate_limiting_base_ok(self):
         ws = self.websocket_connect()

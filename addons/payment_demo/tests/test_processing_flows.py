@@ -2,14 +2,11 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
-
 from odoo.addons.payment_demo.controllers.main import PaymentDemoController
 from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestProcessingFlows(PaymentDemoCommon, PaymentHttpCommon):
 
     def test_portal_payment_triggers_processing(self):

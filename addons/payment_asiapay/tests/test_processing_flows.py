@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -12,7 +11,6 @@ from odoo.addons.payment_asiapay.controllers.main import AsiaPayController
 from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_asiapay.controllers.main')

@@ -7,7 +7,7 @@ import re
 
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools.misc import mute_logger
 from odoo.tools.translate import code_translations
 
@@ -555,6 +555,7 @@ class test_selection_function(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
 
+@tagged("at_install", "-post_install")
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
 
@@ -873,6 +874,7 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[0].value), [84, 9])
 
 
+@tagged("at_install", "-post_install")
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 

@@ -2,12 +2,11 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import fields, Command
 from odoo.tools.safe_eval import datetime
 
 
-@tagged('post_install', '-at_install')
 class TestAccountPaymentTerms(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):

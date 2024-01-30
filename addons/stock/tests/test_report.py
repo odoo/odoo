@@ -3,7 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 
 
 class TestReportsCommon(TransactionCase):
@@ -38,6 +38,7 @@ class TestReportsCommon(TransactionCase):
         return report_values, docs, lines
 
 
+@tagged("at_install", "-post_install")
 class TestReports(TestReportsCommon):
     def test_reports(self):
         product1 = self.env['product.product'].create({

@@ -13,7 +13,7 @@ from odoo.tests import tagged
 from .common import TestEsEdiTbaiCommon
 
 
-@tagged('post_install', '-at_install', 'post_install_l10n')
+@tagged('post_install_l10n')
 class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
 
     @classmethod

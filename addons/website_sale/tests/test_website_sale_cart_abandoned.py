@@ -4,7 +4,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
-from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.mail.models.mail_template import MailTemplate
 
@@ -120,7 +119,7 @@ class TestWebsiteSaleCartAbandonedCommon(HttpCaseWithUserPortal):
             self.env['website']._send_abandoned_cart_email()
         return email_got_sent
 
-@tagged('post_install', '-at_install')
+
 class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
     def test_search_abandoned_cart(self):
         """Make sure the search for abandoned carts uses the delay and public partner specified in each website."""
