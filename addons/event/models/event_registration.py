@@ -173,7 +173,7 @@ class EventRegistration(models.Model):
         res = attendee._get_registration_summary()
         if attendee.state == 'cancel':
             status = 'canceled_registration'
-        elif not attendee.event_id.is_ongoing:
+        elif attendee.event_id.is_finished:
             status = 'not_ongoing_event'
         elif attendee.state != 'done':
             if event_id and attendee.event_id.id != event_id:
