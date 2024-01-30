@@ -330,7 +330,7 @@ QUnit.module(
                 result.groups.reduce((acc, g) => acc + g.profession_count, 0),
                 MAIN_RECORDSET_SIZE
             );
-            assert.ok(result.groups.every((g) => g.profession_count === g.__data.length));
+            assert.ok(result.groups.every((g) => g.profession_count === g.__recordIds.length));
         });
 
         QUnit.test("Send 'web_read_group' RPC: all groups", async function (assert) {
@@ -363,7 +363,7 @@ QUnit.module(
                 result.groups.reduce((acc, g) => acc + g.profession_count, 0),
                 MAIN_RECORDSET_SIZE
             );
-            assert.ok(result.groups.every((g) => g.profession_count === g.__data.length));
+            assert.ok(result.groups.every((g) => g.profession_count === g.__recordIds.length));
         });
 
         QUnit.test("Send 'read_group' RPC: no group", async function (assert) {

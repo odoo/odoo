@@ -582,8 +582,11 @@ export class SampleServer {
             const groups = this.existingGroups;
             const group = groups[searchReadNumber++ % groups.length];
             result = {
-                records: group.__data.records,
-                length: group.__data.records.length,
+                records: this._mockRead({
+                    model: params.model,
+                    args: [group.__recordIds, fields],
+                }),
+                length: group.__recordIds.length,
             };
         } else {
             const model = this.data[params.model];
@@ -746,6 +749,7 @@ export class SampleServer {
         const groupBy = fullGroupBy.split(":")[0];
         const groupByField = this.data[params.model].fields[groupBy];
         const records = this.data[params.model].records;
+        const fields = params.fields.map((aggregate_spec) => aggregate_spec.split(":")[0])
         for (const g of groups) {
             const recordsInGroup = records.filter((r) => {
                 if (["date", "datetime"].includes(groupByField.type)) {
@@ -755,20 +759,14 @@ export class SampleServer {
                 }
                 return r[groupBy] === g[fullGroupBy];
             });
-            for (const field of params.fields) {
+            for (const field of fields) {
                 const fieldType = this.data[params.model].fields[field].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {
                     g[field] = recordsInGroup.reduce((acc, r) => acc + r[field], 0);
                 }
             }
             g[`${groupBy}_count`] = recordsInGroup.length;
-            g.__data = {
-                records: this._mockRead({
-                    model: params.model,
-                    args: [recordsInGroup.map((r) => r.id), params.fields],
-                }),
-                length: recordsInGroup.length,
-            };
+            g.__recordIds = recordsInGroup.map((r) => r.id);
         }
     }
 }
