@@ -72,7 +72,7 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in self - manual_ops:
             data = self.env['mrp.workorder'].search([
                 ('operation_id', '=', operation.id),
-                ('qty_produced', '>', 0),
+                ('qty_producing', '>', 0),
                 ('state', '=', 'done')],
                 limit=operation.time_mode_batch,
                 order="date_finished desc, id desc")
@@ -86,7 +86,7 @@ class MrpRoutingWorkcenter(models.Model):
             for item in data:
                 total_duration += item['duration']
                 capacity = item['workcenter_id']._get_capacity(item.product_id)
-                cycle_number += tools.float_round((item['qty_produced'] / capacity or 1.0), precision_digits=0, rounding_method='UP')
+                cycle_number += tools.float_round((item['qty_producing'] / capacity or 1.0), precision_digits=0, rounding_method='UP')
             if cycle_number:
                 operation.time_cycle = total_duration / cycle_number
             else:

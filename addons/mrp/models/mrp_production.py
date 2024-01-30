@@ -1663,7 +1663,7 @@ class MrpProduction(models.Model):
                     workorder.duration_expected = workorder._get_duration_expected()
                 if workorder.duration == 0.0:
                     workorder.duration = workorder.duration_expected * order.qty_producing / order.product_qty
-                    workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
+                    workorder.duration_unit = round(workorder.duration / max(workorder.qty_producing, 1), 2)
             order._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish.picked = True
@@ -1926,14 +1926,13 @@ class MrpProduction(models.Model):
 
             # Adapt quantities produced
             for workorder in production.workorder_ids:
-                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
-                workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
+                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_producing, 0))
             workorders_len = len(production.workorder_ids)
             for index, workorder in enumerate(bo.workorder_ids):
                 remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
                 workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
                 if remaining_qty:
-                    initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
+                    initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_producing, 0)
                 else:
                     workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
