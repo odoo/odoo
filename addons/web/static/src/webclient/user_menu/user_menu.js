@@ -27,6 +27,7 @@ export class UserMenu extends Component {
         const sortedItems = userMenuRegistry
             .getAll()
             .map((element) => element(this.env))
+            .filter((element) => (element.show ? element.show() : true))
             .sort((x, y) => {
                 const xSeq = x.sequence ? x.sequence : 100;
                 const ySeq = y.sequence ? y.sequence : 100;
