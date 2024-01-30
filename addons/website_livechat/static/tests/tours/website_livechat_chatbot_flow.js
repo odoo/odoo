@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { debounce } from "@web/core/utils/timing";
 
 const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
 
@@ -13,11 +12,9 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Hello! I'm a bot!"),
             run: () => {
                 // make chat bot faster for this tour
-                const chatbotService = odoo.__WOWL_DEBUG__.root.env.services["im_livechat.chatbot"];
-                chatbotService.debouncedProcessUserAnswer = debounce(
-                    chatbotService._processUserAnswer.bind(chatbotService),
-                    500
-                );
+                odoo.__WOWL_DEBUG__.root.env.services[
+                    "im_livechat.chatbot"
+                ].chatbot.script.isLivechatTourRunning = true;
             },
         },
         {

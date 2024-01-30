@@ -10,7 +10,7 @@ patch(Thread.prototype, {
         super.setup();
         this.chatbotTypingMessage = Record.one("Message", {
             compute() {
-                if (this.isChatbotThread) {
+                if (this.chatbot) {
                     return { id: -0.1 - this.id, originThread: this, author: this.operator };
                 }
             },
@@ -28,7 +28,7 @@ patch(Thread.prototype, {
                 }
             },
         });
-        this.chatbot_script_id = null;
+        this.chatbot = Record.one("Chatbot");
         this.requested_by_operator = false;
     },
 
@@ -46,11 +46,7 @@ patch(Thread.prototype, {
         return super.avatarUrl;
     },
 
-    get isChatbotThread() {
-        return Boolean(this.chatbot_script_id);
-    },
-
     get hasWelcomeMessage() {
-        return this.type === "livechat" && !this.isChatbotThread && !this.requested_by_operator;
+        return this.type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
 });

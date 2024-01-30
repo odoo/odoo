@@ -7,7 +7,7 @@ import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/tes
 import { Command } from "@mail/../tests/helpers/command";
 
 import { contains } from "@web/../tests/utils";
-import { cookie } from "@web/core/browser/cookie";
+import { browser } from "@web/core/browser/browser";
 
 QUnit.module("autopopup");
 
@@ -26,7 +26,7 @@ QUnit.test("persisted session", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    cookie.set(
+    browser.localStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );

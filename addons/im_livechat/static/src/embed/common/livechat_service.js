@@ -1,8 +1,10 @@
 /* @odoo-module */
 
 import { reactive } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 import { cookie } from "@web/core/browser/cookie";
+import { parseDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -35,10 +37,10 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 
 const OPERATOR_COOKIE = "im_livechat_previous_operator";
 const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
-const SAVED_STATE_COOKIE = "im_livechat.saved_state";
+const SAVED_STATE_STORAGE_KEY = "im_livechat.saved_state";
 
 export function getGuestToken() {
-    return localStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
+    return browser.localStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
 }
 
 export class LivechatService {
@@ -82,7 +84,7 @@ export class LivechatService {
                 channel_id: this.options.channel_id,
             }));
         this.available = data?.available_for_me ?? this.available;
-        this.rule = data?.rule ?? {};
+        this.rule = this.store.LivechatRule.insert(data?.rule ?? {});
         if (this.options?.force_thread) {
             this._saveLivechatState(this.options.force_thread, { persisted: true });
         }
@@ -136,7 +138,6 @@ export class LivechatService {
         this.chatWindowService.open(this.thread);
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         await this.env.services["mail.messaging"].initialize();
-        await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.PERSISTED].map((fn) => fn()));
         return this.thread;
     }
 
@@ -154,7 +155,7 @@ export class LivechatService {
                 });
             }
         } finally {
-            cookie.delete(SAVED_STATE_COOKIE);
+            browser.localStorage.removeItem(SAVED_STATE_STORAGE_KEY);
             this.state = SESSION_STATE.NONE;
             await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.NONE].map((fn) => fn()));
         }
@@ -181,17 +182,17 @@ export class LivechatService {
     _saveLivechatState(threadData, { persisted = false } = {}) {
         const { guest_token } = threadData;
         if (guest_token) {
-            localStorage.setItem(GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
+            browser.localStorage.setItem(GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
             delete threadData.guest_token;
         }
-        cookie.set(
-            SAVED_STATE_COOKIE,
+        browser.localStorage.setItem(
+            SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
                 threadData: persisted ? { id: threadData.id, model: threadData.model } : threadData,
                 persisted,
                 livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
-            }),
-            60 * 60 * 24
+                expirationDate: luxon.DateTime.now().plus({ days: 1 }),
+            })
         );
         if (threadData.operator) {
             cookie.set(OPERATOR_COOKIE, threadData.operator.id, 7 * 24 * 60 * 60);
@@ -210,8 +211,8 @@ export class LivechatService {
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
                 chatbot_script_id: this.savedState
-                    ? this.savedState.threadData.chatbot_script_id
-                    : this.rule.chatbot?.scriptId,
+                    ? this.savedState.threadData.chatbot?.script.id
+                    : this.rule.chatbotScript?.id,
                 previous_operator_id: cookie.get(OPERATOR_COOKIE),
                 temporary_id: this.thread?.id,
                 persisted: persist,
@@ -226,7 +227,7 @@ export class LivechatService {
         this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
         this._saveLivechatState(data.Thread, { persisted: persist });
         this.store.insert(data);
-        await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.CREATED].map((fn) => fn()));
+        await Promise.all(this._onStateChangeCallbacks[this.state].map((fn) => fn()));
     }
 
     get options() {
@@ -234,7 +235,7 @@ export class LivechatService {
     }
 
     get savedState() {
-        return JSON.parse(cookie.get(SAVED_STATE_COOKIE) ?? "false");
+        return JSON.parse(browser.localStorage.getItem(SAVED_STATE_STORAGE_KEY) ?? "false");
     }
 
     /**
@@ -260,9 +261,14 @@ export const livechatService = {
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         (async () => {
-            if ((livechat.savedState?.livechatUserId || false) !== (session.user_id || false)) {
-                // live chat state is linked to another user (log in/out after chat
-                // start), discard it.
+            // Live chat state should be deleted for one of those reasons:
+            // - it is linked to another user (log in/out after chat start)
+            // - it expired
+            if (
+                (livechat.savedState?.livechatUserId || false) !== (session.user_id || false) ||
+                (livechat.savedState?.expirationDate &&
+                    parseDateTime(livechat.savedState?.expirationDate) < luxon.DateTime.now())
+            ) {
                 await livechat.leave({ notifyServer: false });
             }
             if (livechat.available) {

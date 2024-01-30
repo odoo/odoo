@@ -106,10 +106,10 @@ class LivechatController(http.Controller):
             if matching_rule.chatbot_script_id.active and (not matching_rule.chatbot_only_if_no_operator or
                (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
                 chatbot_script = matching_rule.chatbot_script_id
-                rule.update({'chatbot': chatbot_script._format_for_frontend()})
+                rule.update({'chatbotScript': chatbot_script._format_for_frontend()})
         return {
-            'available_for_me': (rule and rule.get('chatbot'))
-                                or operator_available and (not rule or rule['action'] != 'hide_button'),
+            'available_for_me': bool((rule and rule.get('chatbotScript'))
+                                or operator_available and (not rule or rule['action'] != 'hide_button')),
             'rule': rule,
         }
 
@@ -157,11 +157,13 @@ class LivechatController(http.Controller):
                 'id': -1, # only one temporary thread at a time, id does not matter.
                 'model': 'discuss.channel',
                 'name': channel_vals['name'],
-                'chatbot_current_step_id': channel_vals['chatbot_current_step_id'],
                 'state': 'open',
                 'operator': operator_partner.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[operator_partner],
                 'channel_type': 'livechat',
-                'chatbot_script_id': chatbot_script.id if chatbot_script else None
+                'chatbot': {
+                    'script': chatbot_script._format_for_frontend(),
+                    'steps': chatbot_script._get_welcome_steps().mapped(lambda s: {'scriptStep': {'id': s.id}}),
+                } if chatbot_script else None
             }
         else:
             channel = request.env['discuss.channel'].with_context(mail_create_nosubscribe=False).sudo().create(channel_vals)
