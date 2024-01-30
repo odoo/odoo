@@ -28,26 +28,7 @@ def qunit_error_checker(message):
 
     return True  # in other cases, always stop (missing dependency, ...)
 
-
-@odoo.tests.tagged('post_install', '-at_install')
-class WebSuite(odoo.tests.HttpCase):
-
-    @odoo.tests.no_retry
-    def test_unit_desktop(self):
-        # Unit tests suite (desktop)
-        self.browser_js('/web/tests/next?headless&tag=-mobile', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
-
-    @odoo.tests.no_retry
-    def test_qunit_desktop(self):
-        # ! DEPRECATED
-        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
-
-    def test_check_suite(self):
-        self._check_forbidden_statements('web.assets_unit_tests')
-        # Checks that no test is using `only` or `debug` as it prevents other tests to be run
-        self._check_only_call('web.qunit_suite_tests')
-        self._check_only_call('web.qunit_mobile_suite_tests')
-
+class Suite(odoo.tests.HttpCase):
     def _check_forbidden_statements(self, bundle):
         # As we currently are not in a request context, we cannot render `web.layout`.
         # We then re-define it as a minimal proxy template.
@@ -85,17 +66,33 @@ class WebSuite(odoo.tests.HttpCase):
                     if RE_ONLY.search(fp.read().decode('utf-8')):
                         self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
 
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(Suite):
+
+    @odoo.tests.no_retry
+    def test_unit_desktop(self):
+        # Unit tests suite (desktop)
+        self._check_forbidden_statements('web.assets_unit_tests')
+        self.browser_js('/web/tests/next?headless&tag=-mobile', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
+
+    @odoo.tests.no_retry
+    def test_qunit_desktop(self):
+        # ! DEPRECATED
+        self._check_only_call('web.qunit_suite_tests')
+        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
 
 @odoo.tests.tagged('post_install', '-at_install')
-class MobileWebSuite(odoo.tests.HttpCase):
+class MobileWebSuite(Suite):
     browser_size = '375x667'
     touch_enabled = True
 
     @odoo.tests.no_retry
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
+        self._check_forbidden_statements('web.assets_unit_tests')
         self.browser_js('/web/tests/next?headless&tag=-desktop', "", "", login='admin', timeout=1800, error_checker=unit_test_error_checker)
 
     def test_qunit_mobile(self):
         # ! DEPRECATED
+        self._check_only_call('web.qunit_mobile_suite_tests')
         self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, error_checker=qunit_error_checker)
