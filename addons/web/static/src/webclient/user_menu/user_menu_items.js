@@ -7,6 +7,7 @@ import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
+import { InstallPWADialog } from "./install_pwa_dialog";
 
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/master";
@@ -104,6 +105,20 @@ export function odooAccountItem(env) {
     };
 }
 
+function installPWAItem(env) {
+    return {
+        type: "item",
+        id: "install_pwa",
+        description: _t("Install the app"),
+        callback: () => {
+            env.bus.trigger("HOME-MENU:TOGGLED");
+            env.services.dialog.add(InstallPWADialog, {});
+        },
+        show: () => env.services.installPrompt.isAvailable,
+        sequence: 65,
+    };
+}
+
 function logOutItem(env) {
     const route = "/web/session/logout";
     return {
@@ -126,4 +141,5 @@ registry
     .add("separator", separator)
     .add("profile", preferencesItem)
     .add("odoo_account", odooAccountItem)
+    .add("install_pwa", installPWAItem)
     .add("log_out", logOutItem);

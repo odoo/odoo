@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.InstallPWADialog">
+        <Dialog title="'Get the app'">
+            <div>Install the application for fast access from your home screen, notifications and more!</div>
+            <div t-if="isBrowserSafari" class="p-1">
+                <t t-set="isMobileSafari" t-value="isIOS" />
+                <t t-call="web.InstallStepsSafari"/>
+            </div>
+            <div class="homeScreenArea d-flex justify-content-center align-items-center flex-column m-2 rounded-2 border cursor-pointer" t-on-click="() => this.launchInstallProcess()">
+                <img alt="Odoo" src="/web/static/img/odoo-icon-192x192.png" style="height: 5em;"/>
+                <span t-out="appName" />
+            </div>
+            <t t-if="!isBrowserSafari">
+                One-click install, no download needed
+            </t>
+            <t t-set-slot="footer">
+                <button t-if="!isBrowserSafari" class="btn btn-primary o-default-button" t-on-click="() => this.launchInstallProcess()">
+                    Install
+                </button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
