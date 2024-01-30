@@ -431,6 +431,31 @@ X[]
                         contentAfter: `<p>[]&nbsp;def</p>`,
                     });
                 });
+                it('should remove invisible empty space at the start', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>[]         def</p>`,
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                        },
+                        contentAfter: `<p>[]ef</p>`,
+                    });
+                });
+                 it('should remove invisible empty space at the start (2)', async () => {
+                    await testEditor(BasicEditor, {
+                        // The first 3 spaces are invisible : considered
+                        // formating by the browser.
+                        // The &nbsp; is visible (space 1).
+                        // The last 3 spaces are consider as 1 visble space and
+                        // two formating spaces (space 2).
+                        contentBefore: `<p>[]   &nbsp;   def</p>`,
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                        },
+                        // Space 1 is deleted and space 2 should be transformed
+                        // to a &nbsp; to stay visible.
+                        contentAfter: `<p>[]&nbsp;def</p>`,
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
