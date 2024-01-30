@@ -18,7 +18,11 @@ export class SuggestionService {
     }
 
     getSupportedDelimiters(thread) {
-        return [["@"], ["#"]];
+        const delimiters = [["@"], ["#"]];
+        if (thread && thread.model !== "discuss.channel") {
+            delimiters.push([":"]);
+        }
+        return delimiters;
     }
 
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {
@@ -67,6 +71,41 @@ export class SuggestionService {
         this.store.Thread.insert(suggestedThreads);
     }
 
+    searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
+        const cannedResponses = Object.values(this.store.CannedResponse.records).filter(
+            (cannedResponse) => {
+                return cleanTerm(cannedResponse.source).includes(cleanedSearchTerm);
+            }
+        );
+        const sortFunc = (c1, c2) => {
+            const cleanedName1 = cleanTerm(c1.source);
+            const cleanedName2 = cleanTerm(c2.source);
+            if (
+                cleanedName1.startsWith(cleanedSearchTerm) &&
+                !cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return -1;
+            }
+            if (
+                !cleanedName1.startsWith(cleanedSearchTerm) &&
+                cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return 1;
+            }
+            if (cleanedName1 < cleanedName2) {
+                return -1;
+            }
+            if (cleanedName1 > cleanedName2) {
+                return 1;
+            }
+            return c1.id - c2.id;
+        };
+        return {
+            type: "CannedResponse",
+            mainSuggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
+        };
+    }
+
     /**
      * Returns suggestions that match the given search term from specified type.
      *
@@ -86,6 +125,8 @@ export class SuggestionService {
             }
             case "#":
                 return this.searchChannelSuggestions(cleanedSearchTerm, thread, sort);
+            case ":":
+                return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
         }
         return {
             type: undefined,
