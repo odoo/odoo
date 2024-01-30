@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
+
 import {
     contains,
     defineModels,

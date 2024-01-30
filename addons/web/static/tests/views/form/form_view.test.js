@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+
 import { clickSave, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class ResPartner extends models.Model {

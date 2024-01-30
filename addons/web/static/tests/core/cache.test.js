@@ -1,8 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
+
 import { Cache } from "@web/core/utils/cache";
 
-test("do not call getValue if already cached", () => {
+test`headless`("do not call getValue if already cached", () => {
     const cache = new Cache((key) => {
         expect.step(key);
         return key.toUpperCase();
@@ -15,7 +16,7 @@ test("do not call getValue if already cached", () => {
     expect(["a", "b"]).toVerifySteps();
 });
 
-test("multiple cache key", async () => {
+test`headless`("multiple cache key", async () => {
     const cache = new Cache((...keys) => expect.step(keys.join("-")));
 
     cache.read("a", 1);
@@ -25,7 +26,7 @@ test("multiple cache key", async () => {
     expect(["a-1", "a-2"]).toVerifySteps();
 });
 
-test("compute key", async () => {
+test`headless`("compute key", async () => {
     const cache = new Cache(
         (key) => expect.step(key),
         (key) => key.toLowerCase()
@@ -37,7 +38,7 @@ test("compute key", async () => {
     expect(["a"]).toVerifySteps();
 });
 
-test("cache promise", async () => {
+test`headless`("cache promise", async () => {
     const cache = new Cache((key) => {
         expect.step(`read ${key}`);
         return new Deferred();
@@ -54,7 +55,7 @@ test("cache promise", async () => {
     expect(["read a", "read b", "then a", "then a", "then b"]).toVerifySteps();
 });
 
-test("clear cache", async () => {
+test`headless`("clear cache", async () => {
     const cache = new Cache((key) => expect.step(key));
 
     cache.read("a");

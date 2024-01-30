@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
+
 import {
     Command,
     MockServer,
