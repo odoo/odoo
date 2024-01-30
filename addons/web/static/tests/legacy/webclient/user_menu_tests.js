@@ -1,11 +1,12 @@
 /** @odoo-module alias=@web/../tests/webclient/user_menu_tests default=false */
 
+import { browser } from "@web/core/browser/browser";
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
-import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
+import { odooAccountItem, preferencesItem } from "@web/webclient/user_menu/user_menu_items";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService, patchUserWithCleanup } from "../helpers/mock_services";
 import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -166,4 +167,20 @@ QUnit.test("can execute the callback of settings", async (assert) => {
     assert.strictEqual(item.textContent, "Preferences");
     await click(item);
     assert.verifySteps(["7", "Change My Preferences"]);
+});
+
+QUnit.test("click on odoo account item", async (assert) => {
+    patchWithCleanup(browser, {
+        open: (url) => assert.step(`open ${url}`),
+    });
+    const mockRPC = (route) => assert.step(route);
+    env = await makeTestEnv({ mockRPC });
+    userMenuRegistry.add("odoo_account", odooAccountItem);
+    await mount(UserMenu, target, { env });
+    await click(target.querySelector("button.dropdown-toggle"));
+    assert.containsOnce(target, ".dropdown-menu .dropdown-item");
+    const item = target.querySelector(".dropdown-menu .dropdown-item");
+    assert.strictEqual(item.textContent, "My Odoo.com account");
+    await click(item);
+    assert.verifySteps(["/web/session/account", "open https://accounts.odoo.com/account"]);
 });
