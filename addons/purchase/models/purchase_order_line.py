@@ -482,7 +482,8 @@ class PurchaseOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records.
+        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records
+        or if it has purchase_line_warn == "block".
 
         Note: This method cannot be called with multiple records that have different products linked.
 
@@ -496,6 +497,7 @@ class PurchaseOrderLine(models.Model):
                 'uom': dict,
                 'purchase_uom': dict,
                 'packaging': dict,
+                'warning': String,
             }
         """
         if len(self) == 1:
