@@ -21,6 +21,8 @@ import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
+import { pick } from "@web/core/utils/objects";
+import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -48,7 +50,6 @@ export class ProductScreen extends Component {
         this.state = useState({
             showProductReminder: false,
             loadingDemo: false,
-            scrollDown: false,
             previousSearchWord: "",
             currentOffset: 0,
         });
@@ -56,7 +57,7 @@ export class ProductScreen extends Component {
             this.pos.openCashControl();
 
             if (this.pos.config.iface_start_categ_id) {
-                this.pos.setSelectedCategoryId(this.pos.config.iface_start_categ_id.id);
+                this.pos.setSelectedCategory(this.pos.config.iface_start_categ_id.id);
             }
 
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
@@ -80,32 +81,34 @@ export class ProductScreen extends Component {
         this.numberBuffer.use({
             useWithBarcode: true,
         });
+        this.scrollDirection = useScrollDirection("products");
     }
-    setScrollDirection(scroll) {
-        this.state.scrollDown = scroll.down;
-    }
+    /**
+     * @returns {import("@point_of_sale/app/generic_components/category_selector/category_selector").Category[]}
+     */
     getCategories() {
-        if (this.pos.selectedCategoryId) {
-            const categoriesToDisplay = [];
-            const category = this.pos.models["pos.category"].get(this.pos.selectedCategoryId);
-
-            if (category.parent_id) {
-                categoriesToDisplay.push(...category.allParents);
-            }
-
-            categoriesToDisplay.push(category);
-
-            if (category.child_id) {
-                categoriesToDisplay.push(...category.child_id);
-            }
-
-            return categoriesToDisplay;
-        } else {
-            return this.pos.models["pos.category"].filter((category) => !category.parent_id);
-        }
-    }
-    computeImageUrl(category) {
-        return `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
+        const selectedCategory = this.pos.selectedCategory;
+        const categoriesToDisplay = selectedCategory
+            ? [...selectedCategory.allParents, selectedCategory, ...selectedCategory.child_id]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+        return [
+            {
+                id: 0,
+                name: "",
+                icon: "fa-home fa-2x",
+            },
+            ...categoriesToDisplay.map((category) => {
+                return {
+                    ...pick(category, "id", "name", "color", "has_image"),
+                    showSeparator:
+                        selectedCategory &&
+                        [
+                            ...selectedCategory.allParents.map((p) => p.id),
+                            this.pos.selectedCategory.id,
+                        ].includes(category.id),
+                };
+            }),
+        ];
     }
     getNumpadButtons() {
         return [
@@ -337,9 +340,6 @@ export class ProductScreen extends Component {
     switchPane() {
         this.pos.switchPane();
     }
-    get selectedCategoryId() {
-        return this.pos.selectedCategoryId;
-    }
     get searchWord() {
         return this.pos.searchProductWord.trim();
     }
@@ -348,10 +348,10 @@ export class ProductScreen extends Component {
         let list = [];
 
         if (this.searchWord !== "") {
-            const product = this.pos.selectedCategoryId
+            const product = this.pos.selectedCategory.id
                 ? this.pos.models["product.product"].getBy(
                       "pos_categ_ids",
-                      this.pos.selectedCategoryId
+                      this.pos.selectedCategory.id
                   )
                 : this.pos.models["product.product"].getAll();
             list = fuzzyLookup(
@@ -359,10 +359,10 @@ export class ProductScreen extends Component {
                 product,
                 (product) => product.display_name + product.description_sale
             );
-        } else if (this.pos.selectedCategoryId) {
+        } else if (this.pos.selectedCategory?.id) {
             list = this.pos.models["product.product"].getBy(
                 "pos_categ_ids",
-                this.pos.selectedCategoryId
+                this.pos.selectedCategory.id
             );
         } else {
             list = this.pos.models["product.product"].getAll();
@@ -456,7 +456,7 @@ export class ProductScreen extends Component {
             return;
         }
 
-        this.pos.selectedCategoryId = 0;
+        this.pos.setSelectedCategory(0);
         const product = await this.pos.data.searchRead(
             "product.product",
             [

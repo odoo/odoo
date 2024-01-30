@@ -172,7 +172,7 @@ export class PosStore extends Reactive {
             orders: [],
             selectedOrder: null,
             selectedPartner: null,
-            selectedCategoryId: null,
+            selectedCategory: null,
             // FIXME POSREF this piece of state should probably be private to the product screen
             // but it currently needs to be available to the ProductInfo screen for dubious functional reasons
             searchProductWord: "",
@@ -337,7 +337,7 @@ export class PosStore extends Reactive {
             this.db.save("TO_REFUND_LINES", this.toRefundLines)
         );
         const { start_category, iface_start_categ_id } = this.config;
-        this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+        this.setSelectedCategory((start_category && iface_start_categ_id?.[0]) || 0);
         // Push orders in background, do not await
         this.push_orders();
         // This method is to load the demo datas.
@@ -596,8 +596,8 @@ export class PosStore extends Reactive {
         return this.has_available_products;
     }
 
-    setSelectedCategoryId(categoryId) {
-        this.selectedCategoryId = categoryId;
+    setSelectedCategory(categoryId) {
+        this.selectedCategory = this.models["pos.category"].get(categoryId);
     }
 
     /**

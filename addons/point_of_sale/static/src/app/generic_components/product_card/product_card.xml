@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
-            t-attf-class="{{props.class}} product position-relative btn btn-light d-flex align-items-stretch p-0 m-0 text-start cursor-pointer overflow-hidden transition-base"
+            t-attf-class="{{props.class}} {{props.color ? `o_colorlist_item_color_${props.color}` : ''}} border-0 product position-relative btn btn-light d-flex align-items-stretch p-0 m-0 text-start cursor-pointer overflow-hidden transition-base"
             t-on-keypress="(event) => event.code === 'Space' ? props.onClick(event) : ()=>{}"
             t-on-click="props.onClick"
             t-att-data-product-id="props.productId"
@@ -19,7 +19,7 @@
                     t-att-class="{'no-image': !props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
-                <span t-if="props.price" class="price-tag text-primary py-1 fw-bolder"
+                <span t-if="props.price" class="price-tag py-1 fw-bolder"
                     t-esc="props.price" />
             </div>
         </article>
