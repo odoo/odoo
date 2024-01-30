@@ -28,6 +28,7 @@ import {
     isVisible,
     isUnbreakable,
     isEmptyBlock,
+    getOffsetAndCharSize,
 } from '../utils/utils.js';
 
 /**
@@ -82,8 +83,8 @@ Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
         return;
     }
     // Get the size of the unicode character to remove.
-    const charSize = [...this.nodeValue.slice(0, offset + 1)].pop().length;
-    deleteText.call(this, charSize, offset, DIRECTIONS.RIGHT, alreadyMoved);
+    const [newOffset, charSize] = getOffsetAndCharSize(this.nodeValue, offset + 1, DIRECTIONS.RIGHT);
+    deleteText.call(this, charSize, newOffset, DIRECTIONS.RIGHT, alreadyMoved);
 };
 
 HTMLElement.prototype.oDeleteForward = function (offset) {
