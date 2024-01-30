@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+
 import { evaluateExpr, formatAST, parseExpr } from "@web/core/py_js/py";
 import { PyDate, PyDateTime } from "@web/core/py_js/py_date";
 import { toPyValue } from "@web/core/py_js/py_utils";
@@ -12,7 +13,7 @@ const checkAST = (expr, message = expr) => {
     return true;
 };
 
-describe("formatAST", () => {
+describe`headless`("formatAST", () => {
     test("basic values", () => {
         expect(checkAST("1", "number value")).toBe(true);
         expect(checkAST("1.4", "float value")).toBe(true);
@@ -130,7 +131,7 @@ describe("formatAST", () => {
     });
 });
 
-describe("toPyValue", () => {
+describe`headless`("toPyValue", () => {
     test("toPyValue a string", () => {
         const ast = toPyValue("test");
         expect(ast.type).toBe(1);

@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
+
 import {
     contains,
     makeMockEnv,
