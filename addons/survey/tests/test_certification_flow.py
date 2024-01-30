@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('-at_install', 'post_install', 'functional')
+@tagged('functional')
 class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
 
     def test_flow_certification(self):

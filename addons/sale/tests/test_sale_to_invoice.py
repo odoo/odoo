@@ -3,13 +3,12 @@
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.tools import float_is_zero
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestSaleToInvoice(TestSaleCommon):
 
     @classmethod

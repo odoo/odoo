@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form, TransactionCase
 from odoo import Command
 
 
-@tagged('post_install', '-at_install')
 class TestAnalyticAccount(TransactionCase):
 
     @classmethod

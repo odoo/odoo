@@ -6,12 +6,11 @@ from passlib.totp import TOTP
 from odoo import http
 from odoo.addons.auth_totp.controllers.home import Home
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.tests import tagged, loaded_demo_data
+from odoo.tests import loaded_demo_data
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install')
 class TestTOTPortal(HttpCaseWithUserPortal):
     """
     Largely replicates TestTOTP

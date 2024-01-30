@@ -2542,7 +2542,6 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(backorder.state, 'done')
 
 
-@tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
 
     def test_last_delivery_partner_field_on_lot(self):

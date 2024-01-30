@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests import TransactionCase
 from odoo.tools.misc import file_open
 from unittest import skipIf
 import os
@@ -13,7 +13,6 @@ except ImportError:
     PDFResourceManager = None
 
 
-@tagged('post_install', '-at_install')
 class TestCaseIndexation(TransactionCase):
 
     @skipIf(PDFResourceManager is None, "pdfminer not installed")

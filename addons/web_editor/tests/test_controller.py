@@ -4,13 +4,12 @@
 import binascii
 import json
 
-import odoo.tests
 from odoo.tests.common import HttpCase, new_test_user
 from odoo.tools.json import scriptsafe as json_safe
 
 from odoo.addons.http_routing.models.ir_http import slug
 
-@odoo.tests.tagged('-at_install', 'post_install')
+
 class TestController(HttpCase):
 
     @classmethod

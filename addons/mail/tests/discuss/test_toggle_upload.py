@@ -3,11 +3,10 @@
 from requests.exceptions import HTTPError
 
 from odoo import Command, http
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests import HttpCase
 from odoo.tools import file_open, mute_logger
 
 
-@tagged("post_install", "-at_install")
 class TestToggleUpload(HttpCase):
     def test_upload_allowed(self):
         self.authenticate(None, None)

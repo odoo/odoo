@@ -183,7 +183,6 @@ class TestDigest(TestDigestCommon):
         self.assertEqual(digest.periodicity, 'monthly')
 
 
-@tagged('-at_install', 'post_install')
 class TestUnsubscribe(HttpCaseWithUserDemo):
 
     def setUp(self):

@@ -4,10 +4,9 @@
 
 import json
 from uuid import uuid4
-from odoo.tests.common import HttpCase, tagged, new_test_user
+from odoo.tests import HttpCase, new_test_user
 
 
-@tagged("-at_install", "post_install")
 class TestOnboardingSession(HttpCase):
 
     @classmethod

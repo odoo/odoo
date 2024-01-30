@@ -22,7 +22,7 @@ except ImportError:
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'post_install_l10n')
+@odoo.tests.tagged('post_install_l10n')
 class TestReports(odoo.tests.TransactionCase):
     def test_reports(self):
         invoice_domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt'))]
@@ -325,7 +325,7 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
             )
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'pdf_rendering')
+@odoo.tests.tagged('pdf_rendering')
 class TestReportsRendering(TestReportsRenderingCommon):
     """
         This test aims to test as much as possible the current pdf rendering,
@@ -526,7 +526,7 @@ class TestReportsRendering(TestReportsRenderingCommon):
         self.assertEqual(pages_contents, expected_pages_contents)
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'pdf_rendering')
+@odoo.tests.tagged('-standard', 'pdf_rendering')
 class TestReportsRenderingLimitations(TestReportsRenderingCommon):
     def test_no_clip(self):
         """

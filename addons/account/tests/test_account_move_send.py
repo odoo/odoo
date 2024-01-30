@@ -2,11 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
-from dateutil.relativedelta import relativedelta
-from freezegun import freeze_time
 from unittest.mock import patch
 
-from odoo import Command, fields
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
@@ -14,7 +12,7 @@ from odoo.tests import users, warmup, tagged
 from odoo.tools import formataddr, mute_logger
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
 
     @classmethod
@@ -441,7 +439,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         self.assertNotIn('access_token=', follower_mail.body_html,
                       "The followers should not bet sent the access token by default")
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+
+@tagged('post_install_l10n')
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
     @classmethod
@@ -475,7 +474,7 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
     def _get_mail_message(self, move):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=1)
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestAccountMoveSend(TestAccountMoveSendCommon):
 
     def test_invoice_single(self):

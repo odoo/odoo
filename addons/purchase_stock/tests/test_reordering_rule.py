@@ -6,12 +6,10 @@ from datetime import timedelta as td
 from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID
-from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form, TransactionCase
 from odoo.exceptions import UserError
 
 
-@tagged('post_install', '-at_install')
 @freeze_time("2021-01-14 09:12:15")
 class TestReorderingRule(TransactionCase):
     @classmethod

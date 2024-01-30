@@ -3,7 +3,6 @@ from odoo.tests import common
 from unittest.mock import patch
 
 
-@common.tagged('post_install', '-at_install')
 class TestWebSearchRead(common.TransactionCase):
 
     @classmethod

@@ -2,10 +2,9 @@
 # pylint: disable=C0326
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
     @classmethod

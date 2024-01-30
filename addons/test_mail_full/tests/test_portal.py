@@ -28,7 +28,7 @@ class TestPortal(HttpCase, TestMailFullCommon, TestSMSRecipients):
         self.record_portal._portal_ensure_token()
 
 
-@tagged('-at_install', 'post_install', 'portal')
+@tagged('portal')
 class TestPortalControllers(TestPortal):
 
     def test_redirect_to_records(self):

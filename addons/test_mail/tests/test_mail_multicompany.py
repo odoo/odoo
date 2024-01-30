@@ -311,7 +311,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         )
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged('multi_company')
 class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
     def test_redirect_to_records(self):

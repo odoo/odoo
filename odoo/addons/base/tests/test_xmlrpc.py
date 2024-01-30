@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import collections
 import time
-from xmlrpc.client import Binary
 
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
@@ -14,7 +13,6 @@ from odoo.service import common as auth, model
 from odoo.tools import DotDict
 
 
-@common.tagged('post_install', '-at_install')
 class TestXMLRPC(common.HttpCase):
 
     def setUp(self):
@@ -117,8 +115,8 @@ class TestXMLRPC(common.HttpCase):
             'ir.attachment', 'read', ids, ['raw'])
         self.assertEqual(att['raw'], '', "actual binary data should be blanked out on read")
 
+
 # really just for the test cursor
-@common.tagged('post_install', '-at_install')
 class TestAPIKeys(common.HttpCase):
     @classmethod
     def setUpClass(cls):

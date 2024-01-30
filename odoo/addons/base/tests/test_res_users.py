@@ -224,7 +224,7 @@ class TestUsers(TransactionCase):
 
         self.assertEqual(user.context_get()['lang'], 'en_US')
 
-@tagged('post_install', '-at_install')
+
 class TestUsers2(TransactionCase):
 
     def test_reified_groups(self):
@@ -349,7 +349,7 @@ class TestUsers2(TransactionCase):
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
 
-@tagged('post_install', '-at_install', 'res_groups')
+@tagged("res_groups")
 class TestUsersGroupWarning(TransactionCase):
 
     @classmethod

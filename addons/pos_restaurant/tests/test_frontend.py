@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
     @classmethod

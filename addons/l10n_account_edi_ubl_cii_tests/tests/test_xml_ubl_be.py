@@ -5,7 +5,7 @@ from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSend
 from odoo.tests import tagged
 import base64
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod

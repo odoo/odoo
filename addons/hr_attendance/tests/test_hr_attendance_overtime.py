@@ -4,7 +4,7 @@ from datetime import date, datetime
 from odoo.tests import new_test_user
 from odoo.tests.common import tagged, TransactionCase
 
-@tagged('post_install', '-at_install', 'hr_attendance_overtime')
+@tagged('hr_attendance_overtime')
 class TestHrAttendanceOvertime(TransactionCase):
     """ Tests for overtime """
 

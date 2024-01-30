@@ -5,7 +5,7 @@ from datetime import date
 from unittest.mock import patch
 
 from odoo import http
-from odoo.tests import common, tagged
+from odoo.tests import common
 from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.export import ExportXlsxWriter, Export
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -74,7 +74,6 @@ class XlsxCreatorCase(common.HttpCase):
         self.assertFalse(value, "There are unexpected cells in the export")
 
 
-@tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
     model_name = 'export.group_operator'
     # pylint: disable=bad-whitespace
@@ -392,7 +391,6 @@ class TestGroupedExport(XlsxCreatorCase):
             ['1'                ,'86420.86'],
         ])
 
-@tagged('-at_install', 'post_install')
 class TestExport(common.HttpCase):
 
     def test_properties_type_fields_not_selectable_with_import_compat(self):

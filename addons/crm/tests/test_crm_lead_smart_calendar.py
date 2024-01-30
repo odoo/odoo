@@ -4,9 +4,9 @@
 from datetime import date, datetime
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.tests.common import tagged, users
+from odoo.tests import users
 
-@tagged('post_install', '-at_install')
+
 class TestCRMLeadSmartCalendar(TestCrmCommon):
 
     @classmethod

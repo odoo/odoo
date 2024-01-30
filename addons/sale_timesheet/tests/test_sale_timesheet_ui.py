@@ -3,12 +3,11 @@
 
 import logging
 
-from odoo.tests import HttpCase, tagged, loaded_demo_data
+from odoo.tests import HttpCase, loaded_demo_data
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('-at_install', 'post_install')
 class TestUi(HttpCase):
 
     @classmethod

@@ -5,12 +5,10 @@ from collections import OrderedDict
 from lxml import etree
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
 
 from .test_project_sharing import TestProjectSharingCommon
 
 
-@tagged('post_install', '-at_install')
 class TestProjectSharingPortalAccess(TestProjectSharingCommon):
 
     @classmethod

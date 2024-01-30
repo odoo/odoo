@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -12,7 +11,6 @@ from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 
 
-@tagged('post_install', '-at_install')
 class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_redirect_form_values(self):

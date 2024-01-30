@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase
 
 
-@tagged('post_install', '-at_install')
 class TestCustomSnippet(TransactionCase):
     def test_translations_custom_snippet(self):
         ResLang = self.env['res.lang']

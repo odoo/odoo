@@ -5,8 +5,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
-from odoo.tests import Form, tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 
 
 class TestStockValuationCommon(TransactionCase):
@@ -334,6 +333,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
             self.assertEqual(product.value_svl, 0.0)
         finally:
             self.env.user.company_id = old_company
+
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
@@ -923,7 +923,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
-@tagged('post_install', '-at_install', 'change_valuation')
+@tagged('change_valuation')
 class TestStockValuationChangeValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -1054,7 +1054,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, self.product1.standard_price)
             self.assertAlmostEqual(abs(move.stock_valuation_layer_ids.value), 1123.39)
 
-@tagged('post_install', '-at_install')
+
 class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):

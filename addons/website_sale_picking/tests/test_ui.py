@@ -8,7 +8,6 @@ from odoo.tests import HttpCase, tagged, loaded_demo_data
 _logger = logging.getLogger(__name__)
 
 
-@tagged('-at_install', 'post_install')
 class TestUi(HttpCase):
     def setUp(self):
         super(TestUi, self).setUp()

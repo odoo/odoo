@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 
-@tagged('-at_install', 'post_install')
 class TestStockPickingTour(HttpCase):
     def setUp(self):
         self.receipt = self.env['stock.picking'].create({

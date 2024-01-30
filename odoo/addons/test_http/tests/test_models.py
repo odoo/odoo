@@ -3,15 +3,13 @@
 import html
 
 import odoo
-from odoo.tests import tagged
-from odoo.tests.common import new_test_user, Like
+from odoo.tests import new_test_user, Like
 from odoo.tools import mute_logger
 from odoo.addons.test_http.utils import HtmlTokenizer
 
 from .test_common import TestHttpBase
 
 
-@tagged('post_install', '-at_install')
 class TestHttpModels(TestHttpBase):
     def setUp(self):
         super().setUp()

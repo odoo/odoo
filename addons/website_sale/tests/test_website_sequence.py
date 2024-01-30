@@ -3,7 +3,6 @@
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteSequence(odoo.tests.TransactionCase):
 
     def setUp(self):

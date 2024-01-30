@@ -10,7 +10,7 @@ from odoo.exceptions import AccessError, ValidationError
 from freezegun import freeze_time
 import time
 
-@tagged('post_install', '-at_install', 'holidays_attendance')
+@tagged('holidays_attendance')
 class TestHolidaysOvertime(TransactionCase):
 
     @classmethod

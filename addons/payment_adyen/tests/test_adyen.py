@@ -4,8 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
 
-from odoo.exceptions import UserError
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
@@ -15,7 +13,6 @@ from odoo.addons.payment_adyen.controllers.main import AdyenController
 from odoo.addons.payment_adyen.tests.common import AdyenCommon
 
 
-@tagged('post_install', '-at_install')
 class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_processing_values(self):

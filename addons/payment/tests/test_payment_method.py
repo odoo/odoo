@@ -2,12 +2,10 @@
 
 from odoo.exceptions import UserError
 from odoo.models import Command
-from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestPaymentMethod(PaymentCommon):
 
     def test_unlinking_payment_method_from_provider_state_archives_tokens(self):

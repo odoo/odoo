@@ -65,7 +65,7 @@ class TestMailingControllersCommon(MassMailCommon, HttpCase):
         return super()._request_handler(s, r, **kw)
 
 
-@tagged('mailing_portal', 'post_install', '-at_install')
+@tagged('mailing_portal')
 class TestMailingControllers(TestMailingControllersCommon):
 
     @classmethod

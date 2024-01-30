@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged, new_test_user
+from odoo.tests import new_test_user
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
@@ -50,7 +50,6 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
 
 
-@tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
         # open a session, the /pos/ui controller will redirect to it

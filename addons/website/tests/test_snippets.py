@@ -10,7 +10,7 @@ from odoo.tests.common import HOST
 from odoo.tools import config
 
 
-@tagged('post_install', '-at_install', 'website_snippets')
+@tagged('website_snippets')
 class TestSnippets(HttpCase):
 
     def test_01_empty_parents_autoremove(self):

@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from werkzeug.urls import url_encode, url_join
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -12,7 +11,6 @@ from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.tests.common import StripeCommon
 
 
-@tagged('post_install', '-at_install')
 class StripeTest(StripeCommon, PaymentHttpCommon):
 
     def test_processing_values(self):

@@ -7,7 +7,7 @@ from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestItEdi(AccountTestInvoicingCommon):
 
     @classmethod

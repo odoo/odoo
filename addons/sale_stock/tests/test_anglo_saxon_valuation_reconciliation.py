@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
 class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
@@ -67,7 +67,6 @@ class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
         move1._action_done()
 
 
-@tagged('post_install', '-at_install')
 class TestValuationReconciliation(TestValuationReconciliationCommon):
     def test_shipment_invoice(self):
         """ Tests the case into which we send the goods to the customer before

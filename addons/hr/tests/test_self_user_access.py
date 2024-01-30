@@ -9,7 +9,7 @@ from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
 
-@tagged('post_install', '-at_install')
+
 class TestSelfAccessProfile(TestHrCommon):
 
     def test_access_my_profile(self):

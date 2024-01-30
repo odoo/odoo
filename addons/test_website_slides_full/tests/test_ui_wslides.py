@@ -3,12 +3,10 @@
 
 from dateutil.relativedelta import relativedelta
 from odoo.fields import Datetime
-from odoo import tests
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
 
 
-@tests.common.tagged('post_install', '-at_install')
 class TestUi(AccountTestInvoicingCommon, TestUICommon):
 
     def test_course_certification_employee(self):

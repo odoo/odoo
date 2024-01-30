@@ -7,7 +7,6 @@ import odoo.tests
 from odoo.tools import config
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteAssets(odoo.tests.HttpCase):
 
     def test_01_multi_domain_assets_generation(self):
@@ -138,7 +137,6 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         self.assertTrue(website_attach.exists(), 'attachment for website should still exist after generating attachment for no website')
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestWebAssets(odoo.tests.HttpCase):
     def test_assets_url_validation(self):
         website_id = self.env['website'].search([], limit=1, order='id desc').id

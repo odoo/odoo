@@ -4,7 +4,6 @@
 from datetime import datetime, timedelta
 
 from odoo import Command
-from odoo.tests import tagged
 
 from odoo.addons.project.tests.test_project_profitability import TestProjectProfitabilityCommon
 from odoo.addons.purchase.tests.test_purchase_invoice import TestPurchaseToInvoiceCommon
@@ -12,7 +11,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools.float_utils import float_compare
 
 
-@tagged('-at_install', 'post_install')
 class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurchaseToInvoiceCommon, AccountTestInvoicingCommon):
 
     def test_bills_without_purchase_order_are_accounted_in_profitability_project_purchase(self):

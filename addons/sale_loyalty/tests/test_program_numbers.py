@@ -3,11 +3,9 @@
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 from odoo.tools.float_utils import float_compare
 
 
-@tagged('post_install', '-at_install')
 class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
     def test_program_numbers_free_and_paid_product_qty(self):

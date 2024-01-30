@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -64,7 +62,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
         })
         cls.pos_config.write({'payment_method_ids': [(6, 0, cls.cash_payment_method.ids)]})
 
-@tagged('post_install', '-at_install')
+
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
     def test_create_account_move_line(self):

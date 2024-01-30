@@ -1730,7 +1730,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         }])
 
 
-@tagged('mail_post', 'post_install', '-at_install')
+@tagged('mail_post')
 class TestMessagePostGlobal(TestMessagePostCommon):
 
     @users('employee')

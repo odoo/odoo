@@ -7,11 +7,9 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
-from odoo.tools.misc import formatLang
+from odoo.tests import Form
 
 
-@tagged('-at_install', 'post_install')
 class TestExpenses(TestExpenseCommon):
     #############################################
     #  Test Expense flows

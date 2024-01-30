@@ -3251,7 +3251,7 @@ Forbidden use of `__comp__` in arch."""
         )
 
 
-@tagged('post_install', '-at_install')
+
 class TestDebugger(common.TransactionCase):
     def test_t_debug_in_qweb_based_views(self):
         View = self.env['ir.ui.view']
@@ -3954,7 +3954,7 @@ class TestAccessRights(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             self.env['ir.ui.view'].get_view(view_type='form')
 
-@common.tagged('post_install', '-at_install', '-standard', 'migration')
+@common.tagged('-standard', 'migration')
 class TestAllViews(common.TransactionCase):
     def test_views(self):
         views = self.env['ir.ui.view'].with_context(lang=None).search([])
@@ -3964,7 +3964,8 @@ class TestAllViews(common.TransactionCase):
             with self.subTest(name=view.name):
                 view._check_xml()
 
-@common.tagged('post_install', '-at_install', '-standard', 'render_all_views')
+
+@common.tagged('-standard', 'render_all_views')
 class TestRenderAllViews(TransactionCaseWithUserDemo):
 
     @common.users('demo', 'admin')

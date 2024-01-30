@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 from datetime import datetime, timedelta
 
 
-@tagged('post_install', '-at_install')
 class TestPurchaseOrderReport(AccountTestInvoicingCommon):
 
     def test_00_purchase_order_report(self):

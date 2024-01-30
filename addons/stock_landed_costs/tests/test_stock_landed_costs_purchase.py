@@ -6,10 +6,9 @@ from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestSt
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 from odoo.fields import Date
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
     @classmethod
@@ -363,7 +362,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         return 'Additional Landed Cost should be %s instead of %s' % (actucal_cost, computed_cost)
 
 
-@tagged('post_install', '-at_install')
 class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
     def test_invoice_after_lc(self):
         self.env.company.anglo_saxon_accounting = True

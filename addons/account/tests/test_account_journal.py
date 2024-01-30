@@ -10,7 +10,6 @@ from odoo.tests import Form, tagged
 from odoo.exceptions import UserError, ValidationError
 
 
-@tagged('post_install', '-at_install')
 class TestAccountJournal(AccountTestInvoicingCommon):
 
     def test_constraint_currency_consistency_with_accounts(self):
@@ -149,7 +148,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         self.assertEqual(sorted(new_journals.mapped("code")), ["GEN1", "OD_BL"], "The journals should be set correctly")
 
 
-@tagged('post_install', '-at_install', 'mail_alias')
+@tagged("mail_alias")
 class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
 
     def test_alias_name_creation(self):

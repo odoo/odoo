@@ -2,11 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.survey.tests import common
-from odoo.tests import tagged
-from odoo.tests.common import warmup, HttpCase
+from odoo.tests import HttpCase, warmup
 
 
-@tagged('post_install', '-at_install')
 class SurveyPerformance(common.TestSurveyResultsCommon, HttpCase):
 
     @warmup

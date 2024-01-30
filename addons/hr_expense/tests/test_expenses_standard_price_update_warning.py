@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestExpenseStandardPriceUpdateWarning(TestExpenseCommon):
     def test_expense_standard_price_update_warning(self):
         self.expense_cat_A = self.env['product.product'].create({

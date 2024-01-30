@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests import Form, TransactionCase
 
-@tagged('-at_install', 'post_install')
+
 class TestFormCreate(TransactionCase):
 
     def test_create_res_lang(self):

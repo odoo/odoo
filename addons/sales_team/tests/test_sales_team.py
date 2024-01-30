@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions
-from odoo.tests import tagged, users
+from odoo.tests import users
 
 from odoo.addons.sales_team.tests.common import SalesTeamCommon, TestSalesCommon, TestSalesMC
 
@@ -205,7 +205,6 @@ class TestMultiCompany(TestSalesMC):
             team_c2.write({'company_id': self.company_2.id})
 
 
-@tagged('post_install', '-at_install')
 class TestAccessRights(SalesTeamCommon):
 
     @users('salesmanager')

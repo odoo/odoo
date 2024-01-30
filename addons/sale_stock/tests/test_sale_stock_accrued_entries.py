@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.exceptions import UserError
 
 
-@tagged('post_install', '-at_install')
 class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
 
     @classmethod

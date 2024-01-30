@@ -7,7 +7,7 @@ from odoo.tests import HttpCase, tagged
 from .test_project_base import TestProjectCommon
 
 
-@tagged('-at_install', 'post_install', 'personal_stages')
+@tagged('personal_stages')
 class TestPersonalStages(TestProjectCommon):
 
     @classmethod
@@ -378,7 +378,6 @@ class TestPersonalStages(TestProjectCommon):
         self.assertFalse(self.env['project.task.type'].search_count([('id', 'in', empty_stages.ids)]),
                          "All stages, wether they are personal or not, should be able to be deleted in batch")
 
-@tagged('-at_install', 'post_install')
 class TestPersonalStageTour(HttpCase, TestProjectCommon):
 
     def test_personal_stage_tour(self):

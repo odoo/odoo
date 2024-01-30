@@ -1,15 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 
-from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import TransactionCase
 from odoo import tools
 from io import BytesIO
 from PIL import Image
 import base64
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteEvent(TransactionCase):
 
     def test_event_app_name(self):

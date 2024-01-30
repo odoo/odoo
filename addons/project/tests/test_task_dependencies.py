@@ -2,14 +2,9 @@
 
 from odoo.fields import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
-
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
-from datetime import date
 
-
-@tagged('-at_install', 'post_install')
 class TestTaskDependencies(TestProjectCommon):
 
     @classmethod

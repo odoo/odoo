@@ -4,7 +4,6 @@
 import odoo.tests
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsitePageManager(odoo.tests.HttpCase):
     def test_page_manager_test_model(self):
         if self.env['website'].search_count([]) == 1:

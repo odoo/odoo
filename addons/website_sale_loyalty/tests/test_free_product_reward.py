@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.tests.common import HttpCase
-from odoo.tests import tagged
+from odoo.tests import HttpCase
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
-@tagged('post_install', '-at_install')
+
 class TestFreeProductReward(HttpCase):
 
     def setUp(self):

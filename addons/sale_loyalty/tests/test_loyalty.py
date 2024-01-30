@@ -3,13 +3,12 @@
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, new_test_user
+from odoo.tests import new_test_user
 from odoo.tools.float_utils import float_compare
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged('post_install', '-at_install')
 class TestLoyalty(TestSaleCouponCommon):
 
     @classmethod

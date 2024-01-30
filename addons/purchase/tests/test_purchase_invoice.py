@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import Command, fields
 
 
@@ -110,7 +110,6 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
         return rslt
 
 
-@tagged('post_install', '-at_install')
 class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 
     def test_vendor_bill_delivered(self):
@@ -704,7 +703,7 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(840.0, po_line.price_unit_discounted, "1680.0 * 0.5 = 840.0")
         self.assertEqual(2520.0, po_line.price_subtotal, "840.0 * 3 = 2520.0")
 
-@tagged('post_install', '-at_install')
+
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
     def test_total_match_via_partner(self):

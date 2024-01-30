@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import file_open
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod

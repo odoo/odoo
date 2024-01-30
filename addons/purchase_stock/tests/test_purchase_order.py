@@ -6,11 +6,10 @@ from freezegun import freeze_time
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
 @freeze_time("2021-01-14 09:12:15")
-@tagged('post_install', '-at_install')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     @classmethod

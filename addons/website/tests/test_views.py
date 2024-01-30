@@ -10,7 +10,7 @@ from lxml import etree as ET, html
 from lxml.html import builder as h
 
 from odoo.modules.module import _DEFAULT_MANIFEST
-from odoo.tests import common, HttpCase, tagged
+from odoo.tests import common, HttpCase
 
 
 def attrs(**kwargs):
@@ -286,7 +286,6 @@ class TestViewSaving(TestViewSavingCommon):
         )
 
 
-@tagged('-at_install', 'post_install')
 class TestCowViewSaving(TestViewSavingCommon):
     def setUp(self):
         super(TestCowViewSaving, self).setUp()
@@ -1181,7 +1180,6 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertTrue(view.arch.index('contenu de base') > 0, "New translation must appear in view")
 
 
-@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def setUp(self):
         super(Crawler, self).setUp()
@@ -1492,7 +1490,6 @@ class Crawler(HttpCase):
         self.assertEqual(response.json()['result'][0]['key'], '_website_sale.child_view_w1', "Only '_website_sale.child_view_w1' should be returned")
 
 
-@tagged('post_install', '-at_install')
 class TestThemeViews(common.TransactionCase):
     def test_inherit_specific(self):
         View = self.env['ir.ui.view']

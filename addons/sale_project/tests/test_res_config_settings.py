@@ -2,12 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged
 
 from .common import TestSaleProjectCommon
 
 
-@tagged('post_install', '-at_install')
 class TestResConfigSettings(TestSaleProjectCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):

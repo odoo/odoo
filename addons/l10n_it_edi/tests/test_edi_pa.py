@@ -5,7 +5,7 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.tests.common import tagged
 from odoo import Command
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestItEdiPa(TestItEdi):
 
     @classmethod

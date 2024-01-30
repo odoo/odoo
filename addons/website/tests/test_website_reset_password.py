@@ -4,11 +4,9 @@
 from unittest.mock import patch
 
 import odoo
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase
+from odoo.tests import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteResetPassword(HttpCase):
 
     def test_01_website_reset_password_tour(self):

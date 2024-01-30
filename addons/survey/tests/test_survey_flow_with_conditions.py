@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('-at_install', 'post_install', 'functional')
+@tagged('functional')
 class TestSurveyFlowWithConditions(common.TestSurveyCommon, HttpCase):
     def test_conditional_flow_with_scoring(self):
         with self.with_user('survey_user'):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged, new_test_user
+from odoo.tests import Form, new_test_user
 from odoo import Command, fields
 from odoo.exceptions import UserError, RedirectWarning
 
@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from collections import defaultdict
 
-@tagged('post_install', '-at_install')
+
 class TestAccountMove(AccountTestInvoicingCommon):
 
     @classmethod

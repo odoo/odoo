@@ -1,15 +1,13 @@
 import logging
-import json
 
 from odoo import api
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import get_db_name, loaded_demo_data
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install')
 class TestAPIKeys(HttpCaseWithUserDemo, TestTOTPMixin):
     def setUp(self):
         super().setUp()

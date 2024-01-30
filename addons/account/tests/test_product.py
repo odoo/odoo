@@ -4,7 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install_l10n')
 class TestProduct(AccountTestInvoicingCommon):
 
     def test_multi_company_product_tax(self):

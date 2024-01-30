@@ -6,7 +6,7 @@ import sys
 
 from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests import common, tagged
+from odoo.tests import common
 from odoo.exceptions import AccessError, ValidationError
 from odoo import Command
 
@@ -39,7 +39,6 @@ def create_automation(self, **kwargs):
     return automation_id
 
 
-@tagged('post_install', '-at_install')
 class BaseAutomationTest(TransactionCaseWithUserDemo):
     def setUp(self):
         super(BaseAutomationTest, self).setUp()
@@ -874,7 +873,6 @@ if env.context.get('old_values', None):  # on write
         self.assertTrue(automation.last_run)
 
 
-@common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
     def test_inversion(self):
         """ If a stored field B depends on A, an update to the trigger for A
@@ -1028,7 +1026,6 @@ class TestCompute(common.TransactionCase):
         self.assertTrue(obj.active)
 
 
-@common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
     def test_webhook_trigger(self):
         model = self.env["ir.model"]._get("base.automation.linked.test")

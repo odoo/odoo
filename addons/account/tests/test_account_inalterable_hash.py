@@ -1,12 +1,11 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.models import Model
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tools import format_date
 
 
-@tagged('post_install', '-at_install')
 class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):

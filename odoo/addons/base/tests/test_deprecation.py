@@ -12,7 +12,7 @@ DEPRECATED_MODEL_ATTRIBUTES = [
 ]
 
 
-@tagged('-at_install', 'post_install', 'deprecation')
+@tagged('deprecation')
 class TestModelDeprecations(TransactionCase):
 
     def test_model_attributes(self):

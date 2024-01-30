@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase, tagged
-from odoo.tools import mute_logger, logging
+from odoo.tests import HttpCase
+from odoo.tools import logging
 from unittest.mock import patch
 
-@tagged('-at_install', 'post_install')
+
 class TestHttpCase(HttpCase):
 
     def test_console_error_string(self):

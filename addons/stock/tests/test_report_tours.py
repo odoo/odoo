@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import odoo
-from odoo.tests import Form, HttpCase, tagged
+
+from odoo.tests import HttpCase
 
 
-@tagged('-at_install', 'post_install')
 class TestStockReportTour(HttpCase):
 
     def _get_report_url(self):

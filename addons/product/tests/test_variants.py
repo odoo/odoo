@@ -11,13 +11,12 @@ from PIL import Image
 
 from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests import Form, TransactionCase
 from odoo.tools import mute_logger
 
 from odoo.addons.product.tests.common import ProductVariantsCommon, ProductAttributesCommon
 
 
-@tagged('post_install', '-at_install')
 class TestVariantsSearch(ProductVariantsCommon):
 
     def test_attribute_line_search(self):
@@ -49,7 +48,6 @@ class TestVariantsSearch(ProductVariantsCommon):
                       'Slip should be found searching \'not ilike\'')
 
 
-@tagged('post_install', '-at_install')
 class TestVariants(ProductVariantsCommon):
 
     def test_variants_is_product_variant(self):
@@ -358,7 +356,7 @@ class TestVariants(ProductVariantsCommon):
         self.assertFalse(variant_2.active, 'Should not re-activate other variant')
         self.assertTrue(template.active, 'Should re-activate template')
 
-@tagged('post_install', '-at_install')
+
 class TestVariantsNoCreate(ProductAttributesCommon):
 
     @classmethod
@@ -556,7 +554,6 @@ class TestVariantsNoCreate(ProductAttributesCommon):
         self.assertNotIn(self.size_attribute_s, template.product_variant_ids.product_template_attribute_value_ids.product_attribute_value_id)
 
 
-@tagged('post_install', '-at_install')
 class TestVariantsManyAttributes(TransactionCase):
 
     @classmethod
@@ -663,7 +660,6 @@ class TestVariantsManyAttributes(TransactionCase):
         self.assertEqual(len(toto.product_variant_ids), 0)
 
 
-@tagged('post_install', '-at_install')
 class TestVariantsImages(ProductVariantsCommon):
 
     @classmethod
@@ -763,7 +759,6 @@ class TestVariantsImages(ProductVariantsCommon):
         self.assertEqual(self.variants[0].image_1920, self.images['red'])
 
 
-@tagged('post_install', '-at_install')
 class TestVariantsArchive(ProductVariantsCommon):
     """Once a variant is used on orders/invoices, etc, they can't be unlinked.
        As a result, updating attributes on a product template would simply
@@ -1312,7 +1307,6 @@ class TestVariantsArchive(ProductVariantsCommon):
         self.assertFalse(variants[0].product_template_attribute_value_ids)
 
 
-@tagged('post_install', '-at_install')
 class TestVariantWrite(TransactionCase):
 
     def test_active_one2many(self):
@@ -1362,7 +1356,6 @@ class TestVariantWrite(TransactionCase):
             self.assertEqual(product.sequence, 2)
 
 
-@tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductAttributesCommon):
 
     @classmethod

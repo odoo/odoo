@@ -3,12 +3,10 @@
 
 from PIL import Image
 
-from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import TransactionCase
 from odoo.tools import base64_to_image, image_to_base64
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteResetPassword(TransactionCase):
 
     def test_01_website_favicon(self):

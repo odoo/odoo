@@ -2,13 +2,11 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment_flutterwave.tests.common import FlutterwaveCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentTransaction(FlutterwaveCommon):
 
     def test_no_item_missing_from_rendering_values(self):

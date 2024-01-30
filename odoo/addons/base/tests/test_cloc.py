@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools import cloc
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import tagged, TransactionCase
 
 XML_TEST = """<!-- Comment -->
 <?xml version="1.0" encoding="UTF-8"?>
@@ -250,7 +250,6 @@ class TestClocParser(TransactionCase):
         self.assertEqual(scss_count, (17, 26))
 
 
-@tagged('post_install', '-at_install')
 class TestClocStdNoCusto(TransactionCase):
 
     def test_no_custo_install(self):

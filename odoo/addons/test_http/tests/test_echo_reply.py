@@ -4,7 +4,6 @@ import json
 from urllib.parse import urlparse
 
 from odoo.http import Request
-from odoo.tests import tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import mute_logger
 from odoo.addons.test_http.controllers import CT_JSON
@@ -12,7 +11,6 @@ from odoo.addons.test_http.controllers import CT_JSON
 from .test_common import TestHttpBase
 
 
-@tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpNoDB(TestHttpBase):
     def test_echohttp0_get_qs_nodb(self):
         res = self.nodb_url_open('/test_http/echo-http-get?race=Asgard')
@@ -54,7 +52,6 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         self.assertEqual(mimetype, 'application/json')
 
 
-@tagged('post_install', '-at_install')
 class TestHttpEchoReplyJsonNoDB(TestHttpBase):
     def test_echojson0_qs_json_nodb(self):
         payload = json.dumps({
@@ -90,7 +87,6 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
         self.assertEqual(res.text, "Invalid JSON-RPC data")
 
 
-@tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpWithDB(TestHttpBase):
     def setUp(self):
         super().setUp()
@@ -141,7 +137,6 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
 
 
-@tagged('post_install', '-at_install')
 class TestHttpEchoReplyJsonWithDB(TestHttpBase):
     @classmethod
     def setUpClass(cls):

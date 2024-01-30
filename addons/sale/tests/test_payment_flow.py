@@ -3,7 +3,7 @@
 from unittest.mock import ANY, patch
 
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, JsonRpcException
+from odoo.tests import JsonRpcException
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
@@ -13,7 +13,6 @@ from odoo.addons.sale.controllers.portal import PaymentPortal
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
     @classmethod

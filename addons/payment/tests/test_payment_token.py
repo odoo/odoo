@@ -5,13 +5,11 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestPaymentToken(PaymentCommon):
 
     @mute_logger('odoo.addons.base.models.ir_rule')

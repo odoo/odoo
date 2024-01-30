@@ -18,7 +18,6 @@ from odoo.addons import __path__ as __addons_path__
 from odoo.tools import mute_logger
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestImportModule(odoo.tests.TransactionCase):
 
     def import_zipfile(self, files):

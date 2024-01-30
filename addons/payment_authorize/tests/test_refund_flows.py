@@ -2,13 +2,11 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 
-@tagged('post_install', '-at_install')
 class TestRefundFlows(AuthorizeCommon):
 
     def test_refunding_voided_tx_cancels_it(self):

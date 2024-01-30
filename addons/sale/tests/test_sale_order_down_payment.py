@@ -1,11 +1,9 @@
 import uuid
 
-from odoo.tests import tagged
 from odoo import Command
 from .common import TestSaleCommon
 
 
-@tagged('post_install', '-at_install')
 class TestSaleOrderDownPayment(TestSaleCommon):
 
     @classmethod

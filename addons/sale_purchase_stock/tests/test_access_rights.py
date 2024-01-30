@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
 
-@tagged('post_install', '-at_install')
 class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     @classmethod

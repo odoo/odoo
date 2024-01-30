@@ -2,14 +2,12 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
 
     def test_no_item_missing_from_invoice_request_payload(self):

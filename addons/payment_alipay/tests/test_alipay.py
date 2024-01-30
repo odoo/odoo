@@ -5,7 +5,6 @@ from unittest.mock import patch
 from werkzeug.exceptions import Forbidden
 
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -13,7 +12,6 @@ from odoo.addons.payment_alipay.controllers.main import AlipayController
 from odoo.addons.payment_alipay.tests.common import AlipayCommon
 
 
-@tagged('post_install', '-at_install')
 class AlipayTest(AlipayCommon, PaymentHttpCommon):
 
     def test_compatible_providers(self):

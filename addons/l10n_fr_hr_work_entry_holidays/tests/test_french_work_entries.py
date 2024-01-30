@@ -9,7 +9,7 @@ from odoo.tests.common import TransactionCase, tagged
 
 _logger = logging.getLogger(__name__)
 
-@tagged('post_install_l10n', 'post_install', '-at_install', 'french_work_entries')
+@tagged('post_install_l10n', 'french_work_entries')
 class TestFrenchWorkEntries(TransactionCase):
 
     @classmethod

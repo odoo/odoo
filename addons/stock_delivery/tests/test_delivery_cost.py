@@ -2,7 +2,7 @@
 
 from odoo.tests import common, Form
 
-@common.tagged('post_install', '-at_install')
+
 class TestDeliveryCost(common.TransactionCase):
 
     def test_delivery_real_cost(self):

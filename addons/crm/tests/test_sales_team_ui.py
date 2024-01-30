@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tests
-from odoo.tests import HttpCase
-from odoo.tests.common import users
+from odoo.tests import HttpCase, users
 from odoo.addons.sales_team.tests.common import SalesTeamCommon
 
 
-@tests.tagged('post_install', '-at_install')
 class TestUi(HttpCase, SalesTeamCommon):
 
     @users('salesmanager')

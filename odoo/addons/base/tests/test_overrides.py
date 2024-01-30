@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase
 
 
-@tagged('-at_install', 'post_install')
 class TestOverrides(TransactionCase):
 
     # Ensure all main ORM methods behavior works fine even on empty recordset

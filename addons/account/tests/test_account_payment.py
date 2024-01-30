@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestAccountPayment(AccountTestInvoicingCommon):
 
     @classmethod

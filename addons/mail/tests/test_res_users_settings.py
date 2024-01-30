@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import tagged, users, TransactionCase
+from odoo.tests import TransactionCase, users
 
 
 class TestUSerCreationSettings(TransactionCase):
@@ -23,7 +23,6 @@ class TestUSerCreationSettings(TransactionCase):
         self.assertTrue(user.res_users_settings_ids, 'Internal users should have settings by default')
 
 
-@tagged("post_install", "-at_install")
 class TestResUsersSettings(MailCommon):
 
     @users('employee')

@@ -5,7 +5,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import tagged, HttpCase
 
 
-@tagged('-at_install', 'post_install', 'mail_composer')
+@tagged('mail_composer')
 class TestMailFullComposer(MailCommon, HttpCase):
 
     def test_mail_composer_test_tour(self):

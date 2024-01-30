@@ -3,10 +3,9 @@
 
 from odoo import Command
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     @classmethod

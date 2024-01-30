@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.tests import tagged
 
-@tagged('-at_install', 'post_install')
+
 class TestExpenseMargin(TestExpenseCommon):
 
     def test_expense_reinvoice_purchase_price(self):

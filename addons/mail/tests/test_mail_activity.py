@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import Form, tagged, HttpCase
+from odoo.tests import Form, HttpCase
 
 
 class ActivityScheduleCase(MailCommon):
@@ -145,7 +145,6 @@ class ActivityScheduleCase(MailCommon):
         }))
 
 
-@tagged("-at_install", "post_install")
 class TestMailActivityChatter(HttpCase):
 
     def test_mail_activity_schedule_from_chatter(self):

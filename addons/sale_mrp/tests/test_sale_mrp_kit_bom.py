@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests import Form, TransactionCase
 
 
-@tagged('post_install', '-at_install')
 class TestSaleMrpKitBom(TransactionCase):
 
     def _create_product(self, name, product_type, price):

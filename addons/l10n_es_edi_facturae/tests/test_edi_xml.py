@@ -16,7 +16,7 @@ from odoo.tools import file_open
 
 _logger = logging.getLogger(__name__)
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref='es_full'):

@@ -424,7 +424,6 @@ class TestIrModel(TransactionCase):
         self.assertEqual(monetary_field.currency_field, "x_good_currency",
                          "The currency field in monetary should have x_good_currency as name")
 
-@tagged('-at_install', 'post_install')
 class TestIrModelEdition(TransactionCase):
     def test_new_ir_model_fields_related(self):
         """Check that related field are handled correctly on new field"""
@@ -491,7 +490,6 @@ class TestEvalContext(TransactionCase):
         })
         self.env['res.partner'].create({'name': 'foo'}).x_foo_bar_baz
 
-@tagged('-at_install', 'post_install')
 class TestIrModelFieldsTranslation(HttpCase):
     def test_ir_model_fields_translation(self):
         # If not enabled (like in demo data), landing on res.config will try

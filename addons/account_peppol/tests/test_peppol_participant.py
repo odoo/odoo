@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError, UserError
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
@@ -15,7 +15,6 @@ PDF_FILE_PATH = 'account_peppol/tests/assets/peppol_identification_test.pdf'
 
 
 @freeze_time('2023-01-01')
-@tagged('-at_install', 'post_install')
 class TestPeppolParticipant(TransactionCase):
 
     @classmethod

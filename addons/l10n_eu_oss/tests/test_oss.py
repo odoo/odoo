@@ -6,7 +6,7 @@ from odoo.addons.l10n_eu_oss.models.eu_tag_map import EU_TAG_MAP
 from odoo.tests import tagged
 
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install_l10n')
 class OssTemplateTestCase(AccountTestInvoicingCommon):
 
     @classmethod
@@ -19,7 +19,7 @@ class OssTemplateTestCase(AccountTestInvoicingCommon):
             else:
                 raise e
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install_l10n')
 class TestOSSBelgium(OssTemplateTestCase):
 
     @classmethod
@@ -70,7 +70,7 @@ class TestOSSBelgium(OssTemplateTestCase):
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Belgian CoA not correctly linked")
 
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install_l10n')
 class TestOSSSpain(OssTemplateTestCase):
 
     @classmethod
@@ -103,7 +103,7 @@ class TestOSSSpain(OssTemplateTestCase):
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Spanish CoA not correctly linked")
 
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install_l10n')
 class TestOSSUSA(OssTemplateTestCase):
 
     @classmethod
@@ -120,7 +120,7 @@ class TestOSSUSA(OssTemplateTestCase):
         self.assertFalse(len(tax_oss), "OSS tax shouldn't be instanced on a US company")
 
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install_l10n')
 class TestOSSMap(OssTemplateTestCase):
 
     def test_oss_eu_tag_map(self):

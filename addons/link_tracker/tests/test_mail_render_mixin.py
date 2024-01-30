@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 from odoo.tools import TEXT_URL_REGEX
 
 
-@tagged('-at_install', 'post_install')
 class TestMailRenderMixin(common.HttpCase):
 
     @classmethod

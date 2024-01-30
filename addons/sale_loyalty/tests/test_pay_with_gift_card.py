@@ -3,9 +3,8 @@
 
 from odoo import Command
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
-from odoo.tests.common import tagged
 
-@tagged('-at_install', 'post_install')
+
 class TestPayWithGiftCard(TestSaleCouponCommon):
 
     def test_paying_with_single_gift_card_over(self):

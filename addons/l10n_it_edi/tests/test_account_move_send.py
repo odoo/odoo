@@ -4,7 +4,7 @@ from odoo.tests import tagged
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
     def init_invoice(self, partners):

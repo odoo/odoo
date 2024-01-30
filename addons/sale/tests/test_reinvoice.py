@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from freezegun import freeze_time
 from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 
-@tagged('post_install', '-at_install')
 class TestReInvoice(TestSaleCommon):
 
     @classmethod

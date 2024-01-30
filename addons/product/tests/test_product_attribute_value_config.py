@@ -6,7 +6,7 @@ from psycopg2 import IntegrityError
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
@@ -232,7 +232,6 @@ class TestProductAttributeValueCommon(TransactionCase):
         })
 
 
-@tagged('post_install', '-at_install')
 class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
 
     def test_product_template_attribute_values_creation(self):

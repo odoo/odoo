@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.exceptions import UserError, ValidationError
 from odoo import Command
 
 
-@tagged('post_install', '-at_install')
 class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
     @classmethod

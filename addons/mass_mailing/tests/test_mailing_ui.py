@@ -3,10 +3,8 @@
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests import tagged
 
 
-@tagged('-at_install', 'post_install')
 class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
 
     @classmethod

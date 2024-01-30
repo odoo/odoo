@@ -2,10 +2,8 @@
 from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestExpenseMultiCompany(TestExpenseCommon):
 
     def test_expense_sheet_multi_company(self):

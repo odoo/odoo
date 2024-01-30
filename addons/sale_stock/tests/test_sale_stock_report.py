@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 from odoo.tools import html2plaintext
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 
@@ -86,7 +86,6 @@ class TestSaleStockReports(TestReportsCommon):
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the SO shoud not be matched.")
 
 
-@tagged('post_install', '-at_install')
 class TestSaleStockInvoices(TestSaleCommon):
 
     def setUp(self):

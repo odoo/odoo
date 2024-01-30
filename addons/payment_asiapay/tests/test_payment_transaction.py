@@ -5,7 +5,6 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo.fields import Command
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -13,7 +12,6 @@ from odoo.addons.payment_asiapay import const
 from odoo.addons.payment_asiapay.tests.common import AsiaPayCommon
 
 
-@tagged('post_install', '-at_install')
 class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
 
     @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior.

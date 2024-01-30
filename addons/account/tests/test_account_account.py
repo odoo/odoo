@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
 import psycopg2
 from freezegun import freeze_time
 
-@tagged('post_install', '-at_install')
+
 class TestAccountAccount(AccountTestInvoicingCommon):
 
     def test_changing_account_company(self):

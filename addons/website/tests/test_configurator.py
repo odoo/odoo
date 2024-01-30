@@ -48,7 +48,7 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
         patcher = patch('odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream', wraps=self._theme_upgrade_upstream)
         self.startPatcher(patcher)
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+
 class TestConfiguratorTranslation(TestConfiguratorCommon):
 
     def test_01_configurator_translation(self):

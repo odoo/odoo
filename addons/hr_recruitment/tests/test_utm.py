@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users
 
 
-@tagged('post_install', '-at_install', 'utm_consistency')
+@tagged('utm_consistency')
 class TestUTMConsistencyHrRecruitment(TestUTMCommon):
 
     @users('__system__')

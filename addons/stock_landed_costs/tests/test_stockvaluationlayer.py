@@ -3,7 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 
 
@@ -138,7 +138,6 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         return out_move.with_context(svl=True)
 
 
-@tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
@@ -255,7 +254,6 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
 
 
-@tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):
@@ -345,7 +343,6 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(product.quantity_svl, 1)
         self.assertEqual(product.standard_price, 15)
 
-@tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):

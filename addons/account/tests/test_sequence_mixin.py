@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged, TransactionCase
+from odoo.tests import Form, TransactionCase
 from odoo import fields, api, SUPERUSER_ID, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger
@@ -42,7 +42,6 @@ class TestSequenceMixinCommon(AccountTestInvoicingCommon):
         return move
 
 
-@tagged('post_install', '-at_install')
 class TestSequenceMixin(TestSequenceMixinCommon):
     def assertNameAtDate(self, date, name):
         test = self.create_move(date=date)
@@ -619,7 +618,6 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.assertRecordValues(move.line_ids, [{'move_name': move.name}] * len(move.line_ids))
 
 
-@tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -660,7 +658,6 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         all_moves.unlink()
 
 
-@tagged('post_install', '-at_install')
 class TestSequenceMixinConcurrency(TransactionCase):
     def setUp(self):
         super().setUp()

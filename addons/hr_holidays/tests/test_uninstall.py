@@ -3,10 +3,9 @@
 
 from datetime import date
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 
 
-@tagged('-at_install', 'post_install')
 class TestHrLeaveUninstall(TransactionCase):
     def test_unlink_model(self):
         employee = self.env['hr.employee'].create({

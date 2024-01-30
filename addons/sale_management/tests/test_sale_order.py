@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 
-@tagged('-at_install', 'post_install')
 class TestSaleOrder(SaleManagementCommon):
 
     @classmethod

@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import SaleCommon
@@ -12,8 +11,6 @@ from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
 
 
-
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
     def setUp(self):
         super().setUp()

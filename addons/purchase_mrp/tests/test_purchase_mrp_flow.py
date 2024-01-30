@@ -3,13 +3,12 @@
 
 from datetime import timedelta
 
-from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests import Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import fields
 from odoo.fields import Command
 
 
-@tagged('post_install', '-at_install')
 class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     @classmethod

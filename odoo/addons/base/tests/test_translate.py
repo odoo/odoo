@@ -346,7 +346,6 @@ class TestLanguageInstall(TransactionCase):
         self.assertEqual(loaded[0][2], True)
 
 
-@tagged('post_install', '-at_install')
 class TestTranslationExport(TransactionCase):
 
     def test_export_translatable_resources(self):
@@ -1348,7 +1347,6 @@ class TestHTMLTranslation(TransactionCase):
                 )
 
 
-@tagged('post_install', '-at_install')
 class TestLanguageInstallPerformance(TransactionCase):
     def test_language_install(self):
         """ Install a language on a complete database. """

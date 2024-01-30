@@ -3,11 +3,11 @@ from odoo.addons.http_routing.models.ir_http import slug
 
 from odoo.tools import mute_logger
 from odoo.exceptions import AccessError
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 from odoo.addons.website.controllers.model_page import ModelPageController
 
-@tagged('post_install', '-at_install')
+
 class TestWebsiteControllerPage(HttpCase):
     @classmethod
     def setUpClass(cls):

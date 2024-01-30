@@ -9,7 +9,7 @@ from odoo.tests import tagged
 
 _logger = logging.getLogger(__name__)
 
-@tagged('post_install', '-at_install', '-standard', 'external')
+@tagged('-standard', 'external')
 class TestPingenSend(HttpCase):
 
     def setUp(self):

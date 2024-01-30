@@ -8,7 +8,7 @@ from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged("RTC", "post_install", "-at_install")
+@tagged("RTC")
 class TestChannelRTC(MailCommon):
 
     @users('employee')

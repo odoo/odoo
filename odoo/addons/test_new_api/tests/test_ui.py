@@ -6,7 +6,6 @@ from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 
     def test_01_admin_widget_x2many(self):
@@ -21,7 +20,6 @@ class TestUi(HttpCaseWithUserDemo):
             'widget_x2many', step_delay=100, login="admin", timeout=120)
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslation(odoo.tests.HttpCase):
 
     @mute_logger('odoo.sql_db', 'odoo.http')

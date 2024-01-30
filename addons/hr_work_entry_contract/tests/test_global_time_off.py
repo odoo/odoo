@@ -5,9 +5,7 @@ from .common import TestWorkEntryBase
 
 from datetime import datetime
 
-from odoo.tests import tagged
 
-@tagged('-at_install', 'post_install')
 class TestGlobalTimeOff(TestWorkEntryBase):
 
     def test_gto_other_calendar(self):

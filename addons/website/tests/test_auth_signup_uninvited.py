@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 
-@tagged('-at_install', 'post_install')
 class TestAuthSignupUninvited(common.TransactionCase):
 
     def test_01_auth_signup_uninvited(self):

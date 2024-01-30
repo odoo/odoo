@@ -6,11 +6,8 @@ from datetime import datetime, timedelta
 from odoo import Command, fields
 from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.tests.common import tagged
 
 
-
-@tagged('post_install', '-at_install')
 class TestWebsiteEventBoothSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
 
     @classmethod

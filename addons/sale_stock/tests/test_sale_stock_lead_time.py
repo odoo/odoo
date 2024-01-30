@@ -3,12 +3,10 @@
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo import fields
-from odoo.tests import tagged
 
 from datetime import timedelta
 
 
-@tagged('post_install', '-at_install')
 class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
 
     @classmethod

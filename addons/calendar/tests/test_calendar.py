@@ -6,12 +6,10 @@ from datetime import date, datetime, timedelta
 
 from odoo import fields, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, tagged
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 import freezegun
-import pytz
-import re
 import base64
 
 
@@ -442,7 +440,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
 
-@tagged('post_install', '-at_install')
+
 class TestCalendarTours(HttpCaseWithUserDemo):
     def test_calendar_month_view_start_hour_displayed(self):
         """ Test that the time is displayed in the month view. """

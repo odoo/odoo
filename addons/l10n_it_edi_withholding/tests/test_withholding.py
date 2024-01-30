@@ -10,7 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestWithholdingAndPensionFundTaxes(TestItEdi):
 
     @classmethod

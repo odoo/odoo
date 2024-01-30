@@ -11,7 +11,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class FullBaseMailPerformance(BaseMailPerformance):
 
     @classmethod
@@ -73,7 +73,7 @@ class FullBaseMailPerformance(BaseMailPerformance):
         cls.record_ticket.message_subscribe(cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_portal.partner_id.ids)
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestMailPerformance(FullBaseMailPerformance):
 
     def test_assert_initial_values(self):
@@ -106,7 +106,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         )
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestPortalFormatPerformance(FullBaseMailPerformance):
     """Test performance of `portal_message_format` with multiple messages
     with multiple attachments, with ratings.

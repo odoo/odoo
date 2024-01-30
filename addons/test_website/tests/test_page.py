@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.tests.common import HOST
 from odoo.tools import config, mute_logger
 
 
-@tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
     def test_01_homepage_url(self):
         # Setup

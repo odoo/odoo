@@ -36,7 +36,7 @@ class ProfilingHttpCase(HttpCase):
         req.raise_for_status()
         return req.json()
 
-@tagged('post_install', '-at_install', 'profiling')
+@tagged('profiling')
 class TestProfilingWeb(ProfilingHttpCase):
     def test_profiling_enabled(self):
         # since profiling will use a direct connection to the database patch 'db_connect' to ensure we are using the test cursor
@@ -61,7 +61,7 @@ class TestProfilingWeb(ProfilingHttpCase):
         self.assertEqual(new_profile.name, '/web/speedscope?')
 
 
-@tagged('post_install', '-at_install', 'profiling')
+@tagged('profiling')
 class TestProfilingModes(ProfilingHttpCase):
     def test_profile_collectors(self):
         expiration = datetime.datetime.now() + datetime.timedelta(seconds=50)
@@ -80,7 +80,7 @@ class TestProfilingModes(ProfilingHttpCase):
                          "Enabling and disabling profiling shouldn't have change existing preferences")
 
 
-@tagged('post_install', '-at_install', 'profiling')
+@tagged('profiling')
 class TestProfilingPublic(ProfilingHttpCase):
 
     def test_public_user_profiling(self):

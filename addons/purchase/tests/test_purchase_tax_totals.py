@@ -2,10 +2,8 @@
 
 from odoo import Command
 from odoo.addons.account.tests.test_invoice_tax_totals import TestTaxTotals
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class PurchaseTestTaxTotals(TestTaxTotals):
 
     @classmethod

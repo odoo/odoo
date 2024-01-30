@@ -7,11 +7,9 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
-from odoo.tests import tagged
 from dateutil.relativedelta import relativedelta
 
 
-@tagged('post_install', '-at_install')
 class TestSubcontractingBasic(TransactionCase):
     def test_subcontracting_location_1(self):
         """ Checks the creation and presence of the subcontracting location. """
@@ -22,7 +20,6 @@ class TestSubcontractingBasic(TransactionCase):
         self.assertTrue(self.env.company.subcontracting_location_id != company2.subcontracting_location_id)
 
 
-@tagged('post_install', '-at_install')
 class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_flow_1(self):
         """ Don't tick any route on the components and trigger the creation of the subcontracting
@@ -908,7 +905,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         ])
 
 
-@tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
 
     @classmethod
@@ -1298,7 +1294,6 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertEqual(picking_receipt.state, 'done')
 
 
-@tagged('post_install', '-at_install')
 class TestSubcontractingPortal(TransactionCase):
 
     @classmethod

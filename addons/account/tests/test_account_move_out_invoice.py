@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=bad-whitespace
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo import fields, Command
 from odoo.exceptions import UserError
 
@@ -11,8 +11,6 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 
-
-@tagged('post_install', '-at_install')
 class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     @classmethod

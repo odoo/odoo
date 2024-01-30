@@ -3,10 +3,8 @@
 
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     @classmethod

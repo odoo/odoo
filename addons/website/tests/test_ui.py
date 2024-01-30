@@ -10,7 +10,6 @@ import odoo.tests
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiCustomizeTheme(odoo.tests.HttpCase):
     def test_01_attachment_website_unlink(self):
         ''' Some ir.attachment needs to be unlinked when a website is unlink,
@@ -61,7 +60,6 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         self.assertFalse(so_attachment.website_id, 'Website should be removed')
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
     def test_html_editor_multiple_templates(self):
@@ -116,7 +114,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
         self.env['res.lang'].create({
@@ -194,7 +191,6 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_tour_homepage(self):

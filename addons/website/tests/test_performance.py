@@ -4,11 +4,9 @@
 import logging
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
-from contextlib import nullcontext
-
 from odoo.sql_db import categorize_query
 from odoo.tools import mute_logger
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests import tagged
 
 
 _logger = logging.getLogger(__name__)
@@ -312,7 +310,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         self._check_url_hot_query(self.page.url, 6, select_tables_perf)
         self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
 
-@tagged('-at_install', 'post_install')
+
 class TestWebsitePerformancePost(UtilPerf):
     @mute_logger('odoo.http')
     def test_50_perf_sql_web_assets(self):

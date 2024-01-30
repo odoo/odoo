@@ -7,7 +7,7 @@ from odoo.tests import tagged
 QR_IBAN = 'CH21 3080 8001 2345 6782 7'
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n')
 class TestGenQRRReference(AccountTestInvoicingCommon):
     """Check condition of generation of and content of the structured ref"""
 

@@ -4,10 +4,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.addons.website_sale.tests.test_website_sale_cart_abandoned import TestWebsiteSaleCartAbandonedCommon
-from odoo.tests.common import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleStockAbandonedCartEmail(TestWebsiteSaleCartAbandonedCommon):
     def test_website_sale_stock_abandoned_cart_email(self):
         """Make sure the send_abandoned_cart_email method sends the correct emails."""

@@ -10,7 +10,7 @@ from odoo.tests import Form, users, warmup, tagged
 from odoo.tools import mute_logger, formataddr
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
 
     @classmethod
@@ -108,7 +108,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         return test_partners, test_records, test_template_full
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestBaseMailPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -249,7 +249,7 @@ class TestBaseMailPerformance(BaseMailPerformance):
             })
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestBaseAPIPerformance(BaseMailPerformance):
 
     def setUp(self):
@@ -743,7 +743,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestMailAPIPerformance(BaseMailPerformance):
 
     @classmethod
@@ -1105,7 +1105,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(len(rec1.message_ids), 3)
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestMailFormattersPerformance(BaseMailPerformance):
 
     @classmethod
@@ -1291,7 +1291,7 @@ class TestMailFormattersPerformance(BaseMailPerformance):
             self.assertEqual(len(res), 6)
 
 
-@tagged('mail_performance', 'post_install', '-at_install')
+@tagged('mail_performance')
 class TestPerformance(BaseMailPerformance):
 
     def setUp(self):

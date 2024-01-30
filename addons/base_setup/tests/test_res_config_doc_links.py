@@ -6,7 +6,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.release import url, version
 
 
-@tagged('-standard', 'external', 'post_install', '-at_install') # nightly is not a real tag
+@tagged('-standard', 'external') # nightly is not a real tag
 class TestResConfigDocLinks(HttpCase):
     """
     Parse the 'res_config' view to extract all documentation links and

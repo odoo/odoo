@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 from odoo.addons.http_routing.models.ir_http import slug
 
@@ -9,7 +9,6 @@ from unittest.mock import patch
 from urllib.parse import urlparse
 
 
-@tagged('-at_install', 'post_install')
 class TestRedirect(HttpCase):
 
     def setUp(self):

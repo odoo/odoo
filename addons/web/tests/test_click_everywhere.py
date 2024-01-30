@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.tagged('click_all', 'post_install', '-at_install', '-standard')
+@odoo.tests.tagged('click_all', '-standard')
 class TestMenusAdmin(odoo.tests.HttpCase):
     allow_end_on_form = True
     def test_01_click_everywhere_as_admin(self):
@@ -21,7 +21,7 @@ class TestMenusAdmin(odoo.tests.HttpCase):
                 self.browser_js("/web", "odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="admin", timeout=1200)
 
 
-@odoo.tests.tagged('click_all', 'post_install', '-at_install', '-standard')
+@odoo.tests.tagged('click_all', '-standard')
 class TestMenusDemo(HttpCaseWithUserDemo):
     allow_end_on_form = True
     def test_01_click_everywhere_as_demo(self):
@@ -32,7 +32,7 @@ class TestMenusDemo(HttpCaseWithUserDemo):
                 _logger.runbot('Testing %s', menus[app_id]['name'])
                 self.browser_js("/web", "odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere('%s');" % menus[app_id]['xmlid'], "odoo.isReady === true", login="demo", timeout=1200)
 
-@odoo.tests.tagged('post_install', '-at_install')
+
 class TestMenusAdminLight(odoo.tests.HttpCase):
     allow_end_on_form = True
     def test_01_click_apps_menus_as_admin(self):
@@ -58,7 +58,7 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
             })
         self.browser_js("/web", "odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere(undefined, true);", "odoo.isReady === true", login="admin", timeout=120)
 
-@odoo.tests.tagged('post_install', '-at_install')
+
 class TestMenusDemoLight(HttpCaseWithUserDemo):
     allow_end_on_form = True
 

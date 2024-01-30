@@ -7,7 +7,6 @@ from freezegun import freeze_time
 from werkzeug.exceptions import Forbidden
 
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
@@ -15,7 +14,6 @@ from odoo.addons.payment_sips.controllers.main import SipsController
 from odoo.addons.payment_sips.tests.common import SipsCommon
 
 
-@tagged('post_install', '-at_install')
 class SipsTest(SipsCommon, PaymentHttpCommon):
 
     def test_compatible_providers(self):

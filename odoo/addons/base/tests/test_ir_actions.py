@@ -3,11 +3,10 @@
 
 from datetime import date
 import json
-from psycopg2 import IntegrityError, ProgrammingError
+from psycopg2 import IntegrityError
 import requests
 from unittest.mock import patch
 
-import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common, tagged
@@ -837,7 +836,6 @@ class TestCustomFields(TestCommonCustomFields):
         self.assertEqual(rec3.x_sel, 'baz')
 
 
-@tagged('post_install', '-at_install')
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_add_field_valid(self):
         """ custom field names must start with 'x_', even when bypassing the constraints

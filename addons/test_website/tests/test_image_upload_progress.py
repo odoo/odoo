@@ -9,7 +9,6 @@ import odoo.tests
 from odoo import http
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
 class TestImageUploadProgress(odoo.tests.HttpCase):
 
     def test_01_image_upload_progress(self):

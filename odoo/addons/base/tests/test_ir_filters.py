@@ -277,7 +277,7 @@ class TestGlobalDefaults(FiltersCase):
         ])
 
 
-@tagged('post_install', '-at_install', 'migration')
+@tagged('migration')
 class TestAllFilters(TransactionCase):
     def check_filter(self, name, model, domain, fields, groupby, order, context):
         if groupby:

@@ -6,7 +6,7 @@ from odoo.tests import tagged, common
 from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row
 
 
-@tagged('post_install', '-at_install', 'post_install_l10n')
+@tagged('post_install_l10n')
 class TestIndonesianEfaktur(common.TransactionCase):
     def setUp(self):
         """

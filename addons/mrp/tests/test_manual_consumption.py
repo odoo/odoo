@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests import tagged, Form, HttpCase
+from odoo.tests import Form, HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestTourManualConsumption(HttpCase):
     def test_mrp_manual_consumption(self):
         """Test manual consumption mechanism. Test when manual consumption is

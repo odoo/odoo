@@ -5,10 +5,9 @@ from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
 from odoo.addons.mail.tools.discuss import StoreData
-from odoo.tests.common import users, tagged, HttpCase, warmup
+from odoo.tests import HttpCase, users, warmup
 
 
-@tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase):
     # Queries for _query_count_init_store:
     #     1: action_discuss_id

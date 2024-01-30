@@ -3,10 +3,8 @@
 
 from odoo.addons.digest.tests.common import TestDigestCommon
 from odoo.tools import mute_logger
-from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
 class TestLiveChatDigest(TestDigestCommon):
 
     @classmethod

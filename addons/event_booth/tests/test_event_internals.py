@@ -6,11 +6,10 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.addons.event_booth.tests.common import TestEventBoothCommon
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests import Form, users, tagged
+from odoo.tests import Form, users
 from odoo.tools import mute_logger
 
 
-@tagged('post_install', '-at_install')
 class TestEventData(TestEventBoothCommon):
 
     @mute_logger('odoo.models.unlink')

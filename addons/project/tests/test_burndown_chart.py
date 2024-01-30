@@ -6,7 +6,7 @@ from datetime import datetime
 
 from odoo import Command
 from odoo.osv.expression import AND, OR
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests import HttpCase
 from .test_project_base import TestProjectCommon
 
 
@@ -429,7 +429,6 @@ class TestBurndownChart(TestBurndownChartCommon):
         return expected_dict
 
 
-@tagged('-at_install', 'post_install')
 class TestBurndownChartTour(HttpCase, TestBurndownChartCommon):
 
     def test_burndown_chart_tour(self):

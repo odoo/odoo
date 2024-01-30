@@ -6,13 +6,12 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.tools import float_compare, mute_logger, float_round
 
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-@tagged('post_install', '-at_install')
 class TestSalePrices(SaleCommon):
 
     @classmethod

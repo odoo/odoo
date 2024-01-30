@@ -3,13 +3,12 @@
 
 import datetime
 
-from odoo import tests, _
+from odoo import _
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 from odoo.tests.common import new_test_user
 
 
-@tests.tagged('post_install', '-at_install')
 class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_channel_created_on_user_interaction(self):
         self.start_tour('/', 'im_livechat_request_chat', login=None)

@@ -5,11 +5,9 @@ from unittest.mock import patch
 
 import odoo
 from odoo import fields
-from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
-@tagged('post_install', '-at_install')
 class TestWebsiteSaleMail(HttpCase):
 
     def test_01_shop_mail_tour(self):

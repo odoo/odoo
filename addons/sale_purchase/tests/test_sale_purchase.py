@@ -2,12 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import UserError, AccessError
-from odoo.tests import tagged
+from odoo.exceptions import UserError
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
 
-@tagged('-at_install', 'post_install')
 class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
     @classmethod
