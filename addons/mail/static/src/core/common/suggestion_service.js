@@ -35,6 +35,9 @@ export class SuggestionService {
             case "#":
                 await this.fetchThreads(cleanedSearchTerm);
                 break;
+            case ":":
+                await this.store.fetchCannedResponses();
+                break;
         }
     }
 
