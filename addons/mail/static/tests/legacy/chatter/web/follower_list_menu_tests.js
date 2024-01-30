@@ -231,10 +231,10 @@ QUnit.test("Load 100 followers at once", async () => {
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button[title='Show Followers']");
     await contains(".o-mail-Follower", { text: "Mitchell Admin" });
-    await contains(".o-mail-Follower", { count: 100 });
+    await contains(".o-mail-Follower", { count: 101 }); // 100 more followers + self follower (Mitchell Admin)
     await contains(".o-mail-Followers-dropdown", { text: "Load more" });
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await contains(".o-mail-Follower", { count: 200 });
+    await contains(".o-mail-Follower", { count: 201 });
     await new Promise(setTimeout); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 210 });

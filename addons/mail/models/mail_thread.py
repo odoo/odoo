@@ -4317,6 +4317,7 @@ class MailThread(models.AbstractModel):
         domain = [
             ("res_id", "=", self.id),
             ("res_model", "=", self._name),
+            ("partner_id", "!=", self.env.user.partner_id.id),
         ]
         if filter_recipients:
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
