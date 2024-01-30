@@ -211,6 +211,30 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 }
             ];
         }
+        clickQuotationOrderButton() {
+            return [
+                {
+                    content: 'click quotation button',
+                    trigger: '.o_sale_order_button',
+                },
+            ];
+        }
+        selectQuotationOrder(name) {
+            return [
+                {
+                    content: `select quotation order '${name}'`,
+                    trigger: `.order-list .order-row .name:contains("${name}")`,
+                },
+            ];
+        }
+        selectSettleOrder() {
+            return [
+                {
+                    content: 'click settle button',
+                    trigger: '.selection .selection-item:contains("Settle")',
+                },
+            ];
+        }
     }
 
     class Check {

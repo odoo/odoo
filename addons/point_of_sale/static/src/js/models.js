@@ -2894,7 +2894,8 @@ class Order extends PosModel {
         this.pricelist = pricelist;
 
         var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
-            return ! (line.price_manually_set || line.price_automatically_set);
+            return ! (line.price_manually_set || line.price_automatically_set) &&
+                     (!line.order || pricelist !== line.order.pricelist);
         });
         _.each(lines_to_recompute, function (line) {
             line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra()));

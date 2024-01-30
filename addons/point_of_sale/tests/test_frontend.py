@@ -1055,3 +1055,40 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="accountman")
+
+    def test_imported_so_pricelist(self):
+        product_1, product_2 = self.env['product.product'].create([{
+            'name': 'Test Product 1',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        }, {
+            'name': 'Test Product 2',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        }])
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [Command.create({'product_id': p.id, 'fixed_price': 90}) for p in [product_1, product_2]],
+        })
+
+        so1, so2 = self.env['sale.order'].create([{
+            'name': 'TestSO1',
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {'product_id': product_1.id, 'product_uom_qty': 1})],
+            'pricelist_id': pricelist.id,
+        }, {
+            'name': 'TestSO2',
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {'product_id': product_2.id, 'product_uom_qty': 1})],
+            'pricelist_id': pricelist.id,
+        }])
+        so1.action_confirm()
+        so2.action_confirm()
+
+        self.main_pos_config.available_pricelist_ids += pricelist
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'importSOPricelist', login="accountman")
