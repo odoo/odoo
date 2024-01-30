@@ -760,6 +760,8 @@ class IrActionsReport(models.Model):
                     }
                 }
 
+            # Check if any streams were reloaded from attachment
+            has_reloaded_streams = any([collected_stream['stream'] for collected_stream in collected_streams.values()])
             # Split the pdf for each record using the PDF outlines.
 
             # Only one record: append the whole PDF.
@@ -767,6 +769,9 @@ class IrActionsReport(models.Model):
                 # Check for cases where nothing was rendered
                 if res_ids_wo_stream == html_ids_wo_none:
                     collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
+                elif not has_reloaded_streams:
+                    collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
+
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
@@ -791,11 +796,11 @@ class IrActionsReport(models.Model):
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
-                    return {False: {
-                        'report_action': self,
-                        'stream': pdf_content_stream,
-                        'attachment': None,
-                    }}
+                    # Check for cases where nothing was rendered
+                    if not has_reloaded_streams:
+                        collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
+
+                    return collected_streams
 
                 outlines_pages = []
                 node = root['/Outlines']['/First']
