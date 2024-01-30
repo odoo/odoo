@@ -33,7 +33,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
                     kwargs: { load: false },
                 });
                 if (orderWithInvoice && orderWithInvoice.account_move) {
-                    await this.env.legacyActionManager.do_action('account.account_invoices', {
+                    await this.env.legacyActionManager.do_action(this.env.pos.invoiceReportAction, {
                         additional_context: {
                             active_ids: [orderWithInvoice.account_move],
                         },
