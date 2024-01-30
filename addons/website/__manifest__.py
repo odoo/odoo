@@ -322,6 +322,13 @@
             ('remove', 'website/static/src/components/dialog/*.dark.scss'),
         ],
     },
+    'configurator_snippets': {
+        'homepage': ['s_cover', 's_text_image', 's_numbers'],
+        'about_us': ['s_text_image', 's_image_text', 's_title', 's_company_team'],
+        'our_services': ['s_three_columns', 's_quotes_carousel', 's_references'],
+        'pricing': ['s_comparisons'],
+        'privacy_policy': ['s_faq_collapse'],
+    },
     'new_page_templates': {
         'basic': {
             '1': ['s_text_block_h1', 's_text_block', 's_image_text', 's_text_image'],

@@ -352,7 +352,7 @@ class Website(models.Model):
     @api.model
     def get_theme_configurator_snippets(self, theme_name):
         return {
-            **get_manifest('theme_default')['configurator_snippets'],
+            **get_manifest('website')['configurator_snippets'],
             **get_manifest(theme_name).get('configurator_snippets', {}),
         }
 
