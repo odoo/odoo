@@ -9,7 +9,7 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 import { Command } from "@mail/../tests/helpers/command";
 
 import { assertSteps, contains, focus, step } from "@web/../tests/utils";
-import { cookie } from "@web/core/browser/cookie";
+import { browser } from "@web/core/browser/browser";
 
 QUnit.module("thread service");
 
@@ -28,7 +28,7 @@ QUnit.test("new message from operator displays unread counter", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    cookie.set(
+    browser.localStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
@@ -75,7 +75,7 @@ QUnit.test("focus on unread livechat marks it as read", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    cookie.set(
+    browser.localStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );

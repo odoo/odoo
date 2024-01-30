@@ -48,13 +48,13 @@ class MailMessage(models.Model):
                         ('mail_message_id', '=', message_sudo.id)], limit=1)
                     if chatbot_message_id.script_step_id:
                         vals['chatbotStep'] = {
-                            'id': chatbot_message_id.script_step_id.id,
-                            'answers': [] if chatbot_message_id.script_step_id.step_type != 'question_selection' else [{
-                                'id': answer.id,
-                                'label': answer.name,
-                                'redirectLink': answer.redirect_link,
-                            } for answer in chatbot_message_id.script_step_id.answer_ids],
-                            'selectedAnswerId': chatbot_message_id.user_script_answer_id.id,
-
+                            'message': {'id': message_sudo.id},
+                            'scriptStep': {'id': chatbot_message_id.script_step_id.id},
+                            'chatbot': {
+                                'script': {'id': chatbot_message_id.script_step_id.chatbot_script_id.id},
+                                'thread': {'id': discuss_channel.id, 'model': 'discuss.channel'}
+                            },
+                            'selectedAnswer': {'id': chatbot_message_id.user_script_answer_id.id} if chatbot_message_id.user_script_answer_id else False,
+                            'operatorFound': discuss_channel.chatbot_current_step_id.step_type == 'forward_operator' and len(discuss_channel.channel_member_ids) > 2,
                         }
         return vals_list
