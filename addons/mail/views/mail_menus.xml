@@ -7,6 +7,18 @@
         groups="base.group_user"
         sequence="5"
     />
+    <menuitem
+        id="mail.menu_configuration"
+        name="Configuration"
+        parent="mail.menu_root_discuss"
+        sequence="1"
+    />
+    <menuitem name="Canned Responses"
+        id="mail.menu_canned_responses"
+        parent="mail.menu_configuration"
+        action="mail.mail_shortcode_action"
+        sequence="15"
+    />
 
     <record id="base.menu_email" model="ir.ui.menu">
         <field name="sequence">3</field>
