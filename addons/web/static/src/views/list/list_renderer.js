@@ -238,6 +238,8 @@ export class ListRenderer extends Component {
             this.lastEditedCell = null;
         });
         this.isRTL = localization.direction === "rtl";
+        this.selectionEnabled =
+            !this.props.list.editedRecord && !this.props.list.model.useSampleModel;
     }
 
     displaySaveNotification() {
@@ -1829,20 +1831,16 @@ export class ListRenderer extends Component {
         group.toggle();
     }
 
-    get canSelectRecord() {
-        return !this.props.list.editedRecord && !this.props.list.model.useSampleModel;
-    }
-
     toggleSelection() {
         const list = this.props.list;
-        if (!this.canSelectRecord) {
+        if (!this.selectionEnabled) {
             return;
         }
         return list.toggleSelection();
     }
 
     toggleRecordSelection(record, ev) {
-        if (!this.canSelectRecord) {
+        if (!this.selectionEnabled) {
             return;
         }
         if (this.shiftKeyMode && this.lastCheckedRecord) {
