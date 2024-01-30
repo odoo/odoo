@@ -5,6 +5,7 @@ import calendar
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.osv import expression
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -577,9 +578,10 @@ class ResCompany(models.Model):
             # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
             # This is required in order to generate consistent hashs.
             # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
-            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
-                                            ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
+            domain = self.env['account.move']._get_move_hash_domain(common_domain=[('journal_id', '=', journal.id)])
+            all_moves_count = self.env['account.move'].sudo().search_count(domain)
+            domain = expression.AND([domain, [('secure_sequence_number', '!=', 0)]])
+            moves = self.env['account.move'].sudo().search(domain, order="secure_sequence_number ASC")
             if not moves:
                 rslt.update({
                     'msg_cover': _('There isn\'t any journal entry flagged for data inalterability yet for this journal.'),
