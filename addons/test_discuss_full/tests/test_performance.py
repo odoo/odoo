@@ -20,7 +20,7 @@ class TestDiscussFullPerformance(HttpCase):
     #     6: odoobot format
     #     4: settings
     _query_count_init_store = 16
-    _query_count = 49
+    _query_count = 48
     _query_count_discuss_channels = 68
 
     def setUp(self):
@@ -228,18 +228,6 @@ class TestDiscussFullPerformance(HttpCase):
         The point of having a separate getter is to allow it to be overriden.
         """
         return {
-            "CannedResponse": [
-                {
-                    "id": self.shortcodes[0].id,
-                    "source": "hello",
-                    "substitution": "Hello, how may I help you?",
-                },
-                {
-                    "id": self.shortcodes[1].id,
-                    "source": "bye",
-                    "substitution": "Thanks for your feedback. Goodbye!",
-                },
-            ],
             "Store": {
                 "discuss": {
                     "inbox": {"counter": 1, "id": "inbox", "model": "mail.box"},

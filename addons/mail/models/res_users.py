@@ -299,7 +299,6 @@ class Users(models.Model):
         self.ensure_one()
         self = self.with_user(self)
         store.add({
-            "CannedResponse": self.env["mail.shortcode"].sudo().search_read([], ["source", "substitution"]),
             "Store": {
                 "discuss": {
                     "inbox": {"counter": self.partner_id._get_needaction_count(), "id": "inbox", "model": "mail.box"},
